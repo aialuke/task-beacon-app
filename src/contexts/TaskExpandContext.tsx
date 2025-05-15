@@ -43,9 +43,8 @@ export const TaskExpandProvider: React.FC<{ children: ReactNode }> = ({ children
     // If this task appears before the expanded task in the DOM, no offset
     if (expandedIndex === -1 || currentIndex <= expandedIndex) return 0;
 
-    // Use a minimal offset for a smoother visual experience
-    // This creates just enough space for the expanded content without excess
-    return (taskHeights[expandedTaskId] || 0) * 0.8;
+    // Reduced the multiplier from 0.8 to 0.5 for less spacing
+    return (taskHeights[expandedTaskId] || 0) * 0.5;
   }, [expandedTaskId, taskHeights, taskOrder]);
 
   return (

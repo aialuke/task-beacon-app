@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useSpring, animated, config } from "@react-spring/web";
 import { Task } from "@/lib/types";
@@ -37,13 +38,14 @@ export default function TaskCard({
     }
   }, [task.id, registerTaskHeight]);
 
-  // Spring animation for expanding/collapsing
+  // Spring animation for expanding/collapsing with improved settings
   const expandAnimation = useSpring({
     height: isExpanded ? contentRef.current?.scrollHeight || 'auto' : 0,
     opacity: isExpanded ? 1 : 0,
     config: {
-      tension: 280,
-      friction: 24
+      tension: 220,  // Lower tension for smoother motion
+      friction: 26,  // Slightly increased friction for stability
+      clamp: false   // No clamping for smoother end of animation
     },
     immediate: false
   });
@@ -52,7 +54,6 @@ export default function TaskCard({
   const descriptionAnimation = useSpring({
     height: isExpanded ? descriptionRef.current?.scrollHeight || 'auto' : '16px',
     opacity: isExpanded ? 1 : 1,
-    // Keep text visible during transition
     config: {
       tension: 200,
       friction: 20
@@ -61,13 +62,22 @@ export default function TaskCard({
   });
 
   // Animation for moving cards below the expanded one
+  // Added delay to create more natural sequence of movements
   const offsetAnimation = useSpring({
     transform: `translateY(${getTaskOffset(task.id)}px)`,
-    config: config.gentle
+    config: {
+      tension: 170,  // Lower tension for smoother offset animation
+      friction: 26,  // Higher friction for more stable movement
+      precision: 0.1 // Increased precision
+    },
+    delay: isExpanded ? 0 : 50, // Small delay for collapsed state to make animations feel more natural
+    immediate: false
   });
+
   const toggleExpand = useCallback(() => {
     setExpandedTaskId(isExpanded ? null : task.id);
   }, [isExpanded, task.id, setExpandedTaskId]);
+  
   const getStatusText = (status: string) => {
     switch (status) {
       case "complete":
@@ -126,7 +136,7 @@ export default function TaskCard({
           </Button>
         </div>
 
-        {/* Expanded content */}
+        {/* Expanded content - improved animation configurations */}
         <animated.div ref={contentRef} style={{
         ...expandAnimation,
         willChange: 'height, opacity',
