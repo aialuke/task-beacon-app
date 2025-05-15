@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useSpring, animated, config } from "@react-spring/web";
 import { Task } from "@/lib/types";
@@ -8,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { formatDate, getOwnerName } from "@/lib/utils";
 import TaskActions from "./TaskActions";
 import { useTaskExpand } from "@/contexts/TaskExpandContext";
-import { Link2 } from "lucide-react"; // Import the Link2 icon from lucide-react
+import { Link } from "lucide-react"; // Import the Link icon from lucide-react (changed from Link2)
 
 interface TaskCardProps {
   task: Task;
@@ -80,6 +79,7 @@ export default function TaskCard({
         return "Pending";
     }
   };
+  
   return <animated.div className="task-card-container will-change-transform" style={offsetAnimation}>
       <div ref={cardRef} className={`task-card ${task.pinned ? 'border-l-4 border-l-primary' : ''} ${isExpanded ? 'expanded-card' : ''}`}>
         {/* Header section - always visible */}
@@ -140,8 +140,8 @@ export default function TaskCard({
             </div>
 
             {task.url_link && <div>
-                <div className="flex items-center gap-1">
-                  <Link2 size={16} className="text-primary shrink-0" />
+                <div className="flex items-center gap-3">
+                  <Link size={16} className="text-primary shrink-0" />
                   <a href={task.url_link} target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline truncate">
                     {task.url_link}
                   </a>
