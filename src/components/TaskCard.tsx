@@ -74,61 +74,64 @@ export default function TaskCard({ task }: TaskCardProps) {
     >
       <div 
         ref={cardRef}
-        className={`task-card ${task.pinned ? 'border-l-4 border-l-primary' : ''}`}
+        className={`task-card ${task.pinned ? 'border-l-4 border-l-primary' : ''} ${isExpanded ? 'expanded-card' : ''}`}
       >
-        {/* Timer */}
-        <div className="shrink-0">
-          <CountdownTimer dueDate={task.due_date} status={status} />
-        </div>
+        {/* Header section - always visible */}
+        <div className="flex items-center w-full gap-2">
+          {/* Timer */}
+          <div className="shrink-0">
+            <CountdownTimer dueDate={task.due_date} status={status} />
+          </div>
 
-        {/* Task info */}
-        <div className="flex-1 min-w-0">
-          <h3 className="font-bold text-sm text-gray-900 truncate" title={task.title}>
-            {task.title}
-          </h3>
-          {task.description && (
-            <p className="truncate text-xs text-gray-600" title={task.description}>
-              {truncateText(task.description, 20)}
-            </p>
-          )}
-        </div>
+          {/* Task info */}
+          <div className="flex-1 min-w-0">
+            <h3 className="font-bold text-sm text-gray-900 truncate" title={task.title}>
+              {task.title}
+            </h3>
+            {task.description && (
+              <p className="truncate text-xs text-gray-600" title={task.description}>
+                {truncateText(task.description, 20)}
+              </p>
+            )}
+          </div>
 
-        {/* Owner name */}
-        <div className="owner-name">
-          {ownerName}
-        </div>
-        
-        {/* Status ribbon (flat style) */}
-        <div className={`status-ribbon ${statusColor}`}>
-          {getStatusText(status)}
-        </div>
+          {/* Owner name */}
+          <div className="owner-name">
+            {ownerName}
+          </div>
+          
+          {/* Status ribbon (flat style) */}
+          <div className={`status-ribbon ${statusColor}`}>
+            {getStatusText(status)}
+          </div>
 
-        {/* Task expand button */}
-        <Button 
-          variant="ghost" 
-          size="icon"
-          className="shrink-0 h-8 w-8"
-          onClick={toggleExpand}
-        >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className={`transform transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+          {/* Task expand button */}
+          <Button 
+            variant="ghost" 
+            size="icon"
+            className="shrink-0 h-8 w-8"
+            onClick={toggleExpand}
           >
-            <path
-              d="M6 9L12 15L18 9"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </Button>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className={`transform transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+            >
+              <path
+                d="M6 9L12 15L18 9"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </Button>
+        </div>
 
-        {/* Expanded content with spring animation */}
+        {/* Expanded content */}
         <animated.div 
           ref={contentRef}
           style={{
@@ -136,7 +139,7 @@ export default function TaskCard({ task }: TaskCardProps) {
             willChange: 'height, opacity',
             overflow: 'hidden',
           }}
-          className="w-full mt-2 bg-white rounded-xl border border-blue-100 p-2"
+          className="w-full mt-2 pt-2 border-t border-gray-100"
         >
           <div className="space-y-2">
             <div>
