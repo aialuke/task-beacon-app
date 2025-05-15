@@ -12,30 +12,6 @@ interface TaskActionsProps {
 export default function TaskActions({ task }: TaskActionsProps) {
   const [loading, setLoading] = useState(false);
 
-  const handleTogglePin = async () => {
-    setLoading(true);
-    try {
-      if (isMockingSupabase) {
-        // Mock behavior for development
-        toast.success(`Task ${task.pinned ? "unpinned" : "pinned"} successfully (mock)`);
-        setTimeout(() => setLoading(false), 500);
-        return;
-      }
-      
-      const { error } = await supabase
-        .from("tasks")
-        .update({ pinned: !task.pinned })
-        .eq("id", task.id);
-
-      if (error) throw error;
-      toast.success(`Task ${task.pinned ? "unpinned" : "pinned"} successfully`);
-    } catch (error: any) {
-      toast.error(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleMarkComplete = async () => {
     setLoading(true);
     try {
@@ -72,15 +48,6 @@ export default function TaskActions({ task }: TaskActionsProps) {
 
   return (
     <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-100">
-      <Button 
-        variant="outline" 
-        size="sm" 
-        className="text-xs"
-        onClick={handleTogglePin}
-        disabled={loading}
-      >
-        {task.pinned ? "Unpin" : "Pin"}
-      </Button>
       <Button 
         variant={task.status === "complete" ? "outline" : "default"} 
         size="sm"

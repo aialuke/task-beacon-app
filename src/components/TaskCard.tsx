@@ -1,5 +1,5 @@
 
-import { useRef, useEffect, useCallback } from "react";
+import { useRef, useEffect, useCallback, useState } from "react";
 import { useSpring, animated } from "@react-spring/web";
 import { Task } from "@/lib/types";
 import CountdownTimer from "./CountdownTimer";
@@ -8,7 +8,9 @@ import { Button } from "@/components/ui/button";
 import { formatDate, getOwnerName } from "@/lib/utils";
 import TaskActions from "./TaskActions";
 import { useTaskExpand } from "@/contexts/TaskExpandContext";
-import { Link, Calendar } from "lucide-react";
+import { Link, Calendar, Pin, PinOff } from "lucide-react";
+import { supabase, isMockingSupabase } from "@/lib/supabase";
+import { toast } from "sonner";
 
 interface TaskCardProps {
   task: Task;
@@ -23,6 +25,8 @@ export default function TaskCard({
     registerTaskHeight
   } = useTaskExpand();
   
+  const [isPinned, setIsPinned] = useState(task.pinned);
+  const [pinLoading, setPinLoading] = useState(false);
   const isExpanded = expandedTaskId === task.id;
   const contentRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -66,6 +70,35 @@ export default function TaskCard({
     setExpandedTaskId(isExpanded ? null : task.id);
   }, [isExpanded, task.id, setExpandedTaskId]);
   
+  const handleTogglePin = async () => {
+    setPinLoading(true);
+    const newPinnedState = !isPinned;
+    
+    try {
+      if (isMockingSupabase) {
+        // Mock behavior for development
+        toast.success(`Task ${isPinned ? "unpinned" : "pinned"} successfully (mock)`);
+        setIsPinned(newPinnedState);
+        setTimeout(() => setPinLoading(false), 500);
+        return;
+      }
+      
+      const { error } = await supabase
+        .from("tasks")
+        .update({ pinned: newPinnedState })
+        .eq("id", task.id);
+
+      if (error) throw error;
+      
+      setIsPinned(newPinnedState);
+      toast.success(`Task ${isPinned ? "unpinned" : "pinned"} successfully`);
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setPinLoading(false);
+    }
+  };
+  
   const getStatusText = (status: string) => {
     switch (status) {
       case "complete":
@@ -82,7 +115,7 @@ export default function TaskCard({
     <div className={`task-card-container ${isExpanded ? 'expanded' : ''}`}>
       <div 
         ref={cardRef} 
-        className={`task-card ${task.pinned ? 'border-l-4 border-l-primary' : ''} ${isExpanded ? 'expanded-card' : ''}`}
+        className={`task-card ${isPinned ? 'border-l-4 border-l-primary' : ''} ${isExpanded ? 'expanded-card' : ''}`}
       >
         {/* Header section - always visible */}
         <div className="flex items-center w-full gap-2">
@@ -125,6 +158,21 @@ export default function TaskCard({
           <div className={`status-ribbon ${statusColor}`}>
             {getStatusText(status)}
           </div>
+
+          {/* Pin button */}
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="shrink-0 h-8 w-8"
+            onClick={handleTogglePin}
+            disabled={pinLoading}
+            title={isPinned ? "Unpin task" : "Pin task"}
+          >
+            {isPinned ? 
+              <Pin size={16} className="text-primary" /> : 
+              <PinOff size={16} className="text-gray-500" />
+            }
+          </Button>
 
           {/* Task expand button */}
           <Button variant="ghost" size="icon" className="shrink-0 h-8 w-8" onClick={toggleExpand}>
@@ -188,7 +236,7 @@ export default function TaskCard({
               </div>
             )}
             
-            <TaskActions task={task} />
+            <TaskActions task={{...task, pinned: isPinned}} />
           </div>
         </animated.div>
       </div>
