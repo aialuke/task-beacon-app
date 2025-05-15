@@ -5,7 +5,7 @@ import { Task } from "@/lib/types";
 import CountdownTimer from "./CountdownTimer";
 import { getStatusColor, getTaskStatus, truncateText } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { formatDate, getOwnerName } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 import TaskActions from "./TaskActions";
 import { useTaskExpand } from "@/contexts/TaskExpandContext";
 import { Link, Calendar, Pin, PinOff } from "lucide-react";
@@ -33,7 +33,6 @@ export default function TaskCard({
   const descriptionRef = useRef<HTMLDivElement>(null);
   const status = getTaskStatus(task);
   const statusColor = getStatusColor(status);
-  const ownerName = getOwnerName(task.owner_id);
 
   // Register this task's expanded content height when it changes
   useEffect(() => {
@@ -148,11 +147,6 @@ export default function TaskCard({
               </animated.div>
             )}
           </div>
-
-          {/* Owner name and status */}
-          <div className="owner-name">
-            {ownerName}
-          </div>
           
           {/* Status ribbon */}
           <div className={`status-ribbon ${statusColor}`}>
@@ -199,7 +193,7 @@ export default function TaskCard({
           }} 
           className="w-full mt-2"
         >
-          <div className="space-y-2 pl-[56px]"> {/* Updated left padding from 52px to 56px for perfect alignment */}
+          <div className="space-y-2 pl-[56px]">
             {/* Date and URL in same horizontal row */}
             <div className="flex items-center flex-wrap gap-x-6 gap-y-2">
               {/* Due date with calendar icon */}
