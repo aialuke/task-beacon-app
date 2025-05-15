@@ -62,21 +62,6 @@ export default function CountdownTimer({ dueDate, status, size = 48 }: Countdown
           stroke="#E5EDFF"
         />
         
-        {/* Flowing pattern - only visible for pending or overdue tasks */}
-        {status !== "complete" && (
-          <circle
-            cx={size / 2}
-            cy={size / 2}
-            r={radius}
-            fill="none"
-            strokeWidth="2"
-            stroke="url(#flowGradient)"
-            strokeDasharray="4 6"
-            className="timer-flow"
-            style={{ opacity: 0.3 }}
-          />
-        )}
-        
         {/* Progress circle */}
         <animated.circle
           cx={size / 2}
@@ -90,14 +75,6 @@ export default function CountdownTimer({ dueDate, status, size = 48 }: Countdown
           transform={`rotate(-90, ${size / 2}, ${size / 2})`}
           strokeLinecap="round"
         />
-        
-        {/* Gradient definition for the flowing pattern */}
-        <defs>
-          <linearGradient id="flowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor={timerColor} />
-            <stop offset="100%" stopColor="#0b86da" />
-          </linearGradient>
-        </defs>
       </svg>
       
       {/* Text in center of circle */}
