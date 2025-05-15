@@ -2,8 +2,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import TaskList from "./TaskList";
-import CreateTaskForm from "./CreateTaskForm";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { supabase } from "@/lib/supabase";
 
 export default function TaskDashboard() {
@@ -18,45 +16,6 @@ export default function TaskDashboard() {
       <header className="flex items-center justify-between">
         <h1 className="text-xl font-bold">Task Manager</h1>
         <div className="flex items-center gap-2">
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-              <Button 
-                variant="default" 
-                size="icon" 
-                className="h-9 w-9"
-                title="Create New Task"
-              >
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M21 12L3 12M21 5L3 5M21 19L3 19"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M10 8L6 16M7 9L9 15M13 9L15 15M12 8L16 16"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Create New Task</DialogTitle>
-              </DialogHeader>
-              <CreateTaskForm onClose={() => setOpen(false)} />
-            </DialogContent>
-          </Dialog>
-          
           <Button variant="ghost" size="icon" onClick={handleSignOut}>
             <svg
               width="16"
@@ -78,7 +37,7 @@ export default function TaskDashboard() {
       </header>
       
       <main>
-        <TaskList />
+        <TaskList dialogOpen={open} setDialogOpen={setOpen} />
       </main>
     </div>
   );

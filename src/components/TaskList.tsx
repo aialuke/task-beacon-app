@@ -1,10 +1,10 @@
-
 import { useState, useEffect } from "react";
 import { Task, TaskStatus } from "@/lib/types";
 import TaskCard from "./TaskCard";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
+import { PenSquare } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -12,6 +12,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import CreateTaskForm from "./CreateTaskForm";
 
 // Mock data for development when Supabase is not connected
 const mockTasks: Task[] = [
@@ -56,7 +65,12 @@ const mockTasks: Task[] = [
   }
 ];
 
-export default function TaskList() {
+interface TaskListProps {
+  dialogOpen: boolean;
+  setDialogOpen: (open: boolean) => void;
+}
+
+export default function TaskList({ dialogOpen, setDialogOpen }: TaskListProps) {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<TaskStatus | "all">("all");
@@ -146,22 +160,43 @@ export default function TaskList() {
 
   return (
     <div className="space-y-4">
-      {/* Filter dropdown */}
-      <div className="w-full max-w-xs">
-        <Select
-          value={filter}
-          onValueChange={(value) => setFilter(value as TaskStatus | "all")}
-        >
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Filter tasks" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Tasks</SelectItem>
-            <SelectItem value="pending">Pending</SelectItem>
-            <SelectItem value="overdue" className="text-destructive">Overdue</SelectItem>
-            <SelectItem value="complete" className="text-success">Complete</SelectItem>
-          </SelectContent>
-        </Select>
+      {/* Filter and Create buttons */}
+      <div className="flex items-center justify-between">
+        <div className="w-full max-w-xs">
+          <Select
+            value={filter}
+            onValueChange={(value) => setFilter(value as TaskStatus | "all")}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Filter tasks" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Tasks</SelectItem>
+              <SelectItem value="pending">Pending</SelectItem>
+              <SelectItem value="overdue" className="text-destructive">Overdue</SelectItem>
+              <SelectItem value="complete" className="text-success">Complete</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          <DialogTrigger asChild>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-9 w-9 text-primary"
+              title="Create New Task"
+            >
+              <PenSquare className="h-5 w-5" />
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Create New Task</DialogTitle>
+            </DialogHeader>
+            <CreateTaskForm onClose={() => setDialogOpen(false)} />
+          </DialogContent>
+        </Dialog>
       </div>
 
       {/* Task list */}
