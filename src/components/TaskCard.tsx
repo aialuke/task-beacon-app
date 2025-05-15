@@ -1,4 +1,3 @@
-
 import { useRef, useEffect, useCallback, useState } from "react";
 import { useSpring, animated } from "@react-spring/web";
 import { Task } from "@/lib/types";
@@ -8,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { formatDate } from "@/lib/utils";
 import TaskActions from "./TaskActions";
 import { useTaskExpand } from "@/contexts/TaskExpandContext";
-import { Link, Calendar, Pin, PinOff } from "lucide-react";
+import { Link, Calendar, Pin } from "lucide-react";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
 import { toast } from "sonner";
 
@@ -164,7 +163,7 @@ export default function TaskCard({
           >
             {isPinned ? 
               <Pin size={16} className="text-gray-900" fill="currentColor" /> : 
-              <PinOff size={16} className="text-gray-900" style={{ opacity: 0.8 }} />
+              <Pin size={16} className="text-gray-900" style={{ opacity: 0.8 }} />
             }
           </Button>
 
