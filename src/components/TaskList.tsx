@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Task, TaskStatus } from "@/lib/types";
 import TaskCard from "./TaskCard";
@@ -175,20 +174,25 @@ export default function TaskList({
 
       {/* Task list with TaskExpandProvider */}
       <TaskExpandProvider>
-        <div className="grid gap-2">
-          {loading ?
-        // Skeleton loaders
-        Array.from({
-          length: 5
-        }).map((_, i) => <div key={i} className="task-card animate-pulse">
+        <div className="task-list flex flex-col gap-3">
+          {loading ? (
+            // Skeleton loaders
+            Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="task-card animate-pulse">
                 <div className="h-12 w-12 rounded-full bg-gray-200"></div>
                 <div className="flex-1 space-y-2">
                   <Skeleton className="h-4 w-3/4" />
                   <Skeleton className="h-3 w-1/2" />
                 </div>
-              </div>) : filteredTasks.length > 0 ? filteredTasks.map(task => <TaskCard key={task.id} task={task} />) : <div className="flex items-center justify-center p-4 border border-dashed border-gray-300 rounded-xl">
+              </div>
+            ))
+          ) : filteredTasks.length > 0 ? (
+            filteredTasks.map(task => <TaskCard key={task.id} task={task} />)
+          ) : (
+            <div className="flex items-center justify-center p-4 border border-dashed border-gray-300 rounded-xl">
               <p className="text-gray-500">No tasks found</p>
-            </div>}
+            </div>
+          )}
         </div>
       </TaskExpandProvider>
     </div>;

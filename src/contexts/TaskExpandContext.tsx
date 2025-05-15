@@ -4,7 +4,6 @@ import React, { createContext, useContext, useState, useCallback, ReactNode } fr
 interface TaskExpandContextType {
   expandedTaskId: string | null;
   setExpandedTaskId: (id: string | null) => void;
-  getTaskOffset: (taskId: string) => number;
   registerTaskHeight: (taskId: string, height: number) => void;
 }
 
@@ -17,13 +16,8 @@ interface TaskHeightMap {
 export const TaskExpandProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [expandedTaskId, setExpandedTaskId] = useState<string | null>(null);
   const [taskHeights, setTaskHeights] = useState<TaskHeightMap>({});
-  const [taskOrder, setTaskOrder] = useState<string[]>([]);
 
-  // Update task order when children change
-  const registerTaskOrder = useCallback((taskIds: string[]) => {
-    setTaskOrder(taskIds);
-  }, []);
-
+  // Simplified context - we only track heights for animation purposes
   const registerTaskHeight = useCallback((taskId: string, height: number) => {
     setTaskHeights(prev => ({
       ...prev,
@@ -31,27 +25,10 @@ export const TaskExpandProvider: React.FC<{ children: ReactNode }> = ({ children
     }));
   }, []);
 
-  const getTaskOffset = useCallback((taskId: string): number => {
-    // If no task is expanded or if this is the expanded task, no offset
-    if (!expandedTaskId || taskId === expandedTaskId) return 0;
-
-    // Get the index of the current task and the expanded task
-    const allTaskIds = taskOrder.length > 0 ? taskOrder : Object.keys(taskHeights);
-    const expandedIndex = allTaskIds.indexOf(expandedTaskId);
-    const currentIndex = allTaskIds.indexOf(taskId);
-
-    // If this task appears before the expanded task in the DOM, no offset
-    if (expandedIndex === -1 || currentIndex <= expandedIndex) return 0;
-
-    // Reduced the multiplier from 0.8 to 0.5 for less spacing
-    return (taskHeights[expandedTaskId] || 0) * 0.5;
-  }, [expandedTaskId, taskHeights, taskOrder]);
-
   return (
     <TaskExpandContext.Provider value={{
       expandedTaskId,
       setExpandedTaskId,
-      getTaskOffset,
       registerTaskHeight,
     }}>
       {children}

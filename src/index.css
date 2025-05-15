@@ -65,11 +65,16 @@
   }
 
   .task-card-container {
-    @apply transition-transform will-change-transform mb-2;
+    @apply mb-2;
   }
 
   .expanded-card {
     @apply border-[#E5EDFF];
+  }
+
+  .task-list {
+    @apply flex flex-col;
+    transition: all 0.3s ease-out;
   }
 
   .btn-primary {
