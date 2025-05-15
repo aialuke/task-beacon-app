@@ -4,6 +4,32 @@
 
 **URL**: https://lovable.dev/projects/5577a4ee-c8f7-431c-876d-05403bb6de17
 
+## Task Management PWA
+
+This project is a Task Management Progressive Web Application that allows users to create, manage, and track tasks with due dates and status tracking.
+
+### Task Card Animations
+
+The task cards feature smooth in-place expansion using React Spring animations:
+- Cards expand vertically with height animation when clicked
+- Content fades in/out with opacity transitions
+- Cards below an expanded card shift down smoothly
+- All animations are optimized for performance with will-change properties
+
+#### Testing Notes
+
+When testing the Task Card animations:
+1. **Device Compatibility**: Test on various screen sizes (mobile, tablet, desktop) to ensure proper responsive behavior
+2. **Animation Performance**: Verify smooth transitions without jank, especially on lower-end devices
+3. **Interaction Testing**: 
+   - Expanding a card should push other cards down smoothly
+   - Collapsing a card should pull other cards up smoothly
+   - Multiple rapid expansions/collapses should work properly
+4. **Accessibility**: 
+   - Animations respect reduced-motion preferences
+   - Expanded state is keyboard navigable
+   - Focus management works correctly when cards expand/collapse
+
 ## How can I edit this code?
 
 There are several ways of editing your application.

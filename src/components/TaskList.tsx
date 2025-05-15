@@ -21,6 +21,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import CreateTaskForm from "./CreateTaskForm";
+import { TaskExpandProvider } from "@/contexts/TaskExpandContext";
 
 // Mock data for development when Supabase is not connected
 const mockTasks: Task[] = [
@@ -198,29 +199,31 @@ export default function TaskList({ dialogOpen, setDialogOpen }: TaskListProps) {
         </Dialog>
       </div>
 
-      {/* Task list */}
-      <div className="grid gap-2">
-        {loading ? (
-          // Skeleton loaders
-          Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="task-card animate-pulse">
-              <div className="h-12 w-12 rounded-full bg-gray-200"></div>
-              <div className="flex-1 space-y-2">
-                <Skeleton className="h-4 w-3/4" />
-                <Skeleton className="h-3 w-1/2" />
+      {/* Task list with TaskExpandProvider */}
+      <TaskExpandProvider>
+        <div className="grid gap-2">
+          {loading ? (
+            // Skeleton loaders
+            Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="task-card animate-pulse">
+                <div className="h-12 w-12 rounded-full bg-gray-200"></div>
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-3 w-1/2" />
+                </div>
               </div>
+            ))
+          ) : filteredTasks.length > 0 ? (
+            filteredTasks.map(task => (
+              <TaskCard key={task.id} task={task} />
+            ))
+          ) : (
+            <div className="flex items-center justify-center p-4 border border-dashed border-gray-300 rounded-xl">
+              <p className="text-gray-500">No tasks found</p>
             </div>
-          ))
-        ) : filteredTasks.length > 0 ? (
-          filteredTasks.map(task => (
-            <TaskCard key={task.id} task={task} />
-          ))
-        ) : (
-          <div className="flex items-center justify-center p-4 border border-dashed border-gray-300 rounded-xl">
-            <p className="text-gray-500">No tasks found</p>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      </TaskExpandProvider>
       
       {isMockingSupabase && (
         <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-xl text-sm text-yellow-800">
