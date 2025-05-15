@@ -24,6 +24,7 @@ export default function TaskCard({ task }: TaskCardProps) {
   const isExpanded = expandedTaskId === task.id;
   const contentRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+  const descriptionRef = useRef<HTMLDivElement>(null);
   
   const status = getTaskStatus(task);
   const statusColor = getStatusColor(status);
@@ -42,6 +43,14 @@ export default function TaskCard({ task }: TaskCardProps) {
     height: isExpanded ? contentRef.current?.scrollHeight || 'auto' : 0,
     opacity: isExpanded ? 1 : 0,
     config: { tension: 280, friction: 24 },
+    immediate: false
+  });
+  
+  // Animation specifically for description text
+  const descriptionAnimation = useSpring({
+    height: isExpanded ? (descriptionRef.current?.scrollHeight || 'auto') : '16px',
+    opacity: isExpanded ? 1 : 1, // Keep text visible during transition
+    config: { tension: 200, friction: 20 },
     immediate: false
   });
   
@@ -88,10 +97,25 @@ export default function TaskCard({ task }: TaskCardProps) {
             <h3 className="font-bold text-sm text-gray-900 truncate" title={task.title}>
               {task.title}
             </h3>
-            {task.description && !isExpanded && (
-              <p className="truncate text-xs text-gray-600" title={task.description}>
-                {truncateText(task.description, 20)}
-              </p>
+            
+            {/* Animated description container - always present */}
+            {task.description && (
+              <animated.div 
+                ref={descriptionRef}
+                style={{
+                  ...descriptionAnimation,
+                  willChange: 'height, opacity',
+                  overflow: 'hidden',
+                  position: 'relative',
+                }}
+                className="text-xs text-gray-600"
+              >
+                <div className={`absolute left-0 top-0 ${!isExpanded ? 'truncate w-full' : ''}`}>
+                  {isExpanded 
+                    ? task.description 
+                    : truncateText(task.description, 20)}
+                </div>
+              </animated.div>
             )}
           </div>
 
@@ -131,7 +155,7 @@ export default function TaskCard({ task }: TaskCardProps) {
           </Button>
         </div>
 
-        {/* Expanded content - no border-t */}
+        {/* Expanded content */}
         <animated.div 
           ref={contentRef}
           style={{
@@ -142,12 +166,7 @@ export default function TaskCard({ task }: TaskCardProps) {
           className="w-full mt-2"
         >
           <div className="space-y-2">
-            {task.description && (
-              <div>
-                <p className="text-sm">{task.description}</p>
-              </div>
-            )}
-
+            {/* Don't repeat description here, it's now in the main card view */}
             <div>
               <span className="text-xs font-medium text-gray-600">Due date:</span>
               <p className="text-sm">{formatDate(task.due_date)}</p>

@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 
 interface TaskExpandContextType {
@@ -42,9 +43,9 @@ export const TaskExpandProvider: React.FC<{ children: ReactNode }> = ({ children
     // If this task appears before the expanded task in the DOM, no offset
     if (expandedIndex === -1 || currentIndex <= expandedIndex) return 0;
 
-    // Apply a more reasonable offset for tasks below the expanded one
-    // Use a reduced offset value to keep tasks closer together
-    return Math.min((taskHeights[expandedTaskId] || 0) - 4, 80); // Cap at 80px max for aesthetic reasons
+    // Use a minimal offset for a smoother visual experience
+    // This creates just enough space for the expanded content without excess
+    return (taskHeights[expandedTaskId] || 0) * 0.8;
   }, [expandedTaskId, taskHeights, taskOrder]);
 
   return (

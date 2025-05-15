@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Task, TaskStatus } from "@/lib/types";
 import TaskCard from "./TaskCard";
@@ -190,7 +191,5 @@ export default function TaskList({
             </div>}
         </div>
       </TaskExpandProvider>
-      
-      {isMockingSupabase}
     </div>;
 }
