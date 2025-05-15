@@ -1,3 +1,4 @@
+
 import { useRef, useEffect, useCallback } from "react";
 import { useSpring, animated } from "@react-spring/web";
 import { Task } from "@/lib/types";
@@ -150,7 +151,7 @@ export default function TaskCard({
           }} 
           className="w-full mt-2"
         >
-          <div className="space-y-2 pl-[52px]"> {/* Added left padding to match the countdown timer width + gap */}
+          <div className="space-y-2 pl-[56px]"> {/* Updated left padding from 52px to 56px for perfect alignment */}
             {/* Date and URL in same horizontal row */}
             <div className="flex items-center flex-wrap gap-x-6 gap-y-2">
               {/* Due date with calendar icon */}
