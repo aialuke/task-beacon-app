@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useSpring, animated, config } from "@react-spring/web";
 import { Task } from "@/lib/types";
@@ -7,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { formatDate, getOwnerName } from "@/lib/utils";
 import TaskActions from "./TaskActions";
 import { useTaskExpand } from "@/contexts/TaskExpandContext";
+import { Link2 } from "lucide-react"; // Import the Link2 icon from lucide-react
+
 interface TaskCardProps {
   task: Task;
 }
@@ -137,10 +140,12 @@ export default function TaskCard({
             </div>
 
             {task.url_link && <div>
-                <span className="text-xs font-medium text-gray-600">Link:</span>
-                <a href={task.url_link} target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline block truncate">
-                  {task.url_link}
-                </a>
+                <div className="flex items-center gap-1">
+                  <Link2 size={16} className="text-primary shrink-0" />
+                  <a href={task.url_link} target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline truncate">
+                    {task.url_link}
+                  </a>
+                </div>
               </div>}
 
             {task.photo_url && <div>
