@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Task, TaskStatus } from "@/lib/types";
 import TaskCard from "./TaskCard";
@@ -183,10 +184,10 @@ export default function TaskList({ dialogOpen, setDialogOpen }: TaskListProps) {
           <DialogTrigger asChild>
             <Button 
               variant="default" 
-              className="h-10 w-10 rounded-full bg-primary hover:bg-primary/80 hover:scale-105 transition-all p-0"
+              className="h-10 w-10 rounded-lg bg-primary hover:bg-primary/80 hover:scale-105 transition-all p-0"
               title="Create New Task"
             >
-              <Pen className="h-6 w-6 text-white" />
+              <Pen className="h-5 w-5 text-white" />
             </Button>
           </DialogTrigger>
           <DialogContent>
