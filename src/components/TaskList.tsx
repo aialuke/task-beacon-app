@@ -22,10 +22,12 @@ export default function TaskList() {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks' }, payload => {
         // Handle different types of changes
         if (payload.eventType === 'INSERT') {
-          setTasks(current => [payload.new as Task, ...current]);
+          const newTask = payload.new as Task;
+          setTasks(current => [newTask, ...current]);
         } else if (payload.eventType === 'UPDATE') {
+          const updatedTask = payload.new as Task;
           setTasks(current => 
-            current.map(task => task.id === payload.new.id ? payload.new as Task : task)
+            current.map(task => task.id === updatedTask.id ? updatedTask : task)
           );
         } else if (payload.eventType === 'DELETE') {
           setTasks(current => current.filter(task => task.id !== payload.old.id));
@@ -50,8 +52,13 @@ export default function TaskList() {
 
       if (error) throw error;
       
-      // Sort tasks: pinned first, then by due date
-      setTasks(data || []);
+      // Ensure data conforms to Task type
+      const typedData: Task[] = data ? data.map(item => ({
+        ...item,
+        status: item.status as TaskStatus
+      })) : [];
+      
+      setTasks(typedData);
     } catch (error: any) {
       toast.error(error.message);
     } finally {
