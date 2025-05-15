@@ -20,24 +20,33 @@ export default function TaskDashboard() {
         <div className="flex items-center gap-2">
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-              <Button className="btn-primary">
+              <Button 
+                variant="default" 
+                size="icon" 
+                className="h-9 w-9"
+                title="Create New Task"
+              >
                 <svg
-                  width="16"
-                  height="16"
+                  width="18"
+                  height="18"
                   viewBox="0 0 24 24"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
-                  className="mr-1"
                 >
                   <path
-                    d="M12 4V20M4 12H20"
+                    d="M21 12L3 12M21 5L3 5M21 19L3 19"
                     stroke="currentColor"
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   />
+                  <path
+                    d="M10 8L6 16M7 9L9 15M13 9L15 15M12 8L16 16"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
                 </svg>
-                New Task
               </Button>
             </DialogTrigger>
             <DialogContent>

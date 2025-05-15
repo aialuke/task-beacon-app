@@ -76,3 +76,27 @@ export async function compressAndResizePhoto(file: File): Promise<File> {
   // For now, just return the original file
   return file;
 }
+
+// Function to get owner name from owner ID
+export function getOwnerName(ownerId: string): string {
+  // In a real app, this would fetch from a users table
+  // For mock data, we'll use a simple mapping
+  const mockUsernames: Record<string, string> = {
+    'user-1': 'Alex',
+    'user-2': 'Taylor',
+    'user-3': 'Jordan',
+  };
+  
+  if (ownerId in mockUsernames) {
+    return mockUsernames[ownerId];
+  }
+  
+  // Extract first part of email-like IDs
+  if (ownerId.includes('@')) {
+    return ownerId.split('@')[0];
+  }
+  
+  // Fallback: just return the first part of the ID
+  const parts = ownerId.split('-');
+  return parts.length > 1 ? parts[1] : ownerId;
+}

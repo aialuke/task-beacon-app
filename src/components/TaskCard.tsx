@@ -5,7 +5,7 @@ import { Task } from "@/lib/types";
 import CountdownTimer from "./CountdownTimer";
 import { getStatusColor, getTaskStatus, truncateText } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { formatDate } from "@/lib/utils";
+import { formatDate, getOwnerName } from "@/lib/utils";
 import TaskActions from "./TaskActions";
 
 interface TaskCardProps {
@@ -17,6 +17,7 @@ export default function TaskCard({ task }: TaskCardProps) {
   
   const status = getTaskStatus(task);
   const statusColor = getStatusColor(status);
+  const ownerName = getOwnerName(task.owner_id);
 
   // Spring animation for expanding/collapsing
   const expandAnimation = useSpring({
@@ -25,13 +26,20 @@ export default function TaskCard({ task }: TaskCardProps) {
     config: { tension: 280, friction: 24 }
   });
 
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case "complete": 
+        return "Complete";
+      case "overdue": 
+        return "Overdue";
+      case "pending": 
+      default: 
+        return "Pending";
+    }
+  };
+
   return (
     <div className={`task-card ${task.pinned ? 'border-l-4 border-l-primary' : ''}`}>
-      {/* Status ribbon */}
-      <div className={`status-ribbon ${statusColor}`}>
-        {status === "complete" ? "Done" : status === "overdue" ? "Due" : "Soon"}
-      </div>
-      
       {/* Timer */}
       <div className="shrink-0">
         <CountdownTimer dueDate={task.due_date} status={status} />
@@ -47,6 +55,16 @@ export default function TaskCard({ task }: TaskCardProps) {
             {truncateText(task.description, 20)}
           </p>
         )}
+      </div>
+
+      {/* Owner name */}
+      <div className="owner-name">
+        {ownerName}
+      </div>
+      
+      {/* Status ribbon (flat style) */}
+      <div className={`status-ribbon ${statusColor}`}>
+        {getStatusText(status)}
       </div>
 
       {/* Task expand button */}
@@ -77,7 +95,7 @@ export default function TaskCard({ task }: TaskCardProps) {
       {/* Expanded content */}
       <animated.div 
         style={expandAnimation}
-        className="w-full absolute top-full left-0 mt-1 bg-white p-2 rounded-md shadow-md border border-blue-100 z-10 overflow-hidden"
+        className="w-full absolute top-full left-0 mt-1 bg-white p-2 rounded-xl shadow-md border border-blue-100 z-10 overflow-hidden"
       >
         <div className="space-y-2">
           <div>
@@ -112,7 +130,7 @@ export default function TaskCard({ task }: TaskCardProps) {
               <img 
                 src={task.photo_url} 
                 alt="Task attachment" 
-                className="mt-1 h-20 w-20 object-cover rounded-md"
+                className="mt-1 h-20 w-20 object-cover rounded-xl"
                 loading="lazy"
               />
             </div>

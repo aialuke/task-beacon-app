@@ -5,7 +5,13 @@ import TaskCard from "./TaskCard";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 // Mock data for development when Supabase is not connected
 const mockTasks: Task[] = [
@@ -29,7 +35,7 @@ const mockTasks: Task[] = [
     due_date: new Date(Date.now() - 86400000).toISOString(), // Yesterday (overdue)
     photo_url: null,
     url_link: null,
-    owner_id: "user-1",
+    owner_id: "user-2",
     pinned: false,
     status: "overdue",
     created_at: new Date().toISOString(),
@@ -42,7 +48,7 @@ const mockTasks: Task[] = [
     due_date: new Date(Date.now() + 172800000).toISOString(), // Day after tomorrow
     photo_url: null,
     url_link: null,
-    owner_id: "user-1",
+    owner_id: "user-3",
     pinned: false,
     status: "pending",
     created_at: new Date().toISOString(),
@@ -140,38 +146,22 @@ export default function TaskList() {
 
   return (
     <div className="space-y-4">
-      {/* Filter buttons */}
-      <div className="flex gap-2 overflow-x-auto pb-2">
-        <Button 
-          variant={filter === "all" ? "default" : "outline"}
-          size="sm"
-          onClick={() => setFilter("all")}
+      {/* Filter dropdown */}
+      <div className="w-full max-w-xs">
+        <Select
+          value={filter}
+          onValueChange={(value) => setFilter(value as TaskStatus | "all")}
         >
-          All
-        </Button>
-        <Button 
-          variant={filter === "pending" ? "default" : "outline"}
-          size="sm"
-          onClick={() => setFilter("pending")}
-        >
-          Pending
-        </Button>
-        <Button 
-          variant={filter === "overdue" ? "default" : "outline"}
-          size="sm"
-          onClick={() => setFilter("overdue")}
-          className={filter === "overdue" ? "bg-destructive text-white" : "text-destructive"}
-        >
-          Overdue
-        </Button>
-        <Button 
-          variant={filter === "complete" ? "default" : "outline"}
-          size="sm"
-          onClick={() => setFilter("complete")}
-          className={filter === "complete" ? "bg-success text-white" : "text-success"}
-        >
-          Complete
-        </Button>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Filter tasks" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Tasks</SelectItem>
+            <SelectItem value="pending">Pending</SelectItem>
+            <SelectItem value="overdue" className="text-destructive">Overdue</SelectItem>
+            <SelectItem value="complete" className="text-success">Complete</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Task list */}
@@ -192,14 +182,14 @@ export default function TaskList() {
             <TaskCard key={task.id} task={task} />
           ))
         ) : (
-          <div className="flex items-center justify-center p-4 border border-dashed border-gray-300 rounded-md">
+          <div className="flex items-center justify-center p-4 border border-dashed border-gray-300 rounded-xl">
             <p className="text-gray-500">No tasks found</p>
           </div>
         )}
       </div>
       
       {isMockingSupabase && (
-        <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-md text-sm text-yellow-800">
+        <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-xl text-sm text-yellow-800">
           <p className="font-medium">⚠️ Using mock data</p>
           <p className="text-xs mt-1">
             Connect to Supabase using the green Supabase button in the top right to enable real data and all features.
