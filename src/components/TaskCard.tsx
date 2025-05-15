@@ -138,7 +138,7 @@ export default function TaskCard({
 
             {task.url_link && <div>
                 <span className="text-xs font-medium text-gray-600">Link:</span>
-                <a href={task.url_link} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline block truncate">
+                <a href={task.url_link} target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline block truncate">
                   {task.url_link}
                 </a>
               </div>}
