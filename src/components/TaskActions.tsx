@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Task } from "@/lib/types";
-import { supabase } from "@/lib/supabase";
+import { supabase, isMockingSupabase } from "@/lib/supabase";
 import { toast } from "sonner";
 
 interface TaskActionsProps {
@@ -15,6 +15,13 @@ export default function TaskActions({ task }: TaskActionsProps) {
   const handleTogglePin = async () => {
     setLoading(true);
     try {
+      if (isMockingSupabase) {
+        // Mock behavior for development
+        toast.success(`Task ${task.pinned ? "unpinned" : "pinned"} successfully (mock)`);
+        setTimeout(() => setLoading(false), 500);
+        return;
+      }
+      
       const { error } = await supabase
         .from("tasks")
         .update({ pinned: !task.pinned })
@@ -32,6 +39,13 @@ export default function TaskActions({ task }: TaskActionsProps) {
   const handleMarkComplete = async () => {
     setLoading(true);
     try {
+      if (isMockingSupabase) {
+        // Mock behavior for development
+        toast.success(`Task marked ${task.status === "complete" ? "incomplete" : "complete"} (mock)`);
+        setTimeout(() => setLoading(false), 500);
+        return;
+      }
+      
       const { error } = await supabase
         .from("tasks")
         .update({ status: task.status === "complete" ? "pending" : "complete" })

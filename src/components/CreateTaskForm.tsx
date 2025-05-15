@@ -1,10 +1,9 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { supabase } from "@/lib/supabase";
+import { supabase, isMockingSupabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { compressAndResizePhoto } from "@/lib/utils";
 import { Switch } from "@/components/ui/switch";
@@ -40,6 +39,11 @@ export default function CreateTaskForm({ onClose }: { onClose?: () => void }) {
   const uploadPhoto = async (): Promise<string | null> => {
     if (!photo) return null;
     
+    if (isMockingSupabase) {
+      // Return the local preview URL for mock data
+      return photoPreview;
+    }
+    
     const fileName = `${Date.now()}-${photo.name}`;
     const { data, error } = await supabase.storage
       .from("task-photos")
@@ -66,6 +70,26 @@ export default function CreateTaskForm({ onClose }: { onClose?: () => void }) {
       let photoUrl = null;
       if (photo) {
         photoUrl = await uploadPhoto();
+      }
+      
+      if (isMockingSupabase) {
+        // Mock task creation for development
+        toast.success("Task created successfully (mock data)");
+        
+        // Reset form
+        setTitle("");
+        setDescription("");
+        setDueDate("");
+        setUrl("");
+        setPhoto(null);
+        setPhotoPreview(null);
+        setPinned(false);
+        
+        // Close form if onClose is provided
+        if (onClose) onClose();
+        
+        setLoading(false);
+        return;
       }
       
       // Get current user

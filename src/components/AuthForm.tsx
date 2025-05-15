@@ -1,10 +1,9 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { supabase } from "@/lib/supabase";
+import { supabase, isMockingSupabase } from "@/lib/supabase";
 import { toast } from "sonner";
 
 type AuthMode = "signin" | "signup" | "pin";
@@ -21,10 +20,20 @@ export default function AuthForm() {
     setLoading(true);
 
     try {
+      if (isMockingSupabase) {
+        // Mock authentication for development
+        toast.success("Using mock authentication");
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+        return;
+      }
+      
       if (mode === "pin") {
         // PIN authentication would be implemented with Supabase functions
         // For now, just show a toast
         toast.error("PIN authentication not implemented yet");
+        setLoading(false);
         return;
       }
 

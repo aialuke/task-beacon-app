@@ -2,10 +2,53 @@
 import { useState, useEffect } from "react";
 import { Task, TaskStatus } from "@/lib/types";
 import TaskCard from "./TaskCard";
-import { supabase } from "@/lib/supabase";
+import { supabase, isMockingSupabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+
+// Mock data for development when Supabase is not connected
+const mockTasks: Task[] = [
+  {
+    id: "1",
+    title: "Complete project documentation",
+    description: "Write up all project details and specifications",
+    due_date: new Date(Date.now() + 86400000).toISOString(), // Tomorrow
+    photo_url: null,
+    url_link: "https://example.com/docs",
+    owner_id: "user-1",
+    pinned: true,
+    status: "pending",
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  },
+  {
+    id: "2",
+    title: "Client meeting",
+    description: "Discuss project timeline and deliverables",
+    due_date: new Date(Date.now() - 86400000).toISOString(), // Yesterday (overdue)
+    photo_url: null,
+    url_link: null,
+    owner_id: "user-1",
+    pinned: false,
+    status: "overdue",
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  },
+  {
+    id: "3",
+    title: "Review code changes",
+    description: null,
+    due_date: new Date(Date.now() + 172800000).toISOString(), // Day after tomorrow
+    photo_url: null,
+    url_link: null,
+    owner_id: "user-1",
+    pinned: false,
+    status: "pending",
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  }
+];
 
 export default function TaskList() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -16,34 +59,43 @@ export default function TaskList() {
   useEffect(() => {
     fetchTasks();
     
-    // Set up real-time subscription for task updates
-    const subscription = supabase
-      .channel('public:tasks')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks' }, payload => {
-        // Handle different types of changes
-        if (payload.eventType === 'INSERT') {
-          const newTask = payload.new as Task;
-          setTasks(current => [newTask, ...current]);
-        } else if (payload.eventType === 'UPDATE') {
-          const updatedTask = payload.new as Task;
-          setTasks(current => 
-            current.map(task => task.id === updatedTask.id ? updatedTask : task)
-          );
-        } else if (payload.eventType === 'DELETE') {
-          setTasks(current => current.filter(task => task.id !== payload.old.id));
-        }
-      })
-      .subscribe();
-      
-    return () => {
-      subscription.unsubscribe();
-    };
+    if (!isMockingSupabase) {
+      // Set up real-time subscription for task updates
+      const subscription = supabase
+        .channel('public:tasks')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks' }, payload => {
+          // Handle different types of changes
+          if (payload.eventType === 'INSERT') {
+            const newTask = payload.new as Task;
+            setTasks(current => [newTask, ...current]);
+          } else if (payload.eventType === 'UPDATE') {
+            const updatedTask = payload.new as Task;
+            setTasks(current => 
+              current.map(task => task.id === updatedTask.id ? updatedTask : task)
+            );
+          } else if (payload.eventType === 'DELETE') {
+            setTasks(current => current.filter(task => task.id !== payload.old.id));
+          }
+        })
+        .subscribe();
+        
+      return () => {
+        subscription.unsubscribe();
+      };
+    }
   }, []);
 
-  // Fetch tasks from Supabase
+  // Fetch tasks from Supabase or use mock data
   const fetchTasks = async () => {
     setLoading(true);
     try {
+      if (isMockingSupabase) {
+        // Use mock data when Supabase is not connected
+        setTasks(mockTasks);
+        setLoading(false);
+        return;
+      }
+      
       const { data, error } = await supabase
         .from("tasks")
         .select("*")
@@ -145,6 +197,15 @@ export default function TaskList() {
           </div>
         )}
       </div>
+      
+      {isMockingSupabase && (
+        <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-md text-sm text-yellow-800">
+          <p className="font-medium">⚠️ Using mock data</p>
+          <p className="text-xs mt-1">
+            Connect to Supabase using the green Supabase button in the top right to enable real data and all features.
+          </p>
+        </div>
+      )}
     </div>
   );
 }

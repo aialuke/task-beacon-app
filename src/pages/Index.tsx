@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
+import { supabase, isMockingSupabase } from "@/lib/supabase";
 import AuthForm from "@/components/AuthForm";
 import TaskDashboard from "@/components/TaskDashboard";
 
@@ -9,6 +9,12 @@ const Index = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (isMockingSupabase) {
+      // Skip authentication if using mock data
+      setLoading(false);
+      return;
+    }
+    
     // Check if user is already signed in
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
@@ -34,8 +40,8 @@ const Index = () => {
     );
   }
 
-  // Return auth form if not signed in, otherwise show the task dashboard
-  return session ? <TaskDashboard /> : <AuthForm />;
+  // Return auth form if not signed in or in development mode, otherwise show the task dashboard
+  return isMockingSupabase || session ? <TaskDashboard /> : <AuthForm />;
 };
 
 export default Index;
