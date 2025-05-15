@@ -163,8 +163,8 @@ export default function TaskCard({
             title={isPinned ? "Unpin task" : "Pin task"}
           >
             {isPinned ? 
-              <Pin size={16} className="text-primary" style={{ color: '#3662E3' }} /> : 
-              <PinOff size={16} className="text-gray-500" style={{ opacity: 0.9 }} />
+              <Pin size={16} className="text-gray-900" fill="currentColor" /> : 
+              <PinOff size={16} className="text-gray-900" style={{ opacity: 0.8 }} />
             }
           </Button>
 
