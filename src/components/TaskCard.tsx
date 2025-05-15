@@ -148,8 +148,8 @@ export default function TaskCard({
             )}
           </div>
           
-          {/* Status ribbon */}
-          <div className={`status-ribbon ${statusColor}`}>
+          {/* Status ribbon - moved left */}
+          <div className={`status-ribbon ${statusColor}`} style={{ position: 'relative', right: 0 }}>
             {getStatusText(status)}
           </div>
 
@@ -157,7 +157,7 @@ export default function TaskCard({
           <Button 
             variant="ghost" 
             size="icon" 
-            className="shrink-0 h-8 w-8"
+            className="shrink-0 h-8 w-8 ml-1"
             onClick={handleTogglePin}
             disabled={pinLoading}
             title={isPinned ? "Unpin task" : "Pin task"}
