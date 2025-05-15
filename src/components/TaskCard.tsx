@@ -88,14 +88,14 @@ export default function TaskCard({ task }: TaskCardProps) {
             <h3 className="font-bold text-sm text-gray-900 truncate" title={task.title}>
               {task.title}
             </h3>
-            {task.description && (
+            {task.description && !isExpanded && (
               <p className="truncate text-xs text-gray-600" title={task.description}>
                 {truncateText(task.description, 20)}
               </p>
             )}
           </div>
 
-          {/* Owner name */}
+          {/* Owner name and status moved to the right */}
           <div className="owner-name">
             {ownerName}
           </div>
@@ -131,7 +131,7 @@ export default function TaskCard({ task }: TaskCardProps) {
           </Button>
         </div>
 
-        {/* Expanded content */}
+        {/* Expanded content - no border-t */}
         <animated.div 
           ref={contentRef}
           style={{
@@ -139,20 +139,19 @@ export default function TaskCard({ task }: TaskCardProps) {
             willChange: 'height, opacity',
             overflow: 'hidden',
           }}
-          className="w-full mt-2 pt-2 border-t border-gray-100"
+          className="w-full mt-2"
         >
           <div className="space-y-2">
+            {task.description && (
+              <div>
+                <p className="text-sm">{task.description}</p>
+              </div>
+            )}
+
             <div>
               <span className="text-xs font-medium text-gray-600">Due date:</span>
               <p className="text-sm">{formatDate(task.due_date)}</p>
             </div>
-
-            {task.description && (
-              <div>
-                <span className="text-xs font-medium text-gray-600">Description:</span>
-                <p className="text-sm">{task.description}</p>
-              </div>
-            )}
 
             {task.url_link && (
               <div>
