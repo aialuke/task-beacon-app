@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { formatDate, getOwnerName } from "@/lib/utils";
 import TaskActions from "./TaskActions";
 import { useTaskExpand } from "@/contexts/TaskExpandContext";
-import { Link } from "lucide-react";
+import { Link, Calendar } from "lucide-react";
 
 interface TaskCardProps {
   task: Task;
@@ -152,13 +152,16 @@ export default function TaskCard({
           className="w-full mt-2"
         >
           <div className="space-y-2">
-            <div>
-              <span className="text-xs font-medium text-gray-600">Due date:</span>
-              <p className="text-xs">{formatDate(task.due_date)}</p>
-            </div>
+            {/* Date and URL in same horizontal row */}
+            <div className="flex items-center flex-wrap gap-x-6 gap-y-2">
+              {/* Due date with calendar icon */}
+              <div className="flex items-center gap-3">
+                <Calendar size={16} className="text-primary shrink-0" />
+                <p className="text-xs">{formatDate(task.due_date)}</p>
+              </div>
 
-            {task.url_link && (
-              <div>
+              {/* URL link (if available) */}
+              {task.url_link && (
                 <div className="flex items-center gap-3">
                   <Link size={16} className="text-primary shrink-0" />
                   <a 
@@ -170,8 +173,8 @@ export default function TaskCard({
                     {task.url_link}
                   </a>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
 
             {task.photo_url && (
               <div>
