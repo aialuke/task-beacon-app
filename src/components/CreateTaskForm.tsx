@@ -159,8 +159,12 @@ export default function CreateTaskForm({
       </div>
       
       <div className="flex items-center space-x-2">
-        
-        
+        <Switch
+          id="pinned"
+          checked={pinned}
+          onCheckedChange={setPinned}
+        />
+        <Label htmlFor="pinned">Pin this task</Label>
       </div>
       
       <div className="flex justify-end space-x-2 pt-2">

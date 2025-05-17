@@ -78,11 +78,11 @@
   }
 
   .btn-primary {
-    @apply bg-[#3662E3] text-white hover:bg-blue-700 rounded-xl px-3 py-1.5 text-sm font-medium transition-colors;
+    @apply bg-[#3662E3] text-white hover:bg-blue-700 rounded-full px-3 py-1.5 text-sm font-medium transition-colors;
   }
 
   .btn-secondary {
-    @apply bg-[#E5EDFF] text-[#3662E3] hover:bg-blue-200 rounded-xl px-3 py-1.5 text-sm font-medium transition-colors;
+    @apply bg-[#E5EDFF] text-[#3662E3] hover:bg-blue-200 rounded-full px-3 py-1.5 text-sm font-medium transition-colors;
   }
 
   .header-text {
