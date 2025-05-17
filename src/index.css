@@ -43,7 +43,11 @@
   }
 
   body {
-    @apply bg-[#F9FAFB] text-[#1F2A44] antialiased;
+    @apply bg-[#F9FAFB] text-[#1F2A44] antialiased font-sans;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-semibold;
   }
 
   /* Fix for mobile 100vh issue */
@@ -86,7 +90,7 @@
   }
 
   .header-text {
-    @apply text-lg font-semibold text-[#1F2A44] my-2;
+    @apply text-lg font-heading font-semibold text-[#1F2A44] my-2;
   }
 
   .owner-name {
