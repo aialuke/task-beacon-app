@@ -121,16 +121,8 @@ export default function TaskList({
 
       // Ensure data conforms to Task type
       const typedData: Task[] = data ? data.map(item => {
-        // Check if parent_task exists and is not null before accessing its properties
-        const parentTask = item.parent_task ? {
-          title: item.parent_task.title || "",
-          description: item.parent_task.description,
-          photo_url: item.parent_task.photo_url,
-          url_link: item.parent_task.url_link
-        } : undefined;
-        
         // Create a proper Task object
-        return {
+        const task: Task = {
           id: item.id,
           title: item.title,
           description: item.description,
@@ -144,8 +136,19 @@ export default function TaskList({
           assignee_id: item.assignee_id,
           created_at: item.created_at,
           updated_at: item.updated_at,
-          parent_task: parentTask
         };
+        
+        // Only add parent_task if it exists and has the expected structure
+        if (item.parent_task && typeof item.parent_task === 'object') {
+          task.parent_task = {
+            title: item.parent_task.title || "",
+            description: item.parent_task.description || null,
+            photo_url: item.parent_task.photo_url || null,
+            url_link: item.parent_task.url_link || null
+          };
+        }
+        
+        return task;
       }) : [];
       
       setTasks(typedData);
