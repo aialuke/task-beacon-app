@@ -120,7 +120,7 @@ export default function TaskList({
       if (error) throw error;
 
       // Ensure data conforms to Task type
-      const typedData: Task[] = data ? data.map(item => {
+      const typedData: Task[] = data ? data.map((item: any) => {
         // Create a proper Task object
         const task: Task = {
           id: item.id,
@@ -138,13 +138,14 @@ export default function TaskList({
           updated_at: item.updated_at,
         };
         
-        // Only add parent_task if it exists and has the expected structure
+        // Safely handle parent_task with type assertion and null checks
         if (item.parent_task && typeof item.parent_task === 'object') {
+          const parentTask = item.parent_task as Record<string, any>; 
           task.parent_task = {
-            title: item.parent_task.title || "",
-            description: item.parent_task.description || null,
-            photo_url: item.parent_task.photo_url || null,
-            url_link: item.parent_task.url_link || null
+            title: typeof parentTask.title === 'string' ? parentTask.title : "",
+            description: parentTask.description ?? null,
+            photo_url: parentTask.photo_url ?? null,
+            url_link: parentTask.url_link ?? null
           };
         }
         
