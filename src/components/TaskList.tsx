@@ -101,11 +101,12 @@ export default function TaskList({
         setLoading(false);
         return;
       }
-      
+
       // Updated query to get parent task details when available
-      const { data, error } = await supabase
-        .from("tasks")
-        .select(`
+      const {
+        data,
+        error
+      } = await supabase.from("tasks").select(`
           *,
           parent_task:parent_task_id (
             title,
@@ -113,10 +114,11 @@ export default function TaskList({
             photo_url,
             url_link
           )
-        `)
-        .order("pinned", { ascending: false })
-        .order("due_date", { ascending: true });
-        
+        `).order("pinned", {
+        ascending: false
+      }).order("due_date", {
+        ascending: true
+      });
       if (error) throw error;
 
       // Ensure data conforms to Task type
@@ -135,12 +137,12 @@ export default function TaskList({
           status: item.status as TaskStatus,
           assignee_id: item.assignee_id,
           created_at: item.created_at,
-          updated_at: item.updated_at,
+          updated_at: item.updated_at
         };
-        
+
         // Safely handle parent_task with type assertion and null checks
         if (item.parent_task && typeof item.parent_task === 'object') {
-          const parentTask = item.parent_task as Record<string, any>; 
+          const parentTask = item.parent_task as Record<string, any>;
           task.parent_task = {
             title: typeof parentTask.title === 'string' ? parentTask.title : "",
             description: parentTask.description ?? null,
@@ -148,10 +150,8 @@ export default function TaskList({
             url_link: parentTask.url_link ?? null
           };
         }
-        
         return task;
       }) : [];
-      
       setTasks(typedData);
     } catch (error: any) {
       toast.error(error.message);
@@ -201,7 +201,7 @@ export default function TaskList({
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Create New Task</DialogTitle>
+              
             </DialogHeader>
             <CreateTaskForm onClose={() => setDialogOpen(false)} />
           </DialogContent>
@@ -211,24 +211,19 @@ export default function TaskList({
       {/* Task list with TaskExpandProvider */}
       <TaskExpandProvider>
         <div className="task-list flex flex-col gap-3">
-          {loading ? (
-            // Skeleton loaders
-            Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="task-card animate-pulse">
+          {loading ?
+        // Skeleton loaders
+        Array.from({
+          length: 5
+        }).map((_, i) => <div key={i} className="task-card animate-pulse">
                 <div className="h-12 w-12 rounded-full bg-gray-200"></div>
                 <div className="flex-1 space-y-2">
                   <Skeleton className="h-4 w-3/4" />
                   <Skeleton className="h-3 w-1/2" />
                 </div>
-              </div>
-            ))
-          ) : filteredTasks.length > 0 ? (
-            filteredTasks.map(task => <TaskCard key={task.id} task={task} />)
-          ) : (
-            <div className="flex items-center justify-center p-4 border border-dashed border-gray-300 rounded-xl">
+              </div>) : filteredTasks.length > 0 ? filteredTasks.map(task => <TaskCard key={task.id} task={task} />) : <div className="flex items-center justify-center p-4 border border-dashed border-gray-300 rounded-xl">
               <p className="text-gray-500">No tasks found</p>
-            </div>
-          )}
+            </div>}
         </div>
       </TaskExpandProvider>
     </div>;

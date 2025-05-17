@@ -136,22 +136,22 @@ export default function CreateTaskForm({
       </div>
       
       <div className="space-y-2">
-        <Label htmlFor="description">Description (optional)</Label>
+        
         <Textarea id="description" value={description} onChange={e => setDescription(e.target.value)} placeholder="Task description" rows={3} />
       </div>
       
       <div className="space-y-2">
-        <Label htmlFor="due_date">Due Date</Label>
+        
         <Input id="due_date" type="datetime-local" value={dueDate} onChange={e => setDueDate(e.target.value)} required />
       </div>
       
       <div className="space-y-2">
-        <Label htmlFor="url">URL (optional)</Label>
+        
         <Input id="url" type="url" value={url} onChange={e => setUrl(e.target.value)} placeholder="https://example.com" />
       </div>
       
       <div className="space-y-2">
-        <Label htmlFor="photo">Photo (optional)</Label>
+        
         <Input id="photo" type="file" accept="image/*" onChange={handlePhotoChange} className="cursor-pointer" />
         {photoPreview && <div className="mt-2">
             <img src={photoPreview} alt="Preview" className="h-20 w-20 object-cover rounded-md" />
@@ -159,8 +159,8 @@ export default function CreateTaskForm({
       </div>
       
       <div className="flex items-center space-x-2">
-        <Switch id="pinned" checked={pinned} onCheckedChange={setPinned} />
-        <Label htmlFor="pinned">Pin this task</Label>
+        
+        
       </div>
       
       <div className="flex justify-end space-x-2 pt-2">
