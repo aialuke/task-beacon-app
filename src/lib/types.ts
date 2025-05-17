@@ -27,3 +27,12 @@ export interface Task {
   created_at: string;
   updated_at: string;
 }
+
+export interface TaskWithParentDetails extends Task {
+  parent_task?: {
+    title: string;
+    description?: string;
+    photo_url?: string;
+    url_link?: string;
+  };
+}

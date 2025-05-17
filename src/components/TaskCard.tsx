@@ -1,3 +1,4 @@
+
 import { useRef, useEffect, useCallback, useState } from "react";
 import { useSpring, animated } from "@react-spring/web";
 import { Task } from "@/lib/types";
@@ -7,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { formatDate } from "@/lib/utils";
 import TaskActions from "./TaskActions";
 import { useTaskExpand } from "@/contexts/TaskExpandContext";
-import { Link, Calendar, Pin } from "lucide-react";
+import { Link, Calendar, Pin, User } from "lucide-react";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
 import { toast } from "sonner";
 

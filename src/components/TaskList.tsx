@@ -101,21 +101,39 @@ export default function TaskList({
         setLoading(false);
         return;
       }
-      const {
-        data,
-        error
-      } = await supabase.from("tasks").select("*").order("pinned", {
-        ascending: false
-      }).order("due_date", {
-        ascending: true
-      });
+      
+      // Updated query to get parent task details when available
+      const { data, error } = await supabase
+        .from("tasks")
+        .select(`
+          *,
+          parent:parent_task_id (
+            title,
+            description,
+            photo_url,
+            url_link
+          )
+        `)
+        .order("pinned", { ascending: false })
+        .order("due_date", { ascending: true });
+        
       if (error) throw error;
 
       // Ensure data conforms to Task type
       const typedData: Task[] = data ? data.map(item => ({
         ...item,
-        status: item.status as TaskStatus
+        status: item.status as TaskStatus,
+        // Map parent data to parent_task if it exists
+        parent_task: item.parent ? {
+          title: item.parent.title,
+          description: item.parent.description,
+          photo_url: item.parent.photo_url,
+          url_link: item.parent.url_link
+        } : undefined,
+        // Remove the raw parent data that Supabase returns
+        parent: undefined
       })) : [];
+      
       setTasks(typedData);
     } catch (error: any) {
       toast.error(error.message);

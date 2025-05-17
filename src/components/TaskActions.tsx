@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Task } from "@/lib/types";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
 import { toast } from "sonner";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import FollowUpTaskForm from "./FollowUpTaskForm";
 
 interface TaskActionsProps {
   task: Task;
@@ -11,6 +13,7 @@ interface TaskActionsProps {
 
 export default function TaskActions({ task }: TaskActionsProps) {
   const [loading, setLoading] = useState(false);
+  const [followUpDialogOpen, setFollowUpDialogOpen] = useState(false);
 
   const handleMarkComplete = async () => {
     setLoading(true);
@@ -37,44 +40,44 @@ export default function TaskActions({ task }: TaskActionsProps) {
   };
 
   const handleCreateFollowUp = () => {
-    // This would open a modal for creating a follow-up task
-    toast.info("Follow-up task feature coming soon");
-  };
-
-  const handleReassign = () => {
-    // This would open a modal for reassigning the task
-    toast.info("Task reassignment feature coming soon");
+    setFollowUpDialogOpen(true);
   };
 
   return (
-    <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-100">
-      <Button 
-        variant={task.status === "complete" ? "outline" : "default"} 
-        size="sm"
-        className="text-xs"
-        onClick={handleMarkComplete}
-        disabled={loading}
-      >
-        {task.status === "complete" ? "Mark Incomplete" : "Complete"}
-      </Button>
-      <Button 
-        variant="outline" 
-        size="sm"
-        className="text-xs"
-        onClick={handleCreateFollowUp}
-        disabled={loading}
-      >
-        Follow Up
-      </Button>
-      <Button 
-        variant="outline" 
-        size="sm"
-        className="text-xs"
-        onClick={handleReassign}
-        disabled={loading}
-      >
-        Reassign
-      </Button>
-    </div>
+    <>
+      <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-100">
+        <Button 
+          variant={task.status === "complete" ? "outline" : "default"} 
+          size="sm"
+          className="text-xs"
+          onClick={handleMarkComplete}
+          disabled={loading}
+        >
+          {task.status === "complete" ? "Mark Incomplete" : "Complete"}
+        </Button>
+        <Button 
+          variant="outline" 
+          size="sm"
+          className="text-xs"
+          onClick={handleCreateFollowUp}
+          disabled={loading}
+        >
+          Follow Up
+        </Button>
+      </div>
+      
+      {/* Follow-up Task Dialog */}
+      <Dialog open={followUpDialogOpen} onOpenChange={setFollowUpDialogOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Create Follow-up Task</DialogTitle>
+          </DialogHeader>
+          <FollowUpTaskForm
+            parentTask={task}
+            onClose={() => setFollowUpDialogOpen(false)}
+          />
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
