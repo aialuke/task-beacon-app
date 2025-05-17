@@ -8,7 +8,7 @@ import { Switch } from "@/components/ui/switch";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { compressAndResizePhoto } from "@/lib/utils";
-import { Task, TaskWithParentDetails } from "@/lib/types";
+import { Task } from "@/lib/types";
 import { showBrowserNotification, triggerHapticFeedback } from "@/lib/notification";
 import UserSelect from "./UserSelect";
 

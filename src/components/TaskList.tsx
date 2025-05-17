@@ -121,9 +121,9 @@ export default function TaskList({
 
       // Ensure data conforms to Task type
       const typedData: Task[] = data ? data.map(item => {
-        // Extract parent task data if it exists
+        // Check if parent_task exists and is not null before accessing its properties
         const parentTask = item.parent_task ? {
-          title: item.parent_task.title,
+          title: item.parent_task.title || "",
           description: item.parent_task.description,
           photo_url: item.parent_task.photo_url,
           url_link: item.parent_task.url_link
