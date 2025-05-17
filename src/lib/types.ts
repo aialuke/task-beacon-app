@@ -26,9 +26,6 @@ export interface Task {
   assignee_id?: string;
   created_at: string;
   updated_at: string;
-}
-
-export interface TaskWithParentDetails extends Task {
   parent_task?: {
     title: string;
     description?: string;
@@ -36,3 +33,13 @@ export interface TaskWithParentDetails extends Task {
     url_link?: string;
   };
 }
+
+// We can remove this interface since we've integrated the parent_task directly into the Task interface
+// export interface TaskWithParentDetails extends Task {
+//   parent_task?: {
+//     title: string;
+//     description?: string;
+//     photo_url?: string;
+//     url_link?: string;
+//   };
+// }

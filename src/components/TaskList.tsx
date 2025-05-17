@@ -107,7 +107,7 @@ export default function TaskList({
         .from("tasks")
         .select(`
           *,
-          parent:parent_task_id (
+          parent_task:parent_task_id (
             title,
             description,
             photo_url,
@@ -120,19 +120,33 @@ export default function TaskList({
       if (error) throw error;
 
       // Ensure data conforms to Task type
-      const typedData: Task[] = data ? data.map(item => ({
-        ...item,
-        status: item.status as TaskStatus,
-        // Map parent data to parent_task if it exists
-        parent_task: item.parent ? {
-          title: item.parent.title,
-          description: item.parent.description,
-          photo_url: item.parent.photo_url,
-          url_link: item.parent.url_link
-        } : undefined,
-        // Remove the raw parent data that Supabase returns
-        parent: undefined
-      })) : [];
+      const typedData: Task[] = data ? data.map(item => {
+        // Extract parent task data if it exists
+        const parentTask = item.parent_task ? {
+          title: item.parent_task.title,
+          description: item.parent_task.description,
+          photo_url: item.parent_task.photo_url,
+          url_link: item.parent_task.url_link
+        } : undefined;
+        
+        // Create a proper Task object
+        return {
+          id: item.id,
+          title: item.title,
+          description: item.description,
+          due_date: item.due_date,
+          photo_url: item.photo_url,
+          url_link: item.url_link,
+          owner_id: item.owner_id,
+          parent_task_id: item.parent_task_id,
+          pinned: item.pinned,
+          status: item.status as TaskStatus,
+          assignee_id: item.assignee_id,
+          created_at: item.created_at,
+          updated_at: item.updated_at,
+          parent_task: parentTask
+        };
+      }) : [];
       
       setTasks(typedData);
     } catch (error: any) {
