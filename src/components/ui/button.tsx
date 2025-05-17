@@ -46,7 +46,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }), 
-          props.type !== "icon" ? "rounded-full" : "")} // Apply rounded-full to all non-icon buttons
+          size !== "icon" ? "rounded-full" : "")} // Apply rounded-full to all non-icon buttons
         ref={ref}
         {...props}
       />
