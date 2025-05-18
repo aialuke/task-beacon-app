@@ -4,7 +4,7 @@ import TaskCard from "./task/TaskCard";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
-import { PencilLine } from "lucide-react";
+import { ClockPlus } from "lucide-react/dist/esm/icons/clock-plus";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -196,7 +196,7 @@ export default function TaskList({
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
             <Button variant="default" className="h-10 w-10 rounded-md bg-primary hover:bg-primary/80 hover:scale-105 transition-all p-0" title="Create New Task">
-              <PencilLine className="h-5 w-5 text-white" />
+              <ClockPlus className="h-5 w-5 text-white" />
             </Button>
           </DialogTrigger>
           <DialogContent>
