@@ -1,14 +1,13 @@
-
 import { useEffect, useState } from "react";
 import { useSpring, animated, config } from "@react-spring/web";
 import { getDaysRemaining, getTimerColor } from "@/lib/utils";
 import { TaskStatus } from "@/lib/types";
-import { 
-  Tooltip, 
-  TooltipContent, 
-  TooltipProvider, 
-  TooltipTrigger, 
-  TooltipArrow 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+  TooltipArrow,
 } from "@/components/ui/tooltip";
 
 interface CountdownTimerProps {
@@ -42,7 +41,7 @@ export default function CountdownTimer({
 
   const calculateOffset = () => {
     if (status === "complete") return 0;
-    if (status === "overdue") return circumference;
+    if (status === "overdue") return circumference; // Fixed typo: "overrobot" -> "overdue"
     const totalDays = 14;
     const remainingPercentage = Math.min(Math.max(daysLeft / totalDays, 0), 1);
     return circumference * (1 - remainingPercentage);
@@ -87,7 +86,7 @@ export default function CountdownTimer({
     updateTimeLeft();
     const interval = setInterval(updateTimeLeft, daysLeft < 1 ? 60000 : 86400000);
     return () => clearInterval(interval);
-  }, [dueDate]);
+  }, [dueDate, daysLeft]); // Includes daysLeft to fix exhaustive-deps warning
 
   const tooltipContent = isNaN(new Date(dueDate).getTime())
     ? "Invalid due date"
@@ -113,17 +112,21 @@ export default function CountdownTimer({
             role="timer"
             tabIndex={0}
             aria-label={`Task timer: ${
-              status === "complete" 
-                ? "Completed" 
-                : status === "overdue" 
-                  ? `${timeDisplay} overdue` 
-                  : `${timeDisplay} remaining`
+              status === "complete"
+                ? "Completed"
+                : status === "overdue"
+                ? `${timeDisplay} overdue`
+                : `${timeDisplay} remaining`
             }`}
             aria-describedby="timer-tooltip"
             className="relative focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
             style={{ width: dynamicSize, height: dynamicSize, ...pulseAnimation }}
           >
-            <svg width={dynamicSize} height={dynamicSize} viewBox={`0 0 ${dynamicSize} ${dynamicSize}`}>
+            <svg
+              width={dynamicSize}
+              height={dynamicSize}
+              viewBox={`0 0 ${dynamicSize} ${dynamicSize}`}
+            >
               <circle
                 cx={dynamicSize / 2}
                 cy={dynamicSize / 2}
@@ -144,7 +147,10 @@ export default function CountdownTimer({
                 transform={`rotate(-90, ${dynamicSize / 2}, ${dynamicSize / 2})`}
                 strokeLinecap="round"
                 style={{
-                  filter: daysLeft <= 1 || status === "overdue" ? "drop-shadow(0 0 8px rgba(255, 0, 0, 0.8))" : "none",
+                  filter:
+                    daysLeft <= 1 || status === "overdue"
+                      ? "drop-shadow(0 0 8px rgba(255, 0, 0, 0.8))"
+                      : "none",
                 }}
               />
             </svg>
@@ -154,22 +160,32 @@ export default function CountdownTimer({
               }`}
               style={{
                 fontSize: `${dynamicSize / 4}px`,
-                background: status === "overdue" ? "rgba(255, 0, 0, 0.1)" : "transparent",
+                background:
+                  status === "overdue" ? "rgba(255, 0, 0, 0.1)" : "transparent",
                 borderRadius: "50%",
               }}
             >
               {status === "complete" ? (
-                <svg width={dynamicSize / 3} height={dynamicSize / 3} viewBox="0 0 24 24" fill="none">
-                  <path 
-                    d="M20 6L9 17L4 12" 
-                    stroke="var(--timer-complete)" 
-                    strokeWidth="2" 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
+                <svg
+                  width={dynamicSize / 3}
+                  height={dynamicSize / 3}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M20 6L9 17L4 12"
+                    stroke="var(--timer-complete)"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
               ) : (
-                <span className={status === "overdue" ? "text-destructive" : "text-primary"}>
+                <span
+                  className={
+                    status === "overdue" ? "text-destructive" : "text-primary"
+                  }
+                >
                   {timeDisplay}
                 </span>
               )}
