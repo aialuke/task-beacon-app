@@ -1,15 +1,8 @@
 import type { Config } from "tailwindcss";
-import animate from "tailwindcss-animate"; // Add this import
+import animate from "tailwindcss-animate";
 
 export default {
-  darkMode: ["class"],
-  content: [
-    "./pages/**/*.{ts,tsx}",
-    "./components/**/*.{ts,tsx}",
-    "./app/**/*.{ts,tsx}",
-    "./src/**/*.{ts,tsx}",
-  ],
-  prefix: "",
+  content: ["./src/**/*.{ts,tsx}"], // Consolidated, verify directory structure
   theme: {
     container: {
       center: true,
@@ -49,27 +42,25 @@ export default {
           foreground: "hsl(var(--accent-foreground))",
         },
         popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
+          DEFAULT: "hsl(var(--surface))", // Use consolidated variable
+          foreground: "hsl(var(--surface-foreground))",
         },
         card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
+          DEFAULT: "hsl(var(--surface))", // Use consolidated variable
+          foreground: "hsl(var(--surface-foreground))",
         },
         success: {
-          DEFAULT: "#059669",
+          DEFAULT: "hsl(var(--timer-complete))",
           foreground: "white",
         },
-        // Define brand blue colors explicitly
         brand: {
-          DEFAULT: "#3662E3",
+          DEFAULT: "hsl(var(--timer-pending))",
           light: "#E5EDFF",
         },
-        // Define task status colors for semantic usage
-        "task-pending": "#FFDD24",
-        "task-overdue": "#DA3E52",
-        "task-complete": "#059669",
-        "task-timer": "#3662E3",
+        "task-pending": "hsl(var(--timer-pending))",
+        "task-overdue": "hsl(var(--timer-overdue))",
+        "task-complete": "hsl(var(--timer-complete))",
+        "task-timer": "hsl(var(--timer-pending))",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -103,13 +94,9 @@ export default {
           "0%": { opacity: "1", transform: "translateY(0)" },
           "100%": { opacity: "0", transform: "translateY(10px)" },
         },
-        "pulse-subtle": {
+        pulse: {
           "0%, 100%": { opacity: "1" },
-          "50%": { opacity: "0.8" },
-        },
-        flash: {
-          "0%, 100%": { opacity: "1" },
-          "50%": { opacity: "0.5" },
+          "50%": { opacity: "var(--pulse-opacity, 0.8)" },
         },
       },
       animation: {
@@ -118,10 +105,10 @@ export default {
         flow: "flow 4s linear infinite",
         "fade-in": "fade-in 0.3s ease-out",
         "fade-out": "fade-out 0.3s ease-out",
-        "pulse-subtle": "pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-        flash: "flash 1s ease-in-out infinite",
+        "pulse-subtle": "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite --pulse-opacity=0.8",
+        flash: "pulse 2s ease-in-out infinite --pulse-opacity=0.5",
       },
     },
   },
-  plugins: [animate], // Use the imported animate module
+  plugins: [animate],
 } satisfies Config;
