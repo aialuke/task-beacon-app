@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Task, TaskStatus } from "@/lib/types";
-import TaskCard from "./TaskCard";
+import TaskCard from "./task/TaskCard";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
