@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
 import { toast } from "sonner";
@@ -156,15 +155,6 @@ export default function CreateTaskForm({
         {photoPreview && <div className="mt-2">
             <img src={photoPreview} alt="Preview" className="h-20 w-20 object-cover rounded-md" />
           </div>}
-      </div>
-      
-      <div className="flex items-center space-x-2">
-        <Switch
-          id="pinned"
-          checked={pinned}
-          onCheckedChange={setPinned}
-        />
-        <Label htmlFor="pinned">Pin this task</Label>
       </div>
       
       <div className="flex justify-end space-x-2 pt-2">
