@@ -4,7 +4,7 @@ import TaskCard from "./task/TaskCard";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ClockPlus } from "lucide-react/dist/esm/icons/clock-plus";
+import { ClockPlus } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
