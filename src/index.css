@@ -110,8 +110,5 @@
     animation: flash 2s ease-in-out infinite;
   }
 
-  /* For the timer flow animation */
-  .timer-flow {
-    @apply animate-flow;
-  }
+
 }
