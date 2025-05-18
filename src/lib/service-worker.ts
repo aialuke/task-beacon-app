@@ -1,66 +1,40 @@
+// Application types for task-beacon-app
 
-// This file would be used to create a service worker for offline capability
-// It would need to be registered in index.html or main.tsx
+export type TaskStatus = "pending" | "complete" | "overdue";
 
-const CACHE_NAME = 'task-manager-v1';
-const urlsToCache = [
-  '/',
-  '/index.html',
-  '/src/main.tsx',
-  '/src/index.css',
-];
+// Represents a parent task's details fetched via Supabase relation
+export interface ParentTask {
+  title: string;
+  description: string | null;
+  photo_url: string | null;
+  url_link: string | null;
+}
 
-// Install service worker
-self.addEventListener('install', (event: any) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        return cache.addAll(urlsToCache);
-      })
-  );
-});
+// Represents a task in the app, aligned with Supabase schema
+export interface Task {
+  id: string;
+  title: string;
+  description: string | null;
+  due_date: string; // ISO date string
+  photo_url: string | null;
+  url_link: string | null;
+  owner_id: string;
+  parent_task_id: string | null;
+  parent_task: ParentTask | null;
+  pinned: boolean;
+  status: TaskStatus;
+  assignee_id: string | null;
+  created_at: string;
+  updated_at: string;
+}
 
-// Activate service worker
-self.addEventListener('activate', (event: any) => {
-  event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.filter(cacheName => {
-          return cacheName !== CACHE_NAME;
-        }).map(cacheName => {
-          return caches.delete(cacheName);
-        })
-      );
-    })
-  );
-});
+// User types (kept; verify usage in Index.tsx or auth logic)
+export type UserRole = "admin" | "manager";
 
-// Fetch event
-self.addEventListener('fetch', (event: any) => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        if (response) {
-          return response;
-        }
-        return fetch(event.request).then(
-          response => {
-            if(!response || response.status !== 200 || response.type !== 'basic') {
-              return response;
-            }
-            
-            let responseToCache = response.clone();
-            
-            caches.open(CACHE_NAME)
-              .then(cache => {
-                cache.put(event.request, responseToCache);
-              });
-              
-            return response;
-          }
-        );
-      })
-  );
-});
-
-export {};
+export interface User {
+  id: string;
+  email: string;
+  role: UserRole;
+  name?: string;
+  avatar_url?: string;
+}

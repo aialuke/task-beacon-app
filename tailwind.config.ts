@@ -2,7 +2,7 @@ import type { Config } from "tailwindcss";
 import animate from "tailwindcss-animate";
 
 export default {
-  content: ["./src/**/*.{ts,tsx}"], // Consolidated, verify directory structure
+  content: ["./src/**/*.{ts,tsx}"],
   theme: {
     container: {
       center: true,
@@ -42,11 +42,11 @@ export default {
           foreground: "hsl(var(--accent-foreground))",
         },
         popover: {
-          DEFAULT: "hsl(var(--surface))", // Use consolidated variable
+          DEFAULT: "hsl(var(--surface))",
           foreground: "hsl(var(--surface-foreground))",
         },
         card: {
-          DEFAULT: "hsl(var(--surface))", // Use consolidated variable
+          DEFAULT: "hsl(var(--surface))",
           foreground: "hsl(var(--surface-foreground))",
         },
         success: {
@@ -98,6 +98,10 @@ export default {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "var(--pulse-opacity, 0.8)" },
         },
+        "logo-spin": {
+          from: { transform: "rotate(0deg)" },
+          to: { transform: "rotate(360deg)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -107,6 +111,7 @@ export default {
         "fade-out": "fade-out 0.3s ease-out",
         "pulse-subtle": "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite --pulse-opacity=0.8",
         flash: "pulse 2s ease-in-out infinite --pulse-opacity=0.5",
+        "logo-spin": "logo-spin 20s linear infinite",
       },
     },
   },
