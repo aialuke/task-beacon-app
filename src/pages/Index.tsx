@@ -1,47 +1,58 @@
-
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
-import AuthForm from "@/components/AuthForm";
-import TaskDashboard from "@/components/TaskDashboard";
+import { User } from "@/lib/types";
+import { toast } from "sonner";
+
+const AuthForm = lazy(() => import("@/components/AuthForm"));
+const TaskDashboard = lazy(() => import("@/components/TaskDashboard"));
 
 const Index = () => {
-  const [session, setSession] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (isMockingSupabase) {
-      // Skip authentication if using mock data
+      setUser({ id: "mock-user", email: "mock@example.com" });
       setLoading(false);
       return;
     }
-    
-    // Check if user is already signed in
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setLoading(false);
-    });
 
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
+    const fetchUser = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        setUser(user ? { id: user.id, email: user.email || "" } : null);
+      } catch (error: Error) {
+        toast.error("Failed to fetch user");
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ? { id: session.user.id, email: session.user.email || "" } : null);
+      }
+    );
 
     return () => subscription.unsubscribe();
   }, []);
 
-  // Show loading indicator
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin"></div>
+        <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
       </div>
     );
   }
 
-  // Return auth form if not signed in or in development mode, otherwise show the task dashboard
-  return isMockingSupabase || session ? <TaskDashboard /> : <AuthForm />;
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-gray-100">Loading...</div>}>
+      {isMockingSupabase || user ? <TaskDashboard /> : <AuthForm />}
+    </Suspense>
+  );
 };
 
 export default Index;

@@ -21,19 +21,13 @@ export default function AuthForm() {
 
     try {
       if (isMockingSupabase) {
-        // Mock authentication for development
         toast.success("Using mock authentication");
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
+        setTimeout(() => window.location.reload(), 1000);
         return;
       }
-      
+
       if (mode === "pin") {
-        // PIN authentication would be implemented with Supabase functions
-        // For now, just show a toast
         toast.error("PIN authentication not implemented yet");
-        setLoading(false);
         return;
       }
 
@@ -42,13 +36,9 @@ export default function AuthForm() {
         : await supabase.auth.signUp({ email, password });
 
       if (error) throw error;
-      
-      if (mode === "signup") {
-        toast.success("Check your email for a confirmation link!");
-      } else {
-        toast.success("Logged in successfully!");
-      }
-    } catch (error: any) {
+
+      toast.success(mode === "signup" ? "Check your email for a confirmation link!" : "Logged in successfully!");
+    } catch (error: Error) {
       toast.error(error.message);
     } finally {
       setLoading(false);
@@ -76,13 +66,13 @@ export default function AuthForm() {
                     onChange={(e) => {
                       const value = e.target.value;
                       if (value && !/^\d$/.test(value)) return;
-                      
-                      setPin(prev => {
+
+                      setPin((prev) => {
                         const newPin = prev.split("");
                         newPin[i] = value;
                         return newPin.join("");
                       });
-                      
+
                       if (value && i < 3) {
                         const nextInput = document.querySelectorAll("input")[i + 1] as HTMLInputElement;
                         if (nextInput) nextInput.focus();
@@ -92,13 +82,17 @@ export default function AuthForm() {
                 ))}
               </div>
               <div className="mt-6 flex flex-col gap-2">
-                <Button type="submit" className="btn-primary" disabled={pin.length !== 4 || loading}>
+                <Button
+                  type="submit"
+                  className="btn-primary"
+                  disabled={pin.length !== 4 || loading}
+                >
                   {loading ? "Verifying..." : "Continue"}
                 </Button>
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  onClick={() => setMode("signin")} 
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setMode("signin")}
                   className="btn-secondary"
                 >
                   Use Email Instead
@@ -143,17 +137,25 @@ export default function AuthForm() {
                 required
               />
             </div>
-            <Button type="submit" className="w-full btn-primary" disabled={loading}>
-              {loading 
-                ? (mode === "signin" ? "Signing In..." : "Creating Account...") 
-                : (mode === "signin" ? "Sign In" : "Create Account")}
+            <Button
+              type="submit"
+              className="w-full btn-primary"
+              disabled={loading}
+            >
+              {loading
+                ? mode === "signin"
+                  ? "Signing In..."
+                  : "Creating Account..."
+                : mode === "signin"
+                ? "Sign In"
+                : "Create Account"}
             </Button>
             <div className="text-center text-sm">
               {mode === "signin" ? (
                 <>
                   Don't have an account?{" "}
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     onClick={() => setMode("signup")}
                     className="text-primary hover:underline font-medium"
                   >
@@ -163,8 +165,8 @@ export default function AuthForm() {
               ) : (
                 <>
                   Already have an account?{" "}
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     onClick={() => setMode("signin")}
                     className="text-primary hover:underline font-medium"
                   >
@@ -174,8 +176,8 @@ export default function AuthForm() {
               )}
             </div>
             <div className="text-center">
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={() => setMode("pin")}
                 className="text-sm text-primary hover:underline font-medium"
               >
