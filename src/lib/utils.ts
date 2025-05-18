@@ -55,11 +55,13 @@ export function getStatusColor(status: TaskStatus): string {
 // Get appropriate timer color based on task status
 export function getTimerColor(status: TaskStatus): string {
   switch (status) {
+    case "complete":
+      return "var(--timer-complete)";
     case "overdue":
-      return "#DA3E52"; // Destructive red
+      return "var(--timer-overdue)";
     case "pending":
     default:
-      return "#3662E3"; // Primary blue
+      return "var(--timer-pending)";
   }
 }
 

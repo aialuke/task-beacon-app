@@ -1,8 +1,15 @@
+
 import { useEffect, useState } from "react";
 import { useSpring, animated, config } from "@react-spring/web";
 import { getDaysRemaining, getTimerColor } from "@/lib/utils";
 import { TaskStatus } from "@/lib/types";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, TooltipArrow } from "@radix-ui/react-tooltip";
+import { 
+  Tooltip, 
+  TooltipContent, 
+  TooltipProvider, 
+  TooltipTrigger, 
+  TooltipArrow 
+} from "@/components/ui/tooltip";
 
 interface CountdownTimerProps {
   dueDate: string;
@@ -86,6 +93,18 @@ export default function CountdownTimer({
     ? "Invalid due date"
     : `Due: ${new Date(dueDate).toLocaleDateString()}`;
 
+  const getStatusTooltipClass = () => {
+    if (status === "overdue") return "bg-destructive text-destructive-foreground";
+    if (status === "complete") return "bg-success text-success-foreground";
+    return "bg-gray-900 text-white";
+  };
+
+  const getTooltipArrowClass = () => {
+    if (status === "overdue") return "fill-destructive";
+    if (status === "complete") return "fill-success";
+    return "fill-gray-900";
+  };
+
   return (
     <TooltipProvider>
       <Tooltip>
@@ -93,7 +112,13 @@ export default function CountdownTimer({
           <AnimatedDiv
             role="timer"
             tabIndex={0}
-            aria-label={`Task timer: ${status === "complete" ? "Completed" : status === "overdue" ? `${timeDisplay} overdue` : `${timeDisplay} remaining`}`}
+            aria-label={`Task timer: ${
+              status === "complete" 
+                ? "Completed" 
+                : status === "overdue" 
+                  ? `${timeDisplay} overdue` 
+                  : `${timeDisplay} remaining`
+            }`}
             aria-describedby="timer-tooltip"
             className="relative focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
             style={{ width: dynamicSize, height: dynamicSize, ...pulseAnimation }}
@@ -135,29 +160,29 @@ export default function CountdownTimer({
             >
               {status === "complete" ? (
                 <svg width={dynamicSize / 3} height={dynamicSize / 3} viewBox="0 0 24 24" fill="none">
-                  <path d="M20 6L9 17L4 12" stroke="var(--timer-complete)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <path 
+                    d="M20 6L9 17L4 12" 
+                    stroke="var(--timer-complete)" 
+                    strokeWidth="2" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                  />
                 </svg>
               ) : (
-                <span className={status === "overdue" ? "text-destructive" : "text-primary"}>{timeDisplay}</span>
+                <span className={status === "overdue" ? "text-destructive" : "text-primary"}>
+                  {timeDisplay}
+                </span>
               )}
             </div>
           </AnimatedDiv>
         </TooltipTrigger>
         <TooltipContent
           id="timer-tooltip"
-          className={`px-5 py-3 rounded-lg text-lg shadow-xl z-50 ${
-            status === "overdue" ? "bg-red-700 text-white" :
-            status === "complete" ? "bg-green-700 text-white" :
-            "bg-gray-900 text-white"
-          }`}
+          className={`px-5 py-3 rounded-lg text-lg shadow-xl z-50 ${getStatusTooltipClass()}`}
           side="top"
           sideOffset={10}
         >
-          <TooltipArrow className={`${
-            status === "overdue" ? "fill-red-700" :
-            status === "complete" ? "fill-green-700" :
-            "fill-gray-900"
-          }`} />
+          <TooltipArrow className={getTooltipArrowClass()} />
           {tooltipContent}
         </TooltipContent>
       </Tooltip>

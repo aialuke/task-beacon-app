@@ -34,6 +34,11 @@
     --ring: 240 5.9% 10%;
 
     --radius: 1rem;
+
+    /* Task-specific colors */
+    --timer-complete: #059669;
+    --timer-overdue: #DA3E52;
+    --timer-pending: #3662E3;
   }
 }
 
@@ -43,7 +48,7 @@
   }
 
   body {
-    @apply bg-[#F9FAFB] text-[#1F2A44] antialiased font-sans;
+    @apply bg-background text-foreground antialiased font-sans;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -58,43 +63,50 @@
   }
 }
 
-/* Custom utility classes */
-@layer utilities {
-  .status-ribbon {
-    @apply absolute right-12 px-2 py-0.5 text-xs font-medium text-white text-center rounded-md;
-  }
-
+/* Component-specific styles */
+@layer components {
+  /* Task card components */
   .task-card {
-    @apply flex flex-col p-2 bg-white rounded-xl shadow-sm border border-transparent hover:border-[#E5EDFF] transition-colors relative;
+    @apply flex flex-col p-2 bg-white rounded-xl shadow-sm border border-transparent hover:border-secondary transition-colors relative;
   }
-
+  
   .task-card-container {
     @apply mb-2;
   }
-
-  .expanded-card {
-    @apply border-[#E5EDFF];
+  
+  .task-card.expanded-card {
+    @apply border-secondary;
   }
 
+  /* Status indicators */
+  .status-ribbon {
+    @apply px-2 py-0.5 text-xs font-medium text-white text-center rounded-md;
+  }
+
+  /* Form layout patterns */
+  .form-field-group {
+    @apply space-y-2;
+  }
+}
+
+/* Custom utility classes */
+@layer utilities {
   .task-list {
     @apply flex flex-col;
     transition: all 0.3s ease-out;
   }
 
-  .btn-primary {
-    @apply bg-[#3662E3] text-white hover:bg-blue-700 rounded-full px-3 py-1.5 text-sm font-medium transition-colors;
-  }
-
-  .btn-secondary {
-    @apply bg-[#E5EDFF] text-[#3662E3] hover:bg-blue-200 rounded-full px-3 py-1.5 text-sm font-medium transition-colors;
-  }
-
   .header-text {
-    @apply text-lg font-heading font-semibold text-[#1F2A44] my-2;
+    @apply text-lg font-heading font-semibold text-foreground my-2;
   }
 
   .owner-name {
     @apply text-xs text-gray-600 mr-2 whitespace-nowrap overflow-hidden;
+  }
+
+  /* Overdue task animation */
+  .animate-flash {
+    @apply animate-flash;
   }
 
   /* For the timer flow animation */

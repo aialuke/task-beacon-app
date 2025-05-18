@@ -30,28 +30,24 @@ export default {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: '#3662E3', // Primary blue
+					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))'
 				},
 				secondary: {
-					DEFAULT: '#E5EDFF', // Secondary light blue
-					foreground: '#3662E3'
+					DEFAULT: 'hsl(var(--secondary))',
+					foreground: 'hsl(var(--secondary-foreground))'
 				},
 				destructive: {
-					DEFAULT: '#DA3E52', // Red for overdue
-					foreground: 'white'
+					DEFAULT: 'hsl(var(--destructive))',
+					foreground: 'hsl(var(--destructive-foreground))'
 				},
 				muted: {
 					DEFAULT: 'hsl(var(--muted))',
 					foreground: 'hsl(var(--muted-foreground))'
 				},
 				accent: {
-					DEFAULT: '#FFDD24', // Yellow for pending
-					foreground: 'black'
-				},
-				success: {
-					DEFAULT: '#059669', // Green for complete
-					foreground: 'white'
+					DEFAULT: 'hsl(var(--accent))',
+					foreground: 'hsl(var(--accent-foreground))'
 				},
 				popover: {
 					DEFAULT: 'hsl(var(--popover))',
@@ -61,6 +57,15 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				success: {
+					DEFAULT: '#059669',
+					foreground: 'white'
+				},
+				// Define task status colors for semantic usage
+				'task-pending': '#FFDD24',
+				'task-overdue': '#DA3E52',
+				'task-complete': '#059669',
+				'task-timer': '#3662E3',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -97,6 +102,10 @@ export default {
 				"pulse-subtle": {
 					"0%, 100%": { opacity: "1" },
 					"50%": { opacity: "0.8" }
+				},
+				"flash": {
+					"0%, 100%": { opacity: "1" },
+					"50%": { opacity: "0.5" }
 				}
 			},
 			animation: {
@@ -105,7 +114,8 @@ export default {
 				"flow": "flow 4s linear infinite",
 				"fade-in": "fade-in 0.3s ease-out",
 				"fade-out": "fade-out 0.3s ease-out",
-				"pulse-subtle": "pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite"
+				"pulse-subtle": "pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+				"flash": "flash 1s ease-in-out infinite"
 			},
 		},
 	},
