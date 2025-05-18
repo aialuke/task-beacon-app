@@ -66,5 +66,6 @@ module.exports = {
     "mt-6",
     "flex-col",
     "gap-2",
+    "text-left", // Added for task-card
   ],
 };

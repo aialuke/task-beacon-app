@@ -48,7 +48,7 @@
 
 @layer components {
   .task-card {
-    @apply flex flex-col p-2 bg-white rounded-xl shadow-sm border border-transparent hover:border-secondary transition-colors relative;
+    @apply flex flex-col p-2 bg-white rounded-xl shadow-sm border border-transparent hover:border-secondary transition-colors relative text-left;
   }
 
   .task-card-container {
