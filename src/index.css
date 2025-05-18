@@ -104,9 +104,9 @@
     @apply text-xs text-gray-600 mr-2 whitespace-nowrap overflow-hidden;
   }
 
-  /* Overdue task animation */
+  /* Overdue task animation - fixed circular dependency */
   .animate-flash {
-    @apply animate-flash;
+    animation: flash 1s ease-in-out infinite;
   }
 
   /* For the timer flow animation */
