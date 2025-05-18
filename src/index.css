@@ -6,32 +6,22 @@
   :root {
     --background: 0 0% 98%;
     --foreground: 222 47% 11%;
-
-    --surface: 0 0% 100%; /* Consolidated card and popover */
-    --surface-foreground: 240 10% 3.9%; /* Consolidated card and popover foreground */
-
+    --surface: 0 0% 100%;
+    --surface-foreground: 240 10% 3.9%;
     --primary: 220 79% 55%;
     --primary-foreground: 210 40% 98%;
-
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
-
     --muted: 240 4.8% 95.9%;
     --muted-foreground: 240 3.8% 46.1%;
-
     --accent: 240 4.8% 95.9%;
     --accent-foreground: 240 5.9% 10%;
-
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
     --ring: 240 5.9% 10%;
-
     --radius: 1rem;
-
-    /* Task-specific colors */
     --timer-complete: #059669;
     --timer-overdue: #DA3E52;
     --timer-pending: #3662E3;
@@ -50,14 +40,13 @@
   }
 
   #root {
-    height: 100dvh; /* Modern viewport unit for mobile */
+    height: 100dvh;
     width: 100%;
     overflow-x: hidden;
   }
 }
 
 @layer components {
-  /* Task card components */
   .task-card {
     @apply flex flex-col p-2 bg-white rounded-xl shadow-sm border border-transparent hover:border-secondary transition-colors relative;
   }
@@ -67,20 +56,17 @@
   }
 
   .task-card[data-expanded="true"] {
-    @apply border-secondary; /* Replaced .expanded-card with data attribute */
+    @apply border-secondary;
   }
 
-  /* Status indicators */
   .status-ribbon {
     @apply px-2 py-0.5 text-xs font-medium text-white text-center rounded-md;
   }
 
-  /* Form layout patterns */
   .form-field-group {
     @apply space-y-2;
   }
 
-  /* Button styles */
   .btn-primary {
     @apply bg-primary text-primary-foreground hover:bg-primary/80 rounded-md;
   }
@@ -93,7 +79,7 @@
   }
 
   .header-text {
-    @apply text-lg font-semibold text-foreground my-2; /* Removed font-sans */
+    @apply text-lg font-semibold text-foreground my-2;
   }
 
   .owner-name {
