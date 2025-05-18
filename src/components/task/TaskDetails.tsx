@@ -1,4 +1,3 @@
-
 import { formatDate } from "@/lib/utils";
 import { Task } from "@/lib/types";
 import TaskActions from "../TaskActions";
@@ -33,7 +32,7 @@ export default function TaskDetails({
         <div className="flex items-center flex-wrap gap-x-6 gap-y-2">
           {/* Due date with calendar icon */}
           <div className="flex items-center gap-3">
-            <Calendar1 size={16} className="text-primary shrink-0" />
+            <Calendar1 size={16} className="text-task-overdue shrink-0" />
             <p className="text-xs">{formatDate(task.due_date)}</p>
           </div>
 
