@@ -4,7 +4,6 @@ import { Task } from "@/lib/types";
 import TaskActions from "../TaskActions";
 import { Calendar1, ExternalLink } from "lucide-react";
 import { animated } from "@react-spring/web";
-import { useRef } from "react";
 
 interface TaskDetailsProps {
   task: Task;
