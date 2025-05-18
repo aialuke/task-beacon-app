@@ -2,7 +2,7 @@
 import { formatDate } from "@/lib/utils";
 import { Task } from "@/lib/types";
 import TaskActions from "../TaskActions";
-import { Calendar, Link } from "lucide-react";
+import { Calendar1, SquareArrowOutUpRight } from "lucide-react";
 import { animated } from "@react-spring/web";
 import { useRef } from "react";
 
@@ -34,14 +34,14 @@ export default function TaskDetails({
         <div className="flex items-center flex-wrap gap-x-6 gap-y-2">
           {/* Due date with calendar icon */}
           <div className="flex items-center gap-3">
-            <Calendar size={16} className="text-primary shrink-0" />
+            <Calendar1 size={16} className="text-primary shrink-0" />
             <p className="text-xs">{formatDate(task.due_date)}</p>
           </div>
 
           {/* URL link (if available) */}
           {task.url_link && (
             <div className="flex items-center gap-3">
-              <Link size={16} className="text-primary shrink-0" />
+              <SquareArrowOutUpRight size={16} className="text-primary shrink-0" />
               <a 
                 href={task.url_link} 
                 target="_blank" 
