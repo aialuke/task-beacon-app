@@ -5,7 +5,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { compressAndResizePhoto } from "@/lib/utils";
-import { Switch } from "@/components/ui/switch";
 export default function CreateTaskForm({
   onClose
 }: {
