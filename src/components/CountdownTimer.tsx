@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSpring, animated, config } from "@react-spring/web"; // Correct import
+import { useSpring, animated, config } from "@react-spring/web";
 import { getDaysRemaining, getTimerColor } from "@/lib/utils";
 import { TaskStatus } from "@/lib/types";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, TooltipArrow } from "@radix-ui/react-tooltip";
@@ -8,12 +8,19 @@ interface CountdownTimerProps {
   dueDate: string;
   status: TaskStatus;
   size?: number;
+  priority?: "low" | "medium" | "high";
 }
 
 const AnimatedDiv = animated.div;
 
-export default function CountdownTimer({ dueDate, status, size = 48 }: CountdownTimerProps) {
-  const radius = size / 2 - 4;
+export default function CountdownTimer({
+  dueDate,
+  status,
+  size = 48,
+  priority = "medium",
+}: CountdownTimerProps) {
+  const dynamicSize = priority === "high" ? size * 1.2 : priority === "low" ? size * 0.8 : size;
+  const radius = dynamicSize / 2 - 4;
   const circumference = 2 * Math.PI * radius;
   const [daysLeft, setDaysLeft] = useState<number>(getDaysRemaining(dueDate));
   const [timeDisplay, setTimeDisplay] = useState<string>(`${daysLeft}d`);
@@ -42,9 +49,9 @@ export default function CountdownTimer({ dueDate, status, size = 48 }: Countdown
 
   const pulseAnimation = useSpring({
     from: { scale: 1 },
-    to: { scale: daysLeft <= 1 || status === "overdue" ? 1.15 : 1 },
-    loop: daysLeft <= 1 || status === "overdue",
-    config: { ...config.wobbly, duration: 500 },
+    to: { scale: daysLeft <= 1 || status === "overdue" ? 1.05 : 1 },
+    loop: { reverse: true },
+    config: { tension: 100, friction: 20, duration: 2000 },
   });
 
   useEffect(() => {
@@ -57,14 +64,21 @@ export default function CountdownTimer({ dueDate, status, size = 48 }: Countdown
         const due = new Date(dueDate).getTime();
         const now = Date.now();
         const hoursLeft = Math.floor((due - now) / (1000 * 60 * 60));
-        setTimeDisplay(hoursLeft >= 0 ? `${hoursLeft}h` : `${Math.abs(hoursLeft)}h late`);
+        if (hoursLeft < 1 && hoursLeft >= 0) {
+          const minutesLeft = Math.floor((due - now) / (1000 * 60));
+          setTimeDisplay(`${minutesLeft}m`);
+        } else {
+          setTimeDisplay(`${hoursLeft}h`);
+        }
+      } else if (days < 0) {
+        setTimeDisplay(`${days}d`);
       } else {
         setTimeDisplay(`${days}d`);
       }
     };
 
     updateTimeLeft();
-    const interval = setInterval(updateTimeLeft, daysLeft < 1 ? 3600000 : 86400000);
+    const interval = setInterval(updateTimeLeft, daysLeft < 1 ? 60000 : 86400000);
     return () => clearInterval(interval);
   }, [dueDate]);
 
@@ -79,47 +93,49 @@ export default function CountdownTimer({ dueDate, status, size = 48 }: Countdown
           <AnimatedDiv
             role="timer"
             tabIndex={0}
-            aria-label={`Task timer: ${status === "complete" ? "Completed" : status === "overdue" ? `${Math.abs(daysLeft)} days overdue` : `${daysLeft} days remaining`}`}
+            aria-label={`Task timer: ${status === "complete" ? "Completed" : status === "overdue" ? `${timeDisplay} overdue` : `${timeDisplay} remaining`}`}
             aria-describedby="timer-tooltip"
-            className="relative focus:outline-none focus:ring-2 focus:ring-blue-500"
-            style={{ width: size, height: size, ...pulseAnimation }}
+            className="relative focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
+            style={{ width: dynamicSize, height: dynamicSize, ...pulseAnimation }}
           >
-            <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+            <svg width={dynamicSize} height={dynamicSize} viewBox={`0 0 ${dynamicSize} ${dynamicSize}`}>
               <circle
-                cx={size / 2}
-                cy={size / 2}
+                cx={dynamicSize / 2}
+                cy={dynamicSize / 2}
                 r={radius}
                 fill="none"
                 strokeWidth="2"
                 stroke="#E5EDFF"
               />
               <animated.circle
-                cx={size / 2}
-                cy={size / 2}
+                cx={dynamicSize / 2}
+                cy={dynamicSize / 2}
                 r={radius}
                 fill="none"
                 strokeWidth="3"
                 stroke={timerColor}
                 strokeDasharray={circumference}
                 strokeDashoffset={strokeDashoffset}
-                transform={`rotate(-90, ${size / 2}, ${size / 2})`}
+                transform={`rotate(-90, ${dynamicSize / 2}, ${dynamicSize / 2})`}
                 strokeLinecap="round"
                 style={{
-                  filter: daysLeft <= 1 || status === "overdue" ? "drop-shadow(0 0 6px rgba(255, 0, 0, 0.7))" : "none",
+                  filter: daysLeft <= 1 || status === "overdue" ? "drop-shadow(0 0 8px rgba(255, 0, 0, 0.8))" : "none",
                 }}
               />
             </svg>
             <div
-              className="absolute inset-0 flex items-center justify-center font-medium text-center"
+              className={`absolute inset-0 flex items-center justify-center font-medium text-center ${
+                status === "overdue" ? "animate-flash" : ""
+              }`}
               style={{
-                fontSize: `${size / 4}px`,
+                fontSize: `${dynamicSize / 4}px`,
                 background: status === "overdue" ? "rgba(255, 0, 0, 0.1)" : "transparent",
                 borderRadius: "50%",
               }}
             >
               {status === "complete" ? (
-                <svg width={size / 3} height={size / 3} viewBox="0 0 24 24" fill="none">
-                  <path d="M20 6L9 17L4 12" stroke="#059669" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <svg width={dynamicSize / 3} height={dynamicSize / 3} viewBox="0 0 24 24" fill="none">
+                  <path d="M20 6L9 17L4 12" stroke="var(--timer-complete)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               ) : (
                 <span className={status === "overdue" ? "text-destructive" : "text-primary"}>{timeDisplay}</span>
@@ -129,11 +145,19 @@ export default function CountdownTimer({ dueDate, status, size = 48 }: Countdown
         </TooltipTrigger>
         <TooltipContent
           id="timer-tooltip"
-          className="bg-gray-800 text-white px-3 py-2 rounded-md text-sm shadow-lg z-50"
+          className={`px-5 py-3 rounded-lg text-lg shadow-xl z-50 ${
+            status === "overdue" ? "bg-red-700 text-white" :
+            status === "complete" ? "bg-green-700 text-white" :
+            "bg-gray-900 text-white"
+          }`}
           side="top"
-          sideOffset={5}
+          sideOffset={10}
         >
-          <TooltipArrow className="fill-gray-800" />
+          <TooltipArrow className={`${
+            status === "overdue" ? "fill-red-700" :
+            status === "complete" ? "fill-green-700" :
+            "fill-gray-900"
+          }`} />
           {tooltipContent}
         </TooltipContent>
       </Tooltip>
