@@ -21,13 +21,16 @@ const Index = () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
         setUser(user ? { id: user.id, email: user.email || "" } : null);
-      } catch (error: Error) {
-        toast.error("Failed to fetch user");
-        console.error(error);
-      } finally {
-        setLoading(false);
+         } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("An unexpected error occurred.");
       }
-    };
+    } finally {
+      setLoading(false);
+    }
+  };
 
     fetchUser();
 

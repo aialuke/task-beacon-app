@@ -111,14 +111,18 @@ export default function TaskList({ dialogOpen, setDialogOpen }: TaskListProps) {
 
       const typedData: Task[] = data || [];
       setTasks(typedData);
-    } catch (error: Error) {
-      toast.error(error.message);
+        } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("An unexpected error occurred.");
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
+ useEffect(() => {
     fetchTasks();
     if (!isMockingSupabase) {
       const subscription = supabase
@@ -145,9 +149,13 @@ export default function TaskList({ dialogOpen, setDialogOpen }: TaskListProps) {
           }
         )
         .subscribe();
-      return () => subscription.unsubscribe();
+      // Corrected cleanup function
+      return () => {
+        subscription.unsubscribe();
+      };
     }
   }, []);
+
 
   const getFilteredTasks = (): Task[] => {
     if (filter === "all") return tasks;

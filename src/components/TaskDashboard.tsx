@@ -10,10 +10,15 @@ export default function TaskDashboard() {
   const handleSignOut = async () => {
     try {
       await supabase.auth.signOut();
-    } catch (error: Error) {
+       } catch (error: unknown) {
       console.error("Sign-out error:", error);
+      // You might want to add a type check here if you need to access error properties
+      // if (error instanceof Error) {
+      //   console.error("Sign-out error message:", error.message);
+      // }
     }
   };
+
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-6 space-y-6">

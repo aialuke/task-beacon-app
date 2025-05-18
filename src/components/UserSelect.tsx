@@ -42,13 +42,21 @@ export default function UserSelect({ value, onChange, disabled = false }: UserSe
 
       if (error) throw error;
       setUsers(data || []);
-    } catch (error: any) {
+       } catch (error: unknown) {
       toast.error("Failed to load users");
       console.error(error);
+      // If you needed to access specific properties of the error,
+      // for example, error.message, you would add a type check:
+      // if (error instanceof Error) {
+      //   toast.error(error.message);
+      // } else {
+      //   toast.error("Failed to load users");
+      // }
     } finally {
       setLoading(false);
     }
   };
+
 
   // Display name or email if name is not available
   const getUserDisplayName = (user: { id: string; name?: string; email: string }) => {

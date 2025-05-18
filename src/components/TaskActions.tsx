@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Task } from "@/lib/types";
@@ -32,8 +31,12 @@ export default function TaskActions({ task }: TaskActionsProps) {
 
       if (error) throw error;
       toast.success(`Task marked ${task.status === "complete" ? "incomplete" : "complete"}`);
-    } catch (error: any) {
-      toast.error(error.message);
+        } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("An unexpected error occurred.");
+      }
     } finally {
       setLoading(false);
     }

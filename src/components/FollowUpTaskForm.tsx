@@ -150,8 +150,12 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
       // Close form if onClose is provided
       if (onClose) onClose();
       
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("An unexpected error occurred.");
+      }
     } finally {
       setLoading(false);
     }

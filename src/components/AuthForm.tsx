@@ -38,8 +38,12 @@ export default function AuthForm() {
       if (error) throw error;
 
       toast.success(mode === "signup" ? "Check your email for a confirmation link!" : "Logged in successfully!");
-    } catch (error: Error) {
-      toast.error(error.message);
+        } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("An unexpected error occurred.");
+      }
     } finally {
       setLoading(false);
     }

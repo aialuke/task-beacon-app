@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { compressAndResizePhoto } from "@/lib/utils";
-import { User } from "@/lib/types";
+
 
 export default function CreateTaskForm({
   onClose,
@@ -30,11 +30,17 @@ export default function CreateTaskForm({
     try {
       const processedFile = await compressAndResizePhoto(file);
       setPhoto(processedFile);
-    } catch (error: Error) {
-      toast.error("Error processing image");
-      console.error(error);
+      } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("An unexpected error occurred.");
+      }
+    } finally {
+      setLoading(false);
     }
   };
+
 
   const uploadPhoto = async (): Promise<string | null> => {
     if (!photo) return null;
@@ -87,12 +93,17 @@ export default function CreateTaskForm({
       toast.success("Task created successfully");
 
       resetForm();
-    } catch (error: Error) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("An unexpected error occurred.");
+      }
     } finally {
       setLoading(false);
     }
   };
+
 
   const resetForm = () => {
     setTitle("");
