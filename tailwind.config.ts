@@ -61,6 +61,11 @@ export default {
 					DEFAULT: '#059669',
 					foreground: 'white'
 				},
+				// Define brand blue colors explicitly
+				brand: {
+					DEFAULT: '#3662E3',
+					light: '#E5EDFF',
+				},
 				// Define task status colors for semantic usage
 				'task-pending': '#FFDD24',
 				'task-overdue': '#DA3E52',

@@ -19,10 +19,10 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        // Added new variant to replace btn-primary custom class
-        brand: "bg-[#3662E3] text-white hover:bg-blue-700",
-        // Added new variant to replace btn-secondary custom class
-        'brand-secondary': "bg-[#E5EDFF] text-[#3662E3] hover:bg-blue-200",
+        // Updated brand color to use the explicitly defined brand color
+        brand: "bg-brand text-white hover:bg-brand/90",
+        // Updated brand-secondary to use the explicitly defined brand light color
+        'brand-secondary': "bg-brand-light text-brand hover:bg-brand-light/90",
       },
       size: {
         default: "h-10 px-4 py-2",
