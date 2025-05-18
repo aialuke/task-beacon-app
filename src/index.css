@@ -107,7 +107,7 @@
 
   /* Overdue task animation - fixed circular dependency */
   .animate-flash {
-    animation: flash 1s ease-in-out infinite;
+    animation: flash 2s ease-in-out infinite;
   }
 
   /* For the timer flow animation */
