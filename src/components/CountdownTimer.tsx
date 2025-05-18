@@ -58,7 +58,7 @@ export default function CountdownTimer({
     from: { scale: 1 },
     to: { scale: daysLeft <= 1 || status === "overdue" ? 1.05 : 1 },
     loop: { reverse: true },
-    config: { tension: 80, friction: 30, duration: 6000 },
+    config: { tension: 80, friction: 30, duration: 8000 },
   });
 
   useEffect(() => {
