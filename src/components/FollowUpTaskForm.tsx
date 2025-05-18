@@ -1,10 +1,8 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { compressAndResizePhoto } from "@/lib/utils";
@@ -200,7 +198,6 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
       </div>
       
       <div className="space-y-2">
-        <Label htmlFor="title">Title</Label>
         <Input
           id="title"
           value={title}
@@ -211,7 +208,6 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
       </div>
       
       <div className="space-y-2">
-        <Label htmlFor="description">Description (optional)</Label>
         <Textarea
           id="description"
           value={description}
@@ -222,7 +218,6 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
       </div>
       
       <div className="space-y-2">
-        <Label htmlFor="due_date">Due Date</Label>
         <Input
           id="due_date"
           type="datetime-local"
@@ -233,7 +228,6 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
       </div>
       
       <div className="space-y-2">
-        <Label htmlFor="url">URL (optional)</Label>
         <Input
           id="url"
           type="url"
@@ -244,7 +238,6 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
       </div>
       
       <div className="space-y-2">
-        <Label htmlFor="photo">Photo (optional)</Label>
         <Input
           id="photo"
           type="file"
@@ -270,15 +263,6 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
           onChange={setAssigneeId} 
           disabled={loading} 
         />
-      </div>
-      
-      <div className="flex items-center space-x-2">
-        <Switch
-          id="pinned"
-          checked={pinned}
-          onCheckedChange={setPinned}
-        />
-        <Label htmlFor="pinned">Pin this task</Label>
       </div>
       
       <div className="flex justify-end space-x-2 pt-2">
