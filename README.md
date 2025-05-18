@@ -1,9 +1,3 @@
-# Welcome to your Lovable project
-
-## Project info
-
-**URL**: https://lovable.dev/projects/5577a4ee-c8f7-431c-876d-05403bb6de17
-
 ## Task Management PWA
 
 This project is a Task Management Progressive Web Application that allows users to create, manage, and track tasks with due dates and status tracking.
