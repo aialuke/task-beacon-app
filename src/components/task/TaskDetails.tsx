@@ -73,7 +73,10 @@ export default function TaskDetails({
 
   useEffect(() => {
     if (isExpanded && contentRef.current) {
-      console.log("Rendered content height:", contentRef.current.offsetHeight);
+      const timer = setTimeout(() => {
+        console.log("Rendered content height:", contentRef.current?.offsetHeight);
+      }, 300);
+      return () => clearTimeout(timer);
     }
   }, [isExpanded, contentRef]);
 
@@ -92,7 +95,7 @@ export default function TaskDetails({
         height: animationState.height,
         opacity: animationState.opacity,
         willChange: "height, opacity",
-        overflow: "visible",
+        overflowY: "hidden",
         minHeight: 0,
         zIndex: 2,
         visibility: isExpanded ? "visible" : "hidden",
@@ -101,14 +104,14 @@ export default function TaskDetails({
     >
       <div
         className={`space-y-2 ${isMobile ? "pl-4 pt-2 pb-4" : "pl-6 pt-2 pb-4"}`}
-        style={{ height: isExpanded ? "auto" : "0" }}
+        style={{ height: isExpanded ? "auto" : "0", overflowY: "hidden" }}
       >
         <div className="flex items-center flex-wrap gap-4 min-w-0">
           <div className="flex items-center gap-3 min-w-0">
             <Calendar1 size={16} className="text-task-overdue shrink-0" />
-            <p className="text-sm">{task.due_date ? formatDate(task.due_date) : "No due date"}</p>
+            <p className="text-sm text-gray-600">{task.due_date ? formatDate(task.due_date) : "No due date"}</p>
           </div>
-          {task.url_link ? (
+          {task.url_link && (
             <div className="flex items-center gap-2 min-w-0">
               <TooltipProvider>
                 <Tooltip>
@@ -131,12 +134,10 @@ export default function TaskDetails({
                 </Tooltip>
               </TooltipProvider>
             </div>
-          ) : (
-            <p className="text-sm text-gray-600">No URL link</p>
           )}
         </div>
 
-        {task.parent_task ? (
+        {task.parent_task && (
           <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded border border-gray-200 line-clamp-2">
             <span className="font-medium">Following up on: </span>
             {task.parent_task.description ? (
@@ -155,11 +156,9 @@ export default function TaskDetails({
               task.parent_task.title
             )}
           </div>
-        ) : (
-          <p className="text-sm text-gray-600">No parent task</p>
         )}
 
-        {task.photo_url ? (
+        {task.photo_url && (
           <div>
             <span className="text-sm font-medium text-gray-600">Photo:</span>
             <img
@@ -169,8 +168,6 @@ export default function TaskDetails({
               loading="lazy"
             />
           </div>
-        ) : (
-          <p className="text-sm text-gray-600">No photo</p>
         )}
 
         <TaskActions task={{ ...task, pinned: isPinned }} />

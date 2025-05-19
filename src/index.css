@@ -56,7 +56,7 @@
   }
 
   #root {
-    @apply max-w-5xl mx-auto px-4 sm:px-8 text-center min-h-[100dvh] w-full overflow-x-hidden;
+    @apply max-w-5xl mx-auto px-4 sm:px-8 text-center min-h-[100dvh] w-full overflow-x-hidden overflow-y-hidden;
   }
 }
 
@@ -80,6 +80,11 @@
 
   .task-card[data-expanded="true"] {
     @apply border-secondary;
+  }
+
+  .task-card-container::-webkit-scrollbar,
+  .task-list::-webkit-scrollbar {
+    display: none;
   }
 
   .form-field-group {
@@ -148,6 +153,9 @@
     @apply flex flex-col;
     transition: all 0.3s ease-out;
     padding: 0 5px;
+    overflow-y: hidden;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .header-text {
@@ -192,9 +200,7 @@
 /* =========================
    Accessibility
    ========================= */
-/* Add visible focus for all interactive elements */
 :focus-visible {
   outline: 2px solid hsl(var(--primary));
   outline-offset: 2px;
 }
-
