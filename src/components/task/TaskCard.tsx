@@ -36,41 +36,36 @@ export default function TaskCard({ task }: TaskCardProps) {
   }, [task.id, registerTaskHeight, task]);
 
   useEffect(() => {
-    console.log("isExpanded changed:", isExpanded);
-  }, [isExpanded]);
+    console.log("isExpanded state:", isExpanded, "taskId:", task.id);
+  }, [isExpanded, task.id]);
 
   const [expandAnimation] = useSpring(() => ({
     from: { height: 0 },
-    to: { height: isExpanded ? (contentRef.current?.scrollHeight ?? 400) : 0 },
-    config: {
-      tension: 210,
-      friction: 24,
-      clamp: true,
-    },
-    immediate: false,
+    to: { height: isExpanded ? (contentRef.current?.scrollHeight ?? 500) : 0 },
+    config: { tension: 210, friction: 24, clamp: true },
+    onRest: () => console.log("Height animation completed:", isExpanded ? contentRef.current?.scrollHeight : 0),
   })) as [SpringValues<{ height: number }>, unknown];
 
   const [opacityAnimation] = useSpring(() => ({
     from: { opacity: 0 },
     to: { opacity: isExpanded ? 1 : 0 },
-    config: {
-      tension: 210,
-      friction: 24,
-      clamp: true,
-    },
-    immediate: false,
+    config: { tension: 210, friction: 24, clamp: true },
+    onRest: () => console.log("Opacity animation completed:", isExpanded ? 1 : 0),
   })) as [SpringValues<{ opacity: number }>, unknown];
 
   useEffect(() => {
-    if (contentRef.current) {
-      const height = isExpanded ? contentRef.current.scrollHeight : 0;
-      expandAnimation.height.set(height);
-      console.log("Content ref height:", height);
-    }
+    const timer = setTimeout(() => {
+      if (contentRef.current) {
+        const height = isExpanded ? contentRef.current.scrollHeight : 0;
+        expandAnimation.height.set(height);
+        console.log("Content ref height:", height);
+      }
+    }, 100);
+    return () => clearTimeout(timer);
   }, [isExpanded, expandAnimation.height, task]);
 
   const toggleExpand = useCallback(() => {
-    console.log("Toggling expand, current isExpanded:", isExpanded);
+    console.log("Toggling expand, current isExpanded:", isExpanded, "taskId:", task.id);
     setExpandedTaskId(isExpanded ? null : task.id);
   }, [isExpanded, task.id, setExpandedTaskId]);
 
@@ -107,7 +102,7 @@ export default function TaskCard({ task }: TaskCardProps) {
   };
 
   return (
-    <div className={`task-card-container ${isExpanded ? "expanded" : ""}`} style={{ overflow: "visible", minHeight: isExpanded ? 400 : 0 }}>
+    <div className={`task-card-container ${isExpanded ? "expanded" : ""}`} style={{ overflow: "visible", minHeight: isExpanded ? 500 : 0, position: "relative", zIndex: 1 }}>
       <div
         ref={cardRef}
         className={`task-card ${isExpanded ? "expanded-card" : ""} p-3`}

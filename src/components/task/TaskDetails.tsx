@@ -62,6 +62,13 @@ export default function TaskDetails({
       hasParentTask: !!task.parent_task,
       hasPhoto: !!task.photo_url,
     });
+    console.log("TaskDetails content:", {
+      dueDate: task.due_date,
+      urlLink: task.url_link,
+      parentTask: task.parent_task,
+      photoUrl: task.photo_url,
+      taskActionsProps: { task, isPinned },
+    });
     console.log("Expand animation:", expandAnimation);
     console.log("Opacity animation:", opacityAnimation);
     console.log("Content height:", contentRef.current?.offsetHeight, "scrollHeight:", contentRef.current?.scrollHeight);
@@ -70,15 +77,10 @@ export default function TaskDetails({
   useEffect(() => {
     if (isExpanded) {
       forceUpdate({});
-      setTimeout(() => {
-        if (contentRef.current) {
-          console.log("Forced re-render scrollHeight:", contentRef.current.scrollHeight);
-        }
-      }, 100);
     }
-  }, [isExpanded, contentRef]);
+  }, [isExpanded]);
 
-  console.log("TaskActions rendering:", { task, isPinned });
+  console.log("TaskActions props:", { task, isPinned });
 
   return (
     <animated.div
@@ -88,14 +90,15 @@ export default function TaskDetails({
         opacity: opacityAnimation.opacity,
         willChange: "height, opacity",
         overflow: "visible",
-        minHeight: isExpanded ? 400 : 0,
+        minHeight: isExpanded ? 500 : 0,
         zIndex: 2,
+        visibility: isExpanded ? "visible" : "hidden",
       }}
       className="w-full mt-1"
     >
       <div
         className={`space-y-3 ${isMobile ? "pl-4 pt-2 pb-6" : "pl-6 pt-2 pb-6"}`}
-        style={{ height: isExpanded ? "auto" : "0", minHeight: isExpanded ? 400 : 0 }}
+        style={{ height: isExpanded ? "auto" : "0", minHeight: isExpanded ? 500 : 0 }}
       >
         <div className="flex items-center flex-wrap gap-4 min-w-0">
           <div className="flex items-center gap-3 min-w-0">
