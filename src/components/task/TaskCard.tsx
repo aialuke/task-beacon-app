@@ -20,7 +20,15 @@ export default function TaskCard({ task }: TaskCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    console.log("TaskCard task:", task);
+    console.log("TaskCard task:", {
+      id: task.id,
+      title: task.title,
+      due_date: task.due_date,
+      url_link: task.url_link,
+      parent_task: task.parent_task,
+      photo_url: task.photo_url,
+      pinned: task.pinned,
+    });
     if (contentRef.current) {
       const height = contentRef.current.scrollHeight;
       registerTaskHeight(task.id, height);
@@ -28,22 +36,39 @@ export default function TaskCard({ task }: TaskCardProps) {
   }, [task.id, registerTaskHeight, task]);
 
   const [expandAnimation] = useSpring(() => ({
-    from: { height: 0, opacity: 0 },
-    to: () => ({ height: isExpanded ? contentRef.current?.scrollHeight ?? 250 : 0, opacity: isExpanded ? 1 : 0 }),
+    from: { height: 0 },
+    to: { height: isExpanded ? contentRef.current?.scrollHeight ?? 350 : 0 },
     config: {
       tension: 210,
       friction: 24,
       clamp: true,
     },
     immediate: false,
-  })) as [SpringValues<{ height: number; opacity: number }>, unknown];
+  })) as [SpringValues<{ height: number }>, unknown];
+
+  const [opacityAnimation] = useSpring(() => ({
+    from: { opacity: 0 },
+    to: { opacity: isExpanded ? 1 : 0 },
+    config: {
+      tension: 210,
+      friction: 24,
+      clamp: true,
+    },
+    immediate: false,
+  })) as [SpringValues<{ opacity: number }>, unknown];
 
   useLayoutEffect(() => {
-    if (contentRef.current) {
-      const height = isExpanded ? contentRef.current.scrollHeight : 0;
-      expandAnimation.height.set(height);
-      console.log("Content ref height:", height);
-    }
+    const updateHeight = () => {
+      requestAnimationFrame(() => {
+        if (contentRef.current) {
+          const height = isExpanded ? contentRef.current.scrollHeight : 0;
+          expandAnimation.height.set(height);
+          console.log("Content ref height:", height);
+        }
+      });
+    };
+    const raf = requestAnimationFrame(updateHeight);
+    return () => cancelAnimationFrame(raf);
   }, [isExpanded, expandAnimation.height, task]);
 
   const toggleExpand = useCallback(() => {
@@ -103,6 +128,7 @@ export default function TaskCard({ task }: TaskCardProps) {
           isPinned={isPinned}
           isExpanded={isExpanded}
           expandAnimation={expandAnimation}
+          opacityAnimation={opacityAnimation}
           contentRef={contentRef}
         />
       </div>

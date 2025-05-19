@@ -10,13 +10,14 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface TaskDetailsProps {
   task: Task;
   isPinned: boolean;
   isExpanded: boolean;
-  expandAnimation: SpringValues<{ height: number; opacity: number }>;
+  expandAnimation: SpringValues<{ height: number }>;
+  opacityAnimation: SpringValues<{ opacity: number }>;
   contentRef: React.RefObject<HTMLDivElement>;
 }
 
@@ -46,9 +47,11 @@ export default function TaskDetails({
   isPinned,
   isExpanded,
   expandAnimation,
+  opacityAnimation,
   contentRef,
 }: TaskDetailsProps) {
   const isMobile = useIsMobile();
+  const [, forceUpdate] = useState({});
 
   useEffect(() => {
     console.log("TaskDetails rendering:", {
@@ -60,30 +63,46 @@ export default function TaskDetails({
       hasPhoto: !!task.photo_url,
     });
     console.log("Expand animation:", expandAnimation);
+    console.log("Opacity animation:", opacityAnimation);
     console.log("Content height:", contentRef.current?.offsetHeight, "scrollHeight:", contentRef.current?.scrollHeight);
-  }, [task, isExpanded, expandAnimation, contentRef]);
+  }, [task, isExpanded, expandAnimation, opacityAnimation, contentRef]);
+
+  useEffect(() => {
+    if (isExpanded) {
+      setTimeout(() => {
+        forceUpdate({});
+        if (contentRef.current) {
+          console.log("Forced re-render scrollHeight:", contentRef.current.scrollHeight);
+        }
+      }, 100);
+    }
+  }, [isExpanded, contentRef]);
+
+  console.log("TaskActions rendering:", { task, isPinned });
 
   return (
     <animated.div
       ref={contentRef}
       style={{
-        ...expandAnimation,
+        height: expandAnimation.height,
+        opacity: opacityAnimation.opacity,
         willChange: "height, opacity",
-        overflow: "hidden",
-        minHeight: isExpanded ? 250 : 0,
-        visibility: isExpanded ? "visible" : "hidden",
+        overflow: "visible",
+        minHeight: isExpanded ? 350 : 0,
+        zIndex: 2,
       }}
       className="w-full mt-1"
     >
       <div
         className={`space-y-3 ${isMobile ? "pl-4 pt-2 pb-6" : "pl-6 pt-2 pb-6"}`}
+        style={{ height: isExpanded ? "auto" : "0", minHeight: isExpanded ? 350 : 0 }}
       >
         <div className="flex items-center flex-wrap gap-4 min-w-0">
           <div className="flex items-center gap-3 min-w-0">
             <Calendar1 size={16} className="text-task-overdue shrink-0" />
-            <p className="text-sm">{formatDate(task.due_date)}</p>
+            <p className="text-sm">{task.due_date ? formatDate(task.due_date) : "No due date"}</p>
           </div>
-          {task.url_link && (
+          {task.url_link ? (
             <div className="flex items-center gap-2 min-w-0">
               <TooltipProvider>
                 <Tooltip>
@@ -106,10 +125,12 @@ export default function TaskDetails({
                 </Tooltip>
               </TooltipProvider>
             </div>
+          ) : (
+            <p className="text-sm text-gray-600">No URL link</p>
           )}
         </div>
 
-        {task.parent_task && (
+        {task.parent_task ? (
           <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded border border-gray-200 line-clamp-2">
             <span className="font-medium">Following up on: </span>
             {task.parent_task.description ? (
@@ -128,9 +149,11 @@ export default function TaskDetails({
               task.parent_task.title
             )}
           </div>
+        ) : (
+          <p className="text-sm text-gray-600">No parent task</p>
         )}
 
-        {task.photo_url && (
+        {task.photo_url ? (
           <div>
             <span className="text-sm font-medium text-gray-600">Photo:</span>
             <img
@@ -140,6 +163,8 @@ export default function TaskDetails({
               loading="lazy"
             />
           </div>
+        ) : (
+          <p className="text-sm text-gray-600">No photo</p>
         )}
 
         <TaskActions task={{ ...task, pinned: isPinned }} />
