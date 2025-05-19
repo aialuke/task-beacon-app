@@ -1,5 +1,5 @@
 // src/components/CountdownTimer.tsx
-import { useEffect, useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSpring, animated } from "@react-spring/web";
 import { getDaysRemaining, getTimerColor } from "@/lib/utils";
 import { TaskStatus } from "@/lib/types";
@@ -44,7 +44,8 @@ export default function CountdownTimer({
 
   const calculateOffset = () => {
     if (status === "complete") return 0;
-    if (status === "overdue") return circumference;
+    if (status === "overdue") return 0;
+    if (!dueDate) return circumference; // No due date, empty ring
     const totalDays = 14;
     const remainingPercentage = Math.min(Math.max(daysLeft / totalDays, 0), 1);
     return circumference * (1 - remainingPercentage);
@@ -53,7 +54,7 @@ export default function CountdownTimer({
   const { strokeDashoffset } = useSpring({
     strokeDashoffset: calculateOffset(),
     config: { tension: 120, friction: 14 },
-    immediate: status === "complete",
+    immediate: status === "complete" || status === "overdue" || !dueDate,
   });
 
   const pulseAnimation = useSpring({
