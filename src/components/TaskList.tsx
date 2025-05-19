@@ -1,4 +1,3 @@
-
 import { useState, useEffect, lazy, Suspense } from "react";
 import { Task, TaskStatus } from "@/lib/types";
 import TaskCard from "./task/TaskCard";
@@ -173,12 +172,12 @@ export default function TaskList({ dialogOpen, setDialogOpen }: TaskListProps) {
   return (
     <div className="space-y-4 relative">
       <div className="flex items-center">
-        <div className="w-full max-w-xs sm:max-w-xs md:max-w-xs lg:max-w-xs xl:max-w-xs">
+        <div className="w-full">
           <Select
             value={filter}
             onValueChange={(value) => setFilter(value as TaskStatus | "all")}
           >
-            <SelectTrigger className="w-full sm:w-2/5 md:w-auto">
+            <SelectTrigger className="filter-dropdown-mobile">
               <SelectValue placeholder="Filter tasks" />
             </SelectTrigger>
             <SelectContent>

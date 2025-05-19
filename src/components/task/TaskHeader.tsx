@@ -54,7 +54,7 @@ export default function TaskHeader({
   };
   
   return (
-    <div className="flex items-center w-full gap-2">
+    <div className="flex items-center w-full gap-2 task-header-container">
       {/* Timer */}
       <div className="shrink-0">
         <CountdownTimer dueDate={task.due_date} status={status} />
@@ -79,13 +79,13 @@ export default function TaskHeader({
             className={`text-xs sm:text-sm text-gray-600 ${isMobile ? 'mobile-description-container' : ''}`}
           >
             <div className={`${!isExpanded ? 'truncate w-full' : ''} ${isMobile ? 'pt-1' : ''}`}>
-              {isExpanded ? task.description : truncateText(task.description, isMobile ? 15 : 20)}
+              {isExpanded ? task.description : truncateText(task.description, isMobile ? 25 : 40)}
             </div>
           </animated.div>
         )}
       </div>
       
-      {/* Status ribbon */}
+      {/* Status ribbon - positioned absolutely on mobile */}
       <div className={`status-ribbon ${statusColor}`}>
         {getStatusText(status)}
       </div>

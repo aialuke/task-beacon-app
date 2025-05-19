@@ -175,9 +175,9 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {/* Original task reference - shortened */}
-      <div className="p-2 bg-gray-50 rounded-md mb-4">
-        <h4 className="font-medium text-sm mb-1">Following up on: {parentTask.title}</h4>
+      {/* Display just a shortened reference to parent task */}
+      <div className="p-2 bg-gray-50 rounded-md">
+        <h4 className="font-medium text-sm">Following up on: {parentTask.title}</h4>
       </div>
       
       <div className="space-y-2">
@@ -200,7 +200,7 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
         />
       </div>
       
-      <div className="space-y-2 relative">
+      <div className="space-y-2">
         <div className="relative">
           <Input
             id="due_date"

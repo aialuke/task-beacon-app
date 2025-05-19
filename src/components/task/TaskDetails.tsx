@@ -23,7 +23,15 @@ const truncateUrl = (url: string, maxLength: number = 15): string => {
   if (!url) return '';
   if (url.length <= maxLength) return url;
   
-  return `${url.substring(0, maxLength)}…`;
+  // Get domain from URL
+  try {
+    const domain = new URL(url).hostname;
+    if (domain.length <= maxLength) return domain;
+    return `${domain.substring(0, maxLength)}…`;
+  } catch {
+    // If URL parsing fails, just truncate the original URL
+    return `${url.substring(0, maxLength)}…`;
+  }
 };
 
 export default function TaskDetails({ 
@@ -53,9 +61,9 @@ export default function TaskDetails({
             <p className="text-xs">{formatDate(task.due_date)}</p>
           </div>
 
-          {/* URL link (if available) - with tooltip and truncation */}
+          {/* URL link (if available) - with tooltip and improved truncation */}
           {task.url_link && (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <ExternalLink size={16} className="text-primary shrink-0" />
               <TooltipProvider>
                 <Tooltip>
@@ -64,7 +72,8 @@ export default function TaskDetails({
                       href={task.url_link} 
                       target="_blank" 
                       rel="noopener noreferrer" 
-                      className="text-xs text-primary hover:underline truncate max-w-[180px] sm:max-w-xs"
+                      className="text-xs text-primary hover:underline truncate max-w-[120px] sm:max-w-xs external-link"
+                      onClick={(e) => e.stopPropagation()}
                     >
                       {truncateUrl(task.url_link, 15)}
                     </a>

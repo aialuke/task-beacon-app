@@ -37,7 +37,7 @@
     --input: 240 5.9% 90%;
     --ring: 240 5.9% 10%;
 
-    /* Misc */
+    /* Radius */
     --radius: 1rem;
 
     /* Timer Status */
@@ -70,8 +70,8 @@
 @layer components {
   .task-card {
     @apply flex flex-col p-3 sm:p-3 bg-white rounded-xl shadow-sm border border-transparent hover:border-secondary transition-colors relative text-left;
-    min-height: calc(1.25 * 60px); /* Increasing height by 25% (assuming base height around 60px) */
-    width: 90%; /* Change width to 90% on mobile */
+    min-height: calc(1.25 * 60px); /* Increasing height by 25% */
+    width: 95%; /* Increase width to 95% on mobile */
     margin-left: auto;
     margin-right: auto;
   }
@@ -88,6 +88,14 @@
 
   .status-ribbon {
     @apply px-2 py-0.5 text-xs font-medium text-white text-center rounded-md;
+    /* Mobile optimizations for status ribbon */
+    @media (max-width: 640px) {
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      font-size: 0.6rem;
+      padding: 1px 4px;
+    }
   }
 
   .form-field-group {
@@ -126,12 +134,25 @@
     transform: scale(0.95);
   }
 
-  /* File input styling */
+  /* File input styling - improved for mobile */
   input[type="file"] {
-    @apply max-w-full sm:max-w-[200px] text-sm file:mr-4 file:py-2 file:px-4
+    @apply text-sm file:mr-4 file:py-2 file:px-4
     file:rounded-full file:border-0 file:text-sm file:font-semibold
     file:bg-primary file:text-primary-foreground
     hover:file:bg-primary/80 cursor-pointer;
+    max-width: 100%;
+  }
+  
+  @media (max-width: 640px) {
+    input[type="file"] {
+      max-width: 100px;
+    }
+  }
+  
+  @media (min-width: 640px) {
+    input[type="file"] {
+      max-width: 200px;
+    }
   }
 }
 
@@ -151,7 +172,6 @@
 
   .owner-name {
     @apply text-xs text-gray-600 mr-2 whitespace-nowrap overflow-hidden;
-    /* For RTL support, consider: margin-inline-end: 0.5rem; */
   }
   
   .mobile-safe-area {
@@ -159,9 +179,16 @@
   }
   
   .mobile-description-container {
-    margin-top: 10px; /* Ensure text starts below status ribbon */
-    padding-top: 2px; /* Extra padding for spacing */
-    min-height: 20px; /* Minimum height to ensure visibility */
+    margin-top: 4px;
+    padding-top: 1px;
+    min-height: 20px;
+  }
+
+  /* Mobile optimizations for task header */
+  @media (max-width: 640px) {
+    .task-header-container {
+      padding-right: 50px; /* Make room for status ribbon */
+    }
   }
 
   /* Tooltip styling for mobile/touch devices */
@@ -169,6 +196,19 @@
     .tooltip-touch {
       @apply visible opacity-100;
     }
+  }
+  
+  /* Task filter dropdown width for mobile */
+  @media (max-width: 640px) {
+    .filter-dropdown-mobile {
+      width: 40%;
+    }
+  }
+  
+  /* External link styling */
+  .external-link {
+    @apply flex items-center gap-1 text-primary hover:underline;
+    word-break: break-all;
   }
 }
 
@@ -180,3 +220,4 @@
   outline: 2px solid hsl(var(--primary));
   outline-offset: 2px;
 }
+
