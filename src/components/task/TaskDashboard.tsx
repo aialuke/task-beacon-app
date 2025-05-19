@@ -13,8 +13,6 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export default function TaskDashboard() {
-  const [open, setOpen] = useState(false);
-  const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleSignOut = async () => {
     try {
@@ -38,8 +36,13 @@ export default function TaskDashboard() {
           <img
             src="/hourglass_logo.svg"
             alt="Task Beacon Logo"
+<<<<<<< HEAD
             width={36} // Increased by from 30
             height={36} // Increased by from 30
+=======
+            width={24}
+            height={24}
+>>>>>>> parent of c67e2be (Logo and app name update)
             className="text-primary"
           />
           <span className="text-foreground text-lg font-semibold">Flow State</span>
