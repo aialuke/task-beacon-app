@@ -1,6 +1,5 @@
-
 import { useRef, useState, useEffect, useCallback } from "react";
-import { useSpring } from "@react-spring/web";
+import { useSpring, SpringValues } from "@react-spring/web";
 import { Task } from "@/lib/types";
 import { useTaskExpand } from "@/contexts/TaskExpandContext";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
@@ -13,19 +12,13 @@ interface TaskCardProps {
 }
 
 export default function TaskCard({ task }: TaskCardProps) {
-  const {
-    expandedTaskId,
-    setExpandedTaskId,
-    registerTaskHeight
-  } = useTaskExpand();
-  
+  const { expandedTaskId, setExpandedTaskId, registerTaskHeight } = useTaskExpand();
   const [isPinned, setIsPinned] = useState(task.pinned);
   const [pinLoading, setPinLoading] = useState(false);
   const isExpanded = expandedTaskId === task.id;
   const contentRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
 
-  // Register this task's expanded content height when it changes
   useEffect(() => {
     if (contentRef.current) {
       const height = contentRef.current.scrollHeight;
@@ -33,58 +26,62 @@ export default function TaskCard({ task }: TaskCardProps) {
     }
   }, [task.id, registerTaskHeight]);
 
-  // Spring animation for expanding/collapsing with improved settings
-  const expandAnimation = useSpring({
-    height: isExpanded ? contentRef.current?.scrollHeight || 'auto' : 0,
-    opacity: isExpanded ? 1 : 0,
+  const [expandAnimation] = useSpring(() => ({
+    from: { height: 0, opacity: 0 },
+    to: { height: isExpanded ? contentRef.current?.scrollHeight ?? 180 : 0, opacity: isExpanded ? 1 : 0 },
     config: {
-      tension: 210,  // Adjusted tension for smooth expansion
-      friction: 24,  // Balanced friction
-      clamp: false   // No clamping for smoother end of animation
+      tension: 210,
+      friction: 24,
+      clamp: true,
     },
-    immediate: false
-  });
+    immediate: false,
+  })) as [SpringValues<{ height: number; opacity: number }>, unknown];
+
+  useEffect(() => {
+    if (contentRef.current && isExpanded) {
+      expandAnimation.height.set(contentRef.current.scrollHeight);
+    }
+  }, [isExpanded, expandAnimation.height]);
 
   const toggleExpand = useCallback(() => {
     setExpandedTaskId(isExpanded ? null : task.id);
   }, [isExpanded, task.id, setExpandedTaskId]);
-  
+
   const handleTogglePin = async () => {
     setPinLoading(true);
     const newPinnedState = !isPinned;
-    
+
     try {
       if (isMockingSupabase) {
-        // Mock behavior for development
         toast.success(`Task ${isPinned ? "unpinned" : "pinned"} successfully (mock)`);
         setIsPinned(newPinnedState);
         setTimeout(() => setPinLoading(false), 500);
         return;
       }
-      
+
       const { error } = await supabase
         .from("tasks")
         .update({ pinned: newPinnedState })
         .eq("id", task.id);
 
       if (error) throw error;
-      
+
       setIsPinned(newPinnedState);
       toast.success(`Task ${isPinned ? "unpinned" : "pinned"} successfully`);
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      if (error && typeof error === "object" && "message" in error) {
+        toast.error((error as { message: string }).message);
+      } else {
+        toast.error("An unexpected error occurred");
+      }
     } finally {
       setPinLoading(false);
     }
   };
-  
+
   return (
-    <div className={`task-card-container ${isExpanded ? 'expanded' : ''}`}>
-      <div 
-        ref={cardRef} 
-        className={`task-card ${isExpanded ? 'expanded-card' : ''}`}
-      >
-        {/* Header section - always visible */}
+    <div className={`task-card-container ${isExpanded ? "expanded" : ""}`}>
+      <div ref={cardRef} className={`task-card ${isExpanded ? "expanded-card" : ""} p-3`}>
         <TaskHeader
           task={task}
           isExpanded={isExpanded}
@@ -93,9 +90,7 @@ export default function TaskCard({ task }: TaskCardProps) {
           toggleExpand={toggleExpand}
           handleTogglePin={handleTogglePin}
         />
-
-        {/* Expanded content */}
-        <TaskDetails 
+        <TaskDetails
           task={task}
           isPinned={isPinned}
           expandAnimation={expandAnimation}

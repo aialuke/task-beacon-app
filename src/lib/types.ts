@@ -1,21 +1,18 @@
-// Application types for task-beacon-app
-
 export type TaskStatus = "pending" | "complete" | "overdue";
 
-// Represents a parent task's details fetched via Supabase relation
 export interface ParentTask {
+  id: string; // Added id
   title: string;
   description: string | null;
   photo_url: string | null;
   url_link: string | null;
 }
 
-// Represents a task in the app, aligned with Supabase schema
 export interface Task {
   id: string;
   title: string;
   description: string | null;
-  due_date: string; // ISO date string
+  due_date: string;
   photo_url: string | null;
   url_link: string | null;
   owner_id: string;
@@ -28,7 +25,6 @@ export interface Task {
   updated_at: string;
 }
 
-// Represents an authenticated user
 export interface User {
   id: string;
   email: string;
