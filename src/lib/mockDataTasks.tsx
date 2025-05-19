@@ -1,7 +1,7 @@
-// src/lib/mockTasks.ts
+// src/lib/mockDataTasks.ts
 import { Task } from "./types";
 
-export const mockTasks: Task[] = [
+export const mockDataTasks: Task[] = [
   {
     id: "1",
     title: "Complete project documentation",

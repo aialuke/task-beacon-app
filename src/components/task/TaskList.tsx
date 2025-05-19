@@ -38,8 +38,8 @@ export default function TaskList({ dialogOpen, setDialogOpen }: TaskListProps) {
     setLoading(true);
     try {
       if (isMockingSupabase) {
-        const { mockTasks } = await import("@/lib/mockTasks");
-        setTasks(mockTasks);
+        const { mockDataTasks } = await import("@/lib/mockDataTasks");
+        setTasks(mockDataTasks);
         return;
       }
 
