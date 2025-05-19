@@ -24,57 +24,6 @@ import { TaskHeightProvider } from "@/contexts/TaskHeightContext";
 
 const CreateTaskForm = lazy(() => import("../CreateTaskForm"));
 
-const mockTasks: Task[] = [
-  {
-    id: "1",
-    title: "Complete project documentation",
-    description: "Write up all project details and specifications",
-    due_date: new Date(Date.now() + 86400000).toISOString(),
-    photo_url: null,
-    url_link: "https://example.com/docs",
-    owner_id: "user-1",
-    parent_task_id: null,
-    parent_task: null,
-    pinned: true,
-    status: "pending",
-    assignee_id: null,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: "2",
-    title: "Client meeting",
-    description: "Discuss project timeline and deliverables",
-    due_date: new Date(Date.now() - 86400000).toISOString(),
-    photo_url: null,
-    url_link: null,
-    owner_id: "user-2",
-    parent_task_id: null,
-    parent_task: null,
-    pinned: false,
-    status: "overdue",
-    assignee_id: null,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: "3",
-    title: "Review code changes",
-    description: null,
-    due_date: new Date(Date.now() + 172800000).toISOString(),
-    photo_url: null,
-    url_link: null,
-    owner_id: "user-3",
-    parent_task_id: null,
-    parent_task: null,
-    pinned: false,
-    status: "pending",
-    assignee_id: null,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-];
-
 interface TaskListProps {
   dialogOpen: boolean;
   setDialogOpen: (open: boolean) => void;
@@ -89,6 +38,7 @@ export default function TaskList({ dialogOpen, setDialogOpen }: TaskListProps) {
     setLoading(true);
     try {
       if (isMockingSupabase) {
+        const { mockTasks } = await import("@/lib/mockTasks");
         setTasks(mockTasks);
         return;
       }
@@ -120,7 +70,7 @@ export default function TaskList({ dialogOpen, setDialogOpen }: TaskListProps) {
     } finally {
       setLoading(false);
     }
-  }, []); // Empty dependencies since setLoading, setTasks, isMockingSupabase are stable
+  }, []);
 
   useEffect(() => {
     fetchTasks();
@@ -158,7 +108,7 @@ export default function TaskList({ dialogOpen, setDialogOpen }: TaskListProps) {
   const getFilteredTasks = (): Task[] => {
     if (filter === "all") return tasks;
     return tasks.filter((task) => {
-      const dueDate = new Date(task.due_date);
+      const dueDate = task.due_date ? new Date(task.due_date) : new Date();
       const now = new Date();
       const isNotComplete = task.status !== "complete";
       if (filter === "overdue") return dueDate < now && isNotComplete;
@@ -222,11 +172,7 @@ export default function TaskList({ dialogOpen, setDialogOpen }: TaskListProps) {
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogTrigger asChild>
-          <button
-            className="fab"
-            title="Create New Task"
-            aria-label="Create New Task"
-          >
+          <button className="fab" aria-label="Create New Task">
             <ClockPlus className="h-6 w-6" />
           </button>
         </DialogTrigger>

@@ -1,10 +1,9 @@
-// src/components/TaskCard.tsx
 import { useRef, useState, useEffect, useCallback, memo } from "react";
 import { Task } from "@/lib/types";
-import { useExpandedTask } from "@/lib/expanded-task-utils"; // Corrected import
-import { useTaskHeight } from "@/lib/task-height-utils"; // Corrected import
+import { useExpandedTask } from "@/lib/expanded-task-utils";
+import { useTaskHeight } from "@/lib/task-height-utils";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
-import { toast } from "@/lib/toast"; // Corrected import
+import { toast } from "@/lib/toast";
 import TaskHeader from "./TaskHeader";
 import TaskDetails from "./TaskDetails";
 
@@ -91,6 +90,7 @@ function TaskCard({ task }: TaskCardProps) {
       <div
         ref={cardRef}
         className={`task-card ${isExpanded ? "expanded-card" : ""} p-3`}
+        aria-expanded={isExpanded}
         style={{
           overflowY: "hidden",
           boxSizing: "border-box",
