@@ -82,10 +82,7 @@ export default function TaskCard({ task }: TaskCardProps) {
   
   return (
     <div className={`task-card-container ${isExpanded ? 'expanded' : ''}`}>
-      <div 
-        ref={cardRef} 
-        className={`task-card ${isPinned ? 'border-l-4 border-l-primary' : ''} ${isExpanded ? 'expanded-card' : ''}`}
-      >
+      <div>
         {/* Header section - always visible */}
         <TaskHeader
           task={task}

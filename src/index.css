@@ -86,18 +86,6 @@
     @apply border-secondary;
   }
 
-  .status-ribbon {
-    @apply px-2 py-0.5 text-xs font-medium text-white text-center rounded-md;
-    /* Mobile optimizations for status ribbon */
-    @media (max-width: 640px) {
-      position: absolute;
-      top: 3px;
-      right: 3px;
-      font-size: 0.6rem;
-      padding: 1px 4px;
-    }
-  }
-
   .form-field-group {
     @apply space-y-2;
   }
@@ -182,13 +170,6 @@
     margin-top: 4px;
     padding-top: 1px;
     min-height: 20px;
-  }
-
-  /* Mobile optimizations for task header */
-  @media (max-width: 640px) {
-    .task-header-container {
-      padding-right: 50px; /* Make room for status ribbon */
-    }
   }
 
   /* Tooltip styling for mobile/touch devices */
