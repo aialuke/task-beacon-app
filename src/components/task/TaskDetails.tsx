@@ -1,8 +1,10 @@
+
 import { formatDate } from "@/lib/utils";
 import { Task } from "@/lib/types";
 import TaskActions from "../TaskActions";
 import { Calendar1, ExternalLink } from "lucide-react";
 import { animated } from "@react-spring/web";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface TaskDetailsProps {
   task: Task;
@@ -17,6 +19,8 @@ export default function TaskDetails({
   expandAnimation, 
   contentRef 
 }: TaskDetailsProps) {
+  const isMobile = useIsMobile();
+  
   return (
     <animated.div 
       ref={contentRef} 
@@ -25,9 +29,9 @@ export default function TaskDetails({
         willChange: 'height, opacity',
         overflow: 'hidden'
       }} 
-      className="w-full mt-2"
+      className="w-full mt-3"
     >
-      <div className="space-y-2 pl-[56px]">
+      <div className={`space-y-3 pl-[56px] ${isMobile ? 'pt-1' : ''}`}>
         {/* Date and URL in same horizontal row */}
         <div className="flex items-center flex-wrap gap-x-6 gap-y-2">
           {/* Due date with calendar icon */}
@@ -44,7 +48,7 @@ export default function TaskDetails({
                 href={task.url_link} 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="text-xs text-primary hover:underline truncate"
+                className="text-xs text-primary hover:underline truncate max-w-[180px] sm:max-w-xs"
               >
                 {task.url_link}
               </a>

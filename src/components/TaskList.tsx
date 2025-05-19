@@ -4,7 +4,7 @@ import TaskCard from "./task/TaskCard";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ClockPlus } from "lucide-react"; // Verify with lucide-react@0.462.0
+import { ClockPlus, Plus } from "lucide-react"; // Verify with lucide-react@0.462.0
 import {
   Select,
   SelectContent,
@@ -111,7 +111,7 @@ export default function TaskList({ dialogOpen, setDialogOpen }: TaskListProps) {
 
       const typedData: Task[] = data || [];
       setTasks(typedData);
-        } catch (error: unknown) {
+    } catch (error: unknown) {
       if (error instanceof Error) {
         toast.error(error.message);
       } else {
@@ -122,7 +122,7 @@ export default function TaskList({ dialogOpen, setDialogOpen }: TaskListProps) {
     }
   };
 
- useEffect(() => {
+  useEffect(() => {
     fetchTasks();
     if (!isMockingSupabase) {
       const subscription = supabase
@@ -156,7 +156,6 @@ export default function TaskList({ dialogOpen, setDialogOpen }: TaskListProps) {
     }
   }, []);
 
-
   const getFilteredTasks = (): Task[] => {
     if (filter === "all") return tasks;
     return tasks.filter((task) => {
@@ -172,8 +171,8 @@ export default function TaskList({ dialogOpen, setDialogOpen }: TaskListProps) {
   const filteredTasks = getFilteredTasks();
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 relative">
+      <div className="flex items-center">
         <div className="w-full max-w-xs">
           <Select
             value={filter}
@@ -194,26 +193,6 @@ export default function TaskList({ dialogOpen, setDialogOpen }: TaskListProps) {
             </SelectContent>
           </Select>
         </div>
-
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogTrigger asChild>
-            <Button
-              variant="default"
-              className="h-10 w-10 rounded-md bg-primary hover:bg-primary/80 hover:scale-105 transition-all p-0"
-              title="Create New Task"
-            >
-              <ClockPlus className="h-5 w-5 text-white" />
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Create New Task</DialogTitle>
-            </DialogHeader>
-            <Suspense fallback={<div>Loading form...</div>}>
-              <CreateTaskForm onClose={() => setDialogOpen(false)} />
-            </Suspense>
-          </DialogContent>
-        </Dialog>
       </div>
 
       <TaskExpandProvider>
@@ -239,6 +218,27 @@ export default function TaskList({ dialogOpen, setDialogOpen }: TaskListProps) {
           )}
         </div>
       </TaskExpandProvider>
+
+      {/* Floating Action Button (FAB) for creating new tasks */}
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogTrigger asChild>
+          <button
+            className="fab"
+            title="Create New Task"
+            aria-label="Create New Task"
+          >
+            <Plus className="h-6 w-6" />
+          </button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Create New Task</DialogTitle>
+          </DialogHeader>
+          <Suspense fallback={<div>Loading form...</div>}>
+            <CreateTaskForm onClose={() => setDialogOpen(false)} />
+          </Suspense>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

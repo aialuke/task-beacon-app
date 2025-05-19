@@ -7,6 +7,7 @@ import { supabase, isMockingSupabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import TaskHeader from "./TaskHeader";
 import TaskDetails from "./TaskDetails";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface TaskCardProps {
   task: Task;
@@ -24,6 +25,7 @@ export default function TaskCard({ task }: TaskCardProps) {
   const isExpanded = expandedTaskId === task.id;
   const contentRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
 
   // Register this task's expanded content height when it changes
   useEffect(() => {

@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import TaskList from "./TaskList";
@@ -10,7 +11,7 @@ export default function TaskDashboard() {
   const handleSignOut = async () => {
     try {
       await supabase.auth.signOut();
-       } catch (error: unknown) {
+    } catch (error: unknown) {
       console.error("Sign-out error:", error);
       // You might want to add a type check here if you need to access error properties
       // if (error instanceof Error) {
@@ -19,9 +20,8 @@ export default function TaskDashboard() {
     }
   };
 
-
   return (
-    <div className="max-w-3xl mx-auto px-4 py-6 space-y-6">
+    <div className="max-w-3xl mx-auto px-2 sm:px-4 py-6 space-y-6">
       <header className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <svg

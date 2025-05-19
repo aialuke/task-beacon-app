@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -59,7 +60,7 @@
   }
 
   #root {
-    @apply max-w-5xl mx-auto px-8 text-center min-h-[100dvh] w-full overflow-x-hidden;
+    @apply max-w-5xl mx-auto px-4 sm:px-8 text-center min-h-[100dvh] w-full overflow-x-hidden;
   }
 }
 
@@ -68,7 +69,17 @@
    ========================= */
 @layer components {
   .task-card {
-    @apply flex flex-col p-2 bg-white rounded-xl shadow-sm border border-transparent hover:border-secondary transition-colors relative text-left;
+    @apply flex flex-col p-3 sm:p-2 bg-white rounded-xl shadow-sm border border-transparent hover:border-secondary transition-colors relative text-left;
+    min-height: calc(1.25 * 60px); /* Increasing height by 25% (assuming base height around 60px) */
+    width: 90%; /* Change width to 90% on mobile */
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  @media (min-width: 640px) {
+    .task-card {
+      width: 100%;
+    }
   }
 
   .task-card[data-expanded="true"] {
@@ -92,6 +103,26 @@
     @apply border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md focus:outline-none focus:ring-2 focus:ring-accent/50;
     transition: background 0.2s, color 0.2s;
   }
+  
+  /* FAB button styles */
+  .fab {
+    @apply bg-primary text-white rounded-full shadow-lg flex items-center justify-center fixed;
+    bottom: 16px;
+    right: 16px;
+    width: 56px;
+    height: 56px;
+    z-index: 50;
+    transition: transform 0.2s, background-color 0.2s;
+  }
+  
+  .fab:hover {
+    @apply bg-primary/90;
+    transform: scale(1.05);
+  }
+  
+  .fab:active {
+    transform: scale(0.95);
+  }
 }
 
 /* =========================
@@ -101,6 +132,7 @@
   .task-list {
     @apply flex flex-col;
     transition: all 0.3s ease-out;
+    padding: 0 5px;
   }
 
   .header-text {
@@ -110,6 +142,16 @@
   .owner-name {
     @apply text-xs text-gray-600 mr-2 whitespace-nowrap overflow-hidden;
     /* For RTL support, consider: margin-inline-end: 0.5rem; */
+  }
+  
+  .mobile-safe-area {
+    @apply px-4;
+  }
+  
+  .mobile-description-container {
+    margin-top: 10px; /* Ensure text starts below status ribbon */
+    padding-top: 2px; /* Extra padding for spacing */
+    min-height: 20px; /* Minimum height to ensure visibility */
   }
 }
 

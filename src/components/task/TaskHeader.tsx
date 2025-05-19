@@ -6,6 +6,7 @@ import { useSpring, animated } from "@react-spring/web";
 import { useRef } from "react";
 import CountdownTimer from "../CountdownTimer";
 import { Pin } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface TaskHeaderProps {
   task: Task;
@@ -27,8 +28,9 @@ export default function TaskHeader({
   const status = getTaskStatus(task);
   const statusColor = getStatusColor(status);
   const descriptionRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
 
-  // Animation for description text
+  // Animation for description text - adjusted for mobile
   const descriptionAnimation = useSpring({
     height: isExpanded ? descriptionRef.current?.scrollHeight || 'auto' : '16px',
     opacity: isExpanded ? 1 : 1,
@@ -60,11 +62,11 @@ export default function TaskHeader({
 
       {/* Task info */}
       <div className="flex-1 min-w-0">
-        <h3 className="font-bold text-sm text-gray-900 truncate" title={task.title}>
+        <h3 className="font-bold text-sm sm:text-base text-gray-900 truncate" title={task.title}>
           {task.title}
         </h3>
         
-        {/* Animated description container */}
+        {/* Animated description container with improved mobile positioning */}
         {task.description && (
           <animated.div 
             ref={descriptionRef} 
@@ -74,17 +76,17 @@ export default function TaskHeader({
               overflow: 'hidden',
               position: 'relative'
             }} 
-            className="text-xs text-gray-600"
+            className={`text-xs sm:text-sm text-gray-600 ${isMobile ? 'mobile-description-container' : ''}`}
           >
-            <div className={`absolute left-0 top-0 ${!isExpanded ? 'truncate w-full' : ''}`}>
-              {isExpanded ? task.description : truncateText(task.description, 20)}
+            <div className={`${!isExpanded ? 'truncate w-full' : ''} ${isMobile ? 'pt-1' : ''}`}>
+              {isExpanded ? task.description : truncateText(task.description, isMobile ? 15 : 20)}
             </div>
           </animated.div>
         )}
       </div>
       
       {/* Status ribbon */}
-      <div className={`status-ribbon ${statusColor}`} style={{ position: 'relative', right: 0 }}>
+      <div className={`status-ribbon ${statusColor}`}>
         {getStatusText(status)}
       </div>
 
