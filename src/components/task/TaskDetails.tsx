@@ -50,7 +50,6 @@ export default function TaskDetails({
         willChange: 'height, opacity',
         overflow: 'hidden'
       }} 
-      className="w-full mt-3"
     >
       <div className={`space-y-3 pl-[56px] ${isMobile ? 'pt-1' : ''}`}>
         {/* Date and URL in same horizontal row */}
