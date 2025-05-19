@@ -62,7 +62,7 @@ export default function TaskHeader({
 
       {/* Task info */}
       <div className="flex-1 min-w-0">
-        <h3 className="font-bold text-sm sm:text-base text-gray-900 truncate" title={task.title}>
+        <h3 className="font-bold text-xs sm:text-base text-gray-900 truncate" title={task.title}>
           {task.title}
         </h3>
         
