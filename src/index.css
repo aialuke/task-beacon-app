@@ -43,9 +43,6 @@
     --timer-complete: 158 83% 36%; /* #059669 in HSL */
     --timer-overdue: 348 68% 54%;  /* #DA3E52 in HSL */
     --timer-pending: 226 72% 56%;  /* #3662E3 in HSL */
-
-    /* Font */
-    --font-sans: 'Manrope', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
   }
 
   body {
