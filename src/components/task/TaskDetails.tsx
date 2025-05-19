@@ -69,8 +69,8 @@ export default function TaskDetails({
 
   useEffect(() => {
     if (isExpanded) {
+      forceUpdate({});
       setTimeout(() => {
-        forceUpdate({});
         if (contentRef.current) {
           console.log("Forced re-render scrollHeight:", contentRef.current.scrollHeight);
         }
@@ -88,14 +88,14 @@ export default function TaskDetails({
         opacity: opacityAnimation.opacity,
         willChange: "height, opacity",
         overflow: "visible",
-        minHeight: isExpanded ? 350 : 0,
+        minHeight: isExpanded ? 400 : 0,
         zIndex: 2,
       }}
       className="w-full mt-1"
     >
       <div
         className={`space-y-3 ${isMobile ? "pl-4 pt-2 pb-6" : "pl-6 pt-2 pb-6"}`}
-        style={{ height: isExpanded ? "auto" : "0", minHeight: isExpanded ? 350 : 0 }}
+        style={{ height: isExpanded ? "auto" : "0", minHeight: isExpanded ? 400 : 0 }}
       >
         <div className="flex items-center flex-wrap gap-4 min-w-0">
           <div className="flex items-center gap-3 min-w-0">
