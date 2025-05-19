@@ -13,6 +13,8 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export default function TaskDashboard() {
+  const [open, setOpen] = useState(false); // For DropdownMenu
+  const [dialogOpen, setDialogOpen] = useState(false); // For TaskList dialog
 
   const handleSignOut = async () => {
     try {
@@ -45,7 +47,6 @@ export default function TaskDashboard() {
 >>>>>>> parent of c67e2be (Logo and app name update)
             className="text-primary"
           />
-          <span className="text-foreground text-lg font-semibold">Flow State</span>
         </div>
         <DropdownMenu open={open} onOpenChange={setOpen}>
           <DropdownMenuTrigger asChild>
