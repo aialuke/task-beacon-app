@@ -1,5 +1,5 @@
 // src/components/CountdownTimer.tsx
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSpring, animated } from "@react-spring/web";
 import { getDaysRemaining, getTimerColor } from "@/lib/utils";
 import { TaskStatus } from "@/lib/types";
@@ -42,8 +42,8 @@ export default function CountdownTimer({
   };
 
   const calculateOffset = () => {
-    if (status === "complete") return 0; // Full circle
-    if (status === "overdue") return 0; // Full red circle
+    if (status === "complete") return 0;
+    if (status === "overdue") return circumference;
     const totalDays = 14;
     const remainingPercentage = Math.min(Math.max(daysLeft / totalDays, 0), 1);
     return circumference * (1 - remainingPercentage);
@@ -52,7 +52,7 @@ export default function CountdownTimer({
   const { strokeDashoffset } = useSpring({
     strokeDashoffset: calculateOffset(),
     config: { tension: 120, friction: 14 },
-    immediate: status === "complete" || status === "overdue",
+    immediate: status === "complete",
   });
 
   const pulseAnimation = useSpring({
@@ -94,6 +94,7 @@ export default function CountdownTimer({
 
     updateTimeLeft();
 
+    // Cleanup on unmount
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
@@ -159,7 +160,6 @@ export default function CountdownTimer({
                 strokeDashoffset={strokeDashoffset}
                 transform={`rotate(-90, ${dynamicSize / 2}, ${dynamicSize / 2})`}
                 strokeLinecap="round"
-                className="timer-ring"
                 style={{
                   filter:
                     daysLeft <= 1 || status === "overdue"
@@ -200,7 +200,7 @@ export default function CountdownTimer({
                     status === "overdue" ? "text-destructive" : "text-primary"
                   }
                 >
-                  {timeDisplay} {status === "overdue" && "[Overdue]"}
+                  {timeDisplay}
                 </span>
               )}
             </div>
