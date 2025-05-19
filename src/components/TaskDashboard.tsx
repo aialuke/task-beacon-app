@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect } from "react";
 import TaskList from "./TaskList";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
