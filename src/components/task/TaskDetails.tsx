@@ -15,6 +15,7 @@ import { useEffect } from "react";
 interface TaskDetailsProps {
   task: Task;
   isPinned: boolean;
+  isExpanded: boolean; // Added for conditional minHeight
   expandAnimation: SpringValues<{ height: number; opacity: number }>;
   contentRef: React.RefObject<HTMLDivElement>;
 }
@@ -43,15 +44,17 @@ const truncateDescription = (text: string, maxLength: number = 60): string => {
 export default function TaskDetails({
   task,
   isPinned,
+  isExpanded,
   expandAnimation,
   contentRef,
 }: TaskDetailsProps) {
   const isMobile = useIsMobile();
 
   useEffect(() => {
+    console.log("Task props:", task);
     console.log("Expand animation:", expandAnimation);
     console.log("Content height:", contentRef.current?.offsetHeight);
-  }, [expandAnimation, contentRef]);
+  }, [task, expandAnimation, contentRef]);
 
   return (
     <animated.div
@@ -59,8 +62,8 @@ export default function TaskDetails({
       style={{
         ...expandAnimation,
         willChange: "height, opacity",
-        overflow: "hidden",
-        minHeight: 180,
+        overflow: "visible", // Debug clipping
+        minHeight: isExpanded ? 180 : 0, // Conditional minHeight
       }}
       className="w-full mt-1"
     >

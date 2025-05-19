@@ -23,12 +23,13 @@ export default function TaskCard({ task }: TaskCardProps) {
     if (contentRef.current) {
       const height = contentRef.current.scrollHeight;
       registerTaskHeight(task.id, height);
+      console.log("Content ref height:", contentRef.current.scrollHeight);
     }
   }, [task.id, registerTaskHeight]);
 
   const [expandAnimation] = useSpring(() => ({
     from: { height: 0, opacity: 0 },
-    to: { height: isExpanded ? contentRef.current?.scrollHeight ?? 180 : 0, opacity: isExpanded ? 1 : 0 },
+    to: () => ({ height: isExpanded ? contentRef.current?.scrollHeight ?? 180 : 0, opacity: isExpanded ? 1 : 0 }),
     config: {
       tension: 210,
       friction: 24,
@@ -38,8 +39,8 @@ export default function TaskCard({ task }: TaskCardProps) {
   })) as [SpringValues<{ height: number; opacity: number }>, unknown];
 
   useEffect(() => {
-    if (contentRef.current && isExpanded) {
-      expandAnimation.height.set(contentRef.current.scrollHeight);
+    if (contentRef.current) {
+      expandAnimation.height.set(isExpanded ? contentRef.current.scrollHeight : 0);
     }
   }, [isExpanded, expandAnimation.height]);
 
@@ -93,6 +94,7 @@ export default function TaskCard({ task }: TaskCardProps) {
         <TaskDetails
           task={task}
           isPinned={isPinned}
+          isExpanded={isExpanded}
           expandAnimation={expandAnimation}
           contentRef={contentRef}
         />
