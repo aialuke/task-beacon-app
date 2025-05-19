@@ -235,7 +235,6 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
             className="cursor-pointer w-full sm:w-auto"
             aria-label="Attach File"
           />
-          <span className="text-xs text-gray-500 sm:hidden">Attach File</span>
         </div>
         {photoPreview && (
           <div className="mt-2">
