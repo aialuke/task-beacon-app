@@ -3,7 +3,6 @@ import { formatDate } from "@/lib/utils";
 import { Task } from "@/lib/types";
 import TaskActions from "../TaskActions";
 import { Calendar1, ExternalLink } from "lucide-react";
-import { animated } from "@react-spring/web";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
   Tooltip,
@@ -43,14 +42,7 @@ export default function TaskDetails({
   const isMobile = useIsMobile();
   
   return (
-    <animated.div 
-      ref={contentRef} 
-      style={{
-        ...expandAnimation,
-        willChange: 'height, opacity',
-        overflow: 'hidden'
-      }} 
-    >
+    
       <div className={`space-y-3 pl-[56px] ${isMobile ? 'pt-1' : ''}`}>
         {/* Date and URL in same horizontal row */}
         <div className="flex items-center flex-wrap gap-x-6 gap-y-2">
@@ -112,6 +104,4 @@ export default function TaskDetails({
         
         <TaskActions task={{...task, pinned: isPinned}} />
       </div>
-    </animated.div>
-  );
-}
+  )}
