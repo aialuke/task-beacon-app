@@ -20,15 +20,6 @@ export default function TaskCard({ task }: TaskCardProps) {
   const [animationState, setAnimationState] = useState({ height: 0, opacity: 0 });
 
   useEffect(() => {
-    console.log("TaskCard task:", {
-      id: task.id,
-      title: task.title,
-      due_date: task.due_date,
-      url_link: task.url_link,
-      parent_task: task.parent_task,
-      photo_url: task.photo_url,
-      pinned: task.pinned,
-    });
     if (contentRef.current) {
       const height = contentRef.current.scrollHeight;
       registerTaskHeight(task.id, height);
@@ -36,22 +27,16 @@ export default function TaskCard({ task }: TaskCardProps) {
   }, [task.id, registerTaskHeight, task]);
 
   useEffect(() => {
-    console.log("isExpanded state:", isExpanded, "taskId:", task.id);
-  }, [isExpanded, task.id]);
-
-  useEffect(() => {
     const timer = setTimeout(() => {
       if (contentRef.current) {
         const height = isExpanded ? Math.min(contentRef.current.scrollHeight, 400) : 0;
         setAnimationState({ height, opacity: isExpanded ? 1 : 0 });
-        console.log("Content ref height:", height);
       }
     }, 200);
     return () => clearTimeout(timer);
   }, [isExpanded, task]);
 
   const toggleExpand = useCallback(() => {
-    console.log("Toggling expand, current isExpanded:", isExpanded, "taskId:", task.id);
     setExpandedTaskId(isExpanded ? null : task.id);
   }, [isExpanded, task.id, setExpandedTaskId]);
 

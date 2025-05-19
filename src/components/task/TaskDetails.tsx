@@ -52,41 +52,10 @@ export default function TaskDetails({
   const [, forceUpdate] = useState({});
 
   useEffect(() => {
-    console.log("TaskDetails rendering:", {
-      task,
-      isExpanded,
-      hasDueDate: !!task.due_date,
-      hasUrl: !!task.url_link,
-      hasParentTask: !!task.parent_task,
-      hasPhoto: !!task.photo_url,
-    });
-    console.log("TaskDetails content:", {
-      dueDate: task.due_date,
-      urlLink: task.url_link,
-      parentTask: task.parent_task,
-      photoUrl: task.photo_url,
-      taskActionsProps: { task, isPinned },
-    });
-    console.log("Animation state:", animationState);
-    console.log("Content height:", contentRef.current?.offsetHeight, "scrollHeight:", contentRef.current?.scrollHeight);
-  }, [task, isExpanded, animationState, contentRef]);
-
-  useEffect(() => {
-    if (isExpanded && contentRef.current) {
-      const timer = setTimeout(() => {
-        console.log("Rendered content height:", contentRef.current?.offsetHeight);
-      }, 300);
-      return () => clearTimeout(timer);
-    }
-  }, [isExpanded, contentRef]);
-
-  useEffect(() => {
     if (isExpanded) {
       forceUpdate({});
     }
   }, [isExpanded]);
-
-  console.log("TaskActions props:", { task, isPinned });
 
   return (
     <animated.div
