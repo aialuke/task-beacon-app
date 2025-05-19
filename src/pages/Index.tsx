@@ -4,7 +4,7 @@ import { User } from "@/lib/types";
 import { toast } from "sonner";
 
 const AuthForm = lazy(() => import("@/components/AuthForm"));
-const TaskDashboard = lazy(() => import("@/components/TaskDashboard"));
+const TaskDashboard = lazy(() => import("@/components/task/TaskDashboard"));
 
 const Index = () => {
   const [user, setUser] = useState<User | null>(null);

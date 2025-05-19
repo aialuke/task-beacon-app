@@ -1,6 +1,6 @@
 import { useState, useEffect, lazy, Suspense } from "react";
 import { Task, TaskStatus } from "@/lib/types";
-import TaskCard from "./task/TaskCard";
+import TaskCard from "./TaskCard";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -22,7 +22,7 @@ import {
 import { ExpandedTaskProvider } from "@/contexts/ExpandedTaskContext";
 import { TaskHeightProvider } from "@/contexts/TaskHeightContext";
 
-const CreateTaskForm = lazy(() => import("./CreateTaskForm"));
+const CreateTaskForm = lazy(() => import("../CreateTaskForm"));
 
 const mockTasks: Task[] = [
   {

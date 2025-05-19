@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Task } from "@/lib/types";
 import { getStatusColor, getTaskStatus, truncateText } from "@/lib/utils";
 import { useSpring, animated, SpringValues } from "@react-spring/web";
-import { useRef } from "react";
+import { useRef, memo } from "react"; // Add memo to the import
 import CountdownTimer from "../CountdownTimer";
 import { Pin } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -118,4 +118,4 @@ function TaskHeader({
   );
 }
 
-export default React.memo(TaskHeader);
+export default memo(TaskHeader);

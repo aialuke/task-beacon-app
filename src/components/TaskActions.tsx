@@ -8,6 +8,7 @@ import FollowUpTaskForm from "./FollowUpTaskForm";
 
 interface TaskActionsProps {
   task: Task;
+  isPinned?: boolean; // Added to match TaskDetails prop
 }
 
 function TaskActions({ task }: TaskActionsProps) {

@@ -1,7 +1,7 @@
 import { useEffect, useState, memo } from "react";
 import { formatDate } from "@/lib/utils";
 import { Task } from "@/lib/types";
-import TaskActions from "../TaskActions"; // Default import, assuming memo(TaskActions)
+import TaskActions from "../TaskActions";
 import { Calendar1, ExternalLink } from "lucide-react";
 import { animated } from "@react-spring/web";
 import { useIsMobile } from "@/hooks/use-mobile";
