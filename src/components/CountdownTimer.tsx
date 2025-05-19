@@ -1,5 +1,5 @@
 // src/components/CountdownTimer.tsx
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSpring, animated } from "@react-spring/web";
 import { getDaysRemaining, getTimerColor } from "@/lib/utils";
 import { TaskStatus } from "@/lib/types";
@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/tooltip";
 
 interface CountdownTimerProps {
-  dueDate: string;
+  dueDate: string | null;
   status: TaskStatus;
   size?: number;
   priority?: "low" | "medium" | "high";
@@ -29,12 +29,13 @@ export default function CountdownTimer({
   const dynamicSize = priority === "high" ? size * 1.2 : priority === "low" ? size * 0.8 : size;
   const radius = dynamicSize / 2 - 4;
   const circumference = 2 * Math.PI * radius;
-  const [daysLeft, setDaysLeft] = useState<number>(getDaysRemaining(dueDate));
-  const [timeDisplay, setTimeDisplay] = useState<string>(`${daysLeft}d`);
+  const [daysLeft, setDaysLeft] = useState<number>(dueDate ? getDaysRemaining(dueDate) : 0);
+  const [timeDisplay, setTimeDisplay] = useState<string>(dueDate ? `${daysLeft}d` : "No due date");
   const timerColor = getTimerColor(status);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const validateDueDate = (date: string): number => {
+  const validateDueDate = (date: string | null): number => {
+    if (!date) return 0;
     const due = new Date(date).getTime();
     if (isNaN(due)) return 0;
     const now = Date.now();
@@ -42,8 +43,8 @@ export default function CountdownTimer({
   };
 
   const calculateOffset = () => {
-    if (status === "complete") return 0; // Full circle
-    if (status === "overdue") return 0; // Full red circle
+    if (status === "complete") return 0;
+    if (status === "overdue") return circumference;
     const totalDays = 14;
     const remainingPercentage = Math.min(Math.max(daysLeft / totalDays, 0), 1);
     return circumference * (1 - remainingPercentage);
@@ -52,7 +53,7 @@ export default function CountdownTimer({
   const { strokeDashoffset } = useSpring({
     strokeDashoffset: calculateOffset(),
     config: { tension: 120, friction: 14 },
-    immediate: status === "complete" || status === "overdue",
+    immediate: status === "complete",
   });
 
   const pulseAnimation = useSpring({
@@ -63,6 +64,12 @@ export default function CountdownTimer({
   });
 
   useEffect(() => {
+    if (!dueDate) {
+      setDaysLeft(0);
+      setTimeDisplay("No due date");
+      return;
+    }
+
     const updateTimeLeft = () => {
       const days = validateDueDate(dueDate);
       setDaysLeft(days);
@@ -82,12 +89,10 @@ export default function CountdownTimer({
         setTimeDisplay(`${days}d`);
       }
 
-      // Clear existing interval
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
 
-      // Set new interval based on current daysLeft
       const intervalDuration = days < 1 ? 60000 : 86400000;
       intervalRef.current = setInterval(updateTimeLeft, intervalDuration);
     };
@@ -101,7 +106,9 @@ export default function CountdownTimer({
     };
   }, [dueDate]);
 
-  const tooltipContent = isNaN(new Date(dueDate).getTime())
+  const tooltipContent = !dueDate
+    ? "No due date"
+    : isNaN(new Date(dueDate).getTime())
     ? "Invalid due date"
     : `Due: ${new Date(dueDate).toLocaleDateString()}`;
 
@@ -129,7 +136,7 @@ export default function CountdownTimer({
                 ? "Completed"
                 : status === "overdue"
                 ? `${timeDisplay} overdue`
-                : `${timeDisplay} remaining`
+                : `${timeDisplay}`
             }`}
             aria-describedby="timer-tooltip"
             className="relative focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
