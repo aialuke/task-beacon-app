@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import { Button } from "@/components/ui/button";
 import { Task } from "@/lib/types";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
@@ -10,7 +10,7 @@ interface TaskActionsProps {
   task: Task;
 }
 
-export default function TaskActions({ task }: TaskActionsProps) {
+function TaskActions({ task }: TaskActionsProps) {
   const [loading, setLoading] = useState(false);
   const [followUpDialogOpen, setFollowUpDialogOpen] = useState(false);
 
@@ -18,7 +18,6 @@ export default function TaskActions({ task }: TaskActionsProps) {
     setLoading(true);
     try {
       if (isMockingSupabase) {
-        // Mock behavior for development
         toast.success(`Task marked ${task.status === "complete" ? "incomplete" : "complete"} (mock)`);
         setTimeout(() => setLoading(false), 500);
         return;
@@ -31,7 +30,7 @@ export default function TaskActions({ task }: TaskActionsProps) {
 
       if (error) throw error;
       toast.success(`Task marked ${task.status === "complete" ? "incomplete" : "complete"}`);
-        } catch (error: unknown) {
+    } catch (error: unknown) {
       if (error instanceof Error) {
         toast.error(error.message);
       } else {
@@ -69,7 +68,6 @@ export default function TaskActions({ task }: TaskActionsProps) {
         </Button>
       </div>
       
-      {/* Follow-up Task Dialog */}
       <Dialog open={followUpDialogOpen} onOpenChange={setFollowUpDialogOpen}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
@@ -84,3 +82,5 @@ export default function TaskActions({ task }: TaskActionsProps) {
     </>
   );
 }
+
+export default memo(TaskActions);

@@ -1,6 +1,7 @@
+import { useEffect, useState, memo } from "react";
 import { formatDate } from "@/lib/utils";
 import { Task } from "@/lib/types";
-import TaskActions from "../TaskActions";
+import TaskActions from "../TaskActions"; // Default import, assuming memo(TaskActions)
 import { Calendar1, ExternalLink } from "lucide-react";
 import { animated } from "@react-spring/web";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -10,7 +11,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useEffect, useState } from "react";
 
 interface TaskDetailsProps {
   task: Task;
@@ -41,7 +41,7 @@ const truncateDescription = (text: string, maxLength: number = 60): string => {
   return lastSpace > 0 ? `${truncated.substring(0, lastSpace)}…` : `${truncated}…`;
 };
 
-export default function TaskDetails({
+function TaskDetails({
   task,
   isPinned,
   isExpanded,
@@ -144,3 +144,5 @@ export default function TaskDetails({
     </animated.div>
   );
 }
+
+export default memo(TaskDetails);

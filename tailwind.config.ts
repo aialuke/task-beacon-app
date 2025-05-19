@@ -2,7 +2,16 @@ import type { Config } from "tailwindcss";
 import animate from "tailwindcss-animate";
 
 export default {
-  content: ["./src/**/*.{ts,tsx}"], // Assumes pages, components, app in src
+  content: ["./src/**/*.{ts,tsx}"],
+  safelist: [
+    'text-destructive',
+    'text-success',
+    'text-primary',
+    'text-gray-600',
+    'bg-gray-50',
+    'border-gray-200',
+    'hover:underline',
+  ],
   theme: {
     container: {
       center: true,

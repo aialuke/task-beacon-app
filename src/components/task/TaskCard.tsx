@@ -1,6 +1,7 @@
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect, useCallback, memo } from "react";
 import { Task } from "@/lib/types";
-import { useTaskExpand } from "@/contexts/TaskExpandContext";
+import { useExpandedTask } from "@/contexts/ExpandedTaskContext";
+import { useTaskHeight } from "@/contexts/TaskHeightContext";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import TaskHeader from "./TaskHeader";
@@ -10,8 +11,9 @@ interface TaskCardProps {
   task: Task;
 }
 
-export default function TaskCard({ task }: TaskCardProps) {
-  const { expandedTaskId, setExpandedTaskId, registerTaskHeight } = useTaskExpand();
+function TaskCard({ task }: TaskCardProps) {
+  const { expandedTaskId, setExpandedTaskId } = useExpandedTask();
+  const { registerTaskHeight } = useTaskHeight();
   const [isPinned, setIsPinned] = useState(task.pinned);
   const [pinLoading, setPinLoading] = useState(false);
   const isExpanded = expandedTaskId === task.id;
@@ -24,7 +26,7 @@ export default function TaskCard({ task }: TaskCardProps) {
       const height = contentRef.current.scrollHeight;
       registerTaskHeight(task.id, height);
     }
-  }, [task.id, registerTaskHeight, task]);
+  }, [task.id, registerTaskHeight]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -40,7 +42,7 @@ export default function TaskCard({ task }: TaskCardProps) {
     setExpandedTaskId(isExpanded ? null : task.id);
   }, [isExpanded, task.id, setExpandedTaskId]);
 
-  const handleTogglePin = async () => {
+  const handleTogglePin = useCallback(async () => {
     setPinLoading(true);
     const newPinnedState = !isPinned;
 
@@ -70,7 +72,7 @@ export default function TaskCard({ task }: TaskCardProps) {
     } finally {
       setPinLoading(false);
     }
-  };
+  }, [isPinned, task.id, isMockingSupabase]);
 
   return (
     <div className={`task-card-container ${isExpanded ? "expanded" : ""}`} style={{ overflowY: "hidden", boxSizing: "border-box", width: "100%", position: "relative", zIndex: 1, scrollbarWidth: "none", msOverflowStyle: "none" }}>
@@ -98,3 +100,5 @@ export default function TaskCard({ task }: TaskCardProps) {
     </div>
   );
 }
+
+export default memo(TaskCard);

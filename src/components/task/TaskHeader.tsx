@@ -16,7 +16,7 @@ interface TaskHeaderProps {
   handleTogglePin: () => void;
 }
 
-export default function TaskHeader({
+function TaskHeader({
   task,
   isExpanded,
   isPinned,
@@ -117,3 +117,5 @@ export default function TaskHeader({
     </div>
   );
 }
+
+export default React.memo(TaskHeader);
