@@ -38,8 +38,8 @@ export default function TaskDashboard() {
           <img
             src="/hourglass_logo.svg"
             alt="Task Beacon Logo"
-            width={44} // Increased by from 36
-            height={44} // Increased by from 36
+            width={36} // Increased by from 30
+            height={36} // Increased by from 30
             className="text-primary"
           />
           <span className="text-foreground text-lg font-semibold">Flow State</span>
