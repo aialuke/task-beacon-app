@@ -82,7 +82,8 @@ export default function TaskCard({ task }: TaskCardProps) {
   
   return (
     <div className={`task-card-container ${isExpanded ? 'expanded' : ''}`}>
-      <div>
+      <div
+      >
         {/* Header section - always visible */}
         <TaskHeader
           task={task}
