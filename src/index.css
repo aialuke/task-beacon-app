@@ -29,10 +29,10 @@
     --accent-foreground: 240 5.9% 10%;
 
     /* Status */
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 80% 50%; /* Darker red for ~5.1:1 contrast with white */
     --destructive-foreground: 0 0% 98%;
     --success: 158 83% 36%; /* Matches --timer-complete */
-    --success-foreground: 0 0% 98%; /* Matches destructive-foreground for consistency */
+    --success-foreground: 0 0% 98%; /* Matches destructive-foreground */
 
     /* Borders/Inputs */
     --border: 240 5.9% 90%;
@@ -44,8 +44,8 @@
 
     /* Timer Status */
     --timer-complete: 158 83% 36%; /* #059669 in HSL */
-    --timer-overdue: 348 68% 54%;  /* #DA3E52 in HSL */
-    --timer-pending: 226 72% 56%;  /* #3662E3 in HSL */
+    --timer-overdue: 348 68% 54%; /* #DA3E52 in HSL */
+    --timer-pending: 226 72% 56%; /* #3662E3 in HSL */
   }
 
   body {
@@ -53,7 +53,12 @@
     font-family: var(--font-sans);
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-semibold;
     font-family: var(--font-sans);
   }
@@ -95,7 +100,7 @@
   }
 
   .btn-primary {
-    @apply bg-primary text-primary-foreground hover:bg-primary/80 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50;
+    @apply bg-primary text-primary-foreground hover:bg-primary/80 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 text-base;
     transition: background 0.2s;
   }
 
@@ -125,11 +130,19 @@
     transform: scale(0.95);
   }
 
+  @media (max-width: 320px) {
+    .fab {
+      @apply bottom-2 right-2 w-12 h-12;
+    }
+  }
+
+  .header-logo {
+    @apply text-primary;
+    fill: currentColor;
+  }
+
   input[type="file"] {
-    @apply text-sm file:mr-4 file:py-2 file:px-4
-    file:rounded-full file:border-0 file:text-sm file:font-semibold
-    file:bg-primary file:text-primary-foreground
-    hover:file:bg-primary/80 cursor-pointer;
+    @apply text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/80 cursor-pointer;
     max-width: 100%;
   }
 
@@ -218,7 +231,8 @@
    ========================= */
 @layer utilities {
   @keyframes flash {
-    0%, 100% {
+    0%,
+    100% {
       opacity: 1;
     }
     50% {
