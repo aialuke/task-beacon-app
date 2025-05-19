@@ -183,10 +183,16 @@
     }
   }
   
-  /* Task filter dropdown width for mobile */
+  /* Task filter dropdown width for status dropdown (TaskList.tsx) */
   @media (max-width: 640px) {
     .filter-dropdown-mobile {
       width: 40%;
+    }
+  }
+
+  @media (min-width: 641px) {
+    .filter-dropdown-mobile {
+      width: 25%;
     }
   }
   
