@@ -1,6 +1,5 @@
-// src/components/TaskDetails.tsx
 import { memo } from "react";
-import { formatDate, truncateUrl, truncateDescription } from "@/lib/utils"; // Updated imports
+import { formatDate, truncateUrl, truncateDescription } from "@/lib/utils";
 import { Task } from "@/lib/types";
 import TaskActions from "../TaskActions";
 import { Calendar1, ExternalLink } from "lucide-react";
@@ -89,6 +88,7 @@ function TaskDetails({
                   <a
                     href={`/tasks/${task.parent_task.id}`}
                     className="text-primary hover:underline ml-1"
+                    aria-label={`View details for parent task ${task.parent_task.title}`}
                   >
                     View more
                   </a>
