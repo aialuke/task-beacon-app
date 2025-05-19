@@ -4,7 +4,7 @@ import TaskCard from "./task/TaskCard";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Plus } from "lucide-react";
+import { ClockPlus } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -226,7 +226,7 @@ export default function TaskList({ dialogOpen, setDialogOpen }: TaskListProps) {
             title="Create New Task"
             aria-label="Create New Task"
           >
-            <Plus className="h-6 w-6" />
+            <ClockPlus className="h-6 w-6" />
           </button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-md">
