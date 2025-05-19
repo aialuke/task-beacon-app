@@ -15,7 +15,7 @@ import { useEffect } from "react";
 interface TaskDetailsProps {
   task: Task;
   isPinned: boolean;
-  isExpanded: boolean; // Added for conditional minHeight
+  isExpanded: boolean;
   expandAnimation: SpringValues<{ height: number; opacity: number }>;
   contentRef: React.RefObject<HTMLDivElement>;
 }
@@ -51,10 +51,17 @@ export default function TaskDetails({
   const isMobile = useIsMobile();
 
   useEffect(() => {
-    console.log("Task props:", task);
+    console.log("TaskDetails rendering:", {
+      task,
+      isExpanded,
+      hasDueDate: !!task.due_date,
+      hasUrl: !!task.url_link,
+      hasParentTask: !!task.parent_task,
+      hasPhoto: !!task.photo_url,
+    });
     console.log("Expand animation:", expandAnimation);
-    console.log("Content height:", contentRef.current?.offsetHeight);
-  }, [task, expandAnimation, contentRef]);
+    console.log("Content height:", contentRef.current?.offsetHeight, "scrollHeight:", contentRef.current?.scrollHeight);
+  }, [task, isExpanded, expandAnimation, contentRef]);
 
   return (
     <animated.div
@@ -62,8 +69,9 @@ export default function TaskDetails({
       style={{
         ...expandAnimation,
         willChange: "height, opacity",
-        overflow: "visible", // Debug clipping
-        minHeight: isExpanded ? 180 : 0, // Conditional minHeight
+        overflow: "hidden",
+        minHeight: isExpanded ? 250 : 0,
+        visibility: isExpanded ? "visible" : "hidden",
       }}
       className="w-full mt-1"
     >

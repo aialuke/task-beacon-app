@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect, useCallback, useLayoutEffect } from "react";
 import { useSpring, SpringValues } from "@react-spring/web";
 import { Task } from "@/lib/types";
 import { useTaskExpand } from "@/contexts/TaskExpandContext";
@@ -20,16 +20,16 @@ export default function TaskCard({ task }: TaskCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    console.log("TaskCard task:", task);
     if (contentRef.current) {
       const height = contentRef.current.scrollHeight;
       registerTaskHeight(task.id, height);
-      console.log("Content ref height:", contentRef.current.scrollHeight);
     }
-  }, [task.id, registerTaskHeight]);
+  }, [task.id, registerTaskHeight, task]);
 
   const [expandAnimation] = useSpring(() => ({
     from: { height: 0, opacity: 0 },
-    to: () => ({ height: isExpanded ? contentRef.current?.scrollHeight ?? 180 : 0, opacity: isExpanded ? 1 : 0 }),
+    to: () => ({ height: isExpanded ? contentRef.current?.scrollHeight ?? 250 : 0, opacity: isExpanded ? 1 : 0 }),
     config: {
       tension: 210,
       friction: 24,
@@ -38,14 +38,17 @@ export default function TaskCard({ task }: TaskCardProps) {
     immediate: false,
   })) as [SpringValues<{ height: number; opacity: number }>, unknown];
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (contentRef.current) {
-      expandAnimation.height.set(isExpanded ? contentRef.current.scrollHeight : 0);
+      const height = isExpanded ? contentRef.current.scrollHeight : 0;
+      expandAnimation.height.set(height);
+      console.log("Content ref height:", height);
     }
-  }, [isExpanded, expandAnimation.height]);
+  }, [isExpanded, expandAnimation.height, task]);
 
   const toggleExpand = useCallback(() => {
     setExpandedTaskId(isExpanded ? null : task.id);
+    console.log("Task card classes:", `task-card ${isExpanded ? "expanded-card" : ""} p-3`);
   }, [isExpanded, task.id, setExpandedTaskId]);
 
   const handleTogglePin = async () => {
@@ -82,7 +85,11 @@ export default function TaskCard({ task }: TaskCardProps) {
 
   return (
     <div className={`task-card-container ${isExpanded ? "expanded" : ""}`}>
-      <div ref={cardRef} className={`task-card ${isExpanded ? "expanded-card" : ""} p-3`}>
+      <div
+        ref={cardRef}
+        className={`task-card ${isExpanded ? "expanded-card" : ""} p-3`}
+        style={{ overflow: "visible", position: "relative", zIndex: 1 }}
+      >
         <TaskHeader
           task={task}
           isExpanded={isExpanded}
