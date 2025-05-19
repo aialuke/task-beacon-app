@@ -1,23 +1,51 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import TaskList from "./TaskList";
-import { supabase } from "@/lib/supabase";
+import { supabase, isMockingSupabase } from "@/lib/supabase";
 import { LogOut } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export default function TaskDashboard() {
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useState<{id: string, email: string} | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (isMockingSupabase) {
+        setUser({ id: "mock-user", email: "mock@example.com" });
+        return;
+      }
+
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        setUser(user ? { id: user.id, email: user.email || "" } : null);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   const handleSignOut = async () => {
     try {
       await supabase.auth.signOut();
     } catch (error: unknown) {
       console.error("Sign-out error:", error);
-      // You might want to add a type check here if you need to access error properties
-      // if (error instanceof Error) {
-      //   console.error("Sign-out error message:", error.message);
-      // }
     }
+  };
+
+  // Get first letter of email for avatar
+  const getAvatarInitial = () => {
+    if (!user?.email) return "U";
+    return user.email.charAt(0).toUpperCase();
   };
 
   return (
@@ -51,15 +79,21 @@ export default function TaskDashboard() {
           <h1 className="text-xl font-bold">Task Flow</h1>
         </div>
         <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleSignOut}
-            title="Sign out"
-            className="btn-secondary"
-          >
-            <LogOut className="h-4 w-4" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Avatar className="h-10 w-10 bg-white border border-gray-200 cursor-pointer hover:bg-gray-50">
+                <AvatarFallback className="bg-white text-primary font-bold">
+                  {getAvatarInitial()}
+                </AvatarFallback>
+              </Avatar>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="bg-white p-2 shadow-md">
+              <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer flex items-center gap-2">
+                <LogOut className="h-4 w-4" />
+                <span>Logout</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </header>
 

@@ -5,6 +5,12 @@ import TaskActions from "../TaskActions";
 import { Calendar1, ExternalLink } from "lucide-react";
 import { animated } from "@react-spring/web";
 import { useIsMobile } from "@/hooks/use-mobile";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface TaskDetailsProps {
   task: Task;
@@ -12,6 +18,13 @@ interface TaskDetailsProps {
   expandAnimation: any; // Spring animation type
   contentRef: React.RefObject<HTMLDivElement>;
 }
+
+const truncateUrl = (url: string, maxLength: number = 15): string => {
+  if (!url) return '';
+  if (url.length <= maxLength) return url;
+  
+  return `${url.substring(0, maxLength)}…`;
+};
 
 export default function TaskDetails({ 
   task, 
@@ -40,21 +53,42 @@ export default function TaskDetails({
             <p className="text-xs">{formatDate(task.due_date)}</p>
           </div>
 
-          {/* URL link (if available) */}
+          {/* URL link (if available) - with tooltip and truncation */}
           {task.url_link && (
             <div className="flex items-center gap-3">
               <ExternalLink size={16} className="text-primary shrink-0" />
-              <a 
-                href={task.url_link} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="text-xs text-primary hover:underline truncate max-w-[180px] sm:max-w-xs"
-              >
-                {task.url_link}
-              </a>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <a 
+                      href={task.url_link} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="text-xs text-primary hover:underline truncate max-w-[180px] sm:max-w-xs"
+                    >
+                      {truncateUrl(task.url_link, 15)}
+                    </a>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="text-xs">{task.url_link}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           )}
         </div>
+
+        {/* Show parent task summary for follow-up tasks */}
+        {task.parent_task && (
+          <div className="text-xs text-gray-600 bg-gray-50 p-2 rounded">
+            <span className="font-medium">Following up on: </span>
+            {task.parent_task.description ? 
+              (task.parent_task.description.length > 50 ? 
+                `${task.parent_task.description.substring(0, 50)}...` : 
+                task.parent_task.description) : 
+              task.parent_task.title}
+          </div>
+        )}
 
         {task.photo_url && (
           <div>

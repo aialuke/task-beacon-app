@@ -69,7 +69,7 @@
    ========================= */
 @layer components {
   .task-card {
-    @apply flex flex-col p-3 sm:p-2 bg-white rounded-xl shadow-sm border border-transparent hover:border-secondary transition-colors relative text-left;
+    @apply flex flex-col p-3 sm:p-3 bg-white rounded-xl shadow-sm border border-transparent hover:border-secondary transition-colors relative text-left;
     min-height: calc(1.25 * 60px); /* Increasing height by 25% (assuming base height around 60px) */
     width: 90%; /* Change width to 90% on mobile */
     margin-left: auto;
@@ -104,7 +104,7 @@
     transition: background 0.2s, color 0.2s;
   }
   
-  /* FAB button styles */
+  /* FAB button styles - improved */
   .fab {
     @apply bg-primary text-white rounded-full shadow-lg flex items-center justify-center fixed;
     bottom: 16px;
@@ -113,15 +113,25 @@
     height: 56px;
     z-index: 50;
     transition: transform 0.2s, background-color 0.2s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   
   .fab:hover {
     @apply bg-primary/90;
     transform: scale(1.05);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1);
   }
   
   .fab:active {
     transform: scale(0.95);
+  }
+
+  /* File input styling */
+  input[type="file"] {
+    @apply max-w-full sm:max-w-[200px] text-sm file:mr-4 file:py-2 file:px-4
+    file:rounded-full file:border-0 file:text-sm file:font-semibold
+    file:bg-primary file:text-primary-foreground
+    hover:file:bg-primary/80 cursor-pointer;
   }
 }
 
@@ -152,6 +162,13 @@
     margin-top: 10px; /* Ensure text starts below status ribbon */
     padding-top: 2px; /* Extra padding for spacing */
     min-height: 20px; /* Minimum height to ensure visibility */
+  }
+
+  /* Tooltip styling for mobile/touch devices */
+  @media (hover: none) {
+    .tooltip-touch {
+      @apply visible opacity-100;
+    }
   }
 }
 

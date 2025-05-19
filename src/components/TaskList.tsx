@@ -1,10 +1,11 @@
+
 import { useState, useEffect, lazy, Suspense } from "react";
 import { Task, TaskStatus } from "@/lib/types";
 import TaskCard from "./task/TaskCard";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ClockPlus, Plus } from "lucide-react"; // Verify with lucide-react@0.462.0
+import { Plus } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -12,7 +13,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -173,12 +173,12 @@ export default function TaskList({ dialogOpen, setDialogOpen }: TaskListProps) {
   return (
     <div className="space-y-4 relative">
       <div className="flex items-center">
-        <div className="w-full max-w-xs">
+        <div className="w-full max-w-xs sm:max-w-xs md:max-w-xs lg:max-w-xs xl:max-w-xs">
           <Select
             value={filter}
             onValueChange={(value) => setFilter(value as TaskStatus | "all")}
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full sm:w-2/5 md:w-auto">
               <SelectValue placeholder="Filter tasks" />
             </SelectTrigger>
             <SelectContent>

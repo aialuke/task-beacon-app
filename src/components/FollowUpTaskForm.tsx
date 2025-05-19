@@ -9,6 +9,7 @@ import { compressAndResizePhoto } from "@/lib/utils";
 import { Task } from "@/lib/types";
 import { showBrowserNotification, triggerHapticFeedback } from "@/lib/notification";
 import UserSelect from "./UserSelect";
+import { Calendar } from "lucide-react";
 
 interface FollowUpTaskFormProps {
   parentTask: Task;
@@ -174,31 +175,9 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {/* Original task context */}
-      <div className="p-3 bg-gray-50 rounded-md mb-4">
-        <h4 className="font-medium text-sm mb-2">Original Task: {parentTask.title}</h4>
-        {parentTask.description && (
-          <p className="text-xs text-gray-600 mb-2">{parentTask.description}</p>
-        )}
-        {parentTask.photo_url && (
-          <img 
-            src={parentTask.photo_url} 
-            alt="Original task attachment" 
-            className="h-16 w-16 object-cover rounded-md mb-2" 
-          />
-        )}
-        {parentTask.url_link && (
-          <div className="flex items-center text-xs text-primary">
-            <a 
-              href={parentTask.url_link} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="truncate hover:underline"
-            >
-              {parentTask.url_link}
-            </a>
-          </div>
-        )}
+      {/* Original task reference - shortened */}
+      <div className="p-2 bg-gray-50 rounded-md mb-4">
+        <h4 className="font-medium text-sm mb-1">Following up on: {parentTask.title}</h4>
       </div>
       
       <div className="space-y-2">
@@ -221,14 +200,19 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
         />
       </div>
       
-      <div className="space-y-2">
-        <Input
-          id="due_date"
-          type="datetime-local"
-          value={dueDate}
-          onChange={(e) => setDueDate(e.target.value)}
-          required
-        />
+      <div className="space-y-2 relative">
+        <div className="relative">
+          <Input
+            id="due_date"
+            type="datetime-local"
+            value={dueDate}
+            onChange={(e) => setDueDate(e.target.value)}
+            placeholder="Select due date"
+            className="pl-9"
+            required
+          />
+          <Calendar size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+        </div>
       </div>
       
       <div className="space-y-2">
@@ -242,13 +226,17 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
       </div>
       
       <div className="space-y-2">
-        <Input
-          id="photo"
-          type="file"
-          accept="image/*"
-          onChange={handlePhotoChange}
-          className="cursor-pointer"
-        />
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+          <Input
+            id="photo"
+            type="file"
+            accept="image/*"
+            onChange={handlePhotoChange}
+            className="cursor-pointer w-full sm:w-auto"
+            aria-label="Attach File"
+          />
+          <span className="text-xs text-gray-500 sm:hidden">Attach File</span>
+        </div>
         {photoPreview && (
           <div className="mt-2">
             <img 

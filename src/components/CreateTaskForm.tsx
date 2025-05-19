@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { compressAndResizePhoto } from "@/lib/utils";
-
+import { Calendar } from "lucide-react";
 
 export default function CreateTaskForm({
   onClose,
@@ -40,7 +40,6 @@ export default function CreateTaskForm({
       setLoading(false);
     }
   };
-
 
   const uploadPhoto = async (): Promise<string | null> => {
     if (!photo) return null;
@@ -104,7 +103,6 @@ export default function CreateTaskForm({
     }
   };
 
-
   const resetForm = () => {
     setTitle("");
     setDescription("");
@@ -136,14 +134,19 @@ export default function CreateTaskForm({
           rows={3}
         />
       </div>
-      <div className="space-y-2">
-        <Input
-          id="due_date"
-          type="datetime-local"
-          value={dueDate}
-          onChange={(e) => setDueDate(e.target.value)}
-          required
-        />
+      <div className="space-y-2 relative">
+        <div className="relative">
+          <Input
+            id="due_date"
+            type="datetime-local"
+            value={dueDate}
+            onChange={(e) => setDueDate(e.target.value)}
+            placeholder="Select due date"
+            required
+            className="pl-9"
+          />
+          <Calendar size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+        </div>
       </div>
       <div className="space-y-2">
         <Input
@@ -155,13 +158,17 @@ export default function CreateTaskForm({
         />
       </div>
       <div className="space-y-2">
-        <Input
-          id="photo"
-          type="file"
-          accept="image/*"
-          onChange={handlePhotoChange}
-          className="cursor-pointer"
-        />
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+          <Input
+            id="photo"
+            type="file"
+            accept="image/*"
+            onChange={handlePhotoChange}
+            className="cursor-pointer w-full sm:w-auto"
+            aria-label="Attach File"
+          />
+          <span className="text-xs text-gray-500 sm:hidden">Attach File</span>
+        </div>
         {photoPreview && (
           <div className="mt-2">
             <img
