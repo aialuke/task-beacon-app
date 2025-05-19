@@ -84,11 +84,6 @@ export default function TaskHeader({
           </animated.div>
         )}
       </div>
-      
-      {/* Status ribbon - positioned absolutely on mobile */}
-      <div className={`status-ribbon ${statusColor}`}>
-        {getStatusText(status)}
-      </div>
 
       {/* Pin button */}
       <Button 
