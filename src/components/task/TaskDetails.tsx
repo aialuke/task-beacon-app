@@ -1,4 +1,3 @@
-
 import { formatDate } from "@/lib/utils";
 import { Task } from "@/lib/types";
 import TaskActions from "../TaskActions";
@@ -42,9 +41,7 @@ export default function TaskDetails({
   const isMobile = useIsMobile();
   
   return (
-    
-      <div className={`space-y-3 pl-[56px] ${isMobile ? 'pt-1' : ''}`}>
-        {/* Date and URL in same horizontal row */}
+        /* Date and URL in same horizontal row */
         <div className="flex items-center flex-wrap gap-x-6 gap-y-2">
           {/* Due date with calendar icon */}
           <div className="flex items-center gap-3">
@@ -75,33 +72,8 @@ export default function TaskDetails({
                 </Tooltip>
               </TooltipProvider>
             </div>
-          )}
-        </div>
-
-        {/* Show parent task summary for follow-up tasks */}
-        {task.parent_task && (
-          <div className="text-xs text-gray-600 bg-gray-50 p-2 rounded">
-            <span className="font-medium">Following up on: </span>
-            {task.parent_task.description ? 
-              (task.parent_task.description.length > 50 ? 
-                `${task.parent_task.description.substring(0, 50)}...` : 
-                task.parent_task.description) : 
-              task.parent_task.title}
-          </div>
-        )}
-
-        {task.photo_url && (
-          <div>
-            <span className="text-xs font-medium text-gray-600">Photo:</span>
-            <img 
-              src={task.photo_url} 
-              alt="Task attachment" 
-              className="mt-1 h-20 w-20 object-cover rounded-xl" 
-              loading="lazy" 
-            />
-          </div>
-        )}
-        
+          )} 
         <TaskActions task={{...task, pinned: isPinned}} />
       </div>
-  )}
+  );
+}
