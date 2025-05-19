@@ -1,14 +1,6 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
-
-interface TaskHeightMap {
-  [key: string]: number;
-}
-
-interface TaskHeightContextType {
-  registerTaskHeight: (taskId: string, height: number) => void;
-}
-
-const TaskHeightContext = createContext<TaskHeightContextType | undefined>(undefined);
+// src/contexts/TaskHeightContext.tsx
+import React, { useState, useCallback, ReactNode } from "react";
+import { TaskHeightContext, TaskHeightContextType, TaskHeightMap } from "@/lib/task-height-utils";
 
 export const TaskHeightProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [taskHeights, setTaskHeights] = useState<TaskHeightMap>({});
@@ -25,12 +17,4 @@ export const TaskHeightProvider: React.FC<{ children: ReactNode }> = ({ children
       {children}
     </TaskHeightContext.Provider>
   );
-};
-
-export const useTaskHeight = (): TaskHeightContextType => {
-  const context = useContext(TaskHeightContext);
-  if (context === undefined) {
-    throw new Error('useTaskHeight must be used within a TaskHeightProvider');
-  }
-  return context;
 };

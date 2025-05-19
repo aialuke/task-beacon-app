@@ -1,8 +1,7 @@
-
 import { useState, useEffect } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast"; // Updated import
 
 // Mock users for development
 const mockUsers = [

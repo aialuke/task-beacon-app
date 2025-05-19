@@ -1,3 +1,4 @@
+/* src/index.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -30,6 +31,8 @@
     /* Status */
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
+    --success: 158 83% 36%; /* Matches --timer-complete */
+    --success-foreground: 0 0% 98%; /* Matches destructive-foreground for consistency */
 
     /* Borders/Inputs */
     --border: 240 5.9% 90%;
@@ -66,8 +69,8 @@
 @layer components {
   .task-card {
     @apply flex flex-col p-3 sm:p-3 bg-white rounded-xl shadow-sm border border-transparent hover:border-secondary transition-colors relative text-left;
-    min-height: calc(1.25 * 60px); /* Increasing height by 25% */
-    width: 95%; /* Increase width to 95% on mobile */
+    min-height: calc(1.25 * 60px);
+    width: 95%;
     margin-left: auto;
     margin-right: auto;
   }
@@ -100,8 +103,7 @@
     @apply border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md focus:outline-none focus:ring-2 focus:ring-accent/50;
     transition: background 0.2s, color 0.2s;
   }
-  
-  /* FAB button styles - improved */
+
   .fab {
     @apply bg-primary text-white rounded-full shadow-lg flex items-center justify-center fixed;
     bottom: 16px;
@@ -112,18 +114,17 @@
     transition: transform 0.2s, background-color 0.2s;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.1);
   }
-  
+
   .fab:hover {
     @apply bg-primary/90;
     transform: scale(1.05);
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1);
   }
-  
+
   .fab:active {
     transform: scale(0.95);
   }
 
-  /* File input styling - improved for mobile */
   input[type="file"] {
     @apply text-sm file:mr-4 file:py-2 file:px-4
     file:rounded-full file:border-0 file:text-sm file:font-semibold
@@ -131,13 +132,13 @@
     hover:file:bg-primary/80 cursor-pointer;
     max-width: 100%;
   }
-  
+
   @media (max-width: 640px) {
     input[type="file"] {
       max-width: 100px;
     }
   }
-  
+
   @media (min-width: 640px) {
     input[type="file"] {
       max-width: 200px;
@@ -165,25 +166,27 @@
   .owner-name {
     @apply text-xs text-gray-600 mr-2 whitespace-nowrap overflow-hidden;
   }
-  
+
   .mobile-safe-area {
     @apply px-4;
   }
-  
+
   .mobile-description-container {
     margin-top: 4px;
     padding-top: 1px;
     min-height: 20px;
   }
 
-  /* Tooltip styling for mobile/touch devices */
+  .tooltip-touch {
+    @apply visible opacity-100 transition-opacity duration-300;
+  }
+
   @media (hover: none) {
     .tooltip-touch {
       @apply visible opacity-100;
     }
   }
-  
-  /* Task filter dropdown width for status dropdown (TaskList.tsx) */
+
   @media (max-width: 640px) {
     .filter-dropdown-mobile {
       width: 40%;
@@ -195,8 +198,7 @@
       width: 25%;
     }
   }
-  
-  /* External link styling */
+
   .external-link {
     @apply flex items-center gap-1 text-primary hover:underline;
     word-break: break-all;
@@ -209,4 +211,22 @@
 :focus-visible {
   outline: 2px solid hsl(var(--primary));
   outline-offset: 2px;
+}
+
+/* =========================
+   Animations
+   ========================= */
+@layer utilities {
+  @keyframes flash {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  .animate-flash {
+    animation: flash 1.5s infinite;
+  }
 }

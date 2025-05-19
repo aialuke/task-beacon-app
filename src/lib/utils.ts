@@ -1,3 +1,4 @@
+// src/lib/utils.ts
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Task, TaskStatus } from "./types";
@@ -71,6 +72,29 @@ export function truncateText(text: string, maxLength: number): string {
   return text.substring(0, maxLength) + "...";
 }
 
+// Function to truncate URL to domain or shortened form
+export function truncateUrl(url: string, maxLength: number = 20): string {
+  if (!url) return "";
+  if (url.length <= maxLength) return url;
+
+  try {
+    const domain = new URL(url).hostname;
+    if (domain.length <= maxLength) return domain;
+    return `${domain.substring(0, maxLength - 1)}…`;
+  } catch {
+    return `${url.substring(0, maxLength - 1)}…`;
+  }
+}
+
+// Function to truncate description with ellipsis at last space
+export function truncateDescription(text: string, maxLength: number = 60): string {
+  if (!text) return "";
+  if (text.length <= maxLength) return text;
+  const truncated = text.substring(0, maxLength);
+  const lastSpace = truncated.lastIndexOf(" ");
+  return lastSpace > 0 ? `${truncated.substring(0, lastSpace)}…` : `${truncated}…`;
+}
+
 // Function to compress and resize photos (placeholder for now)
 export async function compressAndResizePhoto(file: File): Promise<File> {
   // This would be implemented with libwebp.js
@@ -83,9 +107,9 @@ export function getOwnerName(ownerId: string): string {
   // In a real app, this would fetch from a users table
   // For mock data, we'll use a simple mapping
   const mockUsernames: Record<string, string> = {
-    'user-1': 'Alex',
-    'user-2': 'Taylor',
-    'user-3': 'Jordan',
+    "user-1": "Alex",
+    "user-2": "Taylor",
+    "user-3": "Jordan",
   };
   
   if (ownerId in mockUsernames) {
@@ -93,11 +117,11 @@ export function getOwnerName(ownerId: string): string {
   }
   
   // Extract first part of email-like IDs
-  if (ownerId.includes('@')) {
-    return ownerId.split('@')[0];
+  if (ownerId.includes("@")) {
+    return ownerId.split("@")[0];
   }
   
   // Fallback: just return the first part of the ID
-  const parts = ownerId.split('-');
+  const parts = ownerId.split("-");
   return parts.length > 1 ? parts[1] : ownerId;
 }

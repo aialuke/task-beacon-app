@@ -1,21 +1,21 @@
-import { useState, memo } from "react";
+// src/components/TaskActions.tsx
+import { useState, useCallback, memo } from "react";
 import { Button } from "@/components/ui/button";
 import { Task } from "@/lib/types";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast"; // Updated import
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import FollowUpTaskForm from "./FollowUpTaskForm";
 
 interface TaskActionsProps {
   task: Task;
-  isPinned?: boolean; // Added to match TaskDetails prop
 }
 
 function TaskActions({ task }: TaskActionsProps) {
   const [loading, setLoading] = useState(false);
   const [followUpDialogOpen, setFollowUpDialogOpen] = useState(false);
 
-  const handleMarkComplete = async () => {
+  const handleMarkComplete = useCallback(async () => {
     setLoading(true);
     try {
       if (isMockingSupabase) {
@@ -23,7 +23,7 @@ function TaskActions({ task }: TaskActionsProps) {
         setTimeout(() => setLoading(false), 500);
         return;
       }
-      
+
       const { error } = await supabase
         .from("tasks")
         .update({ status: task.status === "complete" ? "pending" : "complete" })
@@ -40,17 +40,17 @@ function TaskActions({ task }: TaskActionsProps) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [task.status, task.id]);
 
-  const handleCreateFollowUp = () => {
+  const handleCreateFollowUp = useCallback(() => {
     setFollowUpDialogOpen(true);
-  };
+  }, []);
 
   return (
     <>
       <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-100">
-        <Button 
-          variant={task.status === "complete" ? "outline" : "default"} 
+        <Button
+          variant={task.status === "complete" ? "outline" : "default"}
           size="sm"
           className="text-xs"
           onClick={handleMarkComplete}
@@ -58,8 +58,8 @@ function TaskActions({ task }: TaskActionsProps) {
         >
           {task.status === "complete" ? "Mark Incomplete" : "Complete"}
         </Button>
-        <Button 
-          variant="outline" 
+        <Button
+          variant="outline"
           size="sm"
           className="text-xs"
           onClick={handleCreateFollowUp}
@@ -68,7 +68,7 @@ function TaskActions({ task }: TaskActionsProps) {
           Follow Up
         </Button>
       </div>
-      
+
       <Dialog open={followUpDialogOpen} onOpenChange={setFollowUpDialogOpen}>
         <DialogContent className="max-w-lg">
           <DialogHeader>

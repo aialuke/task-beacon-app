@@ -1,11 +1,6 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-
-interface ExpandedTaskContextType {
-  expandedTaskId: string | null;
-  setExpandedTaskId: (id: string | null) => void;
-}
-
-const ExpandedTaskContext = createContext<ExpandedTaskContextType | undefined>(undefined);
+// src/contexts/ExpandedTaskContext.tsx
+import React, { useState, ReactNode } from "react";
+import { ExpandedTaskContext, ExpandedTaskContextType } from "@/lib/expanded-task-utils";
 
 export const ExpandedTaskProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [expandedTaskId, setExpandedTaskId] = useState<string | null>(null);
@@ -15,12 +10,4 @@ export const ExpandedTaskProvider: React.FC<{ children: ReactNode }> = ({ childr
       {children}
     </ExpandedTaskContext.Provider>
   );
-};
-
-export const useExpandedTask = (): ExpandedTaskContextType => {
-  const context = useContext(ExpandedTaskContext);
-  if (context === undefined) {
-    throw new Error('useExpandedTask must be used within an ExpandedTaskProvider');
-  }
-  return context;
 };

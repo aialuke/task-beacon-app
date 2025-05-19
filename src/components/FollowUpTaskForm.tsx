@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 import { compressAndResizePhoto } from "@/lib/utils";
 import { Task } from "@/lib/types";
 import { showBrowserNotification, triggerHapticFeedback } from "@/lib/notification";
@@ -27,90 +27,89 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
   const [assigneeId, setAssigneeId] = useState<string>("");
   const [loading, setLoading] = useState(false);
 
-  const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLoading(true);
     const file = e.target.files?.[0];
-    if (!file) return;
-    
-    // Create preview
+    if (!file) {
+      setLoading(false);
+      return;
+    }
+
     const preview = URL.createObjectURL(file);
     setPhotoPreview(preview);
-    
+
     try {
-      // This would actually compress and resize the photo
       const processedFile = await compressAndResizePhoto(file);
       setPhoto(processedFile);
     } catch (error) {
       toast.error("Error processing image");
       console.error(error);
+    } finally {
+      setLoading(false);
     }
-  };
+  }, []);
 
-  const uploadPhoto = async (): Promise<string | null> => {
+  const uploadPhoto = useCallback(async (): Promise<string | null> => {
     if (!photo) return null;
-    
+
     if (isMockingSupabase) {
-      // Return the local preview URL for mock data
       return photoPreview;
     }
-    
+
     const fileName = `${Date.now()}-${photo.name}`;
     const { data, error } = await supabase.storage
       .from("task-photos")
       .upload(fileName, photo);
-      
+
     if (error) {
       throw error;
     }
-    
-    // Get a signed URL that expires in 24 hours
+
     const { data: urlData } = await supabase.storage
       .from("task-photos")
       .createSignedUrl(fileName, 86400);
-      
-    return urlData?.signedUrl || null;
-  };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+    return urlData?.signedUrl || null;
+  }, [photo, photoPreview]);
+
+  const resetForm = useCallback(() => {
+    setTitle("");
+    setDescription("");
+    setDueDate("");
+    setUrl(parentTask.url_link || "");
+    setPhoto(null);
+    setPhotoPreview(null);
+    setPinned(false);
+    setAssigneeId("");
+  }, [parentTask.url_link]);
+
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    
+
     try {
-      // Upload photo if exists
       let photoUrl = null;
       if (photo) {
         photoUrl = await uploadPhoto();
       }
-      
+
       if (isMockingSupabase) {
-        // Mock task creation for development
         toast.success("Follow-up task created successfully (mock data)");
-        
-        // Trigger haptic feedback
         triggerHapticFeedback();
-        
-        // Show notification
         if (assigneeId) {
           showBrowserNotification(
-            "Task Assigned", 
+            "Task Assigned",
             `Follow-up task "${title}" has been assigned`
           );
         }
-        
-        // Reset form
         resetForm();
-        
-        // Close form if onClose is provided
         if (onClose) onClose();
-        
-        setLoading(false);
         return;
       }
-      
-      // Get current user
+
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("User not authenticated");
-      
-      // Create task
+
       const { data, error } = await supabase
         .from("tasks")
         .insert({
@@ -128,29 +127,21 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
           updated_at: new Date().toISOString(),
         })
         .select();
-        
+
       if (error) throw error;
-      
-      // Trigger haptic feedback
+
       triggerHapticFeedback();
-      
-      // Show success message
       toast.success("Follow-up task created successfully");
-      
-      // Show notification if task is assigned to someone
+
       if (assigneeId) {
         showBrowserNotification(
-          "Task Assigned", 
+          "Task Assigned",
           `Follow-up task "${title}" has been assigned`
         );
       }
-      
-      // Reset form
+
       resetForm();
-      
-      // Close form if onClose is provided
       if (onClose) onClose();
-      
     } catch (error: unknown) {
       if (error instanceof Error) {
         toast.error(error.message);
@@ -160,26 +151,26 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
     } finally {
       setLoading(false);
     }
-  };
-  
-  const resetForm = () => {
-    setTitle("");
-    setDescription("");
-    setDueDate("");
-    setUrl(parentTask.url_link || "");
-    setPhoto(null);
-    setPhotoPreview(null);
-    setPinned(false);
-    setAssigneeId("");
-  };
+  }, [
+    photo,
+    title,
+    description,
+    dueDate,
+    url,
+    pinned,
+    assigneeId,
+    parentTask.id,
+    uploadPhoto,
+    resetForm,
+    onClose,
+  ]);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {/* Display just a shortened reference to parent task */}
       <div className="p-2 bg-gray-50 rounded-md">
         <h4 className="font-medium text-sm">Following up on: {parentTask.title}</h4>
       </div>
-      
+
       <div className="space-y-2">
         <Input
           id="title"
@@ -189,7 +180,7 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
           required
         />
       </div>
-      
+
       <div className="space-y-2">
         <Textarea
           id="description"
@@ -199,7 +190,7 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
           rows={3}
         />
       </div>
-      
+
       <div className="space-y-2">
         <div className="relative">
           <Input
@@ -214,7 +205,7 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
           <Calendar size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
         </div>
       </div>
-      
+
       <div className="space-y-2">
         <Input
           id="url"
@@ -224,7 +215,7 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
           placeholder="https://example.com"
         />
       </div>
-      
+
       <div className="space-y-2">
         <div className="flex flex-col sm:flex-row sm:items-center gap-2">
           <Input
@@ -238,29 +229,29 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
         </div>
         {photoPreview && (
           <div className="mt-2">
-            <img 
-              src={photoPreview} 
-              alt="Preview" 
-              className="h-20 w-20 object-cover rounded-md" 
+            <img
+              src={photoPreview}
+              alt="Preview"
+              className="h-20 w-20 object-cover rounded-md"
             />
           </div>
         )}
       </div>
-      
+
       <div className="space-y-2">
         <Label htmlFor="assignee">Assignee</Label>
-        <UserSelect 
-          value={assigneeId} 
-          onChange={setAssigneeId} 
-          disabled={loading} 
+        <UserSelect
+          value={assigneeId}
+          onChange={setAssigneeId}
+          disabled={loading}
         />
       </div>
-      
+
       <div className="flex justify-end space-x-2 pt-2">
         {onClose && (
-          <Button 
-            type="button" 
-            variant="outline" 
+          <Button
+            type="button"
+            variant="outline"
             onClick={onClose}
             disabled={loading}
           >

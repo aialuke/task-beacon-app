@@ -1,8 +1,8 @@
-import { useState, useEffect, lazy, Suspense } from "react";
+import { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import { Task, TaskStatus } from "@/lib/types";
 import TaskCard from "./TaskCard";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ClockPlus } from "lucide-react";
 import {
@@ -85,7 +85,7 @@ export default function TaskList({ dialogOpen, setDialogOpen }: TaskListProps) {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<TaskStatus | "all">("all");
 
-  const fetchTasks = async () => {
+  const fetchTasks = useCallback(async () => {
     setLoading(true);
     try {
       if (isMockingSupabase) {
@@ -120,7 +120,7 @@ export default function TaskList({ dialogOpen, setDialogOpen }: TaskListProps) {
     } finally {
       setLoading(false);
     }
-  };
+  }, []); // Empty dependencies since setLoading, setTasks, isMockingSupabase are stable
 
   useEffect(() => {
     fetchTasks();
@@ -153,7 +153,7 @@ export default function TaskList({ dialogOpen, setDialogOpen }: TaskListProps) {
         subscription.unsubscribe();
       };
     }
-  }, []);
+  }, [fetchTasks]);
 
   const getFilteredTasks = (): Task[] => {
     if (filter === "all") return tasks;

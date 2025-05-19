@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast"; // Updated import
 
 type AuthMode = "signin" | "signup" | "pin";
 

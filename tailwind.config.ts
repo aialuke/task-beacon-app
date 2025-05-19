@@ -1,3 +1,4 @@
+// tailwind.config.ts
 import type { Config } from "tailwindcss";
 import animate from "tailwindcss-animate";
 
@@ -11,12 +12,18 @@ export default {
     'bg-gray-50',
     'border-gray-200',
     'hover:underline',
+    'bg-destructive', // Added for CountdownTimer tooltips
+    'bg-success', // Added for CountdownTimer tooltips
+    'fill-destructive', // Added for CountdownTimer tooltip arrow
+    'fill-success', // Added for CountdownTimer tooltip arrow
   ],
   theme: {
     container: {
       center: true,
       padding: "1rem",
       screens: {
+        sm: "640px", // Added for consistency with index.css
+        md: "768px", // Added for consistency with use-mobile.tsx
         "2xl": "1400px",
       },
     },
@@ -85,16 +92,6 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        flow: {
-          "0%": {
-            strokeDashoffset: "0",
-            transform: "rotate(0deg)",
-          },
-          "100%": {
-            strokeDashoffset: "20",
-            transform: "rotate(360deg)",
-          },
-        },
         "fade-in": {
           "0%": { opacity: "0", transform: "translateY(10px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
@@ -107,20 +104,13 @@ export default {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "var(--pulse-opacity, 0.8)" },
         },
-        "logo-spin": {
-          from: { transform: "rotate(0deg)" },
-          to: { transform: "rotate(360deg)" },
-        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        flow: "flow 4s linear infinite",
         "fade-in": "fade-in 0.3s ease-out",
         "fade-out": "fade-out 0.3s ease-out",
         "pulse-subtle": "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite --pulse-opacity=0.8",
-        flash: "pulse 2s ease-in-out infinite --pulse-opacity=0.5",
-        "logo-spin": "logo-spin 20s linear infinite",
       },
     },
   },

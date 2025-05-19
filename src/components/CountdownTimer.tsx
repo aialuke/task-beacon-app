@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
-import { useSpring, animated, config } from "@react-spring/web";
+// src/components/CountdownTimer.tsx
+import { useEffect, useState, useRef } from "react";
+import { useSpring, animated } from "@react-spring/web";
 import { getDaysRemaining, getTimerColor } from "@/lib/utils";
 import { TaskStatus } from "@/lib/types";
 import {
@@ -31,6 +32,7 @@ export default function CountdownTimer({
   const [daysLeft, setDaysLeft] = useState<number>(getDaysRemaining(dueDate));
   const [timeDisplay, setTimeDisplay] = useState<string>(`${daysLeft}d`);
   const timerColor = getTimerColor(status);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const validateDueDate = (date: string): number => {
     const due = new Date(date).getTime();
@@ -41,7 +43,7 @@ export default function CountdownTimer({
 
   const calculateOffset = () => {
     if (status === "complete") return 0;
-    if (status === "overdue") return circumference; // Fixed typo: "overrobot" -> "overdue"
+    if (status === "overdue") return circumference;
     const totalDays = 14;
     const remainingPercentage = Math.min(Math.max(daysLeft / totalDays, 0), 1);
     return circumference * (1 - remainingPercentage);
@@ -57,7 +59,7 @@ export default function CountdownTimer({
     from: { scale: 1 },
     to: { scale: daysLeft <= 1 || status === "overdue" ? 1.05 : 1 },
     loop: { reverse: true },
-    config: { tension: 80, friction: 30, duration: 8000 },
+    config: { tension: 80, friction: 30, duration: 2000 },
   });
 
   useEffect(() => {
@@ -76,17 +78,29 @@ export default function CountdownTimer({
         } else {
           setTimeDisplay(`${hoursLeft}h`);
         }
-      } else if (days < 0) {
-        setTimeDisplay(`${days}d`);
       } else {
         setTimeDisplay(`${days}d`);
       }
+
+      // Clear existing interval
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+
+      // Set new interval based on current daysLeft
+      const intervalDuration = days < 1 ? 60000 : 86400000;
+      intervalRef.current = setInterval(updateTimeLeft, intervalDuration);
     };
 
     updateTimeLeft();
-    const interval = setInterval(updateTimeLeft, daysLeft < 1 ? 60000 : 86400000);
-    return () => clearInterval(interval);
-  }, [dueDate, daysLeft]); // Includes daysLeft to fix exhaustive-deps warning
+
+    // Cleanup on unmount
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [dueDate]);
 
   const tooltipContent = isNaN(new Date(dueDate).getTime())
     ? "Invalid due date"

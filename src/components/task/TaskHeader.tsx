@@ -1,11 +1,12 @@
+// src/components/TaskHeader.tsx
 import { Button } from "@/components/ui/button";
 import { Task } from "@/lib/types";
 import { getStatusColor, getTaskStatus, truncateText } from "@/lib/utils";
 import { useSpring, animated, SpringValues } from "@react-spring/web";
-import { useRef, memo } from "react"; // Add memo to the import
+import { useRef, memo } from "react";
 import CountdownTimer from "../CountdownTimer";
 import { Pin } from "lucide-react";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useIsMobile } from "@/lib/mobile-utils";
 
 interface TaskHeaderProps {
   task: Task;
@@ -31,7 +32,7 @@ function TaskHeader({
 
   const descriptionAnimation = useSpring({
     height: isExpanded ? descriptionRef.current?.scrollHeight || 16 : 16,
-    opacity: isExpanded ? 1 : 1,
+    opacity: isExpanded ? 1 : 0, // Changed to animate opacity for fade effect
     config: {
       tension: 200,
       friction: 20,
@@ -39,18 +40,6 @@ function TaskHeader({
     },
     immediate: false,
   }) as SpringValues<{ height: number; opacity: number }>;
-
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case "complete":
-        return "Complete";
-      case "overdue":
-        return "Overdue";
-      case "pending":
-      default:
-        return "Pending";
-    }
-  };
 
   return (
     <div className="flex items-center w-full gap-2 task-header-container">

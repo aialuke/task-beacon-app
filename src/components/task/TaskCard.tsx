@@ -1,9 +1,10 @@
+// src/components/TaskCard.tsx
 import { useRef, useState, useEffect, useCallback, memo } from "react";
 import { Task } from "@/lib/types";
-import { useExpandedTask } from "@/contexts/ExpandedTaskContext";
-import { useTaskHeight } from "@/contexts/TaskHeightContext";
+import { useExpandedTask } from "@/lib/expanded-task-utils"; // Corrected import
+import { useTaskHeight } from "@/lib/task-height-utils"; // Corrected import
 import { supabase, isMockingSupabase } from "@/lib/supabase";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast"; // Corrected import
 import TaskHeader from "./TaskHeader";
 import TaskDetails from "./TaskDetails";
 
@@ -72,14 +73,31 @@ function TaskCard({ task }: TaskCardProps) {
     } finally {
       setPinLoading(false);
     }
-  }, [isPinned, task.id, isMockingSupabase]);
+  }, [isPinned, task.id]);
 
   return (
-    <div className={`task-card-container ${isExpanded ? "expanded" : ""}`} style={{ overflowY: "hidden", boxSizing: "border-box", width: "100%", position: "relative", zIndex: 1, scrollbarWidth: "none", msOverflowStyle: "none" }}>
+    <div
+      className={`task-card-container ${isExpanded ? "expanded" : ""}`}
+      style={{
+        overflowY: "hidden",
+        boxSizing: "border-box",
+        width: "100%",
+        position: "relative",
+        zIndex: 1,
+        scrollbarWidth: "none",
+        msOverflowStyle: "none",
+      }}
+    >
       <div
         ref={cardRef}
         className={`task-card ${isExpanded ? "expanded-card" : ""} p-3`}
-        style={{ overflowY: "hidden", boxSizing: "border-box", width: "100%", position: "relative", zIndex: 1 }}
+        style={{
+          overflowY: "hidden",
+          boxSizing: "border-box",
+          width: "100%",
+          position: "relative",
+          zIndex: 1,
+        }}
       >
         <TaskHeader
           task={task}

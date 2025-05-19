@@ -1,9 +1,10 @@
-import { useState } from "react";
+// src/components/CreateTaskForm.tsx
+import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast"; // Updated import
 import { compressAndResizePhoto } from "@/lib/utils";
 import { Calendar } from "lucide-react";
 
@@ -21,16 +22,20 @@ export default function CreateTaskForm({
   const [pinned, setPinned] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLoading(true); // Added
     const file = e.target.files?.[0];
-    if (!file) return;
+    if (!file) {
+      setLoading(false);
+      return;
+    }
 
     const preview = URL.createObjectURL(file);
     setPhotoPreview(preview);
     try {
       const processedFile = await compressAndResizePhoto(file);
       setPhoto(processedFile);
-      } catch (error: unknown) {
+    } catch (error: unknown) {
       if (error instanceof Error) {
         toast.error(error.message);
       } else {
@@ -39,9 +44,9 @@ export default function CreateTaskForm({
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const uploadPhoto = async (): Promise<string | null> => {
+  const uploadPhoto = useCallback(async (): Promise<string | null> => {
     if (!photo) return null;
     if (isMockingSupabase) return photoPreview;
 
@@ -55,9 +60,20 @@ export default function CreateTaskForm({
       .from("task-photos")
       .createSignedUrl(fileName, 86400);
     return urlData?.signedUrl || null;
-  };
+  }, [photo, photoPreview]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const resetForm = useCallback(() => {
+    setTitle("");
+    setDescription("");
+    setDueDate("");
+    setUrl("");
+    setPhoto(null);
+    setPhotoPreview(null);
+    setPinned(false);
+    if (onClose) onClose();
+  }, [onClose]);
+
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
@@ -101,18 +117,7 @@ export default function CreateTaskForm({
     } finally {
       setLoading(false);
     }
-  };
-
-  const resetForm = () => {
-    setTitle("");
-    setDescription("");
-    setDueDate("");
-    setUrl("");
-    setPhoto(null);
-    setPhotoPreview(null);
-    setPinned(false);
-    if (onClose) onClose();
-  };
+  }, [title, description, dueDate, url, photo, pinned, uploadPhoto, resetForm]);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -167,7 +172,6 @@ export default function CreateTaskForm({
             className="cursor-pointer w-full sm:w-auto"
             aria-label="Attach File"
           />
-
         </div>
         {photoPreview && (
           <div className="mt-2">

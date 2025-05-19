@@ -1,3 +1,4 @@
+// src/app.tsx
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -6,6 +7,8 @@ import { lazy, Suspense } from "react";
 import Index from "./pages/Index";
 
 const NotFound = lazy(() => import("./pages/NotFound"));
+// Placeholder for task details page
+const TaskDetailsPage = lazy(() => import("./pages/TaskDetailsPage"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,10 +24,16 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <BrowserRouter>
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-gray-100">Loading...</div>}>
+        <Suspense
+          fallback={
+            <div className="min-h-screen flex items-center justify-center bg-gray-100">
+              <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+            </div>
+          }
+        >
           <Routes>
             <Route path="/" element={<Index />} />
-            {/* Add custom routes above the catch-all "*" route */}
+            <Route path="/tasks/:id" element={<TaskDetailsPage />} /> {/* Added for task details */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

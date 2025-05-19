@@ -1,10 +1,11 @@
-import { useEffect, useState, memo } from "react";
-import { formatDate } from "@/lib/utils";
+// src/components/TaskDetails.tsx
+import { memo } from "react";
+import { formatDate, truncateUrl, truncateDescription } from "@/lib/utils"; // Updated imports
 import { Task } from "@/lib/types";
 import TaskActions from "../TaskActions";
 import { Calendar1, ExternalLink } from "lucide-react";
 import { animated } from "@react-spring/web";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useIsMobile } from "@/lib/mobile-utils";
 import {
   Tooltip,
   TooltipContent,
@@ -20,27 +21,6 @@ interface TaskDetailsProps {
   contentRef: React.RefObject<HTMLDivElement>;
 }
 
-const truncateUrl = (url: string, maxLength: number = 20): string => {
-  if (!url) return "";
-  if (url.length <= maxLength) return url;
-
-  try {
-    const domain = new URL(url).hostname;
-    if (domain.length <= maxLength) return domain;
-    return `${domain.substring(0, maxLength - 1)}…`;
-  } catch {
-    return `${url.substring(0, maxLength - 1)}…`;
-  }
-};
-
-const truncateDescription = (text: string, maxLength: number = 60): string => {
-  if (!text) return "";
-  if (text.length <= maxLength) return text;
-  const truncated = text.substring(0, maxLength);
-  const lastSpace = truncated.lastIndexOf(" ");
-  return lastSpace > 0 ? `${truncated.substring(0, lastSpace)}…` : `${truncated}…`;
-};
-
 function TaskDetails({
   task,
   isPinned,
@@ -49,13 +29,6 @@ function TaskDetails({
   contentRef,
 }: TaskDetailsProps) {
   const isMobile = useIsMobile();
-  const [, forceUpdate] = useState({});
-
-  useEffect(() => {
-    if (isExpanded) {
-      forceUpdate({});
-    }
-  }, [isExpanded]);
 
   return (
     <animated.div
