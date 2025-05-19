@@ -72,6 +72,12 @@ export default function TaskDetails({
   }, [task, isExpanded, animationState, contentRef]);
 
   useEffect(() => {
+    if (isExpanded && contentRef.current) {
+      console.log("Rendered content height:", contentRef.current.offsetHeight);
+    }
+  }, [isExpanded, contentRef]);
+
+  useEffect(() => {
     if (isExpanded) {
       forceUpdate({});
     }
@@ -87,15 +93,15 @@ export default function TaskDetails({
         opacity: animationState.opacity,
         willChange: "height, opacity",
         overflow: "visible",
-        minHeight: isExpanded ? 500 : 0,
+        minHeight: 0,
         zIndex: 2,
         visibility: isExpanded ? "visible" : "hidden",
       }}
       className="w-full mt-1"
     >
       <div
-        className={`space-y-3 ${isMobile ? "pl-4 pt-2 pb-6" : "pl-6 pt-2 pb-6"}`}
-        style={{ height: isExpanded ? "auto" : "0", minHeight: isExpanded ? 500 : 0 }}
+        className={`space-y-2 ${isMobile ? "pl-4 pt-2 pb-4" : "pl-6 pt-2 pb-4"}`}
+        style={{ height: isExpanded ? "auto" : "0" }}
       >
         <div className="flex items-center flex-wrap gap-4 min-w-0">
           <div className="flex items-center gap-3 min-w-0">

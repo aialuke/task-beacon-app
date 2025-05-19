@@ -42,7 +42,7 @@ export default function TaskCard({ task }: TaskCardProps) {
   useEffect(() => {
     const timer = setTimeout(() => {
       if (contentRef.current) {
-        const height = isExpanded ? contentRef.current.scrollHeight : 0;
+        const height = isExpanded ? Math.min(contentRef.current.scrollHeight, 300) : 0;
         setAnimationState({ height, opacity: isExpanded ? 1 : 0 });
         console.log("Content ref height:", height);
       }
@@ -88,7 +88,7 @@ export default function TaskCard({ task }: TaskCardProps) {
   };
 
   return (
-    <div className={`task-card-container ${isExpanded ? "expanded" : ""}`} style={{ overflow: "visible", minHeight: isExpanded ? 500 : 0, position: "relative", zIndex: 1 }}>
+    <div className={`task-card-container ${isExpanded ? "expanded" : ""}`} style={{ overflow: "visible", position: "relative", zIndex: 1 }}>
       <div
         ref={cardRef}
         className={`task-card ${isExpanded ? "expanded-card" : ""} p-3`}
