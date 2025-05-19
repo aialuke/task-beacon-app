@@ -18,77 +18,67 @@ interface TaskDetailsProps {
   contentRef: React.RefObject<HTMLDivElement>;
 }
 
-const truncateUrl = (url: string, maxLength: number = 20): string => {
-  if (!url) return "";
+const truncateUrl = (url: string, maxLength: number = 15): string => {
+  if (!url) return '';
   if (url.length <= maxLength) return url;
-
+  
+  // Get domain from URL
   try {
     const domain = new URL(url).hostname;
     if (domain.length <= maxLength) return domain;
-    return `${domain.substring(0, maxLength - 1)}…`;
+    return `${domain.substring(0, maxLength)}…`;
   } catch {
-    return `${url.substring(0, maxLength - 1)}…`;
+    // If URL parsing fails, just truncate the original URL
+    return `${url.substring(0, maxLength)}…`;
   }
 };
 
-const truncateDescription = (text: string, maxLength: number = 60): string => {
-  if (!text) return "";
-  if (text.length <= maxLength) return text;
-  // Truncate at word boundary
-  const truncated = text.substring(0, maxLength);
-  const lastSpace = truncated.lastIndexOf(" ");
-  return lastSpace > 0 ? `${truncated.substring(0, lastSpace)}…` : `${truncated}…`;
-};
-
-export default function TaskDetails({
-  task,
-  isPinned,
-  expandAnimation,
-  contentRef,
+export default function TaskDetails({ 
+  task, 
+  isPinned, 
+  expandAnimation, 
+  contentRef 
 }: TaskDetailsProps) {
   const isMobile = useIsMobile();
-
+  
   return (
-    <animated.div
-      ref={contentRef}
+    <animated.div 
+      ref={contentRef} 
       style={{
         ...expandAnimation,
-        willChange: "height, opacity",
-        overflow: "hidden",
-        minHeight: isMobile ? "100px" : "120px", // Prevent clipping during animation
-      }}
+        willChange: 'height, opacity',
+        overflow: 'hidden'
+      }} 
       className="w-full mt-3"
     >
-      <div
-        className={`space-y-3 ${isMobile ? "pl-4 pt-2" : "pl-14"}`} // 16px mobile margin, 56px desktop
-      >
+      <div className={`space-y-3 pl-[56px] ${isMobile ? 'pt-1' : ''}`}>
         {/* Date and URL in same horizontal row */}
-        <div className="flex items-center flex-wrap gap-4 min-w-0">
+        <div className="flex items-center flex-wrap gap-x-6 gap-y-2">
           {/* Due date with calendar icon */}
-          <div className="flex items-center gap-3 min-w-0">
+          <div className="flex items-center gap-3">
             <Calendar1 size={16} className="text-task-overdue shrink-0" />
-            <p className="text-sm">{formatDate(task.due_date)}</p> {/* Increased to text-sm */}
+            <p className="text-xs">{formatDate(task.due_date)}</p>
           </div>
 
-          {/* URL link (if available) - clickable icon and text */}
+          {/* URL link (if available) - with tooltip and improved truncation */}
           {task.url_link && (
-            <div className="flex items-center gap-2 min-w-0">
+            <div className="flex items-center gap-2">
+              <ExternalLink size={16} className="text-primary shrink-0" />
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <a
-                      href={task.url_link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-sm text-primary hover:underline truncate max-w-[140px] sm:max-w-[200px]" // Wider max-width
+                    <a 
+                      href={task.url_link} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="text-xs text-primary hover:underline truncate max-w-[120px] sm:max-w-xs external-link"
                       onClick={(e) => e.stopPropagation()}
                     >
-                      <ExternalLink size={16} className="text-primary shrink-0" />
-                      <span>{truncateUrl(task.url_link, 20)}</span> {/* Increased to 20 chars */}
+                      {truncateUrl(task.url_link, 15)}
                     </a>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p className="text-sm">{task.url_link}</p> {/* Match text-sm */}
+                    <p className="text-xs">{task.url_link}</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
@@ -96,7 +86,31 @@ export default function TaskDetails({
           )}
         </div>
 
-        <TaskActions task={{ ...task, pinned: isPinned }} />
+        {/* Show parent task summary for follow-up tasks */}
+        {task.parent_task && (
+          <div className="text-xs text-gray-600 bg-gray-50 p-2 rounded">
+            <span className="font-medium">Following up on: </span>
+            {task.parent_task.description ? 
+              (task.parent_task.description.length > 50 ? 
+                `${task.parent_task.description.substring(0, 50)}...` : 
+                task.parent_task.description) : 
+              task.parent_task.title}
+          </div>
+        )}
+
+        {task.photo_url && (
+          <div>
+            <span className="text-xs font-medium text-gray-600">Photo:</span>
+            <img 
+              src={task.photo_url} 
+              alt="Task attachment" 
+              className="mt-1 h-20 w-20 object-cover rounded-xl" 
+              loading="lazy" 
+            />
+          </div>
+        )}
+        
+        <TaskActions task={{...task, pinned: isPinned}} />
       </div>
     </animated.div>
   );
