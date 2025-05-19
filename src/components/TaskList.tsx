@@ -194,6 +194,29 @@ export default function TaskList({ dialogOpen, setDialogOpen }: TaskListProps) {
         </div>
       </div>
 
+      <TaskExpandProvider>
+        <div className="task-list flex flex-col gap-3">
+          {loading ? (
+            Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="task-card animate-pulse">
+                <div className="h-12 w-12 rounded-full bg-gray-200" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-3 w-1/2" />
+                </div>
+              </div>
+            ))
+          ) : filteredTasks.length > 0 ? (
+            filteredTasks.map((task) => (
+              <TaskCard key={task.id} task={task} />
+            ))
+          ) : (
+            <div className="flex items-center justify-center p-4 border border-dashed border-gray-300 rounded-xl">
+              <p className="text-gray-500">No tasks found</p>
+            </div>
+          )}
+        </div>
+      </TaskExpandProvider>
 
       {/* Floating Action Button (FAB) for creating new tasks */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
