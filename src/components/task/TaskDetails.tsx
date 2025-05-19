@@ -2,7 +2,7 @@ import { formatDate } from "@/lib/utils";
 import { Task } from "@/lib/types";
 import TaskActions from "../TaskActions";
 import { Calendar1, ExternalLink } from "lucide-react";
-import { animated, SpringValues } from "@react-spring/web";
+import { animated } from "@react-spring/web";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
   Tooltip,
@@ -16,8 +16,7 @@ interface TaskDetailsProps {
   task: Task;
   isPinned: boolean;
   isExpanded: boolean;
-  expandAnimation: SpringValues<{ height: number }>;
-  opacityAnimation: SpringValues<{ opacity: number }>;
+  animationState: { height: number; opacity: number };
   contentRef: React.RefObject<HTMLDivElement>;
 }
 
@@ -46,8 +45,7 @@ export default function TaskDetails({
   task,
   isPinned,
   isExpanded,
-  expandAnimation,
-  opacityAnimation,
+  animationState,
   contentRef,
 }: TaskDetailsProps) {
   const isMobile = useIsMobile();
@@ -69,10 +67,9 @@ export default function TaskDetails({
       photoUrl: task.photo_url,
       taskActionsProps: { task, isPinned },
     });
-    console.log("Expand animation:", expandAnimation);
-    console.log("Opacity animation:", opacityAnimation);
+    console.log("Animation state:", animationState);
     console.log("Content height:", contentRef.current?.offsetHeight, "scrollHeight:", contentRef.current?.scrollHeight);
-  }, [task, isExpanded, expandAnimation, opacityAnimation, contentRef]);
+  }, [task, isExpanded, animationState, contentRef]);
 
   useEffect(() => {
     if (isExpanded) {
@@ -86,8 +83,8 @@ export default function TaskDetails({
     <animated.div
       ref={contentRef}
       style={{
-        height: expandAnimation.height,
-        opacity: opacityAnimation.opacity,
+        height: animationState.height,
+        opacity: animationState.opacity,
         willChange: "height, opacity",
         overflow: "visible",
         minHeight: isExpanded ? 500 : 0,

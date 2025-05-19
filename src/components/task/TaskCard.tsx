@@ -1,5 +1,4 @@
 import { useRef, useState, useEffect, useCallback } from "react";
-import { useSpring, SpringValues } from "@react-spring/web";
 import { Task } from "@/lib/types";
 import { useTaskExpand } from "@/contexts/TaskExpandContext";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
@@ -18,6 +17,7 @@ export default function TaskCard({ task }: TaskCardProps) {
   const isExpanded = expandedTaskId === task.id;
   const contentRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+  const [animationState, setAnimationState] = useState({ height: 0, opacity: 0 });
 
   useEffect(() => {
     console.log("TaskCard task:", {
@@ -39,30 +39,16 @@ export default function TaskCard({ task }: TaskCardProps) {
     console.log("isExpanded state:", isExpanded, "taskId:", task.id);
   }, [isExpanded, task.id]);
 
-  const [expandAnimation] = useSpring(() => ({
-    from: { height: 0 },
-    to: { height: isExpanded ? (contentRef.current?.scrollHeight ?? 500) : 0 },
-    config: { tension: 210, friction: 24, clamp: true },
-    onRest: () => console.log("Height animation completed:", isExpanded ? contentRef.current?.scrollHeight : 0),
-  })) as [SpringValues<{ height: number }>, unknown];
-
-  const [opacityAnimation] = useSpring(() => ({
-    from: { opacity: 0 },
-    to: { opacity: isExpanded ? 1 : 0 },
-    config: { tension: 210, friction: 24, clamp: true },
-    onRest: () => console.log("Opacity animation completed:", isExpanded ? 1 : 0),
-  })) as [SpringValues<{ opacity: number }>, unknown];
-
   useEffect(() => {
     const timer = setTimeout(() => {
       if (contentRef.current) {
         const height = isExpanded ? contentRef.current.scrollHeight : 0;
-        expandAnimation.height.set(height);
+        setAnimationState({ height, opacity: isExpanded ? 1 : 0 });
         console.log("Content ref height:", height);
       }
-    }, 100);
+    }, 200);
     return () => clearTimeout(timer);
-  }, [isExpanded, expandAnimation.height, task]);
+  }, [isExpanded, task]);
 
   const toggleExpand = useCallback(() => {
     console.log("Toggling expand, current isExpanded:", isExpanded, "taskId:", task.id);
@@ -120,8 +106,7 @@ export default function TaskCard({ task }: TaskCardProps) {
           task={task}
           isPinned={isPinned}
           isExpanded={isExpanded}
-          expandAnimation={expandAnimation}
-          opacityAnimation={opacityAnimation}
+          animationState={animationState}
           contentRef={contentRef}
         />
       </div>
