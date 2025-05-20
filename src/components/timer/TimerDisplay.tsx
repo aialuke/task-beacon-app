@@ -29,7 +29,7 @@ const TimerDisplay = ({ size, status, timeDisplay }: TimerDisplayProps) => {
           <path
             d="M20 6L9 17L4 12"
             stroke="var(--timer-complete)"
-            strokeWidth="2"
+            strokeWidth="3"
             strokeLinecap="round"
             strokeLinejoin="round"
           />

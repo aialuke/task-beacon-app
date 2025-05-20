@@ -33,7 +33,7 @@ function TaskHeader({
 
   const descriptionAnimation = useSpring({
     height: isExpanded ? descriptionRef.current?.scrollHeight || 16 : 16,
-    opacity: isExpanded ? 1 : 0, // Changed to animate opacity for fade effect
+    opacity: isExpanded ? 1 : 0.9, // Changed to animate opacity for fade effect
     config: {
       tension: 200,
       friction: 20,

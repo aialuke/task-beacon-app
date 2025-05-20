@@ -34,7 +34,7 @@ const TimerRing = ({
         cy={size / 2}
         r={radius}
         fill="none"
-        strokeWidth="2"
+        strokeWidth="2.5"
         stroke="#E5EDFF"
       />
       {/* Animated foreground circle */}
@@ -43,7 +43,7 @@ const TimerRing = ({
         cy={size / 2}
         r={radius}
         fill="none"
-        strokeWidth="3.6"
+        strokeWidth="4"
         stroke={timerColor}
         strokeDasharray={circumference}
         strokeDashoffset={strokeDashoffset}
