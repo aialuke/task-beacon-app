@@ -20,14 +20,16 @@
 
 /* Fix for task cards and buttons */
 .task-card {
-  background-color: white;
-  border: 1px solid #e2e8f0;
+  background-color: white !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 0.75rem !important; /* XL rounded corners */
 }
 
 .btn-primary, 
 button[class*="bg-primary"] {
-  background-color: hsl(var(--primary));
-  color: hsl(var(--primary-foreground));
+  background-color: hsl(var(--primary)) !important;
+  color: hsl(var(--primary-foreground)) !important;
+  border-radius: 9999px !important;
 }
 
 .timer-ring circle {
@@ -35,15 +37,20 @@ button[class*="bg-primary"] {
 }
 
 .fab {
-  position: fixed;
-  bottom: 1rem;
-  right: 1rem;
-  z-index: 50;
-  background-color: hsl(var(--primary));
-  color: white;
+  position: fixed !important;
+  bottom: 1rem !important;
+  right: 1rem !important;
+  z-index: 99999 !important; /* Very high z-index */
+  background-color: hsl(var(--primary)) !important;
+  color: white !important;
   border-radius: 9999px !important;
   width: 56px !important;
   height: 56px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 /* Override for select and dropdown components */
@@ -52,6 +59,7 @@ button[class*="bg-primary"] {
 [data-radix-dropdown-menu-content] {
   background-color: white !important;
   color: hsl(var(--foreground)) !important;
+  border-radius: 0.75rem !important; /* XL rounded corners */
 }
 
 /* Fix avatar fallback backgrounds */
@@ -66,5 +74,35 @@ body .externally-styled-element {
   background-color: inherit;
 }
 
-/* Remove dark mode styles */
-/* @media (prefers-color-scheme: dark) { ... } - removed dark mode section */
+/* All dialog, card, and other container elements should have rounded-xl corners */
+[class*="rounded-md"],
+[class*="rounded-lg"] {
+  border-radius: 0.75rem !important; /* XL rounded corners */
+}
+
+/* Explicitly force rounded corners for specific components */
+.dialog-content,
+.select-content,
+.card,
+.dropdown-content,
+.popover-content,
+.task-card {
+  border-radius: 0.75rem !important; /* XL rounded corners */
+}
+
+/* Make all buttons rounded-full */
+button, 
+.button,
+[role="button"] {
+  border-radius: 9999px !important;
+}
+
+/* Special handling for FAB to ensure it's visible */
+#root .fab,
+body .fab {
+  display: flex !important;
+  position: fixed !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 99999 !important;
+}

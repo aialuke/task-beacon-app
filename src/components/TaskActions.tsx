@@ -54,7 +54,7 @@ function TaskActions({ task, detailView }: TaskActionsProps) {
         <Button
           variant={task.status === "complete" ? "outline" : "default"}
           size="sm"
-          className="text-xs"
+          className="text-xs rounded-full"
           onClick={handleMarkComplete}
           disabled={loading}
         >
@@ -63,7 +63,7 @@ function TaskActions({ task, detailView }: TaskActionsProps) {
         <Button
           variant="outline"
           size="sm"
-          className="text-xs"
+          className="text-xs rounded-full"
           onClick={handleCreateFollowUp}
           disabled={loading}
         >
@@ -72,7 +72,7 @@ function TaskActions({ task, detailView }: TaskActionsProps) {
       </div>
 
       <Dialog open={followUpDialogOpen} onOpenChange={setFollowUpDialogOpen}>
-        <DialogContent className="max-w-lg bg-white">
+        <DialogContent className="max-w-lg bg-white rounded-xl">
           <DialogHeader>
             <DialogTitle className="text-foreground">Create Follow-up Task</DialogTitle>
           </DialogHeader>

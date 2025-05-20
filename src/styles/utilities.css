@@ -62,10 +62,17 @@
     position: fixed !important;
     bottom: 1rem !important;
     right: 1rem !important;
-    z-index: 50 !important;
+    z-index: 99999 !important;
     background-color: hsl(var(--primary)) !important;
     color: white !important;
     border-radius: 9999px !important;
+    width: 56px !important;
+    height: 56px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
 
   /* Fixes for button variants */
@@ -165,5 +172,11 @@
 
   .bg-accent-yellow {
     background-color: hsl(var(--accent-yellow)) !important;
+  }
+
+  /* XL rounded corners for all containers */
+  .rounded-xl-container {
+    @apply rounded-xl;
+    border-radius: 0.75rem !important;
   }
 }

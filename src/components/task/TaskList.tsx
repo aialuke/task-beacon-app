@@ -139,10 +139,10 @@ export default function TaskList({ dialogOpen, setDialogOpen }: TaskListProps) {
             value={filter}
             onValueChange={(value) => setFilter(value as TaskStatus | "all")}
           >
-            <SelectTrigger className="filter-dropdown-mobile">
+            <SelectTrigger className="filter-dropdown-mobile rounded-xl">
               <SelectValue placeholder="Filter tasks" />
             </SelectTrigger>
-            <SelectContent className="bg-white">
+            <SelectContent className="bg-white rounded-xl">
               <SelectItem value="all" className="text-foreground">Current Tasks</SelectItem>
               <SelectItem value="pending" className="text-foreground">Pending</SelectItem>
               <SelectItem value="overdue" className="text-destructive">
@@ -184,11 +184,32 @@ export default function TaskList({ dialogOpen, setDialogOpen }: TaskListProps) {
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogTrigger asChild>
-          <button className="fab" aria-label="Create New Task">
+          <button 
+            className="fab" 
+            aria-label="Create New Task"
+            style={{
+              position: "fixed",
+              bottom: "16px",
+              right: "16px",
+              width: "56px",
+              height: "56px",
+              zIndex: 99999,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: "9999px",
+              backgroundColor: "hsl(var(--primary))",
+              color: "white",
+              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.1)",
+              border: "none",
+              visibility: "visible",
+              opacity: 1
+            }}
+          >
             <ClockPlus className="h-6 w-6 text-white fill-white stroke-white" />
           </button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-md bg-white">
+        <DialogContent className="sm:max-w-md bg-white rounded-xl">
           <DialogHeader>
             <DialogTitle className="text-foreground">Create New Task</DialogTitle>
           </DialogHeader>

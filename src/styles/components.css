@@ -50,12 +50,16 @@
     right: 16px !important;
     width: 56px !important;
     height: 56px !important;
-    z-index: 50 !important;
+    z-index: 99999 !important; /* Significantly increase z-index */
     transition: transform 0.2s, background-color 0.2s;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.1) !important;
     background-color: hsl(var(--primary)) !important;
     color: white !important;
     border-radius: 9999px !important;
+    position: fixed !important; /* Reinforce fixed positioning */
+    display: flex !important; /* Ensure it's displayed */
+    visibility: visible !important; /* Ensure it's visible */
+    opacity: 1 !important; /* Ensure it's fully opaque */
   }
 
   .fab:hover {
