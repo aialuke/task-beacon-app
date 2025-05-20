@@ -33,7 +33,7 @@ function TaskHeader({
 
   const descriptionAnimation = useSpring({
     height: isExpanded ? descriptionRef.current?.scrollHeight || 16 : 16,
-    opacity: isExpanded ? 1 : 0.9, // Changed to animate opacity for fade effect
+    opacity: isExpanded ? 1 : 0.9,
     config: {
       tension: 200,
       friction: 20,
@@ -91,7 +91,6 @@ function TaskHeader({
           width="16"
           height="16"
           viewBox="0 0 24 24"
-          fill="none"
           xmlns="http://www.w3.org/2000/svg"
           className={`transform transition-transform text-gray-900 stroke-gray-900 ${isExpanded ? "rotate-180" : ""}`}
         >

@@ -25,15 +25,14 @@ const TimerDisplay = ({ size, status, timeDisplay }: TimerDisplayProps) => {
           height={size / 3}
           viewBox="0 0 24 24"
           fill="none"
-          className="text-success stroke-success"
+          className="text-success stroke-success icon-filled"
         >
           <path
             d="M20 6L9 17L4 12"
-            stroke="var(--timer-complete)"
+            stroke="currentColor"
             strokeWidth="3"
             strokeLinecap="round"
             strokeLinejoin="round"
-            style={{ stroke: "var(--timer-complete)", strokeWidth: "3px" }}
           />
         </svg>
       ) : (
@@ -41,11 +40,6 @@ const TimerDisplay = ({ size, status, timeDisplay }: TimerDisplayProps) => {
           className={
             status === "overdue" ? "text-destructive" : "text-primary"
           }
-          style={{
-            color: status === "overdue" 
-              ? "hsl(var(--destructive))" 
-              : "hsl(var(--primary))"
-          }}
         >
           {timeDisplay}
         </span>

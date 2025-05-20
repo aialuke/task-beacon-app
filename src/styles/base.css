@@ -1,5 +1,7 @@
+
 /* src/styles/base.css */
 :root {
+  /* Color system - normalized variable names */
   --background: 0 0% 100%;
   --foreground: 240 10% 3.9%;
   --card: 0 0% 100%;
@@ -24,7 +26,7 @@
   --surface-foreground: 240 10% 3.9%;
   --accent-yellow: 51 100% 57%; /* #FFDD24 */
   
-  /* Timer Colors */
+  /* Timer Colors - consistent naming */
   --timer-pending: #FFDD24; /* Yellow */
   --timer-overdue: #DA3E52; /* Red */
   --timer-complete: #10b981; /* Green */
@@ -45,7 +47,7 @@ body {
   background-color: hsl(var(--background));
 }
 
-/* Additional resets to prevent style overrides */
+/* Reset buttons and form elements to ensure consistent inheritance */
 button, input, optgroup, select, textarea {
   font-family: inherit;
   font-size: 100%;

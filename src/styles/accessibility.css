@@ -3,6 +3,8 @@
 /* =========================
    Accessibility
    ========================= */
+
+/* Improved focus styles that respect inheritance */
 :focus-visible {
   outline: 2px solid hsl(var(--primary));
   outline-offset: 2px;
@@ -13,4 +15,22 @@
   .timer-ring {
     stroke: CanvasText;
   }
+  
+  button, 
+  a[role="button"],
+  .btn-primary,
+  .btn-secondary {
+    border: 1px solid CanvasText;
+  }
+  
+  /* Ensure icons remain visible in high contrast mode */
+  svg {
+    forced-color-adjust: auto;
+  }
+}
+
+/* Keyboard navigation improvements */
+[tabindex]:not([tabindex="-1"]):focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
 }

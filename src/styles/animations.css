@@ -35,5 +35,15 @@
   
   .animate-pulse-ring {
     animation: pulse-ring 2s infinite;
+    will-change: transform, opacity;
+  }
+  
+  /* Performance optimizations for animations */
+  .animate-transform {
+    will-change: transform;
+  }
+  
+  .animate-opacity {
+    will-change: opacity;
   }
 }

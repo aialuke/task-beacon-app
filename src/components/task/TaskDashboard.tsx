@@ -46,14 +46,14 @@ export default function TaskDashboard() {
         <DropdownMenu open={open} onOpenChange={setOpen}>
           <DropdownMenuTrigger asChild>
             <Avatar className="cursor-pointer h-8 w-8">
-              <AvatarFallback className="text-sm" style={{ backgroundColor: "#e5e7eb", color: "#6b7280" }}>
+              <AvatarFallback className="text-sm avatar-fallback">
                 {getAvatarInitial(undefined)}
               </AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="p-2 bg-white">
             <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-foreground">
-              <LogOut className="mr-2 h-4 w-4" style={{ color: "#3662E3", stroke: "#3662E3" }} />
+              <LogOut className="mr-2 h-4 w-4 text-primary stroke-primary" />
               <span>Sign out</span>
             </DropdownMenuItem>
           </DropdownMenuContent>

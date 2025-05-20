@@ -1,3 +1,4 @@
+
 /* src/styles/components.css */
 @layer components {
   .task-card {
@@ -6,8 +7,6 @@
     width: 95%;
     margin-left: auto;
     margin-right: auto;
-    background-color: white !important;
-    border-color: #e2e8f0 !important;
   }
 
   @media (min-width: 640px) {
@@ -18,7 +17,7 @@
 
   .task-card[data-expanded="true"] {
     @apply border-secondary;
-    border-color: #3662E3 !important; /* Updated to blue */
+    border-color: hsl(var(--primary));
   }
 
   .task-card-container::-webkit-scrollbar,
@@ -33,44 +32,37 @@
   .btn-primary {
     @apply rounded-full focus:outline-none focus:ring-2 focus:ring-primary/50 text-base;
     transition: background 0.2s;
-    background-color: #3662E3 !important; /* Updated to blue */
-    color: white !important;
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
   }
 
   .btn-secondary {
     @apply border border-input hover:bg-accent hover:text-accent-foreground rounded-full focus:outline-none focus:ring-2 focus:ring-accent/50;
     transition: background 0.2s, color 0.2s;
-    background-color: white !important;
   }
 
   .fab {
     @apply rounded-full shadow-lg flex items-center justify-center fixed;
-    bottom: 16px !important;
-    right: 16px !important;
-    width: 56px !important;
-    height: 56px !important;
-    z-index: 99999 !important; /* Significantly increase z-index */
+    bottom: 16px;
+    right: 16px;
+    width: 56px;
+    height: 56px;
+    z-index: 99999;
     transition: transform 0.2s, background-color 0.2s;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.1) !important;
-    background-color: #3662E3 !important; /* Updated to blue */
-    color: white !important;
-    border-radius: 9999px !important;
-    position: fixed !important; /* Reinforce fixed positioning */
-    display: flex !important; /* Ensure it's displayed */
-    visibility: visible !important; /* Ensure it's visible */
-    opacity: 1 !important; /* Ensure it's fully opaque */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
   }
 
   .fab svg {
-    stroke: white !important;
-    fill: none !important;
-    stroke-width: 2 !important;
+    stroke: white;
+    stroke-width: 2;
   }
 
   .fab:hover {
-    background-color: #2C50B6 !important; /* Darker blue for hover */
+    background-color: #2C50B6;
     transform: scale(1.05);
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1);
   }
 
   .fab:active {

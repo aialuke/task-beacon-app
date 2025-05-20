@@ -4,11 +4,16 @@
 @tailwind components;
 @tailwind utilities;
 
-/* CSS Reset to ensure consistent styling */
+/* CSS Reset and base styles - moved from scattered locations */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+*::before, 
+*::after {
+  box-sizing: inherit;
 }
 
 /* Import custom styles after Tailwind directives */
@@ -18,72 +23,52 @@
 @import "./styles/accessibility.css";
 @import "./styles/animations.css";
 
-/* Fix for task cards and buttons */
+/* Global icon handling - centralized here instead of duplicated */
+svg {
+  fill: none;
+}
+
+.icon-filled {
+  fill: currentColor;
+}
+
+/* Fix for commonly used elements */
 .task-card {
-  background-color: white !important;
-  border: 1px solid #e2e8f0 !important;
-  border-radius: 0.75rem !important; /* XL rounded corners */
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem; /* XL rounded corners */
 }
 
 .btn-primary, 
 button[class*="bg-primary"] {
-  background-color: #3662E3 !important; /* Updated to blue */
-  color: white !important;
-  border-radius: 9999px !important;
+  background-color: #3662E3;
+  color: white;
+  border-radius: 9999px;
 }
 
 .timer-ring circle {
   stroke-width: attr(stroke-width);
 }
 
-/* Default SVG styling - ensures icons are outlined by default */
-svg:not(.icon-filled) {
-  fill: none;
-}
-
-/* FAB styling */
-.fab {
-  position: fixed !important;
-  bottom: 1rem !important;
-  right: 1rem !important;
-  z-index: 99999 !important;
-  background-color: #3662E3 !important; /* Updated to blue */
-  color: white !important;
-  border-radius: 9999px !important;
-  width: 56px !important;
-  height: 56px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
-
 /* Override for select and dropdown components */
 .select-content,
 [data-radix-popper-content-wrapper],
 [data-radix-dropdown-menu-content] {
-  background-color: white !important;
-  color: #000000e6 !important;
-  border-radius: 0.75rem !important; /* XL rounded corners */
+  background-color: white;
+  color: #000000e6;
+  border-radius: 0.75rem; /* XL rounded corners */
 }
 
 /* Fix avatar fallback backgrounds */
 .avatar-fallback {
-  background-color: #e5e7eb !important;
-  color: #6b7280 !important;
-}
-
-/* Override for any external injected styles */
-body .externally-styled-element {
-  color: inherit;
-  background-color: inherit;
+  background-color: #e5e7eb;
+  color: #6b7280;
 }
 
 /* All dialog, card, and other container elements should have rounded-xl corners */
 [class*="rounded-md"],
 [class*="rounded-lg"] {
-  border-radius: 0.75rem !important; /* XL rounded corners */
+  border-radius: 0.75rem; /* XL rounded corners */
 }
 
 /* Explicitly force rounded corners for specific components */
@@ -93,22 +78,31 @@ body .externally-styled-element {
 .dropdown-content,
 .popover-content,
 .task-card {
-  border-radius: 0.75rem !important; /* XL rounded corners */
+  border-radius: 0.75rem; /* XL rounded corners */
 }
 
 /* Make all buttons rounded-full */
 button, 
 .button,
 [role="button"] {
-  border-radius: 9999px !important;
+  border-radius: 9999px;
 }
 
 /* Special handling for FAB to ensure it's visible */
 #root .fab,
 body .fab {
-  display: flex !important;
-  position: fixed !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  z-index: 99999 !important;
+  display: flex;
+  position: fixed;
+  visibility: visible;
+  opacity: 1;
+  z-index: 99999;
+  bottom: 1rem;
+  right: 1rem;
+  width: 56px;
+  height: 56px;
+  background-color: #3662E3;
+  color: white;
+  border-radius: 9999px;
+  align-items: center;
+  justify-content: center;
 }
