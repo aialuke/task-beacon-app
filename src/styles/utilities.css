@@ -1,0 +1,57 @@
+
+/* src/styles/utilities.css */
+@layer utilities {
+  .task-list {
+    @apply flex flex-col;
+    transition: all 0.3s ease-out;
+    padding: 0 5px;
+    overflow-y: hidden;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .header-text {
+    @apply text-lg font-semibold text-foreground my-2;
+  }
+
+  .owner-name {
+    @apply text-xs text-gray-600 mr-2 whitespace-nowrap overflow-hidden;
+  }
+
+  .mobile-safe-area {
+    @apply px-4;
+  }
+
+  .mobile-description-container {
+    margin-top: 4px;
+    padding-top: 1px;
+    min-height: 20px;
+  }
+
+  .tooltip-touch {
+    @apply visible opacity-100 transition-opacity duration-300;
+  }
+
+  @media (hover: none) {
+    .tooltip-touch {
+      @apply visible opacity-100;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .filter-dropdown-mobile {
+      width: 40%;
+    }
+  }
+
+  @media (min-width: 641px) {
+    .filter-dropdown-mobile {
+      width: 25%;
+    }
+  }
+
+  .external-link {
+    @apply flex items-center gap-1 text-primary hover:underline;
+    word-break: break-all;
+  }
+}

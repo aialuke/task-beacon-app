@@ -1,0 +1,93 @@
+
+/* src/styles/components.css */
+@layer components {
+  .task-card {
+    @apply flex flex-col p-3 sm:p-3 bg-white rounded-xl shadow-sm border border-transparent hover:border-secondary transition-colors relative text-left;
+    min-height: calc(1.25 * 60px);
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  @media (min-width: 640px) {
+    .task-card {
+      width: 100%;
+    }
+  }
+
+  .task-card[data-expanded="true"] {
+    @apply border-secondary;
+  }
+
+  .task-card-container::-webkit-scrollbar,
+  .task-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .form-field-group {
+    @apply space-y-2;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary/80 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 text-base;
+    transition: background 0.2s;
+  }
+
+  .btn-secondary {
+    @apply border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md focus:outline-none focus:ring-2 focus:ring-accent/50;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .fab {
+    @apply bg-primary text-white rounded-full shadow-lg flex items-center justify-center fixed;
+    bottom: 16px;
+    right: 16px;
+    width: 56px;
+    height: 56px;
+    z-index: 50;
+    transition: transform 0.2s, background-color 0.2s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .fab:hover {
+    @apply bg-primary/90;
+    transform: scale(1.05);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .fab:active {
+    transform: scale(0.95);
+  }
+
+  @media (max-width: 320px) {
+    .fab {
+      @apply bottom-2 right-2 w-12 h-12;
+    }
+  }
+
+  .header-logo {
+    @apply text-primary;
+    fill: currentColor;
+  }
+
+  .timer-ring {
+    clip-path: circle(50%); /* Fix square effect for drop shadow */
+  }
+
+  input[type="file"] {
+    @apply text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/80 cursor-pointer;
+    max-width: 100%;
+  }
+
+  @media (max-width: 640px) {
+    input[type="file"] {
+      max-width: 100px;
+    }
+  }
+
+  @media (min-width: 640px) {
+    input[type="file"] {
+      max-width: 200px;
+    }
+  }
+}

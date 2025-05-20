@@ -1,0 +1,65 @@
+
+/* src/styles/base.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================
+   CSS Custom Properties
+   ========================= */
+@layer base {
+  :root {
+    /* Backgrounds */
+    --background: 0 0% 98%;
+    --surface: 0 0% 100%;
+
+    /* Foregrounds */
+    --foreground: 222 47% 11%;
+    --surface-foreground: 240 10% 3.9%;
+
+    /* Primary/Secondary */
+    --primary: 220 79% 55%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    /* Muted/Accent */
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+
+    /* Status */
+    --destructive: 0 80% 50%;
+    --destructive-foreground: 0 0% 98%;
+    --success: 158 83% 36%;
+    --success-foreground: 0 0% 98%;
+
+    /* Borders/Inputs */
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
+
+    /* Radius */
+    --radius: 1rem;
+
+    /* Timer Status - Updated with WCAG compliant colors */
+    --timer-complete: 158 83% 36%;
+    --timer-overdue: 14 66% 56%; /* #DF6441 - Overdue tasks */
+    --timer-pending: 47 100% 60%; /* #FFDD35 - Pending tasks */
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-sans);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold;
+    font-family: var(--font-sans);
+  }
+
+  #root {
+    @apply max-w-5xl mx-auto px-4 sm:px-8 text-center min-h-[100dvh] w-full overflow-x-hidden overflow-y-hidden;
+  }
+}
