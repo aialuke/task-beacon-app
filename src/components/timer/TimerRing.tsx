@@ -1,5 +1,5 @@
 
-import { animated } from "@react-spring/web";
+import { animated, SpringValue } from "@react-spring/web";
 import { TaskStatus } from "@/lib/types";
 import { getTimerColor } from "@/lib/utils";
 
@@ -7,7 +7,7 @@ interface TimerRingProps {
   size: number;
   radius: number;
   circumference: number;
-  strokeDashoffset: number;
+  strokeDashoffset: SpringValue<number> | number;
   status: TaskStatus;
 }
 
