@@ -65,7 +65,7 @@ export default function CreateTaskForm({
         preview={photoPreview}
       />
       <FormActions
-        onClose={onClose}
+        onCancel={onClose}
         isSubmitting={loading}
       />
     </form>
