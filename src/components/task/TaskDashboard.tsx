@@ -1,4 +1,3 @@
-// src/components/task/TaskDashboard.tsx
 import { useState } from "react";
 import TaskList from "./TaskList";
 import { supabase } from "@/lib/supabase";
@@ -38,13 +37,8 @@ export default function TaskDashboard() {
           <img
             src="/hourglass_logo.svg"
             alt="Task Beacon Logo"
-<<<<<<< HEAD
-            width={36} // Increased by from 30
-            height={36} // Increased by from 30
-=======
             width={24}
             height={24}
->>>>>>> parent of c67e2be (Logo and app name update)
             className="text-primary"
           />
         </div>
