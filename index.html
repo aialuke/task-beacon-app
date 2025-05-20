@@ -1,35 +1,19 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Task Beacon: Manage tasks efficiently with deadlines, follow-ups, and notifications." />
-    <meta name="keywords" content="task management, productivity, to-do list, Task Beacon" />
-    <meta name="theme-color" content="#3662E3" /> <!-- Matches --primary: 220 79% 55% from index.css -->
-    <title>Task Beacon</title>
-    <!-- Favicon and App Icons -->
-    <link rel="icon" type="image/png" href="/favicon.png" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <title>Task Management PWA</title>
+    <meta name="description" content="Track and manage your tasks efficiently with our Task Management Progressive Web App" />
+    <meta name="theme-color" content="#5e52c5" />
     <link rel="manifest" href="/manifest.json" />
-    <!-- Google Fonts (Optimized) -->
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap"
-    />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   </head>
   <body>
     <div id="root"></div>
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
     <script type="module" src="/src/main.tsx"></script>
-    <!-- Service Worker Registration (Optional) -->
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/service-worker.js').catch((error) => {
-            console.error('Service Worker registration failed:', error);
-          });
-        });
-      }
-    </script>
   </body>
 </html>
