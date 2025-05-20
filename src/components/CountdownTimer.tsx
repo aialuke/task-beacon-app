@@ -45,13 +45,6 @@ export default function CountdownTimer({
     immediate: status === "complete" || status === "overdue" || !dueDate,
   });
 
-  const pulseAnimation = useSpring({
-    from: { scale: 1 },
-    to: { scale: daysLeft <= 1 || status === "overdue" ? 1.05 : 1 },
-    loop: { reverse: true },
-    config: { tension: 80, friction: 30, duration: 2000 },
-  });
-
   useEffect(() => {
     if (!dueDate) {
       setDaysLeft(0);
@@ -100,7 +93,7 @@ export default function CountdownTimer({
             }`}
             aria-describedby="timer-tooltip"
             className="relative focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
-            style={{ width: dynamicSize, height: dynamicSize, ...pulseAnimation }}
+            style={{ width: dynamicSize, height: dynamicSize }}
           >
             <TimerRing
               size={dynamicSize}
