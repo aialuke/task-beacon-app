@@ -1,65 +1,75 @@
 
 /* src/styles/base.css */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+:root {
+  --background: 0 0% 100%;
+  --foreground: 240 10% 3.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 240 10% 3.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 10% 3.9%;
+  --primary: 260 84.3% 74.3%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 240 4.8% 95.9%;
+  --secondary-foreground: 240 5.9% 10%;
+  --muted: 240 4.8% 95.9%;
+  --muted-foreground: 240 3.8% 46.1%;
+  --accent: 240 4.8% 95.9%;
+  --accent-foreground: 240 5.9% 10%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 5.9% 90%;
+  --input: 240 5.9% 90%;
+  --ring: 240 5.9% 10%;
+  --radius: 0.5rem;
+  --surface: 0 0% 100%;
+  --surface-foreground: 240 10% 3.9%;
+  
+  /* Timer Colors */
+  --timer-pending: #5e52c5;
+  --timer-overdue: #df6441;
+  --timer-complete: #10b981;
+}
 
-/* =========================
-   CSS Custom Properties
-   ========================= */
-@layer base {
+@media (prefers-color-scheme: dark) {
   :root {
-    /* Backgrounds */
-    --background: 0 0% 98%;
-    --surface: 0 0% 100%;
-
-    /* Foregrounds */
-    --foreground: 222 47% 11%;
-    --surface-foreground: 240 10% 3.9%;
-
-    /* Primary/Secondary */
-    --primary: 220 79% 55%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    /* Muted/Accent */
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-
-    /* Status */
-    --destructive: 0 80% 50%;
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 260 84.3% 74.3%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --success: 158 83% 36%;
-    --success-foreground: 0 0% 98%;
-
-    /* Borders/Inputs */
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 5.9% 10%;
-
-    /* Radius */
-    --radius: 1rem;
-
-    /* Timer Status - Updated with WCAG compliant colors */
-    --timer-complete: 158 83% 36%;
-    --timer-overdue: 14 66% 56%; /* #DF6441 - Overdue tasks */
-    --timer-pending: 47 100% 60%; /* #FFDD35 - Pending tasks */
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+    --surface: 240 10% 3.9%;
+    --surface-foreground: 0 0% 98%;
+    
+    /* Timer Colors - Dark Theme */
+    --timer-pending: #7c73d6;
+    --timer-overdue: #e87e61;
+    --timer-complete: #34d399;
   }
+}
 
-  body {
-    @apply bg-background text-foreground antialiased;
-    font-family: var(--font-sans);
-  }
+*, *::before, *::after {
+  box-sizing: border-box;
+}
 
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-semibold;
-    font-family: var(--font-sans);
-  }
-
-  #root {
-    @apply max-w-5xl mx-auto px-4 sm:px-8 text-center min-h-[100dvh] w-full overflow-x-hidden overflow-y-hidden;
-  }
+body {
+  font-feature-settings: "rlig" 1, "calt" 1;
+  margin: 0;
+  padding: 0;
+  font-family: "Manrope", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

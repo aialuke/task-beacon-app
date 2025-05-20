@@ -7,3 +7,10 @@
   outline: 2px solid hsl(var(--primary));
   outline-offset: 2px;
 }
+
+/* High contrast outline for important elements */
+@media (forced-colors: active) {
+  .timer-ring {
+    stroke: CanvasText;
+  }
+}

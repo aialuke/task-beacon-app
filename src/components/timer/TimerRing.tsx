@@ -27,6 +27,7 @@ const TimerRing = ({
       viewBox={`0 0 ${size} ${size}`}
       style={{ overflow: "visible" }}
     >
+      {/* Background circle */}
       <circle
         cx={size / 2}
         cy={size / 2}
@@ -35,18 +36,18 @@ const TimerRing = ({
         strokeWidth="2"
         stroke="#E5EDFF"
       />
+      {/* Animated foreground circle */}
       <animated.circle
         cx={size / 2}
         cy={size / 2}
         r={radius}
         fill="none"
-        strokeWidth="3.6" // Increased thickness by 20% (from 3 to 3.6)
+        strokeWidth="3.6"
         stroke={timerColor}
         strokeDasharray={circumference}
         strokeDashoffset={strokeDashoffset}
         transform={`rotate(-90, ${size / 2}, ${size / 2})`}
-        strokeLinecap="round" // Rounded corners
-        className="timer-ring"
+        strokeLinecap="round"
         style={{
           filter: status === "overdue" ? "drop-shadow(0 0 8px rgba(223, 100, 65, 0.8))" : "none",
         }}
