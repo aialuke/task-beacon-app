@@ -7,7 +7,7 @@
   --card-foreground: 240 10% 3.9%;
   --popover: 0 0% 100%;
   --popover-foreground: 240 10% 3.9%;
-  --primary: 260 84.3% 74.3%;
+  --primary: 212 72% 45%;
   --primary-foreground: 0 0% 98%;
   --secondary: 240 4.8% 95.9%;
   --secondary-foreground: 240 5.9% 10%;
@@ -30,37 +30,6 @@
   --timer-complete: #10b981;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 260 84.3% 74.3%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
-    --surface: 240 10% 3.9%;
-    --surface-foreground: 0 0% 98%;
-    
-    /* Timer Colors - Dark Theme */
-    --timer-pending: #7c73d6;
-    --timer-overdue: #e87e61;
-    --timer-complete: #34d399;
-  }
-}
-
 *, *::before, *::after {
   box-sizing: border-box;
 }
@@ -72,8 +41,8 @@ body {
   font-family: "Manrope", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: hsl(var(--foreground)) !important;
-  background-color: hsl(var(--background)) !important;
+  color: hsl(var(--foreground));
+  background-color: hsl(var(--background));
 }
 
 /* Additional resets to prevent style overrides */

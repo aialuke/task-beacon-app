@@ -18,90 +18,78 @@
 @import "./styles/accessibility.css";
 @import "./styles/animations.css";
 
-/* Ensure our styles take precedence */
+/* Root light theme variables - single source of truth */
 :root {
-  --background: 0 0% 100% !important;
-  --foreground: 240 10% 3.9% !important;
-  --card: 0 0% 100% !important;
-  --card-foreground: 240 10% 3.9% !important;
-  --popover: 0 0% 100% !important;
-  --popover-foreground: 240 10% 3.9% !important;
-  --primary: 260 84.3% 74.3% !important;
-  --primary-foreground: 0 0% 98% !important;
-  --secondary: 240 4.8% 95.9% !important;
-  --secondary-foreground: 240 5.9% 10% !important;
-  --muted: 240 4.8% 95.9% !important;
-  --muted-foreground: 240 3.8% 46.1% !important;
-  --accent: 240 4.8% 95.9% !important;
-  --accent-foreground: 240 5.9% 10% !important;
-  --destructive: 0 84.2% 60.2% !important;
-  --destructive-foreground: 0 0% 98% !important;
-  --border: 240 5.9% 90% !important;
-  --input: 240 5.9% 90% !important;
-  --ring: 240 5.9% 10% !important;
-  --radius: 0.5rem !important;
-  --surface: 0 0% 100% !important;
-  --surface-foreground: 240 10% 3.9% !important;
+  --background: 0 0% 100%;
+  --foreground: 240 10% 3.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 240 10% 3.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 10% 3.9%;
+  --primary: 212 72% 45%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 240 4.8% 95.9%;
+  --secondary-foreground: 240 5.9% 10%;
+  --muted: 240 4.8% 95.9%;
+  --muted-foreground: 240 3.8% 46.1%;
+  --accent: 240 4.8% 95.9%;
+  --accent-foreground: 240 5.9% 10%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 5.9% 90%;
+  --input: 240 5.9% 90%;
+  --ring: 240 5.9% 10%;
+  --radius: 0.5rem;
+  --surface: 0 0% 100%;
+  --surface-foreground: 240 10% 3.9%;
   
   /* Timer Colors */
-  --timer-pending: #5e52c5 !important;
-  --timer-overdue: #df6441 !important;
-  --timer-complete: #10b981 !important;
-}
-
-/* Higher-specificity override for dark mode */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: 240 10% 3.9% !important;
-    --foreground: 0 0% 98% !important;
-    --card: 240 10% 3.9% !important;
-    --card-foreground: 0 0% 98% !important;
-    --popover: 240 10% 3.9% !important;
-    --popover-foreground: 0 0% 98% !important;
-    --primary: 260 84.3% 74.3% !important;
-    --primary-foreground: 0 0% 98% !important;
-    --secondary: 240 3.7% 15.9% !important;
-    --secondary-foreground: 0 0% 98% !important;
-    --muted: 240 3.7% 15.9% !important;
-    --muted-foreground: 240 5% 64.9% !important;
-    --accent: 240 3.7% 15.9% !important;
-    --accent-foreground: 0 0% 98% !important;
-    --destructive: 0 84.2% 60.2% !important;
-    --destructive-foreground: 0 0% 98% !important;
-    --border: 240 3.7% 15.9% !important;
-    --input: 240 3.7% 15.9% !important;
-    --ring: 240 4.9% 83.9% !important;
-    --surface: 240 10% 3.9% !important;
-    --surface-foreground: 0 0% 98% !important;
-    
-    /* Timer Colors - Dark Theme */
-    --timer-pending: #7c73d6 !important;
-    --timer-overdue: #e87e61 !important;
-    --timer-complete: #34d399 !important;
-  }
+  --timer-pending: #5e52c5;
+  --timer-overdue: #df6441;
+  --timer-complete: #10b981;
 }
 
 /* Fix for task cards and buttons */
 .task-card {
-  background-color: white !important;
-  border: 1px solid #e2e8f0 !important;
+  background-color: white;
+  border: 1px solid #e2e8f0;
 }
 
 .btn-primary, 
 button[class*="bg-primary"] {
-  background-color: hsl(var(--primary)) !important;
-  color: hsl(var(--primary-foreground)) !important;
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
 }
 
 .timer-ring circle {
-  stroke-width: attr(stroke-width) !important;
+  stroke-width: attr(stroke-width);
 }
 
 .fab {
-  position: fixed !important;
-  bottom: 1rem !important;
-  right: 1rem !important;
-  z-index: 50 !important;
-  background-color: hsl(var(--primary)) !important;
-  color: white !important;
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 50;
+  background-color: hsl(var(--primary));
+  color: white;
+}
+
+/* Override for select and dropdown components */
+.select-content,
+[data-radix-popper-content-wrapper],
+[data-radix-dropdown-menu-content] {
+  background-color: white !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+/* Fix avatar fallback backgrounds */
+.avatar-fallback {
+  background-color: hsl(var(--muted)) !important;
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+/* Override for any external injected styles */
+body .externally-styled-element {
+  color: inherit;
+  background-color: inherit;
 }
