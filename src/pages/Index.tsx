@@ -1,8 +1,9 @@
+
 // src/index.tsx
 import { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
 import { User } from "@/lib/types";
-import { toast } from "@/lib/toast"; // Updated import
+import { toast } from "@/lib/toast";
 
 const AuthForm = lazy(() => import("@/components/AuthForm"));
 const TaskDashboard = lazy(() => import("@/components/task/TaskDashboard"));
@@ -19,7 +20,7 @@ const Index = () => {
       if (error instanceof Error) {
         toast.error(error.message);
       } else {
-        toast.error("Failed to fetch user information"); // Improved error message
+        toast.error("Failed to fetch user information");
       }
     } finally {
       setLoading(false);
@@ -33,13 +34,15 @@ const Index = () => {
       return;
     }
 
-    fetchUser();
-
+    // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setUser(session?.user ? { id: session.user.id, email: session.user.email || "" } : null);
       }
     );
+
+    // THEN check for existing session
+    fetchUser();
 
     return () => subscription.unsubscribe();
   }, [fetchUser]);

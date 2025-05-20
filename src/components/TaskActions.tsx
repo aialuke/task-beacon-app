@@ -1,48 +1,29 @@
 
-// src/components/TaskActions.tsx
 import { useState, useCallback, memo } from "react";
 import { Button } from "@/components/ui/button";
 import { Task } from "@/lib/types";
-import { supabase, isMockingSupabase } from "@/lib/supabase";
-import { toast } from "@/lib/toast"; // Updated import
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import FollowUpTaskForm from "./FollowUpTaskForm";
+import { useTaskContext } from "@/contexts/TaskContext";
 
 interface TaskActionsProps {
   task: Task;
-  detailView?: boolean; // Added detailView as an optional prop
+  detailView?: boolean;
 }
 
 function TaskActions({ task, detailView }: TaskActionsProps) {
+  const { toggleTaskComplete } = useTaskContext();
   const [loading, setLoading] = useState(false);
   const [followUpDialogOpen, setFollowUpDialogOpen] = useState(false);
 
   const handleMarkComplete = useCallback(async () => {
     setLoading(true);
     try {
-      if (isMockingSupabase) {
-        toast.success(`Task marked ${task.status === "complete" ? "incomplete" : "complete"} (mock)`);
-        setTimeout(() => setLoading(false), 500);
-        return;
-      }
-
-      const { error } = await supabase
-        .from("tasks")
-        .update({ status: task.status === "complete" ? "pending" : "complete" })
-        .eq("id", task.id);
-
-      if (error) throw error;
-      toast.success(`Task marked ${task.status === "complete" ? "incomplete" : "complete"}`);
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
+      await toggleTaskComplete(task);
     } finally {
       setLoading(false);
     }
-  }, [task.status, task.id]);
+  }, [task, toggleTaskComplete]);
 
   const handleCreateFollowUp = useCallback(() => {
     setFollowUpDialogOpen(true);

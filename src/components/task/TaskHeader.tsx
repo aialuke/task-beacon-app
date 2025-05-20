@@ -1,19 +1,16 @@
 
-// src/components/TaskHeader.tsx
+import { useRef, memo } from "react";
 import { Button } from "@/components/ui/button";
 import { Task } from "@/lib/types";
 import { getStatusColor, getTaskStatus, truncateText } from "@/lib/utils";
-import { useSpring, animated, SpringValues } from "@react-spring/web";
-import { useRef, memo } from "react";
+import { useSpring, animated } from "@react-spring/web";
 import CountdownTimer from "../CountdownTimer";
 import { Pin } from "lucide-react";
-import { useIsMobile } from "@/lib/mobile-utils";
+import { useUIContext } from "@/contexts/UIContext";
 
 interface TaskHeaderProps {
   task: Task;
   isExpanded: boolean;
-  isPinned: boolean;
-  pinLoading: boolean;
   toggleExpand: () => void;
   handleTogglePin: () => void;
 }
@@ -21,15 +18,13 @@ interface TaskHeaderProps {
 function TaskHeader({
   task,
   isExpanded,
-  isPinned,
-  pinLoading,
   toggleExpand,
   handleTogglePin,
 }: TaskHeaderProps) {
+  const { isMobile } = useUIContext();
   const status = getTaskStatus(task);
   const statusColor = getStatusColor(status);
   const descriptionRef = useRef<HTMLDivElement>(null);
-  const isMobile = useIsMobile();
 
   const descriptionAnimation = useSpring({
     height: isExpanded ? descriptionRef.current?.scrollHeight || 16 : 16,
@@ -40,7 +35,7 @@ function TaskHeader({
       clamp: true,
     },
     immediate: false,
-  }) as SpringValues<{ height: number; opacity: number }>;
+  });
 
   return (
     <div className="flex items-center w-full gap-2 task-header-container">
@@ -76,10 +71,9 @@ function TaskHeader({
         size="icon"
         className="shrink-0 h-8 w-8 ml-1"
         onClick={handleTogglePin}
-        disabled={pinLoading}
-        title={isPinned ? "Unpin task" : "Pin task"}
+        title={task.pinned ? "Unpin task" : "Pin task"}
       >
-        {isPinned ? (
+        {task.pinned ? (
           <Pin size={16} className="text-gray-900 stroke-gray-900 icon-filled" />
         ) : (
           <Pin size={16} className="text-gray-900 stroke-gray-900" style={{ opacity: 0.8 }} />

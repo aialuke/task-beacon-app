@@ -1,3 +1,4 @@
+
 // src/app.tsx
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -7,14 +8,15 @@ import { lazy, Suspense } from "react";
 import Index from "./pages/Index";
 
 const NotFound = lazy(() => import("./pages/NotFound"));
-// Placeholder for task details page
 const TaskDetailsPage = lazy(() => import("./pages/TaskDetailsPage"));
 
+// Create a client
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 1,
       staleTime: 1000 * 60, // 1 minute
+      refetchOnWindowFocus: true,
     },
   },
 });
@@ -33,7 +35,7 @@ const App = () => (
         >
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/tasks/:id" element={<TaskDetailsPage />} /> {/* Added for task details */}
+            <Route path="/tasks/:id" element={<TaskDetailsPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

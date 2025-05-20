@@ -5,7 +5,7 @@ import { Task } from "@/lib/types";
 import TaskActions from "../TaskActions";
 import { Calendar1, ExternalLink } from "lucide-react";
 import { animated } from "@react-spring/web";
-import { useIsMobile } from "@/lib/mobile-utils";
+import { useUIContext } from "@/contexts/UIContext";
 import { Link } from "react-router-dom";
 import {
   Tooltip,
@@ -16,7 +16,6 @@ import {
 
 interface TaskDetailsProps {
   task: Task;
-  isPinned: boolean;
   isExpanded: boolean;
   animationState: { height: number; opacity: number };
   contentRef: React.RefObject<HTMLDivElement>;
@@ -24,12 +23,11 @@ interface TaskDetailsProps {
 
 function TaskDetails({
   task,
-  isPinned,
   isExpanded,
   animationState,
   contentRef,
 }: TaskDetailsProps) {
-  const isMobile = useIsMobile();
+  const { isMobile } = useUIContext();
 
   return (
     <animated.div
@@ -113,7 +111,7 @@ function TaskDetails({
           </div>
         )}
 
-        <TaskActions task={{ ...task, pinned: isPinned }} />
+        <TaskActions task={task} />
       </div>
     </animated.div>
   );

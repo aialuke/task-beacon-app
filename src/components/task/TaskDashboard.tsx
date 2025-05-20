@@ -11,10 +11,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { TaskContextProvider } from "@/contexts/TaskContext";
+import { UIContextProvider } from "@/contexts/UIContext";
 
 export default function TaskDashboard() {
   const [open, setOpen] = useState(false); // For DropdownMenu
-  const [dialogOpen, setDialogOpen] = useState(false); // For TaskList dialog
 
   const handleSignOut = async () => {
     try {
@@ -32,34 +33,38 @@ export default function TaskDashboard() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-2 sm:px-4 py-6 space-y-6">
-      <header className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <img
-            src="/hourglass_logo.svg"
-            alt="Task Beacon Logo"
-            width={36}
-            height={36}
-            className="text-primary"
-          />
+    <TaskContextProvider>
+      <UIContextProvider>
+        <div className="max-w-3xl mx-auto px-2 sm:px-4 py-6 space-y-6">
+          <header className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <img
+                src="/hourglass_logo.svg"
+                alt="Task Beacon Logo"
+                width={36}
+                height={36}
+                className="text-primary"
+              />
+            </div>
+            <DropdownMenu open={open} onOpenChange={setOpen}>
+              <DropdownMenuTrigger asChild>
+                <Avatar className="cursor-pointer h-8 w-8">
+                  <AvatarFallback className="text-sm avatar-fallback">
+                    {getAvatarInitial(undefined)}
+                  </AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="p-2 bg-white">
+                <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-foreground">
+                  <LogOut className="mr-2 h-4 w-4 text-primary stroke-primary" />
+                  <span>Sign out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </header>
+          <TaskList />
         </div>
-        <DropdownMenu open={open} onOpenChange={setOpen}>
-          <DropdownMenuTrigger asChild>
-            <Avatar className="cursor-pointer h-8 w-8">
-              <AvatarFallback className="text-sm avatar-fallback">
-                {getAvatarInitial(undefined)}
-              </AvatarFallback>
-            </Avatar>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="p-2 bg-white">
-            <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-foreground">
-              <LogOut className="mr-2 h-4 w-4 text-primary stroke-primary" />
-              <span>Sign out</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </header>
-      <TaskList dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} />
-    </div>
+      </UIContextProvider>
+    </TaskContextProvider>
   );
 }
