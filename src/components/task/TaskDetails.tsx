@@ -1,5 +1,5 @@
 
-import { memo } from "react";
+import { memo, useCallback } from "react";
 import { formatDate, truncateUrl } from "@/lib/utils";
 import { Task } from "@/lib/types";
 import TaskActions from "../TaskActions";

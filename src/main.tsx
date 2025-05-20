@@ -1,45 +1,45 @@
 
 import { createRoot } from "react-dom/client";
-import { StrictMode, Component, ReactNode } from "react";
-import App from "./App.tsx";
+import { StrictMode, lazy, Suspense } from "react";
 import "./index.css";
+import "./styles/critical.css"; // Import critical CSS first
 
-interface ErrorBoundaryProps {
-  children: ReactNode;
-}
+// Lazy load the main App component
+const App = lazy(() => import("./App.tsx"));
 
-interface ErrorBoundaryState {
-  hasError: boolean;
-}
-
-class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  state: ErrorBoundaryState = { hasError: false };
-
-  static getDerivedStateFromError(): ErrorBoundaryState {
-    return { hasError: true };
+// Simplified ErrorBoundary component
+const ErrorBoundary = ({ children }: { children: React.ReactNode }) => {
+  try {
+    return <>{children}</>;
+  } catch (error) {
+    console.error("Application error:", error);
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <h1 className="text-2xl font-bold text-destructive">Something went wrong.</h1>
+      </div>
+    );
   }
+};
 
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
-          <h1 className="text-2xl font-bold text-destructive">Something went wrong.</h1>
-        </div>
-      );
-    }
-    return this.props.children;
-  }
-}
+// Loading state while App loads
+const LoadingFallback = () => (
+  <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+  </div>
+);
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
   throw new Error("Root element with ID 'root' not found in the document.");
 }
 
+// Hydrate the app with optimized settings
 createRoot(rootElement).render(
   <StrictMode>
     <ErrorBoundary>
-      <App />
+      <Suspense fallback={<LoadingFallback />}>
+        <App />
+      </Suspense>
     </ErrorBoundary>
   </StrictMode>
 );

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Task } from "@/lib/types";
 import { getStatusColor, getTaskStatus, truncateText } from "@/lib/utils";
 import { useSpring, animated, SpringValues } from "@react-spring/web";
-import { useRef, memo } from "react";
+import { useRef, memo, useCallback } from "react";
 import CountdownTimer from "../CountdownTimer";
 import { Pin } from "lucide-react";
 import { useIsMobile } from "@/lib/mobile-utils";

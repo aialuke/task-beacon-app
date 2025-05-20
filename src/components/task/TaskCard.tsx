@@ -77,7 +77,7 @@ function TaskCard({ task }: TaskCardProps) {
 
   return (
     <div
-      className={`task-card-container ${isExpanded ? "expanded" : ""}`}
+      className="task-card-container"
       style={{
         overflowY: "hidden",
         boxSizing: "border-box",
@@ -92,13 +92,6 @@ function TaskCard({ task }: TaskCardProps) {
         ref={cardRef}
         className={`task-card ${isExpanded ? "expanded-card" : ""} p-3`}
         data-expanded={isExpanded}
-        style={{
-          overflowY: "hidden",
-          boxSizing: "border-box",
-          width: "100%",
-          position: "relative",
-          zIndex: 1,
-        }}
       >
         <TaskHeader
           task={task}
