@@ -1,3 +1,4 @@
+
 // src/components/TaskActions.tsx
 import { useState, useCallback, memo } from "react";
 import { Button } from "@/components/ui/button";
@@ -9,9 +10,10 @@ import FollowUpTaskForm from "./FollowUpTaskForm";
 
 interface TaskActionsProps {
   task: Task;
+  detailView?: boolean; // Added detailView as an optional prop
 }
 
-function TaskActions({ task }: TaskActionsProps) {
+function TaskActions({ task, detailView }: TaskActionsProps) {
   const [loading, setLoading] = useState(false);
   const [followUpDialogOpen, setFollowUpDialogOpen] = useState(false);
 
