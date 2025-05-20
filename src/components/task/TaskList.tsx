@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import { Task, TaskStatus } from "@/lib/types";
 import TaskCard from "./TaskCard";
@@ -198,7 +197,7 @@ export default function TaskList({ dialogOpen, setDialogOpen }: TaskListProps) {
               alignItems: "center",
               justifyContent: "center",
               borderRadius: "9999px",
-              backgroundColor: "#9b87f5",
+              backgroundColor: "#3662E3", /* Updated to blue */
               color: "white",
               boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.1)",
               border: "none",

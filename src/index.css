@@ -27,7 +27,7 @@
 
 .btn-primary, 
 button[class*="bg-primary"] {
-  background-color: #9b87f5 !important;
+  background-color: #3662E3 !important; /* Updated to blue */
   color: white !important;
   border-radius: 9999px !important;
 }
@@ -41,7 +41,7 @@ button[class*="bg-primary"] {
   bottom: 1rem !important;
   right: 1rem !important;
   z-index: 99999 !important; /* Very high z-index */
-  background-color: #9b87f5 !important;
+  background-color: #3662E3 !important; /* Updated to blue */
   color: white !important;
   border-radius: 9999px !important;
   width: 56px !important;
