@@ -72,6 +72,18 @@ body {
   font-family: "Manrope", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: hsl(var(--foreground));
-  background-color: hsl(var(--background));
+  color: hsl(var(--foreground)) !important;
+  background-color: hsl(var(--background)) !important;
+}
+
+/* Additional resets to prevent style overrides */
+button, input, optgroup, select, textarea {
+  font-family: inherit;
+  font-size: 100%;
+  line-height: 1.15;
+  margin: 0;
+}
+
+[type="button"], [type="reset"], [type="submit"], button {
+  -webkit-appearance: button;
 }

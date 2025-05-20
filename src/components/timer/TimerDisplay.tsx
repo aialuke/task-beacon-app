@@ -32,6 +32,7 @@ const TimerDisplay = ({ size, status, timeDisplay }: TimerDisplayProps) => {
             strokeWidth="3"
             strokeLinecap="round"
             strokeLinejoin="round"
+            style={{ stroke: "var(--timer-complete)", strokeWidth: "3px" }}
           />
         </svg>
       ) : (
@@ -39,6 +40,11 @@ const TimerDisplay = ({ size, status, timeDisplay }: TimerDisplayProps) => {
           className={
             status === "overdue" ? "text-destructive" : "text-primary"
           }
+          style={{
+            color: status === "overdue" 
+              ? "hsl(var(--destructive))" 
+              : "hsl(var(--primary))"
+          }}
         >
           {timeDisplay}
         </span>

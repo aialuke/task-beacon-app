@@ -25,7 +25,9 @@ const TimerRing = ({
       width={size}
       height={size}
       viewBox={`0 0 ${size} ${size}`}
-      style={{ overflow: "visible" }}
+      style={{ 
+        overflow: "visible",
+      }}
       className="timer-ring"
     >
       {/* Background circle */}
@@ -36,6 +38,7 @@ const TimerRing = ({
         fill="none"
         strokeWidth="2.5"
         stroke="#E5EDFF"
+        style={{ strokeWidth: "2.5px" }}
       />
       {/* Animated foreground circle */}
       <animated.circle
@@ -52,6 +55,7 @@ const TimerRing = ({
         className="timer-progress"
         style={{
           filter: status === "overdue" ? "drop-shadow(0 0 8px rgba(223, 100, 65, 0.8))" : "none",
+          strokeWidth: "4px",
         }}
       />
     </svg>

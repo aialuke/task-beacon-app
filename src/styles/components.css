@@ -2,11 +2,13 @@
 /* src/styles/components.css */
 @layer components {
   .task-card {
-    @apply flex flex-col p-3 sm:p-3 bg-white rounded-xl shadow-sm border border-gray-200 hover:border-secondary transition-colors relative text-left;
+    @apply flex flex-col p-3 sm:p-3 rounded-xl shadow-sm border border-gray-200 hover:border-secondary transition-colors relative text-left;
     min-height: calc(1.25 * 60px);
     width: 95%;
     margin-left: auto;
     margin-right: auto;
+    background-color: white !important;
+    border-color: #e2e8f0 !important;
   }
 
   @media (min-width: 640px) {
@@ -17,6 +19,7 @@
 
   .task-card[data-expanded="true"] {
     @apply border-secondary;
+    border-color: hsl(var(--secondary)) !important;
   }
 
   .task-card-container::-webkit-scrollbar,
@@ -29,30 +32,35 @@
   }
 
   .btn-primary {
-    @apply bg-primary text-primary-foreground hover:bg-primary/80 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 text-base;
+    @apply rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 text-base;
     transition: background 0.2s;
+    background-color: hsl(var(--primary)) !important;
+    color: hsl(var(--primary-foreground)) !important;
   }
 
   .btn-secondary {
-    @apply border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md focus:outline-none focus:ring-2 focus:ring-accent/50;
+    @apply border border-input hover:bg-accent hover:text-accent-foreground rounded-md focus:outline-none focus:ring-2 focus:ring-accent/50;
     transition: background 0.2s, color 0.2s;
+    background-color: hsl(var(--background)) !important;
   }
 
   .fab {
-    @apply bg-primary text-white rounded-full shadow-lg flex items-center justify-center fixed;
-    bottom: 16px;
-    right: 16px;
-    width: 56px;
-    height: 56px;
-    z-index: 50;
+    @apply rounded-full shadow-lg flex items-center justify-center fixed;
+    bottom: 16px !important;
+    right: 16px !important;
+    width: 56px !important;
+    height: 56px !important;
+    z-index: 50 !important;
     transition: transform 0.2s, background-color 0.2s;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+    background-color: hsl(var(--primary)) !important;
+    color: white !important;
   }
 
   .fab:hover {
-    @apply bg-primary/90;
+    background-color: hsl(var(--primary)/90) !important;
     transform: scale(1.05);
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1) !important;
   }
 
   .fab:active {

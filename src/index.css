@@ -1,7 +1,15 @@
 
+/* Base Tailwind directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* CSS Reset to ensure consistent styling */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 /* Import custom styles after Tailwind directives */
 @import "./styles/base.css";
@@ -9,3 +17,91 @@
 @import "./styles/utilities.css";
 @import "./styles/accessibility.css";
 @import "./styles/animations.css";
+
+/* Ensure our styles take precedence */
+:root {
+  --background: 0 0% 100% !important;
+  --foreground: 240 10% 3.9% !important;
+  --card: 0 0% 100% !important;
+  --card-foreground: 240 10% 3.9% !important;
+  --popover: 0 0% 100% !important;
+  --popover-foreground: 240 10% 3.9% !important;
+  --primary: 260 84.3% 74.3% !important;
+  --primary-foreground: 0 0% 98% !important;
+  --secondary: 240 4.8% 95.9% !important;
+  --secondary-foreground: 240 5.9% 10% !important;
+  --muted: 240 4.8% 95.9% !important;
+  --muted-foreground: 240 3.8% 46.1% !important;
+  --accent: 240 4.8% 95.9% !important;
+  --accent-foreground: 240 5.9% 10% !important;
+  --destructive: 0 84.2% 60.2% !important;
+  --destructive-foreground: 0 0% 98% !important;
+  --border: 240 5.9% 90% !important;
+  --input: 240 5.9% 90% !important;
+  --ring: 240 5.9% 10% !important;
+  --radius: 0.5rem !important;
+  --surface: 0 0% 100% !important;
+  --surface-foreground: 240 10% 3.9% !important;
+  
+  /* Timer Colors */
+  --timer-pending: #5e52c5 !important;
+  --timer-overdue: #df6441 !important;
+  --timer-complete: #10b981 !important;
+}
+
+/* Higher-specificity override for dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: 240 10% 3.9% !important;
+    --foreground: 0 0% 98% !important;
+    --card: 240 10% 3.9% !important;
+    --card-foreground: 0 0% 98% !important;
+    --popover: 240 10% 3.9% !important;
+    --popover-foreground: 0 0% 98% !important;
+    --primary: 260 84.3% 74.3% !important;
+    --primary-foreground: 0 0% 98% !important;
+    --secondary: 240 3.7% 15.9% !important;
+    --secondary-foreground: 0 0% 98% !important;
+    --muted: 240 3.7% 15.9% !important;
+    --muted-foreground: 240 5% 64.9% !important;
+    --accent: 240 3.7% 15.9% !important;
+    --accent-foreground: 0 0% 98% !important;
+    --destructive: 0 84.2% 60.2% !important;
+    --destructive-foreground: 0 0% 98% !important;
+    --border: 240 3.7% 15.9% !important;
+    --input: 240 3.7% 15.9% !important;
+    --ring: 240 4.9% 83.9% !important;
+    --surface: 240 10% 3.9% !important;
+    --surface-foreground: 0 0% 98% !important;
+    
+    /* Timer Colors - Dark Theme */
+    --timer-pending: #7c73d6 !important;
+    --timer-overdue: #e87e61 !important;
+    --timer-complete: #34d399 !important;
+  }
+}
+
+/* Fix for task cards and buttons */
+.task-card {
+  background-color: white !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.btn-primary, 
+button[class*="bg-primary"] {
+  background-color: hsl(var(--primary)) !important;
+  color: hsl(var(--primary-foreground)) !important;
+}
+
+.timer-ring circle {
+  stroke-width: attr(stroke-width) !important;
+}
+
+.fab {
+  position: fixed !important;
+  bottom: 1rem !important;
+  right: 1rem !important;
+  z-index: 50 !important;
+  background-color: hsl(var(--primary)) !important;
+  color: white !important;
+}

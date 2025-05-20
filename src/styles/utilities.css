@@ -11,7 +11,8 @@
   }
 
   .header-text {
-    @apply text-lg font-semibold text-foreground my-2;
+    @apply text-lg font-semibold my-2;
+    color: hsl(var(--foreground)) !important;
   }
 
   .owner-name {
@@ -51,8 +52,9 @@
   }
 
   .external-link {
-    @apply flex items-center gap-1 text-primary hover:underline;
+    @apply flex items-center gap-1 hover:underline;
     word-break: break-all;
+    color: hsl(var(--primary)) !important;
   }
 
   /* Fix for floating action button */
@@ -61,5 +63,56 @@
     bottom: 1rem !important;
     right: 1rem !important;
     z-index: 50 !important;
+    background-color: hsl(var(--primary)) !important;
+    color: white !important;
+  }
+
+  /* Fixes for button variants */
+  button[class*="bg-primary"], 
+  a[class*="bg-primary"],
+  div[class*="bg-primary"] {
+    background-color: hsl(var(--primary)) !important;
+    color: hsl(var(--primary-foreground)) !important;
+  }
+
+  button[class*="bg-secondary"], 
+  a[class*="bg-secondary"],
+  div[class*="bg-secondary"] {
+    background-color: hsl(var(--secondary)) !important;
+    color: hsl(var(--secondary-foreground)) !important;
+  }
+
+  button[class*="bg-destructive"], 
+  a[class*="bg-destructive"],
+  div[class*="bg-destructive"] {
+    background-color: hsl(var(--destructive)) !important;
+    color: hsl(var(--destructive-foreground)) !important;
+  }
+
+  button[class*="border-input"], 
+  a[class*="border-input"],
+  div[class*="border-input"] {
+    border-color: hsl(var(--input)) !important;
+  }
+
+  /* Fix for card backgrounds */
+  div[class*="bg-card"],
+  div[class*="bg-popover"],
+  div[class*="bg-background"] {
+    background-color: hsl(var(--card)) !important;
+    color: hsl(var(--card-foreground)) !important;
+  }
+
+  /* Fix for text colors */
+  [class*="text-primary"] {
+    color: hsl(var(--primary)) !important;
+  }
+
+  [class*="text-destructive"] {
+    color: hsl(var(--destructive)) !important;
+  }
+
+  [class*="text-muted"] {
+    color: hsl(var(--muted-foreground)) !important;
   }
 }
