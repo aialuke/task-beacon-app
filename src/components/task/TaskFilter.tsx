@@ -8,6 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { TaskStatus } from "@/lib/types";
+import { useUIContext } from "@/contexts/UIContext";
 
 interface TaskFilterProps {
   filter: TaskStatus | "all";
@@ -15,8 +16,10 @@ interface TaskFilterProps {
 }
 
 function TaskFilter({ filter, onFilterChange }: TaskFilterProps) {
+  const { isMobile } = useUIContext();
+  
   return (
-    <div className="w-1/4 flex justify-start">
+    <div className={`${isMobile ? 'w-[40%]' : 'w-1/4'} flex justify-start`}>
       <Select
         value={filter}
         onValueChange={(value) => onFilterChange(value as TaskStatus | "all")}
