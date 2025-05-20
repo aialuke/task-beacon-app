@@ -205,7 +205,7 @@ export default function TaskList({ dialogOpen, setDialogOpen }: TaskListProps) {
               opacity: 1
             }}
           >
-            <ClockPlus className="h-6 w-6 text-white fill-white stroke-white" />
+            <ClockPlus className="h-6 w-6" strokeWidth={2} stroke="white" fill="none" />
           </button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-md bg-white rounded-xl">

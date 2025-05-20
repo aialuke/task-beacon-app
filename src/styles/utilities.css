@@ -74,6 +74,12 @@
     opacity: 1 !important;
   }
 
+  .fab svg {
+    stroke: white !important;
+    fill: none !important;
+    stroke-width: 2 !important;
+  }
+
   /* Fixes for button variants */
   button[class*="bg-primary"], 
   a[class*="bg-primary"],
