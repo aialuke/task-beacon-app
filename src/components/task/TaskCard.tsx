@@ -1,3 +1,4 @@
+
 import { useRef, useState, useEffect, useCallback, memo } from "react";
 import { Task } from "@/lib/types";
 import { useExpandedTask } from "@/lib/expanded-task-utils";
@@ -90,7 +91,7 @@ function TaskCard({ task }: TaskCardProps) {
       <div
         ref={cardRef}
         className={`task-card ${isExpanded ? "expanded-card" : ""} p-3`}
-        aria-expanded={isExpanded}
+        data-expanded={isExpanded}
         style={{
           overflowY: "hidden",
           boxSizing: "border-box",
