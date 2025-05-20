@@ -1,0 +1,25 @@
+
+import { Task, TaskStatus } from "@/lib/types";
+
+// Types
+export type TaskFilter = TaskStatus | "all";
+
+export interface TaskContextType {
+  // Task queries
+  tasks: Task[];
+  isLoading: boolean;
+  error: Error | null;
+  
+  // Filters
+  filter: TaskFilter;
+  setFilter: (filter: TaskFilter) => void;
+  
+  // Expanded state
+  expandedTaskId: string | null;
+  setExpandedTaskId: (id: string | null) => void;
+  
+  // Task mutations
+  toggleTaskPin: (task: Task) => Promise<void>;
+  toggleTaskComplete: (task: Task) => Promise<void>;
+  createFollowUpTask: (parentTask: Task, newTaskData: any) => Promise<void>;
+}
