@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import { Task, TaskStatus } from "@/lib/types";
 import TaskCard from "./TaskCard";
@@ -106,14 +107,25 @@ export default function TaskList({ dialogOpen, setDialogOpen }: TaskListProps) {
   }, [fetchTasks]);
 
   const getFilteredTasks = (): Task[] => {
-    if (filter === "all") return tasks;
+    if (filter === "all") {
+      // For "Current" filter (renamed from "All"), exclude completed tasks
+      return tasks.filter((task) => task.status !== "complete");
+    }
+    if (filter === "overdue") {
+      return tasks.filter((task) => {
+        const dueDate = task.due_date ? new Date(task.due_date) : new Date();
+        const now = new Date();
+        return dueDate < now && task.status !== "complete";
+      });
+    }
+    if (filter === "complete") {
+      return tasks.filter((task) => task.status === "complete");
+    }
+    // For "pending" filter
     return tasks.filter((task) => {
       const dueDate = task.due_date ? new Date(task.due_date) : new Date();
       const now = new Date();
-      const isNotComplete = task.status !== "complete";
-      if (filter === "overdue") return dueDate < now && isNotComplete;
-      if (filter === "complete") return task.status === "complete";
-      return dueDate >= now && isNotComplete;
+      return dueDate >= now && task.status !== "complete";
     });
   };
 
@@ -131,7 +143,7 @@ export default function TaskList({ dialogOpen, setDialogOpen }: TaskListProps) {
               <SelectValue placeholder="Filter tasks" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Tasks</SelectItem>
+              <SelectItem value="all">Current Tasks</SelectItem>
               <SelectItem value="pending">Pending</SelectItem>
               <SelectItem value="overdue" className="text-destructive">
                 Overdue

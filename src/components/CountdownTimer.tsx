@@ -1,3 +1,4 @@
+
 // src/components/CountdownTimer.tsx
 import { useState, useEffect, useRef } from "react";
 import { useSpring, animated } from "@react-spring/web";
@@ -74,19 +75,19 @@ export default function CountdownTimer({
     const updateTimeLeft = () => {
       const days = validateDueDate(dueDate);
       setDaysLeft(days);
-      if (days === 0 && new Date(dueDate).toDateString() === new Date().toDateString()) {
-        setTimeDisplay("Today");
-      } else if (days < 1) {
+
+      // Format display based on status and time remaining
+      if (status === "overdue") {
+        // For overdue tasks, show negative days (e.g., "-1d")
+        setTimeDisplay(`-${Math.abs(days)}d`);
+      } else if (days === 0 && new Date(dueDate).toDateString() === new Date().toDateString()) {
+        // For tasks due today, show hours remaining
         const due = new Date(dueDate).getTime();
         const now = Date.now();
         const hoursLeft = Math.floor((due - now) / (1000 * 60 * 60));
-        if (hoursLeft < 1 && hoursLeft >= 0) {
-          const minutesLeft = Math.floor((due - now) / (1000 * 60));
-          setTimeDisplay(`${minutesLeft}m`);
-        } else {
-          setTimeDisplay(`${hoursLeft}h`);
-        }
+        setTimeDisplay(`${hoursLeft}h`);
       } else {
+        // Normal case - show days
         setTimeDisplay(`${days}d`);
       }
 
@@ -94,7 +95,8 @@ export default function CountdownTimer({
         clearInterval(intervalRef.current);
       }
 
-      const intervalDuration = days < 1 ? 60000 : 86400000;
+      // Use shorter interval for today's tasks to update hours more frequently
+      const intervalDuration = days === 0 ? 60000 : 86400000;
       intervalRef.current = setInterval(updateTimeLeft, intervalDuration);
     };
 
@@ -105,7 +107,7 @@ export default function CountdownTimer({
         clearInterval(intervalRef.current);
       }
     };
-  }, [dueDate]);
+  }, [dueDate, status]);
 
   const tooltipContent = !dueDate
     ? "No due date"
@@ -147,6 +149,7 @@ export default function CountdownTimer({
               width={dynamicSize}
               height={dynamicSize}
               viewBox={`0 0 ${dynamicSize} ${dynamicSize}`}
+              style={{ overflow: "visible" }}
             >
               <circle
                 cx={dynamicSize / 2}
@@ -161,18 +164,15 @@ export default function CountdownTimer({
                 cy={dynamicSize / 2}
                 r={radius}
                 fill="none"
-                strokeWidth="3"
+                strokeWidth="3.6" // Increased thickness by 20% (from 3 to 3.6)
                 stroke={timerColor}
                 strokeDasharray={circumference}
                 strokeDashoffset={strokeDashoffset}
                 transform={`rotate(-90, ${dynamicSize / 2}, ${dynamicSize / 2})`}
-                strokeLinecap="round"
+                strokeLinecap="round" // Added rounded corners
                 className="timer-ring"
                 style={{
-                  filter:
-                    daysLeft <= 1 || status === "overdue"
-                      ? "drop-shadow(0 0 8px rgba(255, 0, 0, 0.8))"
-                      : "none",
+                  filter: status === "overdue" ? "drop-shadow(0 0 8px rgba(223, 100, 65, 0.8))" : "none",
                 }}
               />
             </svg>
@@ -182,8 +182,7 @@ export default function CountdownTimer({
               }`}
               style={{
                 fontSize: `${dynamicSize / 4}px`,
-                background:
-                  status === "overdue" ? "rgba(255, 0, 0, 0.1)" : "transparent",
+                background: status === "overdue" ? "rgba(223, 100, 65, 0.1)" : "transparent",
                 borderRadius: "50%",
               }}
             >
@@ -208,7 +207,7 @@ export default function CountdownTimer({
                     status === "overdue" ? "text-destructive" : "text-primary"
                   }
                 >
-                  {timeDisplay} {status === "overdue" && "[Overdue]"}
+                  {timeDisplay}
                 </span>
               )}
             </div>

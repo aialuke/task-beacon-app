@@ -42,10 +42,10 @@
     /* Radius */
     --radius: 1rem;
 
-    /* Timer Status */
+    /* Timer Status - Updated with WCAG compliant colors */
     --timer-complete: 158 83% 36%;
-    --timer-overdue: 348 68% 54%;
-    --timer-pending: 226 72% 56%;
+    --timer-overdue: 14 66% 56%; /* #DF6441 - Overdue tasks */
+    --timer-pending: 47 100% 60%; /* #FFDD35 - Pending tasks */
   }
 
   body {
@@ -143,6 +143,7 @@
 
   .timer-ring {
     stroke: currentColor !important;
+    clip-path: circle(50%); /* Fix square effect for drop shadow */
   }
 
   input[type="file"] {

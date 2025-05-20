@@ -1,10 +1,12 @@
+
 import { memo } from "react";
-import { formatDate, truncateUrl, truncateDescription } from "@/lib/utils";
+import { formatDate, truncateUrl } from "@/lib/utils";
 import { Task } from "@/lib/types";
 import TaskActions from "../TaskActions";
 import { Calendar1, ExternalLink } from "lucide-react";
 import { animated } from "@react-spring/web";
 import { useIsMobile } from "@/lib/mobile-utils";
+import { Link } from "react-router-dom";
 import {
   Tooltip,
   TooltipContent,
@@ -79,24 +81,23 @@ function TaskDetails({
         </div>
 
         {task.parent_task && (
-          <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded border border-gray-200 line-clamp-2">
+          <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded border border-gray-200">
             <span className="font-medium">Following up on: </span>
-            {task.parent_task.description ? (
-              <>
-                {truncateDescription(task.parent_task.description, 60)}
-                {task.parent_task.description.length > 60 && (
-                  <a
-                    href={`/tasks/${task.parent_task.id}`}
-                    className="text-primary hover:underline ml-1"
-                    aria-label={`View details for parent task ${task.parent_task.title}`}
-                  >
-                    View more
-                  </a>
-                )}
-              </>
-            ) : (
-              task.parent_task.title
-            )}
+            <div className="mt-1">
+              {task.parent_task.description ? (
+                <p className="line-clamp-2">{task.parent_task.description}</p>
+              ) : (
+                <p>{task.parent_task.title}</p>
+              )}
+              <Link 
+                to={`/tasks/${task.parent_task_id}`}
+                className="text-primary hover:underline inline-flex items-center gap-1 mt-2"
+                aria-label={`View details for original task ${task.parent_task.title}`}
+              >
+                <ExternalLink size={14} />
+                <span>View Original Task</span>
+              </Link>
+            </div>
           </div>
         )}
 
