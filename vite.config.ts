@@ -11,9 +11,7 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
   },
   plugins: [
-    react({
-      // Remove the fastRefresh option as it's not recognized in the current type
-    }),
+    react(),
     mode === 'development' &&
     componentTagger(),
   ].filter(Boolean),
