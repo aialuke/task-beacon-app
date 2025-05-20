@@ -14,9 +14,9 @@ const Card = React.forwardRef<
       className
     )}
     style={{
-      backgroundColor: "hsl(var(--card))",
-      color: "hsl(var(--card-foreground))",
-      borderColor: "hsl(var(--border))"
+      backgroundColor: "white",
+      color: "#000000e6",
+      borderColor: "#e2e8f0"
     }}
     {...props}
   />
@@ -45,7 +45,7 @@ const CardTitle = React.forwardRef<
       "text-2xl font-semibold leading-none tracking-tight",
       className
     )}
-    style={{ color: "hsl(var(--card-foreground))" }}
+    style={{ color: "#000000e6" }}
     {...props}
   />
 ))
@@ -58,7 +58,7 @@ const CardDescription = React.forwardRef<
   <p
     ref={ref}
     className={cn("text-sm text-muted-foreground", className)}
-    style={{ color: "hsl(var(--muted-foreground))" }}
+    style={{ color: "#6b7280" }}
     {...props}
   />
 ))

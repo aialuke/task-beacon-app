@@ -198,7 +198,7 @@ export default function TaskList({ dialogOpen, setDialogOpen }: TaskListProps) {
               alignItems: "center",
               justifyContent: "center",
               borderRadius: "9999px",
-              backgroundColor: "hsl(var(--primary))",
+              backgroundColor: "#9b87f5",
               color: "white",
               boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.1)",
               border: "none",

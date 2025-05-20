@@ -27,8 +27,8 @@
 
 .btn-primary, 
 button[class*="bg-primary"] {
-  background-color: hsl(var(--primary)) !important;
-  color: hsl(var(--primary-foreground)) !important;
+  background-color: #9b87f5 !important;
+  color: white !important;
   border-radius: 9999px !important;
 }
 
@@ -41,7 +41,7 @@ button[class*="bg-primary"] {
   bottom: 1rem !important;
   right: 1rem !important;
   z-index: 99999 !important; /* Very high z-index */
-  background-color: hsl(var(--primary)) !important;
+  background-color: #9b87f5 !important;
   color: white !important;
   border-radius: 9999px !important;
   width: 56px !important;
@@ -58,14 +58,14 @@ button[class*="bg-primary"] {
 [data-radix-popper-content-wrapper],
 [data-radix-dropdown-menu-content] {
   background-color: white !important;
-  color: hsl(var(--foreground)) !important;
+  color: #000000e6 !important;
   border-radius: 0.75rem !important; /* XL rounded corners */
 }
 
 /* Fix avatar fallback backgrounds */
 .avatar-fallback {
-  background-color: hsl(var(--muted)) !important;
-  color: hsl(var(--muted-foreground)) !important;
+  background-color: #e5e7eb !important;
+  color: #6b7280 !important;
 }
 
 /* Override for any external injected styles */

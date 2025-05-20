@@ -12,7 +12,7 @@
 
   .header-text {
     @apply text-lg font-semibold my-2;
-    color: hsl(var(--foreground)) !important;
+    color: #000000e6 !important;
   }
 
   .owner-name {
@@ -54,7 +54,7 @@
   .external-link {
     @apply flex items-center gap-1 hover:underline;
     word-break: break-all;
-    color: hsl(var(--primary)) !important;
+    color: #9b87f5 !important;
   }
 
   /* Fix for floating action button */
@@ -63,7 +63,7 @@
     bottom: 1rem !important;
     right: 1rem !important;
     z-index: 99999 !important;
-    background-color: hsl(var(--primary)) !important;
+    background-color: #9b87f5 !important;
     color: white !important;
     border-radius: 9999px !important;
     width: 56px !important;
@@ -79,74 +79,74 @@
   button[class*="bg-primary"], 
   a[class*="bg-primary"],
   div[class*="bg-primary"] {
-    background-color: hsl(var(--primary)) !important;
-    color: hsl(var(--primary-foreground)) !important;
+    background-color: #9b87f5 !important;
+    color: white !important;
   }
 
   button[class*="bg-secondary"], 
   a[class*="bg-secondary"],
   div[class*="bg-secondary"] {
-    background-color: hsl(var(--secondary)) !important;
-    color: hsl(var(--secondary-foreground)) !important;
+    background-color: #8B5CF6 !important;
+    color: white !important;
   }
 
   button[class*="bg-destructive"], 
   a[class*="bg-destructive"],
   div[class*="bg-destructive"] {
-    background-color: hsl(var(--destructive)) !important;
-    color: hsl(var(--destructive-foreground)) !important;
+    background-color: #ea384c !important;
+    color: white !important;
   }
 
   button[class*="border-input"], 
   a[class*="border-input"],
   div[class*="border-input"] {
-    border-color: hsl(var(--input)) !important;
+    border-color: #e2e8f0 !important;
   }
 
   /* Fix for card backgrounds */
   div[class*="bg-card"],
   div[class*="bg-popover"],
   div[class*="bg-background"] {
-    background-color: hsl(var(--card)) !important;
-    color: hsl(var(--card-foreground)) !important;
+    background-color: white !important;
+    color: #000000e6 !important;
   }
 
   /* Fix for text colors */
   [class*="text-primary"] {
-    color: hsl(var(--primary)) !important;
+    color: #9b87f5 !important;
   }
 
   [class*="text-destructive"] {
-    color: hsl(var(--destructive)) !important;
+    color: #ea384c !important;
   }
 
   [class*="text-muted"] {
-    color: hsl(var(--muted-foreground)) !important;
+    color: #6b7280 !important;
   }
 
   /* Icon color fixes */
   [class*="fill-primary"] {
-    fill: hsl(var(--primary)) !important;
+    fill: #9b87f5 !important;
   }
 
   [class*="stroke-primary"] {
-    stroke: hsl(var(--primary)) !important;
+    stroke: #9b87f5 !important;
   }
 
   [class*="fill-destructive"] {
-    fill: hsl(var(--destructive)) !important;
+    fill: #ea384c !important;
   }
 
   [class*="stroke-destructive"] {
-    stroke: hsl(var(--destructive)) !important;
+    stroke: #ea384c !important;
   }
 
   [class*="fill-success"] {
-    fill: var(--timer-complete) !important;
+    fill: #10b981 !important;
   }
 
   [class*="stroke-success"] {
-    stroke: var(--timer-complete) !important;
+    stroke: #10b981 !important;
   }
 
   [class*="fill-gray-500"] {
@@ -167,11 +167,11 @@
 
   /* New color utility classes */
   .text-accent-yellow {
-    color: hsl(var(--accent-yellow)) !important;
+    color: #eab308 !important;
   }
 
   .bg-accent-yellow {
-    background-color: hsl(var(--accent-yellow)) !important;
+    background-color: #eab308 !important;
   }
 
   /* XL rounded corners for all containers */
