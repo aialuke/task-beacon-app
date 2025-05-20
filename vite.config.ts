@@ -12,8 +12,7 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     react({
-      // Optimize React refresh
-      fastRefresh: true,
+      // Remove the fastRefresh option as it's not recognized in the current type
     }),
     mode === 'development' &&
     componentTagger(),
