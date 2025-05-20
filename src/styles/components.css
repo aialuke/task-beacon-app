@@ -1,3 +1,4 @@
+
 /* src/styles/components.css */
 @layer components {
   .task-card {
@@ -70,8 +71,10 @@
   }
 
   .timer-ring {
-    clip-path: circle(50%); /* Fix square effect for drop shadow */
-    stroke-width: 3.6px;
+    clip-path: circle(50%);
+  }
+  
+  .timer-progress {
     transition: stroke 0.3s ease;
   }
 

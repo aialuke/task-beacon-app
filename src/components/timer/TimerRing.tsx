@@ -26,6 +26,7 @@ const TimerRing = ({
       height={size}
       viewBox={`0 0 ${size} ${size}`}
       style={{ overflow: "visible" }}
+      className="timer-ring"
     >
       {/* Background circle */}
       <circle
@@ -48,6 +49,7 @@ const TimerRing = ({
         strokeDashoffset={strokeDashoffset}
         transform={`rotate(-90, ${size / 2}, ${size / 2})`}
         strokeLinecap="round"
+        className="timer-progress"
         style={{
           filter: status === "overdue" ? "drop-shadow(0 0 8px rgba(223, 100, 65, 0.8))" : "none",
         }}
