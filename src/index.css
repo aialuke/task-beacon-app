@@ -41,6 +41,9 @@ button[class*="bg-primary"] {
   z-index: 50;
   background-color: hsl(var(--primary));
   color: white;
+  border-radius: 9999px !important;
+  width: 56px !important;
+  height: 56px !important;
 }
 
 /* Override for select and dropdown components */
@@ -62,3 +65,6 @@ body .externally-styled-element {
   color: inherit;
   background-color: inherit;
 }
+
+/* Remove dark mode styles */
+/* @media (prefers-color-scheme: dark) { ... } - removed dark mode section */

@@ -72,9 +72,9 @@ function TaskActions({ task, detailView }: TaskActionsProps) {
       </div>
 
       <Dialog open={followUpDialogOpen} onOpenChange={setFollowUpDialogOpen}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-lg bg-white">
           <DialogHeader>
-            <DialogTitle>Create Follow-up Task</DialogTitle>
+            <DialogTitle className="text-foreground">Create Follow-up Task</DialogTitle>
           </DialogHeader>
           <FollowUpTaskForm
             parentTask={task}

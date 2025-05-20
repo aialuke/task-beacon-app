@@ -142,9 +142,9 @@ export default function TaskList({ dialogOpen, setDialogOpen }: TaskListProps) {
             <SelectTrigger className="filter-dropdown-mobile">
               <SelectValue placeholder="Filter tasks" />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Current Tasks</SelectItem>
-              <SelectItem value="pending">Pending</SelectItem>
+            <SelectContent className="bg-white">
+              <SelectItem value="all" className="text-foreground">Current Tasks</SelectItem>
+              <SelectItem value="pending" className="text-foreground">Pending</SelectItem>
               <SelectItem value="overdue" className="text-destructive">
                 Overdue
               </SelectItem>
@@ -185,12 +185,12 @@ export default function TaskList({ dialogOpen, setDialogOpen }: TaskListProps) {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogTrigger asChild>
           <button className="fab" aria-label="Create New Task">
-            <ClockPlus className="h-6 w-6" />
+            <ClockPlus className="h-6 w-6 text-white fill-white stroke-white" />
           </button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md bg-white">
           <DialogHeader>
-            <DialogTitle>Create New Task</DialogTitle>
+            <DialogTitle className="text-foreground">Create New Task</DialogTitle>
           </DialogHeader>
           <Suspense fallback={<div>Loading form...</div>}>
             <CreateTaskForm onClose={() => setDialogOpen(false)} />

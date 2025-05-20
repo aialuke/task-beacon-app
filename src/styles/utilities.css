@@ -65,6 +65,7 @@
     z-index: 50 !important;
     background-color: hsl(var(--primary)) !important;
     color: white !important;
+    border-radius: 9999px !important;
   }
 
   /* Fixes for button variants */
@@ -114,6 +115,47 @@
 
   [class*="text-muted"] {
     color: hsl(var(--muted-foreground)) !important;
+  }
+
+  /* Icon color fixes */
+  [class*="fill-primary"] {
+    fill: hsl(var(--primary)) !important;
+  }
+
+  [class*="stroke-primary"] {
+    stroke: hsl(var(--primary)) !important;
+  }
+
+  [class*="fill-destructive"] {
+    fill: hsl(var(--destructive)) !important;
+  }
+
+  [class*="stroke-destructive"] {
+    stroke: hsl(var(--destructive)) !important;
+  }
+
+  [class*="fill-success"] {
+    fill: var(--timer-complete) !important;
+  }
+
+  [class*="stroke-success"] {
+    stroke: var(--timer-complete) !important;
+  }
+
+  [class*="fill-gray-500"] {
+    fill: #6b7280 !important;
+  }
+
+  [class*="stroke-gray-500"] {
+    stroke: #6b7280 !important;
+  }
+
+  [class*="fill-gray-900"] {
+    fill: #111827 !important;
+  }
+
+  [class*="stroke-gray-900"] {
+    stroke: #111827 !important;
   }
 
   /* New color utility classes */

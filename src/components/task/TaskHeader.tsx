@@ -80,9 +80,9 @@ function TaskHeader({
         title={isPinned ? "Unpin task" : "Pin task"}
       >
         {isPinned ? (
-          <Pin size={16} className="text-gray-900" fill="currentColor" />
+          <Pin size={16} className="text-gray-900 fill-gray-900 stroke-gray-900" />
         ) : (
-          <Pin size={16} className="text-gray-900" style={{ opacity: 0.8 }} />
+          <Pin size={16} className="text-gray-900 stroke-gray-900" style={{ opacity: 0.8 }} />
         )}
       </Button>
 
@@ -93,7 +93,7 @@ function TaskHeader({
           viewBox="0 0 24 24"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className={`transform transition-transform ${isExpanded ? "rotate-180" : ""}`}
+          className={`transform transition-transform text-gray-900 stroke-gray-900 ${isExpanded ? "rotate-180" : ""}`}
         >
           <path
             d="M6 9L12 15L18 9"

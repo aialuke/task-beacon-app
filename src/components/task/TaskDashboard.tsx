@@ -51,9 +51,9 @@ export default function TaskDashboard() {
               </AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="p-2">
-            <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">
-              <LogOut className="mr-2 h-4 w-4" />
+          <DropdownMenuContent align="end" className="p-2 bg-white">
+            <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-foreground">
+              <LogOut className="mr-2 h-4 w-4 text-primary fill-primary stroke-primary" />
               <span>Sign out</span>
             </DropdownMenuItem>
           </DropdownMenuContent>

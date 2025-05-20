@@ -1,3 +1,4 @@
+
 import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -178,6 +179,7 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Task title"
           required
+          className="text-foreground"
         />
       </div>
 
@@ -188,6 +190,7 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Task description"
           rows={3}
+          className="text-foreground"
         />
       </div>
 
@@ -199,10 +202,10 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
             placeholder="Select due date"
-            className="pl-9"
+            className="pl-9 text-foreground"
             required
           />
-          <Calendar size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+          <Calendar size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 fill-gray-500 stroke-gray-500" />
         </div>
       </div>
 
@@ -213,6 +216,7 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           placeholder="https://example.com"
+          className="text-foreground"
         />
       </div>
 
@@ -223,7 +227,7 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
             type="file"
             accept="image/*"
             onChange={handlePhotoChange}
-            className="cursor-pointer w-full sm:w-auto"
+            className="cursor-pointer w-full sm:w-auto text-foreground"
             aria-label="Attach File"
           />
         </div>
@@ -239,7 +243,7 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="assignee">Assignee</Label>
+        <Label htmlFor="assignee" className="text-foreground">Assignee</Label>
         <UserSelect
           value={assigneeId}
           onChange={setAssigneeId}
@@ -254,6 +258,7 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
             variant="outline"
             onClick={onClose}
             disabled={loading}
+            className="text-foreground"
           >
             Cancel
           </Button>

@@ -25,6 +25,7 @@ const TimerDisplay = ({ size, status, timeDisplay }: TimerDisplayProps) => {
           height={size / 3}
           viewBox="0 0 24 24"
           fill="none"
+          className="text-success fill-success stroke-success"
         >
           <path
             d="M20 6L9 17L4 12"
