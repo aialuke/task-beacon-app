@@ -1,4 +1,3 @@
-
 // tailwind.config.ts
 import type { Config } from "tailwindcss";
 import animate from "tailwindcss-animate";
@@ -13,18 +12,28 @@ export default {
     'bg-gray-50',
     'border-gray-200',
     'hover:underline',
-    'bg-destructive', // Added for CountdownTimer tooltips
-    'bg-success', // Added for CountdownTimer tooltips
-    'fill-destructive', // Added for CountdownTimer tooltip arrow
-    'fill-success', // Added for CountdownTimer tooltip arrow
+    'bg-destructive', 
+    'bg-success',
+    'fill-destructive',
+    'fill-success',
+    // Added for new color scheme
+    'bg-blue-600',
+    'text-blue-600',
+    'border-blue-600',
+    'bg-yellow-400',
+    'bg-red-500',
+    'text-yellow-400',
+    'border-yellow-400',
+    'text-red-500',
+    'border-red-500',
   ],
   theme: {
     container: {
       center: true,
       padding: "1rem",
       screens: {
-        sm: "640px", // Added for consistency with index.css
-        md: "768px", // Added for consistency with use-mobile.tsx
+        sm: "640px",
+        md: "768px",
         "2xl": "1400px",
       },
     },
@@ -58,6 +67,10 @@ export default {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
         },
+        'accent-yellow': {
+          DEFAULT: "hsl(var(--accent-yellow))",
+          foreground: "hsl(var(--foreground))",
+        },
         popover: {
           DEFAULT: "hsl(var(--surface))",
           foreground: "hsl(var(--surface-foreground))",
@@ -71,13 +84,13 @@ export default {
           foreground: "white",
         },
         brand: {
-          DEFAULT: "hsl(var(--timer-pending))",
+          DEFAULT: "hsl(var(--primary))",
           light: "#E5EDFF",
         },
-        "task-pending": "hsl(var(--timer-pending))",
-        "task-overdue": "hsl(var(--timer-overdue))",
-        "task-complete": "hsl(var(--timer-complete))",
-        "task-timer": "hsl(var(--timer-pending))",
+        "task-pending": "var(--timer-pending)",
+        "task-overdue": "var(--timer-overdue)",
+        "task-complete": "var(--timer-complete)",
+        "task-timer": "var(--timer-pending)",
       },
       borderRadius: {
         lg: "var(--radius)",

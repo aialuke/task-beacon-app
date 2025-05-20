@@ -15,7 +15,7 @@ const TimerDisplay = ({ size, status, timeDisplay }: TimerDisplayProps) => {
       }`}
       style={{
         fontSize: `${size / 4}px`,
-        background: status === "overdue" ? "rgba(223, 100, 65, 0.1)" : "transparent",
+        background: status === "overdue" ? "rgba(218, 62, 82, 0.1)" : "transparent",
         borderRadius: "50%",
       }}
     >

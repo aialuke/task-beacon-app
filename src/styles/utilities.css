@@ -115,4 +115,13 @@
   [class*="text-muted"] {
     color: hsl(var(--muted-foreground)) !important;
   }
+
+  /* New color utility classes */
+  .text-accent-yellow {
+    color: hsl(var(--accent-yellow)) !important;
+  }
+
+  .bg-accent-yellow {
+    background-color: hsl(var(--accent-yellow)) !important;
+  }
 }
