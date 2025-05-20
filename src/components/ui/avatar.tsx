@@ -11,7 +11,7 @@ const Avatar = React.forwardRef<
   <AvatarPrimitive.Root
     ref={ref}
     className={cn(
-      "relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full",
+      "relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full shadow-sm",
       className
     )}
     {...props}
@@ -43,7 +43,8 @@ const AvatarFallback = React.forwardRef<
     )}
     style={{
       backgroundColor: "#e5e7eb",
-      color: "#6b7280"
+      color: "#6b7280",
+      boxShadow: "inset 0 2px 4px rgba(0, 0, 0, 0.05)"
     }}
     {...props}
   />

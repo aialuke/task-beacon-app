@@ -17,6 +17,7 @@ const TimerDisplay = ({ size, status, timeDisplay }: TimerDisplayProps) => {
         fontSize: `${size / 4}px`,
         background: status === "overdue" ? "rgba(218, 62, 82, 0.1)" : "transparent",
         borderRadius: "50%",
+        boxShadow: status === "overdue" ? "inset 0 0 10px rgba(218, 62, 82, 0.2)" : "none"
       }}
     >
       {status === "complete" ? (
@@ -26,6 +27,9 @@ const TimerDisplay = ({ size, status, timeDisplay }: TimerDisplayProps) => {
           viewBox="0 0 24 24"
           fill="none"
           className="text-success stroke-success icon-filled"
+          style={{ 
+            filter: "drop-shadow(0 1px 2px rgba(16, 185, 129, 0.2))"
+          }}
         >
           <path
             d="M20 6L9 17L4 12"
@@ -40,6 +44,11 @@ const TimerDisplay = ({ size, status, timeDisplay }: TimerDisplayProps) => {
           className={
             status === "overdue" ? "text-destructive" : "text-primary"
           }
+          style={{
+            textShadow: status === "overdue" 
+              ? "0 1px 2px rgba(218, 62, 82, 0.2)" 
+              : "0 1px 2px rgba(54, 98, 227, 0.1)"
+          }}
         >
           {timeDisplay}
         </span>

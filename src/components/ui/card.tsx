@@ -16,7 +16,8 @@ const Card = React.forwardRef<
     style={{
       backgroundColor: "white",
       color: "#000000e6",
-      borderColor: "#e2e8f0"
+      borderColor: "#e2e8f0",
+      boxShadow: "var(--shadow-md)"
     }}
     {...props}
   />

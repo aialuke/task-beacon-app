@@ -50,13 +50,14 @@ button[class*="bg-primary"] {
   stroke-width: attr(stroke-width);
 }
 
-/* Override for select and dropdown components */
+/* Enhanced shadow styles for popups and dialogs */
 .select-content,
 [data-radix-popper-content-wrapper],
 [data-radix-dropdown-menu-content] {
   background-color: white;
   color: #000000e6;
   border-radius: 0.75rem; /* XL rounded corners */
+  box-shadow: var(--shadow-lg);
 }
 
 /* Fix avatar fallback backgrounds */
@@ -65,7 +66,7 @@ button[class*="bg-primary"] {
   color: #6b7280;
 }
 
-/* All dialog, card, and other container elements should have rounded-xl corners */
+/* All dialog, card, and other container elements should have rounded-xl corners and subtle shadows */
 [class*="rounded-md"],
 [class*="rounded-lg"] {
   border-radius: 0.75rem; /* XL rounded corners */
@@ -79,13 +80,28 @@ button[class*="bg-primary"] {
 .popover-content,
 .task-card {
   border-radius: 0.75rem; /* XL rounded corners */
+  box-shadow: var(--shadow-md);
 }
 
-/* Make all buttons rounded-full */
+/* Make all buttons rounded-full with hover shadow enhancement */
 button, 
 .button,
 [role="button"] {
   border-radius: 9999px;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+button:hover, 
+.button:hover,
+[role="button"]:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+button:active, 
+.button:active,
+[role="button"]:active {
+  transform: translateY(0);
 }
 
 /* Special handling for FAB to ensure it's visible */
@@ -105,4 +121,10 @@ body .fab {
   border-radius: 9999px;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+#root .fab:hover,
+body .fab:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.1);
 }

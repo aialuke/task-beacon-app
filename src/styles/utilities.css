@@ -10,6 +10,41 @@
     box-sizing: border-box;
   }
 
+  /* Shadow utility classes */
+  .shadow-sm {
+    box-shadow: var(--shadow-sm);
+  }
+  
+  .shadow-md {
+    box-shadow: var(--shadow-md);
+  }
+  
+  .shadow-lg {
+    box-shadow: var(--shadow-lg);
+  }
+  
+  .shadow-xl {
+    box-shadow: var(--shadow-xl);
+  }
+  
+  .shadow-inner {
+    box-shadow: var(--shadow-inner);
+  }
+  
+  .shadow-none {
+    box-shadow: none;
+  }
+  
+  .shadow-hover {
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  
+  .shadow-hover:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-1px);
+  }
+
+  /* Original utility classes */
   .header-text {
     @apply text-lg font-semibold my-2;
     color: #000000e6;

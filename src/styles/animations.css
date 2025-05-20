@@ -22,20 +22,23 @@
     0% {
       transform: scale(0.98);
       opacity: 0.8;
+      box-shadow: 0 0 0 0 rgba(54, 98, 227, 0.3);
     }
     50% {
       transform: scale(1.02);
       opacity: 1;
+      box-shadow: 0 0 0 6px rgba(54, 98, 227, 0.1);
     }
     100% {
       transform: scale(0.98);
       opacity: 0.8;
+      box-shadow: 0 0 0 0 rgba(54, 98, 227, 0.3);
     }
   }
   
   .animate-pulse-ring {
     animation: pulse-ring 2s infinite;
-    will-change: transform, opacity;
+    will-change: transform, opacity, box-shadow;
   }
   
   /* Performance optimizations for animations */
@@ -45,5 +48,22 @@
   
   .animate-opacity {
     will-change: opacity;
+  }
+
+  /* Shadow animation */
+  @keyframes shadow-pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(54, 98, 227, 0.4);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgba(54, 98, 227, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(54, 98, 227, 0);
+    }
+  }
+  
+  .animate-shadow-pulse {
+    animation: shadow-pulse 2s infinite;
   }
 }
