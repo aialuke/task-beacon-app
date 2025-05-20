@@ -36,11 +36,17 @@ button[class*="bg-primary"] {
   stroke-width: attr(stroke-width);
 }
 
+/* Default SVG styling - ensures icons are outlined by default */
+svg:not(.icon-filled) {
+  fill: none;
+}
+
+/* FAB styling */
 .fab {
   position: fixed !important;
   bottom: 1rem !important;
   right: 1rem !important;
-  z-index: 99999 !important; /* Very high z-index */
+  z-index: 99999 !important;
   background-color: #3662E3 !important; /* Updated to blue */
   color: white !important;
   border-radius: 9999px !important;

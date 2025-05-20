@@ -1,3 +1,4 @@
+
 // src/components/TaskHeader.tsx
 import { Button } from "@/components/ui/button";
 import { Task } from "@/lib/types";
@@ -79,7 +80,7 @@ function TaskHeader({
         title={isPinned ? "Unpin task" : "Pin task"}
       >
         {isPinned ? (
-          <Pin size={16} className="text-gray-900 stroke-gray-900" />
+          <Pin size={16} className="text-gray-900 stroke-gray-900 icon-filled" />
         ) : (
           <Pin size={16} className="text-gray-900 stroke-gray-900" style={{ opacity: 0.8 }} />
         )}
