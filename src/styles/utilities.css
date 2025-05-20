@@ -130,40 +130,20 @@
   }
 
   /* Icon color fixes */
-  [class*="fill-primary"] {
-    fill: #3662E3 !important; /* Updated to blue */
-  }
-
   [class*="stroke-primary"] {
     stroke: #3662E3 !important; /* Updated to blue */
-  }
-
-  [class*="fill-destructive"] {
-    fill: #ea384c !important;
   }
 
   [class*="stroke-destructive"] {
     stroke: #ea384c !important;
   }
 
-  [class*="fill-success"] {
-    fill: #10b981 !important;
-  }
-
   [class*="stroke-success"] {
     stroke: #10b981 !important;
   }
 
-  [class*="fill-gray-500"] {
-    fill: #6b7280 !important;
-  }
-
   [class*="stroke-gray-500"] {
     stroke: #6b7280 !important;
-  }
-
-  [class*="fill-gray-900"] {
-    fill: #111827 !important;
   }
 
   [class*="stroke-gray-900"] {

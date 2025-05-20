@@ -53,7 +53,7 @@ export default function TaskDashboard() {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="p-2 bg-white">
             <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-foreground">
-              <LogOut className="mr-2 h-4 w-4" style={{ color: "#3662E3", fill: "#3662E3", stroke: "#3662E3" }} />
+              <LogOut className="mr-2 h-4 w-4" style={{ color: "#3662E3", stroke: "#3662E3" }} />
               <span>Sign out</span>
             </DropdownMenuItem>
           </DropdownMenuContent>

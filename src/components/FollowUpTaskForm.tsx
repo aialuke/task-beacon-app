@@ -205,7 +205,7 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
             className="pl-9 text-foreground"
             required
           />
-          <Calendar size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 fill-gray-500 stroke-gray-500" />
+          <Calendar size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 stroke-gray-500" />
         </div>
       </div>
 
