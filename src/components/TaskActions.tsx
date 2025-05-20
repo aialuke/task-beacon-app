@@ -4,13 +4,13 @@ import { useState, useCallback, memo } from "react";
 import { Button } from "@/components/ui/button";
 import { Task } from "@/lib/types";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
-import { toast } from "@/lib/toast"; 
+import { toast } from "@/lib/toast"; // Updated import
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import FollowUpTaskForm from "./FollowUpTaskForm";
 
 interface TaskActionsProps {
   task: Task;
-  detailView?: boolean;
+  detailView?: boolean; // Added detailView as an optional prop
 }
 
 function TaskActions({ task, detailView }: TaskActionsProps) {

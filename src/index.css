@@ -1,11 +1,4 @@
 
-/* Import custom styles before Tailwind directives */
-@import "./styles/base.css";
-@import "./styles/components.css";
-@import "./styles/utilities.css";
-@import "./styles/accessibility.css";
-@import "./styles/animations.css";
-
 /* Base Tailwind directives */
 @tailwind base;
 @tailwind components;
@@ -22,6 +15,13 @@
 *::after {
   box-sizing: inherit;
 }
+
+/* Import custom styles after Tailwind directives */
+@import "./styles/base.css";
+@import "./styles/components.css";
+@import "./styles/utilities.css";
+@import "./styles/accessibility.css";
+@import "./styles/animations.css";
 
 /* Global icon handling - centralized here instead of duplicated */
 svg {
