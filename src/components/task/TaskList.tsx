@@ -32,7 +32,7 @@ export default function TaskList() {
 
   return (
     <div className="space-y-4 relative">
-      <div className="flex items-center">
+      <div className="flex items-center w-full">
         <TaskFilter 
           filter={filter}
           onFilterChange={setFilter}

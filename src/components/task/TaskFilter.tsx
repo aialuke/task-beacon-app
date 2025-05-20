@@ -16,12 +16,12 @@ interface TaskFilterProps {
 
 function TaskFilter({ filter, onFilterChange }: TaskFilterProps) {
   return (
-    <div className="w-full">
+    <div className="w-1/4 flex justify-start">
       <Select
         value={filter}
         onValueChange={(value) => onFilterChange(value as TaskStatus | "all")}
       >
-        <SelectTrigger className="filter-dropdown-mobile rounded-xl">
+        <SelectTrigger className="filter-dropdown-mobile rounded-xl w-full">
           <SelectValue placeholder="Filter tasks" />
         </SelectTrigger>
         <SelectContent className="bg-white rounded-xl">
