@@ -37,15 +37,15 @@ export default function TaskDashboard() {
       <UIContextProvider>
         <div className="max-w-3xl mx-auto px-2 sm:px-4 py-6 space-y-6">
           <header className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <img
                 src="/hourglass_logo.svg"
                 alt="Task Beacon Logo"
-                width={26}
-                height={26}
+                width={23}
+                height={23}
                 className="text-primary"
               />
-              <h1 className="text-lg font-medium text-gray-900">Flow State</h1>
+              <h1 className="text-xl font-medium text-gray-900">Flow State</h1>
             </div>
             <DropdownMenu open={open} onOpenChange={setOpen}>
               <DropdownMenuTrigger asChild>
