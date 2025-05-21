@@ -41,10 +41,11 @@ export default function TaskDashboard() {
               <img
                 src="/hourglass_logo.svg"
                 alt="Task Beacon Logo"
-                width={29}
-                height={29}
+                width={26}
+                height={26}
                 className="text-primary"
               />
+              <h1 className="text-lg font-medium text-gray-900">Flow State</h1>
             </div>
             <DropdownMenu open={open} onOpenChange={setOpen}>
               <DropdownMenuTrigger asChild>
