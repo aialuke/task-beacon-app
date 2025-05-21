@@ -41,8 +41,8 @@ export default function TaskDashboard() {
               <img
                 src="/hourglass_logo.svg"
                 alt="Task Beacon Logo"
-                width={36}
-                height={36}
+                width={29}
+                height={29}
                 className="text-primary"
               />
             </div>
