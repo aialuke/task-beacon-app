@@ -41,8 +41,8 @@ export default function TaskDashboard() {
               <img
                 src="/hourglass_logo.svg"
                 alt="Task Beacon Logo"
-                width={23}
-                height={23}
+                width={22}
+                height={22}
                 className="text-primary"
               />
               <h1 className="text-xl font-medium text-gray-900">Flow State</h1>
