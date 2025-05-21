@@ -44,9 +44,15 @@ function TaskDetails({
       className="w-full mt-1"
     >
       <div
-        className={`space-y-2 ${isMobile ? "pl-4 pt-2 pb-4" : "pl-6 pt-2 pb-4"}`}
+        className={`space-y-3 ${isMobile ? "pl-4 pt-2 pb-4" : "pl-6 pt-2 pb-4"}`}
         style={{ height: isExpanded ? "auto" : "0", overflowY: "hidden" }}
       >
+        {task.description && (
+          <div className="text-sm text-gray-600">
+            {task.description}
+          </div>
+        )}
+
         <div className="flex items-center flex-wrap gap-4 min-w-0">
           <div className="flex items-center gap-3 min-w-0">
             <Calendar1 size={16} className="text-task-overdue shrink-0" />

@@ -104,6 +104,16 @@ button:active,
   transform: translateY(0);
 }
 
+/* Button no shadow override */
+.no-shadow {
+  box-shadow: none !important;
+}
+
+.no-shadow:hover {
+  box-shadow: none !important;
+  transform: none !important;
+}
+
 /* Special handling for FAB to ensure it's visible */
 #root .fab,
 body .fab {

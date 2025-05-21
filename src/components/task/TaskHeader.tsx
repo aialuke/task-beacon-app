@@ -1,10 +1,9 @@
 
-import { useRef, memo } from "react";
+import { memo } from "react";
 import { Button } from "@/components/ui/button";
 import { Task } from "@/lib/types";
-import { getStatusColor, getTaskStatus, truncateText } from "@/lib/utils";
-import { useSpring, animated } from "@react-spring/web";
-import CountdownTimer from "../CountdownTimer";
+import { getStatusColor, getTaskStatus } from "@/lib/utils";
+import { CountdownTimer } from "../CountdownTimer";
 import { Pin } from "lucide-react";
 import { useUIContext } from "@/contexts/UIContext";
 
@@ -23,19 +22,6 @@ function TaskHeader({
 }: TaskHeaderProps) {
   const { isMobile } = useUIContext();
   const status = getTaskStatus(task);
-  const statusColor = getStatusColor(status);
-  const descriptionRef = useRef<HTMLDivElement>(null);
-
-  const descriptionAnimation = useSpring({
-    height: isExpanded ? descriptionRef.current?.scrollHeight || 16 : 16,
-    opacity: isExpanded ? 1 : 0.9,
-    config: {
-      tension: 200,
-      friction: 20,
-      clamp: true,
-    },
-    immediate: false,
-  });
 
   return (
     <div className="flex items-center w-full gap-2 task-header-container">
@@ -43,33 +29,16 @@ function TaskHeader({
         <CountdownTimer dueDate={task.due_date} status={status} />
       </div>
 
-      <div className="flex-1 min-w-0">
-        <h3 className="font-bold text-xs sm:text-base text-gray-900 truncate mb-0" title={task.title}>
+      <div className="flex-1 min-w-0 flex items-center">
+        <h3 className="font-bold text-base sm:text-lg text-gray-900 truncate mb-0" title={task.title}>
           {task.title}
         </h3>
-
-        {task.description && (
-          <animated.div
-            ref={descriptionRef}
-            style={{
-              ...descriptionAnimation,
-              willChange: "height, opacity",
-              overflow: "hidden",
-              position: "relative",
-            }}
-            className={`text-xs sm:text-sm text-gray-600 ${isMobile ? "mobile-description-container" : ""}`}
-          >
-            <div className={`${!isExpanded ? "truncate w-full" : ""}`}>
-              {isExpanded ? task.description : truncateText(task.description, isMobile ? 25 : 40)}
-            </div>
-          </animated.div>
-        )}
       </div>
 
       <Button
         variant="ghost"
         size="icon"
-        className="shrink-0 h-8 w-8 ml-1"
+        className="shrink-0 h-8 w-8 ml-1 no-shadow"
         onClick={handleTogglePin}
         title={task.pinned ? "Unpin task" : "Pin task"}
       >
@@ -80,7 +49,7 @@ function TaskHeader({
         )}
       </Button>
 
-      <Button variant="ghost" size="icon" className="shrink-0 h-8 w-8" onClick={toggleExpand}>
+      <Button variant="ghost" size="icon" className="shrink-0 h-8 w-8 no-shadow" onClick={toggleExpand}>
         <svg
           width="16"
           height="16"
