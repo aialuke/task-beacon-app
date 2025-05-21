@@ -29,7 +29,8 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
     setLoading,
     handlePhotoChange,
     uploadPhoto,
-    resetForm
+    resetForm,
+    validateTitle
   } = useBaseTaskForm({
     initialUrl: parentTask.url_link || "",
     onClose
@@ -39,6 +40,10 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate title length
+    if (!validateTitle(title)) return;
+    
     setLoading(true);
 
     try {
@@ -114,7 +119,8 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
     parentTask.id,
     uploadPhoto,
     resetForm,
-    setLoading
+    setLoading,
+    validateTitle
   ]);
 
   return {

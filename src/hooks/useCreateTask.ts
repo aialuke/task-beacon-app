@@ -26,11 +26,16 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
     setLoading,
     handlePhotoChange,
     uploadPhoto,
-    resetForm
+    resetForm,
+    validateTitle
   } = useBaseTaskForm({ onClose });
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate title length
+    if (!validateTitle(title)) return;
+    
     setLoading(true);
     try {
       let photoUrl = null;
@@ -82,7 +87,8 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
     pinned,
     uploadPhoto,
     resetForm,
-    setLoading
+    setLoading,
+    validateTitle
   ]);
 
   return {

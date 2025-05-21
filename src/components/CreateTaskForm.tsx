@@ -35,8 +35,14 @@ export default function CreateTaskForm({
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Task title"
+          maxLength={22}
           required
         />
+        <div className="flex justify-end">
+          <span className={`text-xs ${title.length > 22 ? "text-destructive" : "text-muted-foreground"}`}>
+            {title.length}/22
+          </span>
+        </div>
       </div>
       <div className="space-y-2">
         <Textarea

@@ -1,10 +1,11 @@
+
 // src/lib/mockDataTasks.ts
 import { Task } from "./types";
 
 export const mockDataTasks: Task[] = [
   {
     id: "1",
-    title: "Complete project documentation",
+    title: "Project documentation",
     description: "Write up all project details and specifications",
     due_date: new Date(Date.now() + 86400000).toISOString(), // Tomorrow
     photo_url: null,
@@ -52,7 +53,7 @@ export const mockDataTasks: Task[] = [
   },
   {
     id: "4",
-    title: "Follow up on documentation feedback",
+    title: "Follow up on docs",
     description: "Address reviewer comments on project docs",
     due_date: new Date(Date.now() + 43200000).toISOString(), // 12 hours
     photo_url: null,
@@ -61,7 +62,7 @@ export const mockDataTasks: Task[] = [
     parent_task_id: "1",
     parent_task: {
       id: "1",
-      title: "Complete project documentation",
+      title: "Project documentation",
       description: "Write up all project details and specifications",
       photo_url: null,
       url_link: "https://example.com/docs",
@@ -74,7 +75,7 @@ export const mockDataTasks: Task[] = [
   },
   {
     id: "5",
-    title: "Update project timeline",
+    title: "Update timeline",
     description: "Revise schedule based on client feedback",
     due_date: null, // Test nullable due_date
     photo_url: null,
@@ -90,7 +91,7 @@ export const mockDataTasks: Task[] = [
   },
   {
     id: "6",
-    title: "Finalize design mockups",
+    title: "Design mockups",
     description: "Complete UI designs for client review",
     due_date: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
     photo_url: "https://example.com/mockup.png",

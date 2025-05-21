@@ -30,7 +30,7 @@ function TaskHeader({
       </div>
 
       <div className="flex-1 min-w-0 flex items-center">
-        <h3 className="text-base sm:text-lg text-gray-900 truncate mb-0" title={task.title}>
+        <h3 className="text-base sm:text-lg text-gray-900 mb-0" title={task.title}>
           {task.title}
         </h3>
       </div>

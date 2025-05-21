@@ -45,9 +45,15 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Task title"
+          maxLength={22}
           required
           className="text-foreground"
         />
+        <div className="flex justify-end">
+          <span className={`text-xs ${title.length > 22 ? "text-destructive" : "text-muted-foreground"}`}>
+            {title.length}/22
+          </span>
+        </div>
       </div>
 
       <div className="space-y-2">

@@ -30,6 +30,14 @@ export function useBaseTaskForm({ initialUrl = "", onClose }: UseBaseTaskFormOpt
   const [pinned, setPinned] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  // Custom title setter with validation
+  const handleTitleChange = useCallback((value: string) => {
+    // Limit to 22 characters
+    if (value.length <= 22) {
+      setTitle(value);
+    }
+  }, []);
+
   const handlePhotoChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     setLoading(true);
     const file = e.target.files?.[0];
@@ -81,9 +89,17 @@ export function useBaseTaskForm({ initialUrl = "", onClose }: UseBaseTaskFormOpt
     if (onClose) onClose();
   }, [initialUrl, onClose]);
 
+  const validateTitle = useCallback((value: string): boolean => {
+    if (value.length > 22) {
+      toast.error("Task title cannot exceed 22 characters");
+      return false;
+    }
+    return true;
+  }, []);
+
   return {
     title,
-    setTitle,
+    setTitle: handleTitleChange,
     description,
     setDescription,
     dueDate,
@@ -98,6 +114,7 @@ export function useBaseTaskForm({ initialUrl = "", onClose }: UseBaseTaskFormOpt
     setLoading,
     handlePhotoChange,
     uploadPhoto,
-    resetForm
+    resetForm,
+    validateTitle
   };
 }
