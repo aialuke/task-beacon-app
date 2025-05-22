@@ -39,10 +39,10 @@ export default function TaskDashboard() {
           <header className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <img
-                src="/hourglass_logo.svg"
+                src="/assets/hourglass_logo.svg"
                 alt="Task Beacon Logo"
-                width={24}
-                height={24}
+                width={29}
+                height={29}
                 className="text-primary"
               />
               <h1 className="text-xl font-medium text-gray-900">Flow State</h1>
