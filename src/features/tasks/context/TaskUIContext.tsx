@@ -22,7 +22,7 @@ const TaskUIContext = createContext<TaskUIContextType | undefined>(undefined);
 /**
  * Provider component for task UI-related state
  * 
- * Manages UI concerns like filters, expanded state, and dialogs
+ * Manages UI-only concerns like filters, expanded state, and dialog visibility
  * 
  * @param children - React components that will consume the context
  */

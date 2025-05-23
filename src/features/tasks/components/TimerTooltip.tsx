@@ -1,5 +1,4 @@
 
-// Move from src/components/timer/TimerTooltip.tsx
 import {
   TooltipContent,
   TooltipArrow,

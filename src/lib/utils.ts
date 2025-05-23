@@ -6,19 +6,18 @@
  * along with selective re-exports of the most commonly used utilities.
  * 
  * For more specialized utilities, import directly from their respective files:
- * - UI utilities: import { cn } from "@/lib/uiUtils";
- * - Date utilities: import { formatDate } from "@/lib/dateUtils";
+ * - UI utilities: import { cn, getStatusColor } from "@/lib/uiUtils";
+ * - Date utilities: import { formatDate, getDaysRemaining } from "@/lib/dateUtils";
  * - Format utilities: import { truncateText } from "@/lib/formatUtils";
- * - Animation utilities: import { animateElement } from "@/lib/animationUtils";
- * - Image utilities: import { compressAndResizePhoto } from "@/lib/imageUtils";
  * - Data utilities: import { sortByProperty } from "@/lib/dataUtils";
  * - Validation utilities: import { isValidEmail } from "@/lib/validationUtils";
  */
 
 // Re-export only the most commonly used utilities
-export { cn } from './uiUtils';
+export { cn, getStatusColor, getTimerColor } from './uiUtils';
 export { formatDate, getDaysRemaining, getTimeUntilDue } from './dateUtils';
 export { truncateText } from './formatUtils';
+export { sortByProperty, searchByTerm } from './dataUtils';
 
 /**
  * Deep clones an object using JSON serialization
@@ -132,4 +131,3 @@ export function throttle<T extends (...args: any[]) => any>(
     }
   };
 }
-

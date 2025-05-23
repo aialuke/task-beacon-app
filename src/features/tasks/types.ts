@@ -4,6 +4,8 @@ import { Task, TaskStatus } from "@/lib/types";
 // Types
 export type TaskFilter = TaskStatus | "all" | "assigned";
 
+// Legacy type kept for backward compatibility
+// New code should use specific context types from TaskContext.tsx and TaskUIContext.tsx
 export interface TaskContextType {
   // Task queries
   tasks: Task[];
@@ -34,6 +36,3 @@ export interface TaskContextType {
   goToNextPage?: () => void;
   goToPreviousPage?: () => void;
 }
-
-// Note: This type is kept for backward compatibility
-// New code should use the specific context types

@@ -1,11 +1,10 @@
 
 import { createContext, useContext, useState, ReactNode } from "react";
 import { Task } from "@/lib/types";
-import { TaskContextType } from "../types";
 import { useTaskQueries } from "@/features/tasks/hooks/useTaskQueries";
 import { useTaskMutations } from "@/features/tasks/hooks/useTaskMutations";
 
-// Define new data-focused context type
+// Define data-focused context type
 interface TaskDataContextType {
   // Task queries
   tasks: Task[];
@@ -34,7 +33,7 @@ const TaskDataContext = createContext<TaskDataContextType | undefined>(undefined
 /**
  * Provider component for task data-related state and operations
  * 
- * Manages tasks data, loading state, and data mutations
+ * Manages tasks data, loading state, data mutations, and pagination
  * 
  * @param children - React components that will consume the task context
  */
@@ -60,14 +59,18 @@ export function TaskContextProvider({ children }: { children: ReactNode }) {
 
   return (
     <TaskDataContext.Provider value={{
+      // Data properties
       tasks,
       isLoading,
       isFetching,
       error: error as Error, // Cast to Error type to satisfy the type constraint
+      
+      // Data mutations
       toggleTaskPin,
       toggleTaskComplete,
       createFollowUpTask,
-      // Pagination props
+      
+      // Pagination properties
       currentPage,
       totalCount,
       pageSize,

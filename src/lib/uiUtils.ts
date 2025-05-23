@@ -54,12 +54,12 @@ export function getStatusColor(status: TaskStatus): string {
 export function getTimerColor(status: TaskStatus): string {
   switch (status) {
     case "complete":
-      return "var(--timer-complete)";
+      return "var(--status-complete)";
     case "overdue":
-      return "var(--timer-overdue)";
+      return "var(--status-overdue)";
     case "pending":
     default:
-      return "var(--timer-pending)";
+      return "var(--status-pending)";
   }
 }
 
@@ -114,4 +114,3 @@ export function isElementInViewport(element: HTMLElement): boolean {
 export function isDarkMode(): boolean {
   return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 }
-
