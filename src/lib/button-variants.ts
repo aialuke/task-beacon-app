@@ -15,7 +15,7 @@ export const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-full shadow hover:shadow-md",
         ghost: "hover:bg-accent hover:text-accent-foreground rounded-full",
         link: "text-primary underline-offset-4 hover:underline",
-        brand: "bg-primary text-white rounded-full shadow hover:shadow-md",
+        brand: "bg-primary text-primary-foreground rounded-full shadow hover:shadow-md",
         "brand-secondary": "bg-secondary text-primary hover:bg-secondary/80 rounded-full shadow hover:shadow-md",
       },
       size: {

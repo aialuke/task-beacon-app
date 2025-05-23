@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -88,7 +89,7 @@ export default function AuthForm() {
               <div className="mt-6 flex flex-col gap-2">
                 <Button
                   type="submit"
-                  className="btn-primary"
+                  variant="default"
                   disabled={pin.length !== 4 || loading}
                 >
                   {loading ? "Verifying..." : "Continue"}
@@ -97,7 +98,6 @@ export default function AuthForm() {
                   type="button"
                   variant="outline"
                   onClick={() => setMode("signin")}
-                  className="btn-secondary"
                 >
                   Use Email Instead
                 </Button>
@@ -143,7 +143,8 @@ export default function AuthForm() {
             </div>
             <Button
               type="submit"
-              className="w-full btn-primary"
+              variant="default"
+              className="w-full"
               disabled={loading}
             >
               {loading

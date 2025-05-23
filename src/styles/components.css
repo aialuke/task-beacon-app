@@ -48,8 +48,8 @@
     width: 56px;
     height: 56px;
     z-index: 99999;
-    transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
-    background: hsl(var(--primary));
+    transition: background-color 0.2s, box-shadow 0.2s;
+    background-color: hsl(var(--primary));
     color: hsl(var(--primary-foreground));
     border-radius: var(--border-radius-full);
   }
@@ -60,13 +60,11 @@
   }
 
   .fab:hover {
-    background: hsl(var(--primary) / 0.9);
-    transform: scale(1.05);
+    background-color: hsl(var(--primary) / 0.9);
     @apply shadow-xl;
   }
 
   .fab:active {
-    transform: scale(0.95);
     @apply shadow-lg;
   }
 
@@ -168,6 +166,7 @@
     @apply transition-all duration-200;
   }
 
+  /* Button hover and active states use shadow changes only */
   button:hover, 
   .button:hover,
   [role="button"]:hover {
@@ -178,6 +177,14 @@
   .button:active,
   [role="button"]:active {
     @apply shadow-sm;
+  }
+
+  /* Ensure primary buttons use the theme blue color */
+  .btn-primary,
+  button[data-variant="default"],
+  button[data-variant="brand"] {
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
   }
 
   /* ===== FORM FIELD STYLES ===== */
@@ -212,7 +219,7 @@
   input[type="file"]::file-selector-button {
     border-radius: var(--border-radius-full);
     padding: 0.25rem 0.75rem;
-    background: var(--gradient-blue);
+    background-color: hsl(var(--primary));
     border: none;
     color: white;
     margin-right: 0.5rem;
