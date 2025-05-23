@@ -2,6 +2,8 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllTasks } from "@/integrations/supabase/api/tasks.api";
 import { useState } from "react";
+import { TablesResponse } from "@/integrations/supabase/types/api.types";
+import { Task } from "@/lib/types";
 
 /**
  * Custom hook for paginated task queries
@@ -19,19 +21,17 @@ export function useTaskQueries(pageSize = 10) {
     isLoading,
     error,
     isFetching,
-    isPreviousData
   } = useQuery({
     queryKey: ["tasks", currentPage, pageSize],
     queryFn: () => getAllTasks(currentPage, pageSize),
     staleTime: 5 * 60 * 1000, // 5 minutes
-    keepPreviousData: true // Keep previous page data while fetching new page
   });
 
-  // Prefetch next page
-  const hasNextPage = response?.hasNextPage || false;
+  // Determine if we have a next page
+  const hasNextPage = response?.data?.hasNextPage || false;
   
   // Prefetch next page if available
-  if (hasNextPage && !isPreviousData) {
+  if (hasNextPage) {
     queryClient.prefetchQuery({
       queryKey: ["tasks", currentPage + 1, pageSize],
       queryFn: () => getAllTasks(currentPage + 1, pageSize),
@@ -40,8 +40,8 @@ export function useTaskQueries(pageSize = 10) {
   }
 
   return {
-    tasks: response?.data || [],
-    totalCount: response?.totalCount || 0,
+    tasks: response?.data?.data || [],
+    totalCount: response?.data?.totalCount || 0,
     currentPage,
     pageSize,
     hasNextPage,

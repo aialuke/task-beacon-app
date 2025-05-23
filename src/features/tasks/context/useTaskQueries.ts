@@ -11,11 +11,11 @@ export function useTaskQueries() {
   // Fetch tasks query
   const { data: response, isLoading, error } = useQuery({
     queryKey: ["tasks"],
-    queryFn: getAllTasks
+    queryFn: () => getAllTasks()
   });
 
   return {
-    tasks: response?.data || [],
+    tasks: response?.data?.data || [],
     isLoading,
     error: error || response?.error || null
   };
