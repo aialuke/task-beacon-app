@@ -11,6 +11,7 @@
     transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
     /* Rounded corners for task cards */
     border-radius: var(--border-radius-xl);
+    background-color: white;
   }
 
   .task-card:hover {
@@ -127,5 +128,93 @@
     input[type="file"] {
       max-width: 200px;
     }
+  }
+
+  /* ===== SELECT & DROPDOWN STYLING ===== */
+  .select-content,
+  [data-radix-popper-content-wrapper],
+  [data-radix-dropdown-menu-content] {
+    background-color: white;
+    color: #000000e6;
+    border-radius: var(--border-radius-xl);
+    @apply shadow-lg;
+    z-index: 9999;
+  }
+
+  /* ===== DIALOG CONTENT STYLING ===== */
+  .dialog-content, 
+  [class*="dialog-content"],
+  .popover-content,
+  [class*="popover-content"] {
+    padding: 1.25rem;
+    background: white;
+    @apply shadow-lg;
+    border: 1px solid #f0f0f0;
+    border-radius: var(--border-radius-xl);
+  }
+
+  /* ===== AVATAR FALLBACK BACKGROUNDS ===== */
+  .avatar-fallback {
+    background-color: #e5e7eb;
+    color: #6b7280;
+  }
+
+  /* ===== BUTTON STYLING CONSISTENCY ===== */
+  button, 
+  .button,
+  [role="button"] {
+    border-radius: var(--border-radius-full);
+    @apply transition-all duration-200;
+  }
+
+  button:hover, 
+  .button:hover,
+  [role="button"]:hover {
+    @apply shadow-md -translate-y-1;
+  }
+
+  button:active, 
+  .button:active,
+  [role="button"]:active {
+    @apply translate-y-0;
+  }
+
+  /* ===== FORM FIELD STYLES ===== */
+  /* Form inputs with consistent styling */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  input[type="search"],
+  input[type="url"],
+  input[type="tel"],
+  input[type="date"],
+  input[type="datetime-local"],
+  textarea,
+  .select-trigger {
+    border-radius: var(--border-radius-xl);
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s ease;
+    @apply shadow-sm;
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+    border-color: #3662E3;
+    @apply shadow;
+  }
+
+  /* File selector button styling */
+  input[type="file"]::file-selector-button {
+    border-radius: var(--border-radius-full);
+    padding: 0.25rem 0.75rem;
+    background: var(--gradient-blue);
+    border: none;
+    color: white;
+    margin-right: 0.5rem;
+    @apply shadow-sm;
   }
 }

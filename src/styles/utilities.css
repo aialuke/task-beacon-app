@@ -162,6 +162,48 @@
   .rounded-xl-container {
     border-radius: var(--border-radius-xl);
   }
+
+  /* ===== ANIMATION UTILITIES ===== */
+  /* Flash animation for overdue tasks */
+  .animate-flash {
+    animation: flash 2s infinite;
+  }
+
+  /* Subtle pulse animation for tasks due today */
+  .animate-pulse-subtle {
+    animation: pulse-subtle 3s infinite ease-in-out;
+  }
+
+  /* Ring fill animation */
+  .animate-ring-fill {
+    animation: ring-fill 1.5s ease-out forwards;
+  }
+
+  /* Basic animations */
+  .animate-spin {
+    animation: spin 1s linear infinite;
+  }
+
+  .animate-ping {
+    animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+
+  .animate-bounce {
+    animation: bounce 1s infinite;
+  }
+  
+  .animate-fade-in {
+    animation: fade-in 0.3s ease-out;
+  }
+  
+  /* Transition animations */
+  .animate-accordion-down {
+    animation: accordion-down 0.2s ease-out;
+  }
+  
+  .animate-accordion-up {
+    animation: accordion-up 0.2s ease-out;
+  }
   
   /* ===== ANIMATION KEYFRAMES ===== */
   /* Flash animation for overdue tasks */
@@ -213,4 +255,3 @@
     to { height: 0; opacity: 0; }
   }
 }
-
