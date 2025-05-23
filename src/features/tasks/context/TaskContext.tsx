@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useState, ReactNode } from "react";
 import { Task } from "@/lib/types";
 import { TaskContextType, TaskFilter } from "../types";
