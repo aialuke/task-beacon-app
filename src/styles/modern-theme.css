@@ -82,7 +82,9 @@ button[class*="bg-primary"]:hover,
 [class*="btn-primary"]:hover {
   transform: translateY(-1px) !important;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06) !important;
-  filter: brightness(1.05) !important;
+  filter: brightness(0.9) !important;
+  color: white !important;
+  background: linear-gradient(45deg, #2C50B6, #4A6DCA) !important;
 }
 
 button[class*="bg-primary"]:active, 
@@ -253,4 +255,53 @@ input[type="checkbox"]:checked {
   overflow: hidden !important; 
   margin-top: 4px !important;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Force button styles to override any other styles */
+button[type="submit"],
+button[class*="primary"],
+button[variant="default"],
+button[class*="btn-primary"] {
+  background: linear-gradient(45deg, #3662E3, #5C85EE) !important;
+  color: white !important;
+}
+
+button[type="submit"]:hover,
+button[class*="primary"]:hover,
+button[variant="default"]:hover,
+button[class*="btn-primary"]:hover {
+  background: linear-gradient(45deg, #2C50B6, #4A6DCA) !important;
+  color: white !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Override any conflicting button hover styles */
+.bg-primary.hover\:bg-primary\/90:hover {
+  --tw-bg-opacity: 0.9 !important;
+  background-color: rgba(54, 98, 227, var(--tw-bg-opacity)) !important;
+  color: white !important;
+}
+
+/* Ensure consistent form layout */
+#root form .space-y-4 > div,
+body form .space-y-4 > div {
+  width: 100% !important;
+  margin-bottom: 0.75rem !important;
+}
+
+/* Make all select components match the styling */
+.select-trigger {
+  border-radius: 0.75rem !important;
+  height: 2.5rem !important;
+  padding: 0 0.75rem !important;
+}
+
+/* Final Touch to Ensure Button Hover States */
+button.bg-primary:hover,
+.button.bg-primary:hover,
+[role="button"].bg-primary:hover,
+.btn-primary:hover {
+  color: white !important;
+  background: #2C50B6 !important;
+  background-image: none !important;
 }
