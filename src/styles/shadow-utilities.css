@@ -14,13 +14,12 @@
     @apply shadow-lg;
   }
   
-  /* ===== BUTTON UTILITIES ===== */
-  /* Use attribute selectors for more specific targeting without !important */
+  /* ===== NO SHADOW UTILITY ===== */
   .no-shadow {
-    @apply shadow-none;
+    @apply shadow-none !important;
   }
 
   .no-shadow:hover {
-    @apply shadow-none;
+    @apply shadow-none !important;
   }
 }

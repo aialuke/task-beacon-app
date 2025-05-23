@@ -144,7 +144,6 @@ export default function AuthForm() {
             <Button
               type="submit"
               variant="default"
-              data-button-primary="true"
               className="w-full"
               disabled={loading}
             >

@@ -1,43 +1,12 @@
 
 /* src/styles/button.css */
 @layer components {
-  /* ===== BUTTON STYLING ===== */
+  /* ===== BUTTON BASICS ===== */
   button, 
   .button,
   [role="button"] {
     border-radius: var(--border-radius-full);
     @apply transition-all duration-200;
-  }
-
-  /* Button hover and active states use shadow changes only */
-  button:hover, 
-  .button:hover,
-  [role="button"]:hover {
-    @apply shadow-md;
-  }
-
-  button:active, 
-  .button:active,
-  [role="button"]:active {
-    @apply shadow-sm;
-  }
-
-  /* High specificity rules for primary buttons */
-  button[data-button-primary="true"],
-  button[data-variant="default"],
-  button[data-variant="brand"],
-  button[variant="default"],
-  button[variant="brand"],
-  button.bg-primary,
-  .btn-primary {
-    background-color: hsl(var(--primary)) !important;
-    color: hsl(var(--primary-foreground)) !important;
-  }
-
-  /* Debug class to verify styling */
-  .button-debug {
-    background-color: blue !important;
-    color: white !important;
   }
 
   /* ===== FAB BUTTON ===== */

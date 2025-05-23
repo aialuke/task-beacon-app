@@ -2,7 +2,6 @@
 /* src/styles/color-utilities.css */
 @layer utilities {
   /* ===== COLOR UTILITIES ===== */
-  /* Using direct color classes rather than relying on !important */
   .text-primary {
     color: hsl(var(--primary));
   }
@@ -17,20 +16,5 @@
 
   .text-muted {
     color: #6b7280;
-  }
-
-  /* Button specific color utilities - with important flags for higher specificity */
-  .bg-primary-button {
-    background-color: hsl(var(--primary)) !important;
-  }
-
-  .text-primary-button-foreground {
-    color: hsl(var(--primary-foreground)) !important;
-  }
-  
-  /* Force primary button styling */
-  .force-primary-button {
-    background-color: hsl(var(--primary)) !important;
-    color: hsl(var(--primary-foreground)) !important;
   }
 }
