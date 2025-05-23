@@ -9,7 +9,7 @@ import Index from "./pages/Index";
 import { AuthProvider } from "./contexts/AuthContext";
 
 const NotFound = lazy(() => import("./pages/NotFound"));
-const TaskDetailsPage = lazy(() => import("./pages/TaskDetailsPage"));
+const TaskDetailsPage = lazy(() => import("./features/tasks/pages/TaskDetailsPage"));
 
 // Create a client
 const queryClient = new QueryClient({

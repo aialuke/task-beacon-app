@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Calendar1, ExternalLink } from "lucide-react";
 import CountdownTimer from "@/components/CountdownTimer";
 import { getTaskStatus } from "@/lib/utils";
-import TaskActions from "@/components/TaskActions";
+import TaskActions from "@/features/tasks/components/TaskActions";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const TaskDetailsPage = () => {
