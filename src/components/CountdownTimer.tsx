@@ -2,19 +2,12 @@
 import { useState, useEffect, useRef } from "react";
 import { useSpring, animated } from "@react-spring/web";
 import { TaskStatus } from "@/lib/types";
-import {
-  Tooltip,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import TimerRing from "./timer/TimerRing";
 import TimerDisplay from "./timer/TimerDisplay";
-import TimerTooltip from "./timer/TimerTooltip";
 import {
   validateDueDate,
   calculateTimerOffset,
   formatTimeDisplay,
-  getTooltipContent
 } from "@/lib/timer-utils";
 
 interface CountdownTimerProps {
@@ -75,42 +68,32 @@ export default function CountdownTimer({
     };
   }, [dueDate, status]);
 
-  const tooltipContent = getTooltipContent(dueDate);
-
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <AnimatedDiv
-            role="timer"
-            tabIndex={0}
-            aria-label={`Task timer: ${
-              status === "complete"
-                ? "Completed"
-                : status === "overdue"
-                ? `${timeDisplay} overdue`
-                : `${timeDisplay}`
-            }`}
-            aria-describedby="timer-tooltip"
-            className="relative focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
-            style={{ width: dynamicSize, height: dynamicSize }}
-          >
-            <TimerRing
-              size={dynamicSize}
-              radius={radius}
-              circumference={circumference}
-              strokeDashoffset={strokeDashoffset}
-              status={status}
-            />
-            <TimerDisplay 
-              size={dynamicSize} 
-              status={status} 
-              timeDisplay={timeDisplay} 
-            />
-          </AnimatedDiv>
-        </TooltipTrigger>
-        <TimerTooltip tooltipContent={tooltipContent} status={status} />
-      </Tooltip>
-    </TooltipProvider>
+    <AnimatedDiv
+      role="timer"
+      tabIndex={0}
+      aria-label={`Task timer: ${
+        status === "complete"
+          ? "Completed"
+          : status === "overdue"
+          ? `${timeDisplay} overdue`
+          : `${timeDisplay}`
+      }`}
+      className="relative focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
+      style={{ width: dynamicSize, height: dynamicSize }}
+    >
+      <TimerRing
+        size={dynamicSize}
+        radius={radius}
+        circumference={circumference}
+        strokeDashoffset={strokeDashoffset}
+        status={status}
+      />
+      <TimerDisplay 
+        size={dynamicSize} 
+        status={status} 
+        timeDisplay={timeDisplay} 
+      />
+    </AnimatedDiv>
   );
 }
