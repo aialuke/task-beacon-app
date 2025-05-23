@@ -28,11 +28,14 @@ const CreateTaskForm = lazy(() => import("../forms/CreateTaskForm"));
 
 // Skeleton component for lazy-loaded task cards
 const TaskCardSkeleton = () => (
-  <div className="task-card animate-pulse">
-    <div className="h-12 w-12 rounded-full bg-gray-200" />
-    <div className="flex-1 space-y-2">
-      <Skeleton className="h-4 w-3/4" />
-      <Skeleton className="h-3 w-1/2" />
+  <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 animate-pulse">
+    <div className="flex items-center gap-3">
+      <div className="h-10 w-10 rounded-full bg-gray-200" />
+      <div className="flex-1 space-y-2">
+        <Skeleton className="h-4 w-3/4" />
+        <Skeleton className="h-3 w-1/2" />
+      </div>
+      <div className="h-8 w-8 rounded-full bg-gray-200" />
     </div>
   </div>
 );
@@ -63,7 +66,7 @@ export default function TaskList() {
 
   return (
     <div className="space-y-4 relative">
-      <div className="flex items-center w-full">
+      <div className="flex items-center p-3 mb-1 w-full bg-white rounded-xl shadow-sm">
         <TaskFilter 
           filter={filter}
           onFilterChange={setFilter}
@@ -82,25 +85,25 @@ export default function TaskList() {
             </Suspense>
           ))
         ) : (
-          <div className="flex items-center justify-center p-4 border border-dashed border-gray-300 rounded-xl">
-            <p className="text-gray-500">No tasks found</p>
+          <div className="flex items-center justify-center p-8 border border-dashed border-gray-300 rounded-xl bg-white/80 text-gray-500">
+            <p>No tasks found</p>
           </div>
         )}
       </div>
       
       {/* Pagination Controls */}
       {totalCount > pageSize && (
-        <Pagination className="mt-4">
-          <PaginationContent>
+        <Pagination className="mt-6">
+          <PaginationContent className="bg-white shadow-sm rounded-xl p-1">
             <PaginationItem>
               <PaginationPrevious 
                 onClick={() => hasPreviousPage && goToPreviousPage()}
-                className={!hasPreviousPage ? "pointer-events-none opacity-50" : ""}
+                className={!hasPreviousPage ? "pointer-events-none opacity-50 hover:bg-transparent" : "hover:bg-gray-50"}
               />
             </PaginationItem>
             
             <PaginationItem>
-              <span className="flex items-center justify-center px-4">
+              <span className="flex items-center justify-center px-4 text-sm text-gray-700">
                 Page {currentPage} of {Math.ceil(totalCount / pageSize)}
               </span>
             </PaginationItem>
@@ -108,7 +111,7 @@ export default function TaskList() {
             <PaginationItem>
               <PaginationNext 
                 onClick={() => hasNextPage && goToNextPage()}
-                className={!hasNextPage ? "pointer-events-none opacity-50" : ""}
+                className={!hasNextPage ? "pointer-events-none opacity-50 hover:bg-transparent" : "hover:bg-gray-50"}
               />
             </PaginationItem>
           </PaginationContent>
@@ -117,7 +120,7 @@ export default function TaskList() {
       
       {/* Loading indicator for pagination */}
       {isFetching && !isLoading && (
-        <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-primary/20 text-primary px-4 py-1 rounded-full text-sm">
+        <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-primary/10 text-primary px-4 py-1 rounded-full text-sm shadow-md">
           Updating...
         </div>
       )}
@@ -140,18 +143,19 @@ export default function TaskList() {
               borderRadius: "9999px",
               backgroundColor: "#3662E3",
               color: "white",
-              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.1)",
+              boxShadow: "0 4px 12px rgba(54, 98, 227, 0.3), 0 2px 4px rgba(0, 0, 0, 0.1)",
               border: "none",
               visibility: "visible",
-              opacity: 1
+              opacity: 1,
+              transition: "transform 0.2s ease, box-shadow 0.2s ease"
             }}
           >
             <ClockPlus className="h-6 w-6" strokeWidth={2} stroke="white" fill="none" />
           </button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-md bg-white rounded-xl">
+        <DialogContent className="sm:max-w-md bg-white rounded-xl shadow-lg border-gray-100">
           <DialogHeader>
-            <DialogTitle className="text-foreground">Create New Task</DialogTitle>
+            <DialogTitle className="text-gray-800">Create New Task</DialogTitle>
           </DialogHeader>
           <Suspense fallback={<div className="p-4 text-center">Loading form...</div>}>
             <CreateTaskForm onClose={() => setDialogOpen(false)} />
