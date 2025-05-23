@@ -10,7 +10,7 @@
     margin-right: auto;
     box-shadow: var(--shadow-sm);
     transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
-    /* Square corners for task cards */
+    /* Rounded corners for task cards */
     border-radius: var(--task-card-radius) !important;
   }
 
@@ -40,43 +40,7 @@
     @apply space-y-2;
   }
 
-  /* ===== BUTTON STYLES ===== */
-  .btn-primary {
-    @apply rounded-full focus:outline-none focus:ring-2 focus:ring-primary/50 text-base;
-    transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
-    background: var(--gradient-blue);
-    color: hsl(var(--primary-foreground));
-    box-shadow: var(--shadow-sm);
-    border-radius: var(--border-radius-full);
-  }
-
-  .btn-primary:hover {
-    background: var(--gradient-blue-dark);
-    box-shadow: var(--shadow-md);
-    transform: translateY(-1px);
-  }
-
-  .btn-primary:active {
-    transform: translateY(0);
-    box-shadow: var(--shadow-sm);
-  }
-
-  .btn-secondary {
-    @apply border border-input hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-accent/50;
-    transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
-    box-shadow: var(--shadow-sm);
-    border-radius: var(--border-radius-full);
-  }
-
-  .btn-secondary:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateY(-1px);
-  }
-
-  .btn-secondary:active {
-    transform: translateY(0);
-    box-shadow: var(--shadow-sm);
-  }
+  /* Removed redundant button styling that conflicts with button-variants.ts */
 
   /* ===== FAB BUTTON ===== */
   .fab {

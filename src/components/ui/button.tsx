@@ -16,7 +16,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
     
-    // Apply the appropriate styling based on variant
+    // Apply gradient background only to default and brand buttons
     const buttonStyle = {} as React.CSSProperties;
     if (variant === "default" || variant === "brand") {
       buttonStyle.background = "var(--gradient-blue)";
