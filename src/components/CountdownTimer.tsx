@@ -6,7 +6,7 @@ import TimerRing from "./timer/TimerRing";
 import TimerDisplay from "./timer/TimerDisplay";
 import { useUIContext } from "@/contexts/UIContext";
 import { Tooltip, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import TimerTooltip from "./timer/TimerTooltip";
+import TimerTooltip from "@/features/tasks/components/TimerTooltip";
 // Import from new utility files
 import { 
   getDaysRemaining,
