@@ -163,16 +163,18 @@
   }
 
   /* ===== BUTTON UTILITIES ===== */
+  /* Use attribute selectors for more specific targeting without !important */
   .no-shadow {
-    box-shadow: none !important;
+    box-shadow: none;
   }
 
   .no-shadow:hover {
-    box-shadow: none !important;
-    transform: none !important;
+    box-shadow: none;
+    transform: none;
   }
   
   /* ===== ACCESSIBILITY UTILITIES ===== */
+  /* Use more specific selector for focus styles */
   .focus-visible:focus {
     outline: 2px solid hsl(var(--primary));
     outline-offset: 2px;

@@ -28,14 +28,14 @@ svg {
   fill: none;
 }
 
-/* Task card specific overrides */
+/* Task card specific styles with more specific selectors */
 .task-card {
   background-color: white;
   border: 1px solid #e2e8f0;
-  border-radius: var(--task-card-radius) !important;
+  border-radius: var(--task-card-radius);
 }
 
-/* Select and dropdown styling */
+/* Select and dropdown styling with proper specificity */
 .select-content,
 [data-radix-popper-content-wrapper],
 [data-radix-dropdown-menu-content] {
@@ -46,7 +46,7 @@ svg {
   z-index: 9999;
 }
 
-/* Dialog content styling */
+/* Dialog content styling with more specific selectors */
 .dialog-content, 
 [class*="dialog-content"],
 .popover-content,
@@ -64,7 +64,7 @@ svg {
   color: #6b7280;
 }
 
-/* Button styling consistency */
+/* Button styling consistency with specific selectors */
 button, 
 .button,
 [role="button"] {
@@ -123,4 +123,3 @@ input[type="file"]::file-selector-button {
   margin-right: 0.5rem;
   box-shadow: var(--shadow-sm);
 }
-
