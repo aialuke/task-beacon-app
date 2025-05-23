@@ -2,19 +2,16 @@
 import { useEffect, useState } from "react";
 import { 
   Command, 
-  CommandDialog,
   CommandEmpty, 
   CommandGroup, 
   CommandInput, 
   CommandItem, 
   CommandList 
 } from "@/components/ui/command";
-import { Button } from "@/components/ui/button";
-import { Check, ChevronsUpDown, User } from "lucide-react";
+import { Check, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
 import { toast } from "@/lib/toast";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 // Mock users for development
 const mockUsers = [
@@ -31,17 +28,15 @@ interface UserSearchInputProps {
 
 export default function UserSearchInput({ value, onChange, disabled = false }: UserSearchInputProps) {
   const [users, setUsers] = useState<{ id: string; name?: string; email: string }[]>([]);
-  const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
   const [selectedUser, setSelectedUser] = useState<{ id: string; name?: string; email: string } | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
 
-  // Load users on component mount or when popover opens
+  // Load users on component mount
   useEffect(() => {
-    if (open) {
-      loadUsers();
-    }
-  }, [open]);
+    loadUsers();
+  }, []);
 
   // Set selected user when value changes from parent
   useEffect(() => {
@@ -95,53 +90,96 @@ export default function UserSearchInput({ value, onChange, disabled = false }: U
         return displayName.includes(term) || email.includes(term);
       })
     : users;
+    
+  const handleSelect = (userId: string) => {
+    const user = users.find(u => u.id === userId);
+    if (user) {
+      onChange(userId);
+      setSelectedUser(user);
+      setSearchTerm("");
+      setIsOpen(false);
+    }
+  };
+
+  const handleFocus = () => {
+    setIsOpen(true);
+  };
+
+  const handleBlur = (e: React.FocusEvent) => {
+    // Delay closing to allow click events on items to register
+    setTimeout(() => {
+      if (!e.currentTarget.contains(document.activeElement)) {
+        setIsOpen(false);
+      }
+    }, 100);
+  };
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          disabled={disabled}
-          className="w-full justify-between"
-        >
-          {selectedUser ? getUserDisplayName(selectedUser) : "Search users..."}
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-[300px] p-0" align="start">
-        <Command>
+    <div 
+      className="relative w-full"
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+    >
+      <div className={cn(
+        "flex items-center border border-input rounded-md w-full",
+        disabled ? "bg-muted opacity-50" : "bg-background",
+        isOpen ? "ring-2 ring-ring ring-offset-2 ring-offset-background" : ""
+      )}>
+        <div className="flex items-center pl-3">
+          <User className="h-4 w-4 text-muted-foreground" />
+        </div>
+        
+        {selectedUser ? (
+          <div className="flex items-center justify-between w-full px-3 py-2 text-sm">
+            <span className="flex-grow">{getUserDisplayName(selectedUser)}</span>
+            <button 
+              type="button"
+              className="text-muted-foreground hover:text-foreground"
+              onClick={() => {
+                onChange("");
+                setSelectedUser(null);
+                setSearchTerm("");
+              }}
+              disabled={disabled}
+            >
+              ×
+            </button>
+          </div>
+        ) : (
           <CommandInput 
             placeholder="Search user..." 
-            className="h-9"
             value={searchTerm}
             onValueChange={setSearchTerm}
+            className="flex-grow border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+            disabled={disabled}
           />
-          <CommandList>
-            <CommandEmpty>
-              {loading ? "Loading..." : "No user found."}
-            </CommandEmpty>
-            <CommandGroup>
-              {filteredUsers.map(user => (
-                <CommandItem
-                  key={user.id}
-                  onSelect={() => {
-                    onChange(user.id);
-                    setSelectedUser(user);
-                    setOpen(false);
-                  }}
-                  className="flex items-center gap-2"
-                >
-                  <User className="h-4 w-4" />
-                  <span>{getUserDisplayName(user)}</span>
-                  {user.id === value && <Check className="h-4 w-4 ml-auto" />}
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
+        )}
+      </div>
+      
+      {isOpen && !selectedUser && (
+        <div className="absolute z-50 w-full mt-1 bg-popover text-popover-foreground shadow-md rounded-md overflow-hidden border border-border">
+          <Command shouldFilter={false}>
+            <CommandList>
+              <CommandEmpty>
+                {loading ? "Loading..." : "No user found."}
+              </CommandEmpty>
+              <CommandGroup>
+                {filteredUsers.map(user => (
+                  <CommandItem
+                    key={user.id}
+                    onSelect={() => handleSelect(user.id)}
+                    className="flex items-center gap-2 cursor-pointer"
+                  >
+                    <User className="h-4 w-4" />
+                    <span>{getUserDisplayName(user)}</span>
+                    {user.id === value && <Check className="h-4 w-4 ml-auto" />}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </div>
+      )}
+    </div>
   );
 }
