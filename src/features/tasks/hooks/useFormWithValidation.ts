@@ -14,6 +14,7 @@ interface UseFormWithValidationOptions<T extends FieldValues> extends UseFormPro
 // Define a return type that extends UseFormReturn but adds our custom properties
 interface UseFormWithValidationReturn<T extends FieldValues> extends UseFormReturn<T> {
   isSubmitting: boolean;
+  onSubmit: (data: T) => Promise<void>;
 }
 
 export function useFormWithValidation<T extends FieldValues>({
@@ -53,12 +54,10 @@ export function useFormWithValidation<T extends FieldValues>({
     [onSubmit, methods, successMessage]
   );
 
-  // Return everything from methods plus our isSubmitting state
+  // Return everything from methods plus our isSubmitting state and onSubmit handler
   return {
     ...methods,
     isSubmitting,
-    // Override the handleSubmit to use our custom submission handler
-    handleSubmit: (onValid, onInvalid) => 
-      methods.handleSubmit((data) => handleFormSubmit(data), onInvalid)
+    onSubmit: handleFormSubmit,
   };
 }
