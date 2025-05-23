@@ -47,14 +47,14 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps): 
     photoPreview,
     pinned,
     setPinned,
+    assigneeId,
+    setAssigneeId,
     loading,
     setLoading,
     handlePhotoChange,
     resetForm,
     validateTitle
   } = baseForm;
-
-  const [assigneeId, setAssigneeId] = useState<string>("");
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
@@ -122,9 +122,22 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps): 
   ]);
 
   return {
-    ...baseForm,
+    title,
+    setTitle,
+    description,
+    setDescription,
+    dueDate,
+    setDueDate,
+    url,
+    setUrl,
+    photo,
+    photoPreview,
+    pinned,
+    setPinned,
     assigneeId,
     setAssigneeId,
+    loading,
+    handlePhotoChange,
     handleSubmit
   };
 }

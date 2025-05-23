@@ -61,14 +61,21 @@ export type TaskFormData = NewTaskFormData | FollowUpTaskFormData;
 // Form state types for hooks
 export interface TaskFormState {
   title: string;
+  setTitle: (title: string) => void;
   description: string;
+  setDescription: (description: string) => void;
   dueDate: string;
+  setDueDate: (dueDate: string) => void;
   url: string;
+  setUrl: (url: string) => void;
   photo: File | null;
   photoPreview: string | null;
   pinned: boolean;
+  setPinned: (pinned: boolean) => void;
   assigneeId: string;
+  setAssigneeId: (assigneeId: string) => void;
   loading: boolean;
+  handlePhotoChange: (e: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
 }
 
 // Response types for API calls

@@ -109,7 +109,22 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}): TaskFormSta
   ]);
 
   return {
-    ...baseForm,
+    title,
+    setTitle,
+    description,
+    setDescription,
+    dueDate,
+    setDueDate,
+    url,
+    setUrl,
+    photo,
+    photoPreview,
+    pinned,
+    setPinned,
+    assigneeId,
+    setAssigneeId,
+    loading,
+    handlePhotoChange,
     handleSubmit
   };
 }
