@@ -1,10 +1,9 @@
-
 import { useRef, memo } from "react";
 import { Task } from "@/lib/types";
 import { useTaskContext } from "@/contexts/TaskContext";
 import TaskHeader from "./TaskHeader";
 import TaskDetails from "./TaskDetails";
-import { useTaskAnimation } from "@/hooks/useTaskAnimation";
+import { useTaskAnimation } from "@/features/tasks/hooks/useTaskAnimation";
 
 interface TaskCardProps {
   task: Task;
