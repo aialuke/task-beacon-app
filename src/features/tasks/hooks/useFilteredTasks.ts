@@ -14,40 +14,29 @@ export function useFilteredTasks(
   tasks: Task[],
   filter: TaskFilter
 ) {
-  return useMemo(() => {
-    if (filter === "all") {
-      // For "all" filter, show all non-completed tasks
-      return tasks.filter((task) => task.status !== "complete");
-    }
-    
-    if (filter === "assigned") {
-      // For "assigned" filter, check if the task is assigned to someone other than the owner
-      return tasks.filter((task) => 
-        task.owner_id && 
-        task.assignee_id && 
-        task.owner_id !== task.assignee_id
-      );
-    }
-    
-    if (filter === "overdue") {
-      // For "overdue" filter, check if the due date is in the past and task is not complete
-      return tasks.filter((task) => {
-        const dueDate = task.due_date ? new Date(task.due_date) : new Date();
-        const now = new Date();
-        return dueDate < now && task.status !== "complete";
-      });
-    }
-    
-    if (filter === "complete") {
-      // For "complete" filter, show only completed tasks
-      return tasks.filter((task) => task.status === "complete");
-    }
-    
-    // For "pending" filter, show tasks that are not overdue and not complete
-    return tasks.filter((task) => {
+  // Memoize filter functions separately to prevent recreating them on every render
+  const filterFunctions = useMemo(() => ({
+    all: (task: Task) => task.status !== "complete",
+    assigned: (task: Task) => 
+      task.owner_id && 
+      task.assignee_id && 
+      task.owner_id !== task.assignee_id,
+    overdue: (task: Task) => {
+      const dueDate = task.due_date ? new Date(task.due_date) : new Date();
+      const now = new Date();
+      return dueDate < now && task.status !== "complete";
+    },
+    complete: (task: Task) => task.status === "complete",
+    pending: (task: Task) => {
       const dueDate = task.due_date ? new Date(task.due_date) : new Date();
       const now = new Date();
       return dueDate >= now && task.status !== "complete";
-    });
-  }, [tasks, filter]);
+    }
+  }), []); // These functions don't depend on any props, so they're created only once
+
+  // Apply the selected filter function to the tasks array
+  return useMemo(() => {
+    const filterFunction = filterFunctions[filter];
+    return tasks.filter(filterFunction);
+  }, [tasks, filter, filterFunctions]); // Only re-run when tasks or filter change
 }
