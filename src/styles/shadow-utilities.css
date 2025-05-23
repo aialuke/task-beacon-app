@@ -1,0 +1,26 @@
+
+/* src/styles/shadow-utilities.css */
+@layer utilities {
+  /* ===== SHADOW UTILITIES ===== */
+  /* Use Tailwind's built-in shadow classes in your components directly:
+     shadow-sm, shadow, shadow-md, shadow-lg, shadow-xl, shadow-2xl, shadow-inner */
+  
+  /* Keep special shadow utilities that aren't available in Tailwind */
+  .shadow-hover {
+    @apply transition-shadow duration-200;
+  }
+  
+  .shadow-hover:hover {
+    @apply shadow-lg;
+  }
+  
+  /* ===== BUTTON UTILITIES ===== */
+  /* Use attribute selectors for more specific targeting without !important */
+  .no-shadow {
+    @apply shadow-none;
+  }
+
+  .no-shadow:hover {
+    @apply shadow-none;
+  }
+}

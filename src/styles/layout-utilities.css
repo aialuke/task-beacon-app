@@ -1,0 +1,42 @@
+
+/* src/styles/layout-utilities.css */
+@layer utilities {
+  /* ===== LAYOUT UTILITIES ===== */
+  .task-list {
+    @apply flex flex-col;
+    transition: all 0.3s ease-out;
+    padding: 0 5px;
+    overflow-y: hidden;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  /* ===== SPACING & CONTAINER UTILITIES ===== */
+  .mobile-safe-area {
+    @apply px-4;
+  }
+
+  .mobile-description-container {
+    margin-top: 4px;
+    padding-top: 1px;
+    min-height: 20px;
+  }
+  
+  /* ===== RESPONSIVE UTILITIES ===== */
+  @media (max-width: 640px) {
+    .filter-dropdown-mobile {
+      width: 40%;
+    }
+  }
+
+  @media (min-width: 641px) {
+    .filter-dropdown-mobile {
+      width: 25%;
+    }
+  }
+  
+  /* ===== BORDER RADIUS UTILITIES ===== */
+  .rounded-xl-container {
+    border-radius: var(--border-radius-xl);
+  }
+}

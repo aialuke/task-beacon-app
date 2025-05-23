@@ -16,10 +16,26 @@
   box-sizing: inherit;
 }
 
-/* Import custom styles after Tailwind directives */
+/* Import base styles */
 @import "./styles/base.css";
-@import "./styles/components.css";
-@import "./styles/utilities.css";
+
+/* Import component styles */
+@import "./styles/button.css";
+@import "./styles/card.css";
+@import "./styles/form.css";
+@import "./styles/dialog.css";
+@import "./styles/avatar.css";
+@import "./styles/header.css";
+@import "./styles/timer.css";
+
+/* Import utility styles */
+@import "./styles/layout-utilities.css";
+@import "./styles/shadow-utilities.css";
+@import "./styles/text-utilities.css";
+@import "./styles/icon-utilities.css";
+@import "./styles/color-utilities.css";
+@import "./styles/tooltip-utilities.css";
+@import "./styles/animation-utilities.css";
 
 /* Global icon handling */
 svg {

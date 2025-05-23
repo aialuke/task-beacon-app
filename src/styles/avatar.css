@@ -1,0 +1,9 @@
+
+/* src/styles/avatar.css */
+@layer components {
+  /* ===== AVATAR FALLBACK BACKGROUNDS ===== */
+  .avatar-fallback {
+    background-color: #e5e7eb;
+    color: #6b7280;
+  }
+}

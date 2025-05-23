@@ -1,0 +1,9 @@
+
+/* src/styles/header.css */
+@layer components {
+  /* ===== HEADER & LOGO ===== */
+  .header-logo {
+    @apply text-primary;
+    fill: currentColor;
+  }
+}

@@ -1,0 +1,26 @@
+
+/* src/styles/dialog.css */
+@layer components {
+  /* ===== SELECT & DROPDOWN STYLING ===== */
+  .select-content,
+  [data-radix-popper-content-wrapper],
+  [data-radix-dropdown-menu-content] {
+    background-color: white;
+    color: #000000e6;
+    border-radius: var(--border-radius-xl);
+    @apply shadow-lg;
+    z-index: 9999;
+  }
+
+  /* ===== DIALOG CONTENT STYLING ===== */
+  .dialog-content, 
+  [class*="dialog-content"],
+  .popover-content,
+  [class*="popover-content"] {
+    padding: 1.25rem;
+    background: white;
+    @apply shadow-lg;
+    border: 1px solid #f0f0f0;
+    border-radius: var(--border-radius-xl);
+  }
+}

@@ -1,0 +1,50 @@
+
+/* src/styles/icon-utilities.css */
+@layer utilities {
+  /* ===== ICON UTILITIES ===== */
+  .icon-filled {
+    fill: currentColor;
+  }
+  
+  /* Icon stroke colors */
+  .stroke-primary {
+    stroke: hsl(var(--primary));
+  }
+
+  .stroke-destructive {
+    stroke: hsl(var(--destructive));
+  }
+
+  .stroke-success {
+    stroke: var(--timer-complete);
+  }
+
+  .stroke-gray-500 {
+    stroke: #6b7280;
+  }
+
+  .stroke-gray-900 {
+    stroke: #111827;
+  }
+
+  /* Fill colors for SVG */
+  .fill-primary {
+    fill: hsl(var(--primary));
+  }
+
+  .fill-destructive {
+    fill: hsl(var(--destructive));
+  }
+
+  .fill-success {
+    fill: var(--timer-complete);
+  }
+
+  .fill-gray-500 {
+    fill: #6b7280;
+  }
+
+  .fill-gray-900 {
+    fill: #111827;
+  }
+}

@@ -1,0 +1,76 @@
+
+/* src/styles/button.css */
+@layer components {
+  /* ===== BUTTON STYLING ===== */
+  button, 
+  .button,
+  [role="button"] {
+    border-radius: var(--border-radius-full);
+    @apply transition-all duration-200;
+  }
+
+  /* Button hover and active states use shadow changes only */
+  button:hover, 
+  .button:hover,
+  [role="button"]:hover {
+    @apply shadow-md;
+  }
+
+  button:active, 
+  .button:active,
+  [role="button"]:active {
+    @apply shadow-sm;
+  }
+
+  /* High specificity rules for primary buttons */
+  button[data-button-primary="true"],
+  button[data-variant="default"],
+  button[data-variant="brand"],
+  button[variant="default"],
+  button[variant="brand"],
+  button.bg-primary,
+  .btn-primary {
+    background-color: hsl(var(--primary)) !important;
+    color: hsl(var(--primary-foreground)) !important;
+  }
+
+  /* Debug class to verify styling */
+  .button-debug {
+    background-color: blue !important;
+    color: white !important;
+  }
+
+  /* ===== FAB BUTTON ===== */
+  .fab {
+    @apply flex items-center justify-center fixed shadow-lg;
+    bottom: 16px;
+    right: 16px;
+    width: 56px;
+    height: 56px;
+    z-index: 99999;
+    transition: background-color 0.2s, box-shadow 0.2s;
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    border-radius: var(--border-radius-full);
+  }
+
+  .fab svg {
+    stroke: white;
+    stroke-width: 2;
+  }
+
+  .fab:hover {
+    background-color: hsl(var(--primary) / 0.9);
+    @apply shadow-xl;
+  }
+
+  .fab:active {
+    @apply shadow-lg;
+  }
+
+  @media (max-width: 320px) {
+    .fab {
+      @apply bottom-2 right-2 w-12 h-12;
+    }
+  }
+}

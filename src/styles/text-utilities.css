@@ -1,0 +1,20 @@
+
+/* src/styles/text-utilities.css */
+@layer utilities {
+  /* ===== TEXT UTILITIES ===== */
+  .header-text {
+    @apply text-lg font-semibold my-2;
+    color: #000000e6;
+  }
+
+  .owner-name {
+    @apply text-xs text-gray-600 mr-2 whitespace-nowrap overflow-hidden;
+  }
+  
+  /* ===== LINK UTILITIES ===== */
+  .external-link {
+    @apply flex items-center gap-1 hover:underline;
+    word-break: break-all;
+    color: hsl(var(--primary));
+  }
+}
