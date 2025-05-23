@@ -1,13 +1,5 @@
 
 import { useEffect, useState } from "react";
-import { 
-  Command, 
-  CommandEmpty, 
-  CommandGroup, 
-  CommandInput, 
-  CommandItem, 
-  CommandList 
-} from "@/components/ui/command";
 import { Check, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
@@ -24,9 +16,15 @@ interface UserSearchInputProps {
   value: string;
   onChange: (value: string) => void;
   disabled?: boolean;
+  placeholder?: string;
 }
 
-export default function UserSearchInput({ value, onChange, disabled = false }: UserSearchInputProps) {
+export default function UserSearchInput({ 
+  value, 
+  onChange, 
+  disabled = false,
+  placeholder = "Search user..." 
+}: UserSearchInputProps) {
   const [users, setUsers] = useState<{ id: string; name?: string; email: string }[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
@@ -80,7 +78,7 @@ export default function UserSearchInput({ value, onChange, disabled = false }: U
     return user.name || user.email.split('@')[0];
   };
 
-  // Filter users based on search term
+  // Filter users based on search term and limit to 1 result
   const filteredUsers = searchTerm.length > 0
     ? users.filter(user => {
         const displayName = getUserDisplayName(user).toLowerCase();
@@ -88,8 +86,8 @@ export default function UserSearchInput({ value, onChange, disabled = false }: U
         const term = searchTerm.toLowerCase();
         
         return displayName.includes(term) || email.includes(term);
-      })
-    : users;
+      }).slice(0, 1) // Limit to 1 result
+    : users.slice(0, 1); // Show only 1 user when not searching
     
   const handleSelect = (userId: string) => {
     const user = users.find(u => u.id === userId);
@@ -105,13 +103,11 @@ export default function UserSearchInput({ value, onChange, disabled = false }: U
     setIsOpen(true);
   };
 
-  const handleBlur = (e: React.FocusEvent) => {
-    // Delay closing to allow click events on items to register
+  const handleBlur = () => {
+    // Improved blur handling to avoid TypeErrors
     setTimeout(() => {
-      if (!e.currentTarget.contains(document.activeElement)) {
-        setIsOpen(false);
-      }
-    }, 100);
+      setIsOpen(false);
+    }, 150);
   };
 
   return (
@@ -135,7 +131,9 @@ export default function UserSearchInput({ value, onChange, disabled = false }: U
             <button 
               type="button"
               className="text-muted-foreground hover:text-foreground"
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 onChange("");
                 setSelectedUser(null);
                 setSearchTerm("");
@@ -148,7 +146,7 @@ export default function UserSearchInput({ value, onChange, disabled = false }: U
         ) : (
           <input 
             type="text"
-            placeholder="Search user..." 
+            placeholder={placeholder} 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="flex-grow border-0 bg-transparent px-3 py-2 text-sm focus:outline-none focus:ring-0"
@@ -157,15 +155,15 @@ export default function UserSearchInput({ value, onChange, disabled = false }: U
         )}
       </div>
       
-      {isOpen && !selectedUser && (
+      {isOpen && !selectedUser && filteredUsers.length > 0 && (
         <div className="absolute z-50 w-full mt-1 bg-popover text-popover-foreground shadow-md rounded-md overflow-hidden border border-border">
-          <div className="max-h-[300px] overflow-y-auto p-1">
+          <div className="overflow-y-auto p-1 max-h-20">
             {loading ? (
-              <div className="py-6 text-center text-sm">Loading...</div>
+              <div className="py-2 text-center text-sm">Loading...</div>
             ) : filteredUsers.length === 0 ? (
-              <div className="py-6 text-center text-sm">No user found.</div>
+              <div className="py-2 text-center text-sm">No user found.</div>
             ) : (
-              <div className="overflow-hidden p-1">
+              <div>
                 {filteredUsers.map(user => (
                   <div 
                     key={user.id}

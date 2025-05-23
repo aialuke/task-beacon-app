@@ -69,14 +69,14 @@ export default function CreateTaskForm({
           placeholder="https://example.com"
         />
       </div>
+      <PhotoUploadField
+        onChange={handlePhotoChange}
+        preview={photoPreview}
+      />
       <UserSearchField
         value={assigneeId}
         onChange={setAssigneeId}
         disabled={loading}
-      />
-      <PhotoUploadField
-        onChange={handlePhotoChange}
-        preview={photoPreview}
       />
       <FormActions
         onCancel={onClose}
