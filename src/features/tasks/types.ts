@@ -34,3 +34,6 @@ export interface TaskContextType {
   goToNextPage?: () => void;
   goToPreviousPage?: () => void;
 }
+
+// Note: This type is kept for backward compatibility
+// New code should use the specific context types

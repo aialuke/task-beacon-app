@@ -1,23 +1,45 @@
 
 import { createContext, useContext, useState, ReactNode } from "react";
 import { Task } from "@/lib/types";
-import { TaskContextType, TaskFilter } from "../types";
+import { TaskContextType } from "../types";
 import { useTaskQueries } from "@/features/tasks/hooks/useTaskQueries";
 import { useTaskMutations } from "@/features/tasks/hooks/useTaskMutations";
 
-const TaskContext = createContext<TaskContextType | undefined>(undefined);
+// Define new data-focused context type
+interface TaskDataContextType {
+  // Task queries
+  tasks: Task[];
+  isLoading: boolean;
+  isFetching?: boolean;
+  error: Error | null;
+  
+  // Task mutations
+  toggleTaskPin: (task: Task) => Promise<void>;
+  toggleTaskComplete: (task: Task) => Promise<void>;
+  createFollowUpTask: (parentTask: Task, newTaskData: any) => Promise<void>;
+  
+  // Pagination
+  currentPage: number;
+  totalCount: number;
+  pageSize: number;
+  setPageSize: (size: number) => void;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  goToNextPage: () => void;
+  goToPreviousPage: () => void;
+}
+
+const TaskDataContext = createContext<TaskDataContextType | undefined>(undefined);
 
 /**
- * Provider component for task-related state and operations
+ * Provider component for task data-related state and operations
  * 
- * Manages the task list, filters, expanded state, and task mutations
+ * Manages tasks data, loading state, and data mutations
  * 
  * @param children - React components that will consume the task context
  */
 export function TaskContextProvider({ children }: { children: ReactNode }) {
-  // States
-  const [filter, setFilter] = useState<TaskFilter>("all");
-  const [expandedTaskId, setExpandedTaskId] = useState<string | null>(null);
+  // State for pagination
   const [pageSize, setPageSize] = useState(10);
 
   // Get task data and mutations
@@ -33,18 +55,15 @@ export function TaskContextProvider({ children }: { children: ReactNode }) {
     goToPreviousPage,
     isFetching
   } = useTaskQueries(pageSize);
+  
   const { toggleTaskPin, toggleTaskComplete, createFollowUpTask } = useTaskMutations();
 
   return (
-    <TaskContext.Provider value={{
+    <TaskDataContext.Provider value={{
       tasks,
       isLoading,
       isFetching,
       error: error as Error, // Cast to Error type to satisfy the type constraint
-      filter,
-      setFilter,
-      expandedTaskId,
-      setExpandedTaskId,
       toggleTaskPin,
       toggleTaskComplete,
       createFollowUpTask,
@@ -59,18 +78,18 @@ export function TaskContextProvider({ children }: { children: ReactNode }) {
       goToPreviousPage
     }}>
       {children}
-    </TaskContext.Provider>
+    </TaskDataContext.Provider>
   );
 }
 
 /**
- * Custom hook for using the task context
+ * Custom hook for using the task data context
  * 
- * @returns The task context value
+ * @returns The task data context value
  * @throws Error if used outside of a TaskContextProvider
  */
 export function useTaskContext() {
-  const context = useContext(TaskContext);
+  const context = useContext(TaskDataContext);
   if (context === undefined) {
     throw new Error("useTaskContext must be used within a TaskContextProvider");
   }

@@ -2,6 +2,7 @@
 import { useRef, memo, useCallback } from "react";
 import { Task } from "@/lib/types";
 import { useTaskContext } from "@/features/tasks/context/TaskContext";
+import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
 import TaskHeader from "./TaskHeader";
 import TaskDetails from "./TaskDetails";
 import { useTaskAnimation } from "@/features/tasks/hooks/useTaskAnimation";
@@ -27,7 +28,8 @@ const arePropsEqual = (prevProps: TaskCardProps, nextProps: TaskCardProps): bool
 };
 
 function TaskCard({ task }: TaskCardProps) {
-  const { expandedTaskId, setExpandedTaskId, toggleTaskPin } = useTaskContext();
+  const { toggleTaskPin } = useTaskContext();
+  const { expandedTaskId, setExpandedTaskId } = useTaskUIContext();
   const contentRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   

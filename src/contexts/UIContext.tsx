@@ -1,43 +1,34 @@
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-
-// Constants
-const MOBILE_BREAKPOINT = 768;
+// Using the filename from the error message
+import * as React from "react";
+import { useState, createContext, useContext, useEffect, useMemo } from "react";
 
 interface UIContextType {
   isMobile: boolean;
-  isDialogOpen: boolean;
-  setDialogOpen: (open: boolean) => void;
 }
 
 const UIContext = createContext<UIContextType | undefined>(undefined);
 
-export function UIContextProvider({ children }: { children: ReactNode }) {
-  const [isMobile, setIsMobile] = useState<boolean>(
-    typeof window !== "undefined" ? window.innerWidth < MOBILE_BREAKPOINT : false
-  );
-  const [isDialogOpen, setDialogOpen] = useState<boolean>(false);
+export function UIContextProvider({ children }: { children: React.ReactNode }) {
+  const [isMobile, setIsMobile] = useState(false);
 
+  // Check if the device is mobile on component mount and window resize
   useEffect(() => {
-    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
-    const onChange = () => {
-      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768);
     };
-    mql.addEventListener("change", onChange);
-    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+
+    checkIfMobile();
+    window.addEventListener('resize', checkIfMobile);
     
-    return () => mql.removeEventListener("change", onChange);
+    return () => window.removeEventListener('resize', checkIfMobile);
   }, []);
 
-  return (
-    <UIContext.Provider value={{
-      isMobile,
-      isDialogOpen,
-      setDialogOpen,
-    }}>
-      {children}
-    </UIContext.Provider>
-  );
+  const value = useMemo(() => ({
+    isMobile
+  }), [isMobile]);
+
+  return <UIContext.Provider value={value}>{children}</UIContext.Provider>;
 }
 
 export function useUIContext() {

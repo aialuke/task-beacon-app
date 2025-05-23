@@ -1,6 +1,7 @@
 
 import { lazy, Suspense } from "react";
-import { useTaskContext } from "@/features/tasks/context/TaskContext"; 
+import { useTaskContext } from "@/features/tasks/context/TaskContext";
+import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
 import { useUIContext } from "@/contexts/UIContext";
 import { useFilteredTasks } from "@/features/tasks/hooks/useFilteredTasks";
 import TaskFilter from "./TaskFilter";
@@ -42,8 +43,6 @@ export default function TaskList() {
   const { 
     tasks, 
     isLoading, 
-    filter, 
-    setFilter,
     isFetching,
     // Pagination props
     hasNextPage,
@@ -55,8 +54,8 @@ export default function TaskList() {
     pageSize
   } = useTaskContext();
   
-  // Always use the hook, never conditionally
-  const { isDialogOpen, setDialogOpen } = useUIContext();
+  // Get UI state from TaskUIContext
+  const { filter, setFilter, isDialogOpen, setDialogOpen } = useTaskUIContext();
   
   // Get filtered tasks
   const filteredTasks = useFilteredTasks(tasks, filter);
