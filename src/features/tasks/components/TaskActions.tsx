@@ -25,9 +25,9 @@ function TaskActions({ task, detailView }: TaskActionsProps) {
     <>
       <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-100">
         <Button
-          variant={task.status === "complete" ? "outline" : "default"}
+          variant={task.status === "complete" ? "outline" : "brand"}
           size="sm"
-          className="text-xs"
+          className={task.status === "complete" ? "" : "force-primary-button text-xs"}
           onClick={handleToggleComplete}
           disabled={loading}
         >

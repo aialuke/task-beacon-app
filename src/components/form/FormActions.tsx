@@ -32,7 +32,8 @@ export function FormActions({
         type="submit" 
         disabled={isSubmitting}
         size="sm"
-        variant="default"
+        variant="brand"
+        className="force-primary-button"
       >
         {isSubmitting ? "Creating..." : submitLabel}
       </Button>

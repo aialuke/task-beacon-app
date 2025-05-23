@@ -6,7 +6,7 @@ export const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90 rounded-full shadow hover:shadow-md",
+        default: "bg-primary-button text-primary-foreground hover:bg-primary/90 rounded-full shadow hover:shadow-md",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-full shadow hover:shadow-md",
         outline:
@@ -15,7 +15,7 @@ export const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-full shadow hover:shadow-md",
         ghost: "hover:bg-accent hover:text-accent-foreground rounded-full",
         link: "text-primary underline-offset-4 hover:underline",
-        brand: "bg-primary text-primary-foreground rounded-full shadow hover:shadow-md",
+        brand: "force-primary-button rounded-full shadow hover:shadow-md",
         "brand-secondary": "bg-secondary text-primary hover:bg-secondary/80 rounded-full shadow hover:shadow-md",
       },
       size: {

@@ -29,6 +29,7 @@
 @import "./styles/timer.css";
 
 /* Import utility styles */
+@import "./styles/utilities.css";
 @import "./styles/layout-utilities.css";
 @import "./styles/shadow-utilities.css";
 @import "./styles/text-utilities.css";

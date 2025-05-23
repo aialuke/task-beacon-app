@@ -9,6 +9,21 @@
     @apply transition-all duration-200;
   }
 
+  /* Force primary button color */
+  button[data-variant="default"],
+  .button[data-variant="default"],
+  [role="button"][data-variant="default"] {
+    background-color: hsl(var(--primary)) !important;
+    color: hsl(var(--primary-foreground)) !important;
+  }
+
+  button[data-variant="brand"],
+  .button[data-variant="brand"],
+  [role="button"][data-variant="brand"] {
+    background-color: hsl(var(--primary)) !important;
+    color: hsl(var(--primary-foreground)) !important;
+  }
+
   /* ===== FAB BUTTON ===== */
   .fab {
     @apply flex items-center justify-center fixed shadow-lg;
