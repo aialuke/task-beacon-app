@@ -11,7 +11,7 @@
     box-shadow: var(--shadow-sm);
     transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
     /* Rounded corners for task cards */
-    border-radius: var(--task-card-radius) !important;
+    border-radius: var(--border-radius-xl);
   }
 
   .task-card:hover {
@@ -134,4 +134,3 @@
     }
   }
 }
-

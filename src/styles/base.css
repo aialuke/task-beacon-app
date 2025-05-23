@@ -58,9 +58,6 @@
   --border-radius-xl: 0.75rem;   /* 12px */
   --border-radius-2xl: 1rem;     /* 16px */
   --border-radius-full: 9999px;  /* Full rounded for buttons */
-  
-  /* Component-specific styles */
-  --task-card-radius: var(--border-radius-xl);         /* Changed from 0 to rounded corners */
 }
 
 *, *::before, *::after {

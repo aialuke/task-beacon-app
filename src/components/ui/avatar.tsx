@@ -14,6 +14,9 @@ const Avatar = React.forwardRef<
       "relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full shadow-sm",
       className
     )}
+    style={{
+      borderRadius: "var(--border-radius-full)"
+    }}
     {...props}
   />
 ))
@@ -44,7 +47,8 @@ const AvatarFallback = React.forwardRef<
     style={{
       backgroundColor: "#e5e7eb",
       color: "#6b7280",
-      boxShadow: "inset 0 2px 4px rgba(0, 0, 0, 0.05)"
+      boxShadow: "inset 0 2px 4px rgba(0, 0, 0, 0.05)",
+      borderRadius: "var(--border-radius-full)"
     }}
     {...props}
   />

@@ -31,7 +31,8 @@ const Alert = React.forwardRef<
     style={{
       boxShadow: variant === "destructive" 
         ? "0 2px 8px rgba(218, 62, 82, 0.15)" 
-        : "var(--shadow-md)"
+        : "var(--shadow-md)",
+      borderRadius: "var(--border-radius-xl)"
     }}
     {...props}
   />

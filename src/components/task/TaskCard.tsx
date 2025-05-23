@@ -51,6 +51,7 @@ function TaskCard({ task }: TaskCardProps) {
           width: "100%",
           position: "relative",
           zIndex: 1,
+          borderRadius: "var(--border-radius-xl)"
         }}
       >
         <TaskHeader

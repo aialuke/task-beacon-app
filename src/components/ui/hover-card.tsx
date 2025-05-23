@@ -21,7 +21,8 @@ const HoverCardContent = React.forwardRef<
       className
     )}
     style={{
-      boxShadow: "var(--shadow-lg)"
+      boxShadow: "var(--shadow-lg)",
+      borderRadius: "var(--border-radius-xl)"
     }}
     {...props}
   />
