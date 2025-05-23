@@ -11,6 +11,20 @@ interface UseFollowUpTaskProps {
   onClose?: () => void;
 }
 
+/**
+ * Custom hook for follow-up task creation functionality
+ * 
+ * Provides specialized functionality for creating follow-up tasks from a parent task, including:
+ * - Form state management
+ * - Task submission handling
+ * - Photo upload logic
+ * - Notifications and feedback when tasks are created
+ * 
+ * @param props - Configuration options
+ * @param props.parentTask - The parent task to create a follow-up for
+ * @param props.onClose - Optional callback to execute when the form is closed
+ * @returns Form state and handlers for creating a follow-up task
+ */
 export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
   const {
     title,
