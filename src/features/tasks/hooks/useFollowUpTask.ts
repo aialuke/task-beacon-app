@@ -1,11 +1,10 @@
 
-// Move from src/hooks/useFollowUpTask.ts
 import { useState, useCallback } from "react";
 import { Task } from "@/lib/types";
-import { supabase, isMockingSupabase } from "@/lib/supabase";
 import { toast } from "@/lib/toast";
 import { showBrowserNotification, triggerHapticFeedback } from "@/lib/notification";
 import { useBaseTaskForm } from "./useBaseTaskForm";
+import { createFollowUpTask, uploadTaskPhoto } from "@/integrations/supabase/api/tasks.api";
 
 interface UseFollowUpTaskProps {
   parentTask: Task;
@@ -29,7 +28,6 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
     loading,
     setLoading,
     handlePhotoChange,
-    uploadPhoto,
     resetForm,
     validateTitle
   } = useBaseTaskForm({
@@ -50,42 +48,20 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
     try {
       let photoUrl = null;
       if (photo) {
-        photoUrl = await uploadPhoto();
+        const { data: uploadedUrl, error: uploadError } = await uploadTaskPhoto(photo);
+        if (uploadError) throw uploadError;
+        photoUrl = uploadedUrl;
       }
 
-      if (isMockingSupabase) {
-        toast.success("Follow-up task created successfully (mock data)");
-        triggerHapticFeedback();
-        if (assigneeId) {
-          showBrowserNotification(
-            "Task Assigned",
-            `Follow-up task "${title}" has been assigned`
-          );
-        }
-        resetForm();
-        return;
-      }
-
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("User not authenticated");
-
-      const { data, error } = await supabase
-        .from("tasks")
-        .insert({
-          title,
-          description: description || null,
-          due_date: new Date(dueDate).toISOString(),
-          photo_url: photoUrl,
-          url_link: url || null,
-          owner_id: user.id,
-          parent_task_id: parentTask.id,
-          pinned,
-          assignee_id: assigneeId || null,
-          status: "pending",
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        })
-        .select();
+      const { error } = await createFollowUpTask(parentTask.id, {
+        title,
+        description: description || null,
+        due_date: dueDate ? new Date(dueDate).toISOString() : null,
+        photo_url: photoUrl,
+        url_link: url || null,
+        assignee_id: assigneeId || null,
+        pinned,
+      });
 
       if (error) throw error;
 
@@ -118,7 +94,6 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
     pinned,
     assigneeId,
     parentTask.id,
-    uploadPhoto,
     resetForm,
     setLoading,
     validateTitle

@@ -1,9 +1,8 @@
 
-// Move from src/hooks/useCreateTask.ts
 import { useCallback } from "react";
-import { supabase, isMockingSupabase } from "@/lib/supabase";
 import { toast } from "@/lib/toast";
 import { useBaseTaskForm } from "./useBaseTaskForm";
+import { createTask, uploadTaskPhoto } from "@/integrations/supabase/api/tasks.api";
 
 interface UseCreateTaskProps {
   onClose?: () => void;
@@ -28,7 +27,6 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
     loading,
     setLoading,
     handlePhotoChange,
-    uploadPhoto,
     resetForm,
     validateTitle
   } = useBaseTaskForm({ onClose });
@@ -42,36 +40,26 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
     setLoading(true);
     try {
       let photoUrl = null;
-      if (photo) photoUrl = await uploadPhoto();
-
-      if (isMockingSupabase) {
-        toast.success("Task created successfully (mock data)");
-        resetForm();
-        return;
+      if (photo) {
+        const { data: uploadedUrl, error: uploadError } = await uploadTaskPhoto(photo);
+        
+        if (uploadError) throw uploadError;
+        photoUrl = uploadedUrl;
       }
 
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("User not authenticated");
+      const { error } = await createTask({
+        title,
+        description: description || null,
+        due_date: dueDate ? new Date(dueDate).toISOString() : null,
+        photo_url: photoUrl,
+        url_link: url || null,
+        assignee_id: assigneeId || null,
+        pinned,
+      });
 
-      const { data, error } = await supabase
-        .from("tasks")
-        .insert({
-          title,
-          description: description || null,
-          due_date: new Date(dueDate).toISOString(),
-          photo_url: photoUrl,
-          url_link: url || null,
-          owner_id: user.id,
-          assignee_id: assigneeId || null,
-          pinned,
-          status: "pending",
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        })
-        .select();
       if (error) throw error;
+      
       toast.success("Task created successfully");
-
       resetForm();
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -90,7 +78,6 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
     photo,
     pinned,
     assigneeId,
-    uploadPhoto,
     resetForm,
     setLoading,
     validateTitle

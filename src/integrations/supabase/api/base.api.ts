@@ -1,0 +1,56 @@
+
+import { supabase } from '@/integrations/supabase/client';
+import { ApiError, TablesResponse } from '../types/api.types';
+
+/**
+ * Handles and normalizes errors from Supabase or other sources
+ */
+export const handleApiError = (error: unknown): ApiError => {
+  // Handle PostgrestError from Supabase
+  if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
+    return {
+      message: String(error.message),
+      code: String(error.code),
+      details: 'details' in error ? error.details : undefined,
+      hint: 'hint' in error ? String(error.hint) : undefined,
+      originalError: error as any,
+    };
+  }
+  
+  // Handle standard Error objects
+  if (error instanceof Error) {
+    return {
+      message: error.message,
+      originalError: error,
+    };
+  }
+  
+  // Handle unknown error types
+  return {
+    message: typeof error === 'string' ? error : 'An unknown error occurred',
+    details: error,
+  };
+};
+
+/**
+ * Check if a user is authenticated and get their ID
+ */
+export const getCurrentUserId = async (): Promise<string> => {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('User not authenticated');
+  return user.id;
+};
+
+/**
+ * Wrapper for standardized error handling in async functions
+ */
+export const apiRequest = async <T>(
+  requestFn: () => Promise<T>
+): Promise<TablesResponse<T>> => {
+  try {
+    const data = await requestFn();
+    return { data, error: null };
+  } catch (error) {
+    return { data: null, error: handleApiError(error) };
+  }
+};
