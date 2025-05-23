@@ -1,9 +1,8 @@
 
 import { useState } from "react";
 import TaskList from "./TaskList";
-import { supabase } from "@/lib/supabase";
-import { toast } from "@/lib/toast";
 import { LogOut } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,16 +15,7 @@ import { UIContextProvider } from "@/contexts/UIContext";
 
 export default function TaskDashboard() {
   const [open, setOpen] = useState(false); // For DropdownMenu
-
-  const handleSignOut = async () => {
-    try {
-      await supabase.auth.signOut();
-      toast.success("Signed out successfully");
-    } catch (error: unknown) {
-      console.error("Sign-out error:", error);
-      toast.error("Failed to sign out");
-    }
-  };
+  const { signOut, user } = useAuth();
 
   const getAvatarInitial = (email: string | undefined) => {
     if (!email) return "U";
@@ -51,12 +41,12 @@ export default function TaskDashboard() {
               <DropdownMenuTrigger asChild>
                 <Avatar className="cursor-pointer h-8 w-8">
                   <AvatarFallback className="text-sm avatar-fallback">
-                    {getAvatarInitial(undefined)}
+                    {getAvatarInitial(user?.email)}
                   </AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="p-2 bg-white">
-                <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-foreground">
+                <DropdownMenuItem onClick={signOut} className="cursor-pointer text-foreground">
                   <LogOut className="mr-2 h-4 w-4 text-primary stroke-primary" />
                   <span>Sign out</span>
                 </DropdownMenuItem>

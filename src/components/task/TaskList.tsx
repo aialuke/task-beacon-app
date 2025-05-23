@@ -1,8 +1,8 @@
 
 import { lazy, Suspense } from "react";
-import { useTaskContext } from "@/contexts/TaskContext"; 
+import { useTaskContext } from "@/features/tasks/context/TaskContext"; 
 import { useUIContext } from "@/contexts/UIContext";
-import { useFilteredTasks } from "@/hooks/useFilteredTasks";
+import { useFilteredTasks } from "@/features/tasks/hooks/useFilteredTasks";
 import TaskCard from "./TaskCard";
 import TaskFilter from "./TaskFilter";
 import { Skeleton } from "@/components/ui/skeleton";

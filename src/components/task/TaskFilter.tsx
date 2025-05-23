@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/select";
 import { TaskStatus } from "@/lib/types";
 import { useUIContext } from "@/contexts/UIContext";
-import { TaskFilter as TaskFilterType } from "@/contexts/task/types";
+import { TaskFilter as TaskFilterType } from "@/features/tasks/types";
 
 interface TaskFilterProps {
   filter: TaskFilterType;

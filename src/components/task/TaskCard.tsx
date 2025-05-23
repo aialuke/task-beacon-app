@@ -1,6 +1,7 @@
+
 import { useRef, memo } from "react";
 import { Task } from "@/lib/types";
-import { useTaskContext } from "@/contexts/TaskContext";
+import { useTaskContext } from "@/features/tasks/context/TaskContext";
 import TaskHeader from "./TaskHeader";
 import TaskDetails from "./TaskDetails";
 import { useTaskAnimation } from "@/features/tasks/hooks/useTaskAnimation";
