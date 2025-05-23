@@ -3,8 +3,9 @@ import { useState, useCallback, memo } from "react";
 import { Button } from "@/components/ui/button";
 import { Task } from "@/lib/types";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import FollowUpTaskForm from "@/features/tasks/forms/FollowUpTaskForm";
-import { useTaskContext } from "@/features/tasks/context/TaskContext";
+import FollowUpTaskForm from "../forms/FollowUpTaskForm";
+import { useTaskContext } from "../context/TaskContext";
+import { useTaskCompletionToggle } from "../hooks/useTaskCompletionToggle";
 
 interface TaskActionsProps {
   task: Task;
@@ -13,18 +14,9 @@ interface TaskActionsProps {
 
 function TaskActions({ task, detailView }: TaskActionsProps) {
   const { toggleTaskComplete } = useTaskContext();
-  const [loading, setLoading] = useState(false);
   const [followUpDialogOpen, setFollowUpDialogOpen] = useState(false);
-
-  const handleMarkComplete = useCallback(async () => {
-    setLoading(true);
-    try {
-      await toggleTaskComplete(task);
-    } finally {
-      setLoading(false);
-    }
-  }, [task, toggleTaskComplete]);
-
+  const { loading, handleToggleComplete } = useTaskCompletionToggle(task, toggleTaskComplete);
+  
   const handleCreateFollowUp = useCallback(() => {
     setFollowUpDialogOpen(true);
   }, []);
@@ -36,7 +28,7 @@ function TaskActions({ task, detailView }: TaskActionsProps) {
           variant={task.status === "complete" ? "outline" : "default"}
           size="sm"
           className="text-xs rounded-full"
-          onClick={handleMarkComplete}
+          onClick={handleToggleComplete}
           disabled={loading}
         >
           {task.status === "complete" ? "Mark Incomplete" : "Complete"}
