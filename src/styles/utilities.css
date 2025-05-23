@@ -92,7 +92,7 @@
   }
 
   .text-success {
-    color: var(--timer-complete);
+    color: var(--status-complete);
   }
 
   .text-muted {
@@ -109,7 +109,7 @@
   }
 
   .stroke-success {
-    stroke: var(--timer-complete);
+    stroke: var(--status-complete);
   }
 
   .stroke-gray-500 {
@@ -130,7 +130,7 @@
   }
 
   .fill-success {
-    fill: var(--timer-complete);
+    fill: var(--status-complete);
   }
 
   .fill-gray-500 {
@@ -160,7 +160,7 @@
   
   /* ===== BORDER RADIUS UTILITIES ===== */
   .rounded-xl-container {
-    border-radius: var(--border-radius-xl);
+    border-radius: var(--radius-xl);
   }
 
   /* ===== ANIMATION UTILITIES ===== */
