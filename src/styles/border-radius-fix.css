@@ -57,6 +57,24 @@ img.rounded-xl {
   -moz-border-radius: 0.75rem !important;
 }
 
+/* Direct styling for buttons with more specific selectors to ensure proper colors */
+button[data-variant="default"], 
+button[type="submit"],
+.btn-primary,
+[role="button"][data-variant="default"] {
+  background-color: hsl(221, 77%, 55%) !important; /* Blue: #3662E3 */
+  color: white !important;
+}
+
+button[data-variant="destructive"] {
+  background-color: hsl(351, 83%, 53%) !important; /* Red: #DA3E52 */
+  color: white !important;
+}
+
+button[data-variant="secondary"] {
+  background-color: hsl(240, 4.8%, 95.9%) !important;
+}
+
 /* Ensure buttons have rounded corners with direct values */
 button, 
 .btn,

@@ -19,7 +19,7 @@
 /* Import base styles */
 @import "./styles/base.css";
 
-/* Import component styles */
+/* Import component styles - loading button early */
 @import "./styles/button.css";
 @import "./styles/card.css";
 @import "./styles/form.css";

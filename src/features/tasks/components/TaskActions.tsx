@@ -27,18 +27,24 @@ function TaskActions({ task, detailView }: TaskActionsProps) {
         <Button
           variant={task.status === "complete" ? "outline" : "default"}
           size="sm"
-          className="text-xs rounded-full"
+          className="text-xs"
           onClick={handleToggleComplete}
           disabled={loading}
+          style={task.status === "complete" ? {} : {
+            backgroundColor: "hsl(221, 77%, 55%)",
+            color: "white",
+            borderRadius: "0.75rem"
+          }}
         >
           {task.status === "complete" ? "Mark Incomplete" : "Complete"}
         </Button>
         <Button
           variant="outline"
           size="sm"
-          className="text-xs rounded-full"
+          className="text-xs"
           onClick={handleCreateFollowUp}
           disabled={loading}
+          style={{ borderRadius: "0.75rem" }}
         >
           Follow Up
         </Button>

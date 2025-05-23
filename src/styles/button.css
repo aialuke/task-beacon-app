@@ -5,8 +5,14 @@
   button, 
   .button,
   [role="button"] {
-    border-radius: var(--border-radius-full);
+    border-radius: 0.75rem;
     @apply transition-all duration-200;
+  }
+
+  /* Default button styling with direct value */
+  button[data-variant="default"] {
+    background-color: hsl(221, 77%, 55%) !important;
+    color: white !important;
   }
 
   /* ===== FAB BUTTON ===== */
@@ -18,9 +24,9 @@
     height: 56px;
     z-index: 99999;
     transition: background-color 0.2s, box-shadow 0.2s;
-    background-color: hsl(var(--primary));
-    color: hsl(var(--primary-foreground));
-    border-radius: var(--border-radius-full);
+    background-color: hsl(221, 77%, 55%) !important; /* Direct color value */
+    color: white !important;
+    border-radius: 9999px;
   }
 
   .fab svg {
@@ -29,7 +35,7 @@
   }
 
   .fab:hover {
-    background-color: hsl(var(--primary) / 0.9);
+    background-color: hsl(221, 77%, 50%) !important;
     @apply shadow-xl;
   }
 
