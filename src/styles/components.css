@@ -1,14 +1,13 @@
-
 /* src/styles/components.css */
 @layer components {
   /* ===== TASK CARD STYLES ===== */
   .task-card {
-    @apply flex flex-col p-4 sm:p-4 shadow-sm border border-gray-200 hover:border-primary/60 transition-colors relative text-left;
+    @apply flex flex-col p-3 sm:p-3 shadow-sm border border-gray-200 hover:border-secondary transition-colors relative text-left;
     min-height: calc(1.25 * 60px);
     width: 95%;
     margin-left: auto;
     margin-right: auto;
-    transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
     /* Rounded corners for task cards */
     border-radius: var(--border-radius-xl);
     background-color: white;
@@ -26,7 +25,7 @@
   }
 
   .task-card[data-expanded="true"] {
-    @apply shadow-md;
+    @apply border-primary shadow-md;
     border-color: hsl(var(--primary));
   }
 
@@ -61,7 +60,7 @@
 
   .fab:hover {
     background: var(--gradient-blue-dark);
-    transform: scale(1.05) translateY(-2px);
+    transform: scale(1.05);
     @apply shadow-xl;
   }
 
@@ -138,7 +137,7 @@
     background-color: white;
     color: #000000e6;
     border-radius: var(--border-radius-xl);
-    @apply shadow-lg border border-gray-100;
+    @apply shadow-lg;
     z-index: 9999;
   }
 
@@ -147,7 +146,7 @@
   [class*="dialog-content"],
   .popover-content,
   [class*="popover-content"] {
-    padding: 1.5rem;
+    padding: 1.25rem;
     background: white;
     @apply shadow-lg;
     border: 1px solid #f0f0f0;
@@ -156,9 +155,8 @@
 
   /* ===== AVATAR FALLBACK BACKGROUNDS ===== */
   .avatar-fallback {
-    background-color: rgba(54, 98, 227, 0.1);
-    color: hsl(var(--primary));
-    font-weight: 500;
+    background-color: #e5e7eb;
+    color: #6b7280;
   }
 
   /* ===== BUTTON STYLING CONSISTENCY ===== */
@@ -172,7 +170,7 @@
   button:hover, 
   .button:hover,
   [role="button"]:hover {
-    @apply shadow-md -translate-y-0.5;
+    @apply shadow-md -translate-y-1;
   }
 
   button:active, 

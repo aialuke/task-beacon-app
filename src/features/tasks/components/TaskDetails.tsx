@@ -40,11 +40,11 @@ function TaskDetails({
       className="w-full mt-1"
     >
       <div
-        className={`space-y-3 bg-gray-50/80 rounded-b-xl ${isMobile ? "px-4 pt-3 pb-4" : "px-6 pt-3 pb-4"}`}
+        className={`space-y-3 ${isMobile ? "pl-4 pt-2 pb-4" : "pl-6 pt-2 pb-4"}`}
         style={{ height: isExpanded ? "auto" : "0", overflowY: "hidden" }}
       >
         {task.description && (
-          <div className="text-sm text-gray-700">
+          <div className="text-sm text-gray-600">
             {task.description}
           </div>
         )}
@@ -57,11 +57,11 @@ function TaskDetails({
 
         {task.photo_url && (
           <div>
-            <span className="text-sm font-medium text-gray-700">Photo:</span>
+            <span className="text-sm font-medium text-gray-600">Photo:</span>
             <img
               src={task.photo_url}
               alt="Task attachment"
-              className="mt-1 h-20 w-20 object-cover rounded-xl shadow-sm"
+              className="mt-1 h-20 w-20 object-cover rounded-xl"
               loading="lazy"
             />
           </div>
