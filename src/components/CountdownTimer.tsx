@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useSpring, animated, config } from "@react-spring/web";
 import { TaskStatus } from "@/lib/types";
 import TimerRing from "./timer/TimerRing";
