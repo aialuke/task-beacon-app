@@ -1,3 +1,4 @@
+
 /* src/styles/components.css */
 @layer components {
   /* ===== TASK CARD STYLES ===== */
@@ -170,13 +171,13 @@
   button:hover, 
   .button:hover,
   [role="button"]:hover {
-    @apply shadow-md -translate-y-1;
+    @apply shadow-md scale-[1.02];
   }
 
   button:active, 
   .button:active,
   [role="button"]:active {
-    @apply translate-y-0;
+    @apply scale-100;
   }
 
   /* ===== FORM FIELD STYLES ===== */

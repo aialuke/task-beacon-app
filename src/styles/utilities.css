@@ -21,7 +21,7 @@
   }
   
   .shadow-hover:hover {
-    @apply shadow-lg -translate-y-1;
+    @apply shadow-lg scale-[1.02];
   }
 
   /* ===== TEXT UTILITIES ===== */
