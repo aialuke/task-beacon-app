@@ -51,7 +51,7 @@ export default function TaskFormWithValidation({ onSubmit, onClose }: TaskFormPr
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit} className="space-y-4">
+      <form onSubmit={form.handleSubmit()} className="space-y-4">
         <FormField
           control={form.control}
           name="title"

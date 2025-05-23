@@ -12,8 +12,7 @@ interface UseFormWithValidationOptions<T extends FieldValues> extends UseFormPro
 }
 
 // Define a return type that extends UseFormReturn but adds our custom properties
-interface UseFormWithValidationReturn<T extends FieldValues> extends Omit<UseFormReturn<T>, 'handleSubmit'> {
-  handleSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
+interface UseFormWithValidationReturn<T extends FieldValues> extends UseFormReturn<T> {
   isSubmitting: boolean;
 }
 
@@ -30,7 +29,7 @@ export function useFormWithValidation<T extends FieldValues>({
     ...formOptions,
   });
 
-  const handleSubmit = useCallback(
+  const handleFormSubmit = useCallback(
     async (data: T) => {
       setIsSubmitting(true);
       try {
@@ -54,15 +53,12 @@ export function useFormWithValidation<T extends FieldValues>({
     [onSubmit, methods, successMessage]
   );
 
-  // Create a wrapper function that accepts a form event
-  const submitHandler = async (e?: React.BaseSyntheticEvent) => {
-    return methods.handleSubmit(handleSubmit)(e);
-  };
-
-  // Return the form methods and a wrapped handleSubmit that uses our custom handler
+  // Return everything from methods plus our isSubmitting state
   return {
     ...methods,
-    handleSubmit: submitHandler,
     isSubmitting,
+    // Override the handleSubmit to use our custom submission handler
+    handleSubmit: (onValid, onInvalid) => 
+      methods.handleSubmit((data) => handleFormSubmit(data), onInvalid)
   };
 }
