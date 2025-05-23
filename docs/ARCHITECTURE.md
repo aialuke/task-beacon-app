@@ -19,7 +19,10 @@ This document outlines the architecture of the Task Management Progressive Web A
 ```
 src/
 ├── components/        # Shared UI components
-├── contexts/          # Global state and context providers
+│   └── ui/            # Base UI components using Shadcn UI
+├── contexts/          # Global context providers
+│   ├── AuthContext.tsx       # Authentication context
+│   └── UIContext.tsx         # UI state management context
 ├── features/          # Feature-based modules
 │   └── tasks/         # Task management feature
 │       ├── components/    # Task-specific UI components
@@ -36,6 +39,15 @@ src/
 │       ├── client.ts      # Supabase client configuration
 │       └── types/         # Supabase-related type definitions
 ├── lib/               # Utility functions and constants
+│   ├── utils.ts           # Core utility functions & re-exports
+│   ├── uiUtils.ts         # UI-related utility functions
+│   ├── dataUtils.ts       # Data manipulation utilities
+│   ├── dateUtils.ts       # Date-related utility functions
+│   ├── validationUtils.ts # Input validation utilities
+│   ├── formatUtils.ts     # Formatting utility functions
+│   ├── animationUtils.ts  # Animation utility functions
+│   ├── imageUtils.ts      # Image manipulation utilities
+│   └── types.ts           # Shared type definitions
 ├── pages/             # Application pages/routes
 └── styles/            # Global styles and theme
 ```
@@ -46,6 +58,11 @@ src/
 
 The application uses a feature-based folder structure which groups related components, hooks, and utilities by feature rather than by type. This makes it easier to understand the codebase and to locate related code.
 
+Key principles:
+- Each feature has its own directory with subdirectories for components, hooks, context, etc.
+- Features should be self-contained with minimal dependencies on other features
+- Common/shared code is placed in the root-level directories (components, lib, hooks)
+
 ### API Layer
 
 The application implements a dedicated API layer for Supabase interactions in `integrations/supabase/api/`. This layer:
@@ -53,7 +70,10 @@ The application implements a dedicated API layer for Supabase interactions in `i
 1. Centralizes all data fetching logic
 2. Provides standardized error handling
 3. Offers strongly typed responses
-4. Supports mocking for development and testing
+4. Abstracts the underlying Supabase implementation from the rest of the application
+5. Supports mocking for development and testing
+
+Direct usage of the Supabase client is restricted to the API layer, ensuring all database interactions follow consistent patterns.
 
 ### Custom Hooks Pattern
 
@@ -64,33 +84,54 @@ The application uses custom hooks extensively to:
 3. Make components more readable and focused
 4. Enable reuse across components
 
-Examples include `useTaskContext`, `useCreateTask`, and `useFilteredTasks`.
+Example hook organization:
+- Base hooks: Provide core functionality for a specific domain (e.g., `useBaseTaskForm`)
+- Specialized hooks: Build on base hooks for specific use cases (e.g., `useCreateTask`, `useFollowUpTask`)
+- Feature-specific hooks: Located in feature directories (e.g., `tasks/hooks/useFilteredTasks`)
+- Shared hooks: Located in the root hooks directory (e.g., `use-mobile`)
 
 ### Context API for State Management
 
 The application uses React's Context API for sharing state across components:
 
-1. `TaskContext`: Manages task-related state and operations
-2. `AuthContext`: Handles user authentication state
-3. `UIContext`: Manages UI-related state like themes and layouts
+1. Global contexts: Located in `/contexts`
+   - `AuthContext`: Handles user authentication state
+   - `UIContext`: Manages UI-related state like themes and layouts
 
-### Responsive Animation Patterns
+2. Feature-specific contexts: Located in feature directories
+   - `TaskContext`: Manages task-related state and operations
 
-Task cards use React Spring for smooth animations with performance optimizations:
+Context usage guidelines:
+- Contexts should provide both state and functions to modify that state
+- Each context should have a custom hook (e.g., `useTaskContext`) for consuming it
+- Contexts should split large pieces of state into smaller contexts when appropriate
 
-1. Height transitions for expanding/collapsing cards
-2. Opacity transitions for content fade in/out
-3. Transform transitions for position adjustments
+### Utility Function Organization
+
+Utility functions are organized by domain to improve maintainability and navigation:
+
+- `utils.ts`: Common utilities and re-exports from specialized utility modules
+- Domain-specific utilities:
+  - `uiUtils.ts`: UI helper functions (class merging, element styling)
+  - `dataUtils.ts`: Data transformation and manipulation
+  - `dateUtils.ts`: Date formatting and calculations
+  - `validationUtils.ts`: Input validation
+  - `formatUtils.ts`: String and data formatting
+  - `animationUtils.ts`: Animation calculations and timers
+  - `imageUtils.ts`: Image processing and optimization
 
 ### Form Patterns
 
 Form handling uses a combination of:
 
-1. Base form hooks for shared form logic
-2. Specialized form hooks for specific use cases
-3. Validation using either:
-   - Simple validation functions for basic cases
+1. Base form hooks for shared form logic (e.g., `useBaseTaskForm`)
+2. Specialized form hooks for specific use cases (e.g., `useCreateTask`)
+3. Form validation using:
    - Zod schemas for complex validation scenarios
+   - Custom validation functions for simpler cases
+4. Form component composition pattern:
+   - Form wrapper components handle state management
+   - Child components handle rendering and user interaction
 
 ## Data Flow
 
@@ -99,6 +140,23 @@ Form handling uses a combination of:
 3. **UI Updates**: Components consume context and query results to render the UI
 4. **User Interactions**: Event handlers trigger mutations through the API layer
 5. **Optimistic Updates**: TanStack Query provides optimistic updates for better UX
+
+## Responsive Design Pattern
+
+The application implements responsive design using:
+
+1. Tailwind CSS responsive utilities
+2. Layout components that adapt to screen size
+3. UI Context to track viewport size and device type
+4. Custom hooks (e.g., `use-mobile`) to adapt functionality based on screen size
+
+## Animation Patterns
+
+Task cards use animation utilities for smooth transitions:
+
+1. `animationUtils.ts` provides timer calculations and animation helpers
+2. CSS transitions handle basic animations
+3. React Spring is used for more complex animations with performance optimizations
 
 ## Testing Approach
 
