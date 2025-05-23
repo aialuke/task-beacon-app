@@ -1,4 +1,3 @@
-
 // Move from src/pages/home/TaskDetailsPage.tsx
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
@@ -76,7 +75,7 @@ const TaskDetailsPage = () => {
   if (loading) {
     return (
       <div className="container py-8 space-y-6">
-        <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="mb-4" style={{ borderRadius: "9999px" }}>
+        <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="mb-4">
           <ArrowLeft size={16} className="mr-2" /> Back
         </Button>
         <div className="animate-pulse space-y-4">
@@ -91,7 +90,7 @@ const TaskDetailsPage = () => {
   if (!task) {
     return (
       <div className="container py-8">
-        <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="mb-4" style={{ borderRadius: "9999px" }}>
+        <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="mb-4">
           <ArrowLeft size={16} className="mr-2" /> Back
         </Button>
         <div className="bg-red-50 text-red-600 p-4 rounded-lg">
@@ -105,7 +104,7 @@ const TaskDetailsPage = () => {
 
   return (
     <div className="container py-8 max-w-2xl mx-auto">
-      <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="mb-6" style={{ borderRadius: "9999px" }}>
+      <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="mb-6">
         <ArrowLeft size={16} className="mr-2" /> Back
       </Button>
 
@@ -167,7 +166,6 @@ const TaskDetailsPage = () => {
                 size="sm" 
                 className="mt-3"
                 onClick={() => navigate(`/tasks/${task.parent_task_id}`)}
-                style={{ borderRadius: "9999px" }}
               >
                 <ExternalLink size={14} className="mr-2" />
                 View Original Task

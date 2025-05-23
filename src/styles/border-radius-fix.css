@@ -1,5 +1,5 @@
 
-/* Border radius fix - using direct values instead of variables */
+/* Border radius fix - using CSS variables */
 :root {
   --border-radius-xl: 0.75rem; /* 12px */
   --border-radius-full: 9999px;
@@ -13,14 +13,13 @@ select,
 .card,
 .task-card,
 .dropdown-content,
-[class*="rounded"],
-[style*="border-radius"] {
-  border-radius: 0.75rem !important;
-  -webkit-border-radius: 0.75rem !important;
-  -moz-border-radius: 0.75rem !important;
+[class*="rounded"]:not(.rounded-full):not(button):not(.button):not([role="button"]) {
+  border-radius: var(--border-radius-xl) !important;
+  -webkit-border-radius: var(--border-radius-xl) !important;
+  -moz-border-radius: var(--border-radius-xl) !important;
 }
 
-/* Target specific components that might be problematic with direct values */
+/* Target specific components that might be problematic */
 .select-trigger,
 .select-content,
 .popover-content,
@@ -31,70 +30,52 @@ select,
 .form-field-group input,
 .form-field-group select,
 .form-field-group textarea {
-  border-radius: 0.75rem !important;
-  -webkit-border-radius: 0.75rem !important;
-  -moz-border-radius: 0.75rem !important;
+  border-radius: var(--border-radius-xl) !important;
+  -webkit-border-radius: var(--border-radius-xl) !important;
+  -moz-border-radius: var(--border-radius-xl) !important;
 }
 
 /* Specific targeting for task cards */
 .task-card,
 .task-card-container > div {
-  border-radius: 0.75rem !important;
-  -webkit-border-radius: 0.75rem !important;
-  -moz-border-radius: 0.75rem !important;
-  border-top-left-radius: 0.75rem !important;
-  border-top-right-radius: 0.75rem !important;
-  border-bottom-left-radius: 0.75rem !important;
-  border-bottom-right-radius: 0.75rem !important;
+  border-radius: var(--border-radius-xl) !important;
+  -webkit-border-radius: var(--border-radius-xl) !important;
+  -moz-border-radius: var(--border-radius-xl) !important;
+  border-top-left-radius: var(--border-radius-xl) !important;
+  border-top-right-radius: var(--border-radius-xl) !important;
+  border-bottom-left-radius: var(--border-radius-xl) !important;
+  border-bottom-right-radius: var(--border-radius-xl) !important;
   overflow: hidden;
 }
 
 /* Ensure image previews are rounded */
 img.rounded-xl {
-  border-radius: 0.75rem !important;
-  -webkit-border-radius: 0.75rem !important;
-  -moz-border-radius: 0.75rem !important;
+  border-radius: var(--border-radius-xl) !important;
+  -webkit-border-radius: var(--border-radius-xl) !important;
+  -moz-border-radius: var(--border-radius-xl) !important;
 }
 
-/* Direct styling for buttons with more specific selectors to ensure proper colors */
-button[data-variant="default"], 
-button[type="submit"],
-.btn-primary,
-[role="button"][data-variant="default"] {
-  background-color: hsl(221, 77%, 55%) !important; /* Blue: #3662E3 */
-  color: white !important;
-}
-
-button[data-variant="destructive"] {
-  background-color: hsl(351, 83%, 53%) !important; /* Red: #DA3E52 */
-  color: white !important;
-}
-
-button[data-variant="secondary"] {
-  background-color: hsl(240, 4.8%, 95.9%) !important;
-}
-
-/* Ensure buttons have rounded corners with direct values - FULLY ROUNDED NOW */
+/* Buttons - Fully rounded */
 button, 
 .btn,
 [role="button"],
 [type="button"],
 [type="submit"],
 [type="reset"] {
-  border-radius: 9999px !important;
-  -webkit-border-radius: 9999px !important;
-  -moz-border-radius: 9999px !important;
+  border-radius: var(--border-radius-full) !important;
+  -webkit-border-radius: var(--border-radius-full) !important;
+  -moz-border-radius: var(--border-radius-full) !important;
 }
 
-/* Exceptions for full radius elements with direct values */
+/* Exceptions for full radius elements */
 .avatar,
 .avatar-fallback,
 input[type="file"]::file-selector-button,
 .rounded-full,
 [style*="border-radius: 9999px"] {
-  border-radius: 9999px !important;
-  -webkit-border-radius: 9999px !important;
-  -moz-border-radius: 9999px !important;
+  border-radius: var(--border-radius-full) !important;
+  -webkit-border-radius: var(--border-radius-full) !important;
+  -moz-border-radius: var(--border-radius-full) !important;
 }
 
 /* Ensure borders are visible */

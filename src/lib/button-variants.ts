@@ -6,16 +6,16 @@ export const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-[#3662E3] text-white hover:bg-[#3056c7] rounded-full shadow hover:shadow-md",
+        default: "bg-primary text-primary-foreground hover:bg-primary/90 rounded-full shadow hover:shadow-md",
         destructive:
-          "bg-[#DA3E52] text-white hover:bg-[#c83548] rounded-full shadow hover:shadow-md",
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-full shadow hover:shadow-md",
         outline:
           "border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-full shadow hover:shadow-md",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-full shadow hover:shadow-md",
         ghost: "hover:bg-accent hover:text-accent-foreground rounded-full",
         link: "text-primary underline-offset-4 hover:underline",
-        brand: "bg-[#3662E3] text-white rounded-full shadow hover:shadow-md",
+        brand: "bg-primary text-primary-foreground rounded-full shadow hover:shadow-md",
         "brand-secondary": "bg-secondary text-primary hover:bg-secondary/80 rounded-full shadow hover:shadow-md",
       },
       size: {
