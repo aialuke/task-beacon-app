@@ -24,7 +24,7 @@ export function FormActions({
           disabled={isSubmitting}
           size="sm"
           className="px-4"
-          style={{ borderRadius: "0.75rem" }}
+          style={{ borderRadius: "9999px" }}
         >
           {cancelLabel}
         </Button>
@@ -37,7 +37,7 @@ export function FormActions({
         style={{ 
           backgroundColor: "hsl(221, 77%, 55%)",
           color: "white",
-          borderRadius: "0.75rem"
+          borderRadius: "9999px"
         }}
       >
         {isSubmitting ? "Creating..." : submitLabel}

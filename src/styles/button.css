@@ -5,7 +5,7 @@
   button, 
   .button,
   [role="button"] {
-    border-radius: 0.75rem;
+    border-radius: 9999px !important;
     @apply transition-all duration-200;
   }
 
@@ -26,7 +26,7 @@
     transition: background-color 0.2s, box-shadow 0.2s;
     background-color: hsl(221, 77%, 55%) !important; /* Direct color value */
     color: white !important;
-    border-radius: 9999px;
+    border-radius: 9999px !important;
   }
 
   .fab svg {

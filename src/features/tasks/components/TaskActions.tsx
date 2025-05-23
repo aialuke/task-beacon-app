@@ -30,11 +30,14 @@ function TaskActions({ task, detailView }: TaskActionsProps) {
           className="text-xs"
           onClick={handleToggleComplete}
           disabled={loading}
-          style={task.status === "complete" ? {} : {
-            backgroundColor: "hsl(221, 77%, 55%)",
-            color: "white",
-            borderRadius: "0.75rem"
-          }}
+          style={task.status === "complete" ? 
+            { borderRadius: "9999px" } : 
+            {
+              backgroundColor: "hsl(221, 77%, 55%)",
+              color: "white",
+              borderRadius: "9999px"
+            }
+          }
         >
           {task.status === "complete" ? "Mark Incomplete" : "Complete"}
         </Button>
@@ -44,7 +47,7 @@ function TaskActions({ task, detailView }: TaskActionsProps) {
           className="text-xs"
           onClick={handleCreateFollowUp}
           disabled={loading}
-          style={{ borderRadius: "0.75rem" }}
+          style={{ borderRadius: "9999px" }}
         >
           Follow Up
         </Button>

@@ -6,23 +6,23 @@ export const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-[#3662E3] text-white hover:bg-[#3056c7] rounded-xl shadow hover:shadow-md",
+        default: "bg-[#3662E3] text-white hover:bg-[#3056c7] rounded-full shadow hover:shadow-md",
         destructive:
-          "bg-[#DA3E52] text-white hover:bg-[#c83548] rounded-xl shadow hover:shadow-md",
+          "bg-[#DA3E52] text-white hover:bg-[#c83548] rounded-full shadow hover:shadow-md",
         outline:
-          "border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-xl shadow hover:shadow-md",
+          "border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-full shadow hover:shadow-md",
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-xl shadow hover:shadow-md",
-        ghost: "hover:bg-accent hover:text-accent-foreground rounded-xl",
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-full shadow hover:shadow-md",
+        ghost: "hover:bg-accent hover:text-accent-foreground rounded-full",
         link: "text-primary underline-offset-4 hover:underline",
-        brand: "bg-[#3662E3] text-white rounded-xl shadow hover:shadow-md",
-        "brand-secondary": "bg-secondary text-primary hover:bg-secondary/80 rounded-xl shadow hover:shadow-md",
+        brand: "bg-[#3662E3] text-white rounded-full shadow hover:shadow-md",
+        "brand-secondary": "bg-secondary text-primary hover:bg-secondary/80 rounded-full shadow hover:shadow-md",
       },
       size: {
         default: "h-10 px-4 py-2",
-        sm: "h-8 rounded-xl px-3 py-1",
-        lg: "h-11 rounded-xl px-8",
-        icon: "h-10 w-10 rounded-xl",
+        sm: "h-8 rounded-full px-3 py-1",
+        lg: "h-11 rounded-full px-8",
+        icon: "h-10 w-10 rounded-full",
       },
     },
     defaultVariants: {

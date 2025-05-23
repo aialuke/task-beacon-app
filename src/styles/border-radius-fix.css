@@ -10,7 +10,6 @@
 input,
 textarea,
 select,
-button,
 .card,
 .task-card,
 .dropdown-content,
@@ -75,16 +74,16 @@ button[data-variant="secondary"] {
   background-color: hsl(240, 4.8%, 95.9%) !important;
 }
 
-/* Ensure buttons have rounded corners with direct values */
+/* Ensure buttons have rounded corners with direct values - FULLY ROUNDED NOW */
 button, 
 .btn,
 [role="button"],
 [type="button"],
 [type="submit"],
 [type="reset"] {
-  border-radius: 0.75rem !important;
-  -webkit-border-radius: 0.75rem !important;
-  -moz-border-radius: 0.75rem !important;
+  border-radius: 9999px !important;
+  -webkit-border-radius: 9999px !important;
+  -moz-border-radius: 9999px !important;
 }
 
 /* Exceptions for full radius elements with direct values */

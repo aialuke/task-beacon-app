@@ -17,13 +17,18 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const Comp = asChild ? Slot : "button";
     
     // Add direct styles for default variant to ensure button color is applied correctly
+    // Now using 9999px border-radius for fully rounded buttons
     const buttonStyle = variant === "default" ? { 
       backgroundColor: "hsl(221, 77%, 55%)", 
       color: "white",
-      borderRadius: "0.75rem",
-      WebkitBorderRadius: "0.75rem",
-      MozBorderRadius: "0.75rem"
-    } : {};
+      borderRadius: "9999px",
+      WebkitBorderRadius: "9999px",
+      MozBorderRadius: "9999px"
+    } : {
+      borderRadius: "9999px",
+      WebkitBorderRadius: "9999px",
+      MozBorderRadius: "9999px"
+    };
     
     return (
       <Comp
