@@ -1,90 +1,100 @@
 
-// src/lib/dateUtils.ts
-import { format, differenceInDays, differenceInHours, differenceInMinutes } from "date-fns";
-import { TaskStatus } from "./types";
-
-// Format date to readable format
-export function formatDate(dateString: string): string {
-  return format(new Date(dateString), "MMM d, yyyy");
-}
-
-// Format time to readable format
-export function formatTime(dateString: string): string {
-  return format(new Date(dateString), "h:mm a");
-}
-
-// Calculate days remaining until due date
-export function getDaysRemaining(dueDate: string): number {
-  if (!dueDate) return 0;
-  const now = new Date();
-  const due = new Date(dueDate);
-  return differenceInDays(due, now);
-}
-
-// Calculate hours remaining until due date
-export function getHoursRemaining(dueDate: string): number {
-  if (!dueDate) return 0;
-  const now = new Date();
-  const due = new Date(dueDate);
-  return differenceInHours(due, now);
-}
-
-// Calculate minutes remaining until due date
-export function getMinutesRemaining(dueDate: string): number {
-  if (!dueDate) return 0;
-  const now = new Date();
-  const due = new Date(dueDate);
-  return differenceInMinutes(due, now);
-}
-
-// Determine update frequency based on time remaining
-export function getUpdateInterval(daysLeft: number, status: TaskStatus): number {
-  if (status === "complete") return 0; // No updates needed
-  
-  if (status === "overdue") return 30000; // 30 seconds for overdue tasks
-  
-  if (daysLeft <= 0) {
-    const hoursLeft = Math.ceil(getHoursRemaining(new Date().toISOString()));
-    
-    if (hoursLeft <= 1) return 1000; // Every second if less than 1 hour
-    if (hoursLeft <= 24) return 30000; // 30 seconds if less than 24 hours
+/**
+ * Formats a date string to a human-readable format
+ * 
+ * @param dateString - ISO date string or Date object
+ * @param options - Intl.DateTimeFormat options
+ * @returns Formatted date string
+ */
+export function formatDate(
+  dateString: string | Date, 
+  options: Intl.DateTimeFormatOptions = { 
+    month: 'short', 
+    day: 'numeric', 
+    year: 'numeric' 
   }
-  
-  return 3600000; // Every hour for tasks due in days
+): string {
+  const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
+  return new Intl.DateTimeFormat('en-US', options).format(date);
 }
 
-// Get tooltip content for timer
-export function getTooltipContent(dueDate: string | null): string {
-  if (!dueDate) return "No due date";
-  if (isNaN(new Date(dueDate).getTime())) return "Invalid due date";
+/**
+ * Calculates the number of days remaining until a due date
+ * 
+ * @param dueDate - ISO date string for the due date
+ * @returns Number of days until the due date, or null if no due date
+ */
+export function getDaysRemaining(dueDate: string | null): number | null {
+  if (!dueDate) return null;
   
-  const dueTimeStr = new Date(dueDate).toLocaleTimeString([], {
-    hour: '2-digit',
-    minute: '2-digit'
+  const now = new Date();
+  now.setHours(0, 0, 0, 0); // Start of today
+  
+  const due = new Date(dueDate);
+  due.setHours(0, 0, 0, 0); // Start of due date
+  
+  const timeDiff = due.getTime() - now.getTime();
+  return Math.ceil(timeDiff / (1000 * 3600 * 24));
+}
+
+/**
+ * Creates a human-readable string describing the time until a due date
+ * 
+ * @param dueDate - ISO date string for the due date
+ * @returns A string like "2 days left", "Due today", or "No due date"
+ */
+export function getTimeUntilDue(dueDate: string | null): string {
+  if (!dueDate) return "No due date";
+  
+  const daysRemaining = getDaysRemaining(dueDate);
+  
+  if (daysRemaining === null) return "No due date";
+  if (daysRemaining < 0) return `${Math.abs(daysRemaining)} days overdue`;
+  if (daysRemaining === 0) return "Due today";
+  if (daysRemaining === 1) return "Due tomorrow";
+  return `${daysRemaining} days left`;
+}
+
+/**
+ * Checks if a date is in the past
+ * 
+ * @param dateString - ISO date string to check
+ * @returns True if the date is in the past, false otherwise
+ */
+export function isDatePast(dateString: string | null): boolean {
+  if (!dateString) return false;
+  
+  const now = new Date();
+  const date = new Date(dateString);
+  return date < now;
+}
+
+/**
+ * Creates a tooltip text for a task due date
+ * 
+ * @param dueDate - ISO date string for the due date
+ * @returns Appropriate tooltip text based on due date
+ */
+export function getDueDateTooltip(dueDate: string | null): string {
+  if (!dueDate) return "No due date set";
+  
+  const date = new Date(dueDate);
+  const formattedDate = date.toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
   });
   
-  return `Due: ${new Date(dueDate).toLocaleDateString()} at ${dueTimeStr}`;
-}
-
-// Format the time display based on days left and status
-export function formatTimeDisplay(days: number, dueDate: string | null, status: TaskStatus): string {
-  if (!dueDate) return "No due date";
+  const timeUntil = getTimeUntilDue(dueDate);
   
-  if (status === "overdue") {
-    // For overdue tasks, show negative days (e.g., "-1d")
-    return `-${Math.abs(days)}d`;
-  } 
-  
-  // Check if the task is due today
-  const dueTime = new Date(dueDate).getTime();
-  const now = Date.now();
-  const hoursLeft = Math.floor((dueTime - now) / (1000 * 60 * 60));
-  
-  // If less than 24 hours remaining, show hours
-  if (days === 0 || hoursLeft < 24) {
-    return `${Math.max(hoursLeft, 0)}h`;
+  if (timeUntil === "Due today") {
+    return `Due today (${formattedDate})`;
+  } else if (timeUntil === "Due tomorrow") {
+    return `Due tomorrow (${formattedDate})`;
+  } else if (timeUntil.includes("overdue")) {
+    return `${timeUntil} (${formattedDate})`;
   } else {
-    // Normal case - show days
-    return `${days}d`;
+    return `${timeUntil} - ${formattedDate}`;
   }
 }

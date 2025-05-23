@@ -22,6 +22,20 @@ export interface UseBaseTaskFormOptions {
   onClose?: () => void;
 }
 
+/**
+ * Base hook for task form functionality
+ * 
+ * Provides common state and handlers for task forms, including:
+ * - Form field state management
+ * - Photo upload and preview
+ * - Form validation
+ * - Form reset
+ * 
+ * @param options - Configuration options
+ * @param options.initialUrl - Initial URL value for the form
+ * @param options.onClose - Callback function to execute when form is closed or reset
+ * @returns Form state and handlers
+ */
 export function useBaseTaskForm({ initialUrl = "", onClose }: UseBaseTaskFormOptions = {}) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -33,7 +47,10 @@ export function useBaseTaskForm({ initialUrl = "", onClose }: UseBaseTaskFormOpt
   const [assigneeId, setAssigneeId] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Custom title setter with validation
+  /**
+   * Custom title setter with validation
+   * Limits title to 22 characters
+   */
   const handleTitleChange = useCallback((value: string) => {
     // Limit to 22 characters
     if (value.length <= 22) {
@@ -41,6 +58,10 @@ export function useBaseTaskForm({ initialUrl = "", onClose }: UseBaseTaskFormOpt
     }
   }, []);
 
+  /**
+   * Handles photo file input changes
+   * Creates a preview and processes the photo for upload
+   */
   const handlePhotoChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     setLoading(true);
     const file = e.target.files?.[0];
@@ -65,6 +86,10 @@ export function useBaseTaskForm({ initialUrl = "", onClose }: UseBaseTaskFormOpt
     }
   }, []);
 
+  /**
+   * Uploads the selected photo to Supabase storage
+   * @returns URL of the uploaded photo or null if no photo
+   */
   const uploadPhoto = useCallback(async (): Promise<string | null> => {
     if (!photo) return null;
     if (isMockingSupabase) return photoPreview;
@@ -81,6 +106,9 @@ export function useBaseTaskForm({ initialUrl = "", onClose }: UseBaseTaskFormOpt
     return urlData?.signedUrl || null;
   }, [photo, photoPreview]);
 
+  /**
+   * Resets all form fields to their initial values
+   */
   const resetForm = useCallback(() => {
     setTitle("");
     setDescription("");
@@ -93,6 +121,11 @@ export function useBaseTaskForm({ initialUrl = "", onClose }: UseBaseTaskFormOpt
     if (onClose) onClose();
   }, [initialUrl, onClose]);
 
+  /**
+   * Validates the task title
+   * @param value - The title value to validate
+   * @returns True if valid, false otherwise
+   */
   const validateTitle = useCallback((value: string): boolean => {
     if (value.length > 22) {
       toast.error("Task title cannot exceed 22 characters");

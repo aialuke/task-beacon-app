@@ -8,6 +8,19 @@ interface UseCreateTaskProps {
   onClose?: () => void;
 }
 
+/**
+ * Custom hook for task creation functionality
+ * 
+ * Builds on useBaseTaskForm to provide specialized functionality for creating new tasks, including:
+ * - Form submission handling
+ * - Task creation API integration
+ * - Photo upload handling
+ * - Success/error notifications
+ * 
+ * @param props - Configuration options
+ * @param props.onClose - Optional callback to execute when the form is closed
+ * @returns Form state and submission handler
+ */
 export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
   const {
     title,
@@ -31,6 +44,11 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
     validateTitle
   } = useBaseTaskForm({ onClose });
 
+  /**
+   * Handles form submission for creating a new task
+   * 
+   * @param e - Form submit event
+   */
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     

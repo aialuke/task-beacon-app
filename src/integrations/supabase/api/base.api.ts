@@ -4,6 +4,9 @@ import { ApiError, TablesResponse } from '../types/api.types';
 
 /**
  * Handles and normalizes errors from Supabase or other sources
+ * 
+ * @param error - The error object from Supabase or other source
+ * @returns A standardized ApiError object
  */
 export const handleApiError = (error: unknown): ApiError => {
   // Handle PostgrestError from Supabase
@@ -37,6 +40,9 @@ export const handleApiError = (error: unknown): ApiError => {
 
 /**
  * Check if a user is authenticated and get their ID
+ * 
+ * @returns A promise resolving to the authenticated user's ID
+ * @throws Error if user is not authenticated
  */
 export const getCurrentUserId = async (): Promise<string> => {
   const { data: { user } } = await supabase.auth.getUser();
@@ -46,6 +52,9 @@ export const getCurrentUserId = async (): Promise<string> => {
 
 /**
  * Wrapper for standardized error handling in async functions
+ * 
+ * @param requestFn - The async function to execute 
+ * @returns A standardized TablesResponse with data or error
  */
 export const apiRequest = async <T>(
   requestFn: () => Promise<T>

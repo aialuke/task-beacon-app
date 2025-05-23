@@ -1,9 +1,23 @@
 
-// Move from src/hooks/useFilteredTasks.ts
 import { useMemo } from "react";
 import { Task } from "@/lib/types";
-import { TaskFilter } from "@/features/tasks/types";
+import { TaskFilter } from "@/contexts/task/types";
+import { supabase } from "@/lib/supabase";
 
+/**
+ * Custom hook that filters tasks based on a specified filter criteria
+ * 
+ * Handles filtering for:
+ * - "all" (current non-completed tasks)
+ * - "assigned" (tasks assigned to others)
+ * - "overdue" (past due tasks)
+ * - "complete" (completed tasks)
+ * - "pending" (uncompleted, non-overdue tasks)
+ * 
+ * @param tasks - Array of task objects to filter
+ * @param filter - Filter criteria to apply
+ * @returns Filtered array of tasks
+ */
 export function useFilteredTasks(
   tasks: Task[],
   filter: TaskFilter

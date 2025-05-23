@@ -8,6 +8,13 @@ import { useTaskMutations } from "./useTaskMutations";
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
 
+/**
+ * Provider component for task-related state and operations
+ * 
+ * Manages the task list, filters, expanded state, and task mutations
+ * 
+ * @param children - React components that will consume the task context
+ */
 export function TaskContextProvider({ children }: { children: ReactNode }) {
   // States
   const [filter, setFilter] = useState<TaskFilter>("all");
@@ -35,7 +42,12 @@ export function TaskContextProvider({ children }: { children: ReactNode }) {
   );
 }
 
-// Custom hook for using task context
+/**
+ * Custom hook for using the task context
+ * 
+ * @returns The task context value
+ * @throws Error if used outside of a TaskContextProvider
+ */
 export function useTaskContext() {
   const context = useContext(TaskContext);
   if (context === undefined) {
