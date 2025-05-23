@@ -47,7 +47,7 @@ svg {
 }
 
 /* Ensure borders are visible - these must come after all other styles */
-input, textarea, select, .task-card {
+input:not(.avatar *), textarea, select, .task-card:not(.avatar *) {
   border-width: 1px !important;
   border-radius: 0.75rem !important;
 }

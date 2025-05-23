@@ -6,4 +6,10 @@
     background-color: #e5e7eb;
     color: #6b7280;
   }
+  
+  /* Ensure avatars are always fully rounded */
+  .avatar, 
+  .avatar-fallback {
+    border-radius: 9999px !important;
+  }
 }
