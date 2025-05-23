@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from "react";
+
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useSpring, animated, config } from "@react-spring/web";
 import { TaskStatus } from "@/lib/types";
 import TimerRing from "./timer/TimerRing";
@@ -28,7 +29,7 @@ interface CountdownTimerProps {
 
 const AnimatedDiv = animated.div;
 
-export default function CountdownTimer({
+function CountdownTimer({
   dueDate,
   status,
   size = 48,
@@ -36,20 +37,33 @@ export default function CountdownTimer({
 }: CountdownTimerProps) {
   const { isMobile } = useUIContext();
   
-  // Adjust size based on priority and mobile status
-  const dynamicSize = isMobile 
-    ? (priority === "high" ? size * 1.1 : priority === "low" ? size * 0.7 : size * 0.9)
-    : (priority === "high" ? size * 1.2 : priority === "low" ? size * 0.8 : size);
+  // Calculate and memoize size-related values to avoid recalculation
+  const { dynamicSize, radius, circumference } = useMemo(() => {
+    const dynamicSize = isMobile 
+      ? (priority === "high" ? size * 1.1 : priority === "low" ? size * 0.7 : size * 0.9)
+      : (priority === "high" ? size * 1.2 : priority === "low" ? size * 0.8 : size);
+    
+    const radius = dynamicSize / 2 - 4;
+    const circumference = 2 * Math.PI * radius;
+    
+    return { dynamicSize, radius, circumference };
+  }, [isMobile, priority, size]);
   
-  const radius = dynamicSize / 2 - 4;
-  const circumference = 2 * Math.PI * radius;
   const [daysLeft, setDaysLeft] = useState<number>(dueDate ? getDaysRemaining(dueDate) : 0);
   const [timeDisplay, setTimeDisplay] = useState<string>(dueDate ? formatTimeDisplay(daysLeft, dueDate, status) : "No due date");
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const tooltipContent = getTooltipContent(dueDate);
+  
+  // Memoize tooltip content to avoid recalculation
+  const tooltipContent = useMemo(() => getTooltipContent(dueDate), [dueDate]);
+
+  // Memoize stroke dash offset calculation
+  const dashOffset = useMemo(() => 
+    calculateTimerOffset(circumference, daysLeft, status, dueDate), 
+    [circumference, daysLeft, status, dueDate]
+  );
 
   const { strokeDashoffset } = useSpring({
-    strokeDashoffset: calculateTimerOffset(circumference, daysLeft, status, dueDate),
+    strokeDashoffset: dashOffset,
     config: { tension: 120, friction: 14 },
     immediate: status === "complete" || status === "overdue" || !dueDate,
   });
@@ -130,3 +144,11 @@ export default function CountdownTimer({
     </TooltipProvider>
   );
 }
+
+// Memoize the entire component with a custom comparison function
+export default React.memo(CountdownTimer, (prevProps, nextProps) => {
+  return prevProps.dueDate === nextProps.dueDate && 
+         prevProps.status === nextProps.status &&
+         prevProps.size === nextProps.size &&
+         prevProps.priority === nextProps.priority;
+});

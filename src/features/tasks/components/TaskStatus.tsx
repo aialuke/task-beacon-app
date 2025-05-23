@@ -8,6 +8,13 @@ interface TaskStatusProps {
   task: Task;
 }
 
+// Custom equality function for TaskStatus props
+const arePropsEqual = (prevProps: TaskStatusProps, nextProps: TaskStatusProps): boolean => {
+  // Only compare properties that affect status rendering
+  return prevProps.task.due_date === nextProps.task.due_date &&
+         prevProps.task.status === nextProps.task.status;
+};
+
 function TaskStatus({ task }: TaskStatusProps) {
   const status = getTaskStatus(task);
 
@@ -18,4 +25,4 @@ function TaskStatus({ task }: TaskStatusProps) {
   );
 }
 
-export default memo(TaskStatus);
+export default memo(TaskStatus, arePropsEqual);

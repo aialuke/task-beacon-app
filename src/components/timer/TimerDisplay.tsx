@@ -1,4 +1,5 @@
 
+import { memo } from "react";
 import { TaskStatus } from "@/lib/types";
 
 interface TimerDisplayProps {
@@ -6,6 +7,13 @@ interface TimerDisplayProps {
   status: TaskStatus;
   timeDisplay: string;
 }
+
+// Custom equality check function
+const arePropsEqual = (prevProps: TimerDisplayProps, nextProps: TimerDisplayProps): boolean => {
+  return prevProps.size === nextProps.size &&
+         prevProps.status === nextProps.status &&
+         prevProps.timeDisplay === nextProps.timeDisplay;
+};
 
 const TimerDisplay = ({ size, status, timeDisplay }: TimerDisplayProps) => {
   // Get the appropriate text color based on status
@@ -79,4 +87,4 @@ const TimerDisplay = ({ size, status, timeDisplay }: TimerDisplayProps) => {
   );
 };
 
-export default TimerDisplay;
+export default memo(TimerDisplay, arePropsEqual);

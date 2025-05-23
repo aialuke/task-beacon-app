@@ -1,5 +1,5 @@
 
-import { useRef, memo } from "react";
+import { useRef, memo, useCallback } from "react";
 import { Task } from "@/lib/types";
 import { useTaskContext } from "@/features/tasks/context/TaskContext";
 import TaskHeader from "./TaskHeader";
@@ -9,6 +9,22 @@ import { useTaskAnimation } from "@/features/tasks/hooks/useTaskAnimation";
 interface TaskCardProps {
   task: Task;
 }
+
+// Custom equality function for TaskCard props
+const arePropsEqual = (prevProps: TaskCardProps, nextProps: TaskCardProps): boolean => {
+  const prevTask = prevProps.task;
+  const nextTask = nextProps.task;
+  
+  // Perform a shallow comparison of task properties that affect rendering
+  return prevTask.id === nextTask.id &&
+         prevTask.title === nextTask.title &&
+         prevTask.description === nextTask.description &&
+         prevTask.due_date === nextTask.due_date &&
+         prevTask.url_link === nextTask.url_link &&
+         prevTask.pinned === nextTask.pinned &&
+         prevTask.status === nextTask.status &&
+         prevTask.photo_url === nextTask.photo_url;
+};
 
 function TaskCard({ task }: TaskCardProps) {
   const { expandedTaskId, setExpandedTaskId, toggleTaskPin } = useTaskContext();
@@ -20,13 +36,14 @@ function TaskCard({ task }: TaskCardProps) {
   // Custom hook for task animations
   const { animationState } = useTaskAnimation(contentRef, isExpanded);
 
-  const toggleExpand = () => {
+  // Memoize event handlers with useCallback
+  const toggleExpand = useCallback(() => {
     setExpandedTaskId(isExpanded ? null : task.id);
-  };
+  }, [isExpanded, task.id, setExpandedTaskId]);
 
-  const handleTogglePin = async () => {
+  const handleTogglePin = useCallback(async () => {
     await toggleTaskPin(task);
-  };
+  }, [task, toggleTaskPin]);
 
   return (
     <div
@@ -72,4 +89,4 @@ function TaskCard({ task }: TaskCardProps) {
   );
 }
 
-export default memo(TaskCard);
+export default memo(TaskCard, arePropsEqual);

@@ -15,6 +15,12 @@ interface TaskMetadataProps {
   url: string | null;
 }
 
+// Custom equality function for TaskMetadata props
+const arePropsEqual = (prevProps: TaskMetadataProps, nextProps: TaskMetadataProps): boolean => {
+  return prevProps.dueDate === nextProps.dueDate && 
+         prevProps.url === nextProps.url;
+};
+
 function TaskMetadata({ dueDate, url }: TaskMetadataProps) {
   return (
     <div className="flex items-center flex-wrap gap-4 min-w-0">
@@ -50,4 +56,4 @@ function TaskMetadata({ dueDate, url }: TaskMetadataProps) {
   );
 }
 
-export default memo(TaskMetadata);
+export default memo(TaskMetadata, arePropsEqual);
