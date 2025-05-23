@@ -1,5 +1,4 @@
 
-// Move from src/contexts/task/types.ts
 import { Task, TaskStatus } from "@/lib/types";
 
 // Types

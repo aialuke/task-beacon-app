@@ -1,21 +1,13 @@
 
 import { useMemo } from "react";
 import { Task } from "@/lib/types";
-import { TaskFilter } from "@/contexts/task/types";
-import { supabase } from "@/lib/supabase";
+import { TaskFilter } from "../types";
 
 /**
- * Custom hook that filters tasks based on a specified filter criteria
+ * Hook for filtering tasks based on the selected filter
  * 
- * Handles filtering for:
- * - "all" (current non-completed tasks)
- * - "assigned" (tasks assigned to others)
- * - "overdue" (past due tasks)
- * - "complete" (completed tasks)
- * - "pending" (uncompleted, non-overdue tasks)
- * 
- * @param tasks - Array of task objects to filter
- * @param filter - Filter criteria to apply
+ * @param tasks - Array of tasks to filter
+ * @param filter - Current filter selection
  * @returns Filtered array of tasks
  */
 export function useFilteredTasks(
@@ -24,15 +16,12 @@ export function useFilteredTasks(
 ) {
   return useMemo(() => {
     if (filter === "all") {
-      // For "Current" filter, exclude completed tasks
+      // For "all" filter, show all non-completed tasks
       return tasks.filter((task) => task.status !== "complete");
     }
     
     if (filter === "assigned") {
-      // For "assigned" filter, we need to check if the current user is the owner
-      // and the task is assigned to someone else
-      // We can't reliably get the current user ID in a useMemo, so we'll
-      // filter based on whether assignee_id exists and is different from owner_id
+      // For "assigned" filter, check if the task is assigned to someone other than the owner
       return tasks.filter((task) => 
         task.owner_id && 
         task.assignee_id && 
@@ -41,6 +30,7 @@ export function useFilteredTasks(
     }
     
     if (filter === "overdue") {
+      // For "overdue" filter, check if the due date is in the past and task is not complete
       return tasks.filter((task) => {
         const dueDate = task.due_date ? new Date(task.due_date) : new Date();
         const now = new Date();
@@ -49,10 +39,11 @@ export function useFilteredTasks(
     }
     
     if (filter === "complete") {
+      // For "complete" filter, show only completed tasks
       return tasks.filter((task) => task.status === "complete");
     }
     
-    // For "pending" filter
+    // For "pending" filter, show tasks that are not overdue and not complete
     return tasks.filter((task) => {
       const dueDate = task.due_date ? new Date(task.due_date) : new Date();
       const now = new Date();

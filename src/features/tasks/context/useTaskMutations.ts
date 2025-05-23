@@ -2,8 +2,19 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { Task } from "@/lib/types";
 import { toast } from "@/lib/toast";
-import { toggleTaskPin as apiToggleTaskPin, updateTaskStatus, createFollowUpTask as apiCreateFollowUpTask } from "@/integrations/supabase/api/tasks.api";
+import { 
+  toggleTaskPin as apiToggleTaskPin, 
+  updateTaskStatus, 
+  createFollowUpTask as apiCreateFollowUpTask 
+} from "@/integrations/supabase/api/tasks.api";
 
+/**
+ * Hook for task mutation operations
+ * 
+ * Provides optimistic updates and error handling for task mutations
+ * 
+ * @returns Object containing task mutation functions
+ */
 export function useTaskMutations() {
   const queryClient = useQueryClient();
 
