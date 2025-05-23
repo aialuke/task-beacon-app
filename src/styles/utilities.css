@@ -1,4 +1,3 @@
-
 /* src/styles/utilities.css */
 @layer utilities {
   /* ===== LAYOUT UTILITIES ===== */
@@ -17,11 +16,11 @@
   
   /* Keep special shadow utilities that aren't available in Tailwind */
   .shadow-hover {
-    @apply transition-shadow transition-transform duration-200;
+    @apply transition-shadow duration-200;
   }
   
   .shadow-hover:hover {
-    @apply shadow-lg scale-[1.02];
+    @apply shadow-lg;
   }
 
   /* ===== TEXT UTILITIES ===== */
@@ -148,7 +147,7 @@
   }
 
   .no-shadow:hover {
-    @apply shadow-none transform-none;
+    @apply shadow-none;
   }
   
   /* ===== ACCESSIBILITY UTILITIES ===== */

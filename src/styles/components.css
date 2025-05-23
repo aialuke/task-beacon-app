@@ -171,13 +171,13 @@
   button:hover, 
   .button:hover,
   [role="button"]:hover {
-    @apply shadow-md scale-[1.02];
+    @apply shadow-md;
   }
 
   button:active, 
   .button:active,
   [role="button"]:active {
-    @apply scale-100;
+    @apply shadow-sm;
   }
 
   /* ===== FORM FIELD STYLES ===== */
