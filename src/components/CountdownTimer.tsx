@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { useSpring, animated, config } from "@react-spring/web";
 import { TaskStatus } from "@/lib/types";
@@ -14,7 +13,11 @@ import {
   getTooltipContent,
   getUpdateInterval
 } from "@/lib/dateUtils";
-import { calculateTimerOffset } from "@/lib/animationUtils";
+import { 
+  calculateTimerOffset, 
+  setupAnimationVariables,
+  prefersReducedMotion 
+} from "@/lib/animationUtils";
 
 interface CountdownTimerProps {
   dueDate: string | null;
