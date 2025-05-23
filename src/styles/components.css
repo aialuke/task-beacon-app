@@ -1,4 +1,3 @@
-
 /* src/styles/components.css */
 @layer components {
   /* ===== TASK CARD STYLES ===== */
@@ -19,30 +18,8 @@
     border-color: hsl(var(--primary));
   }
 
-  /* Modern task card styling */
-  .modern-task-card {
-    @apply flex flex-col relative text-left;
-    min-height: calc(1.25 * 60px);
-    width: 98%;
-    margin-left: auto;
-    margin-right: auto;
-    transition: all 0.3s ease;
-    border-radius: var(--border-radius-xl);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  }
-
-  .modern-task-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  }
-
-  .modern-task-card[data-expanded="true"] {
-    @apply shadow-lg;
-    transform: translateY(-2px);
-  }
-
   @media (min-width: 640px) {
-    .task-card, .modern-task-card {
+    .task-card {
       width: 100%;
     }
   }

@@ -5,7 +5,6 @@ import { useTaskContext } from "@/features/tasks/context/TaskContext";
 import TaskHeader from "./TaskHeader";
 import TaskDetails from "./TaskDetails";
 import { useTaskAnimation } from "@/features/tasks/hooks/useTaskAnimation";
-import { Card } from "@/components/ui/card";
 
 interface TaskCardProps {
   task: Task;
@@ -46,19 +45,9 @@ function TaskCard({ task }: TaskCardProps) {
     await toggleTaskPin(task);
   }, [task, toggleTaskPin]);
 
-  // Determine which gradient to use based on task status
-  const getCardGradient = () => {
-    if (task.status === "complete") {
-      return "bg-gradient-to-br from-white to-green-50";
-    } else if (task.status === "overdue") {
-      return "bg-gradient-to-br from-white to-red-50";
-    }
-    return "bg-gradient-to-br from-white to-blue-50";
-  };
-
   return (
     <div
-      className={`task-card-container ${isExpanded ? "expanded" : ""} mb-4`}
+      className={`task-card-container ${isExpanded ? "expanded" : ""}`}
       style={{
         overflowY: "hidden",
         boxSizing: "border-box",
@@ -69,12 +58,18 @@ function TaskCard({ task }: TaskCardProps) {
         msOverflowStyle: "none",
       }}
     >
-      <Card
+      <div
         ref={cardRef}
-        className={`modern-task-card ${getCardGradient()} ${isExpanded ? "expanded-card" : ""} p-4 sm:p-5 hover:shadow-lg transition-all duration-300 border-t-4 ${
-          task.pinned ? "border-t-primary" : "border-t-gray-200"
-        }`}
+        className={`task-card ${isExpanded ? "expanded-card" : ""} p-3 border border-gray-200 hover:border-secondary`}
         data-expanded={isExpanded}
+        style={{
+          overflowY: "hidden",
+          boxSizing: "border-box",
+          width: "100%",
+          position: "relative",
+          zIndex: 1,
+          borderRadius: "var(--border-radius-xl)"
+        }}
       >
         <TaskHeader
           task={task}
@@ -89,7 +84,7 @@ function TaskCard({ task }: TaskCardProps) {
           animationState={animationState}
           contentRef={contentRef}
         />
-      </Card>
+      </div>
     </div>
   );
 }
