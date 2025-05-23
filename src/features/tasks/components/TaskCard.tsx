@@ -1,10 +1,10 @@
-
 import { useRef, memo, useCallback } from "react";
 import { Task } from "@/lib/types";
 import { useTaskContext } from "@/features/tasks/context/TaskContext";
 import TaskHeader from "./TaskHeader";
 import TaskDetails from "./TaskDetails";
 import { useTaskAnimation } from "@/features/tasks/hooks/useTaskAnimation";
+import { useBorderRadius } from "@/contexts/BorderRadiusContext";
 
 interface TaskCardProps {
   task: Task;
@@ -30,6 +30,7 @@ function TaskCard({ task }: TaskCardProps) {
   const { expandedTaskId, setExpandedTaskId, toggleTaskPin } = useTaskContext();
   const contentRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+  const borderStyles = useBorderRadius();
   
   const isExpanded = expandedTaskId === task.id;
   
@@ -60,7 +61,7 @@ function TaskCard({ task }: TaskCardProps) {
     >
       <div
         ref={cardRef}
-        className={`task-card ${isExpanded ? "expanded-card" : ""} p-3 border border-gray-200 hover:border-secondary`}
+        className={`task-card ${isExpanded ? "expanded-card" : ""} p-3 border border-gray-200 hover:border-secondary rounded-xl`}
         data-expanded={isExpanded}
         style={{
           overflowY: "hidden",

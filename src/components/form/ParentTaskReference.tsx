@@ -1,12 +1,15 @@
 
 import React from "react";
 import { Task } from "@/lib/types";
+import { useBorderRadius } from "@/contexts/BorderRadiusContext";
 
 interface ParentTaskReferenceProps {
   parentTask: Task;
 }
 
 export function ParentTaskReference({ parentTask }: ParentTaskReferenceProps) {
+  const borderStyles = useBorderRadius();
+  
   return (
     <div 
       className="p-2 bg-gray-50 rounded-xl" 

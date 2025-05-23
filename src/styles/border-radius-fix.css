@@ -1,0 +1,64 @@
+
+/* Border radius fix - overrides with stronger specificity */
+:root {
+  --border-radius-xl: 0.75rem !important; /* 12px */
+  --border-radius-full: 9999px !important;
+}
+
+/* Global selectors with !important to override any resets */
+.rounded-xl,
+input,
+textarea,
+select,
+button,
+.card,
+.task-card,
+.dropdown-content,
+[class*="rounded"],
+[style*="border-radius"] {
+  border-radius: var(--border-radius-xl) !important;
+}
+
+/* Target specific components that might be problematic */
+.select-trigger,
+.select-content,
+.popover-content,
+.tooltip-content,
+.dropdown-menu,
+.card,
+.avatar,
+.form-field-group input,
+.form-field-group select,
+.form-field-group textarea,
+.task-card {
+  border-radius: var(--border-radius-xl) !important;
+}
+
+/* Ensure image previews are rounded */
+img.rounded-xl {
+  border-radius: var(--border-radius-xl) !important;
+}
+
+/* Ensure buttons have rounded corners */
+button, 
+.btn,
+[role="button"],
+[type="button"],
+[type="submit"],
+[type="reset"] {
+  border-radius: var(--border-radius-xl) !important;
+}
+
+/* Exceptions for full radius elements */
+.avatar,
+.avatar-fallback,
+input[type="file"]::file-selector-button,
+.rounded-full,
+[style*="border-radius: 9999px"] {
+  border-radius: var(--border-radius-full) !important;
+}
+
+/* Ensure borders are visible */
+input, textarea, select, .task-card, .card {
+  border-width: 1px !important;
+}

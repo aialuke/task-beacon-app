@@ -37,22 +37,15 @@
 @import "./styles/tooltip-utilities.css";
 @import "./styles/animation-utilities.css";
 
+/* Import border radius fix - must come after other imports */
+@import "./styles/border-radius-fix.css";
+
 /* Global icon handling */
 svg {
   fill: none;
 }
 
-/* Global border radius overrides */
-.rounded-xl,
-input,
-textarea,
-select,
-.task-card,
-button,
-.dropdown-content,
-.card {
-  border-radius: var(--border-radius-xl) !important;
-}
+/* Global border radius overrides moved to border-radius-fix.css */
 
 /* Ensure borders are visible */
 input, textarea, select, .task-card {

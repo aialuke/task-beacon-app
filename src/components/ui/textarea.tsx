@@ -1,12 +1,14 @@
 
 import * as React from "react";
-
 import { cn } from "@/lib/utils";
+import { useBorderRadius } from "@/contexts/BorderRadiusContext";
 
 const Textarea = React.forwardRef<
   HTMLTextAreaElement,
   React.TextareaHTMLAttributes<HTMLTextAreaElement>
 >(({ className, ...props }, ref) => {
+  const borderStyles = useBorderRadius();
+  
   return (
     <textarea
       className={cn(
@@ -15,7 +17,8 @@ const Textarea = React.forwardRef<
       )}
       style={{
         borderRadius: "var(--border-radius-xl)",
-        borderWidth: "1px"
+        borderWidth: "1px",
+        ...props.style
       }}
       ref={ref}
       {...props}

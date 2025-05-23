@@ -1,28 +1,33 @@
 
 import * as React from "react"
-
 import { cn } from "@/lib/utils"
+import { useBorderRadius } from "@/contexts/BorderRadiusContext"
 
 const Card = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      "border bg-card text-card-foreground shadow-md",
-      className
-    )}
-    style={{
-      backgroundColor: "white",
-      color: "#000000e6",
-      borderColor: "#e2e8f0",
-      borderRadius: "var(--border-radius-xl)",
-      borderWidth: "1px"
-    }}
-    {...props}
-  />
-))
+>(({ className, ...props }, ref) => {
+  const borderStyles = useBorderRadius();
+  
+  return (
+    <div
+      ref={ref}
+      className={cn(
+        "border bg-card text-card-foreground shadow-md rounded-xl",
+        className
+      )}
+      style={{
+        backgroundColor: "white",
+        color: "#000000e6",
+        borderColor: "#e2e8f0",
+        borderRadius: "var(--border-radius-xl)",
+        borderWidth: "1px",
+        ...props.style
+      }}
+      {...props}
+    />
+  )
+})
 Card.displayName = "Card"
 
 const CardHeader = React.forwardRef<

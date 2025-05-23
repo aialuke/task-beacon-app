@@ -3,7 +3,7 @@
 @layer components {
   /* ===== TASK CARD STYLES ===== */
   .task-card {
-    @apply flex flex-col p-3 sm:p-3 shadow-sm border border-gray-200 hover:border-secondary transition-colors relative text-left;
+    @apply flex flex-col p-3 sm:p-3 shadow-sm border border-gray-200 hover:border-secondary transition-colors relative text-left rounded-xl;
     min-height: calc(1.25 * 60px);
     width: 95%;
     margin-left: auto;

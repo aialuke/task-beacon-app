@@ -1,10 +1,12 @@
 
 import * as React from "react"
-
 import { cn } from "@/lib/utils"
+import { useBorderRadius } from "@/contexts/BorderRadiusContext"
 
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
   ({ className, type, ...props }, ref) => {
+    const borderStyles = useBorderRadius();
+    
     return (
       <input
         type={type}
@@ -14,7 +16,8 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
         )}
         style={{
           borderRadius: "var(--border-radius-xl)",
-          borderWidth: "1px"
+          borderWidth: "1px",
+          ...props.style
         }}
         ref={ref}
         {...props}
