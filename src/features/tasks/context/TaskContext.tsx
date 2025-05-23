@@ -2,7 +2,7 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 import { Task } from "@/lib/types";
 import { useTaskQueries } from "@/features/tasks/hooks/useTaskQueries";
-import { useTaskMutations } from "@/features/tasks/hooks/useTaskMutations";
+import { useTaskMutation } from "@/features/tasks/hooks/mutations/useTaskMutation";
 
 // Define data-focused context type
 interface TaskDataContextType {
@@ -55,7 +55,7 @@ export function TaskContextProvider({ children }: { children: ReactNode }) {
     isFetching
   } = useTaskQueries(pageSize);
   
-  const { toggleTaskPin, toggleTaskComplete, createFollowUpTask } = useTaskMutations();
+  const { toggleTaskPin, toggleTaskComplete, createFollowUpTask } = useTaskMutation();
 
   return (
     <TaskDataContext.Provider value={{
