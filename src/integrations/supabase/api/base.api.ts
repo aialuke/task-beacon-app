@@ -1,6 +1,7 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import { ApiError, TablesResponse } from '../types/api.types';
+import { handleApiError } from '@/lib/errorHandling';
 
 /**
  * Handles and normalizes errors from Supabase or other sources
@@ -8,7 +9,7 @@ import { ApiError, TablesResponse } from '../types/api.types';
  * @param error - The error object from Supabase or other source
  * @returns A standardized ApiError object
  */
-export const handleApiError = (error: unknown): ApiError => {
+export const formatApiError = (error: unknown): ApiError => {
   // Handle PostgrestError from Supabase
   if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
     return {
@@ -63,6 +64,11 @@ export const apiRequest = async <T>(
     const data = await requestFn();
     return { data, error: null };
   } catch (error) {
-    return { data: null, error: handleApiError(error) };
+    const formattedError = formatApiError(error);
+    
+    // Log error to console for debugging
+    console.error("[API Error]:", formattedError);
+    
+    return { data: null, error: formattedError };
   }
 };

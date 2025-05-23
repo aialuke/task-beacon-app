@@ -1,0 +1,59 @@
+
+/* src/styles/components/buttons.css - Button styling */
+@layer components {
+  /* ===== BUTTON STYLING CONSISTENCY ===== */
+  button, 
+  .button,
+  [role="button"] {
+    border-radius: var(--radius-full);
+    @apply transition-all duration-200;
+  }
+
+  button:hover, 
+  .button:hover,
+  [role="button"]:hover {
+    @apply shadow-md -translate-y-1;
+  }
+
+  button:active, 
+  .button:active,
+  [role="button"]:active {
+    @apply translate-y-0;
+  }
+
+  /* ===== FAB BUTTON ===== */
+  .fab {
+    @apply flex items-center justify-center fixed shadow-lg;
+    bottom: 16px;
+    right: 16px;
+    width: 56px;
+    height: 56px;
+    z-index: 99999;
+    transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+    background: var(--gradient-blue);
+    color: hsl(var(--primary-foreground));
+    border-radius: var(--radius-full);
+  }
+
+  .fab svg {
+    stroke: white;
+    stroke-width: 2;
+  }
+
+  .fab:hover {
+    background: var(--gradient-blue-dark);
+    transform: scale(1.05);
+    @apply shadow-xl;
+  }
+
+  .fab:active {
+    transform: scale(0.95);
+    @apply shadow-lg;
+  }
+
+  @media (max-width: 320px) {
+    .fab {
+      @apply bottom-2 right-2 w-12 h-12;
+    }
+  }
+}

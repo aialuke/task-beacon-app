@@ -1,0 +1,44 @@
+
+/* src/styles/utilities/accessibility.css - Accessibility utility classes */
+@layer utilities {
+  /* ===== ACCESSIBILITY UTILITIES ===== */
+  /* Use more specific selector for focus styles */
+  .focus-visible:focus {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
+  }
+
+  /* ===== TOOLTIP UTILITIES ===== */
+  .tooltip-touch {
+    @apply visible opacity-100 transition-opacity duration-300;
+  }
+
+  @media (hover: none) {
+    .tooltip-touch {
+      @apply visible opacity-100;
+    }
+  }
+  
+  /* ===== RESPONSIVE UTILITIES ===== */
+  @media (max-width: 640px) {
+    .filter-dropdown-mobile {
+      width: 40%;
+    }
+  }
+
+  @media (min-width: 641px) {
+    .filter-dropdown-mobile {
+      width: 25%;
+    }
+  }
+  
+  /* ===== BORDER RADIUS UTILITIES ===== */
+  .rounded-xl-container {
+    border-radius: var(--radius-xl);
+  }
+
+  /* ===== ICON UTILITIES ===== */
+  .icon-filled {
+    fill: currentColor;
+  }
+}

@@ -1,0 +1,21 @@
+
+/* src/styles/utilities/shadows.css - Shadow utility classes */
+@layer utilities {
+  /* ===== SHADOW UTILITIES ===== */
+  .shadow-hover {
+    @apply transition-shadow transition-transform duration-200;
+  }
+  
+  .shadow-hover:hover {
+    @apply shadow-lg -translate-y-1;
+  }
+
+  /* ===== BUTTON UTILITIES ===== */
+  .no-shadow {
+    @apply shadow-none;
+  }
+
+  .no-shadow:hover {
+    @apply shadow-none transform-none;
+  }
+}

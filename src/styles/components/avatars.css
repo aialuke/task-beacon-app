@@ -1,0 +1,15 @@
+
+/* src/styles/components/avatars.css - Avatar component styling */
+@layer components {
+  /* ===== AVATAR FALLBACK BACKGROUNDS ===== */
+  .avatar-fallback {
+    background-color: #e5e7eb;
+    color: #6b7280;
+  }
+
+  /* ===== HEADER & LOGO ===== */
+  .header-logo {
+    @apply text-primary;
+    fill: currentColor;
+  }
+}
