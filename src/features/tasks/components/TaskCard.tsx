@@ -1,3 +1,4 @@
+
 import { useRef, memo, useCallback } from "react";
 import { Task } from "@/lib/types";
 import { useTaskContext } from "@/features/tasks/context/TaskContext";
@@ -46,9 +47,26 @@ function TaskCard({ task }: TaskCardProps) {
     await toggleTaskPin(task);
   }, [task, toggleTaskPin]);
 
+  // Direct style with specific border-radius properties
+  const cardStyle = {
+    overflowY: "hidden" as const,
+    boxSizing: "border-box" as const,
+    width: "100%",
+    position: "relative" as const,
+    zIndex: 1,
+    borderRadius: "0.75rem",
+    WebkitBorderRadius: "0.75rem",
+    MozBorderRadius: "0.75rem",
+    borderTopLeftRadius: "0.75rem",
+    borderTopRightRadius: "0.75rem",
+    borderBottomLeftRadius: "0.75rem",
+    borderBottomRightRadius: "0.75rem",
+    borderWidth: "1px"
+  };
+
   return (
     <div
-      className={`task-card-container ${isExpanded ? "expanded" : ""}`}
+      className="task-card-container"
       style={{
         overflowY: "hidden",
         boxSizing: "border-box",
@@ -61,16 +79,9 @@ function TaskCard({ task }: TaskCardProps) {
     >
       <div
         ref={cardRef}
-        className={`task-card ${isExpanded ? "expanded-card" : ""} p-3 border border-gray-200 hover:border-secondary rounded-xl`}
+        className={`task-card ${isExpanded ? "expanded-card" : ""} p-3 border border-gray-200 hover:border-secondary`}
         data-expanded={isExpanded}
-        style={{
-          overflowY: "hidden",
-          boxSizing: "border-box",
-          width: "100%",
-          position: "relative",
-          zIndex: 1,
-          borderRadius: "var(--border-radius-xl)"
-        }}
+        style={cardStyle}
       >
         <TaskHeader
           task={task}

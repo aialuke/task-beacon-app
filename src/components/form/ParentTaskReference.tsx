@@ -14,7 +14,9 @@ export function ParentTaskReference({ parentTask }: ParentTaskReferenceProps) {
     <div 
       className="p-2 bg-gray-50 rounded-xl" 
       style={{ 
-        borderRadius: "var(--border-radius-xl)",
+        borderRadius: "0.75rem",
+        WebkitBorderRadius: "0.75rem",
+        MozBorderRadius: "0.75rem",
         border: "1px solid #e2e8f0" 
       }}
     >

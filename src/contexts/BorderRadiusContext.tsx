@@ -1,9 +1,11 @@
 
 import React, { createContext, useContext, ReactNode } from 'react';
 
-// Style object that will be consistently applied across components
+// Style object that will be consistently applied across components - now with direct values
 const borderRadiusStyles = {
-  borderRadius: 'var(--border-radius-xl)',
+  borderRadius: '0.75rem',
+  WebkitBorderRadius: '0.75rem',
+  MozBorderRadius: '0.75rem',
   borderWidth: '1px'
 };
 

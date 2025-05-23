@@ -45,9 +45,8 @@ svg {
   fill: none;
 }
 
-/* Global border radius overrides moved to border-radius-fix.css */
-
-/* Ensure borders are visible */
+/* Ensure borders are visible - these must come after all other styles */
 input, textarea, select, .task-card {
   border-width: 1px !important;
+  border-radius: 0.75rem !important;
 }

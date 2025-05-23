@@ -1,8 +1,8 @@
 
-/* Border radius fix - overrides with stronger specificity */
+/* Border radius fix - using direct values instead of variables */
 :root {
-  --border-radius-xl: 0.75rem !important; /* 12px */
-  --border-radius-full: 9999px !important;
+  --border-radius-xl: 0.75rem; /* 12px */
+  --border-radius-full: 9999px;
 }
 
 /* Global selectors with !important to override any resets */
@@ -16,10 +16,12 @@ button,
 .dropdown-content,
 [class*="rounded"],
 [style*="border-radius"] {
-  border-radius: var(--border-radius-xl) !important;
+  border-radius: 0.75rem !important;
+  -webkit-border-radius: 0.75rem !important;
+  -moz-border-radius: 0.75rem !important;
 }
 
-/* Target specific components that might be problematic */
+/* Target specific components that might be problematic with direct values */
 .select-trigger,
 .select-content,
 .popover-content,
@@ -29,33 +31,53 @@ button,
 .avatar,
 .form-field-group input,
 .form-field-group select,
-.form-field-group textarea,
-.task-card {
-  border-radius: var(--border-radius-xl) !important;
+.form-field-group textarea {
+  border-radius: 0.75rem !important;
+  -webkit-border-radius: 0.75rem !important;
+  -moz-border-radius: 0.75rem !important;
+}
+
+/* Specific targeting for task cards */
+.task-card,
+.task-card-container > div {
+  border-radius: 0.75rem !important;
+  -webkit-border-radius: 0.75rem !important;
+  -moz-border-radius: 0.75rem !important;
+  border-top-left-radius: 0.75rem !important;
+  border-top-right-radius: 0.75rem !important;
+  border-bottom-left-radius: 0.75rem !important;
+  border-bottom-right-radius: 0.75rem !important;
+  overflow: hidden;
 }
 
 /* Ensure image previews are rounded */
 img.rounded-xl {
-  border-radius: var(--border-radius-xl) !important;
+  border-radius: 0.75rem !important;
+  -webkit-border-radius: 0.75rem !important;
+  -moz-border-radius: 0.75rem !important;
 }
 
-/* Ensure buttons have rounded corners */
+/* Ensure buttons have rounded corners with direct values */
 button, 
 .btn,
 [role="button"],
 [type="button"],
 [type="submit"],
 [type="reset"] {
-  border-radius: var(--border-radius-xl) !important;
+  border-radius: 0.75rem !important;
+  -webkit-border-radius: 0.75rem !important;
+  -moz-border-radius: 0.75rem !important;
 }
 
-/* Exceptions for full radius elements */
+/* Exceptions for full radius elements with direct values */
 .avatar,
 .avatar-fallback,
 input[type="file"]::file-selector-button,
 .rounded-full,
 [style*="border-radius: 9999px"] {
-  border-radius: var(--border-radius-full) !important;
+  border-radius: 9999px !important;
+  -webkit-border-radius: 9999px !important;
+  -moz-border-radius: 9999px !important;
 }
 
 /* Ensure borders are visible */
