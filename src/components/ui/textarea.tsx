@@ -13,6 +13,10 @@ const Textarea = React.forwardRef<
         "flex min-h-[80px] w-full rounded-xl border border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50 transition-colors",
         className
       )}
+      style={{
+        borderRadius: "var(--border-radius-xl)",
+        borderWidth: "1px"
+      }}
       ref={ref}
       {...props}
     />

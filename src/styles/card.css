@@ -10,8 +10,9 @@
     margin-right: auto;
     transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
     /* Rounded corners for task cards */
-    border-radius: var(--border-radius-xl);
+    border-radius: var(--border-radius-xl) !important;
     background-color: white;
+    border-width: 1px !important;
   }
 
   .task-card:hover {

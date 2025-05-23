@@ -99,11 +99,14 @@ export default function UserSearchInput({
       onFocus={handleFocus}
       onBlur={handleBlur}
     >
-      <div className={cn(
-        "flex items-center border border-input rounded-xl w-full user-search-input",
-        disabled ? "bg-muted opacity-50" : "bg-background",
-        isOpen ? "ring-2 ring-ring ring-offset-0" : ""
-      )}>
+      <div 
+        className={cn(
+          "flex items-center border border-input rounded-xl w-full user-search-input",
+          disabled ? "bg-muted opacity-50" : "bg-background",
+          isOpen ? "ring-2 ring-ring ring-offset-0" : ""
+        )}
+        style={{ borderRadius: "var(--border-radius-xl)" }}
+      >
         <div className="flex items-center pl-3">
           <User className="h-4 w-4 text-muted-foreground" />
         </div>
@@ -134,12 +137,16 @@ export default function UserSearchInput({
             onChange={(e) => setSearchTerm(e.target.value)}
             className="flex-grow border-0 bg-transparent px-3 py-2 text-sm focus:outline-none focus:ring-0"
             disabled={disabled}
+            style={{ borderRadius: "var(--border-radius-xl)" }}
           />
         )}
       </div>
       
       {isOpen && !selectedUser && filteredUsers.length > 0 && (
-        <div className="absolute z-[9999] w-full mt-1 bg-popover text-popover-foreground shadow-md rounded-xl overflow-hidden border border-border user-search-results">
+        <div 
+          className="absolute z-[9999] w-full mt-1 bg-popover text-popover-foreground shadow-md rounded-xl overflow-hidden border border-border user-search-results"
+          style={{ borderRadius: "var(--border-radius-xl)", borderWidth: "1px" }}
+        >
           <div className="overflow-y-auto p-1 max-h-20">
             {loading ? (
               <div className="py-2 text-center text-sm">Loading...</div>
@@ -152,6 +159,7 @@ export default function UserSearchInput({
                     key={user.id}
                     onClick={() => handleSelect(user.id)}
                     className="relative flex cursor-pointer select-none items-center rounded-xl px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground transition-colors"
+                    style={{ borderRadius: "var(--border-radius-xl)" }}
                   >
                     <User className="h-4 w-4 mr-2" />
                     <span>{getUserDisplayName(user)}</span>

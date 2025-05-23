@@ -41,3 +41,20 @@
 svg {
   fill: none;
 }
+
+/* Global border radius overrides */
+.rounded-xl,
+input,
+textarea,
+select,
+.task-card,
+button,
+.dropdown-content,
+.card {
+  border-radius: var(--border-radius-xl) !important;
+}
+
+/* Ensure borders are visible */
+input, textarea, select, .task-card {
+  border-width: 1px !important;
+}

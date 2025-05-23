@@ -19,7 +19,7 @@
   input[type="datetime-local"],
   textarea,
   .select-trigger {
-    border-radius: var(--border-radius-xl);
+    border-radius: var(--border-radius-xl) !important;
     padding: 0.5rem 0.75rem;
     border: 1px solid #e2e8f0;
     transition: all 0.2s ease;
@@ -49,6 +49,7 @@
   input[type="file"] {
     @apply text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/80 cursor-pointer;
     max-width: 100%;
+    border-radius: var(--border-radius-xl) !important;
   }
 
   @media (max-width: 640px) {

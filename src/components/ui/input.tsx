@@ -13,7 +13,8 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
           className
         )}
         style={{
-          borderRadius: "var(--border-radius-xl)"
+          borderRadius: "var(--border-radius-xl)",
+          borderWidth: "1px"
         }}
         ref={ref}
         {...props}

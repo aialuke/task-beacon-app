@@ -17,7 +17,8 @@ const Card = React.forwardRef<
       backgroundColor: "white",
       color: "#000000e6",
       borderColor: "#e2e8f0",
-      borderRadius: "var(--border-radius-xl)"
+      borderRadius: "var(--border-radius-xl)",
+      borderWidth: "1px"
     }}
     {...props}
   />

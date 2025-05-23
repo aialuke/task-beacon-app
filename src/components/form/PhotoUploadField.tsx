@@ -17,6 +17,7 @@ export function PhotoUploadField({ onChange, preview }: PhotoUploadFieldProps) {
           onChange={onChange}
           className="cursor-pointer w-full sm:w-auto"
           aria-label="Attach File"
+          style={{ borderRadius: "var(--border-radius-xl)" }}
         />
       </div>
       {preview && (
@@ -25,6 +26,7 @@ export function PhotoUploadField({ onChange, preview }: PhotoUploadFieldProps) {
             src={preview}
             alt="Preview"
             className="h-20 w-20 object-cover rounded-xl"
+            style={{ borderRadius: "var(--border-radius-xl)" }}
           />
         </div>
       )}
