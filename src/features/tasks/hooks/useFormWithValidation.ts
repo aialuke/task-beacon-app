@@ -48,8 +48,10 @@ export function useFormWithValidation<T extends FieldValues>({
     [onSubmit, methods, successMessage]
   );
 
+  // Return the form methods and a wrapped handleSubmit that uses our custom handler
   return {
     ...methods,
+    formState: methods.formState,
     handleSubmit: methods.handleSubmit(handleSubmit),
     isSubmitting,
   };

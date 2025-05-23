@@ -17,7 +17,7 @@ export function useTaskCompletionToggle(task: Task, toggleTaskComplete: ToggleTa
     setLoading(true);
     try {
       await toggleTaskComplete(task);
-      const statusText = task.status === 'completed' ? 'reopened' : 'completed';
+      const statusText = task.status === "complete" ? 'reopened' : 'completed';
       toast.success(`Task ${statusText} successfully`);
     } catch (error) {
       console.error('Failed to toggle task status:', error);
