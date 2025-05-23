@@ -9,6 +9,7 @@ export const handleApiError = (error: unknown): ApiError => {
   // Handle PostgrestError from Supabase
   if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
     return {
+      name: 'ApiError', // Add name property to make compatible with Error interface
       message: String(error.message),
       code: String(error.code),
       details: 'details' in error ? error.details : undefined,
@@ -20,6 +21,7 @@ export const handleApiError = (error: unknown): ApiError => {
   // Handle standard Error objects
   if (error instanceof Error) {
     return {
+      name: error.name,
       message: error.message,
       originalError: error,
     };
@@ -27,6 +29,7 @@ export const handleApiError = (error: unknown): ApiError => {
   
   // Handle unknown error types
   return {
+    name: 'UnknownError',
     message: typeof error === 'string' ? error : 'An unknown error occurred',
     details: error,
   };

@@ -16,3 +16,6 @@ export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABL
     autoRefreshToken: true,
   }
 });
+
+// Mock functionality for development when Supabase is not properly connected
+export const isMockingSupabase = true;

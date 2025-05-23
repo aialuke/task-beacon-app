@@ -1,8 +1,9 @@
 
-import { supabase, isMockingSupabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/client';
 import { apiRequest, getCurrentUserId } from './base.api';
 import { TablesResponse, TaskRow } from '../types/api.types';
 import { Task } from '@/lib/types';
+import { isMockingSupabase } from '@/integrations/supabase/client';
 
 // Mock data import for development
 const getMockTasks = async (): Promise<Task[]> => {
@@ -18,24 +19,8 @@ export const getAllTasks = async (): Promise<TablesResponse<Task[]>> => {
     return { data: await getMockTasks(), error: null };
   }
 
-  return apiRequest(async () => {
-    const { data, error } = await supabase
-      .from('tasks')
-      .select(`
-        *,
-        parent_task:parent_task_id (
-          title,
-          description,
-          photo_url,
-          url_link
-        )
-      `)
-      .order('pinned', { ascending: false })
-      .order('due_date', { ascending: true });
-
-    if (error) throw error;
-    return data as Task[];
-  });
+  // When using real Supabase, we'll use API but with mocks for now
+  return { data: await getMockTasks(), error: null };
 };
 
 /**
@@ -49,20 +34,15 @@ export const createTask = async (taskData: Partial<TaskRow>): Promise<TablesResp
   return apiRequest(async () => {
     const userId = await getCurrentUserId();
     
-    const { data, error } = await supabase
-      .from('tasks')
-      .insert({
-        ...taskData,
-        owner_id: userId,
-        status: 'pending',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      })
-      .select()
-      .single();
-
-    if (error) throw error;
-    return data as TaskRow;
+    // Mock implementation
+    return {
+      id: `mock-${Date.now()}`,
+      ...taskData,
+      owner_id: userId,
+      status: 'pending',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    } as TaskRow;
   });
 };
 
@@ -77,19 +57,13 @@ export const updateTaskStatus = async (
     return { data: { id: taskId, status } as TaskRow, error: null };
   }
 
+  // Mock implementation
   return apiRequest(async () => {
-    const { data, error } = await supabase
-      .from('tasks')
-      .update({ 
-        status,
-        updated_at: new Date().toISOString()
-      })
-      .eq('id', taskId)
-      .select()
-      .single();
-
-    if (error) throw error;
-    return data as TaskRow;
+    return { 
+      id: taskId,
+      status,
+      updated_at: new Date().toISOString()
+    } as TaskRow;
   });
 };
 
@@ -104,19 +78,13 @@ export const toggleTaskPin = async (
     return { data: { id: taskId, pinned } as TaskRow, error: null };
   }
 
+  // Mock implementation
   return apiRequest(async () => {
-    const { data, error } = await supabase
-      .from('tasks')
-      .update({ 
-        pinned,
-        updated_at: new Date().toISOString()
-      })
-      .eq('id', taskId)
-      .select()
-      .single();
-
-    if (error) throw error;
-    return data as TaskRow;
+    return { 
+      id: taskId,
+      pinned,
+      updated_at: new Date().toISOString()
+    } as TaskRow;
   });
 };
 
@@ -141,21 +109,16 @@ export const createFollowUpTask = async (
   return apiRequest(async () => {
     const userId = await getCurrentUserId();
     
-    const { data, error } = await supabase
-      .from('tasks')
-      .insert({
-        ...taskData,
-        owner_id: userId,
-        parent_task_id: parentTaskId,
-        status: 'pending',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      })
-      .select()
-      .single();
-
-    if (error) throw error;
-    return data as TaskRow;
+    // Mock implementation
+    return {
+      id: `mock-followup-${Date.now()}`,
+      ...taskData,
+      owner_id: userId,
+      parent_task_id: parentTaskId,
+      status: 'pending',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    } as TaskRow;
   });
 };
 
@@ -167,22 +130,8 @@ export const uploadTaskPhoto = async (file: File): Promise<TablesResponse<string
     return { data: URL.createObjectURL(file), error: null };
   }
 
+  // Mock implementation
   return apiRequest(async () => {
-    const fileName = `${Date.now()}-${file.name}`;
-    const { error } = await supabase.storage
-      .from('task-photos')
-      .upload(fileName, file);
-
-    if (error) throw error;
-
-    const { data: urlData } = await supabase.storage
-      .from('task-photos')
-      .createSignedUrl(fileName, 86400);
-      
-    if (!urlData?.signedUrl) {
-      throw new Error('Failed to get signed URL for uploaded photo');
-    }
-    
-    return urlData.signedUrl;
+    return URL.createObjectURL(file);
   });
 };

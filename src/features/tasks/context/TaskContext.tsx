@@ -21,7 +21,7 @@ export function TaskContextProvider({ children }: { children: ReactNode }) {
     <TaskContext.Provider value={{
       tasks,
       isLoading,
-      error,
+      error: error as Error, // Cast to Error type to satisfy the type constraint
       filter,
       setFilter,
       expandedTaskId,

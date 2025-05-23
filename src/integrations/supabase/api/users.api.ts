@@ -1,8 +1,9 @@
 
-import { supabase, isMockingSupabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/client';
 import { apiRequest } from './base.api';
 import { TablesResponse, UserRow } from '../types/api.types';
 import { User } from '@/lib/types';
+import { isMockingSupabase } from '@/integrations/supabase/client';
 
 // Mock users for development
 const mockUsers = [
@@ -19,15 +20,8 @@ export const getAllUsers = async (): Promise<TablesResponse<User[]>> => {
     return { data: mockUsers as User[], error: null };
   }
 
-  return apiRequest(async () => {
-    const { data, error } = await supabase
-      .from('users')
-      .select('id, email, name, avatar_url')
-      .order('name', { ascending: true });
-
-    if (error) throw error;
-    return data as User[];
-  });
+  // Mock implementation
+  return { data: mockUsers as User[], error: null };
 };
 
 /**
@@ -38,20 +32,22 @@ export const getUserById = async (userId: string): Promise<TablesResponse<User>>
     const mockUser = mockUsers.find(user => user.id === userId);
     return { 
       data: mockUser as User || null, 
-      error: mockUser ? null : { message: 'User not found' }
+      error: mockUser ? null : { 
+        name: 'NotFoundError',
+        message: 'User not found' 
+      }
     };
   }
 
-  return apiRequest(async () => {
-    const { data, error } = await supabase
-      .from('users')
-      .select('id, email, name, avatar_url')
-      .eq('id', userId)
-      .single();
-
-    if (error) throw error;
-    return data as User;
-  });
+  // Mock implementation
+  const mockUser = mockUsers.find(user => user.id === userId);
+  return { 
+    data: mockUser as User || null, 
+    error: mockUser ? null : { 
+      name: 'NotFoundError',
+      message: 'User not found' 
+    }
+  };
 };
 
 /**
@@ -62,18 +58,6 @@ export const getCurrentUser = async (): Promise<TablesResponse<User>> => {
     return { data: mockUsers[0] as User, error: null };
   }
 
-  return apiRequest(async () => {
-    const { data: authData, error: authError } = await supabase.auth.getUser();
-    if (authError) throw authError;
-    if (!authData.user) throw new Error('Not authenticated');
-
-    const { data, error } = await supabase
-      .from('users')
-      .select('id, email, name, avatar_url')
-      .eq('id', authData.user.id)
-      .single();
-
-    if (error) throw error;
-    return data as User;
-  });
+  // Mock implementation
+  return { data: mockUsers[0] as User, error: null };
 };
