@@ -146,11 +146,12 @@ export default function UserSearchInput({ value, onChange, disabled = false }: U
             </button>
           </div>
         ) : (
-          <CommandInput 
+          <input 
+            type="text"
             placeholder="Search user..." 
             value={searchTerm}
-            onValueChange={setSearchTerm}
-            className="flex-grow border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="flex-grow border-0 bg-transparent px-3 py-2 text-sm focus:outline-none focus:ring-0"
             disabled={disabled}
           />
         )}
@@ -158,26 +159,27 @@ export default function UserSearchInput({ value, onChange, disabled = false }: U
       
       {isOpen && !selectedUser && (
         <div className="absolute z-50 w-full mt-1 bg-popover text-popover-foreground shadow-md rounded-md overflow-hidden border border-border">
-          <Command shouldFilter={false}>
-            <CommandList>
-              <CommandEmpty>
-                {loading ? "Loading..." : "No user found."}
-              </CommandEmpty>
-              <CommandGroup>
+          <div className="max-h-[300px] overflow-y-auto p-1">
+            {loading ? (
+              <div className="py-6 text-center text-sm">Loading...</div>
+            ) : filteredUsers.length === 0 ? (
+              <div className="py-6 text-center text-sm">No user found.</div>
+            ) : (
+              <div className="overflow-hidden p-1">
                 {filteredUsers.map(user => (
-                  <CommandItem
+                  <div 
                     key={user.id}
-                    onSelect={() => handleSelect(user.id)}
-                    className="flex items-center gap-2 cursor-pointer"
+                    onClick={() => handleSelect(user.id)}
+                    className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground"
                   >
-                    <User className="h-4 w-4" />
+                    <User className="h-4 w-4 mr-2" />
                     <span>{getUserDisplayName(user)}</span>
                     {user.id === value && <Check className="h-4 w-4 ml-auto" />}
-                  </CommandItem>
+                  </div>
                 ))}
-              </CommandGroup>
-            </CommandList>
-          </Command>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>
