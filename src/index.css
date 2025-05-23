@@ -32,7 +32,7 @@ svg {
 .task-card {
   background-color: white;
   border: 1px solid #e2e8f0;
-  border-radius: var(--task-card-radius) !important; /* Square corners */
+  border-radius: var(--task-card-radius) !important;
 }
 
 /* Select and dropdown styling */
@@ -43,6 +43,7 @@ svg {
   color: #000000e6;
   border-radius: var(--border-radius-xl);
   box-shadow: var(--shadow-lg);
+  z-index: 9999;
 }
 
 /* Dialog content styling */

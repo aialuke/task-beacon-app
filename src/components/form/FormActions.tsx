@@ -30,8 +30,7 @@ export function FormActions({
       )}
       <Button 
         type="submit" 
-        disabled={isSubmitting} 
-        className="btn-primary"
+        disabled={isSubmitting}
         size="sm"
         variant="default"
       >
