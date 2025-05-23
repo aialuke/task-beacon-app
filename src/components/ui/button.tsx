@@ -19,7 +19,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <Comp
         className={cn(
           buttonVariants({ variant, size, className }),
-          "shadow-sm hover:shadow-md transition-shadow"
+          "shadow-sm hover:shadow-md transition-all"
         )}
         ref={ref}
         {...props}

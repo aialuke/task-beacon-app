@@ -1,0 +1,256 @@
+
+/* src/styles/modern-theme.css */
+/* Modern UI Theme - Global style enhancements */
+
+/* ===== CORE UI ELEMENTS ===== */
+
+/* All interactive elements get consistent rounded corners, shadows, and transitions */
+button, 
+.button,
+[role="button"],
+input,
+textarea,
+select,
+.select-trigger,
+[class*="rounded-md"],
+[class*="rounded-lg"],
+.card,
+.dialog-content,
+.popover-content,
+.task-card,
+.dropdown-content {
+  border-radius: 0.75rem !important; /* 12px rounded corners globally */
+  transition: all 0.2s ease-out !important;
+}
+
+/* Form Fields - Consistent styling */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="search"],
+input[type="url"],
+input[type="tel"],
+input[type="date"],
+input[type="datetime-local"],
+textarea,
+.select-trigger,
+[class*="input"],
+[class*="textarea"] {
+  border-radius: 0.75rem !important;
+  padding: 0.5rem 0.75rem !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), inset 0 1px 2px rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid #e2e8f0 !important;
+  background-color: white !important;
+  transition: all 0.2s ease !important;
+}
+
+/* Focus states for inputs */
+input:focus,
+textarea:focus,
+select:focus,
+.select-trigger:focus,
+[class*="input"]:focus,
+[class*="textarea"]:focus {
+  outline: none !important;
+  border-color: #3662E3 !important;
+  box-shadow: 0 0 0 2px rgba(54, 98, 227, 0.15), 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Button enhancements */
+button, 
+.button,
+[role="button"],
+[class*="btn"] {
+  border-radius: 9999px !important; /* Full rounded for buttons */
+  padding: 0.5rem 1rem !important;
+  font-weight: 500 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06) !important;
+  transition: all 0.2s ease !important;
+}
+
+/* Primary button styling */
+button[class*="bg-primary"], 
+.btn-primary,
+[class*="btn-primary"] {
+  background: linear-gradient(45deg, #3662E3, #5C85EE) !important;
+  color: white !important;
+}
+
+button[class*="bg-primary"]:hover, 
+.btn-primary:hover,
+[class*="btn-primary"]:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06) !important;
+  filter: brightness(1.05) !important;
+}
+
+button[class*="bg-primary"]:active, 
+.btn-primary:active,
+[class*="btn-primary"]:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  filter: brightness(0.95) !important;
+}
+
+/* Secondary and outline button styling */
+button[class*="outline"], 
+.btn-secondary,
+[class*="btn-secondary"] {
+  background: white !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+button[class*="outline"]:hover, 
+.btn-secondary:hover,
+[class*="btn-secondary"]:hover {
+  background: #f8fafc !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Disabled button states */
+button:disabled, 
+.button:disabled,
+[role="button"][aria-disabled="true"],
+[class*="btn"]:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* ===== COMPONENT SPECIFIC STYLING ===== */
+
+/* Task cards */
+.task-card {
+  padding: 1rem !important;
+  margin-bottom: 0.75rem !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.06) !important;
+  border: 1px solid #f0f0f0 !important;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease !important;
+}
+
+.task-card:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+  border-color: #e2e8f0 !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Form layout - more compact */
+form .space-y-4 {
+  margin-top: -0.25rem !important;
+}
+
+.space-y-4 > * {
+  margin-top: 0.75rem !important;
+  margin-bottom: 0.75rem !important;
+}
+
+/* Dialog content styling */
+.dialog-content, 
+[class*="dialog-content"],
+.popover-content,
+[class*="popover-content"] {
+  padding: 1.25rem !important;
+  background: white !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+  border: 1px solid #f0f0f0 !important;
+}
+
+/* User search field styling */
+.user-search-container .dropdown-content {
+  overflow: hidden !important;
+  border-radius: 0.5rem !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Date picker styling */
+input[type="date"],
+input[type="datetime-local"] {
+  padding-right: 0.5rem !important;
+}
+
+/* Make dropdowns and popups more compact */
+.select-content,
+[data-radix-popper-content-wrapper],
+[data-radix-dropdown-menu-content] {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* File upload styling */
+input[type="file"] {
+  padding: 0.4rem !important;
+  border-radius: 0.75rem !important;
+}
+
+input[type="file"]::file-selector-button {
+  border-radius: 9999px !important;
+  padding: 0.25rem 0.75rem !important;
+  background: linear-gradient(45deg, #3662E3, #5C85EE) !important;
+  border: none !important;
+  color: white !important;
+  margin-right: 0.5rem !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* FAB (Floating Action Button) - special case */
+.fab {
+  background: linear-gradient(45deg, #3662E3, #5C85EE) !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.fab:hover {
+  transform: scale(1.05) translateY(-1px) !important;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Ensure dropdown z-index is always high enough */
+.select-content,
+[data-radix-popper-content-wrapper],
+[data-radix-dropdown-menu-content] {
+  z-index: 9999 !important;
+}
+
+/* Modern checkbox styling */
+input[type="checkbox"] {
+  border-radius: 4px !important;
+  background-color: white !important;
+  border: 2px solid #e2e8f0 !important;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #3662E3 !important;
+  border-color: #3662E3 !important;
+}
+
+/* Improve select dropdown items */
+.select-item:hover,
+.select-item:focus,
+[data-highlighted] {
+  background-color: #f0f5ff !important;
+  color: #3662E3 !important;
+}
+
+/* Override Input component border radius to be rounder */
+.Input,
+[class*="input-component"] {
+  border-radius: 0.75rem !important;
+}
+
+/* UserSearchInput specific component styling */
+.user-search-input {
+  border-radius: 0.75rem !important;
+}
+
+.user-search-input:focus-within {
+  box-shadow: 0 0 0 2px rgba(54, 98, 227, 0.15) !important;
+}
+
+.user-search-results {
+  border-radius: 0.75rem !important;
+  overflow: hidden !important; 
+  margin-top: 4px !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+}

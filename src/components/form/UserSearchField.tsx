@@ -9,7 +9,7 @@ interface UserSearchFieldProps {
 
 export function UserSearchField({ value, onChange, disabled = false }: UserSearchFieldProps) {
   return (
-    <div className="space-y-2">
+    <div>
       <UserSearchInput
         value={value}
         onChange={onChange}

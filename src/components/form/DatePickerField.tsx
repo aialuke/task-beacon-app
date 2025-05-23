@@ -9,7 +9,7 @@ interface DatePickerFieldProps {
 
 export function DatePickerField({ value, onChange }: DatePickerFieldProps) {
   return (
-    <div className="space-y-2 relative">
+    <div className="relative">
       <div className="relative">
         <Input
           id="due_date"
@@ -18,7 +18,7 @@ export function DatePickerField({ value, onChange }: DatePickerFieldProps) {
           onChange={onChange}
           placeholder="Select due date"
           required
-          className="pl-9"
+          className="pl-9 transition-all"
         />
         <Calendar size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
       </div>

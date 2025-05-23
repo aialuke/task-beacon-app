@@ -112,14 +112,14 @@ export default function UserSearchInput({
 
   return (
     <div 
-      className="relative w-full"
+      className="relative w-full user-search-container"
       onFocus={handleFocus}
       onBlur={handleBlur}
     >
       <div className={cn(
-        "flex items-center border border-input rounded-md w-full",
+        "flex items-center border border-input rounded-xl w-full user-search-input",
         disabled ? "bg-muted opacity-50" : "bg-background",
-        isOpen ? "ring-2 ring-ring ring-offset-2 ring-offset-background" : ""
+        isOpen ? "ring-2 ring-ring ring-offset-0" : ""
       )}>
         <div className="flex items-center pl-3">
           <User className="h-4 w-4 text-muted-foreground" />
@@ -156,7 +156,7 @@ export default function UserSearchInput({
       </div>
       
       {isOpen && !selectedUser && filteredUsers.length > 0 && (
-        <div className="absolute z-50 w-full mt-1 bg-popover text-popover-foreground shadow-md rounded-md overflow-hidden border border-border">
+        <div className="absolute z-[9999] w-full mt-1 bg-popover text-popover-foreground shadow-md rounded-xl overflow-hidden border border-border user-search-results">
           <div className="overflow-y-auto p-1 max-h-20">
             {loading ? (
               <div className="py-2 text-center text-sm">Loading...</div>
@@ -168,7 +168,7 @@ export default function UserSearchInput({
                   <div 
                     key={user.id}
                     onClick={() => handleSelect(user.id)}
-                    className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground"
+                    className="relative flex cursor-pointer select-none items-center rounded-md px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground transition-colors"
                   >
                     <User className="h-4 w-4 mr-2" />
                     <span>{getUserDisplayName(user)}</span>

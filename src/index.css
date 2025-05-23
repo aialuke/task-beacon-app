@@ -22,6 +22,7 @@
 @import "./styles/utilities.css";
 @import "./styles/accessibility.css";
 @import "./styles/animations.css";
+@import "./styles/modern-theme.css"; /* Import our new modern theme */
 
 /* Global icon handling - centralized here instead of duplicated */
 svg {

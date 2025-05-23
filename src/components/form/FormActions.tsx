@@ -15,18 +15,26 @@ export function FormActions({
   cancelLabel = "Cancel" 
 }: FormActionsProps) {
   return (
-    <div className="flex justify-end space-x-2 pt-2">
+    <div className="flex justify-end space-x-3 pt-2">
       {onCancel && (
         <Button
           type="button"
           variant="outline"
           onClick={onCancel}
           disabled={isSubmitting}
+          size="sm"
+          className="px-4"
         >
           {cancelLabel}
         </Button>
       )}
-      <Button type="submit" disabled={isSubmitting} className="btn-primary">
+      <Button 
+        type="submit" 
+        disabled={isSubmitting} 
+        className="btn-primary"
+        size="sm"
+        variant="default"
+      >
         {isSubmitting ? "Creating..." : submitLabel}
       </Button>
     </div>
