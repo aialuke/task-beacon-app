@@ -179,12 +179,22 @@
     @apply shadow-sm;
   }
 
-  /* Ensure primary buttons use the theme blue color */
-  .btn-primary,
+  /* Add more specific targeting for primary buttons - high specificity rules */
+  button[data-button-primary="true"],
   button[data-variant="default"],
-  button[data-variant="brand"] {
-    background-color: hsl(var(--primary));
-    color: hsl(var(--primary-foreground));
+  button[data-variant="brand"],
+  button[variant="default"],
+  button[variant="brand"],
+  button.bg-primary,
+  .btn-primary {
+    background-color: hsl(var(--primary)) !important;
+    color: hsl(var(--primary-foreground)) !important;
+  }
+
+  /* Debug class to verify styling */
+  .button-debug {
+    background-color: blue !important;
+    color: white !important;
   }
 
   /* ===== FORM FIELD STYLES ===== */

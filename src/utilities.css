@@ -1,3 +1,4 @@
+
 /* src/styles/utilities.css */
 @layer utilities {
   /* ===== LAYOUT UTILITIES ===== */
@@ -98,13 +99,19 @@
     color: #6b7280;
   }
 
-  /* Button specific color utilities */
+  /* Button specific color utilities - with important flags for higher specificity */
   .bg-primary-button {
-    background-color: hsl(var(--primary));
+    background-color: hsl(var(--primary)) !important;
   }
 
   .text-primary-button-foreground {
-    color: hsl(var(--primary-foreground));
+    color: hsl(var(--primary-foreground)) !important;
+  }
+  
+  /* Force primary button styling */
+  .force-primary-button {
+    background-color: hsl(var(--primary)) !important;
+    color: hsl(var(--primary-foreground)) !important;
   }
 
   /* Icon stroke colors */

@@ -33,6 +33,7 @@ export function FormActions({
         disabled={isSubmitting}
         size="sm"
         variant="default"
+        data-button-primary="true"
       >
         {isSubmitting ? "Creating..." : submitLabel}
       </Button>

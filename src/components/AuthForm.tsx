@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
-import { toast } from "@/lib/toast"; // Updated import
+import { toast } from "@/lib/toast";
 
 type AuthMode = "signin" | "signup" | "pin";
 
@@ -39,7 +39,7 @@ export default function AuthForm() {
       if (error) throw error;
 
       toast.success(mode === "signup" ? "Check your email for a confirmation link!" : "Logged in successfully!");
-        } catch (error: unknown) {
+    } catch (error: unknown) {
       if (error instanceof Error) {
         toast.error(error.message);
       } else {
@@ -144,6 +144,7 @@ export default function AuthForm() {
             <Button
               type="submit"
               variant="default"
+              data-button-primary="true"
               className="w-full"
               disabled={loading}
             >
