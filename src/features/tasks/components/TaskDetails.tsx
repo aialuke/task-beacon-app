@@ -37,14 +37,14 @@ function TaskDetails({
         zIndex: 2,
         visibility: isExpanded ? "visible" : "hidden",
       }}
-      className="w-full mt-1"
+      className="w-full mt-2"
     >
       <div
-        className={`space-y-3 ${isMobile ? "pl-4 pt-2 pb-4" : "pl-6 pt-2 pb-4"}`}
+        className={`space-y-4 ${isMobile ? "pl-4 pt-2 pb-4" : "pl-6 pt-3 pb-4"} bg-white bg-opacity-70 rounded-xl`}
         style={{ height: isExpanded ? "auto" : "0", overflowY: "hidden" }}
       >
         {task.description && (
-          <div className="text-sm text-gray-600">
+          <div className="text-sm leading-relaxed text-gray-600">
             {task.description}
           </div>
         )}
@@ -56,12 +56,12 @@ function TaskDetails({
         )}
 
         {task.photo_url && (
-          <div>
-            <span className="text-sm font-medium text-gray-600">Photo:</span>
+          <div className="pt-1">
+            <span className="text-sm font-medium text-gray-600 block mb-2">Photo:</span>
             <img
               src={task.photo_url}
               alt="Task attachment"
-              className="mt-1 h-20 w-20 object-cover rounded-xl"
+              className="h-24 w-auto object-cover rounded-xl shadow-sm"
               loading="lazy"
             />
           </div>

@@ -21,11 +21,14 @@ function TaskHeader({
   handleTogglePin,
 }: TaskHeaderProps) {
   return (
-    <div className="flex items-center w-full gap-2 task-header-container">
+    <div className="flex items-center w-full gap-3 task-header-container pb-2">
       <TaskStatus task={task} />
 
       <div className="flex-1 min-w-0 flex items-center">
-        <h3 className="text-base sm:text-lg text-gray-900 mb-0" title={task.title}>
+        <h3 
+          className="text-base sm:text-lg font-medium text-gray-900 mb-0 line-clamp-1" 
+          title={task.title}
+        >
           {task.title}
         </h3>
       </div>
@@ -33,14 +36,14 @@ function TaskHeader({
       <Button
         variant="ghost"
         size="icon"
-        className="shrink-0 h-8 w-8 ml-1 no-shadow"
+        className="shrink-0 h-8 w-8 ml-1 no-shadow hover:bg-gray-100"
         onClick={handleTogglePin}
         title={task.pinned ? "Unpin task" : "Pin task"}
       >
         {task.pinned ? (
-          <Pin size={16} className="text-gray-900 stroke-gray-900 icon-filled" />
+          <Pin size={16} className="text-primary stroke-primary icon-filled" />
         ) : (
-          <Pin size={16} className="text-gray-900 stroke-gray-900" style={{ opacity: 0.8 }} />
+          <Pin size={16} className="text-gray-500 stroke-gray-500" />
         )}
       </Button>
 
