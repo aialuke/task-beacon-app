@@ -1,9 +1,9 @@
 
-// Move from src/hooks/useBaseTaskForm.ts
 import { useState, useCallback } from "react";
-import { supabase, isMockingSupabase } from "@/lib/supabase";
 import { toast } from "@/lib/toast";
 import { compressAndResizePhoto } from "@/lib/utils";
+import { uploadTaskPhoto } from "@/integrations/supabase/api/tasks.api";
+import { isMockingSupabase } from "@/integrations/supabase/client";
 
 export interface BaseTaskFormState {
   title: string;
@@ -87,24 +87,21 @@ export function useBaseTaskForm({ initialUrl = "", onClose }: UseBaseTaskFormOpt
   }, []);
 
   /**
-   * Uploads the selected photo to Supabase storage
+   * Uploads the selected photo using the API layer
    * @returns URL of the uploaded photo or null if no photo
    */
   const uploadPhoto = useCallback(async (): Promise<string | null> => {
     if (!photo) return null;
-    if (isMockingSupabase) return photoPreview;
-
-    const fileName = `${Date.now()}-${photo.name}`;
-    const { data, error } = await supabase.storage
-      .from("task-photos")
-      .upload(fileName, photo);
-    if (error) throw error;
-
-    const { data: urlData } = await supabase.storage
-      .from("task-photos")
-      .createSignedUrl(fileName, 86400);
-    return urlData?.signedUrl || null;
-  }, [photo, photoPreview]);
+    
+    try {
+      const { data: photoUrl, error } = await uploadTaskPhoto(photo);
+      if (error) throw error;
+      return photoUrl || null;
+    } catch (error) {
+      console.error("Error uploading photo:", error);
+      return null;
+    }
+  }, [photo]);
 
   /**
    * Resets all form fields to their initial values

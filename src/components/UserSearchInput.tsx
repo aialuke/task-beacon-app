@@ -2,15 +2,8 @@
 import { useEffect, useState } from "react";
 import { Check, User } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { supabase, isMockingSupabase } from "@/lib/supabase";
 import { toast } from "@/lib/toast";
-
-// Mock users for development
-const mockUsers = [
-  { id: "user-1", name: "Alex Johnson", email: "alex@example.com" },
-  { id: "user-2", name: "Taylor Smith", email: "taylor@example.com" },
-  { id: "user-3", name: "Jordan Davis", email: "jordan@example.com" },
-];
+import { getAllUsers } from "@/integrations/supabase/api/users.api";
 
 interface UserSearchInputProps {
   value: string;
@@ -51,18 +44,8 @@ export default function UserSearchInput({
   const loadUsers = async () => {
     setLoading(true);
     try {
-      if (isMockingSupabase) {
-        // Use mock data when Supabase is not connected
-        setUsers(mockUsers);
-        setLoading(false);
-        return;
-      }
-
-      const { data, error } = await supabase
-        .from("users")
-        .select("id, name, email")
-        .order("name", { ascending: true });
-
+      const { data, error } = await getAllUsers();
+      
       if (error) throw error;
       setUsers(data || []);
     } catch (error: unknown) {

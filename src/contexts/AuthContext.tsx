@@ -1,8 +1,9 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { supabase, isMockingSupabase } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/lib/toast";
 import { User } from "@/lib/types";
+import { getCurrentUser } from "@/integrations/supabase/api/users.api";
 
 interface AuthContextType {
   user: User | null;
@@ -21,14 +22,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Fetch user data
   const fetchUser = async () => {
     try {
-      if (isMockingSupabase) {
-        setUser({ id: "mock-user", email: "mock@example.com" });
-        setLoading(false);
-        return;
-      }
-
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user ? { id: user.id, email: user.email || "" } : null);
+      const { data, error } = await getCurrentUser();
+      
+      if (error) throw error;
+      setUser(data);
     } catch (error: unknown) {
       if (error instanceof Error) {
         setError(error);
@@ -55,12 +52,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    if (isMockingSupabase) {
-      setUser({ id: "mock-user", email: "mock@example.com" });
-      setLoading(false);
-      return;
-    }
-
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {

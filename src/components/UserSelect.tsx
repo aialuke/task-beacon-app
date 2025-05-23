@@ -1,16 +1,9 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { supabase, isMockingSupabase } from "@/lib/supabase";
 import { toast } from "@/lib/toast";
 import { Input } from "@/components/ui/input";
-
-// Mock users for development
-const mockUsers = [
-  { id: "user-1", name: "Alex Johnson", email: "alex@example.com" },
-  { id: "user-2", name: "Taylor Smith", email: "taylor@example.com" },
-  { id: "user-3", name: "Jordan Davis", email: "jordan@example.com" },
-];
+import { getAllUsers } from "@/integrations/supabase/api/users.api";
 
 interface UserSelectProps {
   value: string;
@@ -33,18 +26,8 @@ export default function UserSelect({ value, onChange, disabled = false }: UserSe
   const loadUsers = async () => {
     setLoading(true);
     try {
-      if (isMockingSupabase) {
-        // Use mock data when Supabase is not connected
-        setUsers(mockUsers);
-        setLoading(false);
-        return;
-      }
-
-      const { data, error } = await supabase
-        .from("users")
-        .select("id, name, email")
-        .order("name", { ascending: true });
-
+      const { data, error } = await getAllUsers();
+      
       if (error) throw error;
       setUsers(data || []);
     } catch (error: unknown) {
