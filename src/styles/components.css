@@ -1,0 +1,220 @@
+/* src/styles/components.css */
+@layer components {
+  /* ===== TASK CARD STYLES ===== */
+  .task-card {
+    @apply flex flex-col p-3 sm:p-3 shadow-sm border border-gray-200 hover:border-secondary transition-colors relative text-left;
+    min-height: calc(1.25 * 60px);
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    /* Rounded corners for task cards */
+    border-radius: var(--border-radius-xl);
+    background-color: white;
+  }
+
+  .task-card:hover {
+    @apply shadow-md;
+    border-color: hsl(var(--primary));
+  }
+
+  @media (min-width: 640px) {
+    .task-card {
+      width: 100%;
+    }
+  }
+
+  .task-card[data-expanded="true"] {
+    @apply border-primary shadow-md;
+    border-color: hsl(var(--primary));
+  }
+
+  .task-card-container::-webkit-scrollbar,
+  .task-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* ===== FORM STYLES ===== */
+  .form-field-group {
+    @apply space-y-2;
+  }
+
+  /* ===== FAB BUTTON ===== */
+  .fab {
+    @apply flex items-center justify-center fixed shadow-lg;
+    bottom: 16px;
+    right: 16px;
+    width: 56px;
+    height: 56px;
+    z-index: 99999;
+    transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+    background: var(--gradient-blue);
+    color: hsl(var(--primary-foreground));
+    border-radius: var(--border-radius-full);
+  }
+
+  .fab svg {
+    stroke: white;
+    stroke-width: 2;
+  }
+
+  .fab:hover {
+    background: var(--gradient-blue-dark);
+    transform: scale(1.05);
+    @apply shadow-xl;
+  }
+
+  .fab:active {
+    transform: scale(0.95);
+    @apply shadow-lg;
+  }
+
+  @media (max-width: 320px) {
+    .fab {
+      @apply bottom-2 right-2 w-12 h-12;
+    }
+  }
+
+  /* ===== HEADER & LOGO ===== */
+  .header-logo {
+    @apply text-primary;
+    fill: currentColor;
+  }
+
+  /* ===== TIMER STYLES ===== */
+  .timer-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    border-radius: 50%;
+    background: var(--gradient-light);
+    @apply shadow-sm;
+  }
+  
+  .timer-container:hover {
+    transform: scale(1.05);
+    @apply shadow-md;
+  }
+
+  .timer-ring {
+    clip-path: circle(50%);
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+  }
+  
+  .timer-progress {
+    transition: stroke-dashoffset 0.5s ease-out, stroke 0.3s ease;
+  }
+  
+  .timer-text {
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  /* File upload styles will remain in components.css since they're specialized */
+  input[type="file"] {
+    @apply text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/80 cursor-pointer;
+    max-width: 100%;
+  }
+
+  @media (max-width: 640px) {
+    input[type="file"] {
+      max-width: 100px;
+    }
+  }
+
+  @media (min-width: 640px) {
+    input[type="file"] {
+      max-width: 200px;
+    }
+  }
+
+  /* ===== SELECT & DROPDOWN STYLING ===== */
+  .select-content,
+  [data-radix-popper-content-wrapper],
+  [data-radix-dropdown-menu-content] {
+    background-color: white;
+    color: #000000e6;
+    border-radius: var(--border-radius-xl);
+    @apply shadow-lg;
+    z-index: 9999;
+  }
+
+  /* ===== DIALOG CONTENT STYLING ===== */
+  .dialog-content, 
+  [class*="dialog-content"],
+  .popover-content,
+  [class*="popover-content"] {
+    padding: 1.25rem;
+    background: white;
+    @apply shadow-lg;
+    border: 1px solid #f0f0f0;
+    border-radius: var(--border-radius-xl);
+  }
+
+  /* ===== AVATAR FALLBACK BACKGROUNDS ===== */
+  .avatar-fallback {
+    background-color: #e5e7eb;
+    color: #6b7280;
+  }
+
+  /* ===== BUTTON STYLING CONSISTENCY ===== */
+  button, 
+  .button,
+  [role="button"] {
+    border-radius: var(--border-radius-full);
+    @apply transition-all duration-200;
+  }
+
+  button:hover, 
+  .button:hover,
+  [role="button"]:hover {
+    @apply shadow-md -translate-y-1;
+  }
+
+  button:active, 
+  .button:active,
+  [role="button"]:active {
+    @apply translate-y-0;
+  }
+
+  /* ===== FORM FIELD STYLES ===== */
+  /* Form inputs with consistent styling */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  input[type="search"],
+  input[type="url"],
+  input[type="tel"],
+  input[type="date"],
+  input[type="datetime-local"],
+  textarea,
+  .select-trigger {
+    border-radius: var(--border-radius-xl);
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s ease;
+    @apply shadow-sm;
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+    border-color: #3662E3;
+    @apply shadow;
+  }
+
+  /* File selector button styling */
+  input[type="file"]::file-selector-button {
+    border-radius: var(--border-radius-full);
+    padding: 0.25rem 0.75rem;
+    background: var(--gradient-blue);
+    border: none;
+    color: white;
+    margin-right: 0.5rem;
+    @apply shadow-sm;
+  }
+}

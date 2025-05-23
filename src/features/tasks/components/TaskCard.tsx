@@ -5,7 +5,6 @@ import { useTaskContext } from "@/features/tasks/context/TaskContext";
 import TaskHeader from "./TaskHeader";
 import TaskDetails from "./TaskDetails";
 import { useTaskAnimation } from "@/features/tasks/hooks/useTaskAnimation";
-import { useBorderRadius } from "@/contexts/BorderRadiusContext";
 
 interface TaskCardProps {
   task: Task;
@@ -31,7 +30,6 @@ function TaskCard({ task }: TaskCardProps) {
   const { expandedTaskId, setExpandedTaskId, toggleTaskPin } = useTaskContext();
   const contentRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
-  const borderStyles = useBorderRadius();
   
   const isExpanded = expandedTaskId === task.id;
   
@@ -47,26 +45,9 @@ function TaskCard({ task }: TaskCardProps) {
     await toggleTaskPin(task);
   }, [task, toggleTaskPin]);
 
-  // Direct style with specific border-radius properties
-  const cardStyle = {
-    overflowY: "hidden" as const,
-    boxSizing: "border-box" as const,
-    width: "100%",
-    position: "relative" as const,
-    zIndex: 1,
-    borderRadius: "0.75rem",
-    WebkitBorderRadius: "0.75rem",
-    MozBorderRadius: "0.75rem",
-    borderTopLeftRadius: "0.75rem",
-    borderTopRightRadius: "0.75rem",
-    borderBottomLeftRadius: "0.75rem",
-    borderBottomRightRadius: "0.75rem",
-    borderWidth: "1px"
-  };
-
   return (
     <div
-      className="task-card-container"
+      className={`task-card-container ${isExpanded ? "expanded" : ""}`}
       style={{
         overflowY: "hidden",
         boxSizing: "border-box",
@@ -81,7 +62,14 @@ function TaskCard({ task }: TaskCardProps) {
         ref={cardRef}
         className={`task-card ${isExpanded ? "expanded-card" : ""} p-3 border border-gray-200 hover:border-secondary`}
         data-expanded={isExpanded}
-        style={cardStyle}
+        style={{
+          overflowY: "hidden",
+          boxSizing: "border-box",
+          width: "100%",
+          position: "relative",
+          zIndex: 1,
+          borderRadius: "var(--border-radius-xl)"
+        }}
       >
         <TaskHeader
           task={task}

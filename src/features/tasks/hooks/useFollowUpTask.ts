@@ -5,7 +5,6 @@ import { toast } from "@/lib/toast";
 import { showBrowserNotification, triggerHapticFeedback } from "@/lib/notification";
 import { useBaseTaskForm } from "./useBaseTaskForm";
 import { createFollowUpTask, uploadTaskPhoto } from "@/integrations/supabase/api/tasks.api";
-import { FollowUpTaskFormData, TaskFormState } from "../types";
 
 interface UseFollowUpTaskProps {
   parentTask: Task;
@@ -26,14 +25,7 @@ interface UseFollowUpTaskProps {
  * @param props.onClose - Optional callback to execute when the form is closed
  * @returns Form state and handlers for creating a follow-up task
  */
-export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps): TaskFormState & {
-  handleSubmit: (e: React.FormEvent) => Promise<void>;
-} {
-  const baseForm = useBaseTaskForm({
-    initialUrl: parentTask.url_link || "",
-    onClose
-  });
-  
+export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
   const {
     title,
     setTitle,
@@ -47,14 +39,17 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps): 
     photoPreview,
     pinned,
     setPinned,
-    assigneeId,
-    setAssigneeId,
     loading,
     setLoading,
     handlePhotoChange,
     resetForm,
     validateTitle
-  } = baseForm;
+  } = useBaseTaskForm({
+    initialUrl: parentTask.url_link || "",
+    onClose
+  });
+
+  const [assigneeId, setAssigneeId] = useState<string>("");
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,7 +67,7 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps): 
         photoUrl = uploadedUrl;
       }
 
-      const followUpData: FollowUpTaskFormData = {
+      const { error } = await createFollowUpTask(parentTask.id, {
         title,
         description: description || null,
         due_date: dueDate ? new Date(dueDate).toISOString() : null,
@@ -80,10 +75,7 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps): 
         url_link: url || null,
         assignee_id: assigneeId || null,
         pinned,
-        parent_task_id: parentTask.id,
-      };
-
-      const { error } = await createFollowUpTask(parentTask.id, followUpData);
+      });
 
       if (error) throw error;
 

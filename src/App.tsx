@@ -7,8 +7,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import Index from "./pages/Index";
 import { AuthProvider } from "./contexts/AuthContext";
-import { BorderRadiusProvider } from "./contexts/BorderRadiusContext";
-import { UIContextProvider } from "./contexts/UIContext";
 
 const NotFound = lazy(() => import("./pages/NotFound"));
 const TaskDetailsPage = lazy(() => import("./features/tasks/pages/TaskDetailsPage"));
@@ -33,22 +31,18 @@ const LoadingSpinner = () => (
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
-      <UIContextProvider>
-        <BorderRadiusProvider>
-          <TooltipProvider>
-            <Toaster />
-            <BrowserRouter>
-              <Suspense fallback={<LoadingSpinner />}>
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/tasks/:id" element={<TaskDetailsPage />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </Suspense>
-            </BrowserRouter>
-          </TooltipProvider>
-        </BorderRadiusProvider>
-      </UIContextProvider>
+      <TooltipProvider>
+        <Toaster />
+        <BrowserRouter>
+          <Suspense fallback={<LoadingSpinner />}>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/tasks/:id" element={<TaskDetailsPage />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
+        </BrowserRouter>
+      </TooltipProvider>
     </AuthProvider>
   </QueryClientProvider>
 );

@@ -4,7 +4,18 @@ import { toast } from "@/lib/toast";
 import { compressAndResizePhoto } from "@/lib/imageUtils";
 import { uploadTaskPhoto } from "@/integrations/supabase/api/tasks.api";
 import { isMockingSupabase } from "@/integrations/supabase/client";
-import { TaskFormState } from "../types";
+
+export interface BaseTaskFormState {
+  title: string;
+  description: string;
+  dueDate: string;
+  url: string;
+  photo: File | null;
+  photoPreview: string | null;
+  pinned: boolean;
+  assigneeId: string;
+  loading: boolean;
+}
 
 export interface UseBaseTaskFormOptions {
   initialUrl?: string;
@@ -25,12 +36,7 @@ export interface UseBaseTaskFormOptions {
  * @param options.onClose - Callback function to execute when form is closed or reset
  * @returns Form state and handlers
  */
-export function useBaseTaskForm({ initialUrl = "", onClose }: UseBaseTaskFormOptions = {}): TaskFormState & {
-  setLoading: (loading: boolean) => void;
-  uploadPhoto: () => Promise<string | null>;
-  resetForm: () => void;
-  validateTitle: (value: string) => boolean;
-} {
+export function useBaseTaskForm({ initialUrl = "", onClose }: UseBaseTaskFormOptions = {}) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState("");

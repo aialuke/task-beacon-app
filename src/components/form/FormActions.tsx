@@ -23,7 +23,7 @@ export function FormActions({
           onClick={onCancel}
           disabled={isSubmitting}
           size="sm"
-          className="button--outline button--sm"
+          className="px-4"
         >
           {cancelLabel}
         </Button>
@@ -33,7 +33,6 @@ export function FormActions({
         disabled={isSubmitting}
         size="sm"
         variant="default"
-        className="button--primary button--sm"
       >
         {isSubmitting ? "Creating..." : submitLabel}
       </Button>

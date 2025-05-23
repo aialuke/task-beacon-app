@@ -1,31 +1,27 @@
 
-/**
- * index.css
- * Main CSS file that imports all other CSS files in the correct order
- */
-
-/* Tailwind base directives */
+/* Base Tailwind directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Import theme variables and base styles */
-@import "./styles/theme-variables.css";
-@import "./styles/reset.css";
+/* CSS Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+*::before, 
+*::after {
+  box-sizing: inherit;
+}
+
+/* Import custom styles after Tailwind directives */
 @import "./styles/base.css";
-
-/* Import component styles */
-@import "./styles/components/button.css";
-@import "./styles/components/card.css";
-@import "./styles/components/form.css";
-@import "./styles/components/dialog.css";
-@import "./styles/components/avatar.css";
-@import "./styles/components/timer.css";
-
-/* Import utilities */
+@import "./styles/components.css";
 @import "./styles/utilities.css";
 
-/* Global SVG handling */
+/* Global icon handling */
 svg {
   fill: none;
 }

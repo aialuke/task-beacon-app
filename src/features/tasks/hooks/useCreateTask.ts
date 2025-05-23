@@ -3,7 +3,6 @@ import { useCallback } from "react";
 import { toast } from "@/lib/toast";
 import { useBaseTaskForm } from "./useBaseTaskForm";
 import { createTask, uploadTaskPhoto } from "@/integrations/supabase/api/tasks.api";
-import { NewTaskFormData, TaskFormState } from "../types";
 
 interface UseCreateTaskProps {
   onClose?: () => void;
@@ -22,11 +21,7 @@ interface UseCreateTaskProps {
  * @param props.onClose - Optional callback to execute when the form is closed
  * @returns Form state and submission handler
  */
-export function useCreateTask({ onClose }: UseCreateTaskProps = {}): TaskFormState & {
-  handleSubmit: (e: React.FormEvent) => Promise<void>;
-} {
-  const baseForm = useBaseTaskForm({ onClose });
-  
+export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
   const {
     title,
     setTitle,
@@ -47,7 +42,7 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}): TaskFormSta
     handlePhotoChange,
     resetForm,
     validateTitle
-  } = baseForm;
+  } = useBaseTaskForm({ onClose });
 
   /**
    * Handles form submission for creating a new task
@@ -70,7 +65,7 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}): TaskFormSta
         photoUrl = uploadedUrl;
       }
 
-      const newTaskData: NewTaskFormData = {
+      const { error } = await createTask({
         title,
         description: description || null,
         due_date: dueDate ? new Date(dueDate).toISOString() : null,
@@ -78,9 +73,7 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}): TaskFormSta
         url_link: url || null,
         assignee_id: assigneeId || null,
         pinned,
-      };
-
-      const { error } = await createTask(newTaskData);
+      });
 
       if (error) throw error;
       

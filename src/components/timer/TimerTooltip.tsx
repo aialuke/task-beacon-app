@@ -1,5 +1,3 @@
-
-import { memo } from "react";
 import {
   TooltipContent,
   TooltipArrow,
@@ -26,7 +24,4 @@ const TimerTooltip = ({ tooltipContent, status }: TimerTooltipProps) => {
   );
 };
 
-// Apply memoization with custom equality function
-export default memo(TimerTooltip, (prev, next) => {
-  return prev.tooltipContent === next.tooltipContent && prev.status === next.status;
-});
+export default TimerTooltip;

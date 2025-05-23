@@ -2,8 +2,8 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 import { Task } from "@/lib/types";
 import { TaskContextType, TaskFilter } from "../types";
-import { useTaskMutations } from "@/features/tasks/hooks/useTaskMutations";
 import { useTaskQueries } from "@/features/tasks/hooks/useTaskQueries";
+import { useTaskMutations } from "./useTaskMutations";
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
 
@@ -20,10 +20,7 @@ export function TaskContextProvider({ children }: { children: ReactNode }) {
   const [expandedTaskId, setExpandedTaskId] = useState<string | null>(null);
   const [pageSize, setPageSize] = useState(10);
 
-  // Get task mutations
-  const { toggleTaskPin, toggleTaskComplete, createFollowUpTask } = useTaskMutations();
-  
-  // Get task data queries - ensure this is called after all other hooks
+  // Get task data and mutations
   const { 
     tasks, 
     isLoading, 
@@ -36,6 +33,7 @@ export function TaskContextProvider({ children }: { children: ReactNode }) {
     goToPreviousPage,
     isFetching
   } = useTaskQueries(pageSize);
+  const { toggleTaskPin, toggleTaskComplete, createFollowUpTask } = useTaskMutations();
 
   return (
     <TaskContext.Provider value={{

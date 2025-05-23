@@ -13,14 +13,23 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = "default", size, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
+    
+    // Apply gradient background only to default and brand buttons
+    const buttonStyle = {} as React.CSSProperties;
+    if (variant === "default" || variant === "brand") {
+      buttonStyle.background = "var(--gradient-blue)";
+    }
     
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={cn(
+          buttonVariants({ variant, size, className }),
+          "shadow-sm hover:shadow-md transition-all"
+        )}
         ref={ref}
-        data-variant={variant}
+        style={buttonStyle}
         {...props}
       />
     );

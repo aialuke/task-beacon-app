@@ -1,11 +1,10 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
-import { toast } from "@/lib/toast";
+import { toast } from "@/lib/toast"; // Updated import
 
 type AuthMode = "signin" | "signup" | "pin";
 
@@ -39,7 +38,7 @@ export default function AuthForm() {
       if (error) throw error;
 
       toast.success(mode === "signup" ? "Check your email for a confirmation link!" : "Logged in successfully!");
-    } catch (error: unknown) {
+        } catch (error: unknown) {
       if (error instanceof Error) {
         toast.error(error.message);
       } else {
@@ -89,7 +88,7 @@ export default function AuthForm() {
               <div className="mt-6 flex flex-col gap-2">
                 <Button
                   type="submit"
-                  variant="default"
+                  className="btn-primary"
                   disabled={pin.length !== 4 || loading}
                 >
                   {loading ? "Verifying..." : "Continue"}
@@ -98,6 +97,7 @@ export default function AuthForm() {
                   type="button"
                   variant="outline"
                   onClick={() => setMode("signin")}
+                  className="btn-secondary"
                 >
                   Use Email Instead
                 </Button>
@@ -143,8 +143,7 @@ export default function AuthForm() {
             </div>
             <Button
               type="submit"
-              variant="default"
-              className="w-full"
+              className="w-full btn-primary"
               disabled={loading}
             >
               {loading
