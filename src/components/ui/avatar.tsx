@@ -1,4 +1,3 @@
-
 import * as React from "react"
 import * as AvatarPrimitive from "@radix-ui/react-avatar"
 
@@ -11,7 +10,7 @@ const Avatar = React.forwardRef<
   <AvatarPrimitive.Root
     ref={ref}
     className={cn(
-      "relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full shadow-sm",
+      "relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full shadow",
       className
     )}
     style={{
@@ -41,13 +40,12 @@ const AvatarFallback = React.forwardRef<
   <AvatarPrimitive.Fallback
     ref={ref}
     className={cn(
-      "flex h-full w-full items-center justify-center rounded-full bg-muted text-muted-foreground avatar-fallback",
+      "flex h-full w-full items-center justify-center rounded-full bg-muted text-muted-foreground avatar-fallback shadow-inner",
       className
     )}
     style={{
       backgroundColor: "#e5e7eb",
       color: "#6b7280",
-      boxShadow: "inset 0 2px 4px rgba(0, 0, 0, 0.05)",
       borderRadius: "var(--border-radius-full)"
     }}
     {...props}

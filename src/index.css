@@ -42,7 +42,7 @@ svg {
   background-color: white;
   color: #000000e6;
   border-radius: var(--border-radius-xl);
-  box-shadow: var(--shadow-lg);
+  @apply shadow-lg;
   z-index: 9999;
 }
 
@@ -53,7 +53,7 @@ svg {
 [class*="popover-content"] {
   padding: 1.25rem;
   background: white;
-  box-shadow: var(--shadow-lg);
+  @apply shadow-lg;
   border: 1px solid #f0f0f0;
   border-radius: var(--border-radius-xl);
 }
@@ -69,20 +69,19 @@ button,
 .button,
 [role="button"] {
   border-radius: var(--border-radius-full);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  @apply transition-all duration-200;
 }
 
 button:hover, 
 .button:hover,
 [role="button"]:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-1px);
+  @apply shadow-md -translate-y-1;
 }
 
 button:active, 
 .button:active,
 [role="button"]:active {
-  transform: translateY(0);
+  @apply translate-y-0;
 }
 
 /* ===== CONSOLIDATED FORM FIELD STYLES ===== */
@@ -102,7 +101,7 @@ textarea,
   padding: 0.5rem 0.75rem;
   border: 1px solid #e2e8f0;
   transition: all 0.2s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+  @apply shadow-sm;
 }
 
 input:focus,
@@ -110,7 +109,7 @@ textarea:focus,
 select:focus {
   outline: none;
   border-color: #3662E3;
-  box-shadow: 0 0 0 2px rgba(54, 98, 227, 0.15), 0 1px 3px rgba(0, 0, 0, 0.05);
+  @apply shadow;
 }
 
 /* File selector button styling */
@@ -121,5 +120,5 @@ input[type="file"]::file-selector-button {
   border: none;
   color: white;
   margin-right: 0.5rem;
-  box-shadow: var(--shadow-sm);
+  @apply shadow-sm;
 }

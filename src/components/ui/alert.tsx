@@ -1,15 +1,14 @@
-
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 
 const alertVariants = cva(
-  "relative w-full rounded-lg border p-4 [&>svg~*]:pl-7 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground shadow-sm",
+  "relative w-full rounded-lg border p-4 [&>svg~*]:pl-7 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground",
   {
     variants: {
       variant: {
-        default: "bg-background text-foreground",
+        default: "bg-background text-foreground shadow-sm",
         destructive:
           "border-destructive/50 text-destructive [&>svg]:text-destructive shadow-md",
       },
@@ -29,9 +28,6 @@ const Alert = React.forwardRef<
     role="alert"
     className={cn(alertVariants({ variant }), className)}
     style={{
-      boxShadow: variant === "destructive" 
-        ? "0 2px 8px rgba(218, 62, 82, 0.15)" 
-        : "var(--shadow-md)",
       borderRadius: "var(--border-radius-xl)"
     }}
     {...props}

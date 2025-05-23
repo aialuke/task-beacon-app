@@ -8,14 +8,13 @@
     width: 95%;
     margin-left: auto;
     margin-right: auto;
-    box-shadow: var(--shadow-sm);
     transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
     /* Rounded corners for task cards */
     border-radius: var(--border-radius-xl);
   }
 
   .task-card:hover {
-    box-shadow: var(--shadow-md);
+    @apply shadow-md;
   }
 
   @media (min-width: 640px) {
@@ -25,9 +24,8 @@
   }
 
   .task-card[data-expanded="true"] {
-    @apply border-secondary;
+    @apply border-secondary shadow-md;
     border-color: hsl(var(--primary));
-    box-shadow: var(--shadow-md);
   }
 
   .task-card-container::-webkit-scrollbar,
@@ -40,18 +38,15 @@
     @apply space-y-2;
   }
 
-  /* Removed redundant button styling that conflicts with button-variants.ts */
-
   /* ===== FAB BUTTON ===== */
   .fab {
-    @apply flex items-center justify-center fixed;
+    @apply flex items-center justify-center fixed shadow-lg;
     bottom: 16px;
     right: 16px;
     width: 56px;
     height: 56px;
     z-index: 99999;
     transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
-    box-shadow: var(--shadow-lg);
     background: var(--gradient-blue);
     color: hsl(var(--primary-foreground));
     border-radius: var(--border-radius-full);
@@ -65,12 +60,12 @@
   .fab:hover {
     background: var(--gradient-blue-dark);
     transform: scale(1.05);
-    box-shadow: var(--shadow-xl);
+    @apply shadow-xl;
   }
 
   .fab:active {
     transform: scale(0.95);
-    box-shadow: var(--shadow-lg);
+    @apply shadow-lg;
   }
 
   @media (max-width: 320px) {
@@ -94,12 +89,12 @@
     transition: transform 0.2s ease, opacity 0.2s ease;
     border-radius: 50%;
     background: var(--gradient-light);
-    box-shadow: var(--shadow-sm);
+    @apply shadow-sm;
   }
   
   .timer-container:hover {
     transform: scale(1.05);
-    box-shadow: var(--shadow-md);
+    @apply shadow-md;
   }
 
   .timer-ring {

@@ -1,4 +1,3 @@
-
 /* src/styles/utilities.css */
 @layer utilities {
   /* ===== LAYOUT UTILITIES ===== */
@@ -12,37 +11,16 @@
   }
 
   /* ===== SHADOW UTILITIES ===== */
-  .shadow-sm {
-    box-shadow: var(--shadow-sm);
-  }
+  /* Use Tailwind's built-in shadow classes in your components directly:
+     shadow-sm, shadow, shadow-md, shadow-lg, shadow-xl, shadow-2xl, shadow-inner */
   
-  .shadow-md {
-    box-shadow: var(--shadow-md);
-  }
-  
-  .shadow-lg {
-    box-shadow: var(--shadow-lg);
-  }
-  
-  .shadow-xl {
-    box-shadow: var(--shadow-xl);
-  }
-  
-  .shadow-inner {
-    box-shadow: var(--shadow-inner);
-  }
-  
-  .shadow-none {
-    box-shadow: none;
-  }
-  
+  /* Keep special shadow utilities that aren't available in Tailwind */
   .shadow-hover {
-    transition: box-shadow 0.2s ease, transform 0.2s ease;
+    @apply transition-shadow transition-transform duration-200;
   }
   
   .shadow-hover:hover {
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-1px);
+    @apply shadow-lg -translate-y-1;
   }
 
   /* ===== TEXT UTILITIES ===== */
@@ -165,12 +143,11 @@
   /* ===== BUTTON UTILITIES ===== */
   /* Use attribute selectors for more specific targeting without !important */
   .no-shadow {
-    box-shadow: none;
+    @apply shadow-none;
   }
 
   .no-shadow:hover {
-    box-shadow: none;
-    transform: none;
+    @apply shadow-none transform-none;
   }
   
   /* ===== ACCESSIBILITY UTILITIES ===== */
