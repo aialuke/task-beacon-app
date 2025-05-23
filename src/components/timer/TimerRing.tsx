@@ -1,7 +1,7 @@
 
 import { animated, SpringValue } from "@react-spring/web";
 import { TaskStatus } from "@/lib/types";
-import { getTimerColor } from "@/lib/utils";
+import { getTimerColor } from "@/lib/uiUtils";
 
 interface TimerRingProps {
   size: number;

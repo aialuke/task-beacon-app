@@ -1,6 +1,7 @@
 
 import { memo } from "react";
-import { formatDate, truncateUrl } from "@/lib/utils";
+import { formatDate } from "@/lib/dateUtils";
+import { truncateUrl } from "@/lib/formatUtils";
 import { Calendar1, ExternalLink } from "lucide-react";
 import {
   Tooltip,
