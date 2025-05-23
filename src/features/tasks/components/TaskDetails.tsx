@@ -4,7 +4,7 @@ import { formatDate, truncateUrl } from "@/lib/utils";
 import { Task } from "@/lib/types";
 import TaskActions from "./TaskActions";
 import { Calendar1, ExternalLink } from "lucide-react";
-import { animated } from "@react-spring/web";
+import { animated, SpringValue } from "@react-spring/web";
 import { useUIContext } from "@/contexts/UIContext";
 import { Link } from "react-router-dom";
 import {
@@ -17,7 +17,10 @@ import {
 interface TaskDetailsProps {
   task: Task;
   isExpanded: boolean;
-  animationState: { height: number; opacity: number };
+  animationState: {
+    height: SpringValue<number>;
+    opacity: SpringValue<number>;
+  };
   contentRef: React.RefObject<HTMLDivElement>;
 }
 

@@ -1,7 +1,11 @@
 
-// Move from src/hooks/useTaskAnimation.ts
-import { useSpring } from "@react-spring/web";
+import { useSpring, SpringValue } from "@react-spring/web";
 import { useEffect, useRef } from "react";
+
+export interface TaskAnimationState {
+  height: SpringValue<number>;
+  opacity: SpringValue<number>;
+}
 
 export function useTaskAnimation(
   contentRef: React.RefObject<HTMLDivElement>,
