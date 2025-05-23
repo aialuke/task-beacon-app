@@ -151,7 +151,7 @@ export default function UserSearchInput({
                   <div 
                     key={user.id}
                     onClick={() => handleSelect(user.id)}
-                    className="relative flex cursor-pointer select-none items-center rounded-md px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground transition-colors"
+                    className="relative flex cursor-pointer select-none items-center rounded-xl px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground transition-colors"
                   >
                     <User className="h-4 w-4 mr-2" />
                     <span>{getUserDisplayName(user)}</span>

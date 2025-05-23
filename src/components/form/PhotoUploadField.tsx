@@ -24,7 +24,7 @@ export function PhotoUploadField({ onChange, preview }: PhotoUploadFieldProps) {
           <img
             src={preview}
             alt="Preview"
-            className="h-20 w-20 object-cover rounded-md"
+            className="h-20 w-20 object-cover rounded-xl"
           />
         </div>
       )}

@@ -8,7 +8,7 @@ interface ParentTaskReferenceProps {
 
 export function ParentTaskReference({ parentTask }: ParentTaskReferenceProps) {
   return (
-    <div className="p-2 bg-gray-50 rounded-md">
+    <div className="p-2 bg-gray-50 rounded-xl">
       <h4 className="font-medium text-sm">Following up on: {parentTask.title}</h4>
     </div>
   );
