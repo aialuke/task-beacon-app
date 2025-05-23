@@ -13,7 +13,7 @@ select,
 .card,
 .task-card,
 .dropdown-content,
-[class*="rounded"]:not(.rounded-full):not(button):not(.button):not([role="button"]) {
+[class*="rounded"]:not(.rounded-full):not(button):not(.button):not([role="button"]):not(.avatar):not(.avatar-fallback) {
   border-radius: var(--border-radius-xl) !important;
   -webkit-border-radius: var(--border-radius-xl) !important;
   -moz-border-radius: var(--border-radius-xl) !important;
@@ -26,7 +26,6 @@ select,
 .tooltip-content,
 .dropdown-menu,
 .card,
-.avatar,
 .form-field-group input,
 .form-field-group select,
 .form-field-group textarea {
