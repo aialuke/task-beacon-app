@@ -4,16 +4,17 @@ import { useSpring, animated, config } from "@react-spring/web";
 import { TaskStatus } from "@/lib/types";
 import TimerRing from "./timer/TimerRing";
 import TimerDisplay from "./timer/TimerDisplay";
-import { 
-  getDaysRemaining,
-  formatTimeDisplay,
-  calculateTimerOffset,
-  getTooltipContent,
-  getUpdateInterval
-} from "@/lib/utils";
 import { useUIContext } from "@/contexts/UIContext";
 import { Tooltip, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import TimerTooltip from "./timer/TimerTooltip";
+// Import from new utility files
+import { 
+  getDaysRemaining,
+  formatTimeDisplay,
+  getTooltipContent,
+  getUpdateInterval
+} from "@/lib/dateUtils";
+import { calculateTimerOffset } from "@/lib/animationUtils";
 
 interface CountdownTimerProps {
   dueDate: string | null;

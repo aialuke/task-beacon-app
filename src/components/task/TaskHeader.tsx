@@ -2,7 +2,7 @@
 import { memo } from "react";
 import { Button } from "@/components/ui/button";
 import { Task } from "@/lib/types";
-import { getStatusColor, getTaskStatus } from "@/lib/utils";
+import { getStatusColor, getTaskStatus } from "@/lib/uiUtils";
 import CountdownTimer from "../CountdownTimer";
 import { Pin } from "lucide-react";
 import { useUIContext } from "@/contexts/UIContext";
