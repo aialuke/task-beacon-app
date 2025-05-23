@@ -49,7 +49,7 @@
     height: 56px;
     z-index: 99999;
     transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
-    background: var(--gradient-blue);
+    background: hsl(var(--primary));
     color: hsl(var(--primary-foreground));
     border-radius: var(--border-radius-full);
   }
@@ -60,7 +60,7 @@
   }
 
   .fab:hover {
-    background: var(--gradient-blue-dark);
+    background: hsl(var(--primary) / 0.9);
     transform: scale(1.05);
     @apply shadow-xl;
   }
