@@ -6,6 +6,7 @@ import { useCreateTask } from "@/hooks/useCreateTask";
 import { PhotoUploadField } from "@/components/form/PhotoUploadField";
 import { DatePickerField } from "@/components/form/DatePickerField";
 import { FormActions } from "@/components/form/FormActions";
+import { UserSearchField } from "@/components/form/UserSearchField";
 
 export default function CreateTaskForm({
   onClose,
@@ -22,6 +23,8 @@ export default function CreateTaskForm({
     url,
     setUrl,
     photoPreview,
+    assigneeId,
+    setAssigneeId,
     loading,
     handlePhotoChange,
     handleSubmit
@@ -66,6 +69,11 @@ export default function CreateTaskForm({
           placeholder="https://example.com"
         />
       </div>
+      <UserSearchField
+        value={assigneeId}
+        onChange={setAssigneeId}
+        disabled={loading}
+      />
       <PhotoUploadField
         onChange={handlePhotoChange}
         preview={photoPreview}

@@ -1,7 +1,9 @@
-import { useState, useEffect } from "react";
+
+import { useState, useEffect, useMemo } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
-import { toast } from "@/lib/toast"; // Updated import
+import { toast } from "@/lib/toast";
+import { Input } from "@/components/ui/input";
 
 // Mock users for development
 const mockUsers = [
@@ -19,10 +21,14 @@ interface UserSelectProps {
 export default function UserSelect({ value, onChange, disabled = false }: UserSelectProps) {
   const [users, setUsers] = useState<{ id: string; name?: string; email: string }[]>([]);
   const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    loadUsers();
-  }, []);
+    if (isOpen) {
+      loadUsers();
+    }
+  }, [isOpen]);
 
   const loadUsers = async () => {
     setLoading(true);
@@ -41,21 +47,26 @@ export default function UserSelect({ value, onChange, disabled = false }: UserSe
 
       if (error) throw error;
       setUsers(data || []);
-       } catch (error: unknown) {
+    } catch (error: unknown) {
       toast.error("Failed to load users");
       console.error(error);
-      // If you needed to access specific properties of the error,
-      // for example, error.message, you would add a type check:
-      // if (error instanceof Error) {
-      //   toast.error(error.message);
-      // } else {
-      //   toast.error("Failed to load users");
-      // }
     } finally {
       setLoading(false);
     }
   };
 
+  // Filter users based on search term
+  const filteredUsers = useMemo(() => {
+    if (!searchTerm) return users;
+    
+    return users.filter(user => {
+      const displayName = getUserDisplayName(user).toLowerCase();
+      const email = user.email.toLowerCase();
+      const term = searchTerm.toLowerCase();
+      
+      return displayName.includes(term) || email.includes(term);
+    });
+  }, [users, searchTerm]);
 
   // Display name or email if name is not available
   const getUserDisplayName = (user: { id: string; name?: string; email: string }) => {
@@ -67,15 +78,24 @@ export default function UserSelect({ value, onChange, disabled = false }: UserSe
       value={value}
       onValueChange={onChange}
       disabled={disabled || loading}
+      onOpenChange={setIsOpen}
     >
       <SelectTrigger className="w-full">
         <SelectValue placeholder="Select assignee" />
       </SelectTrigger>
       <SelectContent>
+        <div className="px-2 py-2">
+          <Input 
+            placeholder="Search users..." 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="mb-2"
+          />
+        </div>
         {loading ? (
           <SelectItem value="loading" disabled>Loading users...</SelectItem>
-        ) : users.length > 0 ? (
-          users.map((user) => (
+        ) : filteredUsers.length > 0 ? (
+          filteredUsers.map((user) => (
             <SelectItem key={user.id} value={user.id}>
               {getUserDisplayName(user)}
             </SelectItem>

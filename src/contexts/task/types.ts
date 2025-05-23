@@ -2,7 +2,7 @@
 import { Task, TaskStatus } from "@/lib/types";
 
 // Types
-export type TaskFilter = TaskStatus | "all";
+export type TaskFilter = TaskStatus | "all" | "assigned";
 
 export interface TaskContextType {
   // Task queries

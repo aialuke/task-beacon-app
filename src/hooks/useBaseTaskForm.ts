@@ -12,6 +12,7 @@ export interface BaseTaskFormState {
   photo: File | null;
   photoPreview: string | null;
   pinned: boolean;
+  assigneeId: string;
   loading: boolean;
 }
 
@@ -28,6 +29,7 @@ export function useBaseTaskForm({ initialUrl = "", onClose }: UseBaseTaskFormOpt
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [pinned, setPinned] = useState(false);
+  const [assigneeId, setAssigneeId] = useState("");
   const [loading, setLoading] = useState(false);
 
   // Custom title setter with validation
@@ -86,6 +88,7 @@ export function useBaseTaskForm({ initialUrl = "", onClose }: UseBaseTaskFormOpt
     setPhoto(null);
     setPhotoPreview(null);
     setPinned(false);
+    setAssigneeId("");
     if (onClose) onClose();
   }, [initialUrl, onClose]);
 
@@ -110,6 +113,8 @@ export function useBaseTaskForm({ initialUrl = "", onClose }: UseBaseTaskFormOpt
     photoPreview,
     pinned,
     setPinned,
+    assigneeId,
+    setAssigneeId,
     loading,
     setLoading,
     handlePhotoChange,
