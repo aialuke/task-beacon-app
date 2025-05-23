@@ -1,7 +1,7 @@
 
 import { User } from "lucide-react";
 import { Label } from "@/components/ui/label";
-import UserSelect from "@/components/UserSelect";
+import UserSearchInput from "@/components/UserSearchInput";
 
 interface UserSearchFieldProps {
   value: string;
@@ -14,9 +14,9 @@ export function UserSearchField({ value, onChange, disabled = false }: UserSearc
     <div className="space-y-2">
       <Label htmlFor="assignee" className="text-foreground flex items-center gap-2">
         <User className="h-4 w-4" />
-        <span>Assignee</span>
+        <span>Assign Task</span>
       </Label>
-      <UserSelect
+      <UserSearchInput
         value={value}
         onChange={onChange}
         disabled={disabled}

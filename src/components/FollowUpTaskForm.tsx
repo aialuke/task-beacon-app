@@ -3,14 +3,13 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Task } from "@/lib/types";
-import UserSelect from "./UserSelect";
 import { useFollowUpTask } from "@/hooks/useFollowUpTask";
 import { FormActions } from "./form/FormActions";
 import { DatePickerField } from "./form/DatePickerField";
 import { PhotoUploadField } from "./form/PhotoUploadField";
 import { ParentTaskReference } from "./form/ParentTaskReference";
 import { UrlField } from "./form/UrlField";
-import { Label } from "./ui/label";
+import { UserSearchField } from "./form/UserSearchField";
 
 interface FollowUpTaskFormProps {
   parentTask: Task;
@@ -73,14 +72,11 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
 
       <PhotoUploadField onChange={handlePhotoChange} preview={photoPreview} />
 
-      <div className="space-y-2">
-        <Label htmlFor="assignee" className="text-foreground">Assignee</Label>
-        <UserSelect
-          value={assigneeId}
-          onChange={setAssigneeId}
-          disabled={loading}
-        />
-      </div>
+      <UserSearchField
+        value={assigneeId}
+        onChange={setAssigneeId}
+        disabled={loading}
+      />
 
       <FormActions 
         onCancel={onClose} 
