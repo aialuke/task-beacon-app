@@ -1,5 +1,5 @@
 
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense } from "react";
 import { useTaskContext } from "@/features/tasks/context/TaskContext"; 
 import { useUIContext } from "@/contexts/UIContext";
 import { useFilteredTasks } from "@/features/tasks/hooks/useFilteredTasks";
@@ -37,6 +37,8 @@ export default function TaskList() {
     filter, 
     setFilter 
   } = useTaskContext();
+  
+  // Always use the hook, never conditionally
   const { isDialogOpen, setDialogOpen } = useUIContext();
   
   // Get filtered tasks

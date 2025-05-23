@@ -14,7 +14,7 @@ export function useFilteredTasks(
   tasks: Task[],
   filter: TaskFilter
 ) {
-  // Memoize filter functions separately to prevent recreating them on every render
+  // Memoize filter functions to prevent recreating them on every render
   const filterFunctions = useMemo(() => ({
     all: (task: Task) => task.status !== "complete",
     assigned: (task: Task) => 
@@ -38,5 +38,5 @@ export function useFilteredTasks(
   return useMemo(() => {
     const filterFunction = filterFunctions[filter];
     return tasks.filter(filterFunction);
-  }, [tasks, filter, filterFunctions]); // Only re-run when tasks or filter change
+  }, [tasks, filter, filterFunctions]); // Include filterFunctions in dependencies
 }
