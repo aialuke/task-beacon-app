@@ -1,4 +1,3 @@
-
 {
   "name": "Task Manager PWA",
   "short_name": "Tasks",
@@ -8,6 +7,12 @@
   "background_color": "#F9FAFB",
   "theme_color": "#3662E3",
   "icons": [
+    {
+      "src": "/assets/icon-180x180.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
     {
       "src": "/assets/icon-192x192.png",
       "sizes": "192x192",
