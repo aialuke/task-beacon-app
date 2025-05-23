@@ -98,3 +98,65 @@ export function getDueDateTooltip(dueDate: string | null): string {
     return `${timeUntil} - ${formattedDate}`;
   }
 }
+
+/**
+ * Formats the time display for the timer component
+ * 
+ * @param daysLeft - Number of days until the due date
+ * @param dueDate - ISO date string for the due date
+ * @param status - Current task status
+ * @returns Formatted string for display in the timer component
+ */
+export function formatTimeDisplay(daysLeft: number | null, dueDate: string | null, status: string): string {
+  if (!dueDate) return "No due date";
+  if (status === "complete") return "Done";
+  if (status === "overdue") return "Due";
+  
+  // For pending tasks
+  if (daysLeft === null) return "No due date";
+  if (daysLeft < 0) return "Due";
+  if (daysLeft === 0) return "Today";
+  if (daysLeft === 1) return "1 day";
+  if (daysLeft <= 7) return `${daysLeft}d`;
+  
+  // For tasks more than a week away, show the date
+  const date = new Date(dueDate);
+  return formatDate(date, { month: 'short', day: 'numeric' });
+}
+
+/**
+ * Gets the tooltip content for a timer component
+ * 
+ * @param dueDate - ISO date string for the due date
+ * @returns Appropriate tooltip content based on due date
+ */
+export function getTooltipContent(dueDate: string | null): string {
+  return getDueDateTooltip(dueDate);
+}
+
+/**
+ * Determines the appropriate interval for updating the timer
+ * 
+ * @param daysLeft - Number of days until the due date
+ * @param status - Current task status
+ * @returns Update interval in milliseconds
+ */
+export function getUpdateInterval(daysLeft: number | null, status: string): number {
+  if (status === "complete" || status === "overdue" || daysLeft === null) {
+    // No need for frequent updates for these states
+    return 0;
+  }
+  
+  if (daysLeft === 0) {
+    // Due today - check every minute to see if it's overdue
+    return 60 * 1000;
+  }
+  
+  if (daysLeft <= 3) {
+    // Due soon - check every hour
+    return 60 * 60 * 1000;
+  }
+  
+  // Far in the future - check once a day
+  return 24 * 60 * 60 * 1000;
+}
