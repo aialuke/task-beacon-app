@@ -5,11 +5,11 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Task } from "@/lib/types";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
 import { toast } from "@/lib/toast";
-import { formatDate } from "@/lib/utils";
+import { formatDate } from "@/lib/dateUtils";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Calendar1, ExternalLink } from "lucide-react";
 import CountdownTimer from "@/components/CountdownTimer";
-import { getTaskStatus } from "@/lib/utils";
+import { getTaskStatus } from "@/lib/uiUtils";
 import TaskActions from "../components/TaskActions";
 import { Skeleton } from "@/components/ui/skeleton";
 

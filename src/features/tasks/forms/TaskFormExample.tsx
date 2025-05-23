@@ -1,9 +1,8 @@
-
 import { useState } from "react";
 import TaskFormWithValidation from "./TaskFormWithValidation";
 import { CreateTaskInput } from "../schemas/taskSchema";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
-import { compressAndResizePhoto } from "@/lib/utils";
+import { compressAndResizePhoto } from "@/lib/imageUtils";
 import { toast } from "@/lib/toast";
 
 export default function TaskFormExample({ onClose }: { onClose?: () => void }) {

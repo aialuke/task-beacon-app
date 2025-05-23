@@ -1,7 +1,7 @@
 
 import { useState, useCallback } from "react";
 import { toast } from "@/lib/toast";
-import { compressAndResizePhoto } from "@/lib/utils";
+import { compressAndResizePhoto } from "@/lib/imageUtils";
 import { uploadTaskPhoto } from "@/integrations/supabase/api/tasks.api";
 import { isMockingSupabase } from "@/integrations/supabase/client";
 

@@ -39,7 +39,7 @@ src/
 │       ├── client.ts      # Supabase client configuration
 │       └── types/         # Supabase-related type definitions
 ├── lib/               # Utility functions and constants
-│   ├── utils.ts           # Core utility functions & re-exports
+│   ├── utils.ts           # Core utility functions & selective re-exports
 │   ├── uiUtils.ts         # UI-related utility functions
 │   ├── dataUtils.ts       # Data manipulation utilities
 │   ├── dateUtils.ts       # Date-related utility functions
@@ -106,11 +106,40 @@ Context usage guidelines:
 - Each context should have a custom hook (e.g., `useTaskContext`) for consuming it
 - Contexts should split large pieces of state into smaller contexts when appropriate
 
+### Import Pattern Standards
+
+We follow these import standards in our codebase:
+
+1. **Direct Imports (Preferred)**:
+   - Use direct imports from specific utility files for clarity and better tree-shaking
+   - Examples:
+     ```typescript
+     import { formatDate } from "@/lib/dateUtils";
+     import { compressAndResizePhoto } from "@/lib/imageUtils";
+     import { isValidEmail } from "@/lib/validationUtils";
+     ```
+
+2. **Selective Barrel Imports**:
+   - The `utils.ts` file selectively re-exports the most commonly used utility functions
+   - Only use barrel imports for these very common utilities:
+     ```typescript
+     import { cn, formatDate, truncateText } from "@/lib/utils";
+     ```
+
+3. **When to use each**:
+   - Use direct imports for:
+     - Domain-specific utilities 
+     - Less frequently used functions
+     - When bundle size is a concern
+   - Use barrel imports for:
+     - Very common utilities that appear in many components
+     - When improving code readability in components with many imports
+
 ### Utility Function Organization
 
 Utility functions are organized by domain to improve maintainability and navigation:
 
-- `utils.ts`: Common utilities and re-exports from specialized utility modules
+- `utils.ts`: Common core utilities and selective re-exports of frequently used utilities
 - Domain-specific utilities:
   - `uiUtils.ts`: UI helper functions (class merging, element styling)
   - `dataUtils.ts`: Data transformation and manipulation
