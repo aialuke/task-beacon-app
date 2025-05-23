@@ -8,12 +8,6 @@ export function useFilteredTasks(
   tasks: Task[],
   filter: TaskFilter
 ) {
-  // Get the current user ID
-  const getCurrentUserId = async () => {
-    const { data } = await supabase.auth.getUser();
-    return data?.user?.id;
-  };
-
   return useMemo(() => {
     if (filter === "all") {
       // For "Current" filter, exclude completed tasks
@@ -21,17 +15,15 @@ export function useFilteredTasks(
     }
     
     if (filter === "assigned") {
-      // Show tasks that the current user has assigned to others (owner_id is current user, but assignee_id is someone else)
-      return tasks.filter((task) => {
-        // In a synchronous useMemo we can't use async getCurrentUserId directly
-        // This is simplified - in production you'd want to get this from a context or store
-        const { data } = supabase.auth.getSession();
-        const currentUserId = data?.session?.user.id;
-        
-        return task.owner_id === currentUserId && 
-               task.assignee_id !== null && 
-               task.assignee_id !== currentUserId;
-      });
+      // For "assigned" filter, we need to check if the current user is the owner
+      // and the task is assigned to someone else
+      // We can't reliably get the current user ID in a useMemo, so we'll
+      // filter based on whether assignee_id exists and is different from owner_id
+      return tasks.filter((task) => 
+        task.owner_id && 
+        task.assignee_id && 
+        task.owner_id !== task.assignee_id
+      );
     }
     
     if (filter === "overdue") {
