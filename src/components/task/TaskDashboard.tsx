@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { TaskContextProvider } from "@/contexts/TaskContext";
+import { TaskContextProvider } from "@/features/tasks/context/TaskContext";
 import { UIContextProvider } from "@/contexts/UIContext";
 
 export default function TaskDashboard() {

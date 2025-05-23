@@ -1,10 +1,9 @@
-
 import { useState, useCallback, memo } from "react";
 import { Button } from "@/components/ui/button";
 import { Task } from "@/lib/types";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import FollowUpTaskForm from "./FollowUpTaskForm";
-import { useTaskContext } from "@/contexts/TaskContext";
+import { useTaskContext } from "@/features/tasks/context/TaskContext";
 
 interface TaskActionsProps {
   task: Task;
