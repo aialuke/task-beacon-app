@@ -2,7 +2,7 @@ import { useState } from "react";
 import TaskFormWithValidation from "./TaskFormWithValidation";
 import { CreateTaskInput } from "../schemas/taskSchema";
 import { supabase, isMockingSupabase } from "@/lib/supabase";
-import { compressAndResizePhoto } from "@/lib/imageUtils";
+import { compressAndResizePhoto, supportsWebWorker, compressAndResizePhotoFallback } from "@/lib/imageUtils";
 import { toast } from "@/lib/toast";
 
 export default function TaskFormExample({ onClose }: { onClose?: () => void }) {
@@ -14,7 +14,9 @@ export default function TaskFormExample({ onClose }: { onClose?: () => void }) {
     try {
       let photoUrl = null;
       if (data.photo) {
-        const processedFile = await compressAndResizePhoto(data.photo);
+        // Use Web Worker version if supported, otherwise fallback to main thread
+        const processImage = supportsWebWorker() ? compressAndResizePhoto : compressAndResizePhotoFallback;
+        const processedFile = await processImage(data.photo);
         
         if (isMockingSupabase) {
           photoUrl = URL.createObjectURL(processedFile);

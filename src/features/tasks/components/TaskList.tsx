@@ -1,9 +1,8 @@
 
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useState } from "react";
 import { useTaskContext } from "@/features/tasks/context/TaskContext"; 
 import { useUIContext } from "@/contexts/UIContext";
 import { useFilteredTasks } from "@/features/tasks/hooks/useFilteredTasks";
-import TaskCard from "./TaskCard";
 import TaskFilter from "./TaskFilter";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ClockPlus } from "lucide-react";
@@ -15,7 +14,20 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+// Lazy load components that aren't needed on initial render
+const TaskCard = lazy(() => import("./TaskCard"));
 const CreateTaskForm = lazy(() => import("../forms/CreateTaskForm"));
+
+// Skeleton component for lazy-loaded task cards
+const TaskCardSkeleton = () => (
+  <div className="task-card animate-pulse">
+    <div className="h-12 w-12 rounded-full bg-gray-200" />
+    <div className="flex-1 space-y-2">
+      <Skeleton className="h-4 w-3/4" />
+      <Skeleton className="h-3 w-1/2" />
+    </div>
+  </div>
+);
 
 export default function TaskList() {
   // Get data and functions from contexts
@@ -42,17 +54,13 @@ export default function TaskList() {
       <div className="task-list flex flex-col gap-3">
         {isLoading ? (
           Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="task-card animate-pulse">
-              <div className="h-12 w-12 rounded-full bg-gray-200" />
-              <div className="flex-1 space-y-2">
-                <Skeleton className="h-4 w-3/4" />
-                <Skeleton className="h-3 w-1/2" />
-              </div>
-            </div>
+            <TaskCardSkeleton key={i} />
           ))
         ) : filteredTasks.length > 0 ? (
           filteredTasks.map((task) => (
-            <TaskCard key={task.id} task={task} />
+            <Suspense key={task.id} fallback={<TaskCardSkeleton />}>
+              <TaskCard task={task} />
+            </Suspense>
           ))
         ) : (
           <div className="flex items-center justify-center p-4 border border-dashed border-gray-300 rounded-xl">
@@ -92,7 +100,7 @@ export default function TaskList() {
           <DialogHeader>
             <DialogTitle className="text-foreground">Create New Task</DialogTitle>
           </DialogHeader>
-          <Suspense fallback={<div>Loading form...</div>}>
+          <Suspense fallback={<div className="p-4 text-center">Loading form...</div>}>
             <CreateTaskForm onClose={() => setDialogOpen(false)} />
           </Suspense>
         </DialogContent>

@@ -1,5 +1,5 @@
 
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import { animated, SpringValue } from "@react-spring/web";
 import { TaskStatus } from "@/lib/types";
 import { getTimerColor } from "@/lib/uiUtils";
@@ -13,6 +13,7 @@ interface TimerRingProps {
 }
 
 // Define gradients once outside the component to avoid recreating them on each render
+// This is moved to a separate component and memoized to prevent re-renders
 const GradientDefs = memo(() => (
   <defs>
     <linearGradient id="gradientPending" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -46,6 +47,8 @@ const GradientDefs = memo(() => (
   </defs>
 ));
 
+GradientDefs.displayName = "GradientDefs";
+
 const TimerRing = ({
   size,
   radius,
@@ -53,19 +56,22 @@ const TimerRing = ({
   strokeDashoffset,
   status,
 }: TimerRingProps) => {
-  // Memoize values that are derived from props
-  const timerColor = getTimerColor(status);
-  const gradientId = status === "pending" ? "url(#gradientPending)" : 
-                     status === "overdue" ? "url(#gradientOverdue)" : 
-                     "url(#gradientComplete)";
-  
-  const filterId = status === "overdue" 
-    ? "url(#glowOverdue)" 
-    : status === "complete"
-      ? "url(#glowComplete)"
-      : "url(#glowPending)";
-      
-  const strokeWidth = status === "overdue" ? "5px" : "4px";
+  // Memoize derived values that don't need to be recalculated on every render
+  const staticProps = useMemo(() => {
+    const gradientId = status === "pending" ? "url(#gradientPending)" : 
+                      status === "overdue" ? "url(#gradientOverdue)" : 
+                      "url(#gradientComplete)";
+    
+    const filterId = status === "overdue" 
+      ? "url(#glowOverdue)" 
+      : status === "complete"
+        ? "url(#glowComplete)"
+        : "url(#glowPending)";
+        
+    const strokeWidth = status === "overdue" ? "5px" : "4px";
+    
+    return { gradientId, filterId, strokeWidth };
+  }, [status]);
   
   return (
     <svg
@@ -76,6 +82,7 @@ const TimerRing = ({
         overflow: "visible",
       }}
       className="timer-ring"
+      aria-hidden="true" // Mark as decorative for accessibility
     >
       <GradientDefs />
 
@@ -96,16 +103,15 @@ const TimerRing = ({
         cy={size / 2}
         r={radius}
         fill="none"
-        strokeWidth="4"
-        stroke={gradientId}
+        stroke={staticProps.gradientId}
         strokeDasharray={circumference}
         strokeDashoffset={strokeDashoffset}
         transform={`rotate(-90, ${size / 2}, ${size / 2})`}
         strokeLinecap="round"
         className="timer-progress"
         style={{
-          filter: filterId,
-          strokeWidth: strokeWidth,
+          filter: staticProps.filterId,
+          strokeWidth: staticProps.strokeWidth,
         }}
       />
     </svg>
