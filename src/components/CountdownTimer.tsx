@@ -4,15 +4,16 @@ import { useSpring, animated, config } from "@react-spring/web";
 import { TaskStatus } from "@/lib/types";
 import TimerRing from "./timer/TimerRing";
 import TimerDisplay from "./timer/TimerDisplay";
-import {
-  validateDueDate,
-  calculateTimerOffset,
+import { 
+  getDaysRemaining,
   formatTimeDisplay,
-} from "@/lib/timer-utils";
+  calculateTimerOffset,
+  getTooltipContent,
+  getUpdateInterval
+} from "@/lib/utils";
 import { useUIContext } from "@/contexts/UIContext";
 import { Tooltip, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import TimerTooltip from "./timer/TimerTooltip";
-import { getTooltipContent } from "@/lib/timer-utils";
 
 interface CountdownTimerProps {
   dueDate: string | null;
@@ -38,7 +39,7 @@ export default function CountdownTimer({
   
   const radius = dynamicSize / 2 - 4;
   const circumference = 2 * Math.PI * radius;
-  const [daysLeft, setDaysLeft] = useState<number>(dueDate ? validateDueDate(dueDate) : 0);
+  const [daysLeft, setDaysLeft] = useState<number>(dueDate ? getDaysRemaining(dueDate) : 0);
   const [timeDisplay, setTimeDisplay] = useState<string>(dueDate ? formatTimeDisplay(daysLeft, dueDate, status) : "No due date");
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const tooltipContent = getTooltipContent(dueDate);
@@ -57,7 +58,7 @@ export default function CountdownTimer({
     }
 
     const updateTimeLeft = () => {
-      const days = validateDueDate(dueDate);
+      const days = getDaysRemaining(dueDate);
       setDaysLeft(days);
       setTimeDisplay(formatTimeDisplay(days, dueDate, status));
     };
@@ -73,24 +74,16 @@ export default function CountdownTimer({
 
     cleanup(); // Clear any existing interval
 
-    // Set interval duration based on remaining time
-    let intervalDuration = 3600000; // Default to hourly updates (3600000ms = 1 hour)
+    // Set update interval based on remaining time to be more efficient
+    const intervalDuration = getUpdateInterval(daysLeft, status);
     
-    // For tasks due within 24 hours, update more frequently
-    if (daysLeft === 0) {
-      intervalDuration = 60000; // Update every minute for tasks due today
+    // Only set interval if we need updates
+    if (intervalDuration > 0) {
+      intervalRef.current = setInterval(updateTimeLeft, intervalDuration);
     }
-    
-    // For tasks due within 1 hour or overdue tasks, update even more frequently
-    const hoursTillDue = dueDate ? Math.floor((new Date(dueDate).getTime() - Date.now()) / 3600000) : 0;
-    if (hoursTillDue <= 1 || status === "overdue") {
-      intervalDuration = 1000; // Update every second for imminent or overdue tasks
-    }
-    
-    intervalRef.current = setInterval(updateTimeLeft, intervalDuration);
 
     return cleanup;
-  }, [dueDate, status]);
+  }, [dueDate, status, daysLeft]);
 
   return (
     <TooltipProvider>
@@ -111,9 +104,7 @@ export default function CountdownTimer({
             }`}
             style={{ 
               width: dynamicSize, 
-              height: dynamicSize,
-              background: "var(--gradient-light)",
-              boxShadow: "var(--shadow-sm)"
+              height: dynamicSize
             }}
           >
             <TimerRing

@@ -1,14 +1,17 @@
 
 /* src/styles/components.css */
 @layer components {
+  /* ===== TASK CARD STYLES ===== */
   .task-card {
-    @apply flex flex-col p-3 sm:p-3 rounded-xl shadow-sm border border-gray-200 hover:border-secondary transition-colors relative text-left;
+    @apply flex flex-col p-3 sm:p-3 shadow-sm border border-gray-200 hover:border-secondary transition-colors relative text-left;
     min-height: calc(1.25 * 60px);
     width: 95%;
     margin-left: auto;
     margin-right: auto;
     box-shadow: var(--shadow-sm);
     transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    /* Square corners for task cards */
+    border-radius: var(--task-card-radius) !important;
   }
 
   .task-card:hover {
@@ -32,19 +35,23 @@
     display: none;
   }
 
+  /* ===== FORM STYLES ===== */
   .form-field-group {
     @apply space-y-2;
   }
 
+  /* ===== BUTTON STYLES ===== */
   .btn-primary {
     @apply rounded-full focus:outline-none focus:ring-2 focus:ring-primary/50 text-base;
     transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
-    background-color: hsl(var(--primary));
+    background: var(--gradient-blue);
     color: hsl(var(--primary-foreground));
     box-shadow: var(--shadow-sm);
+    border-radius: var(--border-radius-full);
   }
 
   .btn-primary:hover {
+    background: var(--gradient-blue-dark);
     box-shadow: var(--shadow-md);
     transform: translateY(-1px);
   }
@@ -55,9 +62,10 @@
   }
 
   .btn-secondary {
-    @apply border border-input hover:bg-accent hover:text-accent-foreground rounded-full focus:outline-none focus:ring-2 focus:ring-accent/50;
+    @apply border border-input hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-accent/50;
     transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
     box-shadow: var(--shadow-sm);
+    border-radius: var(--border-radius-full);
   }
 
   .btn-secondary:hover {
@@ -70,17 +78,19 @@
     box-shadow: var(--shadow-sm);
   }
 
+  /* ===== FAB BUTTON ===== */
   .fab {
-    @apply rounded-full shadow-lg flex items-center justify-center fixed;
+    @apply flex items-center justify-center fixed;
     bottom: 16px;
     right: 16px;
     width: 56px;
     height: 56px;
     z-index: 99999;
     transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
-    background-color: hsl(var(--primary));
+    box-shadow: var(--shadow-lg);
+    background: var(--gradient-blue);
     color: hsl(var(--primary-foreground));
+    border-radius: var(--border-radius-full);
   }
 
   .fab svg {
@@ -89,25 +99,43 @@
   }
 
   .fab:hover {
-    background-color: #2C50B6;
+    background: var(--gradient-blue-dark);
     transform: scale(1.05);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15), 0 3px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-xl);
   }
 
   .fab:active {
     transform: scale(0.95);
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12), 0 2px 3px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow-lg);
   }
 
   @media (max-width: 320px) {
     .fab {
-      @apply bottom-2 right-2 w-12 h-12 rounded-full;
+      @apply bottom-2 right-2 w-12 h-12;
     }
   }
 
+  /* ===== HEADER & LOGO ===== */
   .header-logo {
     @apply text-primary;
     fill: currentColor;
+  }
+
+  /* ===== TIMER STYLES ===== */
+  .timer-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    border-radius: 50%;
+    background: var(--gradient-light);
+    box-shadow: var(--shadow-sm);
+  }
+  
+  .timer-container:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-md);
   }
 
   .timer-ring {
@@ -116,9 +144,15 @@
   }
   
   .timer-progress {
-    transition: stroke 0.3s ease;
+    transition: stroke-dashoffset 0.5s ease-out, stroke 0.3s ease;
+  }
+  
+  .timer-text {
+    font-weight: 600;
+    letter-spacing: -0.01em;
   }
 
+  /* ===== FILE UPLOAD STYLES ===== */
   input[type="file"] {
     @apply text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/80 cursor-pointer;
     max-width: 100%;
@@ -134,5 +168,32 @@
     input[type="file"] {
       max-width: 200px;
     }
+  }
+
+  /* ===== FORM FIELDS ===== */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  input[type="search"],
+  input[type="url"],
+  input[type="tel"],
+  input[type="date"],
+  input[type="datetime-local"],
+  textarea,
+  .select-trigger {
+    border-radius: var(--border-radius-xl);
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+    border-color: #3662E3;
+    box-shadow: 0 0 0 2px rgba(54, 98, 227, 0.15), 0 1px 3px rgba(0, 0, 0, 0.05);
   }
 }

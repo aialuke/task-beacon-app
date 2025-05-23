@@ -1,6 +1,7 @@
 
 /* src/styles/animations.css */
 @layer utilities {
+  /* ===== TIMER ANIMATIONS ===== */
   /* Flash animation for overdue tasks */
   .animate-flash {
     animation: flash 2s infinite;
@@ -31,7 +32,7 @@
     to { stroke-dashoffset: var(--target-offset); }
   }
 
-  /* Default animations from Tailwind */
+  /* ===== BASIC ANIMATIONS ===== */
   .animate-spin {
     animation: spin 1s linear infinite;
   }
@@ -65,5 +66,24 @@
   @keyframes fade-in {
     from { opacity: 0; }
     to { opacity: 1; }
+  }
+  
+  /* ===== TRANSITION ANIMATIONS ===== */
+  .animate-accordion-down {
+    animation: accordion-down 0.2s ease-out;
+  }
+  
+  @keyframes accordion-down {
+    from { height: 0; opacity: 0; }
+    to { height: var(--radix-accordion-content-height); opacity: 1; }
+  }
+  
+  .animate-accordion-up {
+    animation: accordion-up 0.2s ease-out;
+  }
+  
+  @keyframes accordion-up {
+    from { height: var(--radix-accordion-content-height); opacity: 1; }
+    to { height: 0; opacity: 0; }
   }
 }

@@ -4,7 +4,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* CSS Reset and base styles - moved from scattered locations */
+/* CSS Reset and base styles */
 * {
   margin: 0;
   padding: 0;
@@ -22,72 +22,39 @@
 @import "./styles/utilities.css";
 @import "./styles/accessibility.css";
 @import "./styles/animations.css";
-@import "./styles/modern-theme.css"; /* Import our new modern theme */
 
-/* Global icon handling - centralized here instead of duplicated */
+/* Global icon handling */
 svg {
   fill: none;
 }
 
-.icon-filled {
-  fill: currentColor;
-}
-
-/* Timer component specific styles */
-.timer-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.2s ease, opacity 0.2s ease;
-}
-
-.timer-container:hover {
-  transform: scale(1.05);
-}
-
-.timer-ring circle {
-  transition: stroke-width 0.2s ease;
-}
-
-.timer-progress {
-  transition: stroke-dashoffset 0.5s ease-out, stroke 0.3s ease;
-}
-
-.timer-text {
-  font-weight: 600;
-  letter-spacing: -0.01em;
-}
-
-/* Task card specific styles */
+/* Task card specific overrides */
 .task-card {
   background-color: white;
   border: 1px solid #e2e8f0;
-  border-radius: 0.75rem !important; /* XL rounded corners */
+  border-radius: var(--task-card-radius) !important; /* Square corners */
 }
 
-/* Primary button with consistent gradient */
-.btn-primary, 
-button[class*="bg-primary"] {
-  background: var(--gradient-blue);
-  color: white;
-  border-radius: 9999px;
-}
-
-.btn-primary:hover, 
-button[class*="bg-primary"]:hover {
-  background: var(--gradient-blue-dark);
-  transform: translateY(-1px);
-}
-
-/* Enhanced shadow styles for popups and dialogs */
+/* Select and dropdown styling */
 .select-content,
 [data-radix-popper-content-wrapper],
 [data-radix-dropdown-menu-content] {
   background-color: white;
   color: #000000e6;
-  border-radius: 0.75rem; /* XL rounded corners */
+  border-radius: var(--border-radius-xl);
   box-shadow: var(--shadow-lg);
+}
+
+/* Dialog content styling */
+.dialog-content, 
+[class*="dialog-content"],
+.popover-content,
+[class*="popover-content"] {
+  padding: 1.25rem;
+  background: white;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid #f0f0f0;
+  border-radius: var(--border-radius-xl);
 }
 
 /* Fix avatar fallback backgrounds */
@@ -96,28 +63,11 @@ button[class*="bg-primary"]:hover {
   color: #6b7280;
 }
 
-/* All dialog, card, and other container elements should have rounded-xl corners and subtle shadows */
-[class*="rounded-md"],
-[class*="rounded-lg"] {
-  border-radius: 0.75rem !important; /* XL rounded corners */
-}
-
-/* Explicitly force rounded corners for specific components */
-.dialog-content,
-.select-content,
-.card,
-.dropdown-content,
-.popover-content,
-.task-card {
-  border-radius: 0.75rem !important; /* XL rounded corners */
-  box-shadow: var(--shadow-md);
-}
-
-/* Make all buttons rounded-full with hover shadow enhancement */
+/* Button styling consistency */
 button, 
 .button,
 [role="button"] {
-  border-radius: 9999px;
+  border-radius: var(--border-radius-full);
   transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
@@ -134,56 +84,13 @@ button:active,
   transform: translateY(0);
 }
 
-/* Button no shadow override */
-.no-shadow {
-  box-shadow: none !important;
-}
-
-.no-shadow:hover {
-  box-shadow: none !important;
-  transform: none !important;
-}
-
-/* Consistently styled FAB for primary actions */
-.fab {
-  display: flex;
-  position: fixed;
-  visibility: visible;
-  opacity: 1;
-  z-index: 99999;
-  bottom: 1rem;
-  right: 1rem;
-  width: 56px;
-  height: 56px;
+/* Consistently styled form fields */
+input[type="file"]::file-selector-button {
+  border-radius: var(--border-radius-full);
+  padding: 0.25rem 0.75rem;
   background: var(--gradient-blue);
+  border: none;
   color: white;
-  border-radius: 9999px;
-  align-items: center;
-  justify-content: center;
-  box-shadow: var(--shadow-lg);
-  transition: all 0.2s ease;
-}
-
-.fab:hover {
-  background: var(--gradient-blue-dark);
-  transform: scale(1.05);
-  box-shadow: var(--shadow-xl);
-}
-
-/* Make form fields consistent */
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="number"],
-input[type="search"],
-input[type="url"],
-input[type="tel"],
-input[type="date"],
-input[type="datetime-local"],
-textarea,
-.select-trigger {
-  width: 100%;
-  border-radius: 0.75rem !important;
-  padding: 0.5rem 0.75rem !important;
-  border: 1px solid #e2e8f0 !important;
+  margin-right: 0.5rem;
+  box-shadow: var(--shadow-sm);
 }
