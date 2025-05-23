@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import * as AvatarPrimitive from "@radix-ui/react-avatar"
 
@@ -14,7 +15,7 @@ const Avatar = React.forwardRef<
       className
     )}
     style={{
-      borderRadius: "var(--border-radius-full)"
+      borderRadius: "var(--radius-full)"
     }}
     {...props}
   />
@@ -46,7 +47,7 @@ const AvatarFallback = React.forwardRef<
     style={{
       backgroundColor: "#e5e7eb",
       color: "#6b7280",
-      borderRadius: "var(--border-radius-full)"
+      borderRadius: "var(--radius-full)"
     }}
     {...props}
   />
