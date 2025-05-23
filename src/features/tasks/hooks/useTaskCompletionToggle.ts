@@ -1,7 +1,6 @@
 
 import { useState, useCallback } from 'react';
 import { Task } from '@/lib/types';
-import { toast } from '@/lib/toast';
 
 type ToggleTaskCompleteFn = (task: Task) => Promise<void>;
 
@@ -10,6 +9,15 @@ interface UseTaskCompletionToggleResult {
   handleToggleComplete: () => Promise<void>;
 }
 
+/**
+ * Custom hook for handling task completion toggle UI state
+ *
+ * Manages loading state and provides a standardized handler for completion toggle
+ * 
+ * @param task - The task to toggle completion for
+ * @param toggleTaskComplete - Function to toggle task completion state
+ * @returns Object containing loading state and toggle handler
+ */
 export function useTaskCompletionToggle(task: Task, toggleTaskComplete: ToggleTaskCompleteFn): UseTaskCompletionToggleResult {
   const [loading, setLoading] = useState(false);
 
@@ -17,11 +25,8 @@ export function useTaskCompletionToggle(task: Task, toggleTaskComplete: ToggleTa
     setLoading(true);
     try {
       await toggleTaskComplete(task);
-      const statusText = task.status === "complete" ? 'reopened' : 'completed';
-      toast.success(`Task ${statusText} successfully`);
     } catch (error) {
       console.error('Failed to toggle task status:', error);
-      toast.error('Failed to update task status');
     } finally {
       setLoading(false);
     }
