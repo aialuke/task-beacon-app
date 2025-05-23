@@ -1,12 +1,20 @@
 
-import { useRef, memo, useCallback } from "react";
+import { memo } from "react";
 import { Task } from "@/lib/types";
-import { useTaskContext } from "@/features/tasks/context/TaskContext";
-import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
+import { Suspense } from "react";
 import TaskHeader from "./TaskHeader";
 import TaskDetails from "./TaskDetails";
-import { useTaskAnimation } from "@/features/tasks/hooks/useTaskAnimation";
+import { useTaskCard } from "../hooks/useTaskCard";
+import { Skeleton } from "@/components/ui/skeleton";
 
+/**
+ * TaskCard component
+ * 
+ * Displays a task with expandable details and provides interactions for
+ * viewing, pinning, and managing task data.
+ * 
+ * @param task - The task data to display
+ */
 interface TaskCardProps {
   task: Task;
 }
@@ -28,24 +36,14 @@ const arePropsEqual = (prevProps: TaskCardProps, nextProps: TaskCardProps): bool
 };
 
 function TaskCard({ task }: TaskCardProps) {
-  const { toggleTaskPin } = useTaskContext();
-  const { expandedTaskId, setExpandedTaskId } = useTaskUIContext();
-  const contentRef = useRef<HTMLDivElement>(null);
-  const cardRef = useRef<HTMLDivElement>(null);
-  
-  const isExpanded = expandedTaskId === task.id;
-  
-  // Custom hook for task animations
-  const { animationState } = useTaskAnimation(contentRef, isExpanded);
-
-  // Memoize event handlers with useCallback
-  const toggleExpand = useCallback(() => {
-    setExpandedTaskId(isExpanded ? null : task.id);
-  }, [isExpanded, task.id, setExpandedTaskId]);
-
-  const handleTogglePin = useCallback(async () => {
-    await toggleTaskPin(task);
-  }, [task, toggleTaskPin]);
+  const {
+    contentRef,
+    cardRef,
+    isExpanded,
+    animationState,
+    toggleExpand,
+    handleTogglePin
+  } = useTaskCard(task);
 
   return (
     <div

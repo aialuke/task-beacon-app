@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useMemo } from "react";
 import { useSpring, animated, config } from "@react-spring/web";
 import { TaskStatus } from "@/lib/types";
 import TimerRing from "./timer/TimerRing";
@@ -7,19 +7,28 @@ import TimerDisplay from "./timer/TimerDisplay";
 import { useUIContext } from "@/contexts/UIContext";
 import { Tooltip, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import TimerTooltip from "@/features/tasks/components/TimerTooltip";
-// Import from new utility files
 import { 
-  getDaysRemaining,
-  formatTimeDisplay,
-  getTooltipContent,
-  getUpdateInterval
-} from "@/lib/dateUtils";
-import { 
-  calculateTimerOffset, 
   setupAnimationVariables,
   prefersReducedMotion 
 } from "@/lib/animationUtils";
+import { useCountdown } from "@/hooks/useCountdown";
 
+/**
+ * CountdownTimer component displays a circular timer that visualizes the time remaining
+ * until a task's due date.
+ * 
+ * Features:
+ * - Visually displays time left as a circular progress indicator
+ * - Adapts display based on task status (pending, complete, overdue)
+ * - Shows different styling based on priority
+ * - Resizes based on mobile/desktop view
+ * - Provides detailed due date information via tooltip
+ * 
+ * @param dueDate - The due date of the task as an ISO string
+ * @param status - The current status of the task
+ * @param size - The size of the timer in pixels (default: 48)
+ * @param priority - The priority of the task (default: "medium")
+ */
 interface CountdownTimerProps {
   dueDate: string | null;
   status: TaskStatus;
@@ -48,85 +57,20 @@ function CountdownTimer({
     
     return { dynamicSize, radius, circumference };
   }, [isMobile, priority, size]);
-  
-  // Memoize the initial days left calculation to avoid unnecessary recalculations
-  const initialDaysLeft = useMemo(() => 
-    dueDate ? getDaysRemaining(dueDate) : 0
-  , [dueDate]);
-  
-  const [daysLeft, setDaysLeft] = useState<number>(initialDaysLeft);
-  
-  // Memoize the time display calculation
-  const initialTimeDisplay = useMemo(() => 
-    dueDate ? formatTimeDisplay(initialDaysLeft, dueDate, status) : "No due date"
-  , [dueDate, initialDaysLeft, status]);
-  
-  const [timeDisplay, setTimeDisplay] = useState<string>(initialTimeDisplay);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  
-  // Memoize tooltip content to avoid recalculation
-  const tooltipContent = useMemo(() => getTooltipContent(dueDate), [dueDate]);
 
-  // Memoize stroke dash offset calculation
-  const dashOffset = useMemo(() => 
-    calculateTimerOffset(circumference, daysLeft, status, dueDate), 
-    [circumference, daysLeft, status, dueDate]
+  // Use our custom hook to manage countdown logic
+  const { timeDisplay, dashOffset, tooltipContent, ariaLabel } = useCountdown(
+    dueDate, 
+    status, 
+    circumference
   );
 
-  // Memoize the update interval calculation
-  const updateInterval = useMemo(() => 
-    getUpdateInterval(daysLeft, status),
-    [daysLeft, status]
-  );
-
+  // Animation for the timer ring
   const { strokeDashoffset } = useSpring({
     strokeDashoffset: dashOffset,
     config: { tension: 120, friction: 14 },
     immediate: status === "complete" || status === "overdue" || !dueDate,
   });
-
-  // Memoize the update function to prevent recreation on re-renders
-  const updateTimeLeft = useMemo(() => () => {
-    if (!dueDate) return;
-    
-    const days = getDaysRemaining(dueDate);
-    setDaysLeft(days);
-    setTimeDisplay(formatTimeDisplay(days, dueDate, status));
-  }, [dueDate, status]);
-
-  useEffect(() => {
-    if (!dueDate) {
-      setDaysLeft(0);
-      setTimeDisplay("No due date");
-      return;
-    }
-
-    // Initial update
-    updateTimeLeft();
-    
-    const cleanup = () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-    };
-
-    cleanup(); // Clear any existing interval
-    
-    // Only set interval if we need updates
-    if (updateInterval > 0) {
-      intervalRef.current = setInterval(updateTimeLeft, updateInterval);
-    }
-
-    return cleanup;
-  }, [dueDate, status, updateInterval, updateTimeLeft]);
-
-  // Memoize the ARIA label to avoid recalculation
-  const ariaLabel = useMemo(() => {
-    if (status === "complete") return "Task timer: Completed";
-    if (status === "overdue") return `Task timer: ${timeDisplay} overdue`;
-    return `Task timer: ${timeDisplay}`;
-  }, [status, timeDisplay]);
 
   return (
     <TooltipProvider>
@@ -137,7 +81,7 @@ function CountdownTimer({
             tabIndex={0}
             aria-label={ariaLabel}
             className={`relative focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-full timer-container ${
-              status === "pending" && daysLeft === 0 ? "animate-pulse-subtle" : ""
+              status === "pending" && Number(timeDisplay) === 0 ? "animate-pulse-subtle" : ""
             }`}
             style={{ 
               width: dynamicSize, 

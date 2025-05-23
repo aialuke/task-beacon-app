@@ -4,6 +4,18 @@ import { animated, SpringValue } from "@react-spring/web";
 import { TaskStatus } from "@/lib/types";
 import { getTimerColor } from "@/lib/uiUtils";
 
+/**
+ * TimerRing Component
+ * 
+ * Renders the circular progress indicator for the countdown timer with the appropriate
+ * styling based on task status. Uses SVG with gradients and filters for visual effects.
+ * 
+ * @param size - The diameter of the timer ring in pixels
+ * @param radius - The radius of the timer ring in pixels
+ * @param circumference - The circumference of the timer ring
+ * @param strokeDashoffset - The animated stroke dash offset value
+ * @param status - The current status of the task
+ */
 interface TimerRingProps {
   size: number;
   radius: number;

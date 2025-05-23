@@ -2,6 +2,19 @@
 import { memo } from "react";
 import { TaskStatus } from "@/lib/types";
 
+/**
+ * TimerDisplay Component
+ * 
+ * Renders the time display inside the countdown timer circle.
+ * Shows different visual indicators based on task status:
+ * - Complete: Displays a checkmark
+ * - Overdue: Displays time with warning styling
+ * - Pending: Displays time remaining
+ * 
+ * @param size - The diameter of the timer in pixels
+ * @param status - The current status of the task
+ * @param timeDisplay - The formatted time string to display
+ */
 interface TimerDisplayProps {
   size: number;
   status: TaskStatus;
