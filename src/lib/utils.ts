@@ -1,8 +1,9 @@
+
 // src/lib/utils.ts
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Task, TaskStatus } from "./types";
-import { format, differenceInDays } from "date-fns";
+import { format, differenceInDays, differenceInHours } from "date-fns";
 
 // Function to merge Tailwind CSS classes
 export function cn(...inputs: ClassValue[]) {
@@ -26,10 +27,21 @@ export function getDaysRemaining(dueDate: string): number {
   return differenceInDays(due, now);
 }
 
+// Calculate hours remaining until due date
+export function getHoursRemaining(dueDate: string): number {
+  const now = new Date();
+  const due = new Date(dueDate);
+  return differenceInHours(due, now);
+}
+
 // Determine task status based on due date
 export function getTaskStatus(task: Task): TaskStatus {
   if (task.status === "complete") {
     return "complete";
+  }
+  
+  if (!task.due_date) {
+    return "pending";
   }
   
   const daysRemaining = getDaysRemaining(task.due_date);
@@ -62,6 +74,19 @@ export function getTimerColor(status: TaskStatus): string {
     case "pending":
     default:
       return "var(--timer-pending)";
+  }
+}
+
+// Get timer gradient based on status
+export function getTimerGradient(status: TaskStatus): string {
+  switch (status) {
+    case "complete":
+      return "url(#gradientComplete)";
+    case "overdue":
+      return "url(#gradientOverdue)";
+    case "pending":
+    default:
+      return "url(#gradientPending)";
   }
 }
 

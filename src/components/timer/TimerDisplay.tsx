@@ -8,16 +8,42 @@ interface TimerDisplayProps {
 }
 
 const TimerDisplay = ({ size, status, timeDisplay }: TimerDisplayProps) => {
+  // Get the appropriate text color based on status
+  const getTextColorClass = () => {
+    switch (status) {
+      case "complete":
+        return "text-success font-semibold";
+      case "overdue":
+        return "text-destructive font-bold";
+      case "pending":
+      default:
+        return "text-primary font-medium";
+    }
+  };
+  
   return (
     <div
-      className={`absolute inset-0 flex items-center justify-center font-medium text-center ${
+      className={`absolute inset-0 flex items-center justify-center text-center ${
         status === "overdue" ? "animate-flash" : ""
-      }`}
+      } ${getTextColorClass()}`}
       style={{
         fontSize: `${size / 4}px`,
-        background: status === "overdue" ? "rgba(218, 62, 82, 0.1)" : "transparent",
+        background: status === "overdue" 
+          ? "rgba(218, 62, 82, 0.1)" 
+          : status === "complete" 
+            ? "rgba(16, 185, 129, 0.05)" 
+            : "transparent",
         borderRadius: "50%",
-        boxShadow: status === "overdue" ? "inset 0 0 10px rgba(218, 62, 82, 0.2)" : "none"
+        boxShadow: status === "overdue" 
+          ? "inset 0 0 10px rgba(218, 62, 82, 0.2)" 
+          : status === "complete" 
+            ? "inset 0 0 8px rgba(16, 185, 129, 0.1)" 
+            : "none",
+        textShadow: status === "overdue" 
+          ? "0 1px 2px rgba(218, 62, 82, 0.2)" 
+          : status === "complete" 
+            ? "0 1px 2px rgba(16, 185, 129, 0.2)" 
+            : "0 1px 2px rgba(54, 98, 227, 0.1)"
       }}
     >
       {status === "complete" ? (
@@ -41,14 +67,10 @@ const TimerDisplay = ({ size, status, timeDisplay }: TimerDisplayProps) => {
         </svg>
       ) : (
         <span
-          className={
-            status === "overdue" ? "text-destructive" : "text-primary"
-          }
-          style={{
-            textShadow: status === "overdue" 
-              ? "0 1px 2px rgba(218, 62, 82, 0.2)" 
-              : "0 1px 2px rgba(54, 98, 227, 0.1)"
-          }}
+          className={`timer-text ${
+            status === "overdue" ? "text-destructive" : 
+            status === "pending" ? "text-amber-500" : "text-primary"
+          }`}
         >
           {timeDisplay}
         </span>

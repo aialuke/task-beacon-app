@@ -11,6 +11,7 @@ export const calculateTimerOffset = (
   if (status === "complete") return 0;
   if (status === "overdue") return 0;
   if (!dueDate) return circumference; // No due date, empty ring
+  
   const totalDays = 14;
   const remainingPercentage = Math.min(Math.max(daysLeft / totalDays, 0), 1);
   return circumference * (1 - remainingPercentage);
@@ -32,12 +33,16 @@ export const formatTimeDisplay = (days: number, dueDate: string | null, status: 
   if (status === "overdue") {
     // For overdue tasks, show negative days (e.g., "-1d")
     return `-${Math.abs(days)}d`;
-  } else if (days === 0 && new Date(dueDate).toDateString() === new Date().toDateString()) {
-    // For tasks due today, show hours remaining
-    const due = new Date(dueDate).getTime();
-    const now = Date.now();
-    const hoursLeft = Math.floor((due - now) / (1000 * 60 * 60));
-    return `${hoursLeft}h`;
+  } 
+  
+  // Check if the task is due today
+  const dueTime = new Date(dueDate).getTime();
+  const now = Date.now();
+  const hoursLeft = Math.floor((dueTime - now) / (1000 * 60 * 60));
+  
+  // If less than 24 hours remaining, show hours
+  if (days === 0 || hoursLeft < 24) {
+    return `${Math.max(hoursLeft, 0)}h`;
   } else {
     // Normal case - show days
     return `${days}d`;
@@ -46,11 +51,15 @@ export const formatTimeDisplay = (days: number, dueDate: string | null, status: 
 
 // Generate tooltip content for timer
 export const getTooltipContent = (dueDate: string | null): string => {
-  return !dueDate
-    ? "No due date"
-    : isNaN(new Date(dueDate).getTime())
-    ? "Invalid due date"
-    : `Due: ${new Date(dueDate).toLocaleDateString()}`;
+  if (!dueDate) return "No due date";
+  if (isNaN(new Date(dueDate).getTime())) return "Invalid due date";
+  
+  const dueTimeStr = new Date(dueDate).toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+  
+  return `Due: ${new Date(dueDate).toLocaleDateString()} at ${dueTimeStr}`;
 };
 
 // Get appropriate CSS classes for tooltip based on task status

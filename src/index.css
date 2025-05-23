@@ -33,22 +33,51 @@ svg {
   fill: currentColor;
 }
 
-/* Fix for commonly used elements */
+/* Timer component specific styles */
+.timer-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.timer-container:hover {
+  transform: scale(1.05);
+}
+
+.timer-ring circle {
+  transition: stroke-width 0.2s ease;
+}
+
+.timer-progress {
+  transition: stroke-dashoffset 0.5s ease-out, stroke 0.3s ease;
+}
+
+.timer-text {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* Task card specific styles */
 .task-card {
   background-color: white;
   border: 1px solid #e2e8f0;
-  border-radius: 0.75rem; /* XL rounded corners */
+  border-radius: 0.75rem !important; /* XL rounded corners */
 }
 
+/* Primary button with consistent gradient */
 .btn-primary, 
 button[class*="bg-primary"] {
-  background-color: #3662E3;
+  background: var(--gradient-blue);
   color: white;
   border-radius: 9999px;
 }
 
-.timer-ring circle {
-  stroke-width: attr(stroke-width);
+.btn-primary:hover, 
+button[class*="bg-primary"]:hover {
+  background: var(--gradient-blue-dark);
+  transform: translateY(-1px);
 }
 
 /* Enhanced shadow styles for popups and dialogs */
@@ -70,7 +99,7 @@ button[class*="bg-primary"] {
 /* All dialog, card, and other container elements should have rounded-xl corners and subtle shadows */
 [class*="rounded-md"],
 [class*="rounded-lg"] {
-  border-radius: 0.75rem; /* XL rounded corners */
+  border-radius: 0.75rem !important; /* XL rounded corners */
 }
 
 /* Explicitly force rounded corners for specific components */
@@ -80,7 +109,7 @@ button[class*="bg-primary"] {
 .dropdown-content,
 .popover-content,
 .task-card {
-  border-radius: 0.75rem; /* XL rounded corners */
+  border-radius: 0.75rem !important; /* XL rounded corners */
   box-shadow: var(--shadow-md);
 }
 
@@ -115,9 +144,8 @@ button:active,
   transform: none !important;
 }
 
-/* Special handling for FAB to ensure it's visible */
-#root .fab,
-body .fab {
+/* Consistently styled FAB for primary actions */
+.fab {
   display: flex;
   position: fixed;
   visibility: visible;
@@ -127,15 +155,35 @@ body .fab {
   right: 1rem;
   width: 56px;
   height: 56px;
-  background-color: #3662E3;
+  background: var(--gradient-blue);
   color: white;
   border-radius: 9999px;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-lg);
+  transition: all 0.2s ease;
 }
 
-#root .fab:hover,
-body .fab:hover {
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.1);
+.fab:hover {
+  background: var(--gradient-blue-dark);
+  transform: scale(1.05);
+  box-shadow: var(--shadow-xl);
+}
+
+/* Make form fields consistent */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="search"],
+input[type="url"],
+input[type="tel"],
+input[type="date"],
+input[type="datetime-local"],
+textarea,
+.select-trigger {
+  width: 100%;
+  border-radius: 0.75rem !important;
+  padding: 0.5rem 0.75rem !important;
+  border: 1px solid #e2e8f0 !important;
 }

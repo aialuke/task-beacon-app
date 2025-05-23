@@ -73,7 +73,7 @@ button,
 button[class*="bg-primary"], 
 .btn-primary,
 [class*="btn-primary"] {
-  background: linear-gradient(45deg, #3662E3, #5C85EE) !important;
+  background: var(--gradient-blue) !important;
   color: white !important;
 }
 
@@ -82,9 +82,8 @@ button[class*="bg-primary"]:hover,
 [class*="btn-primary"]:hover {
   transform: translateY(-1px) !important;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06) !important;
-  filter: brightness(0.9) !important;
   color: white !important;
-  background: linear-gradient(45deg, #2C50B6, #4A6DCA) !important;
+  background: var(--gradient-blue-dark) !important;
 }
 
 button[class*="bg-primary"]:active, 
@@ -92,7 +91,6 @@ button[class*="bg-primary"]:active,
 [class*="btn-primary"]:active {
   transform: translateY(0) !important;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
-  filter: brightness(0.95) !important;
 }
 
 /* Secondary and outline button styling */
@@ -131,6 +129,7 @@ button:disabled,
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.06) !important;
   border: 1px solid #f0f0f0 !important;
   transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease !important;
+  background: var(--gradient-light) !important;
 }
 
 .task-card:hover {
@@ -158,6 +157,12 @@ form .space-y-4 {
   background: white !important;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
   border: 1px solid #f0f0f0 !important;
+}
+
+/* Form fields styling */
+.form-field-container {
+  width: 100% !important;
+  margin-bottom: 1rem !important;
 }
 
 /* User search field styling */
@@ -189,7 +194,7 @@ input[type="file"] {
 input[type="file"]::file-selector-button {
   border-radius: 9999px !important;
   padding: 0.25rem 0.75rem !important;
-  background: linear-gradient(45deg, #3662E3, #5C85EE) !important;
+  background: var(--gradient-blue) !important;
   border: none !important;
   color: white !important;
   margin-right: 0.5rem !important;
@@ -198,7 +203,7 @@ input[type="file"]::file-selector-button {
 
 /* FAB (Floating Action Button) - special case */
 .fab {
-  background: linear-gradient(45deg, #3662E3, #5C85EE) !important;
+  background: var(--gradient-blue) !important;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1) !important;
   transition: transform 0.2s ease, box-shadow 0.2s ease !important;
 }
@@ -206,6 +211,7 @@ input[type="file"]::file-selector-button {
 .fab:hover {
   transform: scale(1.05) translateY(-1px) !important;
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1) !important;
+  background: var(--gradient-blue-dark) !important;
 }
 
 /* Ensure dropdown z-index is always high enough */
@@ -262,7 +268,7 @@ button[type="submit"],
 button[class*="primary"],
 button[variant="default"],
 button[class*="btn-primary"] {
-  background: linear-gradient(45deg, #3662E3, #5C85EE) !important;
+  background: var(--gradient-blue) !important;
   color: white !important;
 }
 
@@ -270,15 +276,14 @@ button[type="submit"]:hover,
 button[class*="primary"]:hover,
 button[variant="default"]:hover,
 button[class*="btn-primary"]:hover {
-  background: linear-gradient(45deg, #2C50B6, #4A6DCA) !important;
+  background: var(--gradient-blue-dark) !important;
   color: white !important;
   transform: translateY(-1px) !important;
 }
 
 /* Override any conflicting button hover styles */
 .bg-primary.hover\:bg-primary\/90:hover {
-  --tw-bg-opacity: 0.9 !important;
-  background-color: rgba(54, 98, 227, var(--tw-bg-opacity)) !important;
+  background: var(--gradient-blue-dark) !important;
   color: white !important;
 }
 
@@ -296,12 +301,27 @@ body form .space-y-4 > div {
   padding: 0 0.75rem !important;
 }
 
+/* Timer component styling */
+.timer-container {
+  border-radius: 50% !important;
+  overflow: visible !important;
+  background: var(--gradient-light) !important;
+}
+
+.timer-container:hover {
+  box-shadow: var(--shadow-md) !important;
+}
+
+.timer-container:focus {
+  box-shadow: var(--shadow-focus) !important;
+  outline: none !important;
+}
+
 /* Final Touch to Ensure Button Hover States */
 button.bg-primary:hover,
 .button.bg-primary:hover,
 [role="button"].bg-primary:hover,
 .btn-primary:hover {
   color: white !important;
-  background: #2C50B6 !important;
-  background-image: none !important;
+  background: var(--gradient-blue-dark) !important;
 }
