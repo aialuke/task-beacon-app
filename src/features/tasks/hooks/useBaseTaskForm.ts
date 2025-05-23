@@ -1,9 +1,9 @@
-
 import { useState, useCallback } from "react";
 import { toast } from "@/lib/toast";
 import { compressAndResizePhoto } from "@/lib/imageUtils";
 import { uploadTaskPhoto } from "@/integrations/supabase/api/tasks.api";
 import { isMockingSupabase } from "@/integrations/supabase/client";
+import { TaskFormState } from "../types";
 
 export interface BaseTaskFormState {
   title: string;
@@ -36,7 +36,13 @@ export interface UseBaseTaskFormOptions {
  * @param options.onClose - Callback function to execute when form is closed or reset
  * @returns Form state and handlers
  */
-export function useBaseTaskForm({ initialUrl = "", onClose }: UseBaseTaskFormOptions = {}) {
+export function useBaseTaskForm({ initialUrl = "", onClose }: UseBaseTaskFormOptions = {}): TaskFormState & {
+  setLoading: (loading: boolean) => void;
+  handlePhotoChange: (e: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
+  uploadPhoto: () => Promise<string | null>;
+  resetForm: () => void;
+  validateTitle: (value: string) => boolean;
+} {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState("");

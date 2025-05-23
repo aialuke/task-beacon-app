@@ -3,6 +3,7 @@ import { useCallback } from "react";
 import { toast } from "@/lib/toast";
 import { useBaseTaskForm } from "./useBaseTaskForm";
 import { createTask, uploadTaskPhoto } from "@/integrations/supabase/api/tasks.api";
+import { NewTaskFormData, TaskFormState } from "../types";
 
 interface UseCreateTaskProps {
   onClose?: () => void;
@@ -21,7 +22,11 @@ interface UseCreateTaskProps {
  * @param props.onClose - Optional callback to execute when the form is closed
  * @returns Form state and submission handler
  */
-export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
+export function useCreateTask({ onClose }: UseCreateTaskProps = {}): TaskFormState & {
+  handleSubmit: (e: React.FormEvent) => Promise<void>;
+} {
+  const baseForm = useBaseTaskForm({ onClose });
+  
   const {
     title,
     setTitle,
@@ -42,7 +47,7 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
     handlePhotoChange,
     resetForm,
     validateTitle
-  } = useBaseTaskForm({ onClose });
+  } = baseForm;
 
   /**
    * Handles form submission for creating a new task
@@ -65,7 +70,7 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
         photoUrl = uploadedUrl;
       }
 
-      const { error } = await createTask({
+      const newTaskData: NewTaskFormData = {
         title,
         description: description || null,
         due_date: dueDate ? new Date(dueDate).toISOString() : null,
@@ -73,7 +78,9 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
         url_link: url || null,
         assignee_id: assigneeId || null,
         pinned,
-      });
+      };
+
+      const { error } = await createTask(newTaskData);
 
       if (error) throw error;
       
@@ -102,22 +109,7 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
   ]);
 
   return {
-    title,
-    setTitle,
-    description,
-    setDescription,
-    dueDate,
-    setDueDate,
-    url,
-    setUrl,
-    photo,
-    photoPreview,
-    pinned,
-    setPinned,
-    assigneeId,
-    setAssigneeId,
-    loading,
-    handlePhotoChange,
+    ...baseForm,
     handleSubmit
   };
 }

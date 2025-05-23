@@ -3,6 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Task } from "@/lib/types";
 import { toast } from "@/lib/toast";
 import { createFollowUpTask as apiCreateFollowUpTask } from "@/integrations/supabase/api/tasks.api";
+import { FollowUpTaskFormData } from "../types";
 
 /**
  * Hook for creating follow-up tasks
@@ -18,7 +19,7 @@ export function useFollowUpTaskMutation() {
    * @param parentTask - The parent task
    * @param newTaskData - Data for the new follow-up task
    */
-  const createFollowUpTask = async (parentTask: Task, newTaskData: any) => {
+  const createFollowUpTask = async (parentTask: Task, newTaskData: FollowUpTaskFormData) => {
     try {
       const { error } = await apiCreateFollowUpTask(parentTask.id, newTaskData);
 
