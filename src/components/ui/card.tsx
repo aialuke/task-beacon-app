@@ -1,35 +1,17 @@
 
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { useBorderRadius } from "@/contexts/BorderRadiusContext"
 
 const Card = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => {
-  const borderStyles = useBorderRadius();
-  
-  return (
-    <div
-      ref={ref}
-      className={cn(
-        "border bg-card text-card-foreground shadow-md rounded-xl",
-        className
-      )}
-      style={{
-        backgroundColor: "white",
-        color: "#000000e6",
-        borderColor: "#e2e8f0",
-        borderRadius: "0.75rem",
-        WebkitBorderRadius: "0.75rem",
-        MozBorderRadius: "0.75rem",
-        borderWidth: "1px",
-        ...props.style
-      }}
-      {...props}
-    />
-  )
-})
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn("card card--shadow", className)}
+    {...props}
+  />
+))
 Card.displayName = "Card"
 
 const CardHeader = React.forwardRef<
@@ -50,11 +32,7 @@ const CardTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <h3
     ref={ref}
-    className={cn(
-      "text-2xl font-semibold leading-none tracking-tight",
-      className
-    )}
-    style={{ color: "#000000e6" }}
+    className={cn("text-2xl font-semibold leading-none tracking-tight", className)}
     {...props}
   />
 ))
@@ -66,8 +44,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
-    style={{ color: "#6b7280" }}
+    className={cn("text-sm text-muted", className)}
     {...props}
   />
 ))

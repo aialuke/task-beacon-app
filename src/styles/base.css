@@ -1,114 +1,52 @@
-/* src/styles/base.css */
-:root {
-  /* Color system - normalized variable names */
-  --background: 0 0% 100%;
-  --foreground: 240 10% 3.9%;
-  --card: 0 0% 100%;
-  --card-foreground: 240 10% 3.9%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 240 10% 3.9%;
-  --primary: 221 77% 55%; /* Blue: #3662E3 */
-  --primary-foreground: 0 0% 98%;
-  --secondary: 240 4.8% 95.9%;
-  --secondary-foreground: 240 5.9% 10%;
-  --muted: 240 4.8% 95.9%;
-  --muted-foreground: 240 3.8% 46.1%;
-  --accent: 240 4.8% 95.9%;
-  --accent-foreground: 240 5.9% 10%;
-  --destructive: 351 83% 53%; /* Red: #DA3E52 */
-  --destructive-foreground: 0 0% 98%;
-  --border: 240 5.9% 90%;
-  --input: 240 5.9% 90%;
-  --ring: 240 5.9% 10%;
-  --radius: 0.5rem;
-  --surface: 0 0% 100%;
-  --surface-foreground: 240 10% 3.9%;
-  --accent-yellow: 51 100% 57%; /* #FFDD24 */
-  --success: 152 76% 40%; /* #10B981 */
-  --success-foreground: 0 0% 98%;
-  
-  /* Timer Colors - consistent naming */
-  --timer-pending: #FFDD24; /* Yellow */
-  --timer-overdue: #DA3E52; /* Red */
-  --timer-complete: #10B981; /* Green */
-  
-  /* Additional timer colors for gradients */
-  --timer-pending-light: #FFE082;
-  --timer-overdue-light: #E57373;
-  --timer-complete-light: #34D399;
 
-  /* Special shadow cases that Tailwind doesn't cover */
-  --shadow-focus: 0 0 0 3px rgba(54, 98, 227, 0.2);
-  
-  /* Gradient backgrounds - consolidated */
-  --gradient-light: linear-gradient(to bottom right, #FFFFFF, #F9FAFB);
-  --gradient-blue: linear-gradient(45deg, #3662E3, #5C85EE);
-  --gradient-blue-dark: linear-gradient(45deg, #2C50B6, #4A6DCA);
-  
-  /* Border radius system - new consolidated system */
-  --border-radius-sm: 0.25rem;   /* 4px */
-  --border-radius-md: 0.375rem;  /* 6px */
-  --border-radius-lg: 0.5rem;    /* 8px */
-  --border-radius-xl: 0.75rem;   /* 12px */
-  --border-radius-2xl: 1rem;     /* 16px */
-  --border-radius-full: 9999px;  /* Full rounded for buttons */
-}
+/**
+ * base.css
+ * Global styles that apply to base elements
+ */
 
-*, *::before, *::after {
-  box-sizing: border-box;
-}
+@import "./theme-variables.css";
+@import "./reset.css";
 
+/* Body styles */
 body {
-  font-feature-settings: "rlig" 1, "calt" 1;
-  margin: 0;
-  padding: 0;
-  font-family: "Manrope", sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   color: hsl(var(--foreground));
   background-color: hsl(var(--background));
 }
 
-/* Reset buttons and form elements to ensure consistent inheritance */
-button, input, optgroup, select, textarea {
-  font-family: inherit;
-  font-size: 100%;
-  line-height: 1.15;
-  margin: 0;
+/* Link styles */
+a {
+  color: hsl(var(--primary));
+  text-decoration: none;
 }
 
-[type="button"], [type="reset"], [type="submit"], button {
-  -webkit-appearance: button;
+a:hover {
+  text-decoration: underline;
 }
 
-/* ===== ACCESSIBILITY STYLES ===== */
-/* Improved focus styles that respect inheritance */
+/* Focus styles for accessibility */
 :focus-visible {
   outline: 2px solid hsl(var(--primary));
   outline-offset: 2px;
-}
-
-/* High contrast outline for important elements */
-@media (forced-colors: active) {
-  .timer-ring {
-    stroke: CanvasText;
-  }
-  
-  button, 
-  a[role="button"],
-  .btn-primary,
-  .btn-secondary {
-    border: 1px solid CanvasText;
-  }
-  
-  /* Ensure icons remain visible in high contrast mode */
-  svg {
-    forced-color-adjust: auto;
-  }
 }
 
 /* Keyboard navigation improvements */
 [tabindex]:not([tabindex="-1"]):focus-visible {
   outline: 2px solid hsl(var(--primary));
   outline-offset: 2px;
+}
+
+/* High contrast mode adjustments */
+@media (forced-colors: active) {
+  .timer-ring {
+    stroke: CanvasText;
+  }
+  
+  button, 
+  a[role="button"] {
+    border: 1px solid CanvasText;
+  }
+  
+  svg {
+    forced-color-adjust: auto;
+  }
 }

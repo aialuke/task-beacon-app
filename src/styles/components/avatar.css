@@ -1,0 +1,56 @@
+
+/**
+ * avatar.css
+ * Avatar component styles
+ */
+
+@import "../theme-variables.css";
+
+/* Base Avatar styles */
+.avatar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: var(--radius-full);
+  width: 2.5rem;
+  height: 2.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Avatar image styles */
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Avatar fallback when no image is available */
+.avatar-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e5e7eb;
+  color: #6b7280;
+  font-weight: 500;
+  border-radius: var(--radius-full);
+}
+
+/* Avatar sizes */
+.avatar--sm {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.avatar--lg {
+  width: 3.5rem;
+  height: 3.5rem;
+}
+
+.avatar--xl {
+  width: 5rem;
+  height: 5rem;
+}

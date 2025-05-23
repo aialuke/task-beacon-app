@@ -1,53 +1,31 @@
 
-/* Base Tailwind directives */
+/**
+ * index.css
+ * Main CSS file that imports all other CSS files in the correct order
+ */
+
+/* Tailwind base directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* CSS Reset and base styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-*::before, 
-*::after {
-  box-sizing: inherit;
-}
-
-/* Import base styles */
+/* Import theme variables and base styles */
+@import "./styles/theme-variables.css";
+@import "./styles/reset.css";
 @import "./styles/base.css";
 
-/* Import component styles - loading button early */
-@import "./styles/button.css";
-@import "./styles/card.css";
-@import "./styles/form.css";
-@import "./styles/dialog.css";
-@import "./styles/avatar.css";
-@import "./styles/header.css";
-@import "./styles/timer.css";
+/* Import component styles */
+@import "./styles/components/button.css";
+@import "./styles/components/card.css";
+@import "./styles/components/form.css";
+@import "./styles/components/dialog.css";
+@import "./styles/components/avatar.css";
+@import "./styles/components/timer.css";
 
-/* Import utility styles */
+/* Import utilities */
 @import "./styles/utilities.css";
-@import "./styles/layout-utilities.css";
-@import "./styles/shadow-utilities.css";
-@import "./styles/text-utilities.css";
-@import "./styles/icon-utilities.css";
-@import "./styles/color-utilities.css";
-@import "./styles/tooltip-utilities.css";
-@import "./styles/animation-utilities.css";
 
-/* Import border radius fix - must come after other imports */
-@import "./styles/border-radius-fix.css";
-
-/* Global icon handling */
+/* Global SVG handling */
 svg {
   fill: none;
-}
-
-/* Ensure borders are visible - these must come after all other styles */
-input:not(.avatar *), textarea, select, .task-card:not(.avatar *) {
-  border-width: 1px !important;
-  border-radius: 0.75rem !important;
 }

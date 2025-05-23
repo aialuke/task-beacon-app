@@ -25,9 +25,9 @@ function TaskActions({ task, detailView }: TaskActionsProps) {
     <>
       <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-100">
         <Button
-          variant={task.status === "complete" ? "outline" : "brand"}
+          variant={task.status === "complete" ? "outline" : "default"}
           size="sm"
-          className={task.status === "complete" ? "" : "force-primary-button text-xs"}
+          className={task.status === "complete" ? "" : ""}
           onClick={handleToggleComplete}
           disabled={loading}
         >
@@ -36,7 +36,6 @@ function TaskActions({ task, detailView }: TaskActionsProps) {
         <Button
           variant="outline"
           size="sm"
-          className="text-xs"
           onClick={handleCreateFollowUp}
           disabled={loading}
         >
@@ -45,9 +44,9 @@ function TaskActions({ task, detailView }: TaskActionsProps) {
       </div>
 
       <Dialog open={followUpDialogOpen} onOpenChange={setFollowUpDialogOpen}>
-        <DialogContent className="max-w-lg bg-white rounded-xl">
+        <DialogContent className="dialog-content">
           <DialogHeader>
-            <DialogTitle className="text-foreground">Create Follow-up Task</DialogTitle>
+            <DialogTitle className="dialog-title">Create Follow-up Task</DialogTitle>
           </DialogHeader>
           <FollowUpTaskForm
             parentTask={task}

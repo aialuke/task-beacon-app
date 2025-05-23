@@ -6,43 +6,64 @@ import animate from "tailwindcss-animate";
 export default {
   content: ["./src/**/*.{ts,tsx}"],
   safelist: [
+    // Text colors
+    'text-primary',
     'text-destructive',
     'text-success',
-    'text-primary',
-    'text-gray-600',
-    'text-gray-900',
-    'text-gray-500',
+    'text-muted',
     'text-foreground',
-    'text-white',
-    'bg-gray-50',
-    'bg-white',
+    
+    // Background colors
     'bg-primary',
-    'bg-card',
-    'bg-popover',
-    'bg-background',
-    'border-gray-200',
-    'border-gray-300',
-    'border-secondary',
-    'border',
-    'border-primary',
-    'hover:border-secondary',
-    'hover:underline',
-    'bg-destructive', 
+    'bg-destructive',
     'bg-success',
+    'bg-muted',
+    'bg-background',
+    'bg-white',
+    'bg-transparent',
+    
+    // Border colors
+    'border-primary',
+    'border-destructive',
+    'border-success',
+    'border-muted',
+    'border',
+    
+    // Interaction states
+    'hover:bg-primary',
+    'hover:bg-destructive',
+    'hover:bg-success',
+    'hover:bg-muted',
+    'hover:border-primary',
+    'hover:underline',
+    
+    // Icon colors
+    'fill-primary',
     'fill-destructive',
     'fill-success',
-    'fill-primary',
+    'fill-muted',
     'fill-white',
-    'fill-gray-500',
-    'fill-gray-900',
+    'stroke-primary',
     'stroke-destructive',
     'stroke-success',
-    'stroke-primary',
+    'stroke-muted',
     'stroke-white',
-    'stroke-gray-500',
-    'stroke-gray-900',
+    
+    // Border radius
     'rounded-full',
-    // Added for new color scheme
+    'rounded-xl',
+    
+    // Shadow
+    'shadow',
+    'shadow-md',
+    'shadow-lg',
+    'shadow-sm',
+    
+    // Animation
+    'animate-fade-in',
+    'animate-pulse',
+    
+    // Task status colors
     'bg-blue-600',
     'text-blue-600',
     'border-blue-600',
@@ -98,30 +119,35 @@ export default {
           foreground: "hsl(var(--foreground))",
         },
         popover: {
-          DEFAULT: "hsl(var(--surface))",
-          foreground: "hsl(var(--surface-foreground))",
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
         },
         card: {
-          DEFAULT: "hsl(var(--surface))",
-          foreground: "hsl(var(--surface-foreground))",
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
         },
         success: {
-          DEFAULT: "hsl(var(--timer-complete))",
+          DEFAULT: "hsl(var(--success))",
           foreground: "white",
-        },
-        brand: {
-          DEFAULT: "hsl(var(--primary))",
-          light: "#E5EDFF",
         },
         "task-pending": "var(--timer-pending)",
         "task-overdue": "var(--timer-overdue)",
         "task-complete": "var(--timer-complete)",
-        "task-timer": "var(--timer-pending)",
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        sm: "var(--radius-sm)",
+        md: "var(--radius-md)",
+        lg: "var(--radius-lg)",
+        xl: "var(--radius-xl)",
+        "2xl": "var(--radius-2xl)",
+        full: "var(--radius-full)",
+      },
+      boxShadow: {
+        sm: "var(--shadow-sm)",
+        DEFAULT: "var(--shadow-md)",
+        md: "var(--shadow-md)",
+        lg: "var(--shadow-lg)",
+        focus: "var(--shadow-focus)",
       },
       keyframes: {
         "accordion-down": {
