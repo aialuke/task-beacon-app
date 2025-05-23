@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { apiRequest, getCurrentUserId } from './base.api';
 import { TablesResponse, TaskRow } from '../types/api.types';
@@ -6,21 +5,38 @@ import { Task } from '@/lib/types';
 import { isMockingSupabase } from '@/integrations/supabase/client';
 
 // Mock data import for development
-const getMockTasks = async (): Promise<Task[]> => {
+const getMockTasks = async (page = 1, pageSize = 10): Promise<{data: Task[], totalCount: number, hasNextPage: boolean}> => {
   const { mockDataTasks } = await import('@/lib/mockDataTasks');
-  return mockDataTasks;
+  
+  const startIndex = (page - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const paginatedTasks = mockDataTasks.slice(startIndex, endIndex);
+  
+  return {
+    data: paginatedTasks,
+    totalCount: mockDataTasks.length,
+    hasNextPage: endIndex < mockDataTasks.length
+  };
 };
 
 /**
- * Fetches all tasks with their parent tasks
+ * Fetches paginated tasks with their parent tasks
+ * 
+ * @param page Current page number (1-based)
+ * @param pageSize Number of items per page
  */
-export const getAllTasks = async (): Promise<TablesResponse<Task[]>> => {
+export const getAllTasks = async (page = 1, pageSize = 10): Promise<TablesResponse<{
+  data: Task[];
+  totalCount: number;
+  hasNextPage: boolean;
+}>> => {
   if (isMockingSupabase) {
-    return { data: await getMockTasks(), error: null };
+    const result = await getMockTasks(page, pageSize);
+    return { data: result, error: null };
   }
 
-  // When using real Supabase, we'll use API but with mocks for now
-  return { data: await getMockTasks(), error: null };
+  // When using real Supabase, we'd use API but with mocks for now
+  return { data: await getMockTasks(page, pageSize), error: null };
 };
 
 /**

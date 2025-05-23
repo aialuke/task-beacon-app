@@ -18,15 +18,28 @@ export function TaskContextProvider({ children }: { children: ReactNode }) {
   // States
   const [filter, setFilter] = useState<TaskFilter>("all");
   const [expandedTaskId, setExpandedTaskId] = useState<string | null>(null);
+  const [pageSize, setPageSize] = useState(10);
 
   // Get task data and mutations
-  const { tasks, isLoading, error } = useTaskQueries();
+  const { 
+    tasks, 
+    isLoading, 
+    error,
+    currentPage,
+    totalCount,
+    hasNextPage,
+    hasPreviousPage,
+    goToNextPage,
+    goToPreviousPage,
+    isFetching
+  } = useTaskQueries(pageSize);
   const { toggleTaskPin, toggleTaskComplete, createFollowUpTask } = useTaskMutations();
 
   return (
     <TaskContext.Provider value={{
       tasks,
       isLoading,
+      isFetching,
       error: error as Error, // Cast to Error type to satisfy the type constraint
       filter,
       setFilter,
@@ -35,6 +48,15 @@ export function TaskContextProvider({ children }: { children: ReactNode }) {
       toggleTaskPin,
       toggleTaskComplete,
       createFollowUpTask,
+      // Pagination props
+      currentPage,
+      totalCount,
+      pageSize,
+      setPageSize,
+      hasNextPage,
+      hasPreviousPage,
+      goToNextPage,
+      goToPreviousPage
     }}>
       {children}
     </TaskContext.Provider>

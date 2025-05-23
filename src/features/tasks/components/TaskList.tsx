@@ -13,6 +13,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 // Lazy load components that aren't needed on initial render
 const TaskCard = lazy(() => import("./TaskCard"));
@@ -35,7 +43,16 @@ export default function TaskList() {
     tasks, 
     isLoading, 
     filter, 
-    setFilter 
+    setFilter,
+    isFetching,
+    // Pagination props
+    hasNextPage,
+    hasPreviousPage,
+    goToNextPage,
+    goToPreviousPage,
+    currentPage,
+    totalCount,
+    pageSize
   } = useTaskContext();
   
   // Always use the hook, never conditionally
@@ -55,7 +72,7 @@ export default function TaskList() {
 
       <div className="task-list flex flex-col gap-3">
         {isLoading ? (
-          Array.from({ length: 5 }).map((_, i) => (
+          Array.from({ length: pageSize }).map((_, i) => (
             <TaskCardSkeleton key={i} />
           ))
         ) : filteredTasks.length > 0 ? (
@@ -70,6 +87,40 @@ export default function TaskList() {
           </div>
         )}
       </div>
+      
+      {/* Pagination Controls */}
+      {totalCount > pageSize && (
+        <Pagination className="mt-4">
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious 
+                onClick={() => hasPreviousPage && goToPreviousPage()}
+                className={!hasPreviousPage ? "pointer-events-none opacity-50" : ""}
+              />
+            </PaginationItem>
+            
+            <PaginationItem>
+              <span className="flex items-center justify-center px-4">
+                Page {currentPage} of {Math.ceil(totalCount / pageSize)}
+              </span>
+            </PaginationItem>
+            
+            <PaginationItem>
+              <PaginationNext 
+                onClick={() => hasNextPage && goToNextPage()}
+                className={!hasNextPage ? "pointer-events-none opacity-50" : ""}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      )}
+      
+      {/* Loading indicator for pagination */}
+      {isFetching && !isLoading && (
+        <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-primary/20 text-primary px-4 py-1 rounded-full text-sm">
+          Updating...
+        </div>
+      )}
 
       <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
         <DialogTrigger asChild>

@@ -8,6 +8,7 @@ export interface TaskContextType {
   // Task queries
   tasks: Task[];
   isLoading: boolean;
+  isFetching?: boolean;
   error: Error | null;
   
   // Filters
@@ -22,4 +23,14 @@ export interface TaskContextType {
   toggleTaskPin: (task: Task) => Promise<void>;
   toggleTaskComplete: (task: Task) => Promise<void>;
   createFollowUpTask: (parentTask: Task, newTaskData: any) => Promise<void>;
+  
+  // Pagination
+  currentPage?: number;
+  totalCount?: number;
+  pageSize?: number;
+  setPageSize?: (size: number) => void;
+  hasNextPage?: boolean;
+  hasPreviousPage?: boolean;
+  goToNextPage?: () => void;
+  goToPreviousPage?: () => void;
 }
