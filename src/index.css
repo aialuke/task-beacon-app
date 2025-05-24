@@ -1,4 +1,3 @@
-
 /* Base Tailwind directives */
 @tailwind base;
 @tailwind components;
@@ -21,8 +20,9 @@ html {
   @apply dark;
 }
 
-/* Initialize Tailwind backdrop-filter variables */
+/* Initialize all Tailwind CSS variables */
 *, ::before, ::after {
+  /* Backdrop-filter variables */
   --tw-backdrop-blur: initial;
   --tw-backdrop-brightness: initial;
   --tw-backdrop-contrast: initial;
@@ -32,6 +32,39 @@ html {
   --tw-backdrop-opacity: initial;
   --tw-backdrop-saturate: initial;
   --tw-backdrop-sepia: initial;
+  
+  /* Transform variables */
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-translate-z: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  
+  /* Ring/outline variables */
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgb(59 130 246 / 0.5);
+  --tw-ring-inset: initial;
+  
+  /* Shadow variables */
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  
+  /* Filter variables */
+  --tw-blur: initial;
+  --tw-brightness: initial;
+  --tw-contrast: initial;
+  --tw-grayscale: initial;
+  --tw-hue-rotate: initial;
+  --tw-invert: initial;
+  --tw-saturate: initial;
+  --tw-sepia: initial;
+  --tw-drop-shadow: initial;
 }
 
 /* Import custom styles after Tailwind directives */
