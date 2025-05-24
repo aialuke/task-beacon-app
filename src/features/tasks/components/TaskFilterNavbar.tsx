@@ -1,7 +1,7 @@
 
 import { memo } from "react";
 import { ClockFading, ClockAlert, CircleCheckBig, Users } from "lucide-react";
-import { TubelightNavbar } from "@/components/ui/tubelight-navbar";
+import { SimpleNavbar } from "@/components/ui/simple-navbar";
 import { TaskFilter } from "@/features/tasks/types";
 
 interface TaskFilterNavbarProps {
@@ -18,7 +18,7 @@ function TaskFilterNavbarComponent({ filter, onFilterChange }: TaskFilterNavbarP
   ];
 
   return (
-    <TubelightNavbar 
+    <SimpleNavbar 
       items={filters}
       activeItem={filter}
       onItemChange={onFilterChange}
