@@ -21,6 +21,19 @@ html {
   @apply dark;
 }
 
+/* Initialize Tailwind backdrop-filter variables */
+*, ::before, ::after {
+  --tw-backdrop-blur: initial;
+  --tw-backdrop-brightness: initial;
+  --tw-backdrop-contrast: initial;
+  --tw-backdrop-grayscale: initial;
+  --tw-backdrop-hue-rotate: initial;
+  --tw-backdrop-invert: initial;
+  --tw-backdrop-opacity: initial;
+  --tw-backdrop-saturate: initial;
+  --tw-backdrop-sepia: initial;
+}
+
 /* Import custom styles after Tailwind directives */
 @import "./styles/base.css";
 @import "./styles/components.css";
