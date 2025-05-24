@@ -3,7 +3,7 @@ import { useRef, useCallback } from "react";
 import { Task } from "@/lib/types";
 import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
 import { useTaskCardAnimation } from "@/features/tasks/hooks/useTaskCardAnimation";
-import { useTaskMutation } from "./mutations/useTaskMutation";
+import { useTaskMutation } from "./useTaskMutation";
 
 /**
  * Custom hook for TaskCard functionality
