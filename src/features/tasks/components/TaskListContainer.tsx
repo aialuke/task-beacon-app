@@ -1,33 +1,49 @@
 
-import { useTaskManagement } from "@/features/tasks/hooks/useTaskManagement";
+import { useTaskContext } from "@/features/tasks/context/TaskContext";
+import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
+import { useFilteredTasks } from "@/features/tasks/hooks/useFilteredTasks";
 import TaskFilterNavbar from "./TaskFilterNavbar";
 import TaskListRenderer from "./TaskListRenderer";
 import TaskPagination from "./TaskPagination";
 import CreateTaskDialog from "./CreateTaskDialog";
 
 export default function TaskListContainer() {
-  // Use composite hook instead of direct context dependencies
-  const { 
-    filteredTasks,
-    isLoading, 
+  console.log("[TaskListContainer] Rendering");
+  
+  // Use contexts directly instead of composite hook
+  const {
+    tasks,
+    isLoading,
     isFetching,
-    filter,
-    setFilter,
-    isDialogOpen,
-    closeCreateDialog,
-    // Pagination props
+    currentPage,
+    totalCount,
+    pageSize,
     hasNextPage,
     hasPreviousPage,
     goToNextPage,
-    goToPreviousPage,
-    currentPage,
-    totalCount,
-    pageSize
-  } = useTaskManagement();
+    goToPreviousPage
+  } = useTaskContext();
+
+  const {
+    filter,
+    setFilter,
+    isDialogOpen,
+    setDialogOpen
+  } = useTaskUIContext();
+
+  console.log("[TaskListContainer] Tasks count:", tasks?.length || 0);
+  console.log("[TaskListContainer] Filter:", filter);
+
+  // Apply filtering using service layer
+  const filteredTasks = useFilteredTasks(tasks, filter);
+
+  console.log("[TaskListContainer] Filtered tasks count:", filteredTasks?.length || 0);
+
+  const closeCreateDialog = () => setDialogOpen(false);
 
   return (
     <>
-      {/* Navbar Section - Completely isolated */}
+      {/* Navbar Section */}
       <div className="w-full mb-8 px-4 sm:px-6">
         <TaskFilterNavbar 
           filter={filter}
@@ -35,7 +51,7 @@ export default function TaskListContainer() {
         />
       </div>
 
-      {/* Task List Section - Completely isolated with no shared containers */}
+      {/* Task List Section */}
       <div className="w-full px-4 sm:px-6">
         <TaskListRenderer 
           filteredTasks={filteredTasks}

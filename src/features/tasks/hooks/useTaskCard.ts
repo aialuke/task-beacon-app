@@ -1,49 +1,25 @@
 
-import { useRef, useCallback } from "react";
+import { useRef } from "react";
 import { Task } from "@/lib/types";
-import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
-import { useTaskCardAnimation } from "@/features/tasks/hooks/useTaskCardAnimation";
-import { useTaskMutation } from "./useTaskMutation";
 
 /**
- * Custom hook for TaskCard functionality
+ * Simplified hook for TaskCard functionality
  * 
- * Provides task card state management, expansion handling, and pin toggling functionality
+ * Only handles card-specific refs and state, contexts are used directly in components
  * 
  * @param task - The task data to display in the card
- * @returns Object containing refs, state, and handlers for the TaskCard component
+ * @returns Object containing refs for the TaskCard component
  */
 export function useTaskCard(task: Task) {
-  const { toggleTaskPin } = useTaskMutation();
-  const { expandedTaskId, setExpandedTaskId } = useTaskUIContext();
+  console.log("[useTaskCard] Hook called for task:", task.id);
+  
   const contentRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+
+  console.log("[useTaskCard] Returning refs");
   
-  const isExpanded = expandedTaskId === task.id;
-  
-  // Custom hook for task animations
-  const { animationState } = useTaskCardAnimation(contentRef, isExpanded);
-
-  /**
-   * Toggle the expanded state of the task card
-   */
-  const toggleExpand = useCallback(() => {
-    setExpandedTaskId(isExpanded ? null : task.id);
-  }, [isExpanded, task.id, setExpandedTaskId]);
-
-  /**
-   * Toggle the pinned state of the task
-   */
-  const handleTogglePin = useCallback(async () => {
-    await toggleTaskPin(task);
-  }, [task, toggleTaskPin]);
-
   return {
     contentRef,
-    cardRef,
-    isExpanded,
-    animationState,
-    toggleExpand,
-    handleTogglePin
+    cardRef
   };
 }

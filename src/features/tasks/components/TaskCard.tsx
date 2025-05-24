@@ -4,17 +4,14 @@ import { Task } from "@/lib/types";
 import { Suspense } from "react";
 import TaskHeader from "./TaskHeader";
 import TaskDetails from "./TaskDetails";
-import { useTaskCard } from "../hooks/useTaskCard";
+import { useTaskCardAnimation } from "../hooks/useTaskCardAnimation";
 import { useTaskCardStyles } from "../hooks/useTaskCardStyles";
+import { useTaskUIContext } from "../context/TaskUIContext";
+import { useTaskMutation } from "../hooks/useTaskMutation";
 import { Skeleton } from "@/components/ui/skeleton";
 
 /**
- * TaskCard component
- * 
- * Displays a task with expandable details and provides interactions for
- * viewing, pinning, and managing task data.
- * 
- * @param task - The task data to display
+ * TaskCard component - Simplified to use contexts directly
  */
 interface TaskCardProps {
   task: Task;
@@ -25,7 +22,6 @@ const arePropsEqual = (prevProps: TaskCardProps, nextProps: TaskCardProps): bool
   const prevTask = prevProps.task;
   const nextTask = nextProps.task;
   
-  // Perform a shallow comparison of task properties that affect rendering
   return prevTask.id === nextTask.id &&
          prevTask.title === nextTask.title &&
          prevTask.description === nextTask.description &&
@@ -37,20 +33,32 @@ const arePropsEqual = (prevProps: TaskCardProps, nextProps: TaskCardProps): bool
 };
 
 function TaskCard({ task }: TaskCardProps) {
-  const {
-    contentRef,
-    cardRef,
-    isExpanded,
-    animationState,
-    toggleExpand,
-    handleTogglePin
-  } = useTaskCard(task);
+  console.log("[TaskCard] Rendering task:", task.id);
+  
+  // Use contexts directly instead of composite hook
+  const { expandedTaskId, setExpandedTaskId } = useTaskUIContext();
+  const { toggleTaskPin } = useTaskMutation();
+  
+  const isExpanded = expandedTaskId === task.id;
+  
+  // Simple toggle function
+  const toggleExpand = () => {
+    console.log("[TaskCard] Toggling expand for task:", task.id);
+    setExpandedTaskId(isExpanded ? null : task.id);
+  };
 
+  // Simple pin toggle function
+  const handleTogglePin = async () => {
+    console.log("[TaskCard] Toggling pin for task:", task.id);
+    await toggleTaskPin(task);
+  };
+
+  // Use animation and styles hooks directly
+  const animationState = useTaskCardAnimation(null, isExpanded);
   const { cardStyles, cardClasses } = useTaskCardStyles(task, isExpanded);
 
   return (
     <div
-      ref={cardRef}
       className={cardClasses}
       style={cardStyles}
     >
@@ -65,7 +73,7 @@ function TaskCard({ task }: TaskCardProps) {
         task={task}
         isExpanded={isExpanded}
         animationState={animationState}
-        contentRef={contentRef}
+        contentRef={null}
       />
     </div>
   );

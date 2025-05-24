@@ -21,16 +21,16 @@ const TaskUIContext = createContext<TaskUIContextType | undefined>(undefined);
 
 /**
  * Provider component for task UI-related state
- * 
- * Manages UI-only concerns like filters, expanded state, and dialog visibility
- * 
- * @param children - React components that will consume the context
  */
 export function TaskUIContextProvider({ children }: { children: ReactNode }) {
+  console.log("[TaskUIContextProvider] Initializing UI provider");
+  
   // UI States
   const [filter, setFilter] = useState<TaskFilter>("all");
   const [expandedTaskId, setExpandedTaskId] = useState<string | null>(null);
   const [isDialogOpen, setDialogOpen] = useState(false);
+
+  console.log("[TaskUIContextProvider] UI provider ready");
 
   return (
     <TaskUIContext.Provider value={{
@@ -48,14 +48,14 @@ export function TaskUIContextProvider({ children }: { children: ReactNode }) {
 
 /**
  * Custom hook for using the task UI context
- * 
- * @returns The task UI context value
- * @throws Error if used outside of a TaskUIContextProvider
  */
 export function useTaskUIContext() {
+  console.log("[useTaskUIContext] Hook called");
   const context = useContext(TaskUIContext);
   if (context === undefined) {
+    console.error("[useTaskUIContext] Context is undefined - not wrapped in provider");
     throw new Error("useTaskUIContext must be used within a TaskUIContextProvider");
   }
+  console.log("[useTaskUIContext] UI context found, filter:", context.filter);
   return context;
 }
