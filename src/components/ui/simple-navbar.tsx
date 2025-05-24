@@ -28,7 +28,8 @@ export function SimpleNavbar({ items, activeItem, onItemChange, className }: Sim
     primaryLight: 'rgba(54, 98, 227, 0.2)',
     primaryVeryLight: 'rgba(54, 98, 227, 0.1)',
     primaryGlow: 'rgba(54, 98, 227, 0.3)',
-    indicatorColor: 'rgba(54, 98, 227, 0.9)',
+    indicatorColor: 'hsl(0 0% 98% / 1)',
+    highlightColor: 'hsl(240 5.9% 10%)',
     isDarkMode: false
   })
 
@@ -59,16 +60,14 @@ export function SimpleNavbar({ items, activeItem, onItemChange, className }: Sim
         if (rgbMatch) {
           const [, r, g, b] = rgbMatch
           
-          // Set indicator color based on theme
-          const indicatorColor = isDarkMode ? 'rgba(255, 255, 255, 0.95)' : `rgba(${r}, ${g}, ${b}, 0.9)`
-          
           const newColors = {
             primary: `rgb(${r}, ${g}, ${b})`,
             primaryWithOpacity: `rgba(${r}, ${g}, ${b}, 0.8)`,
             primaryLight: `rgba(${r}, ${g}, ${b}, 0.2)`,
             primaryVeryLight: `rgba(${r}, ${g}, ${b}, 0.1)`,
             primaryGlow: `rgba(${r}, ${g}, ${b}, 0.3)`,
-            indicatorColor,
+            indicatorColor: 'hsl(0 0% 98% / 1)',
+            highlightColor: 'hsl(240 5.9% 10%)',
             isDarkMode
           }
           
@@ -184,7 +183,7 @@ export function SimpleNavbar({ items, activeItem, onItemChange, className }: Sim
   // Spring animation for active indicator line
   const indicatorLineSpring = useSpring({
     transform: `translateX(${activeButtonBounds.x}px)`,
-    width: activeButtonBounds.width,
+    width: 40,
     opacity: isInitialized ? 1 : 0,
     config: {
       tension: 300,
@@ -194,7 +193,7 @@ export function SimpleNavbar({ items, activeItem, onItemChange, className }: Sim
 
   console.log('🎭 Indicator line spring values:', {
     transform: `translateX(${activeButtonBounds.x}px)`,
-    width: activeButtonBounds.width,
+    width: 40,
     opacity: isInitialized ? 1 : 0,
     isInitialized
   })
@@ -233,8 +232,8 @@ export function SimpleNavbar({ items, activeItem, onItemChange, className }: Sim
         <animated.div
           style={{
             position: 'absolute',
-            top: '-12px',
-            left: '8px',
+            top: '-4px',
+            left: '12px',
             height: '4px',
             borderRadius: '9999px',
             zIndex: 20,
@@ -251,12 +250,12 @@ export function SimpleNavbar({ items, activeItem, onItemChange, className }: Sim
         <animated.div
           style={{
             position: 'absolute',
-            top: '4px',
+            top: '0px',
             left: '8px',
-            height: '40px',
+            height: '36px',
             borderRadius: '9999px',
             zIndex: 5,
-            backgroundColor: computedColors.primaryLight,
+            backgroundColor: computedColors.highlightColor,
             boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
             ...buttonBackgroundSpring
           }}
