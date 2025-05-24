@@ -27,18 +27,22 @@ export function SimpleNavbar({ items, activeItem, onItemChange, className }: Sim
     primaryWithOpacity: 'rgba(54, 98, 227, 0.8)',
     primaryLight: 'rgba(54, 98, 227, 0.2)',
     primaryVeryLight: 'rgba(54, 98, 227, 0.1)',
-    primaryGlow: 'rgba(54, 98, 227, 0.3)'
+    primaryGlow: 'rgba(54, 98, 227, 0.3)',
+    indicatorColor: 'rgba(54, 98, 227, 0.9)',
+    isDarkMode: false
   })
 
-  // Get computed CSS variable values
+  // Get computed CSS variable values and detect theme
   useEffect(() => {
     const getComputedColors = () => {
       const root = document.documentElement
       const computedStyle = getComputedStyle(root)
+      const isDarkMode = root.classList.contains('dark')
       
       // Get the primary color HSL values
       const primaryHSL = computedStyle.getPropertyValue('--primary').trim()
       console.log('🎨 Raw primary HSL value:', primaryHSL)
+      console.log('🌓 Dark mode detected:', isDarkMode)
       
       if (primaryHSL) {
         // Convert HSL to RGB for better control
@@ -54,12 +58,18 @@ export function SimpleNavbar({ items, activeItem, onItemChange, className }: Sim
         const rgbMatch = rgbColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/)
         if (rgbMatch) {
           const [, r, g, b] = rgbMatch
+          
+          // Set indicator color based on theme
+          const indicatorColor = isDarkMode ? 'rgba(255, 255, 255, 0.95)' : `rgba(${r}, ${g}, ${b}, 0.9)`
+          
           const newColors = {
             primary: `rgb(${r}, ${g}, ${b})`,
             primaryWithOpacity: `rgba(${r}, ${g}, ${b}, 0.8)`,
             primaryLight: `rgba(${r}, ${g}, ${b}, 0.2)`,
             primaryVeryLight: `rgba(${r}, ${g}, ${b}, 0.1)`,
-            primaryGlow: `rgba(${r}, ${g}, ${b}, 0.3)`
+            primaryGlow: `rgba(${r}, ${g}, ${b}, 0.3)`,
+            indicatorColor,
+            isDarkMode
           }
           
           console.log('🎨 Computed color variations:', newColors)
@@ -217,20 +227,22 @@ export function SimpleNavbar({ items, activeItem, onItemChange, className }: Sim
     <div className={cn("flex justify-center w-full", className)}>
       <div 
         ref={containerRef}
-        className="relative flex items-center gap-1 p-2 rounded-full border border-gray-300 dark:border-gray-600 bg-gray-50/80 dark:bg-gray-800/80 backdrop-blur-md shadow-lg"
+        className="relative flex items-center gap-1 p-2 rounded-full border border-gray-300 dark:border-gray-600 bg-gray-50/80 dark:bg-gray-900/90 backdrop-blur-md shadow-lg"
       >
         {/* Active indicator line above button */}
         <animated.div
           style={{
             position: 'absolute',
-            top: '-6px',
+            top: '-12px',
             left: '8px',
             height: '4px',
             borderRadius: '9999px',
             zIndex: 20,
             filter: 'blur(1px)',
-            backgroundColor: computedColors.primaryWithOpacity,
-            boxShadow: `0 0 8px ${computedColors.primaryGlow}`,
+            backgroundColor: computedColors.indicatorColor,
+            boxShadow: computedColors.isDarkMode 
+              ? '0 0 8px rgba(255, 255, 255, 0.4)' 
+              : `0 0 8px ${computedColors.primaryGlow}`,
             ...indicatorLineSpring
           }}
         />
@@ -239,7 +251,7 @@ export function SimpleNavbar({ items, activeItem, onItemChange, className }: Sim
         <animated.div
           style={{
             position: 'absolute',
-            top: '8px',
+            top: '4px',
             left: '8px',
             height: '40px',
             borderRadius: '9999px',
@@ -254,7 +266,7 @@ export function SimpleNavbar({ items, activeItem, onItemChange, className }: Sim
         <animated.div
           style={{
             position: 'absolute',
-            top: '4px',
+            top: '0px',
             left: '0px',
             height: '48px',
             borderRadius: '9999px',
