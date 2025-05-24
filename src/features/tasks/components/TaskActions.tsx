@@ -27,7 +27,7 @@ function TaskActions({ task, detailView }: TaskActionsProps) {
         <Button
           variant={task.status === "complete" ? "outline" : "default"}
           size="sm"
-          className="text-xs rounded-full"
+          className="text-xs rounded-full bg-primary text-primary-foreground hover:bg-primary/90 border-border"
           onClick={handleToggleComplete}
           disabled={loading}
         >
@@ -36,7 +36,7 @@ function TaskActions({ task, detailView }: TaskActionsProps) {
         <Button
           variant="outline"
           size="sm"
-          className="text-xs rounded-full"
+          className="text-xs rounded-full bg-background text-foreground border-border hover:bg-accent hover:text-accent-foreground"
           onClick={handleCreateFollowUp}
           disabled={loading}
         >
