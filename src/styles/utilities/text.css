@@ -4,11 +4,11 @@
   /* ===== TEXT UTILITIES ===== */
   .header-text {
     @apply text-lg font-semibold my-2;
-    color: #000000e6;
+    color: hsl(var(--foreground));
   }
 
   .owner-name {
-    @apply text-xs text-gray-600 mr-2 whitespace-nowrap overflow-hidden;
+    @apply text-xs text-muted-foreground mr-2 whitespace-nowrap overflow-hidden;
   }
 
   /* ===== LINK UTILITIES ===== */
