@@ -1,15 +1,15 @@
 
-/* src/styles/components/avatars.css - Avatar component styling */
+/* src/styles/components/avatars.css - Avatar component styling using consolidated colors */
 @layer components {
   /* ===== AVATAR FALLBACK BACKGROUNDS ===== */
   .avatar-fallback {
-    background-color: #e5e7eb;
-    color: #6b7280;
+    background-color: hsl(var(--muted));
+    color: hsl(var(--muted-foreground));
   }
 
   /* ===== HEADER & LOGO ===== */
   .header-logo {
-    @apply text-primary;
+    color: hsl(var(--primary));
     fill: currentColor;
   }
 }

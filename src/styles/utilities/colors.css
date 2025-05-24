@@ -1,250 +1,222 @@
-/* src/styles/utilities/colors.css - Enhanced color utility classes with fallbacks */
+
+/* src/styles/utilities/colors.css - Streamlined color utility classes */
 @layer utilities {
-  /* ===== PRIMARY COLOR UTILITIES WITH FALLBACKS ===== */
+  /* ===== PRIMARY COLOR UTILITIES ===== */
   .text-primary {
-    color: hsl(var(--primary, 221 77% 55%));
+    color: hsl(var(--primary));
   }
 
   .text-primary-foreground {
-    color: hsl(var(--primary-foreground, 0 0% 98%));
+    color: hsl(var(--primary-foreground));
   }
 
   .bg-primary {
-    background-color: hsl(var(--primary, 221 77% 55%));
+    background-color: hsl(var(--primary));
   }
 
   .border-primary {
-    border-color: hsl(var(--primary, 221 77% 55%));
+    border-color: hsl(var(--primary));
   }
 
-  /* ===== STATUS COLOR UTILITIES WITH FALLBACKS ===== */
+  /* ===== STATUS COLOR UTILITIES ===== */
   .text-destructive {
-    color: hsl(var(--destructive, 351 83% 53%));
+    color: hsl(var(--destructive));
   }
 
   .text-destructive-foreground {
-    color: hsl(var(--destructive-foreground, 0 0% 98%));
+    color: hsl(var(--destructive-foreground));
   }
 
   .bg-destructive {
-    background-color: hsl(var(--destructive, 351 83% 53%));
+    background-color: hsl(var(--destructive));
   }
 
   .border-destructive {
-    border-color: hsl(var(--destructive, 351 83% 53%));
+    border-color: hsl(var(--destructive));
   }
 
   .text-success {
-    color: hsl(var(--success, 152 76% 40%));
+    color: hsl(var(--success));
   }
 
   .text-success-foreground {
-    color: hsl(var(--success-foreground, 0 0% 98%));
+    color: hsl(var(--success-foreground));
   }
 
   .bg-success {
-    background-color: hsl(var(--success, 152 76% 40%));
+    background-color: hsl(var(--success));
   }
 
   .border-success {
-    border-color: hsl(var(--success, 152 76% 40%));
+    border-color: hsl(var(--success));
   }
 
-  /* ===== SEMANTIC COLOR UTILITIES WITH FALLBACKS ===== */
+  /* ===== SEMANTIC COLOR UTILITIES ===== */
   .text-muted {
-    color: hsl(var(--muted-foreground, 240 3.8% 46.1%));
+    color: hsl(var(--muted-foreground));
   }
 
   .text-muted-foreground {
-    color: hsl(var(--muted-foreground, 240 3.8% 46.1%));
+    color: hsl(var(--muted-foreground));
   }
 
   .bg-muted {
-    background-color: hsl(var(--muted, 240 4.8% 95.9%));
+    background-color: hsl(var(--muted));
   }
 
   .text-accent {
-    color: hsl(var(--accent-foreground, 240 5.9% 10%));
+    color: hsl(var(--accent-foreground));
   }
 
   .bg-accent {
-    background-color: hsl(var(--accent, 240 4.8% 95.9%));
+    background-color: hsl(var(--accent));
   }
 
-  /* ===== CARD COLOR UTILITIES WITH FALLBACKS ===== */
-  .bg-card {
-    background-color: hsl(var(--card, 0 0% 100%));
-  }
-
-  .text-card-foreground {
-    color: hsl(var(--card-foreground, 240 10% 3.9%));
-  }
-
-  .bg-popover {
-    background-color: hsl(var(--popover, 0 0% 100%));
-  }
-
-  .text-popover-foreground {
-    color: hsl(var(--popover-foreground, 240 10% 3.9%));
-  }
-
-  /* ===== ENHANCED BORDER UTILITIES WITH FALLBACKS ===== */
-  .border-border {
-    border-color: hsl(var(--border, 240 5.9% 90%));
-  }
-
-  .border-border-light {
-    border-color: hsl(var(--border-light, 240 5.9% 85%));
-  }
-
-  .border-border-subtle {
-    border-color: hsl(var(--border-subtle, 240 5.9% 95%));
-  }
-
-  .border-border-strong {
-    border-color: hsl(var(--border-strong, 240 5.9% 75%));
-  }
-
-  /* ===== ENHANCED ICON UTILITIES WITH FALLBACKS ===== */
-  .stroke-primary {
-    stroke: hsl(var(--primary, 221 77% 55%));
-  }
-
-  .stroke-destructive {
-    stroke: hsl(var(--destructive, 351 83% 53%));
-  }
-
-  .stroke-success {
-    stroke: hsl(var(--success, 152 76% 40%));
-  }
-
-  .stroke-muted {
-    stroke: hsl(var(--muted-foreground, 240 3.8% 46.1%));
-  }
-
-  .stroke-foreground {
-    stroke: hsl(var(--foreground, 240 10% 3.9%));
-  }
-
-  .fill-primary {
-    fill: hsl(var(--primary, 221 77% 55%));
-  }
-
-  .fill-destructive {
-    fill: hsl(var(--destructive, 351 83% 53%));
-  }
-
-  .fill-success {
-    fill: hsl(var(--success, 152 76% 40%));
-  }
-
-  .fill-muted {
-    fill: hsl(var(--muted-foreground, 240 3.8% 46.1%));
-  }
-
-  .fill-foreground {
-    fill: hsl(var(--foreground, 240 10% 3.9%));
-  }
-
-  /* ===== TASK STATUS COLOR UTILITIES WITH FALLBACKS ===== */
-  .text-task-pending {
-    color: var(--status-pending, #FFDD24);
-  }
-
-  .text-task-overdue {
-    color: var(--status-overdue, #DA3E52);
-  }
-
-  .text-task-complete {
-    color: var(--status-complete, #10B981);
-  }
-
-  .bg-task-pending {
-    background-color: var(--status-pending, #FFDD24);
-  }
-
-  .bg-task-overdue {
-    background-color: var(--status-overdue, #DA3E52);
-  }
-
-  .bg-task-complete {
-    background-color: var(--status-complete, #10B981);
-  }
-
-  .border-task-pending {
-    border-color: var(--status-pending, #FFDD24);
-  }
-
-  .border-task-overdue {
-    border-color: var(--status-overdue, #DA3E52);
-  }
-
-  .border-task-complete {
-    border-color: var(--status-complete, #10B981);
-  }
-
-  /* ===== OPACITY VARIANTS WITH FALLBACKS ===== */
-  .text-primary\/50 {
-    color: hsl(var(--primary, 221 77% 55%) / 0.5);
-  }
-
-  .text-destructive\/50 {
-    color: hsl(var(--destructive, 351 83% 53%) / 0.5);
-  }
-
-  .text-success\/50 {
-    color: hsl(var(--success, 152 76% 40%) / 0.5);
-  }
-
-  .bg-primary\/10 {
-    background-color: hsl(var(--primary, 221 77% 55%) / 0.1);
-  }
-
-  .bg-destructive\/10 {
-    background-color: hsl(var(--destructive, 351 83% 53%) / 0.1);
-  }
-
-  .bg-success\/10 {
-    background-color: hsl(var(--success, 152 76% 40%) / 0.1);
-  }
-
-  /* ===== GRADIENT UTILITIES WITH FALLBACKS ===== */
-  .bg-gradient-primary {
-    background: var(--gradient-blue, linear-gradient(45deg, #3662E3, #5C85EE));
-  }
-
-  .bg-gradient-primary-dark {
-    background: var(--gradient-blue-dark, linear-gradient(45deg, #2C50B6, #4A6DCA));
-  }
-
-  .bg-gradient-light {
-    background: var(--gradient-light, linear-gradient(to bottom right, #FFFFFF, #F9FAFB));
-  }
-
-  /* ===== ENHANCED DARK MODE COLOR UTILITIES ===== */
-  .dark .text-foreground {
+  /* ===== FOREGROUND AND BACKGROUND ===== */
+  .text-foreground {
     color: hsl(var(--foreground));
   }
 
-  .dark .bg-background {
+  .bg-background {
     background-color: hsl(var(--background));
   }
 
-  .dark .border-border {
+  /* ===== CARD COLOR UTILITIES ===== */
+  .bg-card {
+    background-color: hsl(var(--card));
+  }
+
+  .text-card-foreground {
+    color: hsl(var(--card-foreground));
+  }
+
+  .bg-popover {
+    background-color: hsl(var(--popover));
+  }
+
+  .text-popover-foreground {
+    color: hsl(var(--popover-foreground));
+  }
+
+  /* ===== BORDER UTILITIES ===== */
+  .border-border {
     border-color: hsl(var(--border));
   }
 
-  /* ===== LIGHT MODE COLOR OVERRIDES ===== */
-  .light .text-foreground {
-    color: #1a202c;
+  /* ===== ICON UTILITIES ===== */
+  .stroke-primary {
+    stroke: hsl(var(--primary));
   }
 
-  .light .bg-background {
-    background-color: white;
+  .stroke-destructive {
+    stroke: hsl(var(--destructive));
   }
 
-  .light .border-border {
-    border-color: #e2e8f0;
+  .stroke-success {
+    stroke: hsl(var(--success));
+  }
+
+  .stroke-muted {
+    stroke: hsl(var(--muted-foreground));
+  }
+
+  .stroke-foreground {
+    stroke: hsl(var(--foreground));
+  }
+
+  .fill-primary {
+    fill: hsl(var(--primary));
+  }
+
+  .fill-destructive {
+    fill: hsl(var(--destructive));
+  }
+
+  .fill-success {
+    fill: hsl(var(--success));
+  }
+
+  .fill-muted {
+    fill: hsl(var(--muted-foreground));
+  }
+
+  .fill-foreground {
+    fill: hsl(var(--foreground));
+  }
+
+  /* ===== TASK STATUS COLOR UTILITIES ===== */
+  .text-task-pending {
+    color: var(--status-pending);
+  }
+
+  .text-task-overdue {
+    color: var(--status-overdue);
+  }
+
+  .text-task-complete {
+    color: var(--status-complete);
+  }
+
+  .bg-task-pending {
+    background-color: var(--status-pending);
+  }
+
+  .bg-task-overdue {
+    background-color: var(--status-overdue);
+  }
+
+  .bg-task-complete {
+    background-color: var(--status-complete);
+  }
+
+  .border-task-pending {
+    border-color: var(--status-pending);
+  }
+
+  .border-task-overdue {
+    border-color: var(--status-overdue);
+  }
+
+  .border-task-complete {
+    border-color: var(--status-complete);
+  }
+
+  /* ===== OPACITY VARIANTS ===== */
+  .text-primary\/50 {
+    color: hsl(var(--primary) / 0.5);
+  }
+
+  .text-destructive\/50 {
+    color: hsl(var(--destructive) / 0.5);
+  }
+
+  .text-success\/50 {
+    color: hsl(var(--success) / 0.5);
+  }
+
+  .bg-primary\/10 {
+    background-color: hsl(var(--primary) / 0.1);
+  }
+
+  .bg-destructive\/10 {
+    background-color: hsl(var(--destructive) / 0.1);
+  }
+
+  .bg-success\/10 {
+    background-color: hsl(var(--success) / 0.1);
+  }
+
+  /* ===== GRADIENT UTILITIES ===== */
+  .bg-gradient-primary {
+    background: var(--gradient-blue);
+  }
+
+  .bg-gradient-primary-dark {
+    background: var(--gradient-blue-dark);
+  }
+
+  .bg-gradient-light {
+    background: var(--gradient-light);
   }
 
   /* ===== HIGH CONTRAST MODE SUPPORT ===== */

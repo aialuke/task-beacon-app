@@ -4,12 +4,23 @@ import {
   TooltipArrow,
 } from "@/components/ui/tooltip";
 import { TaskStatus } from "@/lib/types";
-import { getStatusTooltipClass, getTooltipArrowClass } from "@/lib/uiUtils";
 
 interface TimerTooltipProps {
   tooltipContent: string;
   status: TaskStatus;
 }
+
+const getStatusTooltipClass = (status: TaskStatus): string => {
+  if (status === "overdue") return "bg-destructive text-destructive-foreground";
+  if (status === "complete") return "bg-success text-success-foreground";
+  return "bg-popover text-popover-foreground border border-border";
+};
+
+const getTooltipArrowClass = (status: TaskStatus): string => {
+  if (status === "overdue") return "fill-destructive";
+  if (status === "complete") return "fill-success";
+  return "fill-popover";
+};
 
 const TimerTooltip = ({ tooltipContent, status }: TimerTooltipProps) => {
   return (

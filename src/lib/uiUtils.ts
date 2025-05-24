@@ -1,4 +1,3 @@
-
 // src/lib/uiUtils.ts
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -6,13 +5,7 @@ import { Task, TaskStatus } from "./types";
 import { getDaysRemaining } from "./dateUtils";
 
 /**
- * UI utility functions
- * 
- * This file contains utilities for UI-related operations such as:
- * - Class name merging and manipulation
- * - Element styling helpers
- * - UI state calculations
- * - Component-specific helpers
+ * UI utility functions using consolidated color system
  */
 
 // Function to merge Tailwind CSS classes
@@ -37,7 +30,7 @@ export function getTaskStatus(task: Task): TaskStatus {
   return "pending";
 }
 
-// Get appropriate status color based on task status
+// Get appropriate status color based on task status using CSS variables
 export function getStatusColor(status: TaskStatus): string {
   switch (status) {
     case "complete":
@@ -50,7 +43,7 @@ export function getStatusColor(status: TaskStatus): string {
   }
 }
 
-// Get appropriate timer color based on task status
+// Get appropriate timer color based on task status using CSS variables
 export function getTimerColor(status: TaskStatus): string {
   switch (status) {
     case "complete":
@@ -80,14 +73,14 @@ export function getTimerGradient(status: TaskStatus): string {
 export function getStatusTooltipClass(status: TaskStatus): string {
   if (status === "overdue") return "bg-destructive text-destructive-foreground";
   if (status === "complete") return "bg-success text-success-foreground";
-  return "bg-gray-900 text-white";
+  return "bg-popover text-popover-foreground border border-border";
 }
 
 // Get appropriate CSS classes for tooltip arrow based on task status
 export function getTooltipArrowClass(status: TaskStatus): string {
   if (status === "overdue") return "fill-destructive";
   if (status === "complete") return "fill-success";
-  return "fill-gray-900";
+  return "fill-popover";
 }
 
 /**

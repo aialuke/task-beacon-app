@@ -1,55 +1,46 @@
 
-/* src/styles/components/task-cards.css - Enhanced task card styling with improved visual hierarchy */
+/* src/styles/components/task-cards.css - Enhanced task card styling using consolidated colors */
 @layer components {
   /* ===== ENHANCED TASK CARD STYLES ===== */
   .task-card {
     @apply flex flex-col p-4 sm:p-5 transition-all duration-300 relative text-left;
     min-height: calc(1.25 * 60px);
     width: 100%;
-    border-radius: var(--radius-xl, 0.75rem);
-    background-color: hsl(var(--card, 0 0% 100%));
-    color: hsl(var(--card-foreground, 240 10% 3.9%));
-    border: 1.5px solid hsl(var(--border, 240 5.9% 90%) / 0.4);
-    border-color: rgba(148, 163, 184, 0.3);
-    box-shadow: 
-      var(--shadow, 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)),
-      0 0 0 1px rgba(148, 163, 184, 0.1);
+    border-radius: var(--radius-xl);
+    background-color: hsl(var(--card));
+    color: hsl(var(--card-foreground));
+    border: 1.5px solid hsl(var(--border) / 0.4);
+    box-shadow: var(--shadow);
     backdrop-filter: blur(8px);
     cursor: pointer;
     position: relative;
     overflow: hidden;
   }
 
-  /* Enhanced hover effects with smooth transitions */
+  /* Enhanced hover effects */
   .task-card:hover {
-    box-shadow: 
-      var(--shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)),
-      0 0 0 1px hsl(var(--primary, 221 77% 55%) / 0.3),
-      0 0 20px rgba(54, 98, 227, 0.1);
-    border-color: hsl(var(--primary, 221 77% 55%) / 0.5);
+    box-shadow: var(--shadow-lg), 0 0 0 1px hsl(var(--primary) / 0.3);
+    border-color: hsl(var(--primary) / 0.5);
     transform: translateY(-2px) scale(1.01);
-    background-color: hsl(var(--card, 0 0% 100%) / 0.95);
+    background-color: hsl(var(--card) / 0.95);
   }
 
-  /* Enhanced focus states for accessibility */
+  /* Enhanced focus states */
   .task-card:focus-within {
-    outline: 2px solid hsl(var(--primary, 221 77% 55%));
+    outline: 2px solid hsl(var(--primary));
     outline-offset: 2px;
-    box-shadow: 
-      var(--shadow-xl, 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)),
-      var(--shadow-focus, 0 0 0 4px rgba(54, 98, 227, 0.2)),
-      0 0 30px rgba(54, 98, 227, 0.15);
+    box-shadow: var(--shadow-xl), var(--shadow-focus);
     transform: translateY(-3px);
     z-index: 10;
   }
 
-  /* Active state for click feedback */
+  /* Active state */
   .task-card:active {
     transform: translateY(-1px) scale(0.99);
     transition-duration: 0.1s;
   }
 
-  /* Subtle shimmer effect on hover */
+  /* Shimmer effect */
   .task-card::before {
     content: "";
     position: absolute;
@@ -57,12 +48,7 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.1),
-      transparent
-    );
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
     transition: left 0.6s ease;
     z-index: 1;
   }
@@ -71,7 +57,6 @@
     left: 100%;
   }
 
-  /* Ensure content stays above shimmer effect */
   .task-card > * {
     position: relative;
     z-index: 2;
@@ -88,91 +73,56 @@
     }
   }
 
-  /* ===== ENHANCED UTILITY CLASSES FOR TASK STATES ===== */
+  /* ===== TASK STATE STYLES ===== */
   .task-card-expanded {
-    border-color: hsl(var(--primary, 221 77% 55%) / 0.8);
-    box-shadow: 
-      var(--shadow-xl, 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)),
-      0 0 0 2px hsl(var(--primary, 221 77% 55%) / 0.3),
-      0 0 30px rgba(54, 98, 227, 0.2);
+    border-color: hsl(var(--primary) / 0.8);
+    box-shadow: var(--shadow-xl), 0 0 0 2px hsl(var(--primary) / 0.3);
     transform: translateY(-4px) scale(1.02);
-    background-color: hsl(var(--card, 0 0% 100%));
+    background-color: hsl(var(--card));
     z-index: 20;
   }
 
   .task-card-complete {
-    border-color: hsl(var(--success, 152 76% 40%) / 0.6);
-    background: linear-gradient(135deg, 
-      hsl(var(--card, 0 0% 100%)), 
-      hsl(var(--success, 152 76% 40%) / 0.05)
-    );
-    box-shadow: 
-      var(--shadow, 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)),
-      0 0 0 1px hsl(var(--success, 152 76% 40%) / 0.3);
+    border-color: hsl(var(--success) / 0.6);
+    background: linear-gradient(135deg, hsl(var(--card)), hsl(var(--success) / 0.05));
+    box-shadow: var(--shadow), 0 0 0 1px hsl(var(--success) / 0.3);
   }
 
   .task-card-complete:hover {
-    box-shadow: 
-      var(--shadow-md, 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)),
-      0 0 0 1px hsl(var(--success, 152 76% 40%) / 0.5),
-      0 0 15px rgba(16, 185, 129, 0.2);
-    border-color: hsl(var(--success, 152 76% 40%) / 0.8);
+    box-shadow: var(--shadow-md), 0 0 0 1px hsl(var(--success) / 0.5);
+    border-color: hsl(var(--success) / 0.8);
   }
 
   .task-card-overdue {
-    border-color: hsl(var(--destructive, 351 83% 53%) / 0.6);
-    background: linear-gradient(135deg, 
-      hsl(var(--card, 0 0% 100%)), 
-      hsl(var(--destructive, 351 83% 53%) / 0.05)
-    );
-    box-shadow: 
-      var(--shadow, 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)),
-      0 0 0 1px hsl(var(--destructive, 351 83% 53%) / 0.3);
+    border-color: hsl(var(--destructive) / 0.6);
+    background: linear-gradient(135deg, hsl(var(--card)), hsl(var(--destructive) / 0.05));
+    box-shadow: var(--shadow), 0 0 0 1px hsl(var(--destructive) / 0.3);
   }
 
   .task-card-overdue:hover {
-    box-shadow: 
-      var(--shadow-md, 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)),
-      0 0 0 1px hsl(var(--destructive, 351 83% 53%) / 0.5),
-      0 0 15px rgba(218, 62, 82, 0.2);
-    border-color: hsl(var(--destructive, 351 83% 53%) / 0.8);
+    box-shadow: var(--shadow-md), 0 0 0 1px hsl(var(--destructive) / 0.5);
+    border-color: hsl(var(--destructive) / 0.8);
   }
 
   .task-card-pending {
-    border-color: hsl(var(--accent-yellow, 51 100% 57%) / 0.6);
-    background: linear-gradient(135deg, 
-      hsl(var(--card, 0 0% 100%)), 
-      hsl(var(--accent-yellow, 51 100% 57%) / 0.05)
-    );
-    box-shadow: 
-      var(--shadow, 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)),
-      0 0 0 1px hsl(var(--accent-yellow, 51 100% 57%) / 0.3);
+    border-color: hsl(var(--accent-yellow) / 0.6);
+    background: linear-gradient(135deg, hsl(var(--card)), hsl(var(--accent-yellow) / 0.05));
+    box-shadow: var(--shadow), 0 0 0 1px hsl(var(--accent-yellow) / 0.3);
   }
 
   .task-card-pending:hover {
-    box-shadow: 
-      var(--shadow-md, 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)),
-      0 0 0 1px hsl(var(--accent-yellow, 51 100% 57%) / 0.5),
-      0 0 15px rgba(255, 221, 36, 0.2);
-    border-color: hsl(var(--accent-yellow, 51 100% 57%) / 0.8);
+    box-shadow: var(--shadow-md), 0 0 0 1px hsl(var(--accent-yellow) / 0.5);
+    border-color: hsl(var(--accent-yellow) / 0.8);
   }
 
   .task-card-pinned {
-    border-color: hsl(var(--primary, 221 77% 55%) / 0.8);
-    background: linear-gradient(135deg, 
-      hsl(var(--card, 0 0% 100%)), 
-      hsl(var(--primary, 221 77% 55%) / 0.08)
-    );
-    box-shadow: 
-      var(--shadow-md, 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)),
-      0 0 0 2px hsl(var(--primary, 221 77% 55%) / 0.2);
+    border-color: hsl(var(--primary) / 0.8);
+    background: linear-gradient(135deg, hsl(var(--card)), hsl(var(--primary) / 0.08));
+    box-shadow: var(--shadow-md), 0 0 0 2px hsl(var(--primary) / 0.2);
   }
 
   .task-card-pinned:hover {
-    box-shadow: 
-      var(--shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)),
-      0 0 0 2px hsl(var(--primary, 221 77% 55%) / 0.4),
-      0 0 25px rgba(54, 98, 227, 0.25);
+    box-shadow: var(--shadow-lg), 0 0 0 2px hsl(var(--primary) / 0.4);
   }
 
   .task-card-pinned::after {
@@ -182,68 +132,44 @@
     left: 0;
     right: 0;
     height: 4px;
-    background: var(--gradient-blue, linear-gradient(45deg, #3662E3, #5C85EE));
-    border-radius: var(--radius-xl, 0.75rem) var(--radius-xl, 0.75rem) 0 0;
+    background: var(--gradient-blue);
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     z-index: 3;
   }
 
-  /* ===== ENHANCED DARK MODE TASK CARDS ===== */
+  /* ===== DARK MODE TASK CARDS ===== */
   .dark .task-card {
     background-color: hsl(var(--card));
     border: 1px solid hsl(var(--border) / 0.5);
-    box-shadow: 
-      0 1px 3px rgba(0, 0, 0, 0.3),
-      0 1px 2px rgba(0, 0, 0, 0.2),
-      0 0 0 1px hsl(var(--border) / 0.2);
+    box-shadow: var(--shadow);
   }
 
   .dark .task-card:hover {
     background-color: hsl(var(--card) / 0.9);
     border-color: hsl(var(--primary) / 0.7);
-    box-shadow: 
-      0 10px 15px -3px rgba(0, 0, 0, 0.4), 
-      0 4px 6px -1px rgba(0, 0, 0, 0.3),
-      0 0 0 1px hsl(var(--primary) / 0.4),
-      0 0 25px rgba(74, 123, 247, 0.2);
+    box-shadow: var(--shadow-lg), 0 0 0 1px hsl(var(--primary) / 0.4);
   }
 
   .dark .task-card::before {
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.05),
-      transparent
-    );
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
   }
 
   .dark .task-card-complete {
-    background: linear-gradient(135deg, 
-      hsl(var(--card)), 
-      hsl(var(--success) / 0.1)
-    );
+    background: linear-gradient(135deg, hsl(var(--card)), hsl(var(--success) / 0.1));
     border-color: hsl(var(--success) / 0.4);
   }
 
   .dark .task-card-complete:hover {
-    box-shadow: 
-      0 4px 6px rgba(0, 0, 0, 0.3),
-      0 0 0 1px hsl(var(--success) / 0.6),
-      0 0 20px rgba(16, 217, 117, 0.3);
+    box-shadow: var(--shadow-md), 0 0 0 1px hsl(var(--success) / 0.6);
   }
 
   .dark .task-card-overdue {
-    background: linear-gradient(135deg, 
-      hsl(var(--card)), 
-      hsl(var(--destructive) / 0.1)
-    );
+    background: linear-gradient(135deg, hsl(var(--card)), hsl(var(--destructive) / 0.1));
     border-color: hsl(var(--destructive) / 0.4);
   }
 
   .dark .task-card-overdue:hover {
-    box-shadow: 
-      0 4px 6px rgba(0, 0, 0, 0.3),
-      0 0 0 1px hsl(var(--destructive) / 0.6),
-      0 0 20px rgba(229, 93, 115, 0.3);
+    box-shadow: var(--shadow-md), 0 0 0 1px hsl(var(--destructive) / 0.6);
   }
 
   /* ===== SCROLLBAR HIDING ===== */
@@ -258,7 +184,7 @@
     -ms-overflow-style: none;
   }
 
-  /* ===== ENHANCED TASK CARD ANIMATIONS ===== */
+  /* ===== ANIMATIONS ===== */
   .task-card-enter {
     opacity: 0;
     transform: translateY(20px) scale(0.9);
