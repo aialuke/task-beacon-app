@@ -4,7 +4,7 @@ import { useTaskContext } from "@/features/tasks/context/TaskContext";
 import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
 import { useUIContext } from "@/contexts/UIContext";
 import { useFilteredTasks } from "@/features/tasks/hooks/useFilteredTasks";
-import TaskFilter from "./TaskFilter";
+import TaskFilterNavbar from "./TaskFilterNavbar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ClockPlus } from "lucide-react";
 import {
@@ -63,7 +63,7 @@ export default function TaskList() {
   return (
     <div className="space-y-4 relative">
       <div className="flex items-center w-full">
-        <TaskFilter 
+        <TaskFilterNavbar 
           filter={filter}
           onFilterChange={setFilter}
         />
