@@ -1,6 +1,6 @@
 
 import { lazy, Suspense } from "react";
-import { isMockingSupabase } from "@/lib/supabase";
+import { isMockingSupabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
 const AuthForm = lazy(() => import("@/components/AuthForm"));
