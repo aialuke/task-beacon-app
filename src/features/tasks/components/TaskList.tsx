@@ -29,7 +29,7 @@ const CreateTaskForm = lazy(() => import("../forms/CreateTaskForm"));
 
 // Skeleton component for lazy-loaded task cards
 const TaskCardSkeleton = () => (
-  <div className="animate-pulse p-4 sm:p-5 rounded-xl bg-muted/20 border border-border/40">
+  <div className="animate-pulse p-4 sm:p-5 rounded-xl bg-muted/20 border-2 border-border/40">
     <div className="flex items-start gap-3">
       <div className="h-10 w-10 rounded-full bg-muted" />
       <div className="flex-1 space-y-2">
@@ -63,8 +63,8 @@ export default function TaskList() {
   const filteredTasks = useFilteredTasks(tasks, filter);
 
   return (
-    <div className="w-full">
-      {/* Navbar Section - Completely separate container */}
+    <>
+      {/* Navbar Section - Completely isolated */}
       <div className="w-full mb-8 px-4 sm:px-6">
         <TaskFilterNavbar 
           filter={filter}
@@ -72,53 +72,55 @@ export default function TaskList() {
         />
       </div>
 
-      {/* Task List Section - Separate container with no nesting */}
+      {/* Task List Section - Completely isolated with no shared containers */}
       <div className="w-full px-4 sm:px-6">
-        <div className="w-full space-y-6">
-          {isLoading ? (
-            Array.from({ length: pageSize }).map((_, i) => (
+        {isLoading ? (
+          <div className="space-y-6">
+            {Array.from({ length: pageSize }).map((_, i) => (
               <TaskCardSkeleton key={i} />
-            ))
-          ) : filteredTasks.length > 0 ? (
-            filteredTasks.map((task) => (
-              <div key={task.id} className="w-full">
-                <Suspense fallback={<TaskCardSkeleton />}>
-                  <TaskCard task={task} />
-                </Suspense>
-              </div>
-            ))
-          ) : (
-            <div className="flex items-center justify-center p-8 border border-dashed border-border/60 rounded-xl bg-muted/20">
-              <p className="text-muted-foreground">No tasks found</p>
-            </div>
-          )}
-        </div>
+            ))}
+          </div>
+        ) : filteredTasks.length > 0 ? (
+          <div className="space-y-6">
+            {filteredTasks.map((task) => (
+              <Suspense key={task.id} fallback={<TaskCardSkeleton />}>
+                <TaskCard task={task} />
+              </Suspense>
+            ))}
+          </div>
+        ) : (
+          <div className="flex items-center justify-center p-8 border-2 border-dashed border-border/60 rounded-xl bg-muted/20">
+            <p className="text-muted-foreground">No tasks found</p>
+          </div>
+        )}
         
         {/* Pagination Controls */}
         {totalCount > pageSize && (
-          <Pagination className="mt-8">
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious 
-                  onClick={() => hasPreviousPage && goToPreviousPage()}
-                  className={!hasPreviousPage ? "pointer-events-none opacity-50" : ""}
-                />
-              </PaginationItem>
-              
-              <PaginationItem>
-                <span className="flex items-center justify-center px-4">
-                  Page {currentPage} of {Math.ceil(totalCount / pageSize)}
-                </span>
-              </PaginationItem>
-              
-              <PaginationItem>
-                <PaginationNext 
-                  onClick={() => hasNextPage && goToNextPage()}
-                  className={!hasNextPage ? "pointer-events-none opacity-50" : ""}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
+          <div className="mt-8">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious 
+                    onClick={() => hasPreviousPage && goToPreviousPage()}
+                    className={!hasPreviousPage ? "pointer-events-none opacity-50" : ""}
+                  />
+                </PaginationItem>
+                
+                <PaginationItem>
+                  <span className="flex items-center justify-center px-4">
+                    Page {currentPage} of {Math.ceil(totalCount / pageSize)}
+                  </span>
+                </PaginationItem>
+                
+                <PaginationItem>
+                  <PaginationNext 
+                    onClick={() => hasNextPage && goToNextPage()}
+                    className={!hasNextPage ? "pointer-events-none opacity-50" : ""}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
         )}
         
         {/* Loading indicator for pagination */}
@@ -129,31 +131,14 @@ export default function TaskList() {
         )}
       </div>
 
+      {/* Create Task Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
         <DialogTrigger asChild>
           <button 
-            className="fab" 
+            className="fixed bottom-4 right-4 w-14 h-14 z-[99999] flex items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-200 border-none"
             aria-label="Create New Task"
-            style={{
-              position: "fixed",
-              bottom: "16px",
-              right: "16px",
-              width: "56px",
-              height: "56px",
-              zIndex: 99999,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              borderRadius: "9999px",
-              backgroundColor: "#3662E3",
-              color: "white",
-              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.1)",
-              border: "none",
-              visibility: "visible",
-              opacity: 1
-            }}
           >
-            <ClockPlus className="h-6 w-6" strokeWidth={2} stroke="white" fill="none" />
+            <ClockPlus className="h-6 w-6" strokeWidth={2} />
           </button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-md bg-card rounded-xl">
@@ -165,6 +150,6 @@ export default function TaskList() {
           </Suspense>
         </DialogContent>
       </Dialog>
-    </div>
+    </>
   );
 }

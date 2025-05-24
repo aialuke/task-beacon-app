@@ -1,183 +1,7 @@
 
-/* src/styles/components/task-cards.css - Enhanced task card styling with proper specificity */
+/* src/styles/components/task-cards.css - Minimal task card styling */
 @layer components {
-  /* ===== ENHANCED TASK CARD STYLES ===== */
-  .task-card {
-    @apply flex flex-col p-4 sm:p-5 transition-all duration-300 relative text-left rounded-xl;
-    min-height: calc(1.25 * 60px);
-    width: 100%;
-    background-color: hsl(var(--card)) !important;
-    color: hsl(var(--card-foreground)) !important;
-    border: 2px solid hsl(var(--border)) !important;
-    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1) !important;
-    backdrop-filter: blur(8px);
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-
-  /* Force border visibility */
-  .task-card,
-  .task-card * {
-    border-color: hsl(var(--border)) !important;
-  }
-
-  /* Enhanced hover effects */
-  .task-card:hover {
-    @apply transform -translate-y-0.5 scale-101;
-    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1), 0 0 0 1px hsl(var(--primary) / 0.3) !important;
-    border-color: hsl(var(--primary) / 0.7) !important;
-    background-color: hsl(var(--card) / 0.95) !important;
-  }
-
-  /* Enhanced focus states */
-  .task-card:focus-within {
-    @apply outline-none ring-2 ring-primary ring-offset-2 transform -translate-y-1 z-10;
-    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1), 0 0 0 2px hsl(var(--primary) / 0.5) !important;
-    border-color: hsl(var(--primary)) !important;
-  }
-
-  /* Active state */
-  .task-card:active {
-    @apply transform -translate-y-px scale-99 transition-all duration-100;
-  }
-
-  /* Shimmer effect */
-  .task-card::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-    transition: left 0.6s ease;
-    z-index: 1;
-  }
-
-  .task-card:hover::before {
-    left: 100%;
-  }
-
-  .task-card > * {
-    position: relative;
-    z-index: 2;
-  }
-
-  @media (min-width: 640px) {
-    .task-card {
-      @apply p-5;
-      width: 100%;
-    }
-    
-    .task-card:hover {
-      @apply transform -translate-y-1 scale-102;
-    }
-  }
-
-  /* ===== TASK STATE STYLES ===== */
-  .task-card-expanded {
-    @apply rounded-xl transform -translate-y-1 scale-102 z-20;
-    border-color: hsl(var(--primary) / 0.9) !important;
-    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1), 0 0 0 2px hsl(var(--primary) / 0.3) !important;
-    background-color: hsl(var(--card)) !important;
-  }
-
-  .task-card-complete {
-    @apply rounded-xl;
-    border-color: hsl(var(--success) / 0.8) !important;
-    background: linear-gradient(135deg, hsl(var(--card)), hsl(var(--success) / 0.05)) !important;
-    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1), 0 0 0 1px hsl(var(--success) / 0.3) !important;
-  }
-
-  .task-card-complete:hover {
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1), 0 0 0 1px hsl(var(--success) / 0.5) !important;
-    border-color: hsl(var(--success) / 0.9) !important;
-  }
-
-  .task-card-overdue {
-    @apply rounded-xl;
-    border-color: hsl(var(--destructive) / 0.8) !important;
-    background: linear-gradient(135deg, hsl(var(--card)), hsl(var(--destructive) / 0.05)) !important;
-    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1), 0 0 0 1px hsl(var(--destructive) / 0.3) !important;
-  }
-
-  .task-card-overdue:hover {
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1), 0 0 0 1px hsl(var(--destructive) / 0.5) !important;
-    border-color: hsl(var(--destructive) / 0.9) !important;
-  }
-
-  .task-card-pending {
-    @apply rounded-xl;
-    border-color: hsl(var(--accent-yellow) / 0.8) !important;
-    background: linear-gradient(135deg, hsl(var(--card)), hsl(var(--accent-yellow) / 0.05)) !important;
-    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1), 0 0 0 1px hsl(var(--accent-yellow) / 0.3) !important;
-  }
-
-  .task-card-pending:hover {
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1), 0 0 0 1px hsl(var(--accent-yellow) / 0.5) !important;
-    border-color: hsl(var(--accent-yellow) / 0.9) !important;
-  }
-
-  .task-card-pinned {
-    @apply rounded-xl;
-    border-color: hsl(var(--primary) / 0.9) !important;
-    background: linear-gradient(135deg, hsl(var(--card)), hsl(var(--primary) / 0.08)) !important;
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1), 0 0 0 2px hsl(var(--primary) / 0.2) !important;
-  }
-
-  .task-card-pinned:hover {
-    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1), 0 0 0 2px hsl(var(--primary) / 0.4) !important;
-  }
-
-  .task-card-pinned::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--primary) / 0.8));
-    @apply rounded-t-xl;
-    z-index: 3;
-  }
-
-  /* ===== DARK MODE TASK CARDS ===== */
-  .dark .task-card {
-    background-color: hsl(var(--card)) !important;
-    border: 2px solid hsl(var(--border)) !important;
-    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3) !important;
-  }
-
-  .dark .task-card:hover {
-    background-color: hsl(var(--card) / 0.9) !important;
-    border-color: hsl(var(--primary) / 0.8) !important;
-    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3), 0 0 0 1px hsl(var(--primary) / 0.4) !important;
-  }
-
-  .dark .task-card::before {
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-  }
-
-  .dark .task-card-complete {
-    background: linear-gradient(135deg, hsl(var(--card)), hsl(var(--success) / 0.1)) !important;
-    border-color: hsl(var(--success) / 0.6) !important;
-  }
-
-  .dark .task-card-complete:hover {
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3), 0 0 0 1px hsl(var(--success) / 0.6) !important;
-  }
-
-  .dark .task-card-overdue {
-    background: linear-gradient(135deg, hsl(var(--card)), hsl(var(--destructive) / 0.1)) !important;
-    border-color: hsl(var(--destructive) / 0.6) !important;
-  }
-
-  .dark .task-card-overdue:hover {
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3), 0 0 0 1px hsl(var(--destructive) / 0.6) !important;
-  }
-
-  /* ===== ANIMATIONS ===== */
+  /* Only keep essential animations that don't conflict with borders */
   .task-card-enter {
     @apply opacity-0 transform translate-y-5 scale-90;
   }
@@ -196,32 +20,15 @@
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* ===== TASK HEADER ENHANCEMENTS ===== */
-  .task-header-container {
-    @apply transition-all duration-200;
-  }
-
-  .task-card:hover .task-header-container {
-    @apply transform translate-x-0.5;
-  }
-
-  /* ===== REDUCED MOTION RESPECT ===== */
+  /* Reduced motion respect */
   @media (prefers-reduced-motion: reduce) {
-    .task-card,
-    .task-card::before,
-    .task-header-container {
+    .task-card-enter,
+    .task-card-enter-active,
+    .task-card-exit,
+    .task-card-exit-active {
       transition: none !important;
       animation: none !important;
-    }
-    
-    .task-card:hover,
-    .task-card:focus-within,
-    .task-card-expanded {
       transform: none !important;
-    }
-    
-    .task-card:hover::before {
-      left: -100% !important;
     }
   }
 }
