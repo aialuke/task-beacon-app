@@ -69,7 +69,7 @@ export default function TaskList() {
         />
       </div>
 
-      <div className="task-list flex flex-col gap-3">
+      <div className="task-list flex flex-col gap-4 px-2">
         {isLoading ? (
           Array.from({ length: pageSize }).map((_, i) => (
             <TaskCardSkeleton key={i} />
