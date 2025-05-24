@@ -22,6 +22,69 @@ export function SimpleNavbar({ items, activeItem, onItemChange, className }: Sim
   const buttonRefs = useRef<(HTMLButtonElement | null)[]>([])
   const [activeButtonBounds, setActiveButtonBounds] = useState({ x: 0, width: 0 })
   const [isInitialized, setIsInitialized] = useState(false)
+  const [computedColors, setComputedColors] = useState({
+    primary: '#3662E3',
+    primaryWithOpacity: 'rgba(54, 98, 227, 0.8)',
+    primaryLight: 'rgba(54, 98, 227, 0.2)',
+    primaryVeryLight: 'rgba(54, 98, 227, 0.1)',
+    primaryGlow: 'rgba(54, 98, 227, 0.3)'
+  })
+
+  // Get computed CSS variable values
+  useEffect(() => {
+    const getComputedColors = () => {
+      const root = document.documentElement
+      const computedStyle = getComputedStyle(root)
+      
+      // Get the primary color HSL values
+      const primaryHSL = computedStyle.getPropertyValue('--primary').trim()
+      console.log('🎨 Raw primary HSL value:', primaryHSL)
+      
+      if (primaryHSL) {
+        // Convert HSL to RGB for better control
+        const tempDiv = document.createElement('div')
+        tempDiv.style.color = `hsl(${primaryHSL})`
+        document.body.appendChild(tempDiv)
+        const rgbColor = getComputedStyle(tempDiv).color
+        document.body.removeChild(tempDiv)
+        
+        console.log('🎨 Computed RGB color:', rgbColor)
+        
+        // Extract RGB values to create variations
+        const rgbMatch = rgbColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/)
+        if (rgbMatch) {
+          const [, r, g, b] = rgbMatch
+          const newColors = {
+            primary: `rgb(${r}, ${g}, ${b})`,
+            primaryWithOpacity: `rgba(${r}, ${g}, ${b}, 0.8)`,
+            primaryLight: `rgba(${r}, ${g}, ${b}, 0.2)`,
+            primaryVeryLight: `rgba(${r}, ${g}, ${b}, 0.1)`,
+            primaryGlow: `rgba(${r}, ${g}, ${b}, 0.3)`
+          }
+          
+          console.log('🎨 Computed color variations:', newColors)
+          setComputedColors(newColors)
+        }
+      }
+    }
+    
+    // Get colors on mount and when theme changes
+    getComputedColors()
+    
+    // Listen for theme changes
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') {
+          console.log('🌓 Theme change detected, updating colors')
+          setTimeout(getComputedColors, 50) // Small delay to ensure CSS is applied
+        }
+      })
+    })
+    
+    observer.observe(document.documentElement, { attributes: true })
+    
+    return () => observer.disconnect()
+  }, [])
 
   // Calculate active button position with proper timing
   const updateActiveButtonBounds = () => {
@@ -65,6 +128,7 @@ export function SimpleNavbar({ items, activeItem, onItemChange, className }: Sim
       
       console.log('📐 Calculated bounds:', newBounds)
       console.log('🎨 Container padding:', containerPadding)
+      console.log('🎨 Using computed colors:', computedColors)
       
       setActiveButtonBounds(newBounds)
       
@@ -94,7 +158,7 @@ export function SimpleNavbar({ items, activeItem, onItemChange, className }: Sim
       console.log('🧹 Cleaning up requestAnimationFrame')
       cancelAnimationFrame(frame)
     }
-  }, [activeItem, items])
+  }, [activeItem, items, computedColors])
 
   // Handle window resize
   useEffect(() => {
@@ -165,8 +229,8 @@ export function SimpleNavbar({ items, activeItem, onItemChange, className }: Sim
             borderRadius: '9999px',
             zIndex: 20,
             filter: 'blur(1px)',
-            backgroundColor: 'hsl(var(--primary) / 0.8)',
-            boxShadow: '0 0 8px hsl(var(--primary) / 0.6)',
+            backgroundColor: computedColors.primaryWithOpacity,
+            boxShadow: `0 0 8px ${computedColors.primaryGlow}`,
             ...indicatorLineSpring
           }}
         />
@@ -180,7 +244,7 @@ export function SimpleNavbar({ items, activeItem, onItemChange, className }: Sim
             height: '40px',
             borderRadius: '9999px',
             zIndex: 5,
-            backgroundColor: 'hsl(var(--primary) / 0.2)',
+            backgroundColor: computedColors.primaryLight,
             boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
             ...buttonBackgroundSpring
           }}
@@ -195,9 +259,9 @@ export function SimpleNavbar({ items, activeItem, onItemChange, className }: Sim
             height: '48px',
             borderRadius: '9999px',
             zIndex: 0,
-            backgroundColor: 'hsl(var(--primary) / 0.1)',
+            backgroundColor: computedColors.primaryVeryLight,
             filter: 'blur(12px)',
-            boxShadow: '0 0 20px hsl(var(--primary) / 0.3)',
+            boxShadow: `0 0 20px ${computedColors.primaryGlow}`,
             ...glowSpring
           }}
         />
