@@ -39,13 +39,18 @@
   --status-overdue-light: #E57373;
   --status-complete-light: #34D399;
 
-  /* Shadow system */
+  /* Enhanced shadow system with better contrast */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
   --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   --shadow-focus: 0 0 0 3px rgba(54, 98, 227, 0.2);
+  
+  /* Enhanced border system with better visibility */
+  --border-light: 240 5.9% 85%; /* Darker border for better visibility */
+  --border-subtle: 240 5.9% 95%; /* Very subtle border */
+  --border-strong: 240 5.9% 75%; /* Strong border for emphasis */
   
   /* Gradient backgrounds */
   --gradient-light: linear-gradient(to bottom right, #FFFFFF, #F9FAFB);
@@ -61,7 +66,7 @@
   --radius-full: 9999px;  /* Full rounded for buttons */
 }
 
-/* Dark mode colors (default) */
+/* Dark mode colors (default) - Enhanced with better contrast */
 .dark,
 :root {
   /* Dark mode background and surfaces - WCAG AA compliant */
@@ -93,8 +98,11 @@
   --success-foreground: 0 0% 98%;
   --accent-yellow: 51 100% 70%;    /* Brighter yellow #FFE666 */
   
-  /* Borders and inputs */
-  --border: 215 28% 17%;           /* Subtle dark borders */
+  /* Enhanced borders for dark mode with better visibility */
+  --border: 215 28% 25%;           /* More visible dark borders */
+  --border-light: 215 28% 30%;     /* Lighter border variant */
+  --border-subtle: 215 28% 15%;    /* Subtle border variant */
+  --border-strong: 215 28% 35%;    /* Strong border for emphasis */
   --input: 215 28% 17%;
   --ring: 221 77% 65%;             /* Primary color for focus rings */
   
@@ -103,7 +111,7 @@
   --surface-foreground: 213 31% 91%;
   --brand-light: 221 77% 15%;      /* Dark brand light */
   
-  /* Status colors for dark mode */
+  /* Status colors for dark mode - enhanced visibility */
   --status-pending: #FFE666;       /* Enhanced yellow */
   --status-overdue: #FF6B8A;       /* Softer red */
   --status-complete: #4ADE80;      /* Vibrant green */
@@ -113,7 +121,7 @@
   --status-overdue-light: #FFA8BB;
   --status-complete-light: #86EFAC;
 
-  /* Dark mode shadows */
+  /* Dark mode shadows with better contrast */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.25);
   --shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
@@ -146,6 +154,9 @@
   --destructive: 351 83% 53%;
   --destructive-foreground: 0 0% 98%;
   --border: 240 5.9% 90%;
+  --border-light: 240 5.9% 85%;
+  --border-subtle: 240 5.9% 95%;
+  --border-strong: 240 5.9% 75%;
   --input: 240 5.9% 90%;
   --ring: 240 5.9% 10%;
   --surface: 0 0% 100%;
