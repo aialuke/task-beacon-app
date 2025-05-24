@@ -1,69 +1,53 @@
 
 import { useCallback } from "react";
 import { Task } from "@/lib/types";
-import { toast } from "@/lib/toast";
-import { useTaskPinning } from "../useTaskPinning";
-import { useTaskCompletion } from "../useTaskCompletion";
-import { useTaskFollowUp } from "../useTaskFollowUp";
-import { showBrowserNotification, triggerHapticFeedback } from "@/lib/notification";
+import { useTaskMutationCore } from "./useTaskMutationCore";
+import { useTaskMutationUI } from "./useTaskMutationUI";
 
 /**
- * Consolidated hook for task mutation operations
+ * Composed hook for task mutation operations
  * 
- * Provides a unified interface for various task mutations with consistent
- * error handling, notifications, and feedback patterns
+ * Combines core data operations with UI feedback to provide a complete
+ * task mutation interface with consistent error handling and user feedback.
  * 
- * @returns Object containing all task mutation functions with standardized handling
+ * @returns Object containing all task mutation functions with UI feedback
  */
 export function useTaskMutation() {
-  const { toggleTaskPin: pin } = useTaskPinning();
-  const { toggleTaskComplete: complete } = useTaskCompletion();
-  const { createFollowUpTask: followUp } = useTaskFollowUp();
+  const core = useTaskMutationCore();
+  const ui = useTaskMutationUI();
 
   /**
-   * Toggle a task's pinned status with feedback
+   * Toggle a task's pinned status with full UI feedback
    * 
    * @param task - The task to toggle pin status for
    * @returns A promise that resolves when the operation completes
    */
   const toggleTaskPin = useCallback(async (task: Task): Promise<void> => {
     try {
-      await pin(task);
-      triggerHapticFeedback();
+      await core.toggleTaskPin(task);
+      ui.handlePinFeedback(task, true);
     } catch (error) {
-      if (error instanceof Error) {
-        toast.error(`Failed to ${task.pinned ? 'unpin' : 'pin'} task: ${error.message}`);
-      } else {
-        toast.error(`Failed to ${task.pinned ? 'unpin' : 'pin'} task`);
-      }
+      ui.handlePinFeedback(task, false, error instanceof Error ? error : undefined);
     }
-  }, [pin]);
+  }, [core, ui]);
 
   /**
-   * Toggle a task's completion status with feedback
+   * Toggle a task's completion status with full UI feedback
    * 
    * @param task - The task to toggle completion status for
    * @returns A promise that resolves when the operation completes
    */
   const toggleTaskComplete = useCallback(async (task: Task): Promise<void> => {
     try {
-      await complete(task);
-      triggerHapticFeedback();
-      
-      if (!task.status.includes("complete")) {
-        showBrowserNotification("Task completed", `"${task.title}" marked as complete`);
-      }
+      await core.toggleTaskComplete(task);
+      ui.handleCompleteFeedback(task, true);
     } catch (error) {
-      if (error instanceof Error) {
-        toast.error(`Failed to update task status: ${error.message}`);
-      } else {
-        toast.error("Failed to update task status");
-      }
+      ui.handleCompleteFeedback(task, false, error instanceof Error ? error : undefined);
     }
-  }, [complete]);
+  }, [core, ui]);
 
   /**
-   * Create a follow-up task with feedback
+   * Create a follow-up task with full UI feedback
    * 
    * @param parentTask - The parent task to create a follow-up for
    * @param taskData - The data for the new follow-up task
@@ -71,24 +55,12 @@ export function useTaskMutation() {
    */
   const createFollowUpTask = useCallback(async (parentTask: Task, taskData: any): Promise<void> => {
     try {
-      const result = await followUp(parentTask, taskData);
-      triggerHapticFeedback();
-      toast.success("Follow-up task created successfully");
-      
-      if (taskData.assignee_id) {
-        showBrowserNotification(
-          "Task Assigned",
-          `Follow-up task "${taskData.title}" has been assigned`
-        );
-      }
+      await core.createFollowUpTask(parentTask, taskData);
+      ui.handleFollowUpFeedback(taskData, true);
     } catch (error) {
-      if (error instanceof Error) {
-        toast.error(`Failed to create follow-up task: ${error.message}`);
-      } else {
-        toast.error("Failed to create follow-up task");
-      }
+      ui.handleFollowUpFeedback(taskData, false, error instanceof Error ? error : undefined);
     }
-  }, [followUp]);
+  }, [core, ui]);
 
   return {
     toggleTaskPin,
