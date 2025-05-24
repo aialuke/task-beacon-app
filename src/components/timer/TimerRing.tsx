@@ -29,16 +29,16 @@ interface TimerRingProps {
 const GradientDefs = memo(() => (
   <defs>
     <linearGradient id="gradientPending" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stopColor="#FFDD24" />
-      <stop offset="100%" stopColor="#FFE082" />
+      <stop offset="0%" stopColor="var(--status-pending)" />
+      <stop offset="100%" stopColor="var(--status-pending)" stopOpacity="0.8" />
     </linearGradient>
     <linearGradient id="gradientOverdue" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stopColor="#DA3E52" />
-      <stop offset="100%" stopColor="#E57373" />
+      <stop offset="0%" stopColor="var(--status-overdue)" />
+      <stop offset="100%" stopColor="var(--status-overdue)" stopOpacity="0.8" />
     </linearGradient>
     <linearGradient id="gradientComplete" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stopColor="#10B981" />
-      <stop offset="100%" stopColor="#34D399" />
+      <stop offset="0%" stopColor="var(--status-complete)" />
+      <stop offset="100%" stopColor="var(--status-complete)" stopOpacity="0.8" />
     </linearGradient>
     
     {/* Add filters for glow effects */}
@@ -105,7 +105,7 @@ const TimerRing = ({
         r={radius}
         fill="none"
         strokeWidth="2.5"
-        stroke="#F9FAFB"
+        stroke="hsl(var(--muted))"
         style={{ strokeWidth: "2.5px" }}
       />
       
