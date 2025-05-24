@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Task } from "@/lib/types";
-import { supabase, isMockingSupabase } from "@/lib/supabase";
+import { supabase, isMockingSupabase } from "@/integrations/supabase/client";
 import { toast } from "@/lib/toast";
 import { formatDate } from "@/lib/dateUtils";
 import { Button } from "@/components/ui/button";

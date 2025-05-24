@@ -45,7 +45,8 @@ export default function TaskFormExample({ onClose }: { onClose?: () => void }) {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("User not authenticated");
 
-      await supabase
+      // Use type assertion to work around empty Database type
+      await (supabase as any)
         .from("tasks")
         .insert({
           title: data.title,
