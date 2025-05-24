@@ -19,20 +19,8 @@ interface TubelightNavbarProps {
 
 export function TubelightNavbar({ items, activeItem, onItemChange, className }: TubelightNavbarProps) {
   return (
-    <div
-      className={cn(
-        "flex justify-center w-full overflow-visible relative",
-        className,
-      )}
-    >
-      <div 
-        className="relative flex items-center gap-1 py-2 px-2 rounded-full shadow-lg overflow-visible border border-border/50"
-        style={{
-          backgroundColor: 'rgba(0, 0, 0, 0.1)',
-          backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
-        }}
-      >
+    <div className={cn("tubelight-navbar", className)}>
+      <div className="tubelight-container">
         {items.map((item) => {
           const Icon = item.icon
           const isActive = activeItem === item.value
@@ -42,21 +30,20 @@ export function TubelightNavbar({ items, activeItem, onItemChange, className }: 
               key={item.value}
               onClick={() => onItemChange(item.value)}
               className={cn(
-                "relative cursor-pointer text-sm font-semibold px-4 py-2 rounded-full transition-all duration-200 z-10",
-                "text-foreground/70 hover:text-foreground",
-                isActive && "text-white"
+                "tubelight-button",
+                isActive && "active"
               )}
             >
-              <span className="relative z-20">
+              <span className="tubelight-icon">
                 <Icon size={18} strokeWidth={2.5} />
               </span>
               
               {isActive && (
                 <>
-                  {/* Main tubelight bar */}
+                  {/* Main tubelight bar with glow effects */}
                   <motion.div
                     layoutId="tubelight-bar"
-                    className="absolute -top-4 left-1/2 -translate-x-1/2 w-16 h-2 bg-primary rounded-full z-30"
+                    className="tubelight-bar"
                     initial={false}
                     transition={{
                       type: "spring",
@@ -64,16 +51,13 @@ export function TubelightNavbar({ items, activeItem, onItemChange, className }: 
                       damping: 30,
                     }}
                   >
-                    {/* Primary glow effects */}
-                    <div className="absolute inset-0 bg-primary rounded-full blur-sm opacity-80" />
-                    <div className="absolute -inset-1 bg-primary/60 rounded-full blur-md" />
-                    <div className="absolute -inset-2 bg-primary/40 rounded-full blur-lg" />
+                    <div className="tubelight-glow-outer" />
                   </motion.div>
                   
                   {/* Button background highlight */}
                   <motion.div
                     layoutId="button-bg"
-                    className="absolute inset-0 bg-primary/20 rounded-full z-5"
+                    className="tubelight-button-bg"
                     initial={false}
                     transition={{
                       type: "spring",
@@ -85,7 +69,7 @@ export function TubelightNavbar({ items, activeItem, onItemChange, className }: 
                   {/* Additional ambient glow */}
                   <motion.div
                     layoutId="ambient-glow"
-                    className="absolute -inset-4 bg-primary/10 rounded-full blur-xl z-0"
+                    className="tubelight-ambient"
                     initial={false}
                     transition={{
                       type: "spring",
