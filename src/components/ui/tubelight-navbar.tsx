@@ -18,18 +18,6 @@ interface TubelightNavbarProps {
 }
 
 export function TubelightNavbar({ items, activeItem, onItemChange, className }: TubelightNavbarProps) {
-  const [isMobile, setIsMobile] = useState(false)
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768)
-    }
-
-    handleResize()
-    window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
-  }, [])
-
   return (
     <div
       className={cn(
@@ -52,8 +40,7 @@ export function TubelightNavbar({ items, activeItem, onItemChange, className }: 
                 isActive && "text-white"
               )}
             >
-              <span className="hidden md:inline relative z-20">{item.name}</span>
-              <span className="md:hidden relative z-20">
+              <span className="relative z-20">
                 <Icon size={18} strokeWidth={2.5} />
               </span>
               
