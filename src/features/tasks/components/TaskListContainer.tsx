@@ -1,18 +1,20 @@
 
-import { useTaskContext } from "@/features/tasks/context/TaskContext";
-import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
-import { useFilteredTasks } from "@/features/tasks/hooks/useFilteredTasks";
+import { useTaskManagement } from "@/features/tasks/hooks/useTaskManagement";
 import TaskFilterNavbar from "./TaskFilterNavbar";
 import TaskListRenderer from "./TaskListRenderer";
 import TaskPagination from "./TaskPagination";
 import CreateTaskDialog from "./CreateTaskDialog";
 
 export default function TaskListContainer() {
-  // Get data and functions from contexts
+  // Use composite hook instead of direct context dependencies
   const { 
-    tasks, 
+    filteredTasks,
     isLoading, 
     isFetching,
+    filter,
+    setFilter,
+    isDialogOpen,
+    closeCreateDialog,
     // Pagination props
     hasNextPage,
     hasPreviousPage,
@@ -21,13 +23,7 @@ export default function TaskListContainer() {
     currentPage,
     totalCount,
     pageSize
-  } = useTaskContext();
-  
-  // Get UI state from TaskUIContext
-  const { filter, setFilter, isDialogOpen, setDialogOpen } = useTaskUIContext();
-  
-  // Get filtered tasks
-  const filteredTasks = useFilteredTasks(tasks, filter);
+  } = useTaskManagement();
 
   return (
     <>
@@ -62,7 +58,7 @@ export default function TaskListContainer() {
 
       <CreateTaskDialog 
         isDialogOpen={isDialogOpen}
-        setDialogOpen={setDialogOpen}
+        setDialogOpen={closeCreateDialog}
       />
     </>
   );
