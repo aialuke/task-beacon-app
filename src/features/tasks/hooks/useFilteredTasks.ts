@@ -2,13 +2,9 @@
 import { useMemo } from "react";
 import { Task } from "@/lib/types";
 import { TaskFilter } from "../types";
-import { TaskService } from "../services/taskService";
 
 /**
- * Hook for filtering tasks using the task service
- * 
- * This hook now delegates the filtering logic to the TaskService,
- * focusing only on memoization and React-specific concerns.
+ * Hook for filtering tasks based on the selected filter
  * 
  * @param tasks - Array of tasks to filter
  * @param filter - Current filter selection
@@ -18,8 +14,29 @@ export function useFilteredTasks(
   tasks: Task[],
   filter: TaskFilter
 ) {
-  // Use the service layer for filtering logic
+  // Memoize filter functions to prevent recreating them on every render
+  const filterFunctions = useMemo(() => ({
+    all: (task: Task) => task.status !== "complete",
+    assigned: (task: Task) => 
+      task.owner_id && 
+      task.assignee_id && 
+      task.owner_id !== task.assignee_id,
+    overdue: (task: Task) => {
+      const dueDate = task.due_date ? new Date(task.due_date) : new Date();
+      const now = new Date();
+      return dueDate < now && task.status !== "complete";
+    },
+    complete: (task: Task) => task.status === "complete",
+    pending: (task: Task) => {
+      const dueDate = task.due_date ? new Date(task.due_date) : new Date();
+      const now = new Date();
+      return dueDate >= now && task.status !== "complete";
+    }
+  }), []); // These functions don't depend on any props, so they're created only once
+
+  // Apply the selected filter function to the tasks array
   return useMemo(() => {
-    return TaskService.filterTasks(tasks, filter);
-  }, [tasks, filter]);
+    const filterFunction = filterFunctions[filter];
+    return tasks.filter(filterFunction);
+  }, [tasks, filter, filterFunctions]); // Include filterFunctions in dependencies
 }

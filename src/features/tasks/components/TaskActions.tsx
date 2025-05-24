@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Task } from "@/lib/types";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import FollowUpTaskForm from "../forms/FollowUpTaskForm";
-import { useTaskContext } from "../context/TaskContext";
+import { useTaskManagement } from "../hooks/useTaskManagement";
 import { useTaskCompletionToggle } from "../hooks/useTaskCompletionToggle";
 
 interface TaskActionsProps {
@@ -13,17 +13,13 @@ interface TaskActionsProps {
 }
 
 function TaskActions({ task, detailView }: TaskActionsProps) {
-  console.log("[TaskActions] Rendering for task:", task.id);
-  
-  // Use context directly instead of composite hook
-  const { toggleTaskComplete } = useTaskContext();
+  const { toggleTaskComplete } = useTaskManagement();
   const [followUpDialogOpen, setFollowUpDialogOpen] = useState(false);
   const { loading, handleToggleComplete } = useTaskCompletionToggle(task, toggleTaskComplete);
   
   const handleCreateFollowUp = useCallback(() => {
-    console.log("[TaskActions] Opening follow-up dialog for task:", task.id);
     setFollowUpDialogOpen(true);
-  }, [task.id]);
+  }, []);
 
   return (
     <>

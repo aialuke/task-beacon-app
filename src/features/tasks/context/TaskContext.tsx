@@ -2,7 +2,7 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 import { Task } from "@/lib/types";
 import { useTaskQueries } from "@/features/tasks/hooks/useTaskQueries";
-import { useTaskMutation } from "@/features/tasks/hooks/useTaskMutation";
+import { useTaskMutation } from "@/features/tasks/hooks/mutations/useTaskMutation";
 
 // Define data-focused context type
 interface TaskDataContextType {
@@ -32,10 +32,12 @@ const TaskDataContext = createContext<TaskDataContextType | undefined>(undefined
 
 /**
  * Provider component for task data-related state and operations
+ * 
+ * Manages tasks data, loading state, data mutations, and pagination
+ * 
+ * @param children - React components that will consume the task context
  */
 export function TaskContextProvider({ children }: { children: ReactNode }) {
-  console.log("[TaskContextProvider] Initializing provider");
-  
   // State for pagination
   const [pageSize, setPageSize] = useState(10);
 
@@ -53,11 +55,7 @@ export function TaskContextProvider({ children }: { children: ReactNode }) {
     isFetching
   } = useTaskQueries(pageSize);
   
-  console.log("[TaskContextProvider] Tasks from query:", tasks?.length || 0);
-  
   const { toggleTaskPin, toggleTaskComplete, createFollowUpTask } = useTaskMutation();
-
-  console.log("[TaskContextProvider] Provider ready, providing context");
 
   return (
     <TaskDataContext.Provider value={{
@@ -65,7 +63,7 @@ export function TaskContextProvider({ children }: { children: ReactNode }) {
       tasks,
       isLoading,
       isFetching,
-      error: error as Error,
+      error: error as Error, // Cast to Error type to satisfy the type constraint
       
       // Data mutations
       toggleTaskPin,
@@ -89,14 +87,14 @@ export function TaskContextProvider({ children }: { children: ReactNode }) {
 
 /**
  * Custom hook for using the task data context
+ * 
+ * @returns The task data context value
+ * @throws Error if used outside of a TaskContextProvider
  */
 export function useTaskContext() {
-  console.log("[useTaskContext] Hook called");
   const context = useContext(TaskDataContext);
   if (context === undefined) {
-    console.error("[useTaskContext] Context is undefined - not wrapped in provider");
     throw new Error("useTaskContext must be used within a TaskContextProvider");
   }
-  console.log("[useTaskContext] Context found, tasks:", context.tasks?.length || 0);
   return context;
 }

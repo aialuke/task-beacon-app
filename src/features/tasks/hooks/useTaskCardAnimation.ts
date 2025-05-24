@@ -17,9 +17,9 @@ export interface TaskCardAnimationState {
  * @returns Animation state for the content
  */
 export function useTaskCardAnimation(
-  contentRef: React.RefObject<HTMLDivElement> | null,
+  contentRef: React.RefObject<HTMLDivElement>,
   isExpanded: boolean
-): TaskCardAnimationState {
+) {
   const initialHeightRef = useRef<number | null>(null);
   
   const [animationProps, setAnimationProps] = useSpring(() => ({
@@ -29,7 +29,7 @@ export function useTaskCardAnimation(
   }));
 
   useEffect(() => {
-    if (!contentRef?.current) return;
+    if (!contentRef.current) return;
 
     // Get scrollHeight for complete content height including any overflow
     const contentHeight = contentRef.current.scrollHeight;
@@ -55,5 +55,7 @@ export function useTaskCardAnimation(
     });
   }, [isExpanded, contentRef, setAnimationProps]);
 
-  return animationProps;
+  return {
+    animationState: animationProps
+  };
 }
