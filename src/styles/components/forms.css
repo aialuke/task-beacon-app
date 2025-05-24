@@ -1,5 +1,5 @@
 
-/* src/styles/components/forms.css - Enhanced form element styling for dark mode */
+/* src/styles/components/forms.css - Streamlined form styling with consistent color system */
 @layer components {
   /* ===== FORM STYLES ===== */
   .form-field-group {
@@ -18,7 +18,7 @@
   input[type="datetime-local"],
   textarea,
   .select-trigger {
-    border-radius: var(--radius-xl);
+    border-radius: 0.75rem; /* rounded-xl */
     padding: 0.75rem 1rem;
     border: 1px solid hsl(var(--border));
     background-color: hsl(var(--background));
@@ -29,14 +29,14 @@
     line-height: 1.5;
   }
 
-  /* Enhanced focus states for accessibility */
+  /* Enhanced focus states */
   input:focus,
   textarea:focus,
   select:focus,
   .select-trigger:focus {
     outline: none;
-    border-color: hsl(var(--primary));
-    box-shadow: var(--shadow-focus);
+    border-color: hsl(var(--ring));
+    box-shadow: 0 0 0 2px hsl(var(--ring) / 0.2);
     background-color: hsl(var(--background));
   }
 
@@ -56,19 +56,19 @@
     background-color: hsl(var(--muted) / 0.5);
   }
 
-  /* ===== ENHANCED FILE UPLOAD STYLES ===== */
+  /* ===== FILE UPLOAD STYLES ===== */
   input[type="file"] {
     @apply text-sm cursor-pointer;
     max-width: 100%;
     color: hsl(var(--foreground));
     background-color: hsl(var(--background));
     border: 1px solid hsl(var(--border));
-    border-radius: var(--radius-xl);
+    border-radius: 0.75rem; /* rounded-xl */
     padding: 0.5rem;
   }
 
   input[type="file"]::-webkit-file-upload-button {
-    border-radius: var(--radius-full);
+    border-radius: 9999px; /* rounded-full */
     padding: 0.5rem 1rem;
     background: var(--gradient-blue);
     border: none;
@@ -89,7 +89,7 @@
 
   /* Firefox file upload button */
   input[type="file"]::file-selector-button {
-    border-radius: var(--radius-full);
+    border-radius: 9999px; /* rounded-full */
     padding: 0.5rem 1rem;
     background: var(--gradient-blue);
     border: none;
@@ -108,76 +108,19 @@
     transform: translateY(-1px);
   }
 
-  /* ===== ENHANCED DARK MODE FORM SUPPORT ===== */
-  .dark input[type="text"],
-  .dark input[type="email"],
-  .dark input[type="password"],
-  .dark input[type="number"],
-  .dark input[type="search"],
-  .dark input[type="url"],
-  .dark input[type="tel"],
-  .dark input[type="date"],
-  .dark input[type="datetime-local"],
-  .dark textarea,
-  .dark .select-trigger {
-    background-color: hsl(var(--card));
-    border-color: hsl(var(--border));
-    color: hsl(var(--foreground));
-  }
-
-  .dark input:focus,
-  .dark textarea:focus,
-  .dark select:focus,
-  .dark .select-trigger:focus {
-    border-color: hsl(var(--primary));
-    box-shadow: var(--shadow-focus);
-    background-color: hsl(var(--card));
-  }
-
-  .dark input::placeholder,
-  .dark textarea::placeholder {
-    color: hsl(var(--muted-foreground));
-  }
-
-  /* Enhanced light mode overrides */
-  .light input[type="text"],
-  .light input[type="email"],
-  .light input[type="password"],
-  .light input[type="number"],
-  .light input[type="search"],
-  .light input[type="url"],
-  .light input[type="tel"],
-  .light input[type="date"],
-  .light input[type="datetime-local"],
-  .light textarea,
-  .light .select-trigger {
-    background-color: white;
-    border-color: #e2e8f0;
-    color: #1a202c;
-  }
-
-  .light input:focus,
-  .light textarea:focus,
-  .light select:focus,
-  .light .select-trigger:focus {
-    border-color: #3662E3;
-    box-shadow: 0 0 0 3px rgba(54, 98, 227, 0.2);
-    background-color: white;
-  }
-
   /* ===== FORM VALIDATION STATES ===== */
   .form-error input,
   .form-error textarea,
   .form-error .select-trigger {
     border-color: hsl(var(--destructive));
-    box-shadow: 0 0 0 3px hsl(var(--destructive) / 0.2);
+    box-shadow: 0 0 0 2px hsl(var(--destructive) / 0.2);
   }
 
   .form-success input,
   .form-success textarea,
   .form-success .select-trigger {
     border-color: hsl(var(--success));
-    box-shadow: 0 0 0 3px hsl(var(--success) / 0.2);
+    box-shadow: 0 0 0 2px hsl(var(--success) / 0.2);
   }
 
   /* ===== RESPONSIVE FORM ELEMENTS ===== */

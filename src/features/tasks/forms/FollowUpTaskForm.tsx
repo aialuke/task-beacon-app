@@ -35,54 +35,56 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
   } = useFollowUpTask({ parentTask, onClose });
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <ParentTaskReference parentTask={parentTask} />
+    <div className="bg-card text-card-foreground p-6 rounded-xl">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <ParentTaskReference parentTask={parentTask} />
 
-      <div className="space-y-2">
-        <Input
-          id="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Task title"
-          maxLength={22}
-          required
-          className="text-foreground"
-        />
-        <div className="flex justify-end">
-          <span className={`text-xs ${title.length > 22 ? "text-destructive" : "text-muted-foreground"}`}>
-            {title.length}/22
-          </span>
+        <div className="space-y-2">
+          <Input
+            id="title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Task title"
+            maxLength={22}
+            required
+            className="bg-background text-foreground border-border"
+          />
+          <div className="flex justify-end">
+            <span className={`text-xs ${title.length > 22 ? "text-destructive" : "text-muted-foreground"}`}>
+              {title.length}/22
+            </span>
+          </div>
         </div>
-      </div>
 
-      <div className="space-y-2">
-        <Textarea
-          id="description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Task description"
-          rows={3}
-          className="text-foreground"
+        <div className="space-y-2">
+          <Textarea
+            id="description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Task description"
+            rows={3}
+            className="bg-background text-foreground border-border"
+          />
+        </div>
+
+        <DatePickerField value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
+        
+        <UrlField value={url} onChange={(e) => setUrl(e.target.value)} />
+
+        <PhotoUploadField onChange={handlePhotoChange} preview={photoPreview} />
+
+        <UserSearchField
+          value={assigneeId}
+          onChange={setAssigneeId}
+          disabled={loading}
         />
-      </div>
 
-      <DatePickerField value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
-      
-      <UrlField value={url} onChange={(e) => setUrl(e.target.value)} />
-
-      <PhotoUploadField onChange={handlePhotoChange} preview={photoPreview} />
-
-      <UserSearchField
-        value={assigneeId}
-        onChange={setAssigneeId}
-        disabled={loading}
-      />
-
-      <FormActions 
-        onCancel={onClose} 
-        isSubmitting={loading} 
-        submitLabel="Create Follow-up Task" 
-      />
-    </form>
+        <FormActions 
+          onCancel={onClose} 
+          isSubmitting={loading} 
+          submitLabel="Create Follow-up Task" 
+        />
+      </form>
+    </div>
   );
 }
