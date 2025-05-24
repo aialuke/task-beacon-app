@@ -1,4 +1,3 @@
-
 // Move from src/pages/TaskDetailsPage.tsx
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
@@ -38,7 +37,8 @@ const TaskDetailsPage = () => {
           return;
         }
 
-        const { data, error } = await supabase
+        // Use type assertion to work around empty Database type
+        const { data, error } = await (supabase as any)
           .from("tasks")
           .select(`
             *,
