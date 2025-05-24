@@ -5,7 +5,7 @@ import { useUIContext } from "@/contexts/UIContext";
 import { useFilteredTasks } from "@/features/tasks/hooks/useFilteredTasks";
 import TaskFilterNavbar from "./TaskFilterNavbar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ClockPlus } from "lucide-react";
+import { FabButton } from "@/components/FabButton";
 import {
   Dialog,
   DialogContent,
@@ -133,12 +133,7 @@ export default function TaskList() {
       {/* Create Task Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
         <DialogTrigger asChild>
-          <button 
-            className="fab"
-            aria-label="Create New Task"
-          >
-            <ClockPlus className="h-6 w-6" strokeWidth={2} />
-          </button>
+          <FabButton onClick={() => setDialogOpen(true)} />
         </DialogTrigger>
         <DialogContent className="sm:max-w-md bg-card rounded-xl">
           <DialogHeader>
