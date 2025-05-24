@@ -43,6 +43,10 @@ export default {
     'stroke-gray-500',
     'stroke-gray-900',
     'rounded-full',
+    'rounded-xl',
+    'rounded-lg',
+    'rounded-md',
+    'rounded-sm',
     // Dark mode classes
     'dark:bg-gray-800',
     'dark:bg-gray-900',

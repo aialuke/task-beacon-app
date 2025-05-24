@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 
@@ -27,9 +28,6 @@ const Alert = React.forwardRef<
     ref={ref}
     role="alert"
     className={cn(alertVariants({ variant }), className)}
-    style={{
-      borderRadius: "var(--border-radius-xl)"
-    }}
     {...props}
   />
 ))

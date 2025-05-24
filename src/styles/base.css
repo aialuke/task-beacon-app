@@ -1,4 +1,3 @@
-
 /* src/styles/base.css - Single source of truth for all color definitions */
 :root {
   /* ===== LIGHT MODE COLORS (WCAG AA COMPLIANT) ===== */
@@ -61,14 +60,8 @@
   --gradient-blue: linear-gradient(45deg, #3662E3, #5C85EE);
   --gradient-blue-dark: linear-gradient(45deg, #2C50B6, #4A6DCA);
   
-  /* Border radius system */
-  --radius: 0.5rem;
-  --radius-sm: 0.25rem;
-  --radius-md: 0.375rem;
-  --radius-lg: 0.5rem;
-  --radius-xl: 0.75rem;
-  --radius-2xl: 1rem;
-  --radius-full: 9999px;
+  /* Standardized border radius using Tailwind values */
+  --radius: 0.5rem;     /* 8px - Tailwind's default lg */
 }
 
 /* ===== DARK MODE COLORS (WCAG AA COMPLIANT) ===== */
