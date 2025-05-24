@@ -1,3 +1,4 @@
+
 import { lazy, Suspense } from "react";
 import { useTaskContext } from "@/features/tasks/context/TaskContext";
 import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
@@ -60,35 +61,39 @@ export default function TaskList() {
   const filteredTasks = useFilteredTasks(tasks, filter);
 
   return (
-    <div className="space-y-4 relative">
-      <div className="flex items-center w-full">
+    <div className="space-y-6 relative">
+      {/* Navbar Section - Separated from task list */}
+      <div className="navbar-section">
         <TaskFilterNavbar 
           filter={filter}
           onFilterChange={setFilter}
         />
       </div>
 
-      <div className="task-list">
-        {isLoading ? (
-          Array.from({ length: pageSize }).map((_, i) => (
-            <TaskCardSkeleton key={i} />
-          ))
-        ) : filteredTasks.length > 0 ? (
-          filteredTasks.map((task) => (
-            <Suspense key={task.id} fallback={<TaskCardSkeleton />}>
-              <TaskCard task={task} />
-            </Suspense>
-          ))
-        ) : (
-          <div className="flex items-center justify-center p-6 border border-dashed border-gray-300 rounded-xl">
-            <p className="text-gray-500">No tasks found</p>
-          </div>
-        )}
+      {/* Task List Section - Now properly separated */}
+      <div className="task-list-section">
+        <div className="task-list">
+          {isLoading ? (
+            Array.from({ length: pageSize }).map((_, i) => (
+              <TaskCardSkeleton key={i} />
+            ))
+          ) : filteredTasks.length > 0 ? (
+            filteredTasks.map((task) => (
+              <Suspense key={task.id} fallback={<TaskCardSkeleton />}>
+                <TaskCard task={task} />
+              </Suspense>
+            ))
+          ) : (
+            <div className="flex items-center justify-center p-8 border border-dashed border-border/60 rounded-xl bg-muted/20">
+              <p className="text-muted-foreground">No tasks found</p>
+            </div>
+          )}
+        </div>
       </div>
       
       {/* Pagination Controls */}
       {totalCount > pageSize && (
-        <Pagination className="mt-4">
+        <Pagination className="mt-6">
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious 

@@ -8,7 +8,7 @@
     width: 100%;
     background-color: hsl(var(--card));
     color: hsl(var(--card-foreground));
-    border: 1.5px solid hsl(var(--border) / 0.4);
+    border: 2px solid hsl(var(--border) / 0.8);
     box-shadow: var(--shadow);
     backdrop-filter: blur(8px);
     cursor: pointer;
@@ -20,7 +20,7 @@
   .task-card:hover {
     @apply transform -translate-y-0.5 scale-101;
     box-shadow: var(--shadow-lg), 0 0 0 1px hsl(var(--primary) / 0.3);
-    border-color: hsl(var(--primary) / 0.5);
+    border-color: hsl(var(--primary) / 0.7);
     background-color: hsl(var(--card) / 0.95);
   }
 
@@ -71,50 +71,50 @@
   /* ===== TASK STATE STYLES ===== */
   .task-card-expanded {
     @apply rounded-xl transform -translate-y-1 scale-102 z-20;
-    border-color: hsl(var(--primary) / 0.8);
+    border-color: hsl(var(--primary) / 0.9);
     box-shadow: var(--shadow-xl), 0 0 0 2px hsl(var(--primary) / 0.3);
     background-color: hsl(var(--card));
   }
 
   .task-card-complete {
     @apply rounded-xl;
-    border-color: hsl(var(--success) / 0.6);
+    border-color: hsl(var(--success) / 0.8);
     background: linear-gradient(135deg, hsl(var(--card)), hsl(var(--success) / 0.05));
     box-shadow: var(--shadow), 0 0 0 1px hsl(var(--success) / 0.3);
   }
 
   .task-card-complete:hover {
     box-shadow: var(--shadow-md), 0 0 0 1px hsl(var(--success) / 0.5);
-    border-color: hsl(var(--success) / 0.8);
+    border-color: hsl(var(--success) / 0.9);
   }
 
   .task-card-overdue {
     @apply rounded-xl;
-    border-color: hsl(var(--destructive) / 0.6);
+    border-color: hsl(var(--destructive) / 0.8);
     background: linear-gradient(135deg, hsl(var(--card)), hsl(var(--destructive) / 0.05));
     box-shadow: var(--shadow), 0 0 0 1px hsl(var(--destructive) / 0.3);
   }
 
   .task-card-overdue:hover {
     box-shadow: var(--shadow-md), 0 0 0 1px hsl(var(--destructive) / 0.5);
-    border-color: hsl(var(--destructive) / 0.8);
+    border-color: hsl(var(--destructive) / 0.9);
   }
 
   .task-card-pending {
     @apply rounded-xl;
-    border-color: hsl(var(--accent-yellow) / 0.6);
+    border-color: hsl(var(--accent-yellow) / 0.8);
     background: linear-gradient(135deg, hsl(var(--card)), hsl(var(--accent-yellow) / 0.05));
     box-shadow: var(--shadow), 0 0 0 1px hsl(var(--accent-yellow) / 0.3);
   }
 
   .task-card-pending:hover {
     box-shadow: var(--shadow-md), 0 0 0 1px hsl(var(--accent-yellow) / 0.5);
-    border-color: hsl(var(--accent-yellow) / 0.8);
+    border-color: hsl(var(--accent-yellow) / 0.9);
   }
 
   .task-card-pinned {
     @apply rounded-xl;
-    border-color: hsl(var(--primary) / 0.8);
+    border-color: hsl(var(--primary) / 0.9);
     background: linear-gradient(135deg, hsl(var(--card)), hsl(var(--primary) / 0.08));
     box-shadow: var(--shadow-md), 0 0 0 2px hsl(var(--primary) / 0.2);
   }
@@ -138,13 +138,13 @@
   /* ===== DARK MODE TASK CARDS ===== */
   .dark .task-card {
     background-color: hsl(var(--card));
-    border: 1px solid hsl(var(--border) / 0.5);
+    border: 2px solid hsl(var(--border) / 0.6);
     box-shadow: var(--shadow);
   }
 
   .dark .task-card:hover {
     background-color: hsl(var(--card) / 0.9);
-    border-color: hsl(var(--primary) / 0.7);
+    border-color: hsl(var(--primary) / 0.8);
     box-shadow: var(--shadow-lg), 0 0 0 1px hsl(var(--primary) / 0.4);
   }
 
@@ -154,7 +154,7 @@
 
   .dark .task-card-complete {
     background: linear-gradient(135deg, hsl(var(--card)), hsl(var(--success) / 0.1));
-    border-color: hsl(var(--success) / 0.4);
+    border-color: hsl(var(--success) / 0.6);
   }
 
   .dark .task-card-complete:hover {
@@ -163,7 +163,7 @@
 
   .dark .task-card-overdue {
     background: linear-gradient(135deg, hsl(var(--card)), hsl(var(--destructive) / 0.1));
-    border-color: hsl(var(--destructive) / 0.4);
+    border-color: hsl(var(--destructive) / 0.6);
   }
 
   .dark .task-card-overdue:hover {

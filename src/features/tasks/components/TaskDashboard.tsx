@@ -28,8 +28,9 @@ export default function TaskDashboard() {
     <TaskContextProvider>
       <TaskUIContextProvider>
         <UIContextProvider>
-          <div className="max-w-3xl mx-auto px-2 sm:px-4 py-6 space-y-6">
-            <header className="flex items-center justify-between">
+          <div className="max-w-3xl mx-auto px-2 sm:px-4 py-6">
+            {/* Header Section - Separate from task content */}
+            <header className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <img
                   src="/assets/hourglass_logo.svg"
@@ -66,7 +67,11 @@ export default function TaskDashboard() {
                 </DropdownMenu>
               </div>
             </header>
-            <TaskList />
+            
+            {/* Main Content Section - Now properly structured */}
+            <main className="task-dashboard-content">
+              <TaskList />
+            </main>
           </div>
         </UIContextProvider>
       </TaskUIContextProvider>
