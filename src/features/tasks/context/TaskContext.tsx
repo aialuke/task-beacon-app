@@ -2,7 +2,7 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 import { Task } from "@/lib/types";
 import { useTaskQueries } from "@/features/tasks/hooks/useTaskQueries";
-import { useTaskMutation } from "@/features/tasks/hooks/mutations/useTaskMutation";
+import { useTaskMutation } from "@/features/tasks/hooks/useTaskMutation";
 
 // Define data-focused context type
 interface TaskDataContextType {
@@ -63,7 +63,7 @@ export function TaskContextProvider({ children }: { children: ReactNode }) {
       tasks,
       isLoading,
       isFetching,
-      error: error as Error, // Cast to Error type to satisfy the type constraint
+      error: error as Error,
       
       // Data mutations
       toggleTaskPin,

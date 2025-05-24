@@ -13,6 +13,8 @@ import { useFilteredTasks } from "./useFilteredTasks";
  * @returns Combined task management interface
  */
 export function useTaskManagement() {
+  console.log("[useTaskManagement] Hook called");
+  
   // Get data context (now focused on data operations)
   const {
     tasks,
@@ -32,6 +34,8 @@ export function useTaskManagement() {
     goToPreviousPage
   } = useTaskContext();
 
+  console.log("[useTaskManagement] Got task context, tasks count:", tasks?.length || 0);
+
   // Get UI context (focused on UI state)
   const {
     filter,
@@ -42,8 +46,12 @@ export function useTaskManagement() {
     setDialogOpen
   } = useTaskUIContext();
 
+  console.log("[useTaskManagement] Got UI context, filter:", filter);
+
   // Apply filtering using service layer
   const filteredTasks = useFilteredTasks(tasks, filter);
+
+  console.log("[useTaskManagement] Filtered tasks count:", filteredTasks?.length || 0);
 
   // Task expansion helpers (UI logic)
   const isTaskExpanded = (taskId: string) => expandedTaskId === taskId;
@@ -54,6 +62,8 @@ export function useTaskManagement() {
   // Dialog helpers (UI logic)
   const openCreateDialog = () => setDialogOpen(true);
   const closeCreateDialog = () => setDialogOpen(false);
+
+  console.log("[useTaskManagement] Returning combined interface");
 
   return {
     // Data
