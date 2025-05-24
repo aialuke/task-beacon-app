@@ -25,7 +25,14 @@ export function TubelightNavbar({ items, activeItem, onItemChange, className }: 
         className,
       )}
     >
-      <div className="relative flex items-center gap-1 bg-background/10 border border-border/50 backdrop-blur-lg py-2 px-2 rounded-full shadow-lg overflow-visible">
+      <div 
+        className="relative flex items-center gap-1 py-2 px-2 rounded-full shadow-lg overflow-visible border border-border/50"
+        style={{
+          backgroundColor: 'rgba(0, 0, 0, 0.1)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+        }}
+      >
         {items.map((item) => {
           const Icon = item.icon
           const isActive = activeItem === item.value

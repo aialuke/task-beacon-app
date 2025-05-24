@@ -56,7 +56,7 @@ html {
   --tw-sepia: initial;
   --tw-drop-shadow: initial;
   
-  /* Backdrop-filter variables */
+  /* Backdrop-filter variables - Explicitly initialize ALL required variables */
   --tw-backdrop-blur: initial;
   --tw-backdrop-brightness: initial;
   --tw-backdrop-contrast: initial;
@@ -86,4 +86,10 @@ svg {
 
 .light {
   color-scheme: light;
+}
+
+/* Ensure backdrop-blur works consistently */
+.backdrop-blur-fix {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
