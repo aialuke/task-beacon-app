@@ -7,11 +7,11 @@ import { getTaskStatus } from "@/lib/uiUtils";
  */
 
 export interface TaskCardStyles {
-  borderWidth: string;
-  borderStyle: string;
-  borderColor: string;
-  backgroundColor: string;
-  boxShadow: string;
+  borderWidth?: string;
+  borderStyle?: string;
+  borderColor?: string;
+  backgroundColor?: string;
+  boxShadow?: string;
   transform?: string;
   zIndex?: number;
 }
@@ -19,7 +19,7 @@ export interface TaskCardStyles {
 /**
  * Get status-specific styles for task cards
  */
-export function getTaskCardStatusStyles(status: TaskStatus): Partial<TaskCardStyles> {
+export function getTaskCardStatusStyles(status: TaskStatus): TaskCardStyles {
   const baseStyles = {
     borderWidth: '2px',
     borderStyle: 'solid',
