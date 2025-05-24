@@ -20,7 +20,7 @@ function TaskExpandButton({ isExpanded, onClick }: TaskExpandButtonProps) {
         height="16"
         viewBox="0 0 24 24"
         xmlns="http://www.w3.org/2000/svg"
-        className={`transform transition-transform text-gray-900 stroke-gray-900 ${isExpanded ? "rotate-180" : ""}`}
+        className={`transform transition-transform text-foreground ${isExpanded ? "rotate-180" : ""}`}
       >
         <path
           d="M6 9L12 15L18 9"
