@@ -5,7 +5,8 @@
   .task-list {
     @apply flex flex-col;
     transition: all 0.3s ease-out;
-    padding: 0 5px;
+    padding: 0 8px; /* Increased from 5px for better breathing room */
+    gap: 1rem; /* Added explicit gap between task cards */
     overflow-y: hidden;
     width: 100%;
     box-sizing: border-box;
@@ -20,5 +21,15 @@
     margin-top: 4px;
     padding-top: 1px;
     min-height: 20px;
+  }
+
+  /* ===== TASK CARD CONTAINER SPACING ===== */
+  .task-card-container {
+    width: 100%;
+    margin-bottom: 0; /* Remove margin since we're using gap */
+  }
+
+  .task-card-container:not(:last-child) {
+    margin-bottom: 0; /* Ensure no conflicting margins */
   }
 }

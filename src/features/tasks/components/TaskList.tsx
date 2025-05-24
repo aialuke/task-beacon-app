@@ -69,7 +69,7 @@ export default function TaskList() {
         />
       </div>
 
-      <div className="task-list flex flex-col gap-4 px-2">
+      <div className="task-list"> {/* Removed flex flex-col gap-4 px-2 classes since they're now in CSS */}
         {isLoading ? (
           Array.from({ length: pageSize }).map((_, i) => (
             <TaskCardSkeleton key={i} />
@@ -81,7 +81,7 @@ export default function TaskList() {
             </Suspense>
           ))
         ) : (
-          <div className="flex items-center justify-center p-4 border border-dashed border-gray-300 rounded-xl">
+          <div className="flex items-center justify-center p-6 border border-dashed border-gray-300 rounded-xl"> {/* Increased padding */}
             <p className="text-gray-500">No tasks found</p>
           </div>
         )}

@@ -1,23 +1,21 @@
-
 /* src/styles/components/task-cards.css - Enhanced task card styling for dark mode */
 @layer components {
   /* ===== ENHANCED TASK CARD STYLES ===== */
   .task-card {
-    @apply flex flex-col p-3 sm:p-4 transition-all duration-200 relative text-left;
+    @apply flex flex-col p-4 sm:p-5 transition-all duration-200 relative text-left;
     min-height: calc(1.25 * 60px);
-    width: 100%; /* Changed from 95% to 100% for better spacing */
-    margin-left: auto;
-    margin-right: auto;
+    width: 100%; /* Increased from 95% to 100% for better spacing */
     border-radius: var(--radius-xl);
     background-color: hsl(var(--card));
     color: hsl(var(--card-foreground));
-    /* Enhanced border with fallback and better visibility */
-    border: 1px solid hsl(var(--border) / 0.3);
-    /* Enhanced shadow with explicit fallback */
+    /* Enhanced border with explicit fallback colors */
+    border: 1.5px solid hsl(var(--border) / 0.4);
+    border-color: rgba(148, 163, 184, 0.3); /* Explicit fallback for better visibility */
+    /* Enhanced shadow with explicit values and fallbacks */
     box-shadow: 
-      0 1px 3px rgba(0, 0, 0, 0.12),
-      0 1px 2px rgba(0, 0, 0, 0.24),
-      0 0 0 1px hsl(var(--border) / 0.1);
+      0 2px 4px rgba(0, 0, 0, 0.08),
+      0 1px 2px rgba(0, 0, 0, 0.12),
+      0 0 0 1px rgba(148, 163, 184, 0.1);
     backdrop-filter: blur(8px);
   }
 
@@ -44,7 +42,7 @@
   @media (min-width: 640px) {
     .task-card {
       width: 100%;
-      padding: 1rem 1.25rem;
+      padding: 1.25rem 1.5rem; /* Increased padding for better breathing room */
     }
   }
 
