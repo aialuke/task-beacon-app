@@ -6,6 +6,7 @@ import TaskHeader from "./TaskHeader";
 import TaskDetails from "./TaskDetails";
 import { useTaskCard } from "../hooks/useTaskCard";
 import { Skeleton } from "@/components/ui/skeleton";
+import { getTaskStatus } from "@/lib/uiUtils";
 
 /**
  * TaskCard component
@@ -45,6 +46,18 @@ function TaskCard({ task }: TaskCardProps) {
     handleTogglePin
   } = useTaskCard(task);
 
+  const status = getTaskStatus(task);
+
+  // Build class names using utility classes
+  const cardClasses = [
+    "task-card",
+    isExpanded && "task-card-expanded",
+    task.pinned && "task-card-pinned",
+    status === "complete" && "task-card-complete",
+    status === "overdue" && "task-card-overdue",
+    status === "pending" && "task-card-pending"
+  ].filter(Boolean).join(" ");
+
   return (
     <div
       className={`task-card-container ${isExpanded ? "expanded" : ""}`}
@@ -60,8 +73,7 @@ function TaskCard({ task }: TaskCardProps) {
     >
       <div
         ref={cardRef}
-        className={`task-card ${isExpanded ? "expanded-card" : ""} p-3 border border-gray-200 hover:border-secondary`}
-        data-expanded={isExpanded}
+        className={cardClasses}
         style={{
           overflowY: "hidden",
           boxSizing: "border-box",
