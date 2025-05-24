@@ -7,23 +7,25 @@
   [role="button"] {
     border-radius: var(--radius-full);
     @apply transition-all duration-200;
+    color: inherit;
   }
 
   button:hover, 
   .button:hover,
   [role="button"]:hover {
-    @apply shadow-md -translate-y-1;
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
   }
 
   button:active, 
   .button:active,
   [role="button"]:active {
-    @apply translate-y-0;
+    transform: translateY(0);
   }
 
   /* ===== FAB BUTTON ===== */
   .fab {
-    @apply flex items-center justify-center fixed shadow-lg;
+    @apply flex items-center justify-center fixed;
     bottom: 16px;
     right: 16px;
     width: 56px;
@@ -33,27 +35,49 @@
     background: var(--gradient-blue);
     color: hsl(var(--primary-foreground));
     border-radius: var(--radius-full);
+    border: none;
+    box-shadow: var(--shadow-lg);
   }
 
   .fab svg {
-    stroke: white;
+    stroke: hsl(var(--primary-foreground));
     stroke-width: 2;
   }
 
   .fab:hover {
     background: var(--gradient-blue-dark);
     transform: scale(1.05);
-    @apply shadow-xl;
+    box-shadow: var(--shadow-xl);
   }
 
   .fab:active {
     transform: scale(0.95);
-    @apply shadow-lg;
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* Focus states for accessibility */
+  .fab:focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
   }
 
   @media (max-width: 320px) {
     .fab {
       @apply bottom-2 right-2 w-12 h-12;
     }
+  }
+
+  /* Dark mode specific button adjustments */
+  .dark button,
+  .dark .button,
+  .dark [role="button"] {
+    color: hsl(var(--foreground));
+  }
+
+  /* Light mode button overrides */
+  .light button,
+  .light .button,
+  .light [role="button"] {
+    color: hsl(var(--foreground));
   }
 }

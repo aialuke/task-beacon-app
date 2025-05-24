@@ -1,7 +1,7 @@
 
 /* src/styles/base.css */
 :root {
-  /* Color system - with consistent naming convention */
+  /* Light mode colors (fallback) */
   --background: 0 0% 100%;
   --foreground: 240 10% 3.9%;
   --card: 0 0% 100%;
@@ -27,8 +27,9 @@
   --accent-yellow: 51 100% 57%; /* #FFDD24 */
   --success: 152 76% 40%; /* #10B981 */
   --success-foreground: 0 0% 98%;
+  --brand-light: 221 77% 95%;
   
-  /* Status colors - consistent naming convention */
+  /* Status colors - light mode */
   --status-pending: #FFDD24; /* Yellow */
   --status-overdue: #DA3E52; /* Red */
   --status-complete: #10B981; /* Green */
@@ -46,18 +47,131 @@
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   --shadow-focus: 0 0 0 3px rgba(54, 98, 227, 0.2);
   
-  /* Gradient backgrounds - consolidated */
+  /* Gradient backgrounds */
   --gradient-light: linear-gradient(to bottom right, #FFFFFF, #F9FAFB);
   --gradient-blue: linear-gradient(45deg, #3662E3, #5C85EE);
   --gradient-blue-dark: linear-gradient(45deg, #2C50B6, #4A6DCA);
   
-  /* Border radius system - consistent naming */
+  /* Border radius system */
   --radius-sm: 0.25rem;   /* 4px */
   --radius-md: 0.375rem;  /* 6px */
   --radius-lg: 0.5rem;    /* 8px */
   --radius-xl: 0.75rem;   /* 12px */
   --radius-2xl: 1rem;     /* 16px */
   --radius-full: 9999px;  /* Full rounded for buttons */
+}
+
+/* Dark mode colors (default) */
+.dark,
+:root {
+  /* Dark mode background and surfaces - WCAG AA compliant */
+  --background: 222 84% 5%;        /* Very dark blue-gray #0A0F1C */
+  --foreground: 213 31% 91%;       /* Light gray text #E8ECEF */
+  --card: 222 84% 8%;              /* Slightly lighter #141B2B */
+  --card-foreground: 213 31% 91%;
+  --popover: 222 84% 8%;
+  --popover-foreground: 213 31% 91%;
+  
+  /* Primary colors adjusted for dark mode */
+  --primary: 221 77% 65%;          /* Brighter blue #4A7BF7 for better contrast */
+  --primary-foreground: 222 84% 5%;
+  
+  /* Secondary and muted colors */
+  --secondary: 215 28% 17%;        /* Dark gray #252B35 */
+  --secondary-foreground: 213 31% 91%;
+  --muted: 215 28% 17%;
+  --muted-foreground: 215 20% 65%; /* Medium gray #9CA3AF */
+  
+  /* Accent colors */
+  --accent: 215 28% 17%;
+  --accent-foreground: 213 31% 91%;
+  
+  /* Status colors - enhanced for dark mode visibility */
+  --destructive: 351 83% 63%;      /* Lighter red #E55D73 */
+  --destructive-foreground: 0 0% 98%;
+  --success: 152 76% 50%;          /* Brighter green #10D175 */
+  --success-foreground: 0 0% 98%;
+  --accent-yellow: 51 100% 70%;    /* Brighter yellow #FFE666 */
+  
+  /* Borders and inputs */
+  --border: 215 28% 17%;           /* Subtle dark borders */
+  --input: 215 28% 17%;
+  --ring: 221 77% 65%;             /* Primary color for focus rings */
+  
+  /* Surface colors */
+  --surface: 222 84% 8%;
+  --surface-foreground: 213 31% 91%;
+  --brand-light: 221 77% 15%;      /* Dark brand light */
+  
+  /* Status colors for dark mode */
+  --status-pending: #FFE666;       /* Enhanced yellow */
+  --status-overdue: #FF6B8A;       /* Softer red */
+  --status-complete: #4ADE80;      /* Vibrant green */
+  
+  /* Status light variants */
+  --status-pending-light: #FFF4A3;
+  --status-overdue-light: #FFA8BB;
+  --status-complete-light: #86EFAC;
+
+  /* Dark mode shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.25);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+  --shadow-focus: 0 0 0 3px rgba(74, 123, 247, 0.4);
+  
+  /* Dark mode gradients */
+  --gradient-light: linear-gradient(to bottom right, #141B2B, #0A0F1C);
+  --gradient-blue: linear-gradient(45deg, #4A7BF7, #6B93FF);
+  --gradient-blue-dark: linear-gradient(45deg, #3662E3, #5C85EE);
+}
+
+/* Light mode override (when explicitly set) */
+.light {
+  --background: 0 0% 100%;
+  --foreground: 240 10% 3.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 240 10% 3.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 10% 3.9%;
+  --primary: 221 77% 55%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 240 4.8% 95.9%;
+  --secondary-foreground: 240 5.9% 10%;
+  --muted: 240 4.8% 95.9%;
+  --muted-foreground: 240 3.8% 46.1%;
+  --accent: 240 4.8% 95.9%;
+  --accent-foreground: 240 5.9% 10%;
+  --destructive: 351 83% 53%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 5.9% 90%;
+  --input: 240 5.9% 90%;
+  --ring: 240 5.9% 10%;
+  --surface: 0 0% 100%;
+  --surface-foreground: 240 10% 3.9%;
+  --success: 152 76% 40%;
+  --success-foreground: 0 0% 98%;
+  --accent-yellow: 51 100% 57%;
+  --brand-light: 221 77% 95%;
+  
+  --status-pending: #FFDD24;
+  --status-overdue: #DA3E52;
+  --status-complete: #10B981;
+  --status-pending-light: #FFE082;
+  --status-overdue-light: #E57373;
+  --status-complete-light: #34D399;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-focus: 0 0 0 3px rgba(54, 98, 227, 0.2);
+  
+  --gradient-light: linear-gradient(to bottom right, #FFFFFF, #F9FAFB);
+  --gradient-blue: linear-gradient(45deg, #3662E3, #5C85EE);
+  --gradient-blue-dark: linear-gradient(45deg, #2C50B6, #4A6DCA);
 }
 
 *, *::before, *::after {
@@ -73,6 +187,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   color: hsl(var(--foreground));
   background-color: hsl(var(--background));
+  transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 /* Reset buttons and form elements to ensure consistent inheritance */
@@ -110,6 +225,18 @@ button, input, optgroup, select, textarea {
   /* Ensure icons remain visible in high contrast mode */
   svg {
     forced-color-adjust: auto;
+  }
+}
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 

@@ -5,10 +5,11 @@
   .select-content,
   [data-radix-popper-content-wrapper],
   [data-radix-dropdown-menu-content] {
-    background-color: white;
-    color: #000000e6;
+    background-color: hsl(var(--popover));
+    color: hsl(var(--popover-foreground));
     border-radius: var(--radius-xl);
-    @apply shadow-lg;
+    border: 1px solid hsl(var(--border));
+    box-shadow: var(--shadow-lg);
     z-index: 9999;
   }
 
@@ -18,9 +19,36 @@
   .popover-content,
   [class*="popover-content"] {
     padding: 1.25rem;
-    background: white;
-    @apply shadow-lg;
-    border: 1px solid #f0f0f0;
+    background: hsl(var(--popover));
+    color: hsl(var(--popover-foreground));
+    border: 1px solid hsl(var(--border));
     border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* Dark mode enhancements */
+  .dark .select-content,
+  .dark [data-radix-popper-content-wrapper],
+  .dark [data-radix-dropdown-menu-content],
+  .dark .dialog-content,
+  .dark [class*="dialog-content"],
+  .dark .popover-content,
+  .dark [class*="popover-content"] {
+    background-color: hsl(var(--popover));
+    border-color: hsl(var(--border));
+    box-shadow: var(--shadow-xl);
+  }
+
+  /* Light mode overrides */
+  .light .select-content,
+  .light [data-radix-popper-content-wrapper],
+  .light [data-radix-dropdown-menu-content],
+  .light .dialog-content,
+  .light [class*="dialog-content"],
+  .light .popover-content,
+  .light [class*="popover-content"] {
+    background-color: white;
+    color: #000000e6;
+    border-color: #f0f0f0;
   }
 }

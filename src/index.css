@@ -16,12 +16,27 @@
   box-sizing: inherit;
 }
 
+/* Set dark mode as default */
+html {
+  @apply dark;
+}
+
 /* Import custom styles after Tailwind directives */
 @import "./styles/base.css";
 @import "./styles/components.css";
 @import "./styles/utilities.css";
 
-/* Global icon handling */
+/* Global icon handling - improved for dark mode */
 svg {
   fill: none;
+  transition: stroke 0.3s ease, fill 0.3s ease;
+}
+
+/* Dark mode specific adjustments */
+.dark {
+  color-scheme: dark;
+}
+
+.light {
+  color-scheme: light;
 }

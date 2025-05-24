@@ -4,6 +4,7 @@ import type { Config } from "tailwindcss";
 import animate from "tailwindcss-animate";
 
 export default {
+  darkMode: ["class"],
   content: ["./src/**/*.{ts,tsx}"],
   safelist: [
     'text-destructive',
@@ -42,16 +43,13 @@ export default {
     'stroke-gray-500',
     'stroke-gray-900',
     'rounded-full',
-    // Added for new color scheme
-    'bg-blue-600',
-    'text-blue-600',
-    'border-blue-600',
-    'bg-yellow-400',
-    'bg-red-500',
-    'text-yellow-400',
-    'border-yellow-400',
-    'text-red-500',
-    'border-red-500',
+    // Dark mode classes
+    'dark:bg-gray-800',
+    'dark:bg-gray-900',
+    'dark:text-gray-100',
+    'dark:text-gray-200',
+    'dark:border-gray-700',
+    'dark:border-gray-600',
   ],
   theme: {
     container: {
@@ -98,25 +96,25 @@ export default {
           foreground: "hsl(var(--foreground))",
         },
         popover: {
-          DEFAULT: "hsl(var(--surface))",
-          foreground: "hsl(var(--surface-foreground))",
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
         },
         card: {
-          DEFAULT: "hsl(var(--surface))",
-          foreground: "hsl(var(--surface-foreground))",
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
         },
         success: {
-          DEFAULT: "hsl(var(--timer-complete))",
-          foreground: "white",
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
         },
         brand: {
           DEFAULT: "hsl(var(--primary))",
-          light: "#E5EDFF",
+          light: "hsl(var(--brand-light))",
         },
-        "task-pending": "var(--timer-pending)",
-        "task-overdue": "var(--timer-overdue)",
-        "task-complete": "var(--timer-complete)",
-        "task-timer": "var(--timer-pending)",
+        "task-pending": "var(--status-pending)",
+        "task-overdue": "var(--status-overdue)",
+        "task-complete": "var(--status-complete)",
+        "task-timer": "var(--status-pending)",
       },
       borderRadius: {
         lg: "var(--radius)",
