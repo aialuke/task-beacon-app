@@ -37,16 +37,16 @@
   /* ===== FAB BUTTON ===== */
   .fab {
     position: fixed !important;
-    bottom: 16px !important;
-    right: 16px !important;
+    bottom: 24px !important;
+    right: 24px !important;
     width: 56px !important;
     height: 56px !important;
-    z-index: 99999 !important;
+    z-index: 9999 !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease !important;
-    background: linear-gradient(135deg, #4C6DE1 0%, #3B5CE6 100%) !important;
+    background: linear-gradient(135deg, hsl(225 77% 60%) 0%, hsl(225 77% 50%) 100%) !important;
     color: white !important;
     border-radius: 50% !important;
     border: none !important;
@@ -61,7 +61,7 @@
   }
 
   .fab:hover {
-    background: linear-gradient(135deg, #3B5CE6 0%, #2A4CE8 100%) !important;
+    background: linear-gradient(135deg, hsl(225 77% 70%) 0%, hsl(225 77% 60%) 100%) !important;
     transform: scale(1.05) !important;
     box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1) !important;
   }
@@ -81,8 +81,8 @@
   /* Ensure FAB works on small screens */
   @media (max-width: 320px) {
     .fab {
-      bottom: 8px !important;
-      right: 8px !important;
+      bottom: 16px !important;
+      right: 16px !important;
       width: 48px !important;
       height: 48px !important;
     }

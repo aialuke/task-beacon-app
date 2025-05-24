@@ -69,11 +69,12 @@ html {
 }
 
 /* BUTTON UNRESET - Override Tailwind's Preflight reset */
+/* This applies only to buttons WITHOUT shadcn component classes */
 /* This must come AFTER Tailwind utilities to override them */
-button,
-input[type="button"],
-input[type="reset"],
-input[type="submit"] {
+button:not([class*="bg-"]):not([class*="border-"]):not([class*="text-"]):not(.fab),
+input[type="button"]:not([class*="bg-"]):not([class*="border-"]):not([class*="text-"]),
+input[type="reset"]:not([class*="bg-"]):not([class*="border-"]):not([class*="text-"]),
+input[type="submit"]:not([class*="bg-"]):not([class*="border-"]):not([class*="text-"]) {
   -webkit-appearance: button;
   appearance: button;
   background-color: hsl(var(--primary));
@@ -93,35 +94,35 @@ input[type="submit"] {
   transition: all 0.2s ease-in-out;
 }
 
-button:hover,
-input[type="button"]:hover,
-input[type="reset"]:hover,
-input[type="submit"]:hover {
+button:not([class*="bg-"]):not([class*="border-"]):not([class*="text-"]):not(.fab):hover,
+input[type="button"]:not([class*="bg-"]):not([class*="border-"]):not([class*="text-"]):hover,
+input[type="reset"]:not([class*="bg-"]):not([class*="border-"]):not([class*="text-"]):hover,
+input[type="submit"]:not([class*="bg-"]):not([class*="border-"]):not([class*="text-"]):hover {
   background-color: hsl(var(--primary) / 0.9);
   transform: translateY(-1px);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-button:active,
-input[type="button"]:active,
-input[type="reset"]:active,
-input[type="submit"]:active {
+button:not([class*="bg-"]):not([class*="border-"]):not([class*="text-"]):not(.fab):active,
+input[type="button"]:not([class*="bg-"]):not([class*="border-"]):not([class*="text-"]):active,
+input[type="reset"]:not([class*="bg-"]):not([class*="border-"]):not([class*="text-"]):active,
+input[type="submit"]:not([class*="bg-"]):not([class*="border-"]):not([class*="text-"]):active {
   transform: translateY(0);
 }
 
-button:focus-visible,
-input[type="button"]:focus-visible,
-input[type="reset"]:focus-visible,
-input[type="submit"]:focus-visible {
+button:not([class*="bg-"]):not([class*="border-"]):not([class*="text-"]):not(.fab):focus-visible,
+input[type="button"]:not([class*="bg-"]):not([class*="border-"]):not([class*="text-"]):focus-visible,
+input[type="reset"]:not([class*="bg-"]):not([class*="border-"]):not([class*="text-"]):focus-visible,
+input[type="submit"]:not([class*="bg-"]):not([class*="border-"]):not([class*="text-"]):focus-visible {
   outline: 2px solid hsl(var(--primary));
   outline-offset: 2px;
   box-shadow: 0 0 0 4px hsl(var(--primary) / 0.2);
 }
 
-button:disabled,
-input[type="button"]:disabled,
-input[type="reset"]:disabled,
-input[type="submit"]:disabled {
+button:not([class*="bg-"]):not([class*="border-"]):not([class*="text-"]):not(.fab):disabled,
+input[type="button"]:not([class*="bg-"]):not([class*="border-"]):not([class*="text-"]):disabled,
+input[type="reset"]:not([class*="bg-"]):not([class*="border-"]):not([class*="text-"]):disabled,
+input[type="submit"]:not([class*="bg-"]):not([class*="border-"]):not([class*="text-"]):disabled {
   pointer-events: none;
   opacity: 0.5;
 }
