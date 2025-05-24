@@ -1,122 +1,78 @@
 
-/* Tubelight Navbar Effects - Custom CSS to avoid Tailwind conflicts */
-@layer components {
-  .tubelight-navbar {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    overflow: visible;
-  }
+/* Tubelight Navbar - Targeted overrides for effects Tailwind can't handle */
 
-  .tubelight-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 8px;
-    border-radius: 9999px;
-    background-color: rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid hsl(var(--border) / 0.5);
-    overflow: visible;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  }
+/* Use higher specificity selectors to override Tailwind */
+.tubelight-navbar .tubelight-container {
+  background: rgba(0, 0, 0, 0.1) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid hsl(var(--border) / 0.5) !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+}
 
-  .tubelight-button {
-    position: relative;
-    cursor: pointer;
-    font-size: 0.875rem;
-    font-weight: 600;
-    padding: 8px 16px;
-    border-radius: 9999px;
-    transition: all 0.2s ease;
-    z-index: 10;
-    color: hsl(var(--foreground) / 0.7);
-    background: transparent;
-    border: none;
-  }
+.dark .tubelight-navbar .tubelight-container {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: hsl(var(--border) / 0.3) !important;
+}
 
-  .tubelight-button:hover {
-    color: hsl(var(--foreground));
-  }
+/* Tubelight bar effect - positioned above the active button */
+.tubelight-navbar .tubelight-bar {
+  position: absolute !important;
+  top: -16px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 64px !important;
+  height: 8px !important;
+  background-color: hsl(var(--primary)) !important;
+  border-radius: 9999px !important;
+  z-index: 30 !important;
+}
 
-  .tubelight-button.active {
-    color: white;
-  }
+/* Primary glow effects for the bar */
+.tubelight-navbar .tubelight-bar::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background-color: hsl(var(--primary)) !important;
+  border-radius: 9999px !important;
+  filter: blur(4px) !important;
+  opacity: 0.8 !important;
+}
 
-  .tubelight-icon {
-    position: relative;
-    z-index: 20;
-  }
+.tubelight-navbar .tubelight-bar::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: -4px !important;
+  background-color: hsl(var(--primary) / 0.6) !important;
+  border-radius: 9999px !important;
+  filter: blur(8px) !important;
+}
 
-  /* Main tubelight bar effect */
-  .tubelight-bar {
-    position: absolute;
-    top: -16px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 64px;
-    height: 8px;
-    background-color: hsl(var(--primary));
-    border-radius: 9999px;
-    z-index: 30;
-  }
+/* Additional glow layers */
+.tubelight-navbar .tubelight-glow-outer {
+  position: absolute !important;
+  inset: -8px !important;
+  background-color: hsl(var(--primary) / 0.4) !important;
+  border-radius: 9999px !important;
+  filter: blur(12px) !important;
+  z-index: 25 !important;
+}
 
-  /* Primary glow effects for the bar */
-  .tubelight-bar::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-color: hsl(var(--primary));
-    border-radius: 9999px;
-    filter: blur(4px);
-    opacity: 0.8;
-  }
+/* Button background highlight */
+.tubelight-navbar .tubelight-button-bg {
+  position: absolute !important;
+  inset: 0 !important;
+  background-color: hsl(var(--primary) / 0.2) !important;
+  border-radius: 9999px !important;
+  z-index: 5 !important;
+}
 
-  .tubelight-bar::after {
-    content: '';
-    position: absolute;
-    inset: -4px;
-    background-color: hsl(var(--primary) / 0.6);
-    border-radius: 9999px;
-    filter: blur(8px);
-  }
-
-  /* Additional glow layer */
-  .tubelight-glow-outer {
-    content: '';
-    position: absolute;
-    inset: -8px;
-    background-color: hsl(var(--primary) / 0.4);
-    border-radius: 9999px;
-    filter: blur(12px);
-    z-index: 25;
-  }
-
-  /* Button background highlight */
-  .tubelight-button-bg {
-    position: absolute;
-    inset: 0;
-    background-color: hsl(var(--primary) / 0.2);
-    border-radius: 9999px;
-    z-index: 5;
-  }
-
-  /* Ambient glow around button */
-  .tubelight-ambient {
-    position: absolute;
-    inset: -16px;
-    background-color: hsl(var(--primary) / 0.1);
-    border-radius: 9999px;
-    filter: blur(20px);
-    z-index: 0;
-  }
-
-  /* Dark mode adjustments */
-  .dark .tubelight-container {
-    background-color: rgba(255, 255, 255, 0.05);
-    border-color: hsl(var(--border) / 0.3);
-  }
+/* Ambient glow around button */
+.tubelight-navbar .tubelight-ambient {
+  position: absolute !important;
+  inset: -16px !important;
+  background-color: hsl(var(--primary) / 0.1) !important;
+  border-radius: 9999px !important;
+  filter: blur(20px) !important;
+  z-index: 0 !important;
 }

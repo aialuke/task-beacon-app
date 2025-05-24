@@ -19,8 +19,8 @@ interface TubelightNavbarProps {
 
 export function TubelightNavbar({ items, activeItem, onItemChange, className }: TubelightNavbarProps) {
   return (
-    <div className={cn("tubelight-navbar", className)}>
-      <div className="tubelight-container">
+    <div className={cn("tubelight-navbar flex justify-center w-full overflow-visible", className)}>
+      <div className="tubelight-container relative flex items-center gap-1 p-2 rounded-full overflow-visible shadow-lg">
         {items.map((item) => {
           const Icon = item.icon
           const isActive = activeItem === item.value
@@ -30,11 +30,11 @@ export function TubelightNavbar({ items, activeItem, onItemChange, className }: 
               key={item.value}
               onClick={() => onItemChange(item.value)}
               className={cn(
-                "tubelight-button",
-                isActive && "active"
+                "relative cursor-pointer text-sm font-semibold py-2 px-4 rounded-full transition-all duration-200 z-10 border-none bg-transparent",
+                isActive ? "text-white" : "text-foreground/70 hover:text-foreground"
               )}
             >
-              <span className="tubelight-icon">
+              <span className="relative z-20">
                 <Icon size={18} strokeWidth={2.5} />
               </span>
               
