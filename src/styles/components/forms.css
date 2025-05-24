@@ -1,84 +1,25 @@
 
-/* src/styles/components/forms.css - Streamlined form styling with consistent color system */
+/* src/styles/components/forms.css - Simplified form styling for consistent theming */
 @layer components {
   /* ===== FORM STYLES ===== */
   .form-field-group {
     @apply space-y-2;
   }
 
-  /* ===== ENHANCED FORM FIELD STYLES ===== */
-  input[type="text"],
-  input[type="email"],
-  input[type="password"],
-  input[type="number"],
-  input[type="search"],
-  input[type="url"],
-  input[type="tel"],
-  input[type="date"],
-  input[type="datetime-local"],
-  textarea,
-  .select-trigger {
-    border-radius: 0.75rem; /* rounded-xl */
-    padding: 0.75rem 1rem;
-    border: 1px solid hsl(var(--border));
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
-    transition: all 0.2s ease;
-    box-shadow: var(--shadow-sm);
-    font-size: 0.875rem;
-    line-height: 1.5;
-  }
-
-  /* Enhanced focus states */
-  input:focus,
-  textarea:focus,
-  select:focus,
-  .select-trigger:focus {
-    outline: none;
-    border-color: hsl(var(--ring));
-    box-shadow: 0 0 0 2px hsl(var(--ring) / 0.2);
-    background-color: hsl(var(--background));
-  }
-
-  /* Enhanced placeholder styling */
-  input::placeholder,
-  textarea::placeholder {
-    color: hsl(var(--muted-foreground));
-    opacity: 0.7;
-  }
-
-  /* Enhanced disabled states */
-  input:disabled,
-  textarea:disabled,
-  select:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    background-color: hsl(var(--muted) / 0.5);
-  }
-
+  /* ===== MINIMAL FORM FIELD OVERRIDES ===== */
+  /* Let components handle their own styling via Tailwind classes */
+  
   /* ===== FILE UPLOAD STYLES ===== */
   input[type="file"] {
-    @apply text-sm cursor-pointer;
+    @apply text-sm cursor-pointer bg-background text-foreground border border-border rounded-xl p-2 transition-colors;
     max-width: 100%;
-    color: hsl(var(--foreground));
-    background-color: hsl(var(--background));
-    border: 1px solid hsl(var(--border));
-    border-radius: 0.75rem; /* rounded-xl */
-    padding: 0.5rem;
   }
 
   input[type="file"]::-webkit-file-upload-button {
-    border-radius: 9999px; /* rounded-full */
-    padding: 0.5rem 1rem;
+    @apply rounded-full px-4 py-2 mr-3 cursor-pointer text-sm font-semibold border-none transition-all;
     background: var(--gradient-blue);
-    border: none;
     color: hsl(var(--primary-foreground));
-    margin-right: 0.75rem;
-    cursor: pointer;
-    font-size: 0.875rem;
-    font-weight: 600;
     box-shadow: var(--shadow-sm);
-    transition: all 0.2s ease;
   }
 
   input[type="file"]::-webkit-file-upload-button:hover {
@@ -89,17 +30,10 @@
 
   /* Firefox file upload button */
   input[type="file"]::file-selector-button {
-    border-radius: 9999px; /* rounded-full */
-    padding: 0.5rem 1rem;
+    @apply rounded-full px-4 py-2 mr-3 cursor-pointer text-sm font-semibold border-none transition-all;
     background: var(--gradient-blue);
-    border: none;
     color: hsl(var(--primary-foreground));
-    margin-right: 0.75rem;
-    cursor: pointer;
-    font-size: 0.875rem;
-    font-weight: 600;
     box-shadow: var(--shadow-sm);
-    transition: all 0.2s ease;
   }
 
   input[type="file"]::file-selector-button:hover {
@@ -110,16 +44,14 @@
 
   /* ===== FORM VALIDATION STATES ===== */
   .form-error input,
-  .form-error textarea,
-  .form-error .select-trigger {
-    border-color: hsl(var(--destructive));
+  .form-error textarea {
+    @apply border-destructive;
     box-shadow: 0 0 0 2px hsl(var(--destructive) / 0.2);
   }
 
   .form-success input,
-  .form-success textarea,
-  .form-success .select-trigger {
-    border-color: hsl(var(--success));
+  .form-success textarea {
+    @apply border-success;
     box-shadow: 0 0 0 2px hsl(var(--success) / 0.2);
   }
 
@@ -128,15 +60,6 @@
     input[type="file"] {
       max-width: 100%;
       font-size: 0.75rem;
-    }
-    
-    input[type="text"],
-    input[type="email"],
-    input[type="password"],
-    input[type="number"],
-    textarea {
-      padding: 0.625rem 0.875rem;
-      font-size: 1rem; /* Prevent zoom on iOS */
     }
   }
 }

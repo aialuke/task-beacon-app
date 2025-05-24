@@ -33,7 +33,7 @@ export function FormActions({
         disabled={isSubmitting}
         size="sm"
         variant="default"
-        className="px-4"
+        className="px-4 bg-primary text-primary-foreground hover:bg-primary/90"
       >
         {isSubmitting ? "Creating..." : submitLabel}
       </Button>
