@@ -1,4 +1,3 @@
-
 import { lazy, Suspense } from "react";
 import { useTaskContext } from "@/features/tasks/context/TaskContext";
 import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
@@ -135,7 +134,7 @@ export default function TaskList() {
       <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
         <DialogTrigger asChild>
           <button 
-            className="fixed bottom-4 right-4 w-14 h-14 z-[99999] flex items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-200 border-none"
+            className="fab"
             aria-label="Create New Task"
           >
             <ClockPlus className="h-6 w-6" strokeWidth={2} />

@@ -1,3 +1,4 @@
+
 /* src/styles/base.css - Single source of truth for all color definitions */
 :root {
   /* ===== LIGHT MODE COLORS (WCAG AA COMPLIANT) ===== */
@@ -9,8 +10,8 @@
   --popover: 0 0% 100%;             /* Pure white #FFFFFF */
   --popover-foreground: 240 10% 3.9%; /* Nearly black #0A0A0B */
   
-  /* Primary brand colors */
-  --primary: 221 77% 55%;           /* Blue #3662E3 - 4.5:1 contrast on white */
+  /* Primary brand colors - Updated to #4C6DE1 */
+  --primary: 225 77% 60%;           /* Blue #4C6DE1 - 4.5:1 contrast on white */
   --primary-foreground: 0 0% 98%;   /* Near white #FAFAFA */
   
   /* Secondary colors */
@@ -35,12 +36,12 @@
   /* Border and input colors */
   --border: 240 5.9% 90%;           /* Light border #E5E7EB */
   --input: 240 5.9% 90%;            /* Light input border #E5E7EB */
-  --ring: 221 77% 55%;              /* Primary blue for focus rings */
+  --ring: 225 77% 60%;              /* Primary blue for focus rings */
   
   /* Additional semantic colors */
   --surface: 0 0% 100%;             /* Pure white #FFFFFF */
   --surface-foreground: 240 10% 3.9%; /* Nearly black #0A0A0B */
-  --brand-light: 221 77% 95%;       /* Very light blue #F0F4FF */
+  --brand-light: 225 77% 95%;       /* Very light blue #F0F4FF */
   
   /* Task status colors - light mode */
   --status-pending: #F59E0B;        /* Amber #F59E0B - 4.5:1 contrast */
@@ -53,12 +54,12 @@
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  --shadow-focus: 0 0 0 3px rgba(54, 98, 227, 0.2);
+  --shadow-focus: 0 0 0 3px hsl(225 77% 60% / 0.2);
   
-  /* Gradient backgrounds */
+  /* Gradient backgrounds - Updated with new primary color */
   --gradient-light: linear-gradient(to bottom right, #FFFFFF, #F9FAFB);
-  --gradient-blue: linear-gradient(45deg, #3662E3, #5C85EE);
-  --gradient-blue-dark: linear-gradient(45deg, #2C50B6, #4A6DCA);
+  --gradient-blue: linear-gradient(45deg, hsl(225 77% 60%), hsl(225 77% 70%));
+  --gradient-blue-dark: linear-gradient(45deg, hsl(225 77% 50%), hsl(225 77% 60%));
   
   /* Standardized border radius using Tailwind values */
   --radius: 0.5rem;     /* 8px - Tailwind's default lg */
@@ -76,7 +77,7 @@
   --popover-foreground: 213 31% 91%; /* Light gray #E8ECEF */
   
   /* Primary colors adjusted for dark mode */
-  --primary: 221 77% 65%;           /* Brighter blue #4A7BF7 - 4.5:1 contrast on dark */
+  --primary: 225 77% 70%;           /* Brighter blue for dark mode - better contrast */
   --primary-foreground: 222 84% 5%; /* Very dark blue-gray #0A0F1C */
   
   /* Secondary and muted colors */
@@ -99,12 +100,12 @@
   /* Enhanced borders for dark mode */
   --border: 215 28% 25%;            /* More visible dark borders #3A414A */
   --input: 215 28% 17%;             /* Dark input background #252B35 */
-  --ring: 221 77% 65%;              /* Primary color for focus rings */
+  --ring: 225 77% 70%;              /* Primary color for focus rings */
   
   /* Surface colors */
   --surface: 222 84% 8%;            /* Dark surface #141B2B */
   --surface-foreground: 213 31% 91%; /* Light gray #E8ECEF */
-  --brand-light: 221 77% 15%;       /* Dark brand light #1A2332 */
+  --brand-light: 225 77% 15%;       /* Dark brand light #1A2332 */
   
   /* Task status colors for dark mode - enhanced visibility */
   --status-pending: #FCD34D;        /* Enhanced yellow #FCD34D */
@@ -117,12 +118,12 @@
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
-  --shadow-focus: 0 0 0 3px rgba(74, 123, 247, 0.4);
+  --shadow-focus: 0 0 0 3px hsl(225 77% 70% / 0.4);
   
-  /* Dark mode gradients */
+  /* Dark mode gradients - Updated with new primary color */
   --gradient-light: linear-gradient(to bottom right, #141B2B, #0A0F1C);
-  --gradient-blue: linear-gradient(45deg, #4A7BF7, #6B93FF);
-  --gradient-blue-dark: linear-gradient(45deg, #3662E3, #5C85EE);
+  --gradient-blue: linear-gradient(45deg, hsl(225 77% 70%), hsl(225 77% 80%));
+  --gradient-blue-dark: linear-gradient(45deg, hsl(225 77% 60%), hsl(225 77% 70%));
 }
 
 /* ===== LIGHT MODE EXPLICIT OVERRIDE ===== */
@@ -134,7 +135,7 @@
   --card-foreground: 240 10% 3.9%;
   --popover: 0 0% 100%;
   --popover-foreground: 240 10% 3.9%;
-  --primary: 221 77% 55%;
+  --primary: 225 77% 60%;
   --primary-foreground: 0 0% 98%;
   --secondary: 240 4.8% 95.9%;
   --secondary-foreground: 240 5.9% 10%;
@@ -146,13 +147,13 @@
   --destructive-foreground: 0 0% 98%;
   --border: 240 5.9% 90%;
   --input: 240 5.9% 90%;
-  --ring: 221 77% 55%;
+  --ring: 225 77% 60%;
   --surface: 0 0% 100%;
   --surface-foreground: 240 10% 3.9%;
   --success: 152 76% 36%;
   --success-foreground: 0 0% 98%;
   --accent-yellow: 51 100% 50%;
-  --brand-light: 221 77% 95%;
+  --brand-light: 225 77% 95%;
   
   --status-pending: #F59E0B;
   --status-overdue: #DC2626;
@@ -163,11 +164,11 @@
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  --shadow-focus: 0 0 0 3px rgba(54, 98, 227, 0.2);
+  --shadow-focus: 0 0 0 3px hsl(225 77% 60% / 0.2);
   
   --gradient-light: linear-gradient(to bottom right, #FFFFFF, #F9FAFB);
-  --gradient-blue: linear-gradient(45deg, #3662E3, #5C85EE);
-  --gradient-blue-dark: linear-gradient(45deg, #2C50B6, #4A6DCA);
+  --gradient-blue: linear-gradient(45deg, hsl(225 77% 60%), hsl(225 77% 70%));
+  --gradient-blue-dark: linear-gradient(45deg, hsl(225 77% 50%), hsl(225 77% 60%));
 }
 
 /* ===== BASE STYLES ===== */
