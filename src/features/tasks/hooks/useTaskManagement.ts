@@ -8,11 +8,12 @@ import { useFilteredTasks } from "./useFilteredTasks";
  * 
  * This hook provides a unified interface for task management,
  * reducing the need for components to directly depend on multiple contexts.
+ * Now uses the service layer for business logic.
  * 
  * @returns Combined task management interface
  */
 export function useTaskManagement() {
-  // Get data context
+  // Get data context (now focused on data operations)
   const {
     tasks,
     isLoading,
@@ -31,7 +32,7 @@ export function useTaskManagement() {
     goToPreviousPage
   } = useTaskContext();
 
-  // Get UI context
+  // Get UI context (focused on UI state)
   const {
     filter,
     setFilter,
@@ -41,16 +42,16 @@ export function useTaskManagement() {
     setDialogOpen
   } = useTaskUIContext();
 
-  // Apply filtering
+  // Apply filtering using service layer
   const filteredTasks = useFilteredTasks(tasks, filter);
 
-  // Task expansion helpers
+  // Task expansion helpers (UI logic)
   const isTaskExpanded = (taskId: string) => expandedTaskId === taskId;
   const toggleTaskExpansion = (taskId: string) => {
     setExpandedTaskId(expandedTaskId === taskId ? null : taskId);
   };
 
-  // Dialog helpers
+  // Dialog helpers (UI logic)
   const openCreateDialog = () => setDialogOpen(true);
   const closeCreateDialog = () => setDialogOpen(false);
 
