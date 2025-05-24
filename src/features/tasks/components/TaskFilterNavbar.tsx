@@ -1,6 +1,6 @@
 
 import { memo } from "react";
-import { Clock, ClockAlert, CircleCheckBig, Users } from "lucide-react";
+import { ClockFading, ClockAlert, CircleCheckBig, Users } from "lucide-react";
 import { TubelightNavbar } from "@/components/ui/tubelight-navbar";
 import { TaskFilter } from "@/features/tasks/types";
 
@@ -11,7 +11,7 @@ interface TaskFilterNavbarProps {
 
 function TaskFilterNavbarComponent({ filter, onFilterChange }: TaskFilterNavbarProps) {
   const filters = [
-    { name: "Current", value: "all" as TaskFilter, icon: Clock },
+    { name: "Current", value: "all" as TaskFilter, icon: ClockFading },
     { name: "Overdue", value: "overdue" as TaskFilter, icon: ClockAlert },
     { name: "Assigned", value: "assigned" as TaskFilter, icon: Users },
     { name: "Complete", value: "complete" as TaskFilter, icon: CircleCheckBig }
