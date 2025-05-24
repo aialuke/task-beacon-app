@@ -3,6 +3,7 @@ import { useState } from "react";
 import TaskList from "./TaskList";
 import { LogOut } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -37,23 +38,33 @@ export default function TaskDashboard() {
                   height={29}
                   className="text-primary"
                 />
-                <h1 className="text-xl font-medium text-gray-900">Flow State</h1>
+                <h1 className="text-xl font-medium text-foreground">Flow State</h1>
               </div>
-              <DropdownMenu open={open} onOpenChange={setOpen}>
-                <DropdownMenuTrigger asChild>
-                  <Avatar className="cursor-pointer h-8 w-8">
-                    <AvatarFallback className="text-sm avatar-fallback">
-                      {getAvatarInitial(user?.email)}
-                    </AvatarFallback>
-                  </Avatar>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="p-2 bg-white">
-                  <DropdownMenuItem onClick={signOut} className="cursor-pointer text-foreground">
-                    <LogOut className="mr-2 h-4 w-4 text-primary stroke-primary" />
-                    <span>Sign out</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <div className="flex items-center gap-2">
+                <ThemeToggle />
+                <DropdownMenu open={open} onOpenChange={setOpen}>
+                  <DropdownMenuTrigger asChild>
+                    <Avatar className="cursor-pointer h-8 w-8">
+                      <AvatarFallback className="text-sm bg-primary text-primary-foreground">
+                        {getAvatarInitial(user?.email)}
+                      </AvatarFallback>
+                    </Avatar>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent 
+                    align="end" 
+                    className="p-2 bg-popover border-border"
+                    style={{
+                      backgroundColor: "hsl(var(--popover))",
+                      borderColor: "hsl(var(--border))"
+                    }}
+                  >
+                    <DropdownMenuItem onClick={signOut} className="cursor-pointer text-popover-foreground hover:bg-accent">
+                      <LogOut className="mr-2 h-4 w-4 text-foreground" />
+                      <span>Sign out</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </header>
             <TaskList />
           </div>
