@@ -1,79 +1,151 @@
 
 /* src/styles/components/buttons.css - Enhanced button styling for dark mode */
+
+/* ===== BASE STYLES - Override Tailwind's Preflight Reset ===== */
+@layer base {
+  /* Un-reset buttons to restore default appearance */
+  button,
+  input[type="button"],
+  input[type="reset"],
+  input[type="submit"] {
+    background-color: initial;
+    background-image: initial;
+    border: 1px solid;
+    border-radius: 0.375rem;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Default button appearance */
+  button:not([class*="Button"]):not([class*="button"]):not(.fab) {
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    border-color: hsl(var(--primary));
+  }
+
+  button:hover:not([class*="Button"]):not([class*="button"]):not(.fab) {
+    background-color: hsl(var(--primary) / 0.9);
+  }
+}
+
 @layer components {
   /* ===== BUTTON STYLING CONSISTENCY ===== */
   button, 
   .button,
   [role="button"] {
-    border-radius: var(--radius-full);
-    @apply transition-all duration-200;
+    border-radius: var(--radius-full) !important;
+    transition: all 0.2s ease-in-out !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
   }
 
   button:hover, 
   .button:hover,
   [role="button"]:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateY(-1px);
+    box-shadow: var(--shadow-md) !important;
+    transform: translateY(-1px) !important;
   }
 
   button:active, 
   .button:active,
   [role="button"]:active {
-    transform: translateY(0);
+    transform: translateY(0) !important;
   }
 
   /* Enhanced focus states for accessibility */
   button:focus-visible,
   .button:focus-visible,
   [role="button"]:focus-visible {
-    outline: 2px solid hsl(var(--primary));
-    outline-offset: 2px;
-    box-shadow: 0 0 0 4px hsl(var(--primary) / 0.2);
+    outline: 2px solid hsl(var(--primary)) !important;
+    outline-offset: 2px !important;
+    box-shadow: 0 0 0 4px hsl(var(--primary) / 0.2) !important;
   }
 
   /* ===== FAB BUTTON ===== */
   .fab {
-    @apply flex items-center justify-center fixed;
-    bottom: 16px;
-    right: 16px;
-    width: 56px;
-    height: 56px;
-    z-index: 99999;
-    transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
-    background: var(--gradient-blue);
-    color: hsl(var(--primary-foreground));
-    border-radius: var(--radius-full);
-    border: none;
-    box-shadow: var(--shadow-lg);
+    position: fixed !important;
+    bottom: 16px !important;
+    right: 16px !important;
+    width: 56px !important;
+    height: 56px !important;
+    z-index: 99999 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease !important;
+    background: linear-gradient(135deg, #4C6DE1 0%, #3B5CE6 100%) !important;
+    color: white !important;
+    border-radius: 50% !important;
+    border: none !important;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1) !important;
+    cursor: pointer !important;
   }
 
   .fab svg {
-    stroke: hsl(var(--primary-foreground));
-    stroke-width: 2;
-    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+    stroke: white !important;
+    stroke-width: 2 !important;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2)) !important;
   }
 
   .fab:hover {
-    background: var(--gradient-blue-dark);
-    transform: scale(1.05);
-    box-shadow: var(--shadow-xl);
+    background: linear-gradient(135deg, #3B5CE6 0%, #2A4CE8 100%) !important;
+    transform: scale(1.05) !important;
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1) !important;
   }
 
   .fab:active {
-    transform: scale(0.95);
-    box-shadow: var(--shadow-lg);
+    transform: scale(0.95) !important;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1) !important;
   }
 
   /* Enhanced focus state for FAB */
   .fab:focus-visible {
-    outline: 2px solid hsl(var(--primary-foreground));
-    outline-offset: 2px;
-    box-shadow: var(--shadow-xl), 0 0 0 4px hsl(var(--primary) / 0.3);
+    outline: 2px solid white !important;
+    outline-offset: 2px !important;
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1), 0 0 0 4px hsl(var(--primary) / 0.3) !important;
   }
 
+  /* Ensure FAB works on small screens */
   @media (max-width: 320px) {
     .fab {
-      @apply bottom-2 right-2 w-12 h-12;
+      bottom: 8px !important;
+      right: 8px !important;
+      width: 48px !important;
+      height: 48px !important;
     }
+  }
+
+  /* ===== BUTTON VARIANT OVERRIDES ===== */
+  /* Ensure shadcn button variants work properly */
+  .bg-primary {
+    background-color: hsl(var(--primary)) !important;
+  }
+
+  .bg-destructive {
+    background-color: hsl(var(--destructive)) !important;
+  }
+
+  .bg-secondary {
+    background-color: hsl(var(--secondary)) !important;
+  }
+
+  .text-primary-foreground {
+    color: hsl(var(--primary-foreground)) !important;
+  }
+
+  .text-destructive-foreground {
+    color: hsl(var(--destructive-foreground)) !important;
+  }
+
+  .text-secondary-foreground {
+    color: hsl(var(--secondary-foreground)) !important;
+  }
+
+  .border-input {
+    border-color: hsl(var(--border)) !important;
   }
 }
