@@ -59,29 +59,10 @@ function TaskCard({ task }: TaskCardProps) {
   ].filter(Boolean).join(" ");
 
   return (
-    <div
-      className={`task-card-container ${isExpanded ? "expanded" : ""}`}
-      style={{
-        overflowY: "hidden",
-        boxSizing: "border-box",
-        width: "100%",
-        position: "relative",
-        zIndex: 1,
-        scrollbarWidth: "none",
-        msOverflowStyle: "none",
-      }}
-    >
+    <div className={`task-card-container ${isExpanded ? "expanded" : ""}`}>
       <div
         ref={cardRef}
         className={cardClasses}
-        style={{
-          overflowY: "hidden",
-          boxSizing: "border-box",
-          width: "100%",
-          position: "relative",
-          zIndex: 1,
-          borderRadius: "var(--radius-xl)"
-        }}
       >
         <TaskHeader
           task={task}

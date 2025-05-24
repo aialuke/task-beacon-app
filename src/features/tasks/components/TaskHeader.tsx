@@ -25,7 +25,7 @@ function TaskHeader({
       <TaskStatus task={task} />
 
       <div className="flex-1 min-w-0 flex items-center">
-        <h3 className="text-base sm:text-lg text-gray-900 mb-0" title={task.title}>
+        <h3 className="text-base sm:text-lg text-card-foreground mb-0" title={task.title}>
           {task.title}
         </h3>
       </div>
@@ -38,9 +38,9 @@ function TaskHeader({
         title={task.pinned ? "Unpin task" : "Pin task"}
       >
         {task.pinned ? (
-          <Pin size={16} className="text-gray-900 stroke-gray-900 icon-filled" />
+          <Pin size={16} className="text-card-foreground fill-current" />
         ) : (
-          <Pin size={16} className="text-gray-900 stroke-gray-900" style={{ opacity: 0.8 }} />
+          <Pin size={16} className="text-card-foreground opacity-80" />
         )}
       </Button>
 

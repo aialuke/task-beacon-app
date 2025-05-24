@@ -44,7 +44,7 @@ function TaskDetails({
         style={{ height: isExpanded ? "auto" : "0", overflowY: "hidden" }}
       >
         {task.description && (
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-muted-foreground">
             {task.description}
           </div>
         )}
@@ -57,7 +57,7 @@ function TaskDetails({
 
         {task.photo_url && (
           <div>
-            <span className="text-sm font-medium text-gray-600">Photo:</span>
+            <span className="text-sm font-medium text-muted-foreground">Photo:</span>
             <img
               src={task.photo_url}
               alt="Task attachment"

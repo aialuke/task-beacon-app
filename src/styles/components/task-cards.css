@@ -3,7 +3,7 @@
 @layer components {
   /* ===== ENHANCED TASK CARD STYLES ===== */
   .task-card {
-    @apply flex flex-col p-3 sm:p-4 border border-border hover:border-primary/50 transition-all duration-200 relative text-left;
+    @apply flex flex-col p-3 sm:p-4 border transition-all duration-200 relative text-left;
     min-height: calc(1.25 * 60px);
     width: 95%;
     margin-left: auto;
@@ -11,6 +11,7 @@
     border-radius: var(--radius-xl);
     background-color: hsl(var(--card));
     color: hsl(var(--card-foreground));
+    border-color: hsl(var(--border));
     box-shadow: var(--shadow-sm);
     backdrop-filter: blur(8px);
   }
