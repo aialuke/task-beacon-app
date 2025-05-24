@@ -12,9 +12,9 @@ interface TaskFilterNavbarProps {
 function TaskFilterNavbarComponent({ filter, onFilterChange }: TaskFilterNavbarProps) {
   const filters = [
     { name: "Current", value: "all" as TaskFilter, icon: ClockFading },
-    { name: "Complete", value: "complete" as TaskFilter, icon: CircleCheckBig },
     { name: "Overdue", value: "overdue" as TaskFilter, icon: ClockAlert },
-    { name: "Assigned", value: "assigned" as TaskFilter, icon: Users }
+    { name: "Assigned", value: "assigned" as TaskFilter, icon: Users },
+    { name: "Complete", value: "complete" as TaskFilter, icon: CircleCheckBig }
   ];
 
   return (
