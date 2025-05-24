@@ -1,4 +1,3 @@
-
 /* src/styles/base.css - Single source of truth for all color definitions */
 :root {
   /* ===== LIGHT MODE COLORS (WCAG AA COMPLIANT) ===== */
@@ -63,6 +62,7 @@
   
   /* Standardized border radius using Tailwind values */
   --radius: 0.5rem;     /* 8px - Tailwind's default lg */
+  --radius-full: 9999px; /* Full border radius for pills and circular elements */
 }
 
 /* ===== DARK MODE COLORS (WCAG AA COMPLIANT) ===== */
@@ -124,6 +124,9 @@
   --gradient-light: linear-gradient(to bottom right, #141B2B, #0A0F1C);
   --gradient-blue: linear-gradient(45deg, hsl(225 77% 70%), hsl(225 77% 80%));
   --gradient-blue-dark: linear-gradient(45deg, hsl(225 77% 60%), hsl(225 77% 70%));
+  
+  /* Inherit radius values in dark mode */
+  --radius-full: 9999px;
 }
 
 /* ===== LIGHT MODE EXPLICIT OVERRIDE ===== */
@@ -169,6 +172,9 @@
   --gradient-light: linear-gradient(to bottom right, #FFFFFF, #F9FAFB);
   --gradient-blue: linear-gradient(45deg, hsl(225 77% 60%), hsl(225 77% 70%));
   --gradient-blue-dark: linear-gradient(45deg, hsl(225 77% 50%), hsl(225 77% 60%));
+  
+  /* Include radius values in light mode */
+  --radius-full: 9999px;
 }
 
 /* ===== BASE STYLES ===== */
