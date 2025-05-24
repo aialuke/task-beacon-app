@@ -1,5 +1,5 @@
 
-/* src/styles/components/buttons.css - Button styling */
+/* src/styles/components/buttons.css - Enhanced button styling for dark mode */
 @layer components {
   /* ===== BUTTON STYLING CONSISTENCY ===== */
   button, 
@@ -23,6 +23,15 @@
     transform: translateY(0);
   }
 
+  /* Enhanced focus states for accessibility */
+  button:focus-visible,
+  .button:focus-visible,
+  [role="button"]:focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px hsl(var(--primary) / 0.2);
+  }
+
   /* ===== FAB BUTTON ===== */
   .fab {
     @apply flex items-center justify-center fixed;
@@ -42,6 +51,7 @@
   .fab svg {
     stroke: hsl(var(--primary-foreground));
     stroke-width: 2;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
   }
 
   .fab:hover {
@@ -55,10 +65,11 @@
     box-shadow: var(--shadow-lg);
   }
 
-  /* Focus states for accessibility */
+  /* Enhanced focus state for FAB */
   .fab:focus-visible {
-    outline: 2px solid hsl(var(--primary));
+    outline: 2px solid hsl(var(--primary-foreground));
     outline-offset: 2px;
+    box-shadow: var(--shadow-xl), 0 0 0 4px hsl(var(--primary) / 0.3);
   }
 
   @media (max-width: 320px) {
@@ -67,17 +78,58 @@
     }
   }
 
-  /* Dark mode specific button adjustments */
+  /* ===== ENHANCED DARK MODE SUPPORT ===== */
   .dark button,
   .dark .button,
   .dark [role="button"] {
     color: hsl(var(--foreground));
+    background-color: hsl(var(--background));
+    border-color: hsl(var(--border));
   }
 
-  /* Light mode button overrides */
+  .dark button:hover,
+  .dark .button:hover,
+  .dark [role="button"]:hover {
+    background-color: hsl(var(--accent));
+    border-color: hsl(var(--primary) / 0.5);
+  }
+
+  /* Light mode overrides */
   .light button,
   .light .button,
   .light [role="button"] {
     color: hsl(var(--foreground));
+    background-color: white;
+    border-color: #e2e8f0;
+  }
+
+  .light button:hover,
+  .light .button:hover,
+  .light [role="button"]:hover {
+    background-color: #f8fafc;
+    border-color: hsl(var(--primary) / 0.3);
+  }
+
+  /* ===== BUTTON VARIANTS FOR DARK MODE ===== */
+  .btn-ghost-dark {
+    background: transparent;
+    color: hsl(var(--foreground));
+    border: 1px solid transparent;
+  }
+
+  .btn-ghost-dark:hover {
+    background: hsl(var(--accent) / 0.8);
+    border-color: hsl(var(--border));
+  }
+
+  .btn-outline-dark {
+    background: transparent;
+    color: hsl(var(--foreground));
+    border: 1px solid hsl(var(--border));
+  }
+
+  .btn-outline-dark:hover {
+    background: hsl(var(--accent));
+    border-color: hsl(var(--primary));
   }
 }

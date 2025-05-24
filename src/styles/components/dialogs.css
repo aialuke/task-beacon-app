@@ -1,54 +1,177 @@
 
-/* src/styles/components/dialogs.css - Dialog and popover styling */
+/* src/styles/components/dialogs.css - Enhanced dialog and popover styling for dark mode */
 @layer components {
-  /* ===== SELECT & DROPDOWN STYLING ===== */
+  /* ===== ENHANCED SELECT & DROPDOWN STYLING ===== */
   .select-content,
   [data-radix-popper-content-wrapper],
-  [data-radix-dropdown-menu-content] {
+  [data-radix-dropdown-menu-content],
+  [data-radix-select-content] {
     background-color: hsl(var(--popover));
     color: hsl(var(--popover-foreground));
     border-radius: var(--radius-xl);
     border: 1px solid hsl(var(--border));
     box-shadow: var(--shadow-lg);
     z-index: 9999;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 
-  /* ===== DIALOG CONTENT STYLING ===== */
+  /* ===== ENHANCED DIALOG CONTENT STYLING ===== */
   .dialog-content, 
   [class*="dialog-content"],
   .popover-content,
-  [class*="popover-content"] {
-    padding: 1.25rem;
+  [class*="popover-content"],
+  [data-radix-dialog-content],
+  [data-radix-popover-content] {
+    padding: 1.5rem;
     background: hsl(var(--popover));
     color: hsl(var(--popover-foreground));
     border: 1px solid hsl(var(--border));
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    max-height: 90vh;
+    overflow-y: auto;
   }
 
-  /* Dark mode enhancements */
+  /* ===== DIALOG OVERLAY ENHANCEMENTS ===== */
+  .dialog-overlay,
+  [data-radix-dialog-overlay] {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  /* ===== ENHANCED DARK MODE DIALOGS ===== */
   .dark .select-content,
   .dark [data-radix-popper-content-wrapper],
   .dark [data-radix-dropdown-menu-content],
+  .dark [data-radix-select-content],
   .dark .dialog-content,
   .dark [class*="dialog-content"],
   .dark .popover-content,
-  .dark [class*="popover-content"] {
+  .dark [class*="popover-content"],
+  .dark [data-radix-dialog-content],
+  .dark [data-radix-popover-content] {
     background-color: hsl(var(--popover));
     border-color: hsl(var(--border));
-    box-shadow: var(--shadow-xl);
+    box-shadow: var(--shadow-xl), 0 0 0 1px hsl(var(--border) / 0.5);
   }
 
-  /* Light mode overrides */
+  .dark .dialog-overlay,
+  .dark [data-radix-dialog-overlay] {
+    background: rgba(0, 0, 0, 0.7);
+  }
+
+  /* ===== LIGHT MODE DIALOG OVERRIDES ===== */
   .light .select-content,
   .light [data-radix-popper-content-wrapper],
   .light [data-radix-dropdown-menu-content],
+  .light [data-radix-select-content],
   .light .dialog-content,
   .light [class*="dialog-content"],
   .light .popover-content,
-  .light [class*="popover-content"] {
+  .light [class*="popover-content"],
+  .light [data-radix-dialog-content],
+  .light [data-radix-popover-content] {
     background-color: white;
-    color: #000000e6;
-    border-color: #f0f0f0;
+    color: #1a202c;
+    border-color: #e2e8f0;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+
+  .light .dialog-overlay,
+  .light [data-radix-dialog-overlay] {
+    background: rgba(0, 0, 0, 0.3);
+  }
+
+  /* ===== MENU ITEM STYLING ===== */
+  .dropdown-menu-item,
+  .select-item,
+  [data-radix-dropdown-menu-item],
+  [data-radix-select-item] {
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-md);
+    transition: all 0.15s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .dropdown-menu-item:hover,
+  .select-item:hover,
+  [data-radix-dropdown-menu-item]:hover,
+  [data-radix-select-item]:hover,
+  .dropdown-menu-item[data-highlighted],
+  .select-item[data-highlighted],
+  [data-radix-dropdown-menu-item][data-highlighted],
+  [data-radix-select-item][data-highlighted] {
+    background-color: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
+    outline: none;
+  }
+
+  /* ===== DIALOG HEADER AND FOOTER ===== */
+  .dialog-header {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid hsl(var(--border));
+    margin-bottom: 1rem;
+  }
+
+  .dialog-footer {
+    padding-top: 1rem;
+    border-top: 1px solid hsl(var(--border));
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+  }
+
+  /* ===== ACCESSIBILITY ENHANCEMENTS ===== */
+  .dialog-content:focus,
+  .popover-content:focus,
+  [data-radix-dialog-content]:focus,
+  [data-radix-popover-content]:focus {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
+  }
+
+  /* ===== RESPONSIVE DIALOG STYLING ===== */
+  @media (max-width: 640px) {
+    .dialog-content,
+    .popover-content,
+    [data-radix-dialog-content],
+    [data-radix-popover-content] {
+      padding: 1rem;
+      margin: 1rem;
+      max-width: calc(100vw - 2rem);
+      max-height: calc(100vh - 2rem);
+    }
+  }
+
+  /* ===== ANIMATION ENHANCEMENTS ===== */
+  .dialog-content,
+  .popover-content,
+  [data-radix-dialog-content],
+  [data-radix-popover-content] {
+    animation-duration: 0.2s;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* ===== HIGH CONTRAST MODE SUPPORT ===== */
+  @media (forced-colors: active) {
+    .select-content,
+    .dialog-content,
+    .popover-content,
+    [data-radix-popper-content-wrapper],
+    [data-radix-dropdown-menu-content],
+    [data-radix-dialog-content],
+    [data-radix-popover-content] {
+      border: 2px solid CanvasText;
+      background: Canvas;
+      color: CanvasText;
+    }
   }
 }

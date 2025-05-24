@@ -1,29 +1,37 @@
 
-/* src/styles/components/task-cards.css - Task card styling */
+/* src/styles/components/task-cards.css - Enhanced task card styling for dark mode */
 @layer components {
-  /* ===== TASK CARD STYLES ===== */
+  /* ===== ENHANCED TASK CARD STYLES ===== */
   .task-card {
-    @apply flex flex-col p-3 sm:p-3 border border-border hover:border-primary/50 transition-all duration-200 relative text-left;
+    @apply flex flex-col p-3 sm:p-4 border border-border hover:border-primary/50 transition-all duration-200 relative text-left;
     min-height: calc(1.25 * 60px);
     width: 95%;
     margin-left: auto;
     margin-right: auto;
-    /* Rounded corners for task cards */
     border-radius: var(--radius-xl);
     background-color: hsl(var(--card));
     color: hsl(var(--card-foreground));
     box-shadow: var(--shadow-sm);
+    backdrop-filter: blur(8px);
   }
 
   .task-card:hover {
     box-shadow: var(--shadow-md);
     border-color: hsl(var(--primary) / 0.5);
     transform: translateY(-1px);
+    background-color: hsl(var(--card) / 0.9);
+  }
+
+  .task-card:focus-within {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
+    box-shadow: var(--shadow-lg);
   }
 
   @media (min-width: 640px) {
     .task-card {
       width: 100%;
+      padding: 1rem 1.25rem;
     }
   }
 
@@ -31,32 +39,111 @@
     border-color: hsl(var(--primary));
     box-shadow: var(--shadow-lg);
     transform: translateY(-2px);
+    background-color: hsl(var(--card));
   }
 
+  /* ===== ENHANCED TASK CARD STATES ===== */
+  .task-card[data-status="complete"] {
+    border-color: hsl(var(--success) / 0.5);
+    background-color: hsl(var(--success) / 0.05);
+  }
+
+  .task-card[data-status="overdue"] {
+    border-color: hsl(var(--destructive) / 0.5);
+    background-color: hsl(var(--destructive) / 0.05);
+  }
+
+  .task-card[data-status="pending"] {
+    border-color: hsl(var(--accent-yellow) / 0.5);
+    background-color: hsl(var(--accent-yellow) / 0.05);
+  }
+
+  /* ===== ENHANCED PINNED TASK STYLING ===== */
+  .task-card[data-pinned="true"] {
+    border-color: hsl(var(--primary) / 0.7);
+    background: linear-gradient(135deg, hsl(var(--card)), hsl(var(--primary) / 0.05));
+    box-shadow: var(--shadow-md), 0 0 0 1px hsl(var(--primary) / 0.1);
+  }
+
+  .task-card[data-pinned="true"]::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--gradient-blue);
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  }
+
+  /* ===== SCROLLBAR HIDING ===== */
   .task-card-container::-webkit-scrollbar,
   .task-list::-webkit-scrollbar {
     display: none;
   }
 
-  /* Dark mode specific enhancements */
+  .task-card-container,
+  .task-list {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  /* ===== ENHANCED DARK MODE TASK CARDS ===== */
   .dark .task-card {
     background-color: hsl(var(--card));
     border-color: hsl(var(--border));
+    box-shadow: var(--shadow-sm), 0 0 0 1px hsl(var(--border) / 0.5);
   }
 
   .dark .task-card:hover {
     background-color: hsl(var(--card) / 0.8);
     border-color: hsl(var(--primary) / 0.7);
+    box-shadow: var(--shadow-md), 0 0 0 1px hsl(var(--primary) / 0.2);
   }
 
-  /* Light mode overrides when explicitly set */
+  .dark .task-card[data-status="complete"] {
+    background-color: hsl(var(--success) / 0.1);
+    border-color: hsl(var(--success) / 0.3);
+  }
+
+  .dark .task-card[data-status="overdue"] {
+    background-color: hsl(var(--destructive) / 0.1);
+    border-color: hsl(var(--destructive) / 0.3);
+  }
+
+  /* ===== LIGHT MODE OVERRIDES ===== */
   .light .task-card {
     background-color: white;
     border-color: #e2e8f0;
-    color: #000000e6;
+    color: #1a202c;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
 
   .light .task-card:hover {
     border-color: hsl(var(--primary) / 0.3);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  /* ===== TASK CARD ANIMATIONS ===== */
+  .task-card-enter {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+
+  .task-card-enter-active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .task-card-exit {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  .task-card-exit-active {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+    transition: opacity 0.2s ease, transform 0.2s ease;
   }
 }
