@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useState } from "react"
 import { useSpring, animated } from "@react-spring/web"
 import { LucideIcon } from "lucide-react"
@@ -250,9 +249,8 @@ export function SimpleNavbar({ items, activeItem, onItemChange, className }: Sim
         <animated.div
           style={{
             position: 'absolute',
-            top: '0px',
             left: '8px',
-            height: '36px',
+            height: '38px',
             borderRadius: '9999px',
             zIndex: 5,
             backgroundColor: computedColors.highlightColor,
