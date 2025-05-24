@@ -59,25 +59,23 @@ function TaskCard({ task }: TaskCardProps) {
   ].filter(Boolean).join(" ");
 
   return (
-    <div className={`task-card-container ${isExpanded ? "expanded" : ""}`}>
-      <div
-        ref={cardRef}
-        className={cardClasses}
-      >
-        <TaskHeader
-          task={task}
-          isExpanded={isExpanded}
-          toggleExpand={toggleExpand}
-          handleTogglePin={handleTogglePin}
-        />
-        
-        <TaskDetails
-          task={task}
-          isExpanded={isExpanded}
-          animationState={animationState}
-          contentRef={contentRef}
-        />
-      </div>
+    <div
+      ref={cardRef}
+      className={cardClasses}
+    >
+      <TaskHeader
+        task={task}
+        isExpanded={isExpanded}
+        toggleExpand={toggleExpand}
+        handleTogglePin={handleTogglePin}
+      />
+      
+      <TaskDetails
+        task={task}
+        isExpanded={isExpanded}
+        animationState={animationState}
+        contentRef={contentRef}
+      />
     </div>
   );
 }

@@ -36,28 +36,9 @@
     min-height: 20px;
   }
 
-  /* ===== TASK CARD CONTAINER SPACING ===== */
-  .task-card-container {
-    width: 100% !important;
-    margin-bottom: 0 !important;
-  }
-
-  .task-card-container:not(:last-child) {
-    margin-bottom: 0 !important;
-  }
-
   /* ===== DASHBOARD MAIN CONTENT ===== */
   .task-dashboard-main {
     @apply w-full;
-    /* Reset all transform variables to prevent override issues */
-    --tw-translate-x: 0 !important;
-    --tw-translate-y: 0 !important;
-    --tw-translate-z: 0 !important;
-    --tw-rotate: 0 !important;
-    --tw-skew-x: 0 !important;
-    --tw-skew-y: 0 !important;
-    --tw-scale-x: 1 !important;
-    --tw-scale-y: 1 !important;
   }
 
   /* ===== RESPONSIVE SPACING ===== */

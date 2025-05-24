@@ -63,25 +63,25 @@ export default function TaskList() {
   const filteredTasks = useFilteredTasks(tasks, filter);
 
   return (
-    <>
-      {/* Navbar Section - Now completely separate */}
-      <div className="navbar-section mb-8">
+    <div className="w-full">
+      {/* Navbar Section - Completely separate container */}
+      <div className="w-full mb-8 px-4 sm:px-6">
         <TaskFilterNavbar 
           filter={filter}
           onFilterChange={setFilter}
         />
       </div>
 
-      {/* Task List Section - Now completely isolated */}
-      <div className="task-list-section">
-        <div className="task-list space-y-6">
+      {/* Task List Section - Separate container with no nesting */}
+      <div className="w-full px-4 sm:px-6">
+        <div className="w-full space-y-6">
           {isLoading ? (
             Array.from({ length: pageSize }).map((_, i) => (
               <TaskCardSkeleton key={i} />
             ))
           ) : filteredTasks.length > 0 ? (
             filteredTasks.map((task) => (
-              <div key={task.id} className="task-card-container">
+              <div key={task.id} className="w-full">
                 <Suspense fallback={<TaskCardSkeleton />}>
                   <TaskCard task={task} />
                 </Suspense>
@@ -165,6 +165,6 @@ export default function TaskList() {
           </Suspense>
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   );
 }
