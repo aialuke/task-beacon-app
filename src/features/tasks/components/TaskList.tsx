@@ -1,4 +1,3 @@
-
 import { lazy, Suspense } from "react";
 import { useTaskContext } from "@/features/tasks/context/TaskContext";
 import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
@@ -69,7 +68,7 @@ export default function TaskList() {
         />
       </div>
 
-      <div className="task-list"> {/* Removed flex flex-col gap-4 px-2 classes since they're now in CSS */}
+      <div className="task-list">
         {isLoading ? (
           Array.from({ length: pageSize }).map((_, i) => (
             <TaskCardSkeleton key={i} />
@@ -81,7 +80,7 @@ export default function TaskList() {
             </Suspense>
           ))
         ) : (
-          <div className="flex items-center justify-center p-6 border border-dashed border-gray-300 rounded-xl"> {/* Increased padding */}
+          <div className="flex items-center justify-center p-6 border border-dashed border-gray-300 rounded-xl">
             <p className="text-gray-500">No tasks found</p>
           </div>
         )}
@@ -148,7 +147,7 @@ export default function TaskList() {
             <ClockPlus className="h-6 w-6" strokeWidth={2} stroke="white" fill="none" />
           </button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-md bg-white rounded-xl">
+        <DialogContent className="sm:max-w-md bg-card rounded-xl">
           <DialogHeader>
             <DialogTitle className="text-foreground">Create New Task</DialogTitle>
           </DialogHeader>

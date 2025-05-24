@@ -1,3 +1,4 @@
+
 /* Base Tailwind directives */
 @tailwind base;
 @tailwind components;
@@ -20,19 +21,8 @@ html {
   @apply dark;
 }
 
-/* Initialize all Tailwind CSS variables */
+/* Initialize core Tailwind CSS variables */
 *, ::before, ::after {
-  /* Backdrop-filter variables */
-  --tw-backdrop-blur: initial;
-  --tw-backdrop-brightness: initial;
-  --tw-backdrop-contrast: initial;
-  --tw-backdrop-grayscale: initial;
-  --tw-backdrop-hue-rotate: initial;
-  --tw-backdrop-invert: initial;
-  --tw-backdrop-opacity: initial;
-  --tw-backdrop-saturate: initial;
-  --tw-backdrop-sepia: initial;
-  
   /* Transform variables */
   --tw-translate-x: 0;
   --tw-translate-y: 0;
@@ -65,6 +55,17 @@ html {
   --tw-saturate: initial;
   --tw-sepia: initial;
   --tw-drop-shadow: initial;
+  
+  /* Backdrop-filter variables */
+  --tw-backdrop-blur: initial;
+  --tw-backdrop-brightness: initial;
+  --tw-backdrop-contrast: initial;
+  --tw-backdrop-grayscale: initial;
+  --tw-backdrop-hue-rotate: initial;
+  --tw-backdrop-invert: initial;
+  --tw-backdrop-opacity: initial;
+  --tw-backdrop-saturate: initial;
+  --tw-backdrop-sepia: initial;
 }
 
 /* Import custom styles after Tailwind directives */
