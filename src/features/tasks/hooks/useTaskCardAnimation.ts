@@ -2,12 +2,21 @@
 import { useSpring, SpringValue } from "@react-spring/web";
 import { useEffect, useRef } from "react";
 
-export interface TaskAnimationState {
+export interface TaskCardAnimationState {
   height: SpringValue<number>;
   opacity: SpringValue<number>;
 }
 
-export function useTaskAnimation(
+/**
+ * Custom hook for TaskCard animations
+ * 
+ * Handles the expand/collapse animation logic for task card content
+ * 
+ * @param contentRef - Ref to the content element being animated
+ * @param isExpanded - Whether the content should be expanded
+ * @returns Animation state for the content
+ */
+export function useTaskCardAnimation(
   contentRef: React.RefObject<HTMLDivElement>,
   isExpanded: boolean
 ) {

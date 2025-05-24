@@ -1,9 +1,8 @@
 
 import { useRef, useCallback } from "react";
 import { Task } from "@/lib/types";
-import { useTaskContext } from "@/features/tasks/context/TaskContext";
 import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
-import { useTaskAnimation } from "@/features/tasks/hooks/useTaskAnimation";
+import { useTaskCardAnimation } from "@/features/tasks/hooks/useTaskCardAnimation";
 import { useTaskMutation } from "./mutations/useTaskMutation";
 
 /**
@@ -23,7 +22,7 @@ export function useTaskCard(task: Task) {
   const isExpanded = expandedTaskId === task.id;
   
   // Custom hook for task animations
-  const { animationState } = useTaskAnimation(contentRef, isExpanded);
+  const { animationState } = useTaskCardAnimation(contentRef, isExpanded);
 
   /**
    * Toggle the expanded state of the task card
