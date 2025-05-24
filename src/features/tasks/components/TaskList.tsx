@@ -29,11 +29,13 @@ const CreateTaskForm = lazy(() => import("../forms/CreateTaskForm"));
 
 // Skeleton component for lazy-loaded task cards
 const TaskCardSkeleton = () => (
-  <div className="task-card animate-pulse">
-    <div className="h-12 w-12 rounded-full bg-gray-200" />
-    <div className="flex-1 space-y-2">
-      <Skeleton className="h-4 w-3/4" />
-      <Skeleton className="h-3 w-1/2" />
+  <div className="animate-pulse p-4 sm:p-5 rounded-xl bg-muted/20 border border-border/40">
+    <div className="flex items-start gap-3">
+      <div className="h-10 w-10 rounded-full bg-muted" />
+      <div className="flex-1 space-y-2">
+        <Skeleton className="h-4 w-3/4" />
+        <Skeleton className="h-3 w-1/2" />
+      </div>
     </div>
   </div>
 );
@@ -61,27 +63,29 @@ export default function TaskList() {
   const filteredTasks = useFilteredTasks(tasks, filter);
 
   return (
-    <div className="space-y-6 relative">
-      {/* Navbar Section - Separated from task list */}
-      <div className="navbar-section">
+    <>
+      {/* Navbar Section - Now completely separate */}
+      <div className="navbar-section mb-8">
         <TaskFilterNavbar 
           filter={filter}
           onFilterChange={setFilter}
         />
       </div>
 
-      {/* Task List Section - Now properly separated */}
+      {/* Task List Section - Now completely isolated */}
       <div className="task-list-section">
-        <div className="task-list">
+        <div className="task-list space-y-6">
           {isLoading ? (
             Array.from({ length: pageSize }).map((_, i) => (
               <TaskCardSkeleton key={i} />
             ))
           ) : filteredTasks.length > 0 ? (
             filteredTasks.map((task) => (
-              <Suspense key={task.id} fallback={<TaskCardSkeleton />}>
-                <TaskCard task={task} />
-              </Suspense>
+              <div key={task.id} className="task-card-container">
+                <Suspense fallback={<TaskCardSkeleton />}>
+                  <TaskCard task={task} />
+                </Suspense>
+              </div>
             ))
           ) : (
             <div className="flex items-center justify-center p-8 border border-dashed border-border/60 rounded-xl bg-muted/20">
@@ -89,41 +93,41 @@ export default function TaskList() {
             </div>
           )}
         </div>
+        
+        {/* Pagination Controls */}
+        {totalCount > pageSize && (
+          <Pagination className="mt-8">
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious 
+                  onClick={() => hasPreviousPage && goToPreviousPage()}
+                  className={!hasPreviousPage ? "pointer-events-none opacity-50" : ""}
+                />
+              </PaginationItem>
+              
+              <PaginationItem>
+                <span className="flex items-center justify-center px-4">
+                  Page {currentPage} of {Math.ceil(totalCount / pageSize)}
+                </span>
+              </PaginationItem>
+              
+              <PaginationItem>
+                <PaginationNext 
+                  onClick={() => hasNextPage && goToNextPage()}
+                  className={!hasNextPage ? "pointer-events-none opacity-50" : ""}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        )}
+        
+        {/* Loading indicator for pagination */}
+        {isFetching && !isLoading && (
+          <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-primary/20 text-primary px-4 py-1 rounded-full text-sm">
+            Updating...
+          </div>
+        )}
       </div>
-      
-      {/* Pagination Controls */}
-      {totalCount > pageSize && (
-        <Pagination className="mt-6">
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious 
-                onClick={() => hasPreviousPage && goToPreviousPage()}
-                className={!hasPreviousPage ? "pointer-events-none opacity-50" : ""}
-              />
-            </PaginationItem>
-            
-            <PaginationItem>
-              <span className="flex items-center justify-center px-4">
-                Page {currentPage} of {Math.ceil(totalCount / pageSize)}
-              </span>
-            </PaginationItem>
-            
-            <PaginationItem>
-              <PaginationNext 
-                onClick={() => hasNextPage && goToNextPage()}
-                className={!hasNextPage ? "pointer-events-none opacity-50" : ""}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      )}
-      
-      {/* Loading indicator for pagination */}
-      {isFetching && !isLoading && (
-        <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-primary/20 text-primary px-4 py-1 rounded-full text-sm">
-          Updating...
-        </div>
-      )}
 
       <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
         <DialogTrigger asChild>
@@ -161,6 +165,6 @@ export default function TaskList() {
           </Suspense>
         </DialogContent>
       </Dialog>
-    </div>
+    </>
   );
 }

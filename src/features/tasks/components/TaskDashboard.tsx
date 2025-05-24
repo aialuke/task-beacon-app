@@ -28,50 +28,52 @@ export default function TaskDashboard() {
     <TaskContextProvider>
       <TaskUIContextProvider>
         <UIContextProvider>
-          <div className="max-w-3xl mx-auto px-2 sm:px-4 py-6">
-            {/* Header Section - Separate from task content */}
-            <header className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <img
-                  src="/assets/hourglass_logo.svg"
-                  alt="Task Beacon Logo"
-                  width={29}
-                  height={29}
-                  className="text-primary"
-                />
-                <h1 className="text-xl font-medium text-foreground">Flow State</h1>
-              </div>
-              <div className="flex items-center gap-2">
-                <ThemeToggle />
-                <DropdownMenu open={open} onOpenChange={setOpen}>
-                  <DropdownMenuTrigger asChild>
-                    <Avatar className="cursor-pointer h-8 w-8">
-                      <AvatarFallback className="text-sm bg-primary text-primary-foreground">
-                        {getAvatarInitial(user?.email)}
-                      </AvatarFallback>
-                    </Avatar>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent 
-                    align="end" 
-                    className="p-2 bg-popover border-border"
-                    style={{
-                      backgroundColor: "hsl(var(--popover))",
-                      borderColor: "hsl(var(--border))"
-                    }}
-                  >
-                    <DropdownMenuItem onClick={signOut} className="cursor-pointer text-popover-foreground hover:bg-accent">
-                      <LogOut className="mr-2 h-4 w-4 text-foreground" />
-                      <span>Sign out</span>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            </header>
-            
-            {/* Main Content Section - Now properly structured */}
-            <main className="task-dashboard-content">
-              <TaskList />
-            </main>
+          <div className="min-h-screen bg-background">
+            <div className="max-w-3xl mx-auto px-2 sm:px-4 py-6">
+              {/* Header Section */}
+              <header className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <img
+                    src="/assets/hourglass_logo.svg"
+                    alt="Task Beacon Logo"
+                    width={29}
+                    height={29}
+                    className="text-primary"
+                  />
+                  <h1 className="text-xl font-medium text-foreground">Flow State</h1>
+                </div>
+                <div className="flex items-center gap-2">
+                  <ThemeToggle />
+                  <DropdownMenu open={open} onOpenChange={setOpen}>
+                    <DropdownMenuTrigger asChild>
+                      <Avatar className="cursor-pointer h-8 w-8">
+                        <AvatarFallback className="text-sm bg-primary text-primary-foreground">
+                          {getAvatarInitial(user?.email)}
+                        </AvatarFallback>
+                      </Avatar>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent 
+                      align="end" 
+                      className="p-2 bg-popover border-border"
+                      style={{
+                        backgroundColor: "hsl(var(--popover))",
+                        borderColor: "hsl(var(--border))"
+                      }}
+                    >
+                      <DropdownMenuItem onClick={signOut} className="cursor-pointer text-popover-foreground hover:bg-accent">
+                        <LogOut className="mr-2 h-4 w-4 text-foreground" />
+                        <span>Sign out</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </header>
+              
+              {/* Main Content Section */}
+              <main className="task-dashboard-main">
+                <TaskList />
+              </main>
+            </div>
           </div>
         </UIContextProvider>
       </TaskUIContextProvider>

@@ -1,27 +1,28 @@
 
-/* src/styles/utilities/layout.css - Layout utility classes */
+/* src/styles/utilities/layout.css - Layout utility classes with proper specificity */
 @layer utilities {
   /* ===== LAYOUT UTILITIES ===== */
   .task-list {
     @apply flex flex-col;
     transition: all 0.3s ease-out;
-    padding: 0;
-    gap: 1.5rem; /* Increased gap for better visual separation */
+    padding: 0 !important;
+    gap: 1.5rem !important;
     overflow-y: hidden;
-    width: 100%;
+    width: 100% !important;
     box-sizing: border-box;
   }
 
   /* ===== NAVBAR SECTION ===== */
   .navbar-section {
-    @apply w-full mb-2;
-    padding: 0 8px; /* Add horizontal padding for navbar */
+    @apply w-full;
+    padding: 0 8px;
+    margin-bottom: 2rem !important;
   }
 
   /* ===== TASK LIST SECTION ===== */
   .task-list-section {
     @apply w-full;
-    padding: 0 12px; /* Increased padding for better card breathing room */
+    padding: 0 12px;
   }
 
   /* ===== SPACING & CONTAINER UTILITIES ===== */
@@ -37,32 +38,46 @@
 
   /* ===== TASK CARD CONTAINER SPACING ===== */
   .task-card-container {
-    width: 100%;
-    margin-bottom: 0; /* Remove margin since we're using gap */
+    width: 100% !important;
+    margin-bottom: 0 !important;
   }
 
   .task-card-container:not(:last-child) {
-    margin-bottom: 0; /* Ensure no conflicting margins */
+    margin-bottom: 0 !important;
+  }
+
+  /* ===== DASHBOARD MAIN CONTENT ===== */
+  .task-dashboard-main {
+    @apply w-full;
+    /* Reset all transform variables to prevent override issues */
+    --tw-translate-x: 0 !important;
+    --tw-translate-y: 0 !important;
+    --tw-translate-z: 0 !important;
+    --tw-rotate: 0 !important;
+    --tw-skew-x: 0 !important;
+    --tw-skew-y: 0 !important;
+    --tw-scale-x: 1 !important;
+    --tw-scale-y: 1 !important;
   }
 
   /* ===== RESPONSIVE SPACING ===== */
   @media (min-width: 640px) {
     .task-list {
-      gap: 1.75rem; /* Slightly larger gap on larger screens */
+      gap: 1.75rem !important;
     }
     
     .task-list-section {
-      padding: 0 16px; /* More padding on larger screens */
+      padding: 0 16px;
     }
     
     .navbar-section {
-      padding: 0 16px; /* Match padding with task list section */
+      padding: 0 16px;
     }
   }
 
   @media (min-width: 768px) {
     .task-list {
-      gap: 2rem; /* Even larger gap on desktop */
+      gap: 2rem !important;
     }
     
     .task-list-section {
