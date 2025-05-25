@@ -11,6 +11,8 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 
 const NotFound = lazy(() => import("./pages/NotFound"));
 const TaskDetailsPage = lazy(() => import("./features/tasks/pages/TaskDetailsPage"));
+const CreateTaskPage = lazy(() => import("./pages/CreateTaskPage"));
+const FollowUpTaskPage = lazy(() => import("./pages/FollowUpTaskPage"));
 
 // Create a client
 const queryClient = new QueryClient({
@@ -39,6 +41,8 @@ const App = () => (
             <Suspense fallback={<LoadingSpinner />}>
               <Routes>
                 <Route path="/" element={<Index />} />
+                <Route path="/create-task" element={<CreateTaskPage />} />
+                <Route path="/follow-up-task/:parentTaskId" element={<FollowUpTaskPage />} />
                 <Route path="/tasks/:id" element={<TaskDetailsPage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>

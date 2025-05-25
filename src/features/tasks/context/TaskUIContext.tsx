@@ -11,10 +11,6 @@ interface TaskUIContextType {
   // Expanded state
   expandedTaskId: string | null;
   setExpandedTaskId: (id: string | null) => void;
-  
-  // Dialog state
-  isDialogOpen: boolean;
-  setDialogOpen: (open: boolean) => void;
 }
 
 const TaskUIContext = createContext<TaskUIContextType | undefined>(undefined);
@@ -22,7 +18,7 @@ const TaskUIContext = createContext<TaskUIContextType | undefined>(undefined);
 /**
  * Provider component for task UI-related state
  * 
- * Manages UI-only concerns like filters, expanded state, and dialog visibility
+ * Manages UI-only concerns like filters and expanded state
  * 
  * @param children - React components that will consume the context
  */
@@ -30,16 +26,13 @@ export function TaskUIContextProvider({ children }: { children: ReactNode }) {
   // UI States
   const [filter, setFilter] = useState<TaskFilter>("all");
   const [expandedTaskId, setExpandedTaskId] = useState<string | null>(null);
-  const [isDialogOpen, setDialogOpen] = useState(false);
 
   return (
     <TaskUIContext.Provider value={{
       filter,
       setFilter,
       expandedTaskId,
-      setExpandedTaskId,
-      isDialogOpen,
-      setDialogOpen
+      setExpandedTaskId
     }}>
       {children}
     </TaskUIContext.Provider>

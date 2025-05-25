@@ -2,6 +2,7 @@
 import { useState, useCallback } from "react";
 import { Task } from "@/lib/types";
 import { toast } from "@/lib/toast";
+import { useNavigate } from "react-router-dom";
 import { showBrowserNotification, triggerHapticFeedback } from "@/lib/notification";
 import { useBaseTaskForm } from "./useBaseTaskForm";
 import { createFollowUpTask, uploadTaskPhoto } from "@/integrations/supabase/api/tasks.api";
@@ -26,6 +27,8 @@ interface UseFollowUpTaskProps {
  * @returns Form state and handlers for creating a follow-up task
  */
 export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
+  const navigate = useNavigate();
+  
   const {
     title,
     setTitle,
@@ -46,7 +49,7 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
     validateTitle
   } = useBaseTaskForm({
     initialUrl: parentTask.url_link || "",
-    onClose
+    onClose: onClose || (() => navigate("/"))
   });
 
   const [assigneeId, setAssigneeId] = useState<string>("");

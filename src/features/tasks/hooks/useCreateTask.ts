@@ -1,6 +1,7 @@
 
 import { useCallback } from "react";
 import { toast } from "@/lib/toast";
+import { useNavigate } from "react-router-dom";
 import { useBaseTaskForm } from "./useBaseTaskForm";
 import { createTask, uploadTaskPhoto } from "@/integrations/supabase/api/tasks.api";
 
@@ -22,6 +23,8 @@ interface UseCreateTaskProps {
  * @returns Form state and submission handler
  */
 export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
+  const navigate = useNavigate();
+  
   const {
     title,
     setTitle,
@@ -42,7 +45,9 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
     handlePhotoChange,
     resetForm,
     validateTitle
-  } = useBaseTaskForm({ onClose });
+  } = useBaseTaskForm({ 
+    onClose: onClose || (() => navigate("/"))
+  });
 
   /**
    * Handles form submission for creating a new task

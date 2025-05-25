@@ -35,8 +35,8 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
   } = useFollowUpTask({ parentTask, onClose });
 
   return (
-    <div className="bg-card text-card-foreground p-6 rounded-xl border border-border">
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="w-full bg-card text-card-foreground p-6 rounded-xl border border-border shadow-sm">
+      <form onSubmit={handleSubmit} className="space-y-6">
         <ParentTaskReference parentTask={parentTask} />
 
         <div className="space-y-2">
@@ -62,7 +62,7 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Task description"
-            rows={3}
+            rows={4}
             className="bg-background text-foreground border-border placeholder:text-muted-foreground"
           />
         </div>

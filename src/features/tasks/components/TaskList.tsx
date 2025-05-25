@@ -1,30 +1,21 @@
+
 import { lazy, Suspense } from "react";
 import { useTaskContext } from "@/features/tasks/context/TaskContext";
 import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
-import { useUIContext } from "@/contexts/UIContext";
 import { useFilteredTasks } from "@/features/tasks/hooks/useFilteredTasks";
 import TaskFilterNavbar from "./TaskFilterNavbar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FabButton } from "@/components/FabButton";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
   Pagination,
   PaginationContent,
   PaginationItem,
-  PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
 // Lazy load components that aren't needed on initial render
 const TaskCard = lazy(() => import("./TaskCard"));
-const CreateTaskForm = lazy(() => import("../forms/CreateTaskForm"));
 
 // Skeleton component for lazy-loaded task cards
 const TaskCardSkeleton = () => (
@@ -56,7 +47,7 @@ export default function TaskList() {
   } = useTaskContext();
   
   // Get UI state from TaskUIContext
-  const { filter, setFilter, isDialogOpen, setDialogOpen } = useTaskUIContext();
+  const { filter, setFilter } = useTaskUIContext();
   
   // Get filtered tasks
   const filteredTasks = useFilteredTasks(tasks, filter);
@@ -130,20 +121,8 @@ export default function TaskList() {
         )}
       </div>
 
-      {/* Create Task Dialog */}
-      <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
-        <DialogTrigger asChild>
-          <FabButton onClick={() => setDialogOpen(true)} />
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-md bg-card rounded-xl">
-          <DialogHeader>
-            <DialogTitle className="text-foreground">Create New Task</DialogTitle>
-          </DialogHeader>
-          <Suspense fallback={<div className="p-4 text-center">Loading form...</div>}>
-            <CreateTaskForm onClose={() => setDialogOpen(false)} />
-          </Suspense>
-        </DialogContent>
-      </Dialog>
+      {/* Create Task FAB */}
+      <FabButton />
     </>
   );
 }
