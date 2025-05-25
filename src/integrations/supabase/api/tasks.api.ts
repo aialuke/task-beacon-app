@@ -20,6 +20,28 @@ const getMockTasks = async (page = 1, pageSize = 10): Promise<{data: Task[], tot
 };
 
 /**
+ * Fetches a single task by ID
+ */
+export const getTask = async (taskId: string): Promise<Task> => {
+  if (isMockingSupabase) {
+    const { mockDataTasks } = await import('@/lib/mockDataTasks');
+    const task = mockDataTasks.find(t => t.id === taskId);
+    if (!task) {
+      throw new Error('Task not found');
+    }
+    return task;
+  }
+
+  // Mock implementation for now
+  const { mockDataTasks } = await import('@/lib/mockDataTasks');
+  const task = mockDataTasks.find(t => t.id === taskId);
+  if (!task) {
+    throw new Error('Task not found');
+  }
+  return task;
+};
+
+/**
  * Fetches paginated tasks with their parent tasks
  * 
  * @param page Current page number (1-based)
