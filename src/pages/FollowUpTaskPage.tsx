@@ -25,7 +25,7 @@ export default function FollowUpTaskPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
         <div className="container max-w-2xl mx-auto px-4 py-8">
-          <div className="flex items-center gap-6 mb-8">
+          <div className="flex items-center mb-8">
             <Button
               variant="ghost"
               size="sm"
@@ -34,10 +34,6 @@ export default function FollowUpTaskPage() {
             >
               <ArrowLeft className="h-5 w-5" />
             </Button>
-            <div className="space-y-2">
-              <Skeleton className="h-8 w-64 rounded-lg" />
-              <Skeleton className="h-4 w-48 rounded-md" />
-            </div>
           </div>
           <div className="space-y-6 bg-card/50 backdrop-blur-sm p-8 rounded-2xl border border-border/50 shadow-lg">
             <Skeleton className="h-16 w-full rounded-xl" />
@@ -54,7 +50,7 @@ export default function FollowUpTaskPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
         <div className="container max-w-2xl mx-auto px-4 py-8">
-          <div className="flex items-center gap-6 mb-8">
+          <div className="flex items-center mb-8">
             <Button
               variant="ghost"
               size="sm"
@@ -63,10 +59,6 @@ export default function FollowUpTaskPage() {
             >
               <ArrowLeft className="h-5 w-5" />
             </Button>
-            <div className="space-y-1">
-              <h1 className="text-3xl font-bold text-foreground tracking-tight">Follow-up Task</h1>
-              <p className="text-muted-foreground text-sm">Create a follow-up task</p>
-            </div>
           </div>
           <div className="text-center py-12 bg-card/50 backdrop-blur-sm rounded-2xl border border-border/50 shadow-lg">
             <div className="space-y-4">
@@ -84,7 +76,7 @@ export default function FollowUpTaskPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 animate-fade-in">
       <div className="container max-w-2xl mx-auto px-4 py-8">
-        <div className="flex items-center gap-6 mb-8">
+        <div className="flex items-center mb-8">
           <Button
             variant="ghost"
             size="sm"
@@ -93,10 +85,6 @@ export default function FollowUpTaskPage() {
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <div className="space-y-1">
-            <h1 className="text-3xl font-bold text-foreground tracking-tight">Create Follow-up Task</h1>
-            <p className="text-muted-foreground text-sm">Continue from your previous task</p>
-          </div>
         </div>
         
         <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>

@@ -14,7 +14,7 @@ export default function CreateTaskPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 animate-fade-in">
       <div className="container max-w-2xl mx-auto px-4 py-8">
-        <div className="flex items-center gap-6 mb-8">
+        <div className="flex items-center mb-8">
           <Button
             variant="ghost"
             size="sm"
@@ -23,10 +23,6 @@ export default function CreateTaskPage() {
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <div className="space-y-1">
-            <h1 className="text-3xl font-bold text-foreground tracking-tight">Create New Task</h1>
-            <p className="text-muted-foreground text-sm">Fill in the details to create your task</p>
-          </div>
         </div>
         
         <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>

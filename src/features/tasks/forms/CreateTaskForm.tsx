@@ -1,6 +1,7 @@
 
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Link } from "lucide-react";
 import { useCreateTask } from "@/features/tasks/hooks/useCreateTask";
 import { PhotoUploadField } from "@/components/form/PhotoUploadField";
 import { DatePickerField } from "@/components/form/DatePickerField";
@@ -30,12 +31,9 @@ export default function CreateTaskForm({
   } = useCreateTask({ onClose });
 
   return (
-    <div className="w-full bg-card/50 backdrop-blur-sm text-card-foreground p-8 rounded-2xl border border-border/50 shadow-xl hover:shadow-2xl transition-all duration-300">
-      <form onSubmit={handleSubmit} className="space-y-8">
-        <div className="space-y-3">
-          <label htmlFor="title" className="block text-sm font-semibold text-foreground tracking-wide">
-            Task Title
-          </label>
+    <div className="w-full bg-card/50 backdrop-blur-sm text-card-foreground p-6 rounded-2xl border border-border/50 shadow-xl hover:shadow-2xl transition-all duration-300">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="space-y-2">
           <Input
             id="title"
             value={title}
@@ -52,58 +50,38 @@ export default function CreateTaskForm({
           </div>
         </div>
         
-        <div className="space-y-3">
-          <label htmlFor="description" className="block text-sm font-semibold text-foreground tracking-wide">
-            Description
-          </label>
-          <Textarea
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Describe your task in detail..."
-            rows={4}
-            className="bg-background/70 text-foreground border-border/60 placeholder:text-muted-foreground/70 rounded-xl px-4 py-3 transition-all duration-200 focus:shadow-lg focus:bg-background resize-none"
-          />
-        </div>
+        <Textarea
+          id="description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Describe your task in detail..."
+          rows={4}
+          className="bg-background/70 text-foreground border-border/60 placeholder:text-muted-foreground/70 rounded-xl px-4 py-3 transition-all duration-200 focus:shadow-lg focus:bg-background resize-none"
+        />
         
-        <div className="space-y-3">
-          <label className="block text-sm font-semibold text-foreground tracking-wide">
-            Due Date
-          </label>
-          <DatePickerField 
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
-          />
-        </div>
+        <DatePickerField 
+          value={dueDate}
+          onChange={(e) => setDueDate(e.target.value)}
+        />
         
-        <div className="space-y-3">
-          <label htmlFor="url" className="block text-sm font-semibold text-foreground tracking-wide">
-            Reference URL
-          </label>
+        <div className="relative">
           <Input
             id="url"
             type="url"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder="https://example.com"
-            className="bg-background/70 text-foreground border-border/60 placeholder:text-muted-foreground/70 rounded-xl h-12 px-4 transition-all duration-200 focus:shadow-lg focus:bg-background"
+            className="bg-background/70 text-foreground border-border/60 placeholder:text-muted-foreground/70 rounded-xl h-12 px-4 pl-10 transition-all duration-200 focus:shadow-lg focus:bg-background"
           />
+          <Link className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
         </div>
         
-        <div className="space-y-3">
-          <label className="block text-sm font-semibold text-foreground tracking-wide">
-            Attachment
-          </label>
+        <div className="grid grid-cols-2 gap-4">
           <PhotoUploadField
             onChange={handlePhotoChange}
             preview={photoPreview}
           />
-        </div>
-        
-        <div className="space-y-3">
-          <label className="block text-sm font-semibold text-foreground tracking-wide">
-            Assign To
-          </label>
+          
           <UserSearchField
             value={assigneeId}
             onChange={setAssigneeId}
