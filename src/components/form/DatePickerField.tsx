@@ -18,7 +18,7 @@ export function DatePickerField({ value, onChange }: DatePickerFieldProps) {
           onChange={onChange}
           placeholder="Select due date"
           required
-          className="pl-9 transition-all"
+          className="pl-9 h-12 transition-all"
         />
         <Calendar size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
       </div>

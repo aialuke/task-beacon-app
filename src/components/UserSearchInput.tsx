@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Check, User } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -100,7 +99,7 @@ export default function UserSearchInput({
       onBlur={handleBlur}
     >
       <div className={cn(
-        "flex items-center border border-input rounded-xl w-full user-search-input",
+        "flex items-center border border-input rounded-xl w-full h-12 user-search-input",
         disabled ? "bg-muted opacity-50" : "bg-background",
         isOpen ? "ring-2 ring-ring ring-offset-0" : ""
       )}>

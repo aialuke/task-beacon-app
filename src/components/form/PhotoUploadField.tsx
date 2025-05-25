@@ -25,7 +25,7 @@ export function PhotoUploadField({ onChange, preview }: PhotoUploadFieldProps) {
           type="file"
           accept="image/*"
           onChange={handleFileChange}
-          className="cursor-pointer bg-background/70 border-border/60 rounded-xl h-12 text-transparent file:hidden [&::-webkit-file-upload-button]:hidden"
+          className="cursor-pointer bg-background/70 border border-border/60 rounded-xl h-12 text-transparent file:hidden [&::-webkit-file-upload-button]:hidden"
           aria-label="Attach File"
         />
         <ImagePlus className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground pointer-events-none" />
