@@ -1,6 +1,7 @@
 
 import { Input } from "@/components/ui/input";
 import { ImagePlus } from "lucide-react";
+import { useState } from "react";
 
 interface PhotoUploadFieldProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -8,6 +9,14 @@ interface PhotoUploadFieldProps {
 }
 
 export function PhotoUploadField({ onChange, preview }: PhotoUploadFieldProps) {
+  const [selectedFile, setSelectedFile] = useState<string>("");
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    setSelectedFile(file ? file.name : "");
+    onChange(e);
+  };
+
   return (
     <div className="space-y-3">
       <div className="relative">
@@ -15,14 +24,13 @@ export function PhotoUploadField({ onChange, preview }: PhotoUploadFieldProps) {
           id="photo"
           type="file"
           accept="image/*"
-          onChange={onChange}
-          className="cursor-pointer bg-background/70 border-border/60 rounded-xl h-12 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-accent/80 file:text-accent-foreground file:font-medium file:transition-all file:duration-200 hover:file:bg-accent transition-all duration-200 focus:shadow-lg focus:bg-background [&::-webkit-file-upload-button]:hidden file:hidden"
+          onChange={handleFileChange}
+          className="cursor-pointer bg-background/70 border-border/60 rounded-xl h-12 text-transparent file:hidden [&::-webkit-file-upload-button]:hidden"
           aria-label="Attach File"
-          placeholder="Choose file..."
         />
         <ImagePlus className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground pointer-events-none" />
-        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-sm text-muted-foreground/70 pointer-events-none">
-          Choose file...
+        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-sm text-muted-foreground/70 pointer-events-none truncate pr-12">
+          {selectedFile || "Choose file..."}
         </span>
       </div>
       {preview && (
