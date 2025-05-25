@@ -12,21 +12,26 @@ export default function CreateTaskPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container max-w-2xl mx-auto px-4 py-6">
-        <div className="flex items-center gap-4 mb-6">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 animate-fade-in">
+      <div className="container max-w-2xl mx-auto px-4 py-8">
+        <div className="flex items-center gap-6 mb-8">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => navigate("/")}
-            className="p-2"
+            className="p-3 hover:bg-accent/80 transition-all duration-200 hover:scale-105 rounded-full shadow-sm hover:shadow-md"
           >
-            <ArrowLeft className="h-4 w-4" />
+            <ArrowLeft className="h-5 w-5" />
           </Button>
-          <h1 className="text-2xl font-bold text-foreground">Create New Task</h1>
+          <div className="space-y-1">
+            <h1 className="text-3xl font-bold text-foreground tracking-tight">Create New Task</h1>
+            <p className="text-muted-foreground text-sm">Fill in the details to create your task</p>
+          </div>
         </div>
         
-        <CreateTaskForm onClose={handleClose} />
+        <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
+          <CreateTaskForm onClose={handleClose} />
+        </div>
       </div>
     </div>
   );
