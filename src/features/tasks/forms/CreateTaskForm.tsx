@@ -33,9 +33,6 @@ export default function CreateTaskForm({
     <div className="bg-card text-card-foreground p-6 rounded-xl border border-border">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
-          <label htmlFor="title" className="block text-sm font-medium text-foreground">
-            Title
-          </label>
           <Input
             id="title"
             value={title}
@@ -53,9 +50,6 @@ export default function CreateTaskForm({
         </div>
         
         <div className="space-y-2">
-          <label htmlFor="description" className="block text-sm font-medium text-foreground">
-            Description
-          </label>
           <Textarea
             id="description"
             value={description}
@@ -91,9 +85,6 @@ export default function CreateTaskForm({
         </div>
         
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-foreground">
-            Photo
-          </label>
           <PhotoUploadField
             onChange={handlePhotoChange}
             preview={photoPreview}
@@ -101,9 +92,6 @@ export default function CreateTaskForm({
         </div>
         
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-foreground">
-            Assignee
-          </label>
           <UserSearchField
             value={assigneeId}
             onChange={setAssigneeId}
