@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import TaskFormWithValidation from "./TaskFormWithValidation";
 import { CreateTaskInput } from "../schemas/taskSchema";
@@ -19,4 +20,39 @@ export default function TaskFormExample({ onClose }: { onClose?: () => void }) {
         const processedFile = await processImage(data.photo);
         
         if (isMockingSupabase) {
-          photoUrl = URL.createObjectURL(processed
+          photoUrl = URL.createObjectURL(processedFile);
+        } else {
+          // Upload to Supabase storage
+          const { data: uploadData, error: uploadError } = await supabase.storage
+            .from('task-photos')
+            .upload(`photos/${Date.now()}-${data.photo.name}`, processedFile);
+          
+          if (uploadError) throw uploadError;
+          photoUrl = uploadData.path;
+        }
+      }
+
+      // Create task with photo URL
+      const taskData = {
+        ...data,
+        photo_url: photoUrl
+      };
+
+      toast.success("Task created successfully!");
+      if (onClose) onClose();
+      
+    } catch (error) {
+      console.error("Error creating task:", error);
+      toast.error("Failed to create task");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <TaskFormWithValidation 
+      onSubmit={handleSubmit}
+      onClose={onClose}
+    />
+  );
+}
