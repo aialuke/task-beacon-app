@@ -4,7 +4,7 @@ import { Task } from "@/lib/types";
 import { toast } from "@/lib/toast";
 import { useNavigate } from "react-router-dom";
 import { showBrowserNotification, triggerHapticFeedback } from "@/lib/notification";
-import { useTaskForm } from "@/components/form/hooks/useTaskForm";
+import { useTaskForm } from "./useTaskForm";
 import { createFollowUpTask, uploadTaskPhoto } from "@/integrations/supabase/api/tasks.api";
 
 interface UseFollowUpTaskProps {

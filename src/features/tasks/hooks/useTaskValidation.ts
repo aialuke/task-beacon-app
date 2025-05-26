@@ -2,34 +2,41 @@
 import { useCallback } from "react";
 import { useValidation } from "@/hooks/useValidation";
 import { createTextSchema } from "@/schemas/commonValidation";
+import { createTaskSchema } from "@/features/tasks/schemas/taskSchema";
 
 /**
- * Generic form validation utilities
- * 
- * For task-specific validation, use @/features/tasks/hooks/useTaskValidation
+ * Task-specific validation utilities
  */
-export function useFormValidation() {
+export function useTaskValidation() {
   const { validate, validateField, validateWithToast } = useValidation();
 
   /**
-   * Generic text field validation
+   * Validates the task title
    */
-  const validateText = useCallback((value: string, minLength = 1, maxLength = 1000): boolean => {
-    const textSchema = createTextSchema(minLength, maxLength, true);
-    const result = validateField(textSchema, value, "text", { showToast: true });
+  const validateTitle = useCallback((value: string): boolean => {
+    const titleSchema = createTextSchema(1, 22, true);
+    const result = validateField(titleSchema, value, "title", { showToast: true });
     return result.isValid;
   }, [validateField]);
 
   /**
-   * Create a text handler with length limits
+   * Custom title setter with validation
    */
-  const createTextHandler = useCallback((setText: (value: string) => void, maxLength = 1000) => {
+  const createTitleHandler = useCallback((setTitle: (value: string) => void) => {
     return (value: string) => {
-      if (value.length <= maxLength) {
-        setText(value);
+      // Limit to 22 characters silently
+      if (value.length <= 22) {
+        setTitle(value);
       }
     };
   }, []);
+
+  /**
+   * Validate complete task form data
+   */
+  const validateTaskForm = useCallback((data: any) => {
+    return validateWithToast(createTaskSchema, data);
+  }, [validateWithToast]);
 
   /**
    * Validate URL field
@@ -54,10 +61,11 @@ export function useFormValidation() {
   }, []);
 
   return {
-    validateText,
+    validateTitle,
+    validateTaskForm,
     validateUrl,
     validateDueDate,
-    createTextHandler,
+    createTitleHandler,
     // Expose validation utilities
     validate,
     validateField,

@@ -1,8 +1,7 @@
 
 import { useState, useCallback } from "react";
-import { useFormState } from "./useFormState";
-import { usePhotoUpload } from "./usePhotoUpload";
-import { useFormValidation } from "./useFormValidation";
+import { useFormState } from "@/components/form/hooks/useFormState";
+import { usePhotoUpload } from "@/components/form/hooks/usePhotoUpload";
 import { UseFormStateOptions } from "@/types/form.types";
 
 export interface UseTaskFormOptions extends UseFormStateOptions {
@@ -10,9 +9,9 @@ export interface UseTaskFormOptions extends UseFormStateOptions {
 }
 
 /**
- * Composed hook for task form functionality
+ * Task-specific form functionality
  * 
- * Combines form state, photo upload, and validation hooks
+ * Combines form state, photo upload, and task validation
  * to provide a complete task form solution.
  */
 export function useTaskForm({ initialUrl = "", onClose }: UseTaskFormOptions = {}) {
@@ -20,10 +19,29 @@ export function useTaskForm({ initialUrl = "", onClose }: UseTaskFormOptions = {
   
   const formState = useFormState({ initialUrl });
   const photoUpload = usePhotoUpload();
-  const validation = useFormValidation();
 
-  // Override the title setter with validation
-  const setTitle = validation.createTitleHandler(formState.setTitle);
+  /**
+   * Validates the task title
+   */
+  const validateTitle = useCallback((value: string): boolean => {
+    if (!value || value.trim().length === 0) {
+      return false;
+    }
+    if (value.length > 22) {
+      return false;
+    }
+    return true;
+  }, []);
+
+  /**
+   * Custom title setter with validation and character limit
+   */
+  const setTitle = useCallback((value: string) => {
+    // Limit to 22 characters silently
+    if (value.length <= 22) {
+      formState.setTitle(value);
+    }
+  }, [formState]);
 
   /**
    * Resets all form fields and photo
@@ -61,6 +79,6 @@ export function useTaskForm({ initialUrl = "", onClose }: UseTaskFormOptions = {
     
     // Form actions
     resetForm,
-    validateTitle: validation.validateTitle,
+    validateTitle,
   };
 }

@@ -2,7 +2,7 @@
 import { useCallback } from "react";
 import { toast } from "@/lib/toast";
 import { useNavigate } from "react-router-dom";
-import { useTaskForm } from "@/components/form/hooks/useTaskForm";
+import { useTaskForm } from "./useTaskForm";
 import { createTask, uploadTaskPhoto } from "@/integrations/supabase/api/tasks.api";
 import { getCurrentUserId } from "@/integrations/supabase/api/base.api";
 
