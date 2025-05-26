@@ -3,7 +3,6 @@ import { FileText } from "lucide-react";
 import { useCreateTask } from "@/features/tasks/hooks/useCreateTask";
 import { FloatingInput } from "@/components/form/FloatingInput";
 import { FloatingTextarea } from "@/components/form/FloatingTextarea";
-import { EnhancedFormActions } from "@/components/form/EnhancedFormActions";
 import { QuickActionBar } from "@/components/form/QuickActionBar";
 
 export default function CreateTaskForm({
@@ -73,7 +72,7 @@ export default function CreateTaskForm({
           label="Description"
         />
         
-        {/* Quick Action Bar with Direct Popups */}
+        {/* Quick Action Bar with Inline Submit Button */}
         <QuickActionBar
           dueDate={dueDate}
           onDueDateChange={handleDueDateChange}
@@ -83,14 +82,10 @@ export default function CreateTaskForm({
           photoPreview={photoPreview}
           url={url}
           onUrlChange={handleUrlChange}
-          disabled={loading}
-        />
-        
-        {/* Enhanced Actions */}
-        <EnhancedFormActions
-          onCancel={onClose}
+          onSubmit={handleSubmit}
           isSubmitting={loading}
           submitLabel="Share Task"
+          disabled={loading}
         />
       </form>
     </div>

@@ -1,5 +1,5 @@
 
-import { Calendar, User, ImageUp, Link, FileCheck } from "lucide-react";
+import { Calendar, User, ImageUp, Link, FileCheck, Send } from "lucide-react";
 import { useState, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -26,6 +26,11 @@ interface QuickActionBarProps {
   url: string;
   onUrlChange: (value: string) => void;
   
+  // Submit props
+  onSubmit?: (e: React.FormEvent) => void;
+  isSubmitting?: boolean;
+  submitLabel?: string;
+  
   disabled?: boolean;
 }
 
@@ -38,6 +43,9 @@ export function QuickActionBar({
   photoPreview,
   url,
   onUrlChange,
+  onSubmit,
+  isSubmitting = false,
+  submitLabel = "Share Task",
   disabled = false 
 }: QuickActionBarProps) {
   const [isUrlModalOpen, setIsUrlModalOpen] = useState(false);
@@ -69,7 +77,12 @@ export function QuickActionBar({
     fileInputRef.current?.click();
   };
 
-  const getButtonContent = (type: 'date' | 'assignee' | 'photo' | 'url') => {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSubmit?.(e);
+  };
+
+  const getButtonContent = (type: 'date' | 'assignee' | 'photo' | 'url' | 'submit') => {
     switch (type) {
       case 'date':
         return {
@@ -95,6 +108,12 @@ export function QuickActionBar({
           label: hasUrl ? "Link Added" : "Link",
           active: hasUrl
         };
+      case 'submit':
+        return {
+          icon: Send,
+          label: submitLabel,
+          active: false
+        };
       default:
         return { icon: Calendar, label: "", active: false };
     }
@@ -106,11 +125,13 @@ export function QuickActionBar({
     disabled && "opacity-50 cursor-not-allowed hover:scale-100"
   );
 
-  const getButtonClasses = (active: boolean) => cn(
+  const getButtonClasses = (active: boolean, isSubmit?: boolean) => cn(
     buttonBaseClasses,
-    active
-      ? "bg-primary/20 text-primary border border-primary/30 shadow-md shadow-primary/10"
-      : "bg-background/60 text-muted-foreground border border-border/40 hover:bg-background/80 hover:text-foreground hover:border-border/60"
+    isSubmit
+      ? "bg-primary text-primary-foreground border border-primary shadow-md hover:bg-primary/90"
+      : active
+        ? "bg-primary/20 text-primary border border-primary/30 shadow-md shadow-primary/10"
+        : "bg-background/60 text-muted-foreground border border-border/40 hover:bg-background/80 hover:text-foreground hover:border-border/60"
   );
 
   return (
@@ -196,6 +217,32 @@ export function QuickActionBar({
           {getButtonContent('url').label}
         </span>
       </button>
+
+      {/* Submit Button */}
+      {onSubmit && (
+        <button
+          type="submit"
+          onClick={handleSubmit}
+          disabled={disabled || isSubmitting}
+          className={getButtonClasses(false, true)}
+        >
+          {isSubmitting ? (
+            <>
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
+              <span className="text-sm font-medium hidden sm:inline whitespace-nowrap">
+                Creating...
+              </span>
+            </>
+          ) : (
+            <>
+              <Send className="h-4 w-4 transition-all duration-200 flex-shrink-0" />
+              <span className="text-sm font-medium hidden sm:inline whitespace-nowrap">
+                {getButtonContent('submit').label}
+              </span>
+            </>
+          )}
+        </button>
+      )}
 
       {/* Hidden file input */}
       <input
