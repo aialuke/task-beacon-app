@@ -1,19 +1,22 @@
-// src/lib/uiUtils.ts
+
+/**
+ * UI-specific utility functions
+ */
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Task, TaskStatus } from "./types";
 import { getDaysRemaining } from "./dateUtils";
 
 /**
- * UI utility functions using consolidated color system
+ * Merges Tailwind CSS classes with proper conflict resolution
  */
-
-// Function to merge Tailwind CSS classes
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-// Determine task status based on due date
+/**
+ * Determines task status based on due date and completion status
+ */
 export function getTaskStatus(task: Task): TaskStatus {
   if (task.status === "complete") {
     return "complete";
@@ -24,13 +27,15 @@ export function getTaskStatus(task: Task): TaskStatus {
   }
   
   const daysRemaining = getDaysRemaining(task.due_date);
-  if (daysRemaining < 0) {
+  if (daysRemaining !== null && daysRemaining < 0) {
     return "overdue";
   }
   return "pending";
 }
 
-// Get appropriate status color based on task status using CSS variables
+/**
+ * Gets appropriate status color class for task status
+ */
 export function getStatusColor(status: TaskStatus): string {
   switch (status) {
     case "complete":
@@ -43,7 +48,9 @@ export function getStatusColor(status: TaskStatus): string {
   }
 }
 
-// Get appropriate timer color based on task status using CSS variables
+/**
+ * Gets appropriate timer color CSS variable for task status
+ */
 export function getTimerColor(status: TaskStatus): string {
   switch (status) {
     case "complete":
@@ -56,7 +63,9 @@ export function getTimerColor(status: TaskStatus): string {
   }
 }
 
-// Get timer gradient based on status
+/**
+ * Gets timer gradient based on status
+ */
 export function getTimerGradient(status: TaskStatus): string {
   switch (status) {
     case "complete":
@@ -69,14 +78,18 @@ export function getTimerGradient(status: TaskStatus): string {
   }
 }
 
-// Get appropriate CSS classes for tooltip based on task status
+/**
+ * Gets appropriate CSS classes for tooltip based on task status
+ */
 export function getStatusTooltipClass(status: TaskStatus): string {
   if (status === "overdue") return "bg-destructive text-destructive-foreground";
   if (status === "complete") return "bg-success text-success-foreground";
   return "bg-popover text-popover-foreground border border-border";
 }
 
-// Get appropriate CSS classes for tooltip arrow based on task status
+/**
+ * Gets appropriate CSS classes for tooltip arrow based on task status
+ */
 export function getTooltipArrowClass(status: TaskStatus): string {
   if (status === "overdue") return "fill-destructive";
   if (status === "complete") return "fill-success";
@@ -85,9 +98,6 @@ export function getTooltipArrowClass(status: TaskStatus): string {
 
 /**
  * Determines if an element is visible in the viewport
- * 
- * @param element - DOM element to check
- * @returns True if the element is visible in the viewport
  */
 export function isElementInViewport(element: HTMLElement): boolean {
   const rect = element.getBoundingClientRect();
@@ -101,8 +111,6 @@ export function isElementInViewport(element: HTMLElement): boolean {
 
 /**
  * Checks if the device is in dark mode
- * 
- * @returns True if the device is in dark mode
  */
 export function isDarkMode(): boolean {
   return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;

@@ -1,5 +1,12 @@
 
-// Re-export common validation utilities for backward compatibility
+/**
+ * Legacy validation utilities - maintained for backward compatibility
+ * 
+ * @deprecated Consider migrating to the new schema-based validation system
+ * from @/schemas/commonValidation and @/hooks/useValidation
+ */
+
+// Re-export modern validation utilities for backward compatibility
 export { 
   isValidEmail, 
   isValidUrl, 
@@ -14,12 +21,6 @@ export {
 } from "@/schemas/commonValidation";
 
 /**
- * Legacy validation functions - maintained for backward compatibility
- * Consider migrating to the new schema-based validation system
- */
-
-/**
- * Validates a password strength based on common requirements
  * @deprecated Use passwordSchema from commonValidation instead
  */
 export function validatePassword(password: string): { 
@@ -62,7 +63,7 @@ export function isAlphanumeric(value: string): boolean {
 }
 
 /**
- * Validates a date string format
+ * Validates a date string format (YYYY-MM-DD)
  */
 export function isValidDateFormat(dateString: string): boolean {
   return /^\d{4}-\d{2}-\d{2}$/.test(dateString);

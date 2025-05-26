@@ -1,49 +1,35 @@
 
 /**
- * Core utility functions
+ * Core utility functions and selective re-exports
  * 
  * This file contains fundamental utility functions used across the application,
  * along with selective re-exports of the most commonly used utilities.
  * 
- * For more specialized utilities, import directly from their respective files:
+ * For specialized utilities, import directly from their respective files:
  * - UI utilities: import { cn, getStatusColor } from "@/lib/uiUtils";
  * - Date utilities: import { formatDate, getDaysRemaining } from "@/lib/dateUtils";
- * - Format utilities: import { truncateText } from "@/lib/formatUtils";
- * - Data utilities: import { sortByProperty } from "@/lib/dataUtils";
- * - Validation utilities: import { isValidEmail } from "@/lib/validationUtils";
+ * - Format utilities: import { truncateText, truncateUrl } from "@/lib/formatUtils";
+ * - Data utilities: import { sortByProperty, searchByTerm } from "@/lib/dataUtils";
+ * - Validation utilities: import { isValidEmail, emailSchema } from "@/schemas/commonValidation";
  */
 
-// Re-export only the most commonly used utilities
+// === COMMONLY USED RE-EXPORTS ===
+// UI utilities (most frequently used)
 export { cn, getStatusColor, getTimerColor } from './uiUtils';
+
+// Date utilities (frequently used in tasks)
 export { formatDate, getDaysRemaining, getTimeUntilDue } from './dateUtils';
-export { truncateText } from './formatUtils';
+
+// Format utilities (commonly used for display)
+export { truncateText, truncateUrl } from './formatUtils';
+
+// Data utilities (used in filtering and sorting)
 export { sortByProperty, searchByTerm } from './dataUtils';
 
-/**
- * Deep clones an object using JSON serialization
- * Note: This will not preserve functions or special objects like Date
- * 
- * @param obj - Object to clone
- * @returns A deep copy of the object
- */
-export function deepClone<T>(obj: T): T {
-  return JSON.parse(JSON.stringify(obj));
-}
-
-/**
- * Creates a delay using a Promise
- * 
- * @param ms - Milliseconds to delay
- * @returns Promise that resolves after the specified delay
- */
-export function delay(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+// === CORE UTILITY FUNCTIONS ===
 
 /**
  * Generates a UUID v4 string
- * 
- * @returns A random UUID v4 string
  */
 export function generateUUID(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -55,9 +41,6 @@ export function generateUUID(): string {
 
 /**
  * Checks if a value is empty (null, undefined, empty string, empty array, or empty object)
- * 
- * @param value - Value to check
- * @returns True if the value is empty, false otherwise
  */
 export function isEmpty(value: unknown): boolean {
   if (value === null || value === undefined) return true;
@@ -69,10 +52,6 @@ export function isEmpty(value: unknown): boolean {
 
 /**
  * Safely parses a JSON string, returning a default value if parsing fails
- * 
- * @param jsonString - JSON string to parse
- * @param defaultValue - Default value to return if parsing fails
- * @returns Parsed JSON object or the default value
  */
 export function safeJsonParse<T>(jsonString: string, defaultValue: T): T {
   try {
@@ -84,10 +63,6 @@ export function safeJsonParse<T>(jsonString: string, defaultValue: T): T {
 
 /**
  * Debounces a function to limit how often it can be called
- * 
- * @param func - The function to debounce
- * @param wait - Wait time in milliseconds
- * @returns Debounced function
  */
 export function debounce<T extends (...args: any[]) => any>(
   func: T,
@@ -110,10 +85,6 @@ export function debounce<T extends (...args: any[]) => any>(
 
 /**
  * Creates a throttled function that only invokes the provided function at most once per specified interval
- * 
- * @param func - The function to throttle
- * @param limit - The number of milliseconds to throttle invocations to
- * @returns Throttled function
  */
 export function throttle<T extends (...args: any[]) => any>(
   func: T,
