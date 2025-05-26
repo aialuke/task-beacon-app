@@ -8,17 +8,19 @@ import { useTaskFollowUp } from "./useTaskFollowUp";
 import { showBrowserNotification, triggerHapticFeedback } from "@/lib/notification";
 
 /**
- * Consolidated hook for task mutation operations
+ * Consolidated hook for all task mutation operations
  * 
  * Provides a unified interface for various task mutations with consistent
- * error handling, notifications, and feedback patterns
+ * error handling, notifications, and feedback patterns.
+ * 
+ * This is the main entry point for task mutations in the application.
  * 
  * @returns Object containing all task mutation functions with standardized handling
  */
 export function useTaskMutation() {
-  const { toggleTaskPin: pin } = useTaskPinning();
-  const { toggleTaskComplete: complete } = useTaskCompletion();
-  const { createFollowUpTask: followUp } = useTaskFollowUp();
+  const { toggleTaskPin: pinTask } = useTaskPinning();
+  const { toggleTaskComplete: completeTask } = useTaskCompletion();
+  const { createFollowUpTask: createFollowUp } = useTaskFollowUp();
 
   /**
    * Toggle a task's pinned status with feedback
@@ -28,7 +30,7 @@ export function useTaskMutation() {
    */
   const toggleTaskPin = useCallback(async (task: Task): Promise<void> => {
     try {
-      await pin(task);
+      await pinTask(task);
       triggerHapticFeedback();
     } catch (error) {
       if (error instanceof Error) {
@@ -37,7 +39,7 @@ export function useTaskMutation() {
         toast.error(`Failed to ${task.pinned ? 'unpin' : 'pin'} task`);
       }
     }
-  }, [pin]);
+  }, [pinTask]);
 
   /**
    * Toggle a task's completion status with feedback
@@ -47,7 +49,7 @@ export function useTaskMutation() {
    */
   const toggleTaskComplete = useCallback(async (task: Task): Promise<void> => {
     try {
-      await complete(task);
+      await completeTask(task);
       triggerHapticFeedback();
       
       if (!task.status.includes("complete")) {
@@ -60,7 +62,7 @@ export function useTaskMutation() {
         toast.error("Failed to update task status");
       }
     }
-  }, [complete]);
+  }, [completeTask]);
 
   /**
    * Create a follow-up task with feedback
@@ -71,7 +73,7 @@ export function useTaskMutation() {
    */
   const createFollowUpTask = useCallback(async (parentTask: Task, taskData: any): Promise<void> => {
     try {
-      const result = await followUp(parentTask, taskData);
+      const result = await createFollowUp(parentTask, taskData);
       triggerHapticFeedback();
       toast.success("Follow-up task created successfully");
       
@@ -88,7 +90,7 @@ export function useTaskMutation() {
         toast.error("Failed to create follow-up task");
       }
     }
-  }, [followUp]);
+  }, [createFollowUp]);
 
   return {
     toggleTaskPin,
