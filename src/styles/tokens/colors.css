@@ -11,7 +11,7 @@
   --popover: 0 0% 100%;             /* Pure white #FFFFFF */
   --popover-foreground: 240 10% 3.9%; /* Nearly black #0A0A0B */
   
-  /* Primary brand colors - Updated to #4C6DE1 */
+  /* Primary brand colors */
   --primary: 225 77% 60%;           /* Blue #4C6DE1 - 4.5:1 contrast on white */
   --primary-foreground: 0 0% 98%;   /* Near white #FAFAFA */
   
@@ -26,13 +26,17 @@
   /* Accent colors */
   --accent: 240 4.8% 95.9%;         /* Light gray #F8F9FA */
   --accent-foreground: 240 5.9% 10%; /* Dark gray #1A1A1A */
-  --accent-yellow: 51 100% 50%;     /* Yellow #FFD700 - adjusted for better contrast */
+  --accent-blue: 225 77% 60%;       /* Blue #4C6DE1 */
+  --accent-green: 152 76% 36%;      /* Green #059669 */
+  --accent-yellow: 51 100% 50%;     /* Yellow #FFD700 */
   
   /* Status colors - WCAG AA compliant */
   --destructive: 351 83% 48%;       /* Red #DC2626 - 4.5:1 contrast on white */
   --destructive-foreground: 0 0% 98%; /* Near white #FAFAFA */
   --success: 152 76% 36%;           /* Green #059669 - 4.5:1 contrast on white */
   --success-foreground: 0 0% 98%;   /* Near white #FAFAFA */
+  --warning: 38 92% 50%;            /* Orange/amber #F59E0B */
+  --warning-foreground: 0 0% 98%;   /* Near white #FAFAFA */
   
   /* Border and input colors */
   --border: 240 5.9% 90%;           /* Light border #E5E7EB */
@@ -45,9 +49,9 @@
   --brand-light: 225 77% 95%;       /* Very light blue #F0F4FF */
   
   /* Task status colors - light mode */
-  --status-pending: #F59E0B;        /* Amber #F59E0B - 4.5:1 contrast */
-  --status-overdue: #DC2626;        /* Red #DC2626 - 4.5:1 contrast */
-  --status-complete: #059669;       /* Green #059669 - 4.5:1 contrast */
+  --status-pending: 38 92% 50%;     /* Amber #F59E0B */
+  --status-overdue: 351 83% 48%;    /* Red #DC2626 */
+  --status-complete: 152 76% 36%;   /* Green #059669 */
 }
 
 /* ===== DARK MODE COLORS (WCAG AA COMPLIANT) ===== */
@@ -62,7 +66,7 @@
   --popover-foreground: 213 31% 91%; /* Light gray #E8ECEF */
   
   /* Primary colors adjusted for dark mode */
-  --primary: 225 77% 70%;           /* Brighter blue for dark mode - better contrast */
+  --primary: 225 77% 70%;           /* Brighter blue for dark mode */
   --primary-foreground: 222 84% 5%; /* Very dark blue-gray #0A0F1C */
   
   /* Secondary and muted colors */
@@ -74,13 +78,17 @@
   /* Accent colors */
   --accent: 215 28% 17%;            /* Dark gray #252B35 */
   --accent-foreground: 213 31% 91%; /* Light gray #E8ECEF */
-  --accent-yellow: 51 100% 70%;     /* Brighter yellow #FFE666 */
+  --accent-blue: 225 77% 70%;       /* Brighter blue for dark mode */
+  --accent-green: 152 76% 50%;      /* Brighter green for dark mode */
+  --accent-yellow: 51 100% 70%;     /* Brighter yellow for dark mode */
   
   /* Status colors - enhanced for dark mode visibility */
   --destructive: 351 83% 63%;       /* Lighter red #E55D73 - 4.5:1 contrast */
   --destructive-foreground: 0 0% 98%; /* Near white #FAFAFA */
   --success: 152 76% 50%;           /* Brighter green #10D175 - 4.5:1 contrast */
   --success-foreground: 0 0% 98%;   /* Near white #FAFAFA */
+  --warning: 51 100% 60%;           /* Enhanced yellow for dark mode */
+  --warning-foreground: 0 0% 98%;   /* Near white #FAFAFA */
   
   /* Enhanced borders for dark mode */
   --border: 215 28% 25%;            /* More visible dark borders #3A414A */
@@ -93,9 +101,9 @@
   --brand-light: 225 77% 15%;       /* Dark brand light #1A2332 */
   
   /* Task status colors for dark mode - enhanced visibility */
-  --status-pending: #FCD34D;        /* Enhanced yellow #FCD34D */
-  --status-overdue: #F87171;        /* Softer red #F87171 */
-  --status-complete: #4ADE80;       /* Vibrant green #4ADE80 */
+  --status-pending: 51 100% 60%;    /* Enhanced yellow */
+  --status-overdue: 351 83% 63%;    /* Softer red */
+  --status-complete: 152 76% 50%;   /* Vibrant green */
 }
 
 /* ===== LIGHT MODE EXPLICIT OVERRIDE ===== */
@@ -115,19 +123,22 @@
   --muted-foreground: 240 3.8% 46.1%;
   --accent: 240 4.8% 95.9%;
   --accent-foreground: 240 5.9% 10%;
+  --accent-blue: 225 77% 60%;
+  --accent-green: 152 76% 36%;
+  --accent-yellow: 51 100% 50%;
   --destructive: 351 83% 48%;
   --destructive-foreground: 0 0% 98%;
+  --success: 152 76% 36%;
+  --success-foreground: 0 0% 98%;
+  --warning: 38 92% 50%;
+  --warning-foreground: 0 0% 98%;
   --border: 240 5.9% 90%;
   --input: 240 5.9% 90%;
   --ring: 225 77% 60%;
   --surface: 0 0% 100%;
   --surface-foreground: 240 10% 3.9%;
-  --success: 152 76% 36%;
-  --success-foreground: 0 0% 98%;
-  --accent-yellow: 51 100% 50%;
   --brand-light: 225 77% 95%;
-  
-  --status-pending: #F59E0B;
-  --status-overdue: #DC2626;
-  --status-complete: #059669;
+  --status-pending: 38 92% 50%;
+  --status-overdue: 351 83% 48%;
+  --status-complete: 152 76% 36%;
 }

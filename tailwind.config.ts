@@ -76,7 +76,7 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(225 77% 60%)", // Fixed: added hsl() wrapper
+          DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
@@ -94,10 +94,9 @@ export default {
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
-        },
-        'accent-yellow': {
-          DEFAULT: "hsl(var(--accent-yellow))",
-          foreground: "hsl(var(--foreground))",
+          blue: "hsl(var(--accent-blue))",
+          green: "hsl(var(--accent-green))",
+          yellow: "hsl(var(--accent-yellow))",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",
@@ -111,14 +110,23 @@ export default {
           DEFAULT: "hsl(var(--success))",
           foreground: "hsl(var(--success-foreground))",
         },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
+        },
         brand: {
-          DEFAULT: "hsl(225 77% 60%)", // Fixed: added hsl() wrapper
+          DEFAULT: "hsl(var(--primary))",
           light: "hsl(var(--brand-light))",
         },
-        "task-pending": "var(--status-pending)",
-        "task-overdue": "var(--status-overdue)",
-        "task-complete": "var(--status-complete)",
-        "task-timer": "var(--status-pending)",
+        surface: {
+          DEFAULT: "hsl(var(--surface))",
+          foreground: "hsl(var(--surface-foreground))",
+        },
+        // Task status colors using CSS variables
+        "task-pending": "hsl(var(--status-pending))",
+        "task-overdue": "hsl(var(--status-overdue))",
+        "task-complete": "hsl(var(--status-complete))",
+        "task-timer": "hsl(var(--status-pending))",
       },
       borderRadius: {
         lg: "var(--radius)",

@@ -3,7 +3,7 @@
 @layer utilities {
   /* Enhanced color utilities with improved contrast and accessibility */
   
-  /* Status Colors */
+  /* Status Color Utilities */
   .text-warning {
     color: hsl(var(--warning));
   }
@@ -16,7 +16,7 @@
     border-color: hsl(var(--warning));
   }
 
-  /* Success Colors */
+  /* Success Color Utilities */
   .text-success {
     color: hsl(var(--success));
   }
@@ -29,7 +29,7 @@
     border-color: hsl(var(--success));
   }
 
-  /* Error/Destructive Colors */
+  /* Error/Destructive Color Utilities */
   .text-error {
     color: hsl(var(--destructive));
   }
@@ -42,7 +42,7 @@
     border-color: hsl(var(--destructive));
   }
 
-  /* Accent Colors */
+  /* Accent Color Utilities */
   .text-accent-blue {
     color: hsl(var(--accent-blue));
   }
@@ -59,7 +59,15 @@
     background-color: hsl(var(--accent-green));
   }
 
-  /* Glass Effect Colors */
+  .text-accent-yellow {
+    color: hsl(var(--accent-yellow));
+  }
+  
+  .bg-accent-yellow {
+    background-color: hsl(var(--accent-yellow));
+  }
+
+  /* Glass Effect Utilities */
   .bg-glass {
     background-color: hsl(var(--background) / 0.8);
     backdrop-filter: blur(8px);
@@ -70,7 +78,7 @@
     backdrop-filter: blur(12px);
   }
 
-  /* Gradient Text */
+  /* Gradient Text Utilities */
   .text-gradient-primary {
     background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary) / 0.8));
     -webkit-background-clip: text;
@@ -85,7 +93,7 @@
     -webkit-text-fill-color: transparent;
   }
 
-  /* Interactive Color States */
+  /* Interactive Color State Utilities */
   .hover-accent:hover {
     color: hsl(var(--accent-blue));
     transition: color 0.2s ease-in-out;
@@ -96,7 +104,7 @@
     transition: color 0.2s ease-in-out;
   }
 
-  /* Focus ring colors */
+  /* Focus Ring Color Utilities */
   .focus-ring-primary:focus {
     outline: 2px solid hsl(var(--primary));
     outline-offset: 2px;
@@ -106,13 +114,19 @@
     outline: 2px solid hsl(var(--accent-blue));
     outline-offset: 2px;
   }
-}
 
-/* CSS Variables for warning color fallback */
-:root {
-  --warning: 38 92% 50%; /* Orange/amber color */
-}
+  /* Surface Utilities */
+  .bg-surface {
+    background-color: hsl(var(--surface));
+    color: hsl(var(--surface-foreground));
+  }
 
-[data-theme="dark"] {
-  --warning: 38 92% 50%;
+  /* Brand Utilities */
+  .bg-brand-light {
+    background-color: hsl(var(--brand-light));
+  }
+
+  .text-brand {
+    color: hsl(var(--primary));
+  }
 }
