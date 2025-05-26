@@ -38,7 +38,7 @@ export function DatePickerField({ value, onChange }: DatePickerFieldProps) {
           <Button
             variant="outline"
             className={cn(
-              "w-full h-9 px-3 justify-start text-left font-normal bg-background/80 border-border/60 rounded-xl hover:bg-accent/50 transition-all duration-200 text-sm",
+              "w-full h-8 px-3 justify-start text-left font-normal bg-background/80 border-border/60 rounded-xl hover:bg-accent/50 transition-all duration-200 text-sm",
               !selectedDate && "text-muted-foreground/70"
             )}
           >

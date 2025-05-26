@@ -23,7 +23,7 @@ export function FormActions({
           onClick={onCancel}
           disabled={isSubmitting}
           size="sm"
-          className="px-4 py-1.5 bg-background/70 text-foreground border-border/60 hover:bg-accent/80 hover:text-accent-foreground rounded-xl transition-all duration-200 hover:shadow-md font-medium order-2 sm:order-1"
+          className="px-3 py-1 bg-background/70 text-foreground border-border/60 hover:bg-accent/80 hover:text-accent-foreground rounded-lg transition-all duration-200 hover:shadow-sm font-medium order-2 sm:order-1 h-8 text-xs"
         >
           {cancelLabel}
         </Button>
@@ -33,7 +33,7 @@ export function FormActions({
         disabled={isSubmitting}
         size="sm"
         variant="default"
-        className="px-6 py-1.5 bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl transition-all duration-200 hover:shadow-lg font-semibold order-1 sm:order-2"
+        className="px-4 py-1 bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg transition-all duration-200 hover:shadow-md font-semibold order-1 sm:order-2 h-8 text-xs"
       >
         {isSubmitting ? "Creating..." : submitLabel}
       </Button>

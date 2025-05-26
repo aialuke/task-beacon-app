@@ -27,14 +27,14 @@ export function PhotoUploadField({ onChange, preview }: PhotoUploadFieldProps) {
   };
 
   return (
-    <div className="space-y-2">
+    <div className="flex items-center gap-2">
       <label
         htmlFor="photo"
-        className="flex items-center justify-center gap-2 cursor-pointer bg-background/80 border-2 border-dashed border-border/60 rounded-xl h-9 px-3 text-xs font-medium text-foreground hover:bg-accent/50 hover:border-primary/50 transition-all duration-200 group"
+        className="flex items-center justify-center gap-2 cursor-pointer bg-background/80 border-2 border-dashed border-border/60 rounded-xl h-8 px-3 text-xs font-medium text-foreground hover:bg-accent/50 hover:border-primary/50 transition-all duration-200 group flex-1"
       >
         <ImageUp className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
         <span className="truncate group-hover:text-primary transition-colors">
-          {selectedFile || "Choose Image"}
+          {selectedFile || "Image"}
         </span>
         
         <Input
@@ -48,21 +48,19 @@ export function PhotoUploadField({ onChange, preview }: PhotoUploadFieldProps) {
       </label>
       
       {preview && (
-        <div className="animate-fade-in">
-          <div className="relative inline-block group">
-            <img
-              src={preview}
-              alt="Preview"
-              className="h-12 w-12 object-cover rounded-xl shadow-md border border-border/30 hover:shadow-lg transition-all duration-200"
-            />
-            <button
-              type="button"
-              onClick={clearPreview}
-              className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground rounded-full p-1 shadow-md opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110"
-            >
-              <X className="h-3 w-3" />
-            </button>
-          </div>
+        <div className="relative group">
+          <img
+            src={preview}
+            alt="Preview"
+            className="h-8 w-8 object-cover rounded-lg shadow-sm border border-border/30 hover:shadow-md transition-all duration-200"
+          />
+          <button
+            type="button"
+            onClick={clearPreview}
+            className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground rounded-full p-0.5 shadow-sm opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110"
+          >
+            <X className="h-2.5 w-2.5" />
+          </button>
         </div>
       )}
     </div>
