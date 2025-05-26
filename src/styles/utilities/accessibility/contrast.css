@@ -1,0 +1,31 @@
+
+/* src/styles/utilities/accessibility/contrast.css - High contrast and color utilities */
+@layer utilities {
+  /* ===== HIGH CONTRAST MODE UTILITIES ===== */
+  @media (forced-colors: active) {
+    .high-contrast-border {
+      border: 1px solid CanvasText;
+    }
+
+    .high-contrast-bg {
+      background: Canvas;
+      color: CanvasText;
+    }
+
+    .high-contrast-focus {
+      outline: 2px solid CanvasText;
+      outline-offset: 2px;
+    }
+  }
+
+  /* ===== COLOR CONTRAST UTILITIES ===== */
+  .text-high-contrast {
+    color: hsl(var(--foreground));
+    font-weight: 500;
+  }
+
+  .bg-high-contrast {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+}

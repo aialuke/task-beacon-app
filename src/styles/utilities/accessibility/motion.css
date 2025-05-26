@@ -1,0 +1,31 @@
+
+/* src/styles/utilities/accessibility/motion.css - Motion preference utilities */
+@layer utilities {
+  /* ===== MOTION PREFERENCES ===== */
+  @media (prefers-reduced-motion: reduce) {
+    .reduce-motion {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* ===== ENHANCED TOOLTIP UTILITIES ===== */
+  .tooltip-touch {
+    @apply visible opacity-100 transition-opacity duration-300;
+  }
+
+  @media (hover: none) {
+    .tooltip-touch {
+      @apply visible opacity-100;
+    }
+  }
+}

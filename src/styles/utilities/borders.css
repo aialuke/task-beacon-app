@@ -1,0 +1,12 @@
+
+/* src/styles/utilities/borders.css - Border radius and border utilities */
+@layer utilities {
+  /* ===== ENHANCED BORDER RADIUS UTILITIES ===== */
+  .rounded-xl-container {
+    border-radius: var(--radius-xl);
+  }
+
+  .rounded-full-container {
+    border-radius: var(--radius-full);
+  }
+}

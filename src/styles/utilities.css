@@ -8,4 +8,7 @@
   @import "./utilities/animations.css";
   @import "./utilities/shadows.css";
   @import "./utilities/accessibility.css";
+  @import "./utilities/responsive.css";
+  @import "./utilities/borders.css";
+  @import "./utilities/icons.css";
 }
