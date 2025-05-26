@@ -1,42 +1,26 @@
 
-/**
- * Validation utilities
- * 
- * This file contains utilities for validating data and input.
- */
+// Re-export common validation utilities for backward compatibility
+export { 
+  isValidEmail, 
+  isValidUrl, 
+  isValidPassword,
+  isDateInFuture,
+  COMMON_VALIDATION_MESSAGES,
+  emailSchema,
+  passwordSchema,
+  urlSchema,
+  futureDateSchema,
+  createTextSchema
+} from "@/schemas/commonValidation";
 
 /**
- * Validates an email address format
- * 
- * @param email - Email to validate
- * @returns True if the email format is valid
+ * Legacy validation functions - maintained for backward compatibility
+ * Consider migrating to the new schema-based validation system
  */
-export function isValidEmail(email: string): boolean {
-  // RFC 5322 compliant email regex pattern
-  const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-  return emailRegex.test(email);
-}
-
-/**
- * Validates a URL format
- * 
- * @param url - URL to validate
- * @returns True if the URL format is valid
- */
-export function isValidUrl(url: string): boolean {
-  try {
-    new URL(url);
-    return true;
-  } catch {
-    return false;
-  }
-}
 
 /**
  * Validates a password strength based on common requirements
- * 
- * @param password - Password to validate
- * @returns Object containing validity status and any errors
+ * @deprecated Use passwordSchema from commonValidation instead
  */
 export function validatePassword(password: string): { 
   isValid: boolean; 
@@ -72,9 +56,6 @@ export function validatePassword(password: string): {
 
 /**
  * Checks if a string contains only alphanumeric characters
- * 
- * @param value - String to check
- * @returns True if the string contains only alphanumeric characters
  */
 export function isAlphanumeric(value: string): boolean {
   return /^[a-zA-Z0-9]+$/.test(value);
@@ -82,22 +63,13 @@ export function isAlphanumeric(value: string): boolean {
 
 /**
  * Validates a date string format
- * 
- * @param dateString - Date string to validate (YYYY-MM-DD)
- * @returns True if the date format is valid
  */
 export function isValidDateFormat(dateString: string): boolean {
-  // Basic YYYY-MM-DD format check
   return /^\d{4}-\d{2}-\d{2}$/.test(dateString);
 }
 
 /**
  * Checks if a date is within a valid range
- * 
- * @param date - Date to validate
- * @param minDate - Minimum allowed date (optional)
- * @param maxDate - Maximum allowed date (optional)
- * @returns True if the date is within the valid range
  */
 export function isDateInRange(
   date: Date, 
@@ -108,4 +80,3 @@ export function isDateInRange(
   if (maxDate && date > maxDate) return false;
   return true;
 }
-

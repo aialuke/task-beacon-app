@@ -1,36 +1,74 @@
 
 import { useCallback } from "react";
-import { toast } from "@/lib/toast";
+import { useValidation } from "@/hooks/useValidation";
+import { createTextSchema } from "@/schemas/commonValidation";
+import { createTaskSchema } from "@/features/tasks/schemas/taskSchema";
 
 /**
  * Hook for form validation utilities
  */
 export function useFormValidation() {
+  const { validate, validateField, validateWithToast } = useValidation();
+
   /**
    * Validates the task title
    */
   const validateTitle = useCallback((value: string): boolean => {
-    if (value.length > 22) {
-      toast.error("Task title cannot exceed 22 characters");
-      return false;
-    }
-    return true;
-  }, []);
+    const titleSchema = createTextSchema(1, 22, true);
+    const result = validateField(titleSchema, value, "title", { showToast: true });
+    return result.isValid;
+  }, [validateField]);
 
   /**
    * Custom title setter with validation
    */
   const createTitleHandler = useCallback((setTitle: (value: string) => void) => {
     return (value: string) => {
-      // Limit to 22 characters
+      // Limit to 22 characters silently
       if (value.length <= 22) {
         setTitle(value);
       }
     };
   }, []);
 
+  /**
+   * Validate complete task form data
+   */
+  const validateTaskForm = useCallback((data: any) => {
+    return validateWithToast(createTaskSchema, data);
+  }, [validateWithToast]);
+
+  /**
+   * Validate URL field
+   */
+  const validateUrl = useCallback((value: string): boolean => {
+    if (!value || value.length === 0) return true;
+    try {
+      new URL(value);
+      return true;
+    } catch {
+      return false;
+    }
+  }, []);
+
+  /**
+   * Validate due date
+   */
+  const validateDueDate = useCallback((value: string): boolean => {
+    if (!value) return false;
+    const date = new Date(value);
+    return !isNaN(date.getTime()) && date > new Date(Date.now() - 24 * 60 * 60 * 1000);
+  }, []);
+
   return {
     validateTitle,
+    validateTaskForm,
+    validateUrl,
+    validateDueDate,
     createTitleHandler,
+    // Expose validation utilities
+    validate,
+    validateField,
+    validateWithToast,
   };
 }
