@@ -28,3 +28,19 @@ export interface TaskDialogState {
   type: 'create' | 'edit' | 'followUp' | null;
   taskId: string | null;
 }
+
+/**
+ * Task UI Context interface
+ */
+export interface TaskUIContextType {
+  // UI filters
+  filter: TaskFilter;
+  setFilter: (filter: TaskFilter) => void;
+  
+  // Expanded state
+  expandedTaskId: string | null;
+  setExpandedTaskId: (id: string | null) => void;
+  
+  // Mobile detection
+  isMobile: boolean;
+}

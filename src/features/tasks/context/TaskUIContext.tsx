@@ -1,5 +1,5 @@
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, useMemo, ReactNode } from "react";
 import { TaskFilter } from "../types";
 
 // Define the shape of our UI context
@@ -11,6 +11,9 @@ interface TaskUIContextType {
   // Expanded state
   expandedTaskId: string | null;
   setExpandedTaskId: (id: string | null) => void;
+  
+  // Mobile detection
+  isMobile: boolean;
 }
 
 const TaskUIContext = createContext<TaskUIContextType | undefined>(undefined);
@@ -18,7 +21,7 @@ const TaskUIContext = createContext<TaskUIContextType | undefined>(undefined);
 /**
  * Provider component for task UI-related state
  * 
- * Manages UI-only concerns like filters and expanded state
+ * Manages UI-only concerns like filters, expanded state, and mobile detection
  * 
  * @param children - React components that will consume the context
  */
@@ -26,14 +29,30 @@ export function TaskUIContextProvider({ children }: { children: ReactNode }) {
   // UI States
   const [filter, setFilter] = useState<TaskFilter>("all");
   const [expandedTaskId, setExpandedTaskId] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if the device is mobile on component mount and window resize
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkIfMobile();
+    window.addEventListener('resize', checkIfMobile);
+    
+    return () => window.removeEventListener('resize', checkIfMobile);
+  }, []);
+
+  const value = useMemo(() => ({
+    filter,
+    setFilter,
+    expandedTaskId,
+    setExpandedTaskId,
+    isMobile
+  }), [filter, expandedTaskId, isMobile]);
 
   return (
-    <TaskUIContext.Provider value={{
-      filter,
-      setFilter,
-      expandedTaskId,
-      setExpandedTaskId
-    }}>
+    <TaskUIContext.Provider value={value}>
       {children}
     </TaskUIContext.Provider>
   );
@@ -51,4 +70,10 @@ export function useTaskUIContext() {
     throw new Error("useTaskUIContext must be used within a TaskUIContextProvider");
   }
   return context;
+}
+
+// Legacy compatibility export - for backward compatibility during transition
+export function useUIContext() {
+  const context = useTaskUIContext();
+  return { isMobile: context.isMobile };
 }
