@@ -34,6 +34,7 @@ export function FloatingInput({
   const [isFocused, setIsFocused] = useState(false);
   const hasValue = value.length > 0;
   const isFloating = isFocused || hasValue;
+  const showCounter = maxLength && (isFocused || hasValue);
 
   return (
     <div className={cn("relative group", className)}>
@@ -60,7 +61,8 @@ export function FloatingInput({
           autoFocus={autoFocus}
           className={cn(
             "peer h-14 pt-6 pb-2 bg-background/60 backdrop-blur-sm border-border/40 rounded-2xl transition-all duration-300 focus:bg-background/80 focus:border-primary/60 focus:shadow-lg focus:shadow-primary/10 hover:bg-background/70 hover:border-border/60",
-            icon ? "pl-11 pr-4" : "px-4"
+            icon ? "pl-11" : "pl-4",
+            maxLength ? "pr-16" : "pr-4"
           )}
         />
         
@@ -76,6 +78,16 @@ export function FloatingInput({
         >
           {label}
         </label>
+
+        {/* Character counter inside input field */}
+        {showCounter && (
+          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 z-10">
+            <AnimatedCharacterCount 
+              current={value.length} 
+              max={maxLength} 
+            />
+          </div>
+        )}
       </div>
 
       {/* Enhanced focus ring */}
@@ -83,16 +95,6 @@ export function FloatingInput({
         "absolute inset-0 rounded-2xl transition-all duration-300 pointer-events-none",
         isFocused && "ring-2 ring-primary/30 ring-offset-2 ring-offset-background"
       )} />
-      
-      {/* Character counter */}
-      {maxLength && (
-        <div className="mt-1">
-          <AnimatedCharacterCount 
-            current={value.length} 
-            max={maxLength} 
-          />
-        </div>
-      )}
     </div>
   );
 }

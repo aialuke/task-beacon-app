@@ -1,5 +1,5 @@
 
-import { Calendar, User, ImageUp, Link, FileCheck, Send } from "lucide-react";
+import { Calendar, User, ImageUp, Link, FileCheck, Plane } from "lucide-react";
 import { useState, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -110,7 +110,7 @@ export function QuickActionBar({
         };
       case 'submit':
         return {
-          icon: Send,
+          icon: Plane,
           label: submitLabel,
           active: false
         };
@@ -132,6 +132,14 @@ export function QuickActionBar({
       : active
         ? "bg-primary/20 text-primary border border-primary/30 shadow-md shadow-primary/10"
         : "bg-background/60 text-muted-foreground border border-border/40 hover:bg-background/80 hover:text-foreground hover:border-border/60"
+  );
+
+  // Special styling for icon-only submit button
+  const submitButtonClasses = cn(
+    "flex items-center justify-center rounded-full transition-all duration-300 w-[44px] h-[44px] touch-manipulation",
+    "hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30",
+    "bg-primary text-primary-foreground border border-primary shadow-md hover:bg-primary/90",
+    disabled && "opacity-50 cursor-not-allowed hover:scale-100"
   );
 
   return (
@@ -218,28 +226,19 @@ export function QuickActionBar({
         </span>
       </button>
 
-      {/* Submit Button */}
+      {/* Submit Button - Icon Only */}
       {onSubmit && (
         <button
           type="submit"
           onClick={handleSubmit}
           disabled={disabled || isSubmitting}
-          className={getButtonClasses(false, true)}
+          className={submitButtonClasses}
+          title={isSubmitting ? "Creating..." : submitLabel}
         >
           {isSubmitting ? (
-            <>
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
-              <span className="text-sm font-medium hidden sm:inline whitespace-nowrap">
-                Creating...
-              </span>
-            </>
+            <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
           ) : (
-            <>
-              <Send className="h-4 w-4 transition-all duration-200 flex-shrink-0" />
-              <span className="text-sm font-medium hidden sm:inline whitespace-nowrap">
-                {getButtonContent('submit').label}
-              </span>
-            </>
+            <Plane className="h-4 w-4 transition-all duration-200 flex-shrink-0" />
           )}
         </button>
       )}
