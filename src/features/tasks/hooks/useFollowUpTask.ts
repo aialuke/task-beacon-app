@@ -5,6 +5,7 @@ import { toast } from "@/lib/toast";
 import { useNavigate } from "react-router-dom";
 import { showBrowserNotification, triggerHapticFeedback } from "@/lib/notification";
 import { useTaskForm } from "./useTaskForm";
+import { useTaskValidation } from "./useTaskValidation";
 import { createFollowUpTask, uploadTaskPhoto } from "@/integrations/supabase/api/tasks.api";
 
 interface UseFollowUpTaskProps {
@@ -19,6 +20,7 @@ interface UseFollowUpTaskProps {
  */
 export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
   const navigate = useNavigate();
+  const { validateTitle } = useTaskValidation();
   
   const taskForm = useTaskForm({
     onClose: onClose || (() => navigate("/"))
@@ -29,8 +31,8 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate title length
-    if (!taskForm.validateTitle(taskForm.title)) return;
+    // Validate title using schema validation
+    if (!validateTitle(taskForm.title)) return;
     
     taskForm.setLoading(true);
 
@@ -78,6 +80,7 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
     taskForm,
     assigneeId,
     parentTask.id,
+    validateTitle,
   ]);
 
   return {

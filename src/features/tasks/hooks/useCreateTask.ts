@@ -3,6 +3,7 @@ import { useCallback } from "react";
 import { toast } from "@/lib/toast";
 import { useNavigate } from "react-router-dom";
 import { useTaskForm } from "./useTaskForm";
+import { useTaskValidation } from "./useTaskValidation";
 import { createTask, uploadTaskPhoto } from "@/integrations/supabase/api/tasks.api";
 import { getCurrentUserId } from "@/integrations/supabase/api/base.api";
 
@@ -17,6 +18,7 @@ interface UseCreateTaskProps {
  */
 export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
   const navigate = useNavigate();
+  const { validateTaskForm } = useTaskValidation();
   
   const taskForm = useTaskForm({ 
     onClose: onClose || (() => navigate("/"))
@@ -28,17 +30,18 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate title length
-    if (!taskForm.validateTitle(taskForm.title)) return;
-    
-    // Validate required fields
-    if (!taskForm.title.trim()) {
-      toast.error("Title is required");
-      return;
-    }
-    
-    if (!taskForm.dueDate) {
-      toast.error("Due date is required");
+    // Validate the complete form using schema validation
+    const formData = {
+      title: taskForm.title,
+      description: taskForm.description,
+      dueDate: taskForm.dueDate,
+      url: taskForm.url,
+      pinned: taskForm.pinned,
+      assigneeId: taskForm.assigneeId,
+    };
+
+    const validationResult = validateTaskForm(formData);
+    if (!validationResult.isValid) {
       return;
     }
     
@@ -79,7 +82,7 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
     } finally {
       taskForm.setLoading(false);
     }
-  }, [taskForm]);
+  }, [taskForm, validateTaskForm]);
 
   return {
     ...taskForm,

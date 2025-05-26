@@ -1,7 +1,7 @@
 
 import { useCallback } from "react";
 import { useValidation } from "@/hooks/useValidation";
-import { createTextSchema } from "@/schemas/commonValidation";
+import { createTextSchema, urlSchema } from "@/schemas/commonValidation";
 
 /**
  * Generic form validation utilities
@@ -32,31 +32,16 @@ export function useFormValidation() {
   }, []);
 
   /**
-   * Validate URL field
+   * Validate URL field using schema
    */
   const validateUrl = useCallback((value: string): boolean => {
-    if (!value || value.length === 0) return true;
-    try {
-      new URL(value);
-      return true;
-    } catch {
-      return false;
-    }
-  }, []);
-
-  /**
-   * Validate due date
-   */
-  const validateDueDate = useCallback((value: string): boolean => {
-    if (!value) return false;
-    const date = new Date(value);
-    return !isNaN(date.getTime()) && date > new Date(Date.now() - 24 * 60 * 60 * 1000);
-  }, []);
+    const result = validateField(urlSchema, value, "url");
+    return result.isValid;
+  }, [validateField]);
 
   return {
     validateText,
     validateUrl,
-    validateDueDate,
     createTextHandler,
     // Expose validation utilities
     validate,

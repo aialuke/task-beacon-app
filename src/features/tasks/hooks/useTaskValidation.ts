@@ -1,7 +1,7 @@
 
 import { useCallback } from "react";
 import { useValidation } from "@/hooks/useValidation";
-import { createTextSchema } from "@/schemas/commonValidation";
+import { createTextSchema, urlSchema, futureDateSchema } from "@/schemas/commonValidation";
 import { createTaskSchema } from "@/features/tasks/schemas/taskSchema";
 
 /**
@@ -39,26 +39,21 @@ export function useTaskValidation() {
   }, [validateWithToast]);
 
   /**
-   * Validate URL field
+   * Validate URL field using schema
    */
   const validateUrl = useCallback((value: string): boolean => {
-    if (!value || value.length === 0) return true;
-    try {
-      new URL(value);
-      return true;
-    } catch {
-      return false;
-    }
-  }, []);
+    const result = validateField(urlSchema, value, "url");
+    return result.isValid;
+  }, [validateField]);
 
   /**
-   * Validate due date
+   * Validate due date using schema
    */
   const validateDueDate = useCallback((value: string): boolean => {
     if (!value) return false;
-    const date = new Date(value);
-    return !isNaN(date.getTime()) && date > new Date(Date.now() - 24 * 60 * 60 * 1000);
-  }, []);
+    const result = validateField(futureDateSchema, value, "dueDate");
+    return result.isValid;
+  }, [validateField]);
 
   return {
     validateTitle,
