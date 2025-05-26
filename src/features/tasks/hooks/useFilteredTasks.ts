@@ -1,7 +1,6 @@
 
 import { useMemo } from "react";
-import { Task } from "@/lib/types";
-import { TaskFilter } from "../types";
+import { Task, TaskFilter } from "@/types";
 
 /**
  * Hook for filtering tasks based on the selected filter
@@ -14,29 +13,33 @@ export function useFilteredTasks(
   tasks: Task[],
   filter: TaskFilter
 ) {
-  // Memoize filter functions to prevent recreating them on every render
-  const filterFunctions = useMemo(() => ({
-    all: (task: Task) => task.status !== "complete",
-    assigned: (task: Task) => 
-      task.owner_id && 
-      task.assignee_id && 
-      task.owner_id !== task.assignee_id,
-    overdue: (task: Task) => {
-      const dueDate = task.due_date ? new Date(task.due_date) : new Date();
-      const now = new Date();
-      return dueDate < now && task.status !== "complete";
-    },
-    complete: (task: Task) => task.status === "complete",
-    pending: (task: Task) => {
-      const dueDate = task.due_date ? new Date(task.due_date) : new Date();
-      const now = new Date();
-      return dueDate >= now && task.status !== "complete";
-    }
-  }), []); // These functions don't depend on any props, so they're created only once
-
-  // Apply the selected filter function to the tasks array
+  // Optimized: Create filter functions only once and memoize the result
   return useMemo(() => {
-    const filterFunction = filterFunctions[filter];
-    return tasks.filter(filterFunction);
-  }, [tasks, filter, filterFunctions]); // Include filterFunctions in dependencies
+    switch (filter) {
+      case 'all':
+        return tasks.filter(task => task.status !== "complete");
+      case 'assigned':
+        return tasks.filter(task => 
+          task.owner_id && 
+          task.assignee_id && 
+          task.owner_id !== task.assignee_id
+        );
+      case 'overdue':
+        return tasks.filter(task => {
+          if (task.status === "complete") return false;
+          const dueDate = task.due_date ? new Date(task.due_date) : new Date();
+          return dueDate < new Date();
+        });
+      case 'complete':
+        return tasks.filter(task => task.status === "complete");
+      case 'pending':
+        return tasks.filter(task => {
+          if (task.status === "complete") return false;
+          const dueDate = task.due_date ? new Date(task.due_date) : new Date();
+          return dueDate >= new Date();
+        });
+      default:
+        return tasks;
+    }
+  }, [tasks, filter]);
 }

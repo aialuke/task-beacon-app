@@ -4,7 +4,7 @@
  */
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { Task, TaskStatus } from "./types";
+import { Task, TaskStatus } from "@/types";
 import { getDaysRemaining } from "./dateUtils";
 
 /**

@@ -1,6 +1,5 @@
-
 import { memo } from "react";
-import { TaskStatus } from "@/lib/types";
+import { TaskStatus } from "@/types";
 
 /**
  * TimerDisplay Component

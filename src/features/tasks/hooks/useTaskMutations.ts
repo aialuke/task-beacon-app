@@ -1,7 +1,7 @@
 
 import { useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Task } from "@/lib/types";
+import { Task } from "@/types";
 import { toast } from "@/lib/toast";
 import { showBrowserNotification, triggerHapticFeedback } from "@/lib/notification";
 import { 

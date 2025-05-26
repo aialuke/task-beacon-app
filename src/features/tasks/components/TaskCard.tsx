@@ -1,6 +1,6 @@
 
 import { memo } from "react";
-import { Task } from "@/lib/types";
+import { Task } from "@/types";
 import { Suspense } from "react";
 import TaskHeader from "./TaskHeader";
 import TaskDetails from "./TaskDetails";

@@ -1,6 +1,6 @@
 
-import { useState, useEffect, useRef, useMemo } from "react";
-import { TaskStatus } from "@/lib/types";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import { TaskStatus } from "@/types";
 import { 
   getDaysRemaining,
   formatTimeDisplay,
@@ -19,22 +19,18 @@ import { calculateTimerOffset } from "@/lib/animationUtils";
  * @returns The calculated timer state values
  */
 export function useCountdown(dueDate: string | null, status: TaskStatus, circumference: number) {
-  // Memoize the initial days left calculation to avoid unnecessary recalculations
-  const initialDaysLeft = useMemo(() => 
-    dueDate ? getDaysRemaining(dueDate) : 0
-  , [dueDate]);
+  // Memoize initial calculations to prevent unnecessary work
+  const initialValues = useMemo(() => {
+    const daysLeft = dueDate ? getDaysRemaining(dueDate) : 0;
+    const timeDisplay = dueDate ? formatTimeDisplay(daysLeft, dueDate, status) : "No due date";
+    return { daysLeft, timeDisplay };
+  }, [dueDate, status]);
   
-  const [daysLeft, setDaysLeft] = useState<number>(initialDaysLeft);
-  
-  // Memoize the time display calculation
-  const initialTimeDisplay = useMemo(() => 
-    dueDate ? formatTimeDisplay(initialDaysLeft, dueDate, status) : "No due date"
-  , [dueDate, initialDaysLeft, status]);
-  
-  const [timeDisplay, setTimeDisplay] = useState<string>(initialTimeDisplay);
+  const [daysLeft, setDaysLeft] = useState<number>(initialValues.daysLeft);
+  const [timeDisplay, setTimeDisplay] = useState<string>(initialValues.timeDisplay);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Memoize tooltip content to avoid recalculation
+  // Memoize tooltip content calculation
   const tooltipContent = useMemo(() => {
     if (!dueDate) return "No due date set";
     
@@ -69,8 +65,8 @@ export function useCountdown(dueDate: string | null, status: TaskStatus, circumf
     [daysLeft, status]
   );
 
-  // Memoize the update function to prevent recreation on re-renders
-  const updateTimeLeft = useMemo(() => () => {
+  // Optimize the update function with useCallback
+  const updateTimeLeft = useCallback(() => {
     if (!dueDate) return;
     
     const days = getDaysRemaining(dueDate);
@@ -88,21 +84,23 @@ export function useCountdown(dueDate: string | null, status: TaskStatus, circumf
     // Initial update
     updateTimeLeft();
     
-    const cleanup = () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-    };
-
-    cleanup(); // Clear any existing interval
+    // Clear any existing interval
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
     
     // Only set interval if we need updates
     if (updateInterval > 0) {
       intervalRef.current = setInterval(updateTimeLeft, updateInterval);
     }
 
-    return cleanup;
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
   }, [dueDate, status, updateInterval, updateTimeLeft]);
 
   // Memoize the ARIA label to avoid recalculation

@@ -13,18 +13,11 @@
  * - Validation utilities: import { isValidEmail, emailSchema } from "@/schemas/commonValidation";
  */
 
-// === COMMONLY USED RE-EXPORTS ===
-// UI utilities (most frequently used)
-export { cn, getStatusColor, getTimerColor } from './uiUtils';
-
-// Date utilities (frequently used in tasks)
-export { formatDate, getDaysRemaining, getTimeUntilDue } from './dateUtils';
-
-// Format utilities (commonly used for display)
-export { truncateText, truncateUrl } from './formatUtils';
-
-// Data utilities (used in filtering and sorting)
-export { sortByProperty, searchByTerm } from './dataUtils';
+// === MOST COMMONLY USED RE-EXPORTS ===
+// Only re-export utilities used in 3+ components to reduce bundle bloat
+export { cn } from './uiUtils';
+export { formatDate } from './dateUtils';
+export { truncateText } from './formatUtils';
 
 // === CORE UTILITY FUNCTIONS ===
 

@@ -1,6 +1,6 @@
 
 import { memo } from "react";
-import { Task } from "@/lib/types";
+import { Task } from "@/types";
 import { getTaskStatus } from "@/lib/uiUtils";
 import CountdownTimer from "@/components/CountdownTimer";
 
