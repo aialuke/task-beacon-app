@@ -10,13 +10,19 @@ interface UserSearchInputProps {
   onChange: (value: string) => void;
   disabled?: boolean;
   placeholder?: string;
+  className?: string;
+  onFocus?: () => void;
+  onBlur?: () => void;
 }
 
 export default function UserSearchInput({ 
   value, 
   onChange, 
   disabled = false,
-  placeholder = "Assign task" 
+  placeholder = "Assign task",
+  className,
+  onFocus,
+  onBlur
 }: UserSearchInputProps) {
   const [users, setUsers] = useState<{ id: string; name?: string; email: string }[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -95,19 +101,22 @@ export default function UserSearchInput({
 
   const handleInputFocus = () => {
     setIsOpen(true);
+    onFocus?.();
   };
 
   const handleInputBlur = () => {
     setTimeout(() => {
       setIsOpen(false);
     }, 150);
+    onBlur?.();
   };
 
   return (
     <div className="relative w-full">
       <div className={cn(
         "flex items-center p-2 bg-background/70 border border-border/60 rounded-xl h-12 transition-all duration-200",
-        disabled ? "opacity-50" : "hover:bg-accent/50"
+        disabled ? "opacity-50" : "hover:bg-accent/50",
+        className
       )}>
         <User className="h-5 w-5 text-muted-foreground mr-3" />
         
