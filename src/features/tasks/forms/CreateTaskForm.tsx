@@ -59,21 +59,23 @@ export default function CreateTaskForm({
           className="bg-background/70 text-foreground border-border/60 placeholder:text-muted-foreground/70 rounded-xl px-4 py-3 transition-all duration-200 focus:shadow-lg focus:bg-background resize-none"
         />
         
-        <DatePickerField 
-          value={dueDate}
-          onChange={(e) => setDueDate(e.target.value)}
-        />
-        
-        <div className="relative">
-          <Input
-            id="url"
-            type="url"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            placeholder="https://example.com"
-            className="bg-background/70 text-foreground border-border/60 placeholder:text-muted-foreground/70 rounded-xl h-12 px-4 pl-10 transition-all duration-200 focus:shadow-lg focus:bg-background"
+        <div className="grid grid-cols-2 gap-4">
+          <DatePickerField 
+            value={dueDate}
+            onChange={(e) => setDueDate(e.target.value)}
           />
-          <Link className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+          
+          <div className="relative">
+            <Input
+              id="url"
+              type="url"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              placeholder="https://example.com"
+              className="bg-background/70 text-foreground border-border/60 placeholder:text-muted-foreground/70 rounded-xl h-12 px-4 pl-10 transition-all duration-200 focus:shadow-lg focus:bg-background"
+            />
+            <Link className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+          </div>
         </div>
         
         <div className="grid grid-cols-2 gap-4">
