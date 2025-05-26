@@ -1,5 +1,5 @@
 
-import { Calendar, User, FileText, Link } from "lucide-react";
+import { Calendar, User, FileText, Link, FileCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface QuickActionBarProps {
@@ -8,13 +8,13 @@ interface QuickActionBarProps {
     assignee: boolean;
     photo: boolean;
     url: boolean;
-    description: boolean;
   };
   onToggle: (toggle: keyof QuickActionBarProps['activeToggles']) => void;
   disabled?: boolean;
+  hasUrl?: boolean;
 }
 
-export function QuickActionBar({ activeToggles, onToggle, disabled = false }: QuickActionBarProps) {
+export function QuickActionBar({ activeToggles, onToggle, disabled = false, hasUrl = false }: QuickActionBarProps) {
   const toggles = [
     {
       key: 'dueDate' as const,
@@ -36,20 +36,14 @@ export function QuickActionBar({ activeToggles, onToggle, disabled = false }: Qu
     },
     {
       key: 'url' as const,
-      icon: Link,
+      icon: hasUrl ? FileCheck : Link,
       label: 'Link',
-      active: activeToggles.url
-    },
-    {
-      key: 'description' as const,
-      icon: FileText,
-      label: 'Notes',
-      active: activeToggles.description
+      active: activeToggles.url || hasUrl
     }
   ];
 
   return (
-    <div className="flex flex-wrap gap-2 p-4 bg-background/30 backdrop-blur-sm rounded-xl border border-border/20">
+    <div className="flex flex-wrap gap-2 p-4 bg-background/30 backdrop-blur-sm rounded-xl">
       {toggles.map(({ key, icon: Icon, label, active }) => (
         <button
           key={key}
@@ -57,7 +51,7 @@ export function QuickActionBar({ activeToggles, onToggle, disabled = false }: Qu
           onClick={() => onToggle(key)}
           disabled={disabled}
           className={cn(
-            "flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 min-h-[44px] touch-manipulation",
+            "flex items-center justify-center gap-2 px-4 py-2 rounded-full transition-all duration-300 min-h-[44px] min-w-[44px] touch-manipulation",
             "hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30",
             active
               ? "bg-primary/20 text-primary border border-primary/30 shadow-md shadow-primary/10"
@@ -66,10 +60,10 @@ export function QuickActionBar({ activeToggles, onToggle, disabled = false }: Qu
           )}
         >
           <Icon className={cn(
-            "h-4 w-4 transition-all duration-200",
+            "h-4 w-4 transition-all duration-200 flex-shrink-0",
             active && "scale-110"
           )} />
-          <span className="text-sm font-medium hidden sm:inline">{label}</span>
+          <span className="text-sm font-medium hidden sm:inline whitespace-nowrap">{label}</span>
         </button>
       ))}
     </div>

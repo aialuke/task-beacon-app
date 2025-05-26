@@ -33,13 +33,12 @@ export default function CreateTaskForm({
     handleSubmit
   } = useCreateTask({ onClose });
 
-  // Toggle states for progressive disclosure
+  // Toggle states for progressive disclosure (removed description)
   const [activeToggles, setActiveToggles] = useState({
     dueDate: false,
     assignee: false,
     photo: false,
-    url: false,
-    description: false
+    url: false
   });
 
   const handleToggle = (toggle: keyof typeof activeToggles) => {
@@ -77,26 +76,25 @@ export default function CreateTaskForm({
           required
         />
         
+        {/* Description Field - Always Visible */}
+        <FloatingTextarea
+          id="description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Describe your task..."
+          label="Description"
+        />
+        
         {/* Quick Action Toggle Bar */}
         <QuickActionBar
           activeToggles={activeToggles}
           onToggle={handleToggle}
           disabled={loading}
+          hasUrl={!!url}
         />
         
         {/* Progressive Field Reveals */}
         <div className="space-y-2">
-          {/* Description Field */}
-          <ProgressiveFieldContainer isVisible={activeToggles.description}>
-            <FloatingTextarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Describe your task..."
-              label="Description"
-            />
-          </ProgressiveFieldContainer>
-
           {/* Date and URL Row */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <ProgressiveFieldContainer isVisible={activeToggles.dueDate}>
