@@ -1,23 +1,30 @@
 
 import { useCallback } from "react";
-import { usePhotoUpload } from "@/components/form/hooks/usePhotoUpload";
-import { useTaskFormValidation } from "./useTaskFormValidation";
 import { useTaskFormState, UseTaskFormStateOptions } from "./useTaskFormState";
+import { useTaskPhotoUpload } from "./useTaskPhotoUpload";
+import { useTaskValidation } from "./useTaskValidation";
 
 /**
- * Simplified task form hook with standardized validation
+ * Coordinated task form hook
+ * 
+ * Orchestrates form state, photo upload, and validation
+ * while keeping individual concerns separated
  */
 export function useTaskForm(options: UseTaskFormStateOptions = {}) {
   const formState = useTaskFormState(options);
-  const photoUpload = usePhotoUpload();
-  const { validateTitle, createTitleSetter } = useTaskFormValidation();
+  const photoUpload = useTaskPhotoUpload();
+  const validation = useTaskValidation();
 
-  const setTitle = createTitleSetter(formState.setTitle);
+  // Create title setter with validation
+  const setTitle = validation.createTitleSetter(formState.setTitle);
 
   const resetForm = useCallback(() => {
     formState.resetFormState();
     photoUpload.resetPhoto();
   }, [formState, photoUpload]);
+
+  // Combined loading state
+  const loading = formState.loading || photoUpload.photoLoading;
 
   return {
     // Form state
@@ -30,11 +37,14 @@ export function useTaskForm(options: UseTaskFormStateOptions = {}) {
     handlePhotoChange: photoUpload.handlePhotoChange,
     uploadPhoto: photoUpload.uploadPhoto,
     
-    // Loading state (combined)
-    loading: formState.loading || photoUpload.loading,
+    // Validation
+    validateTitle: validation.validateTitle,
+    validateTaskForm: validation.validateTaskForm,
+    
+    // Combined state
+    loading,
     
     // Form actions
     resetForm,
-    validateTitle,
   };
 }
