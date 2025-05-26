@@ -1,9 +1,8 @@
-
 import { memo } from "react";
 import { Button } from "@/components/ui/button";
 import { Task } from "@/lib/types";
 import { Pin } from "lucide-react";
-import { useUIContext } from "@/contexts/UIContext";
+import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
 import TaskStatus from "./TaskStatus";
 import TaskExpandButton from "./TaskExpandButton";
 

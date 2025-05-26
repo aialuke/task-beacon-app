@@ -3,7 +3,7 @@ import { useSpring, animated, config } from "@react-spring/web";
 import { TaskStatus } from "@/lib/types";
 import TimerRing from "./timer/TimerRing";
 import TimerDisplay from "./timer/TimerDisplay";
-import { useUIContext } from "@/contexts/UIContext";
+import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
 import { Tooltip, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import TimerTooltip from "./timer/TimerTooltip";
 import { 
@@ -43,7 +43,7 @@ function CountdownTimer({
   size = 48,
   priority = "medium",
 }: CountdownTimerProps) {
-  const { isMobile } = useUIContext();
+  const { isMobile } = useTaskUIContext();
   
   // Calculate and memoize size-related values to avoid recalculation
   const { dynamicSize, radius, circumference } = useMemo(() => {

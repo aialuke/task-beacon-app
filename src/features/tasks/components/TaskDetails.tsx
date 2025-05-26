@@ -1,8 +1,7 @@
-
 import { memo } from "react";
 import { Task } from "@/lib/types";
 import { animated, SpringValue } from "@react-spring/web";
-import { useUIContext } from "@/contexts/UIContext";
+import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
 import TaskActions from "./TaskActions";
 import TaskMetadata from "./TaskMetadata";
 import ParentTaskInfo from "./ParentTaskInfo";
@@ -23,7 +22,7 @@ function TaskDetails({
   animationState,
   contentRef,
 }: TaskDetailsProps) {
-  const { isMobile } = useUIContext();
+  const { isMobile } = useTaskUIContext();
 
   return (
     <animated.div
