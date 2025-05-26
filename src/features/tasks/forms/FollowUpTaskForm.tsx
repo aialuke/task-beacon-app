@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Task } from "@/lib/types";
+import { Task } from "@/types";
 import { useFollowUpTask } from "@/features/tasks/hooks/useFollowUpTask";
 import { BaseTaskForm } from "@/components/form/BaseTaskForm";
 import { ParentTaskReference } from "@/components/form/ParentTaskReference";

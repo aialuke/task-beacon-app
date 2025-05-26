@@ -1,6 +1,6 @@
 
 // src/lib/mockDataTasks.ts
-import { Task } from "./types";
+import { Task } from "@/types";
 
 export const mockDataTasks: Task[] = [
   {

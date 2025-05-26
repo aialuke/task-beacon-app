@@ -1,6 +1,6 @@
 
 import { useState, useCallback } from "react";
-import { Task } from "@/lib/types";
+import { Task } from "@/types";
 import { toast } from "@/lib/toast";
 import { useNavigate } from "react-router-dom";
 import { showBrowserNotification, triggerHapticFeedback } from "@/lib/notification";

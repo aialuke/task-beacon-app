@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Task } from "@/lib/types";
+import { Task } from "@/types";
 import { ReferenceCard } from "@/components/form/ReferenceCard";
 
 interface ParentTaskReferenceProps {

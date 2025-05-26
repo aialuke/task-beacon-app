@@ -1,7 +1,8 @@
+
 // Move from src/pages/TaskDetailsPage.tsx
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Task } from "@/lib/types";
+import { Task } from "@/types";
 import { supabase, isMockingSupabase } from "@/integrations/supabase/client";
 import { toast } from "@/lib/toast";
 import { formatDate } from "@/lib/dateUtils";

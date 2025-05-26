@@ -1,6 +1,6 @@
 
 import { createContext, useContext, useState, ReactNode } from "react";
-import { Task } from "@/lib/types";
+import { Task } from "@/types";
 import { useTaskQueries } from "@/features/tasks/hooks/useTaskQueries";
 import { useTaskMutations } from "@/features/tasks/hooks/useTaskMutations";
 

@@ -5,6 +5,8 @@
  * This file contains utilities for animations and transitions throughout the app.
  */
 
+import { TaskStatus } from "@/types";
+
 // Calculate the offset for the timer ring based on days left and status
 export function calculateTimerOffset(
   circumference: number,
@@ -101,7 +103,3 @@ export function pulseElement(element: HTMLElement | null, duration: number = 100
 export function prefersReducedMotion(): boolean {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
-
-// Import TaskStatus type for timer functions
-import { TaskStatus } from "./types";
-

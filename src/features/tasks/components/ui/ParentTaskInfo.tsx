@@ -2,7 +2,7 @@
 import { memo } from "react";
 import { Link } from "react-router-dom";
 import { ExternalLink } from "lucide-react";
-import { ParentTask } from "@/lib/types";
+import { ParentTask } from "@/types";
 
 interface ParentTaskInfoProps {
   parentTask: ParentTask;

@@ -1,5 +1,6 @@
+
 import { memo } from "react";
-import { Task } from "@/lib/types";
+import { Task } from "@/types";
 import { animated, SpringValue } from "@react-spring/web";
 import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
 import TaskActions from "./TaskActions";

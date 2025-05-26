@@ -3,7 +3,7 @@ import {
   TooltipContent,
   TooltipArrow,
 } from "@/components/ui/tooltip";
-import { TaskStatus } from "@/lib/types";
+import { TaskStatus } from "@/types";
 
 interface TimerTooltipProps {
   tooltipContent: string;

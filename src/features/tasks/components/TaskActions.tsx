@@ -1,7 +1,7 @@
 
 import { useCallback, memo } from "react";
 import { Button } from "@/components/ui/button";
-import { Task } from "@/lib/types";
+import { Task } from "@/types";
 import { useNavigate } from "react-router-dom";
 import { useTaskContext } from "../context/TaskContext";
 import { useTaskMutations } from "../hooks/useTaskMutations";
