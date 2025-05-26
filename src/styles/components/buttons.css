@@ -33,21 +33,4 @@
     outline-offset: 2px !important;
     box-shadow: 0 0 0 4px hsl(var(--primary) / 0.2) !important;
   }
-
-  /* ===== TEXT COLOR OVERRIDES (KEEP THESE) ===== */
-  .text-primary-foreground {
-    color: hsl(var(--primary-foreground)) !important;
-  }
-
-  .text-destructive-foreground {
-    color: hsl(var(--destructive-foreground)) !important;
-  }
-
-  .text-secondary-foreground {
-    color: hsl(var(--secondary-foreground)) !important;
-  }
-
-  .border-input {
-    border-color: hsl(var(--border)) !important;
-  }
 }

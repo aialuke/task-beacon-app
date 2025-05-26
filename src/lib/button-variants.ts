@@ -7,17 +7,17 @@ export const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90 rounded-full shadow hover:shadow-md",
+        default: "bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 rounded-full shadow hover:shadow-md",
         destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-full shadow hover:shadow-md",
+          "bg-red-600 text-white hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 rounded-full shadow hover:shadow-md",
         outline:
-          "border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-full shadow hover:shadow-md",
+          "border border-gray-300 bg-white text-gray-900 hover:bg-gray-50 hover:text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700 rounded-full shadow hover:shadow-md",
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-full shadow hover:shadow-md",
-        ghost: "hover:bg-accent hover:text-accent-foreground rounded-full",
-        link: "text-primary underline-offset-4 hover:underline",
+          "bg-gray-100 text-gray-900 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600 rounded-full shadow hover:shadow-md",
+        ghost: "hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-700 dark:hover:text-gray-100 rounded-full",
+        link: "text-blue-600 underline-offset-4 hover:underline dark:text-blue-400",
         brand: "bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 dark:from-blue-400 dark:to-blue-500 dark:hover:from-blue-500 dark:hover:to-blue-600 rounded-full shadow hover:shadow-md",
-        "brand-secondary": "bg-secondary text-primary hover:bg-secondary/80 rounded-full shadow hover:shadow-md",
+        "brand-secondary": "bg-gray-100 text-blue-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-blue-400 dark:hover:bg-gray-600 rounded-full shadow hover:shadow-md",
       },
       size: {
         default: "h-10 px-4 py-2",
