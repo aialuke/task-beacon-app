@@ -47,10 +47,7 @@ export function UrlInputModal({ isOpen, onClose, value, onChange }: UrlInputModa
             autoFocus
           />
           
-          <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={handleCancel}>
-              Cancel
-            </Button>
+          <div className="flex justify-end">
             <Button onClick={handleSave}>
               Save URL
             </Button>
