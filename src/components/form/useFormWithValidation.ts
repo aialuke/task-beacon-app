@@ -20,7 +20,7 @@ export function useFormWithValidation<T>({
 }: UseFormWithValidationOptions<T>) {
   const form = useForm<T>({
     resolver: zodResolver(schema),
-    defaultValues,
+    defaultValues: defaultValues as any, // Type assertion to fix the generic constraint
   });
 
   const handleSubmit = useCallback(async (data: T) => {
@@ -40,5 +40,6 @@ export function useFormWithValidation<T>({
   return {
     ...form,
     onSubmit: handleSubmit,
+    isSubmitting: form.formState.isSubmitting, // Explicitly expose isSubmitting
   };
 }
