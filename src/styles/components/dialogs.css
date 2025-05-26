@@ -14,29 +14,40 @@
     z-index: 9999;
   }
 
-  /* ===== ENHANCED DIALOG CONTENT STYLING ===== */
+  /* ===== ENHANCED DIALOG CONTENT STYLING WITH HIGHER SPECIFICITY ===== */
   .dialog-content, 
   [class*="dialog-content"],
   .popover-content,
   [class*="popover-content"],
   [data-radix-dialog-content],
-  [data-radix-popover-content] {
-    padding: 1.5rem;
-    background: hsl(var(--popover)) !important;
-    color: hsl(var(--popover-foreground)) !important;
-    border: 1px solid hsl(var(--border)) !important;
-    border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-lg);
-    max-height: 90vh;
-    overflow-y: auto;
-  }
-
-  /* ===== RADIX UI SPECIFIC OVERRIDES ===== */
+  [data-radix-popover-content],
   [data-radix-portal] [data-radix-dialog-content],
-  [data-radix-portal] [data-radix-popover-content] {
+  [data-radix-portal] [data-radix-popover-content],
+  [data-state="open"][data-radix-dialog-content],
+  [data-state="open"][data-radix-popover-content] {
+    padding: 1.5rem !important;
+    background: hsl(var(--popover)) !important;
     background-color: hsl(var(--popover)) !important;
     color: hsl(var(--popover-foreground)) !important;
     border: 1px solid hsl(var(--border)) !important;
+    border-radius: var(--radius-xl) !important;
+    box-shadow: var(--shadow-lg) !important;
+    max-height: 90vh;
+    overflow-y: auto;
+    opacity: 1 !important;
+  }
+
+  /* ===== RADIX UI SPECIFIC OVERRIDES WITH MAXIMUM SPECIFICITY ===== */
+  [data-radix-portal] [data-radix-dialog-content],
+  [data-radix-portal] [data-radix-popover-content],
+  div[data-radix-portal] div[data-radix-dialog-content],
+  div[data-radix-portal] div[data-radix-popover-content],
+  body [data-radix-portal] [data-radix-dialog-content],
+  body [data-radix-portal] [data-radix-popover-content] {
+    background-color: hsl(var(--popover)) !important;
+    color: hsl(var(--popover-foreground)) !important;
+    border: 1px solid hsl(var(--border)) !important;
+    opacity: 1 !important;
   }
 
   /* ===== DIALOG OVERLAY ENHANCEMENTS ===== */
@@ -46,7 +57,7 @@
     backdrop-filter: blur(4px);
   }
 
-  /* ===== ENHANCED DARK MODE DIALOGS ===== */
+  /* ===== ENHANCED DARK MODE DIALOGS WITH MAXIMUM SPECIFICITY ===== */
   .dark .select-content,
   .dark [data-radix-popper-content-wrapper],
   .dark [data-radix-dropdown-menu-content],
@@ -56,11 +67,16 @@
   .dark .popover-content,
   .dark [class*="popover-content"],
   .dark [data-radix-dialog-content],
-  .dark [data-radix-popover-content] {
+  .dark [data-radix-popover-content],
+  body.dark [data-radix-portal] [data-radix-dialog-content],
+  body.dark [data-radix-portal] [data-radix-popover-content],
+  html.dark [data-radix-portal] [data-radix-dialog-content],
+  html.dark [data-radix-portal] [data-radix-popover-content] {
     background-color: hsl(var(--popover)) !important;
     border-color: hsl(var(--border)) !important;
     color: hsl(var(--popover-foreground)) !important;
-    box-shadow: var(--shadow-xl), 0 0 0 1px hsl(var(--border) / 0.5);
+    box-shadow: var(--shadow-xl), 0 0 0 1px hsl(var(--border) / 0.5) !important;
+    opacity: 1 !important;
   }
 
   .dark .dialog-overlay,
@@ -82,7 +98,8 @@
     background-color: hsl(var(--popover)) !important;
     color: hsl(var(--popover-foreground)) !important;
     border-color: hsl(var(--border)) !important;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+    opacity: 1 !important;
   }
 
   .light .dialog-overlay,
@@ -148,7 +165,7 @@
     .popover-content,
     [data-radix-dialog-content],
     [data-radix-popover-content] {
-      padding: 1rem;
+      padding: 1rem !important;
       margin: 1rem;
       max-width: calc(100vw - 2rem);
       max-height: calc(100vh - 2rem);
@@ -177,5 +194,12 @@
       background: Canvas !important;
       color: CanvasText !important;
     }
+  }
+
+  /* ===== FORCE SOLID BACKGROUNDS - ULTIMATE OVERRIDE ===== */
+  * [data-radix-dialog-content],
+  * [data-radix-popover-content] {
+    background-color: hsl(var(--popover)) !important;
+    opacity: 1 !important;
   }
 }
