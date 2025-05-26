@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { Loader2, Plus, ArrowRight } from "lucide-react";
+import { Loader2, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface EnhancedFormActionsProps {
@@ -54,7 +54,6 @@ export function EnhancedFormActions({
             </>
           ) : (
             <>
-              <Plus className="h-4 w-4 transition-transform duration-200 group-hover:rotate-90" />
               <span>{submitLabel}</span>
               <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
             </>
