@@ -2,9 +2,8 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 import { Task } from "@/lib/types";
 import { useTaskQueries } from "@/features/tasks/hooks/useTaskQueries";
-import { useTaskMutation } from "@/features/tasks/hooks/useTaskMutation";
+import { useTaskMutations } from "@/features/tasks/hooks/useTaskMutations";
 
-// Define data-focused context type
 interface TaskDataContextType {
   // Task queries
   tasks: Task[];
@@ -31,18 +30,14 @@ interface TaskDataContextType {
 const TaskDataContext = createContext<TaskDataContextType | undefined>(undefined);
 
 /**
- * Provider component for task data-related state and operations
+ * Provider for task data operations (queries and mutations)
  * 
- * Manages tasks data, loading state, data mutations, and pagination
- * Uses the consolidated useTaskMutation hook for all task operations
- * 
- * @param children - React components that will consume the task context
+ * Manages task data, loading states, and data mutations.
+ * Focused solely on data concerns.
  */
 export function TaskContextProvider({ children }: { children: ReactNode }) {
-  // State for pagination
   const [pageSize, setPageSize] = useState(10);
 
-  // Get task data and mutations
   const { 
     tasks, 
     isLoading, 
@@ -56,7 +51,7 @@ export function TaskContextProvider({ children }: { children: ReactNode }) {
     isFetching
   } = useTaskQueries(pageSize);
   
-  const { toggleTaskPin, toggleTaskComplete, createFollowUpTask } = useTaskMutation();
+  const { toggleTaskPin, toggleTaskComplete, createFollowUpTask } = useTaskMutations();
 
   return (
     <TaskDataContext.Provider value={{
@@ -66,7 +61,7 @@ export function TaskContextProvider({ children }: { children: ReactNode }) {
       isFetching,
       error: error as Error,
       
-      // Data mutations (from consolidated useTaskMutation)
+      // Data mutations
       toggleTaskPin,
       toggleTaskComplete,
       createFollowUpTask,
@@ -87,10 +82,7 @@ export function TaskContextProvider({ children }: { children: ReactNode }) {
 }
 
 /**
- * Custom hook for using the task data context
- * 
- * @returns The task data context value
- * @throws Error if used outside of a TaskContextProvider
+ * Hook for accessing task data context
  */
 export function useTaskContext() {
   const context = useContext(TaskDataContext);

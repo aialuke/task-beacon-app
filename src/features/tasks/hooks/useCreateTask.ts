@@ -3,7 +3,7 @@ import { useCallback } from "react";
 import { toast } from "@/lib/toast";
 import { useNavigate } from "react-router-dom";
 import { useTaskForm } from "./useTaskForm";
-import { useTaskValidation } from "./useTaskValidation";
+import { useTaskFormValidation } from "./useTaskFormValidation";
 import { createTask, uploadTaskPhoto } from "@/integrations/supabase/api/tasks.api";
 import { getCurrentUserId } from "@/integrations/supabase/api/base.api";
 
@@ -12,25 +12,19 @@ interface UseCreateTaskProps {
 }
 
 /**
- * Custom hook for task creation functionality
- * 
- * Builds on useTaskForm to provide specialized functionality for creating new tasks
+ * Hook for creating new tasks with standardized validation
  */
 export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
   const navigate = useNavigate();
-  const { validateTaskForm } = useTaskValidation();
+  const { validateTaskForm } = useTaskFormValidation();
   
   const taskForm = useTaskForm({ 
     onClose: onClose || (() => navigate("/"))
   });
 
-  /**
-   * Handles form submission for creating a new task
-   */
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate the complete form using schema validation
     const formData = {
       title: taskForm.title,
       description: taskForm.description,
@@ -50,12 +44,10 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
       let photoUrl = null;
       if (taskForm.photo) {
         const { data: uploadedUrl, error: uploadError } = await uploadTaskPhoto(taskForm.photo);
-        
         if (uploadError) throw uploadError;
         photoUrl = uploadedUrl;
       }
 
-      // If no assignee is selected, assign to current user
       const currentUserId = await getCurrentUserId();
       const finalAssigneeId = taskForm.assigneeId || currentUserId;
 

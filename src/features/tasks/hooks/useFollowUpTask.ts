@@ -5,7 +5,7 @@ import { toast } from "@/lib/toast";
 import { useNavigate } from "react-router-dom";
 import { showBrowserNotification, triggerHapticFeedback } from "@/lib/notification";
 import { useTaskForm } from "./useTaskForm";
-import { useTaskValidation } from "./useTaskValidation";
+import { useTaskFormValidation } from "./useTaskFormValidation";
 import { createFollowUpTask, uploadTaskPhoto } from "@/integrations/supabase/api/tasks.api";
 
 interface UseFollowUpTaskProps {
@@ -14,13 +14,11 @@ interface UseFollowUpTaskProps {
 }
 
 /**
- * Custom hook for follow-up task creation functionality
- * 
- * Builds on useTaskForm to provide specialized functionality for creating follow-up tasks
+ * Hook for creating follow-up tasks with standardized validation
  */
 export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
   const navigate = useNavigate();
-  const { validateTitle } = useTaskValidation();
+  const { validateTitle } = useTaskFormValidation();
   
   const taskForm = useTaskForm({
     onClose: onClose || (() => navigate("/"))
@@ -31,7 +29,6 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate title using schema validation
     if (!validateTitle(taskForm.title)) return;
     
     taskForm.setLoading(true);

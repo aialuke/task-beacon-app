@@ -2,6 +2,7 @@
 import { useState, useCallback } from "react";
 import { useFormState } from "@/components/form/hooks/useFormState";
 import { usePhotoUpload } from "@/components/form/hooks/usePhotoUpload";
+import { useTaskFormValidation } from "./useTaskFormValidation";
 import { UseFormStateOptions } from "@/types/form.types";
 
 export interface UseTaskFormOptions extends UseFormStateOptions {
@@ -9,43 +10,17 @@ export interface UseTaskFormOptions extends UseFormStateOptions {
 }
 
 /**
- * Task-specific form functionality
- * 
- * Combines form state, photo upload, and task validation
- * to provide a complete task form solution.
+ * Task form hook with standardized validation
  */
 export function useTaskForm({ initialUrl = "", onClose }: UseTaskFormOptions = {}) {
   const [loading, setLoading] = useState(false);
   
   const formState = useFormState({ initialUrl });
   const photoUpload = usePhotoUpload();
+  const { validateTitle, createTitleSetter } = useTaskFormValidation();
 
-  /**
-   * Validates the task title
-   */
-  const validateTitle = useCallback((value: string): boolean => {
-    if (!value || value.trim().length === 0) {
-      return false;
-    }
-    if (value.length > 22) {
-      return false;
-    }
-    return true;
-  }, []);
+  const setTitle = createTitleSetter(formState.setTitle);
 
-  /**
-   * Custom title setter with validation and character limit
-   */
-  const setTitle = useCallback((value: string) => {
-    // Limit to 22 characters silently
-    if (value.length <= 22) {
-      formState.setTitle(value);
-    }
-  }, [formState]);
-
-  /**
-   * Resets all form fields and photo
-   */
   const resetForm = useCallback(() => {
     formState.resetFormState();
     photoUpload.resetPhoto();
