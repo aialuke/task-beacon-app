@@ -54,6 +54,16 @@ export default {
     'dark:text-gray-200',
     'dark:border-gray-700',
     'dark:border-gray-600',
+    // Brand gradient classes
+    'bg-gradient-to-r',
+    'from-blue-500',
+    'to-blue-600',
+    'hover:from-blue-600',
+    'hover:to-blue-700',
+    'dark:from-blue-400',
+    'dark:to-blue-500',
+    'dark:hover:from-blue-500',
+    'dark:hover:to-blue-600',
   ],
   theme: {
     container: {
@@ -127,6 +137,13 @@ export default {
         "task-overdue": "hsl(var(--status-overdue))",
         "task-complete": "hsl(var(--status-complete))",
         "task-timer": "hsl(var(--status-pending))",
+        // Direct blue colors for brand buttons
+        blue: {
+          400: '#60a5fa',
+          500: '#3b82f6',
+          600: '#2563eb',
+          700: '#1d4ed8',
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
