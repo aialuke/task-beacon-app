@@ -1,12 +1,12 @@
 
 import TaskList from "./TaskList";
 import TaskDashboardHeader from "./TaskDashboardHeader";
-import { TaskContextProvider } from "@/features/tasks/context/TaskContext";
+import { TaskDataContextProvider } from "@/features/tasks/context/TaskDataContext";
 import { TaskUIContextProvider } from "@/features/tasks/context/TaskUIContext";
 
 export default function TaskDashboard() {
   return (
-    <TaskContextProvider>
+    <TaskDataContextProvider>
       <TaskUIContextProvider>
         <div className="min-h-screen bg-background">
           <div className="max-w-3xl mx-auto px-2 sm:px-4 py-6">
@@ -19,6 +19,6 @@ export default function TaskDashboard() {
           </div>
         </div>
       </TaskUIContextProvider>
-    </TaskContextProvider>
+    </TaskDataContextProvider>
   );
 }

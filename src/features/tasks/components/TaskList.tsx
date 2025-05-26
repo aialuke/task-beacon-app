@@ -1,6 +1,6 @@
 
 import { lazy, Suspense } from "react";
-import { useTaskContext } from "@/features/tasks/context/TaskContext";
+import { useTaskDataContext } from "@/features/tasks/context/TaskDataContext";
 import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
 import { useFilteredTasks } from "@/features/tasks/hooks/useFilteredTasks";
 import TaskFilterNavbar from "./TaskFilterNavbar";
@@ -25,7 +25,7 @@ const TaskCardSkeleton = () => (
 );
 
 export default function TaskList() {
-  // Get data and functions from contexts
+  // Get data and functions from data context
   const { 
     tasks, 
     isLoading, 
@@ -38,9 +38,9 @@ export default function TaskList() {
     currentPage,
     totalCount,
     pageSize
-  } = useTaskContext();
+  } = useTaskDataContext();
   
-  // Get UI state from TaskUIContext
+  // Get UI state from UI context
   const { filter, setFilter } = useTaskUIContext();
   
   // Get filtered tasks

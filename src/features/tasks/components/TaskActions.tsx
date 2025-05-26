@@ -3,7 +3,7 @@ import { useCallback, memo } from "react";
 import { Button } from "@/components/ui/button";
 import { Task } from "@/types";
 import { useNavigate } from "react-router-dom";
-import { useTaskContext } from "../context/TaskContext";
+import { useTaskDataContext } from "../context/TaskDataContext";
 import { useTaskMutations } from "../hooks/useTaskMutations";
 
 interface TaskActionsProps {
@@ -13,7 +13,7 @@ interface TaskActionsProps {
 
 function TaskActions({ task, detailView }: TaskActionsProps) {
   const navigate = useNavigate();
-  const { createFollowUpTask } = useTaskContext();
+  const { createFollowUpTask } = useTaskDataContext();
   const { toggleTaskComplete } = useTaskMutations();
   
   const handleCreateFollowUp = useCallback(() => {
