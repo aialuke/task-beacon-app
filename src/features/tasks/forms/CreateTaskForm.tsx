@@ -1,5 +1,5 @@
 
-import { FileText } from "lucide-react";
+import { FileText, Sparkles } from "lucide-react";
 import { useCreateTask } from "@/features/tasks/hooks/useCreateTask";
 import { FloatingInput } from "@/components/form/FloatingInput";
 import { FloatingTextarea } from "@/components/form/FloatingTextarea";
@@ -63,13 +63,14 @@ export default function CreateTaskForm({
           required
         />
         
-        {/* Description Field - Always Visible */}
+        {/* Description Field - Always Visible with Sparkles Icon */}
         <FloatingTextarea
           id="description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Describe your task..."
           label="Description"
+          icon={<Sparkles className="h-4 w-4" />}
         />
         
         {/* Quick Action Bar with Inline Submit Button */}

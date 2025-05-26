@@ -1,5 +1,4 @@
-
-import { Calendar, User, ImageUp, Link, FileCheck, Plane } from "lucide-react";
+import { Calendar, User, ImageUp, Link, FileCheck, Send } from "lucide-react";
 import { useState, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -110,7 +109,7 @@ export function QuickActionBar({
         };
       case 'submit':
         return {
-          icon: Plane,
+          icon: Send,
           label: submitLabel,
           active: false
         };
@@ -143,7 +142,7 @@ export function QuickActionBar({
   );
 
   return (
-    <div className="flex flex-wrap gap-2 p-4 bg-background/30 backdrop-blur-sm rounded-xl">
+    <div className="flex flex-wrap gap-2 p-4 bg-background/30 backdrop-blur-sm rounded-xl justify-center">
       {/* Date Picker Button */}
       <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
         <PopoverTrigger asChild>
@@ -238,7 +237,7 @@ export function QuickActionBar({
           {isSubmitting ? (
             <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
           ) : (
-            <Plane className="h-4 w-4 transition-all duration-200 flex-shrink-0" />
+            <Send className="h-4 w-4 transition-all duration-200 flex-shrink-0" />
           )}
         </button>
       )}
