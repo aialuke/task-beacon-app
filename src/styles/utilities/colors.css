@@ -93,6 +93,25 @@
     -webkit-text-fill-color: transparent;
   }
 
+  /* Gradient Background Utilities - MISSING GRADIENTS RESTORED */
+  .bg-gradient-primary {
+    background: var(--gradient-blue);
+    /* Fallback for older browsers */
+    background-color: hsl(var(--primary));
+  }
+  
+  .bg-gradient-primary-dark {
+    background: var(--gradient-blue-dark);
+    /* Fallback for older browsers */
+    background-color: hsl(var(--primary));
+  }
+  
+  .hover\:bg-gradient-primary-dark:hover {
+    background: var(--gradient-blue-dark);
+    /* Fallback for older browsers */
+    background-color: hsl(var(--primary));
+  }
+
   /* Interactive Color State Utilities */
   .hover-accent:hover {
     color: hsl(var(--accent-blue));
