@@ -4,6 +4,7 @@ import { toast } from "@/lib/toast";
 import { useNavigate } from "react-router-dom";
 import { useBaseTaskForm } from "./useBaseTaskForm";
 import { createTask, uploadTaskPhoto } from "@/integrations/supabase/api/tasks.api";
+import { getCurrentUserId } from "@/integrations/supabase/api/base.api";
 
 interface UseCreateTaskProps {
   onClose?: () => void;
@@ -60,6 +61,17 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
     // Validate title length
     if (!validateTitle(title)) return;
     
+    // Validate required fields
+    if (!title.trim()) {
+      toast.error("Title is required");
+      return;
+    }
+    
+    if (!dueDate) {
+      toast.error("Due date is required");
+      return;
+    }
+    
     setLoading(true);
     try {
       let photoUrl = null;
@@ -70,13 +82,17 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
         photoUrl = uploadedUrl;
       }
 
+      // If no assignee is selected, assign to current user
+      const currentUserId = await getCurrentUserId();
+      const finalAssigneeId = assigneeId || currentUserId;
+
       const { error } = await createTask({
         title,
         description: description || null,
-        due_date: dueDate ? new Date(dueDate).toISOString() : null,
+        due_date: new Date(dueDate).toISOString(),
         photo_url: photoUrl,
         url_link: url || null,
-        assignee_id: assigneeId || null,
+        assignee_id: finalAssigneeId,
         pinned,
       });
 

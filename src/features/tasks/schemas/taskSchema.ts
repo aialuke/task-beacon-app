@@ -7,7 +7,7 @@ export const baseTaskSchema = z.object({
     .min(1, "Title is required")
     .max(22, "Title cannot exceed 22 characters"),
   description: z.string().optional(),
-  dueDate: z.string().optional(),
+  dueDate: z.string().min(1, "Due date is required"),
   url: z.string().url("Please enter a valid URL").or(z.string().length(0)).optional(),
   pinned: z.boolean().default(false),
   assigneeId: z.string().optional(),
