@@ -1,6 +1,6 @@
 
 import { Input } from "@/components/ui/input";
-import { ImageUp } from "lucide-react";
+import { ImageUp, X } from "lucide-react";
 import { useState } from "react";
 
 interface PhotoUploadFieldProps {
@@ -17,15 +17,24 @@ export function PhotoUploadField({ onChange, preview }: PhotoUploadFieldProps) {
     onChange(e);
   };
 
+  const clearPreview = () => {
+    setSelectedFile("");
+    // Create a synthetic event to clear the file
+    const syntheticEvent = {
+      target: { files: null, value: "" }
+    } as React.ChangeEvent<HTMLInputElement>;
+    onChange(syntheticEvent);
+  };
+
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       <label
         htmlFor="photo"
-        className="flex items-center justify-center gap-3 cursor-pointer bg-background border border-border/60 rounded-xl h-12 px-4 text-sm font-medium text-foreground hover:bg-accent/50 transition-all duration-200"
+        className="flex items-center justify-center gap-3 cursor-pointer bg-background/80 border-2 border-dashed border-border/60 rounded-2xl h-14 px-4 text-base font-medium text-foreground hover:bg-accent/50 hover:border-primary/50 transition-all duration-300 group"
       >
-        <ImageUp className="h-5 w-5 text-muted-foreground" />
-        <span className="truncate">
-          {selectedFile || "Add Image"}
+        <ImageUp className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+        <span className="truncate group-hover:text-primary transition-colors">
+          {selectedFile || "Choose Image"}
         </span>
         
         <Input
@@ -40,13 +49,20 @@ export function PhotoUploadField({ onChange, preview }: PhotoUploadFieldProps) {
       
       {preview && (
         <div className="animate-fade-in">
-          <div className="relative inline-block">
+          <div className="relative inline-block group">
             <img
               src={preview}
               alt="Preview"
-              className="h-20 w-20 object-cover rounded-xl shadow-md border border-border/30 hover:shadow-lg transition-all duration-200"
+              className="h-24 w-24 object-cover rounded-2xl shadow-lg border-2 border-border/30 hover:shadow-xl transition-all duration-300"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl pointer-events-none"></div>
+            <button
+              type="button"
+              onClick={clearPreview}
+              className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full p-1 shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110"
+            >
+              <X className="h-3 w-3" />
+            </button>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl pointer-events-none"></div>
           </div>
         </div>
       )}

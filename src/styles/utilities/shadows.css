@@ -1,192 +1,74 @@
 
-/* src/styles/utilities/shadows.css - Enhanced shadow utility classes for dark mode */
+/* src/styles/utilities/shadows.css - Enhanced shadow utilities */
 @layer utilities {
-  /* ===== ENHANCED SHADOW UTILITIES ===== */
-  .shadow-hover {
-    @apply transition-shadow transition-transform duration-200;
-  }
-  
-  .shadow-hover:hover {
-    @apply shadow-lg -translate-y-1;
-  }
-
-  .shadow-hover:active {
-    @apply shadow-md translate-y-0;
-  }
-
-  /* ===== DARK MODE ENHANCED SHADOWS ===== */
-  .shadow-dark-sm {
-    box-shadow: var(--shadow-sm);
+  /* ===== SHADOW SYSTEM ===== */
+  :root {
+    --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    --shadow-3xl: 0 35px 60px -12px rgba(0, 0, 0, 0.35), 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
   }
 
-  .shadow-dark {
-    box-shadow: var(--shadow);
+  /* ===== DARK MODE SHADOWS ===== */
+  .dark {
+    --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.5);
+    --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    --shadow-3xl: 0 35px 60px -12px rgba(0, 0, 0, 0.8), 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+    --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.3);
   }
 
-  .shadow-dark-md {
-    box-shadow: var(--shadow-md);
-  }
+  /* ===== SHADOW UTILITIES ===== */
+  .shadow-xs { box-shadow: var(--shadow-xs); }
+  .shadow-sm { box-shadow: var(--shadow-sm); }
+  .shadow-md { box-shadow: var(--shadow-md); }
+  .shadow-lg { box-shadow: var(--shadow-lg); }
+  .shadow-xl { box-shadow: var(--shadow-xl); }
+  .shadow-2xl { box-shadow: var(--shadow-2xl); }
+  .shadow-3xl { box-shadow: var(--shadow-3xl); }
+  .shadow-inner { box-shadow: var(--shadow-inner); }
+  .shadow-none { box-shadow: none; }
 
-  .shadow-dark-lg {
-    box-shadow: var(--shadow-lg);
-  }
+  /* ===== HOVER SHADOW UTILITIES ===== */
+  .hover\:shadow-xs:hover { box-shadow: var(--shadow-xs); }
+  .hover\:shadow-sm:hover { box-shadow: var(--shadow-sm); }
+  .hover\:shadow-md:hover { box-shadow: var(--shadow-md); }
+  .hover\:shadow-lg:hover { box-shadow: var(--shadow-lg); }
+  .hover\:shadow-xl:hover { box-shadow: var(--shadow-xl); }
+  .hover\:shadow-2xl:hover { box-shadow: var(--shadow-2xl); }
+  .hover\:shadow-3xl:hover { box-shadow: var(--shadow-3xl); }
+  .hover\:shadow-none:hover { box-shadow: none; }
 
-  .shadow-dark-xl {
-    box-shadow: var(--shadow-xl);
-  }
-
-  /* ===== STATUS-SPECIFIC SHADOWS ===== */
+  /* ===== COLORED SHADOWS ===== */
   .shadow-primary {
-    box-shadow: 0 4px 6px -1px hsl(var(--primary) / 0.1), 0 2px 4px -1px hsl(var(--primary) / 0.06);
+    box-shadow: 0 10px 15px -3px hsl(var(--primary) / 0.2), 0 4px 6px -2px hsl(var(--primary) / 0.1);
   }
 
-  .shadow-destructive {
-    box-shadow: 0 4px 6px -1px hsl(var(--destructive) / 0.1), 0 2px 4px -1px hsl(var(--destructive) / 0.06);
+  .shadow-secondary {
+    box-shadow: 0 10px 15px -3px hsl(var(--secondary) / 0.2), 0 4px 6px -2px hsl(var(--secondary) / 0.1);
   }
 
-  .shadow-success {
-    box-shadow: 0 4px 6px -1px hsl(var(--success) / 0.1), 0 2px 4px -1px hsl(var(--success) / 0.06);
+  .shadow-accent {
+    box-shadow: 0 10px 15px -3px hsl(var(--accent) / 0.2), 0 4px 6px -2px hsl(var(--accent) / 0.1);
   }
 
   /* ===== GLOW EFFECTS ===== */
   .glow-primary {
-    box-shadow: 0 0 0 1px hsl(var(--primary) / 0.2), 0 0 10px hsl(var(--primary) / 0.1);
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.3);
   }
 
-  .glow-destructive {
-    box-shadow: 0 0 0 1px hsl(var(--destructive) / 0.2), 0 0 10px hsl(var(--destructive) / 0.1);
+  .glow-secondary {
+    box-shadow: 0 0 20px hsl(var(--secondary) / 0.3);
   }
 
-  .glow-success {
-    box-shadow: 0 0 0 1px hsl(var(--success) / 0.2), 0 0 10px hsl(var(--success) / 0.1);
-  }
-
-  /* ===== INNER SHADOWS ===== */
-  .shadow-inner-light {
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
-  }
-
-  .shadow-inner-dark {
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
-  }
-
-  /* ===== ENHANCED BUTTON UTILITIES ===== */
-  .no-shadow {
-    @apply shadow-none;
-  }
-
-  .no-shadow:hover {
-    @apply shadow-none transform-none;
-  }
-
-  .shadow-button {
-    box-shadow: var(--shadow-sm);
-    transition: box-shadow 0.2s ease, transform 0.2s ease;
-  }
-
-  .shadow-button:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateY(-1px);
-  }
-
-  .shadow-button:active {
-    box-shadow: var(--shadow-sm);
-    transform: translateY(0);
-  }
-
-  /* ===== ELEVATED SHADOWS ===== */
-  .shadow-elevated {
-    box-shadow: 
-      0 1px 3px rgba(0, 0, 0, 0.12),
-      0 1px 2px rgba(0, 0, 0, 0.24);
-  }
-
-  .shadow-elevated-lg {
-    box-shadow: 
-      0 10px 20px rgba(0, 0, 0, 0.19),
-      0 6px 6px rgba(0, 0, 0, 0.23);
-  }
-
-  /* ===== DARK MODE SHADOW OVERRIDES ===== */
-  .dark .shadow-elevated {
-    box-shadow: 
-      0 1px 3px rgba(0, 0, 0, 0.3),
-      0 1px 2px rgba(0, 0, 0, 0.4);
-  }
-
-  .dark .shadow-elevated-lg {
-    box-shadow: 
-      0 10px 20px rgba(0, 0, 0, 0.4),
-      0 6px 6px rgba(0, 0, 0, 0.5);
-  }
-
-  .dark .shadow-primary {
-    box-shadow: 0 4px 6px -1px hsl(var(--primary) / 0.2), 0 2px 4px -1px hsl(var(--primary) / 0.1);
-  }
-
-  .dark .shadow-destructive {
-    box-shadow: 0 4px 6px -1px hsl(var(--destructive) / 0.2), 0 2px 4px -1px hsl(var(--destructive) / 0.1);
-  }
-
-  .dark .shadow-success {
-    box-shadow: 0 4px 6px -1px hsl(var(--success) / 0.2), 0 2px 4px -1px hsl(var(--success) / 0.1);
-  }
-
-  /* ===== LIGHT MODE SHADOW OVERRIDES ===== */
-  .light .shadow-elevated {
-    box-shadow: 
-      0 1px 3px rgba(0, 0, 0, 0.1),
-      0 1px 2px rgba(0, 0, 0, 0.16);
-  }
-
-  .light .shadow-elevated-lg {
-    box-shadow: 
-      0 10px 20px rgba(0, 0, 0, 0.15),
-      0 6px 6px rgba(0, 0, 0, 0.2);
-  }
-
-  /* ===== CARD SHADOWS ===== */
-  .shadow-card {
-    box-shadow: var(--shadow-sm), 0 0 0 1px hsl(var(--border) / 0.05);
-  }
-
-  .shadow-card:hover {
-    box-shadow: var(--shadow-md), 0 0 0 1px hsl(var(--border) / 0.1);
-  }
-
-  .dark .shadow-card {
-    box-shadow: var(--shadow-sm), 0 0 0 1px hsl(var(--border) / 0.2);
-  }
-
-  .dark .shadow-card:hover {
-    box-shadow: var(--shadow-md), 0 0 0 1px hsl(var(--border) / 0.3);
-  }
-
-  /* ===== ACCESSIBILITY CONSIDERATIONS ===== */
-  @media (prefers-reduced-motion: reduce) {
-    .shadow-hover,
-    .shadow-button {
-      transition: none;
-    }
-    
-    .shadow-hover:hover,
-    .shadow-button:hover {
-      transform: none;
-    }
-  }
-
-  /* ===== HIGH CONTRAST MODE ===== */
-  @media (forced-colors: active) {
-    .shadow-hover,
-    .shadow-button,
-    .shadow-card,
-    .shadow-elevated,
-    .shadow-elevated-lg,
-    .glow-primary,
-    .glow-destructive,
-    .glow-success {
-      box-shadow: none;
-      border: 1px solid CanvasText;
-    }
+  .glow-accent {
+    box-shadow: 0 0 20px hsl(var(--accent) / 0.3);
   }
 }
