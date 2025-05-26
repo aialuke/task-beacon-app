@@ -63,7 +63,7 @@ export function BaseTaskForm({
   };
 
   return (
-    <div className="w-full bg-card/40 backdrop-blur-xl text-card-foreground p-8 rounded-3xl border border-border/30 shadow-2xl shadow-black/5">
+    <div className="w-full bg-card/40 backdrop-blur-xl text-card-foreground p-8 rounded-3xl border border-border/30 shadow-2xl shadow-black/5 bg-gradient-to-br from-card via-card to-muted/10">
       {/* Header */}
       <div className="mb-8 text-center">
         <div className="relative inline-block">
