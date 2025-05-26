@@ -71,9 +71,3 @@ export function useTaskUIContext() {
   }
   return context;
 }
-
-// Legacy compatibility export - for backward compatibility during transition
-export function useUIContext() {
-  const context = useTaskUIContext();
-  return { isMobile: context.isMobile };
-}

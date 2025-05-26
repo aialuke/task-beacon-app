@@ -1,21 +1,14 @@
 
-import { useState, useCallback } from "react";
-import { useFormState } from "@/components/form/hooks/useFormState";
+import { useCallback } from "react";
 import { usePhotoUpload } from "@/components/form/hooks/usePhotoUpload";
 import { useTaskFormValidation } from "./useTaskFormValidation";
-import { UseFormStateOptions } from "@/types/form.types";
-
-export interface UseTaskFormOptions extends UseFormStateOptions {
-  onClose?: () => void;
-}
+import { useTaskFormState, UseTaskFormStateOptions } from "./useTaskFormState";
 
 /**
- * Task form hook with standardized validation
+ * Simplified task form hook with standardized validation
  */
-export function useTaskForm({ initialUrl = "", onClose }: UseTaskFormOptions = {}) {
-  const [loading, setLoading] = useState(false);
-  
-  const formState = useFormState({ initialUrl });
+export function useTaskForm(options: UseTaskFormStateOptions = {}) {
+  const formState = useTaskFormState(options);
   const photoUpload = usePhotoUpload();
   const { validateTitle, createTitleSetter } = useTaskFormValidation();
 
@@ -24,23 +17,12 @@ export function useTaskForm({ initialUrl = "", onClose }: UseTaskFormOptions = {
   const resetForm = useCallback(() => {
     formState.resetFormState();
     photoUpload.resetPhoto();
-    if (onClose) onClose();
-  }, [formState, photoUpload, onClose]);
+  }, [formState, photoUpload]);
 
   return {
     // Form state
-    title: formState.title,
-    setTitle,
-    description: formState.description,
-    setDescription: formState.setDescription,
-    dueDate: formState.dueDate,
-    setDueDate: formState.setDueDate,
-    url: formState.url,
-    setUrl: formState.setUrl,
-    pinned: formState.pinned,
-    setPinned: formState.setPinned,
-    assigneeId: formState.assigneeId,
-    setAssigneeId: formState.setAssigneeId,
+    ...formState,
+    setTitle, // Override with validation
     
     // Photo upload
     photo: photoUpload.photo,
@@ -48,9 +30,8 @@ export function useTaskForm({ initialUrl = "", onClose }: UseTaskFormOptions = {
     handlePhotoChange: photoUpload.handlePhotoChange,
     uploadPhoto: photoUpload.uploadPhoto,
     
-    // Loading state
-    loading: loading || photoUpload.loading,
-    setLoading,
+    // Loading state (combined)
+    loading: formState.loading || photoUpload.loading,
     
     // Form actions
     resetForm,

@@ -26,15 +26,59 @@ import { compressAndResizePhoto } from "@/lib/imageUtils";
 import { useTaskMutations } from "@/features/tasks/hooks/useTaskMutations";
 ```
 
-#### 2. Barrel Imports (Common utilities only)
-```typescript
-import { cn, formatDate, truncateText } from "@/lib/utils";
-```
-
-#### 3. Feature Imports
+#### 2. Feature Imports
 ```typescript
 import { TaskCard } from "@/features/tasks/components/TaskCard";
-import { useTaskContext } from "@/features/tasks/context/TaskContext";
+import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
+```
+
+#### 3. Type Imports
+```typescript
+import { Task, TaskStatus, TaskFilter } from "@/types";
+import { ApiResponse, ApiError } from "@/types";
+```
+
+## Context Boundaries
+
+### Strict Context Separation
+
+- **Data Context**: Task queries, mutations, and data operations
+- **UI Context**: Filters, expanded state, mobile detection  
+- **Auth Context**: User authentication and session management
+
+### Context Usage Guidelines
+
+```tsx
+// Correct: Use specific context hooks
+const { tasks, isLoading } = useTaskContext();
+const { filter, setFilter } = useTaskUIContext();
+
+// Avoid: Mixed concerns in single context
+```
+
+## Hook Organization
+
+### Hook Categories
+
+- **State Hooks**: `useTaskFormState` - Basic state management
+- **Composition Hooks**: `useTaskForm` - Combines multiple concerns
+- **Validation Hooks**: `useTaskFormValidation` - Validation logic
+- **Mutation Hooks**: `useCreateTask` - Data operations
+
+### Hook Composition Pattern
+
+```tsx
+export function useComplexForm() {
+  const state = useFormState();
+  const validation = useFormValidation();
+  const upload = usePhotoUpload();
+  
+  return {
+    ...state,
+    ...validation,
+    ...upload,
+  };
+}
 ```
 
 ## Animation and Styling
