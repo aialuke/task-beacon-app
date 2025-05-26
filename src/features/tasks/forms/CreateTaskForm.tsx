@@ -32,6 +32,10 @@ export default function CreateTaskForm({
     setUrl(newUrl);
   };
 
+  const handleDueDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDueDate(e.target.value);
+  };
+
   return (
     <div className="w-full bg-card/40 backdrop-blur-xl text-card-foreground p-8 rounded-3xl border border-border/30 shadow-2xl shadow-black/5">
       {/* Social Media Style Header */}
@@ -72,7 +76,7 @@ export default function CreateTaskForm({
         {/* Quick Action Bar with Direct Popups */}
         <QuickActionBar
           dueDate={dueDate}
-          onDueDateChange={setDueDate}
+          onDueDateChange={handleDueDateChange}
           assigneeId={assigneeId}
           onAssigneeChange={setAssigneeId}
           onPhotoChange={handlePhotoChange}

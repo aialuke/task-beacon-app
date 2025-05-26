@@ -14,6 +14,7 @@ interface FloatingInputProps {
   icon?: ReactNode;
   maxLength?: number;
   required?: boolean;
+  autoFocus?: boolean;
   className?: string;
 }
 
@@ -27,6 +28,7 @@ export function FloatingInput({
   icon,
   maxLength,
   required = false,
+  autoFocus = false,
   className
 }: FloatingInputProps) {
   const [isFocused, setIsFocused] = useState(false);
@@ -55,6 +57,7 @@ export function FloatingInput({
           placeholder=""
           maxLength={maxLength}
           required={required}
+          autoFocus={autoFocus}
           className={cn(
             "peer h-14 pt-6 pb-2 bg-background/60 backdrop-blur-sm border-border/40 rounded-2xl transition-all duration-300 focus:bg-background/80 focus:border-primary/60 focus:shadow-lg focus:shadow-primary/10 hover:bg-background/70 hover:border-border/60",
             icon ? "pl-11 pr-4" : "px-4"
