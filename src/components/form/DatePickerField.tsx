@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -15,17 +14,13 @@ interface DatePickerFieldProps {
 export function DatePickerField({ value, onChange }: DatePickerFieldProps) {
   const [isOpen, setIsOpen] = useState(false);
   
-  // Convert string value to Date object for the calendar
   const selectedDate = value ? new Date(value) : undefined;
   
-  // Handle date selection from calendar
   const handleDateSelect = (date: Date | undefined) => {
     if (date) {
-      // Convert Date back to datetime-local string format
       const isoString = date.toISOString();
-      const localDateTime = isoString.slice(0, 16); // YYYY-MM-DDTHH:mm format
+      const localDateTime = isoString.slice(0, 16);
       
-      // Create a synthetic event to maintain compatibility with existing forms
       const syntheticEvent = {
         target: { value: localDateTime }
       } as React.ChangeEvent<HTMLInputElement>;
@@ -57,7 +52,10 @@ export function DatePickerField({ value, onChange }: DatePickerFieldProps) {
         <PopoverContent 
           className="w-auto p-0" 
           align="start"
-          style={{ backgroundColor: "hsl(var(--popover))" }}
+          style={{ 
+            backgroundColor: "hsl(var(--popover))",
+            border: "1px solid hsl(var(--border))"
+          }}
         >
           <Calendar
             mode="single"
@@ -66,6 +64,10 @@ export function DatePickerField({ value, onChange }: DatePickerFieldProps) {
             disabled={(date) => date < new Date()}
             initialFocus
             className={cn("p-3 pointer-events-auto")}
+            style={{ 
+              backgroundColor: "hsl(var(--popover))",
+              color: "hsl(var(--popover-foreground))"
+            }}
           />
         </PopoverContent>
       </Popover>

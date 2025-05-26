@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Check, User, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -142,19 +141,25 @@ export default function UserSearchInput({
       </div>
       
       {isOpen && !selectedUser && filteredUsers.length > 0 && (
-        <div className="absolute z-[9999] w-full mt-1 bg-popover border border-border shadow-lg rounded-xl overflow-hidden backdrop-blur-sm">
-          <div className="overflow-y-auto p-1 max-h-20" style={{ backgroundColor: "hsl(var(--popover))" }}>
+        <div 
+          className="absolute z-[9999] w-full mt-1 border border-border shadow-lg rounded-xl overflow-hidden"
+          style={{ 
+            backgroundColor: "hsl(var(--popover))",
+            color: "hsl(var(--popover-foreground))"
+          }}
+        >
+          <div className="overflow-y-auto p-1 max-h-20">
             {loading ? (
-              <div className="py-2 text-center text-sm text-popover-foreground">Loading...</div>
+              <div className="py-2 text-center text-sm">Loading...</div>
             ) : filteredUsers.length === 0 ? (
-              <div className="py-2 text-center text-sm text-popover-foreground">No user found.</div>
+              <div className="py-2 text-center text-sm">No user found.</div>
             ) : (
               <div>
                 {filteredUsers.map(user => (
                   <div 
                     key={user.id}
                     onClick={() => handleSelect(user.id)}
-                    className="relative flex cursor-pointer select-none items-center rounded-md px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground transition-colors text-popover-foreground"
+                    className="relative flex cursor-pointer select-none items-center rounded-md px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground transition-colors"
                   >
                     <User className="h-4 w-4 mr-2" />
                     <span>{getUserDisplayName(user)}</span>

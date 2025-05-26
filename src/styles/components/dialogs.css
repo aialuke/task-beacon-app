@@ -6,14 +6,12 @@
   [data-radix-popper-content-wrapper],
   [data-radix-dropdown-menu-content],
   [data-radix-select-content] {
-    background-color: hsl(var(--popover));
+    background-color: hsl(var(--popover)) !important;
     color: hsl(var(--popover-foreground));
     border-radius: var(--radius-xl);
     border: 1px solid hsl(var(--border));
     box-shadow: var(--shadow-lg);
     z-index: 9999;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
   }
 
   /* ===== ENHANCED DIALOG CONTENT STYLING ===== */
@@ -24,13 +22,11 @@
   [data-radix-dialog-content],
   [data-radix-popover-content] {
     padding: 1.5rem;
-    background: hsl(var(--popover));
+    background: hsl(var(--popover)) !important;
     color: hsl(var(--popover-foreground));
     border: 1px solid hsl(var(--border));
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-lg);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
     max-height: 90vh;
     overflow-y: auto;
   }
@@ -39,8 +35,6 @@
   .dialog-overlay,
   [data-radix-dialog-overlay] {
     background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
   }
 
   /* ===== ENHANCED DARK MODE DIALOGS ===== */
@@ -54,7 +48,7 @@
   .dark [class*="popover-content"],
   .dark [data-radix-dialog-content],
   .dark [data-radix-popover-content] {
-    background-color: hsl(var(--popover));
+    background-color: hsl(var(--popover)) !important;
     border-color: hsl(var(--border));
     box-shadow: var(--shadow-xl), 0 0 0 1px hsl(var(--border) / 0.5);
   }
@@ -75,7 +69,7 @@
   .light [class*="popover-content"],
   .light [data-radix-dialog-content],
   .light [data-radix-popover-content] {
-    background-color: white;
+    background-color: white !important;
     color: #1a202c;
     border-color: #e2e8f0;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);

@@ -23,7 +23,8 @@ const PopoverContent = React.forwardRef<
       )}
       style={{
         backgroundColor: "hsl(var(--popover))",
-        borderRadius: "var(--radius-xl)"
+        borderRadius: "var(--radius-xl)",
+        ...props.style
       }}
       {...props}
     />
