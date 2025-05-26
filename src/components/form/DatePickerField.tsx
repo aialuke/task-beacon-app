@@ -38,13 +38,13 @@ export function DatePickerField({ value, onChange }: DatePickerFieldProps) {
           <Button
             variant="outline"
             className={cn(
-              "w-full h-12 px-4 justify-start text-left font-normal bg-background/70 border-border/60 rounded-xl hover:bg-accent/50 transition-all duration-200",
+              "w-full h-9 px-3 justify-start text-left font-normal bg-background/80 border-border/60 rounded-xl hover:bg-accent/50 transition-all duration-200 text-sm",
               !selectedDate && "text-muted-foreground/70"
             )}
           >
-            <CalendarIcon className="h-4 w-4 mr-3 text-muted-foreground" />
+            <CalendarIcon className="h-4 w-4 mr-2 text-muted-foreground" />
             {selectedDate ? (
-              format(selectedDate, "PPP")
+              format(selectedDate, "MMM d, yyyy")
             ) : (
               <span>Due Date</span>
             )}

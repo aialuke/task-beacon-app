@@ -27,10 +27,10 @@ export function PhotoUploadField({ onChange, preview }: PhotoUploadFieldProps) {
   };
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2">
       <label
         htmlFor="photo"
-        className="flex items-center justify-center gap-3 cursor-pointer bg-background/80 border-2 border-dashed border-border/60 rounded-2xl h-12 px-4 text-sm font-medium text-foreground hover:bg-accent/50 hover:border-primary/50 transition-all duration-300 group"
+        className="flex items-center justify-center gap-2 cursor-pointer bg-background/80 border-2 border-dashed border-border/60 rounded-xl h-9 px-3 text-xs font-medium text-foreground hover:bg-accent/50 hover:border-primary/50 transition-all duration-200 group"
       >
         <ImageUp className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
         <span className="truncate group-hover:text-primary transition-colors">
@@ -53,16 +53,15 @@ export function PhotoUploadField({ onChange, preview }: PhotoUploadFieldProps) {
             <img
               src={preview}
               alt="Preview"
-              className="h-20 w-20 object-cover rounded-2xl shadow-lg border-2 border-border/30 hover:shadow-xl transition-all duration-300"
+              className="h-12 w-12 object-cover rounded-xl shadow-md border border-border/30 hover:shadow-lg transition-all duration-200"
             />
             <button
               type="button"
               onClick={clearPreview}
-              className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full p-1 shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110"
+              className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground rounded-full p-1 shadow-md opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110"
             >
               <X className="h-3 w-3" />
             </button>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl pointer-events-none"></div>
           </div>
         </div>
       )}
