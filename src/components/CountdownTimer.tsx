@@ -6,7 +6,7 @@ import TimerRing from "./timer/TimerRing";
 import TimerDisplay from "./timer/TimerDisplay";
 import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
 import { Tooltip, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import TimerTooltip from "./timer/TimerTooltip";
+import TimerTooltip from "@/features/tasks/components/TimerTooltip";
 import { 
   setupAnimationVariables,
   prefersReducedMotion 
