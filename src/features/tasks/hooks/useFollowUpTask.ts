@@ -48,7 +48,6 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
     resetForm,
     validateTitle
   } = useBaseTaskForm({
-    initialUrl: parentTask.url_link || "",
     onClose: onClose || (() => navigate("/"))
   });
 

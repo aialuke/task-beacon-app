@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Task } from "@/lib/types";
-import { Link } from "lucide-react";
+import { Link, ExternalLink } from "lucide-react";
 
 interface ParentTaskReferenceProps {
   parentTask: Task;
@@ -25,6 +25,21 @@ export function ParentTaskReference({ parentTask }: ParentTaskReferenceProps) {
             <p className="text-xs text-muted-foreground/80 line-clamp-2">
               {parentTask.description}
             </p>
+          )}
+          {parentTask.url_link && (
+            <div className="pt-2">
+              <a
+                href={parentTask.url_link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs text-primary hover:text-primary/80 transition-colors"
+              >
+                <ExternalLink className="h-3 w-3" />
+                <span className="truncate max-w-[200px]">
+                  {parentTask.url_link}
+                </span>
+              </a>
+            </div>
           )}
         </div>
       </div>
