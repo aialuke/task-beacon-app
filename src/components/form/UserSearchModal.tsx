@@ -21,7 +21,7 @@ export function UserSearchModal({ isOpen, onClose, value, onChange }: UserSearch
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md pb-8">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <User className="h-5 w-5" />
@@ -29,7 +29,7 @@ export function UserSearchModal({ isOpen, onClose, value, onChange }: UserSearch
           </DialogTitle>
         </DialogHeader>
         
-        <div className="space-y-4">
+        <div className="space-y-4 pb-4">
           <EnhancedUserSearch
             value={tempValue}
             onChange={handleUserSelect}

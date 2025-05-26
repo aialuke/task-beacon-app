@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Check, User, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -118,7 +119,7 @@ export default function UserSearchInput({
         disabled ? "opacity-50" : "hover:bg-accent/50",
         className
       )}>
-        <User className="h-5 w-5 text-muted-foreground mr-3" />
+        <User className="h-5 w-5 text-muted-foreground mr-3 flex-shrink-0 self-center" />
         
         {selectedUser ? (
           <div className="flex items-center justify-between w-full">
@@ -144,7 +145,7 @@ export default function UserSearchInput({
               className="flex-1 text-foreground bg-transparent border-none focus:ring-0 p-0 h-auto text-sm"
               disabled={disabled}
             />
-            <Search className="h-4 w-4 text-muted-foreground ml-2" />
+            <Search className="h-4 w-4 text-muted-foreground ml-2 flex-shrink-0" />
           </>
         )}
       </div>
