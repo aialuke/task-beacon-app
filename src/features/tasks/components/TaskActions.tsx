@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Task } from "@/lib/types";
 import { useNavigate } from "react-router-dom";
 import { useTaskContext } from "../context/TaskContext";
-import { useTaskCompletionToggle } from "../hooks/useTaskCompletionToggle";
+import { useTaskOperations } from "../hooks/useTaskOperations";
 
 interface TaskActionsProps {
   task: Task;
@@ -13,8 +13,8 @@ interface TaskActionsProps {
 
 function TaskActions({ task, detailView }: TaskActionsProps) {
   const navigate = useNavigate();
-  const { toggleTaskComplete } = useTaskContext();
-  const { loading, handleToggleComplete } = useTaskCompletionToggle(task, toggleTaskComplete);
+  const { createFollowUpTask } = useTaskContext();
+  const { handleToggleComplete, completionLoading } = useTaskOperations(task);
   
   const handleCreateFollowUp = useCallback(() => {
     navigate(`/follow-up-task/${task.id}`);
@@ -26,7 +26,7 @@ function TaskActions({ task, detailView }: TaskActionsProps) {
         variant={task.status === "complete" ? "outline" : "default"}
         size="sm"
         onClick={handleToggleComplete}
-        disabled={loading}
+        disabled={completionLoading}
       >
         {task.status === "complete" ? "Mark Incomplete" : "Complete"}
       </Button>
@@ -34,7 +34,7 @@ function TaskActions({ task, detailView }: TaskActionsProps) {
         variant="outline"
         size="sm"
         onClick={handleCreateFollowUp}
-        disabled={loading}
+        disabled={completionLoading}
       >
         Follow Up
       </Button>

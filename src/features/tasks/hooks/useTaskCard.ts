@@ -4,7 +4,7 @@ import { Task } from "@/lib/types";
 import { useTaskContext } from "@/features/tasks/context/TaskContext";
 import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
 import { useTaskAnimation } from "@/features/tasks/hooks/useTaskAnimation";
-import { useTaskMutation } from "./mutations/useTaskMutation";
+import { useTaskMutation } from "./useTaskMutation";
 
 /**
  * Custom hook for TaskCard functionality
