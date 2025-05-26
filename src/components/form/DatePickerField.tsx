@@ -54,7 +54,11 @@ export function DatePickerField({ value, onChange }: DatePickerFieldProps) {
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start">
+        <PopoverContent 
+          className="w-auto p-0" 
+          align="start"
+          style={{ backgroundColor: "hsl(var(--popover))" }}
+        >
           <Calendar
             mode="single"
             selected={selectedDate}
