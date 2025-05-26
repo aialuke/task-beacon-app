@@ -44,7 +44,7 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
       handlePhotoChange={handlePhotoChange}
       handleSubmit={handleSubmit}
       headerTitle="Create Follow-up Task"
-      headerSubtitle="Build upon your existing work ✨"
+      headerSubtitle="Alone we can do so little; together we can do so much.✨"
       submitLabel="Create Follow-up"
       titlePlaceholder="Enter follow-up task title"
       titleLabel="Follow-up Title"

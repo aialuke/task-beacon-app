@@ -41,7 +41,7 @@ export default function CreateTaskForm({
       handlePhotoChange={handlePhotoChange}
       handleSubmit={handleSubmit}
       headerTitle="What would you like to accomplish?"
-      headerSubtitle="Create your next task with style ✨"
+      headerSubtitle="For every minute spent organising, an hour is earnt.✨"
       submitLabel="Share Task"
     />
   );
