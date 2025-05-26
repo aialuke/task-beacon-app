@@ -1,5 +1,7 @@
+
 import { useEffect, useState } from "react";
-import { Check, User } from "lucide-react";
+import { Check, User, Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { toast } from "@/lib/toast";
 import { getAllUsers } from "@/integrations/supabase/api/users.api";
@@ -15,7 +17,7 @@ export default function UserSearchInput({
   value, 
   onChange, 
   disabled = false,
-  placeholder = "Search user..." 
+  placeholder = "Assign task" 
 }: UserSearchInputProps) {
   const [users, setUsers] = useState<{ id: string; name?: string; email: string }[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -81,64 +83,66 @@ export default function UserSearchInput({
     }
   };
 
-  const handleFocus = () => {
+  const handleClearSelection = () => {
+    onChange("");
+    setSelectedUser(null);
+    setSearchTerm("");
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
     setIsOpen(true);
   };
 
-  const handleBlur = () => {
-    // Improved blur handling to avoid TypeErrors
+  const handleInputFocus = () => {
+    setIsOpen(true);
+  };
+
+  const handleInputBlur = () => {
     setTimeout(() => {
       setIsOpen(false);
     }, 150);
   };
 
   return (
-    <div 
-      className="relative w-full user-search-container"
-      onFocus={handleFocus}
-      onBlur={handleBlur}
-    >
+    <div className="relative w-full">
       <div className={cn(
-        "flex items-center border border-input rounded-xl w-full h-12 user-search-input",
-        disabled ? "bg-muted opacity-50" : "bg-background",
-        isOpen ? "ring-2 ring-ring ring-offset-0" : ""
+        "flex items-center p-2 bg-background/70 border border-border/60 rounded-xl h-12 transition-all duration-200",
+        disabled ? "opacity-50" : "hover:bg-accent/50"
       )}>
-        <div className="flex items-center pl-3">
-          <User className="h-4 w-4 text-muted-foreground" />
-        </div>
+        <User className="h-5 w-5 text-muted-foreground mr-3" />
         
         {selectedUser ? (
-          <div className="flex items-center justify-between w-full px-3 py-2 text-sm">
-            <span className="flex-grow">{getUserDisplayName(selectedUser)}</span>
+          <div className="flex items-center justify-between w-full">
+            <span className="flex-grow text-sm text-foreground">{getUserDisplayName(selectedUser)}</span>
             <button 
               type="button"
-              className="text-muted-foreground hover:text-foreground"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onChange("");
-                setSelectedUser(null);
-                setSearchTerm("");
-              }}
+              className="text-muted-foreground hover:text-foreground ml-2"
+              onClick={handleClearSelection}
               disabled={disabled}
             >
               ×
             </button>
           </div>
         ) : (
-          <input 
-            type="text"
-            placeholder={placeholder} 
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="flex-grow border-0 bg-transparent px-3 py-2 text-sm focus:outline-none focus:ring-0"
-            disabled={disabled}
-          />
+          <>
+            <Input
+              type="text"
+              placeholder={placeholder}
+              value={searchTerm}
+              onChange={handleInputChange}
+              onFocus={handleInputFocus}
+              onBlur={handleInputBlur}
+              className="flex-1 text-foreground bg-transparent border-none focus:ring-0 p-0 h-auto text-sm"
+              disabled={disabled}
+            />
+            <Search className="h-4 w-4 text-muted-foreground ml-2" />
+          </>
         )}
       </div>
       
       {isOpen && !selectedUser && filteredUsers.length > 0 && (
-        <div className="absolute z-[9999] w-full mt-1 bg-popover text-popover-foreground shadow-md rounded-xl overflow-hidden border border-border user-search-results">
+        <div className="absolute z-[9999] w-full mt-1 bg-popover text-popover-foreground shadow-md rounded-xl overflow-hidden border border-border">
           <div className="overflow-y-auto p-1 max-h-20">
             {loading ? (
               <div className="py-2 text-center text-sm">Loading...</div>
@@ -150,7 +154,7 @@ export default function UserSearchInput({
                   <div 
                     key={user.id}
                     onClick={() => handleSelect(user.id)}
-                    className="relative flex cursor-pointer select-none items-center rounded-md px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground transition-colors"
+                    className="relative flex cursor-pointer select-none items-center rounded-md px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground transition-colors"
                   >
                     <User className="h-4 w-4 mr-2" />
                     <span>{getUserDisplayName(user)}</span>
