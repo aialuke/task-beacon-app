@@ -3,7 +3,6 @@ import { useState } from "react";
 import { User } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { EnhancedUserSearch } from "@/components/form/EnhancedUserSearch";
-import { Button } from "@/components/ui/button";
 
 interface UserSearchModalProps {
   isOpen: boolean;
@@ -15,13 +14,8 @@ interface UserSearchModalProps {
 export function UserSearchModal({ isOpen, onClose, value, onChange }: UserSearchModalProps) {
   const [tempValue, setTempValue] = useState(value);
 
-  const handleSave = () => {
-    onChange(tempValue);
-    onClose();
-  };
-
-  const handleCancel = () => {
-    setTempValue(value);
+  const handleUserSelect = (selectedValue: string) => {
+    onChange(selectedValue);
     onClose();
   };
 
@@ -38,17 +32,8 @@ export function UserSearchModal({ isOpen, onClose, value, onChange }: UserSearch
         <div className="space-y-4">
           <EnhancedUserSearch
             value={tempValue}
-            onChange={setTempValue}
+            onChange={handleUserSelect}
           />
-          
-          <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={handleCancel}>
-              Cancel
-            </Button>
-            <Button onClick={handleSave}>
-              Assign Task
-            </Button>
-          </div>
         </div>
       </DialogContent>
     </Dialog>
