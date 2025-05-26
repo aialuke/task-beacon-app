@@ -12,4 +12,8 @@
  */
 
 // Re-export most commonly used utilities for backward compatibility
-export { cn, formatDate, truncateText, generateUUID, isEmpty, safeJsonParse, debounce, throttle } from './utils';
+export { cn } from './utils/ui';
+export { formatDate } from './utils/date';
+export { truncateText } from './utils/format';
+export { generateUUID, debounce, throttle } from './utils/core';
+export { isEmpty, safeJsonParse } from './utils/data';
