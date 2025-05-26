@@ -1,8 +1,7 @@
-
 import { memo } from "react";
 import { ClockFading, ClockAlert, CircleCheckBig, Users } from "lucide-react";
 import { SimpleNavbar } from "@/components/ui/simple-navbar";
-import { TaskFilter } from "@/features/tasks/types";
+import { TaskFilter } from "@/types/shared.types";
 
 interface TaskFilterNavbarProps {
   filter: TaskFilter;

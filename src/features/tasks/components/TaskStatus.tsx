@@ -1,6 +1,5 @@
-
 import { memo } from "react";
-import { Task } from "@/types";
+import { Task } from "@/types/shared.types";
 import { getTaskStatus } from "@/lib/uiUtils";
 import CountdownTimer from "@/components/CountdownTimer";
 

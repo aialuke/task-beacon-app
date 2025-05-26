@@ -1,5 +1,17 @@
 import { useState, useCallback } from "react";
-import { FormState, UseFormStateOptions } from "@/types/form.types";
+
+export interface FormState {
+  title: string;
+  description: string;
+  dueDate: string;
+  url: string;
+  pinned: boolean;
+  assigneeId: string;
+}
+
+export interface UseFormStateOptions {
+  initialUrl?: string;
+}
 
 /**
  * Hook for managing basic form field state

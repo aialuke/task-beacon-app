@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllTasks } from "@/integrations/supabase/api/tasks.api";
 import { useState } from "react";
-import { Task } from "@/types";
+import { Task } from "@/types/shared.types";
 
 /**
  * Custom hook for paginated task queries

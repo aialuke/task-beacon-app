@@ -1,4 +1,3 @@
-
 import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "@/lib/toast";
@@ -6,7 +5,7 @@ import { showBrowserNotification, triggerHapticFeedback } from "@/lib/notificati
 import { useTaskForm } from "./useTaskForm";
 import { useTaskFormValidation } from "./useTaskFormValidation";
 import { createFollowUpTask, uploadTaskPhoto } from "@/integrations/supabase/api/tasks.api";
-import { Task } from "@/types";
+import { Task } from "@/types/shared.types";
 
 interface UseFollowUpTaskProps {
   parentTask: Task;
