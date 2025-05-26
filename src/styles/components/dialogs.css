@@ -7,9 +7,9 @@
   [data-radix-dropdown-menu-content],
   [data-radix-select-content] {
     background-color: hsl(var(--popover)) !important;
-    color: hsl(var(--popover-foreground));
+    color: hsl(var(--popover-foreground)) !important;
     border-radius: var(--radius-xl);
-    border: 1px solid hsl(var(--border));
+    border: 1px solid hsl(var(--border)) !important;
     box-shadow: var(--shadow-lg);
     z-index: 9999;
   }
@@ -23,18 +23,27 @@
   [data-radix-popover-content] {
     padding: 1.5rem;
     background: hsl(var(--popover)) !important;
-    color: hsl(var(--popover-foreground));
-    border: 1px solid hsl(var(--border));
+    color: hsl(var(--popover-foreground)) !important;
+    border: 1px solid hsl(var(--border)) !important;
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-lg);
     max-height: 90vh;
     overflow-y: auto;
   }
 
+  /* ===== RADIX UI SPECIFIC OVERRIDES ===== */
+  [data-radix-portal] [data-radix-dialog-content],
+  [data-radix-portal] [data-radix-popover-content] {
+    background-color: hsl(var(--popover)) !important;
+    color: hsl(var(--popover-foreground)) !important;
+    border: 1px solid hsl(var(--border)) !important;
+  }
+
   /* ===== DIALOG OVERLAY ENHANCEMENTS ===== */
   .dialog-overlay,
   [data-radix-dialog-overlay] {
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.5) !important;
+    backdrop-filter: blur(4px);
   }
 
   /* ===== ENHANCED DARK MODE DIALOGS ===== */
@@ -49,13 +58,14 @@
   .dark [data-radix-dialog-content],
   .dark [data-radix-popover-content] {
     background-color: hsl(var(--popover)) !important;
-    border-color: hsl(var(--border));
+    border-color: hsl(var(--border)) !important;
+    color: hsl(var(--popover-foreground)) !important;
     box-shadow: var(--shadow-xl), 0 0 0 1px hsl(var(--border) / 0.5);
   }
 
   .dark .dialog-overlay,
   .dark [data-radix-dialog-overlay] {
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.7) !important;
   }
 
   /* ===== LIGHT MODE DIALOG OVERRIDES ===== */
@@ -69,15 +79,15 @@
   .light [class*="popover-content"],
   .light [data-radix-dialog-content],
   .light [data-radix-popover-content] {
-    background-color: white !important;
-    color: #1a202c;
-    border-color: #e2e8f0;
+    background-color: hsl(var(--popover)) !important;
+    color: hsl(var(--popover-foreground)) !important;
+    border-color: hsl(var(--border)) !important;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   }
 
   .light .dialog-overlay,
   .light [data-radix-dialog-overlay] {
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.3) !important;
   }
 
   /* ===== MENU ITEM STYLING ===== */
@@ -102,8 +112,8 @@
   .select-item[data-highlighted],
   [data-radix-dropdown-menu-item][data-highlighted],
   [data-radix-select-item][data-highlighted] {
-    background-color: hsl(var(--accent));
-    color: hsl(var(--accent-foreground));
+    background-color: hsl(var(--accent)) !important;
+    color: hsl(var(--accent-foreground)) !important;
     outline: none;
   }
 
@@ -163,9 +173,9 @@
     [data-radix-dropdown-menu-content],
     [data-radix-dialog-content],
     [data-radix-popover-content] {
-      border: 2px solid CanvasText;
-      background: Canvas;
-      color: CanvasText;
+      border: 2px solid CanvasText !important;
+      background: Canvas !important;
+      color: CanvasText !important;
     }
   }
 }

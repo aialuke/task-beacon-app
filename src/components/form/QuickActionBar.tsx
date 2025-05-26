@@ -133,7 +133,7 @@ export function QuickActionBar({
           </Button>
         </PopoverTrigger>
         <PopoverContent 
-          className="w-auto p-0 bg-background/95 backdrop-blur-lg border-border/60 shadow-2xl" 
+          className="w-auto p-0 bg-popover text-popover-foreground border-border shadow-lg" 
           align="start"
           sideOffset={8}
         >
