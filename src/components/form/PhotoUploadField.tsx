@@ -27,12 +27,12 @@ export function PhotoUploadField({ onChange, preview }: PhotoUploadFieldProps) {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <label
         htmlFor="photo"
-        className="flex items-center justify-center gap-3 cursor-pointer bg-background/80 border-2 border-dashed border-border/60 rounded-2xl h-14 px-4 text-base font-medium text-foreground hover:bg-accent/50 hover:border-primary/50 transition-all duration-300 group"
+        className="flex items-center justify-center gap-3 cursor-pointer bg-background/80 border-2 border-dashed border-border/60 rounded-2xl h-12 px-4 text-sm font-medium text-foreground hover:bg-accent/50 hover:border-primary/50 transition-all duration-300 group"
       >
-        <ImageUp className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+        <ImageUp className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
         <span className="truncate group-hover:text-primary transition-colors">
           {selectedFile || "Choose Image"}
         </span>
@@ -53,7 +53,7 @@ export function PhotoUploadField({ onChange, preview }: PhotoUploadFieldProps) {
             <img
               src={preview}
               alt="Preview"
-              className="h-24 w-24 object-cover rounded-2xl shadow-lg border-2 border-border/30 hover:shadow-xl transition-all duration-300"
+              className="h-20 w-20 object-cover rounded-2xl shadow-lg border-2 border-border/30 hover:shadow-xl transition-all duration-300"
             />
             <button
               type="button"

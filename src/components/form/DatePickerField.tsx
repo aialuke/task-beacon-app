@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -41,7 +42,7 @@ export function DatePickerField({ value, onChange }: DatePickerFieldProps) {
               !selectedDate && "text-muted-foreground/70"
             )}
           >
-            <CalendarIcon className="h-5 w-5 mr-3 text-muted-foreground" />
+            <CalendarIcon className="h-4 w-4 mr-3 text-muted-foreground" />
             {selectedDate ? (
               format(selectedDate, "PPP")
             ) : (
