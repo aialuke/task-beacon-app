@@ -4,7 +4,7 @@ import { Task } from "@/lib/types";
 import { useTaskContext } from "@/features/tasks/context/TaskContext";
 import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
 import { useTaskAnimation } from "@/features/tasks/hooks/useTaskAnimation";
-import { useTaskMutation } from "./useTaskMutation";
+import { useTaskMutations } from "./useTaskMutations";
 
 /**
  * Custom hook for TaskCard functionality
@@ -15,7 +15,7 @@ import { useTaskMutation } from "./useTaskMutation";
  * @returns Object containing refs, state, and handlers for the TaskCard component
  */
 export function useTaskCard(task: Task) {
-  const { toggleTaskPin } = useTaskMutation();
+  const { toggleTaskPin } = useTaskMutations();
   const { expandedTaskId, setExpandedTaskId } = useTaskUIContext();
   const contentRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
