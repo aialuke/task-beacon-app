@@ -1,12 +1,11 @@
-
 import { Task, TaskStatus, User } from './shared.types';
 
 // API response types
-export interface ApiResponse<T> = {
+export interface ApiResponse<T> {
   data: T | null;
   error: Error | null;
   isLoading: boolean;
-};
+}
 
 export interface ApiError {
   message: string;
