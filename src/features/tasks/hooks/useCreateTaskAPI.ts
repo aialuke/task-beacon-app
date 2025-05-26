@@ -1,6 +1,7 @@
 
 import { useCallback } from "react";
-import { createTask, getCurrentUserId } from "@/integrations/supabase/api/tasks.api";
+import { createTask } from "@/integrations/supabase/api/tasks.api";
+import { getCurrentUserId } from "@/integrations/supabase/api/base.api";
 import { toast } from "@/lib/toast";
 
 interface CreateTaskData {
