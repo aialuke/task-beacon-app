@@ -6,31 +6,45 @@ This document outlines the patterns and conventions used in the codebase to main
 ## Naming Conventions
 
 - **Components**: PascalCase (e.g., `TaskCard`, `CreateTaskForm`)
-- **Hooks**: camelCase with `use` prefix (e.g., `useTaskContext`, `useCreateTask`)
+- **Hooks**: camelCase with `use` prefix (e.g., `useTaskContext`, `useTaskMutations`)
 - **Utility functions**: camelCase (e.g., `formatDate`, `truncateUrl`)
 - **Constants**: UPPER_SNAKE_CASE for global constants, camelCase for component-level constants
 - **Files**:
   - React components: PascalCase (e.g., `TaskCard.tsx`)
-  - Hooks: camelCase (e.g., `useTaskContext.ts`)
+  - Hooks: camelCase (e.g., `useTaskMutations.ts`)
   - Utility files: camelCase (e.g., `dateUtils.ts`)
   - Context files: PascalCase with `Context` suffix (e.g., `TaskContext.tsx`)
 
-## Component Structure
+## Component Structure and Organization
 
-### Functional Components
+### Component Categories
+
+1. **UI Components** (`components/ui/`): Base Shadcn UI components
+2. **Layout Components** (`components/ui/layout/`): Layout-specific UI components
+3. **Business Components** (`components/business/`): Shared business logic components
+4. **Feature Components** (`features/*/components/`): Feature-specific components
+
+### Functional Components Pattern
 
 ```tsx
-// Import statements
-import { memo } from "react";
+// Import statements (standardized order)
+import { memo, useCallback } from "react";
 import { ComponentProps } from "./types";
+import { Button } from "@/components/ui/button";
+import { useFeatureHook } from "@/features/feature/hooks/useFeatureHook";
 
 // Component definition
 function ComponentName({ prop1, prop2 }: ComponentProps) {
-  // Hooks
+  // Hooks (in order: context, queries, mutations, state, effects)
+  const { data } = useFeatureHook();
   
   // Derived state
+  const computedValue = useMemo(() => data?.value, [data]);
   
   // Event handlers
+  const handleClick = useCallback(() => {
+    // Handler logic
+  }, []);
   
   // Render
   return (
@@ -46,98 +60,155 @@ export default memo(ComponentName);
 
 ## Custom Hooks Pattern
 
-Custom hooks encapsulate complex logic and are named with the `use` prefix:
+### Hook Organization
+
+- **Mutation Hooks**: Centralized operations (e.g., `useTaskMutations`)
+- **Query Hooks**: Data fetching (e.g., `useTaskQueries`)
+- **UI Hooks**: Component state management (e.g., `useTaskCard`)
+- **Validation Hooks**: Form validation (e.g., `useTaskFormValidation`)
+
+### Hook Structure
 
 ```tsx
 export function useCustomHook() {
+  // External hooks and context
+  const { contextValue } = useContext();
+  
   // State
+  const [state, setState] = useState();
   
   // Effects
+  useEffect(() => {
+    // Effect logic
+  }, []);
   
-  // Helper functions
+  // Memoized values
+  const memoizedValue = useMemo(() => computation, [dependencies]);
   
-  // Return values and handlers
+  // Callbacks
+  const handleAction = useCallback(() => {
+    // Action logic
+  }, [dependencies]);
+  
+  // Return interface
   return {
-    value1,
-    value2,
-    handleEvent,
+    state,
+    memoizedValue,
+    handleAction,
   };
 }
 ```
 
-## API Layer Pattern
+## Import Order and Patterns
 
-API functions follow this pattern:
+### Standardized Import Order
 
-```ts
-export const apiFunction = async (param1, param2): Promise<TablesResponse<ReturnType>> => {
-  // Mock data handling for development
-  if (isMockingSupabase) {
-    return mockResponse;
-  }
+1. React and React-related imports
+2. Third-party libraries  
+3. UI components (from `@/components/ui`)
+4. Business components (from `@/components/business`)
+5. Feature components
+6. Hooks (context, queries, mutations, custom)
+7. Utilities (direct imports preferred)
+8. Types and interfaces
+9. Assets and styles
 
-  // Actual API call wrapped in error handling
-  return apiRequest(async () => {
-    const { data, error } = await supabase
-      .from("table")
-      .select()
-      .eq("condition", value);
-      
-    if (error) throw error;
-    return data;
-  });
-};
+### Import Pattern Standards
+
+1. **Direct Imports (Preferred)**:
+   ```typescript
+   import { formatDate } from "@/lib/dateUtils";
+   import { compressAndResizePhoto } from "@/lib/imageUtils";
+   import { useTaskMutations } from "@/features/tasks/hooks/useTaskMutations";
+   ```
+
+2. **Barrel Imports (Common utilities only)**:
+   ```typescript
+   import { cn, formatDate, truncateText } from "@/lib/utils";
+   ```
+
+3. **Feature Imports**:
+   ```typescript
+   import { TaskCard } from "@/features/tasks/components/TaskCard";
+   import { useTaskContext } from "@/features/tasks/context/TaskContext";
+   ```
+
+## Form Handling Patterns
+
+### Standardized Form Validation
+
+All forms use the `useFormWithValidation` hook pattern:
+
+```tsx
+const form = useFormWithValidation({
+  schema: validationSchema,
+  defaultValues,
+  onSubmit: handleSubmit,
+  successMessage: "Success message"
+});
 ```
 
-## Error Handling
+### Form Component Structure
 
-Errors are handled at three levels:
+1. **Form Hook**: Handles state and validation
+2. **Form Component**: Renders UI and handles user interaction
+3. **Field Components**: Reusable form field components
 
-1. **API Layer**: Standardized error format with `handleApiError` utility
-2. **Hooks Layer**: Try/catch blocks that use toast notifications
-3. **UI Layer**: Fallback UI components and error states
+## State Management Patterns
 
-## State Management
+### Context Usage
 
-- Use **local state** (useState) for component-specific state
-- Use **context** for shared state across components
-- Use **TanStack Query** for server state and data fetching
+- **Global State**: Authentication, theme, UI preferences
+- **Feature State**: Feature-specific data and operations
+- **Component State**: Local component state only
+
+### Context Structure
+
+```tsx
+interface ContextValue {
+  // State
+  data: DataType;
+  
+  // Actions
+  updateData: (data: DataType) => void;
+  
+  // Computed values
+  isLoading: boolean;
+}
+```
 
 ## Performance Optimization
 
-- Memoize components with `React.memo()` when appropriate
-- Memoize expensive calculations with `useMemo()`
-- Memoize callback functions with `useCallback()`
-- Use `useFilteredTasks` and similar hooks to avoid recalculation
+- **React.memo()**: For components that receive stable props
+- **useMemo()**: For expensive calculations
+- **useCallback()**: For event handlers and functions passed as props
+- **Code splitting**: Lazy loading for routes and large components
 
-## Form Handling
+## Error Handling
 
-Forms use a two-layer approach:
+### Three-Layer Approach
 
-1. Base hooks for common form functionality (`useBaseTaskForm`)
-2. Specialized hooks for specific forms (`useCreateTask`, `useFollowUpTask`)
-
-## Animation Patterns
-
-Animations use React Spring with these principles:
-
-1. Animate CSS properties that trigger only compositing (`transform`, `opacity`)
-2. Use `will-change` property for performance optimization
-3. Respect user preferences with `prefers-reduced-motion` media query
+1. **API Layer**: Standardized error format with `handleApiError`
+2. **Hook Layer**: Try/catch with toast notifications
+3. **UI Layer**: Error boundaries and fallback components
 
 ## Testing Conventions
 
-- **Unit tests**: One test file per utility file
-- **Component tests**: Focus on user interactions and outcomes
-- **Mocks**: Use mocks for external dependencies (Supabase, etc.)
-- **Test IDs**: Use data-testid attributes for component testing
+- **Unit tests**: One test file per utility/hook
+- **Component tests**: User interaction focused
+- **Mocks**: External dependencies (Supabase, etc.)
+- **Test IDs**: `data-testid` for component queries
 
-## Import Order
+## Animation and Styling
 
-1. React and React-related imports
-2. Third-party libraries
-3. Internal components
-4. Internal hooks
-5. Internal utilities
-6. Types and interfaces
-7. Assets and styles
+### CSS Class Organization
+
+- **Tailwind utilities**: Primary styling approach
+- **Component-specific styles**: In dedicated CSS files
+- **Animation classes**: Defined in utilities/animations.css
+
+### Animation Patterns
+
+- **CSS transitions**: For simple state changes
+- **React Spring**: For complex animations
+- **Performance**: Use `transform` and `opacity` properties

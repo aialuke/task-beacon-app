@@ -18,11 +18,14 @@ This document outlines the architecture of the Task Management Progressive Web A
 
 ```
 src/
-├── components/        # Shared UI components
-│   └── ui/            # Base UI components using Shadcn UI
+├── components/        # Shared UI components and form utilities
+│   ├── ui/            # Base UI components using Shadcn UI
+│   ├── form/          # Reusable form components and hooks
+│   ├── timer/         # Timer-related UI components
+│   └── *.tsx          # Other shared components (AuthForm, ErrorBoundary, etc.)
 ├── contexts/          # Global context providers
 │   ├── AuthContext.tsx       # Authentication context
-│   └── UIContext.tsx         # UI state management context
+│   └── ThemeContext.tsx      # Theme management context
 ├── features/          # Feature-based modules
 │   └── tasks/         # Task management feature
 │       ├── components/    # Task-specific UI components
@@ -31,7 +34,7 @@ src/
 │       ├── hooks/         # Task-related custom hooks
 │       ├── pages/         # Task page components
 │       ├── schemas/       # Validation schemas
-│       └── types.ts       # Task-specific type definitions
+│       └── types/         # Task-specific type definitions
 ├── hooks/             # Shared custom hooks
 ├── integrations/      # External service integrations
 │   └── supabase/      # Supabase client and API layer
@@ -39,7 +42,7 @@ src/
 │       ├── client.ts      # Supabase client configuration
 │       └── types/         # Supabase-related type definitions
 ├── lib/               # Utility functions and constants
-│   ├── utils.ts           # Core utility functions & selective re-exports
+│   ├── utils.ts           # Core utilities and common re-exports
 │   ├── uiUtils.ts         # UI-related utility functions
 │   ├── dataUtils.ts       # Data manipulation utilities
 │   ├── dateUtils.ts       # Date-related utility functions
@@ -49,6 +52,7 @@ src/
 │   ├── imageUtils.ts      # Image manipulation utilities
 │   └── types.ts           # Shared type definitions
 ├── pages/             # Application pages/routes
+├── schemas/           # Shared validation schemas
 └── styles/            # Global styles and theme
 ```
 
@@ -63,6 +67,22 @@ Key principles:
 - Features should be self-contained with minimal dependencies on other features
 - Common/shared code is placed in the root-level directories (components, lib, hooks)
 
+### Component Organization Strategy
+
+Components are organized into three main categories:
+
+1. **UI Components** (`components/ui/`): Base components from Shadcn UI
+2. **Shared Components** (`components/`): Reusable business logic components
+3. **Feature Components** (`features/*/components/`): Feature-specific components
+
+### Form Architecture
+
+The application implements a standardized form pattern using:
+
+1. **Form Validation Hook** (`useFormWithValidation`): Provides consistent form handling with Zod validation
+2. **Specialized Form Hooks**: Feature-specific hooks that use the base validation hook
+3. **Form Components**: Reusable form field components in `components/form/`
+
 ### API Layer
 
 The application implements a dedicated API layer for Supabase interactions in `integrations/supabase/api/`. This layer:
@@ -73,8 +93,6 @@ The application implements a dedicated API layer for Supabase interactions in `i
 4. Abstracts the underlying Supabase implementation from the rest of the application
 5. Supports mocking for development and testing
 
-Direct usage of the Supabase client is restricted to the API layer, ensuring all database interactions follow consistent patterns.
-
 ### Custom Hooks Pattern
 
 The application uses custom hooks extensively to:
@@ -84,90 +102,65 @@ The application uses custom hooks extensively to:
 3. Make components more readable and focused
 4. Enable reuse across components
 
-Example hook organization:
-- Base hooks: Provide core functionality for a specific domain (e.g., `useBaseTaskForm`)
-- Specialized hooks: Build on base hooks for specific use cases (e.g., `useCreateTask`, `useFollowUpTask`)
-- Feature-specific hooks: Located in feature directories (e.g., `tasks/hooks/useFilteredTasks`)
-- Shared hooks: Located in the root hooks directory (e.g., `use-mobile`)
+Hook organization:
+- **Mutation Hooks**: Centralized in `useTaskMutations` for all task operations
+- **Query Hooks**: Specific hooks for data fetching (e.g., `useTaskQueries`)
+- **UI Hooks**: Handle component state and interactions (e.g., `useTaskCard`)
+- **Validation Hooks**: Standardized validation using `useTaskFormValidation`
 
 ### Context API for State Management
 
 The application uses React's Context API for sharing state across components:
 
-1. Global contexts: Located in `/contexts`
+1. **Global contexts**: Located in `/contexts`
    - `AuthContext`: Handles user authentication state
-   - `UIContext`: Manages UI-related state like themes and layouts
+   - `ThemeContext`: Manages theme state
 
-2. Feature-specific contexts: Located in feature directories
+2. **Feature-specific contexts**: Located in feature directories
    - `TaskContext`: Manages task-related state and operations
-
-Context usage guidelines:
-- Contexts should provide both state and functions to modify that state
-- Each context should have a custom hook (e.g., `useTaskContext`) for consuming it
-- Contexts should split large pieces of state into smaller contexts when appropriate
+   - `TaskUIContext`: Handles UI-specific state for tasks
 
 ### Import Pattern Standards
 
-We follow these import standards in our codebase:
+We follow these import standards throughout the codebase:
 
 1. **Direct Imports (Preferred)**:
-   - Use direct imports from specific utility files for clarity and better tree-shaking
-   - Examples:
-     ```typescript
-     import { formatDate } from "@/lib/dateUtils";
-     import { compressAndResizePhoto } from "@/lib/imageUtils";
-     import { isValidEmail } from "@/lib/validationUtils";
-     ```
+   ```typescript
+   import { formatDate } from "@/lib/dateUtils";
+   import { compressAndResizePhoto } from "@/lib/imageUtils";
+   import { isValidEmail } from "@/lib/validationUtils";
+   ```
 
 2. **Selective Barrel Imports**:
-   - The `utils.ts` file selectively re-exports the most commonly used utility functions
-   - Only use barrel imports for these very common utilities:
-     ```typescript
-     import { cn, formatDate, truncateText } from "@/lib/utils";
-     ```
+   ```typescript
+   import { cn, formatDate, truncateText } from "@/lib/utils";
+   ```
 
-3. **When to use each**:
-   - Use direct imports for:
-     - Domain-specific utilities 
-     - Less frequently used functions
-     - When bundle size is a concern
-   - Use barrel imports for:
-     - Very common utilities that appear in many components
-     - When improving code readability in components with many imports
+3. **Feature Imports**:
+   ```typescript
+   import { useTaskMutations } from "@/features/tasks/hooks/useTaskMutations";
+   ```
 
 ### Utility Function Organization
 
-Utility functions are organized by domain to improve maintainability and navigation:
+Utility functions are organized by domain:
 
-- `utils.ts`: Common core utilities and selective re-exports of frequently used utilities
-- Domain-specific utilities:
-  - `uiUtils.ts`: UI helper functions (class merging, element styling)
-  - `dataUtils.ts`: Data transformation and manipulation
-  - `dateUtils.ts`: Date formatting and calculations
+- `utils.ts`: Common core utilities and selective re-exports
+- Domain-specific utilities organized by function:
+  - `uiUtils.ts`: UI helper functions
+  - `dataUtils.ts`: Data transformation
+  - `dateUtils.ts`: Date operations
   - `validationUtils.ts`: Input validation
-  - `formatUtils.ts`: String and data formatting
-  - `animationUtils.ts`: Animation calculations and timers
-  - `imageUtils.ts`: Image processing and optimization
-
-### Form Patterns
-
-Form handling uses a combination of:
-
-1. Base form hooks for shared form logic (e.g., `useBaseTaskForm`)
-2. Specialized form hooks for specific use cases (e.g., `useCreateTask`)
-3. Form validation using:
-   - Zod schemas for complex validation scenarios
-   - Custom validation functions for simpler cases
-4. Form component composition pattern:
-   - Form wrapper components handle state management
-   - Child components handle rendering and user interaction
+  - `formatUtils.ts`: String formatting
+  - `animationUtils.ts`: Animation calculations
+  - `imageUtils.ts`: Image processing
 
 ## Data Flow
 
 1. **Data Fetching**: TanStack Query handles data fetching via the Supabase API layer
-2. **State Management**: Context providers manage global state
+2. **State Management**: Context providers manage global and feature-specific state
 3. **UI Updates**: Components consume context and query results to render the UI
-4. **User Interactions**: Event handlers trigger mutations through the API layer
+4. **User Interactions**: Event handlers trigger mutations through centralized hooks
 5. **Optimistic Updates**: TanStack Query provides optimistic updates for better UX
 
 ## Responsive Design Pattern
@@ -176,7 +169,7 @@ The application implements responsive design using:
 
 1. Tailwind CSS responsive utilities
 2. Layout components that adapt to screen size
-3. UI Context to track viewport size and device type
+3. Context to track viewport size and device type
 4. Custom hooks (e.g., `use-mobile`) to adapt functionality based on screen size
 
 ## Animation Patterns

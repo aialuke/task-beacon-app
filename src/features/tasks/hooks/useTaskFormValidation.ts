@@ -7,13 +7,13 @@ import { createTextSchema } from "@/schemas/commonValidation";
 /**
  * Standardized task form validation hook
  * 
- * Single approach for all task form validation using Zod schemas
+ * Provides consistent validation patterns for all task forms using Zod schemas
  */
 export function useTaskFormValidation() {
   const { validateWithToast, validateField } = useValidation();
 
   /**
-   * Validate complete task form data
+   * Validate complete task form data using the task schema
    */
   const validateTaskForm = useCallback((data: any) => {
     return validateWithToast(createTaskSchema, data);
@@ -29,7 +29,7 @@ export function useTaskFormValidation() {
   }, [validateField]);
 
   /**
-   * Create a title setter with validation and character limit
+   * Create a title setter with validation and character limit enforcement
    */
   const createTitleSetter = useCallback((setTitle: (value: string) => void) => {
     return (value: string) => {

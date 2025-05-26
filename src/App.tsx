@@ -1,5 +1,4 @@
 
-// src/App.tsx
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -8,6 +7,7 @@ import { lazy, Suspense } from "react";
 import Index from "./pages/Index";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { LoadingSpinner } from "@/components/ui/layout";
 
 const NotFound = lazy(() => import("./pages/NotFound"));
 const TaskDetailsPage = lazy(() => import("./features/tasks/pages/TaskDetailsPage"));
@@ -24,12 +24,6 @@ const queryClient = new QueryClient({
     },
   },
 });
-
-const LoadingSpinner = () => (
-  <div className="min-h-screen flex items-center justify-center bg-background">
-    <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
-  </div>
-);
 
 const App = () => (
   <ThemeProvider>
