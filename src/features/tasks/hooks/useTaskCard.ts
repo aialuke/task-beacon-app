@@ -30,26 +30,27 @@ export function useTaskCard(task: Task) {
 
   /**
    * Toggle the expanded state of the task card
-   * Optimized: Only recreate when task.id or setExpandedTaskId changes
+   * Optimized: Only recreate when necessary dependencies change
    */
   const toggleExpand = useCallback(() => {
     setExpandedTaskId(isExpanded ? null : task.id);
-  }, [task.id, setExpandedTaskId, isExpanded]);
+  }, [setExpandedTaskId, isExpanded, task.id]);
 
   /**
    * Toggle the pinned state of the task
-   * Optimized: Only recreate when task or toggleTaskPin changes
+   * Optimized: Only recreate when task.id or task.pinned changes
    */
   const handleTogglePin = useCallback(async () => {
     await toggleTaskPin(task);
-  }, [task, toggleTaskPin]);
+  }, [toggleTaskPin, task.id, task.pinned]);
 
-  return {
+  // Memoize the return object to prevent unnecessary re-renders
+  return useMemo(() => ({
     contentRef,
     cardRef,
     isExpanded,
     animationState,
     toggleExpand,
     handleTogglePin
-  };
+  }), [isExpanded, animationState, toggleExpand, handleTogglePin]);
 }
