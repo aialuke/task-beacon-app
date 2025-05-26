@@ -1,6 +1,6 @@
 
 import { Input } from "@/components/ui/input";
-import { ImagePlus } from "lucide-react";
+import { ImageUp } from "lucide-react";
 import { useState } from "react";
 
 interface PhotoUploadFieldProps {
@@ -19,20 +19,25 @@ export function PhotoUploadField({ onChange, preview }: PhotoUploadFieldProps) {
 
   return (
     <div className="space-y-3">
-      <div className="relative">
+      <label
+        htmlFor="photo"
+        className="flex items-center justify-center gap-3 cursor-pointer bg-background border border-border/60 rounded-xl h-12 px-4 text-sm font-medium text-foreground hover:bg-accent/50 transition-all duration-200"
+      >
+        <ImageUp className="h-5 w-5 text-muted-foreground" />
+        <span className="truncate">
+          {selectedFile || "Add Image"}
+        </span>
+        
         <Input
           id="photo"
           type="file"
           accept="image/*"
           onChange={handleFileChange}
-          className="cursor-pointer bg-background/70 border border-border/60 rounded-xl h-12 text-transparent file:hidden [&::-webkit-file-upload-button]:hidden"
-          aria-label="Attach File"
+          className="sr-only"
+          aria-label="Add Image"
         />
-        <ImagePlus className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground pointer-events-none" />
-        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-sm text-muted-foreground/70 pointer-events-none truncate pr-12">
-          {selectedFile || "Choose file..."}
-        </span>
-      </div>
+      </label>
+      
       {preview && (
         <div className="animate-fade-in">
           <div className="relative inline-block">
