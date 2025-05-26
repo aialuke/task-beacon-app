@@ -1,205 +1,41 @@
 
-/* src/styles/components/dialogs.css - Enhanced dialog and popover styling for dark mode */
+/* src/styles/components/dialogs.css - Simplified dialog and popover styling */
 @layer components {
-  /* ===== ENHANCED SELECT & DROPDOWN STYLING ===== */
-  .select-content,
-  [data-radix-popper-content-wrapper],
-  [data-radix-dropdown-menu-content],
-  [data-radix-select-content] {
-    background-color: hsl(var(--popover)) !important;
-    color: hsl(var(--popover-foreground)) !important;
-    border-radius: var(--radius-xl);
-    border: 1px solid hsl(var(--border)) !important;
-    box-shadow: var(--shadow-lg);
-    z-index: 9999;
-  }
-
-  /* ===== ENHANCED DIALOG CONTENT STYLING WITH HIGHER SPECIFICITY ===== */
-  .dialog-content, 
-  [class*="dialog-content"],
-  .popover-content,
-  [class*="popover-content"],
+  /* ===== SOLID BACKGROUND ENFORCEMENT ===== */
   [data-radix-dialog-content],
-  [data-radix-popover-content],
-  [data-radix-portal] [data-radix-dialog-content],
-  [data-radix-portal] [data-radix-popover-content],
-  [data-state="open"][data-radix-dialog-content],
-  [data-state="open"][data-radix-popover-content] {
-    padding: 1.5rem !important;
-    background: hsl(var(--popover)) !important;
-    background-color: hsl(var(--popover)) !important;
-    color: hsl(var(--popover-foreground)) !important;
-    border: 1px solid hsl(var(--border)) !important;
-    border-radius: var(--radius-xl) !important;
-    box-shadow: var(--shadow-lg) !important;
-    max-height: 90vh;
-    overflow-y: auto;
+  [data-radix-popover-content] {
+    background-color: #1a1a1a !important;
+    color: #ffffff !important;
+    border: 1px solid #404040 !important;
     opacity: 1 !important;
   }
 
-  /* ===== RADIX UI SPECIFIC OVERRIDES WITH MAXIMUM SPECIFICITY ===== */
-  [data-radix-portal] [data-radix-dialog-content],
-  [data-radix-portal] [data-radix-popover-content],
-  div[data-radix-portal] div[data-radix-dialog-content],
-  div[data-radix-portal] div[data-radix-popover-content],
-  body [data-radix-portal] [data-radix-dialog-content],
-  body [data-radix-portal] [data-radix-popover-content] {
-    background-color: hsl(var(--popover)) !important;
-    color: hsl(var(--popover-foreground)) !important;
-    border: 1px solid hsl(var(--border)) !important;
-    opacity: 1 !important;
+  /* ===== LIGHT MODE OVERRIDES ===== */
+  .light [data-radix-dialog-content],
+  .light [data-radix-popover-content],
+  html:not(.dark) [data-radix-dialog-content],
+  html:not(.dark) [data-radix-popover-content] {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border: 1px solid #e5e5e5 !important;
   }
 
-  /* ===== DIALOG OVERLAY ENHANCEMENTS ===== */
-  .dialog-overlay,
+  /* ===== CALENDAR SPECIFIC STYLING ===== */
+  [data-radix-popover-content] .rdp {
+    background-color: inherit !important;
+    color: inherit !important;
+  }
+
+  /* ===== OVERLAY STYLING ===== */
   [data-radix-dialog-overlay] {
-    background: rgba(0, 0, 0, 0.5) !important;
+    background-color: rgba(0, 0, 0, 0.8) !important;
     backdrop-filter: blur(4px);
   }
 
-  /* ===== ENHANCED DARK MODE DIALOGS WITH MAXIMUM SPECIFICITY ===== */
-  .dark .select-content,
-  .dark [data-radix-popper-content-wrapper],
-  .dark [data-radix-dropdown-menu-content],
-  .dark [data-radix-select-content],
-  .dark .dialog-content,
-  .dark [class*="dialog-content"],
-  .dark .popover-content,
-  .dark [class*="popover-content"],
-  .dark [data-radix-dialog-content],
-  .dark [data-radix-popover-content],
-  body.dark [data-radix-portal] [data-radix-dialog-content],
-  body.dark [data-radix-portal] [data-radix-popover-content],
-  html.dark [data-radix-portal] [data-radix-dialog-content],
-  html.dark [data-radix-portal] [data-radix-popover-content] {
-    background-color: hsl(var(--popover)) !important;
-    border-color: hsl(var(--border)) !important;
-    color: hsl(var(--popover-foreground)) !important;
-    box-shadow: var(--shadow-xl), 0 0 0 1px hsl(var(--border) / 0.5) !important;
-    opacity: 1 !important;
-  }
-
-  .dark .dialog-overlay,
-  .dark [data-radix-dialog-overlay] {
-    background: rgba(0, 0, 0, 0.7) !important;
-  }
-
-  /* ===== LIGHT MODE DIALOG OVERRIDES ===== */
-  .light .select-content,
-  .light [data-radix-popper-content-wrapper],
-  .light [data-radix-dropdown-menu-content],
-  .light [data-radix-select-content],
-  .light .dialog-content,
-  .light [class*="dialog-content"],
-  .light .popover-content,
-  .light [class*="popover-content"],
-  .light [data-radix-dialog-content],
-  .light [data-radix-popover-content] {
-    background-color: hsl(var(--popover)) !important;
-    color: hsl(var(--popover-foreground)) !important;
-    border-color: hsl(var(--border)) !important;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
-    opacity: 1 !important;
-  }
-
-  .light .dialog-overlay,
-  .light [data-radix-dialog-overlay] {
-    background: rgba(0, 0, 0, 0.3) !important;
-  }
-
-  /* ===== MENU ITEM STYLING ===== */
-  .dropdown-menu-item,
-  .select-item,
-  [data-radix-dropdown-menu-item],
-  [data-radix-select-item] {
-    padding: 0.5rem 0.75rem;
-    border-radius: var(--radius-md);
-    transition: all 0.15s ease;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .dropdown-menu-item:hover,
-  .select-item:hover,
-  [data-radix-dropdown-menu-item]:hover,
-  [data-radix-select-item]:hover,
-  .dropdown-menu-item[data-highlighted],
-  .select-item[data-highlighted],
-  [data-radix-dropdown-menu-item][data-highlighted],
-  [data-radix-select-item][data-highlighted] {
-    background-color: hsl(var(--accent)) !important;
-    color: hsl(var(--accent-foreground)) !important;
-    outline: none;
-  }
-
-  /* ===== DIALOG HEADER AND FOOTER ===== */
-  .dialog-header {
-    padding-bottom: 1rem;
-    border-bottom: 1px solid hsl(var(--border));
-    margin-bottom: 1rem;
-  }
-
-  .dialog-footer {
-    padding-top: 1rem;
-    border-top: 1px solid hsl(var(--border));
-    margin-top: 1rem;
-    display: flex;
-    gap: 0.75rem;
-    justify-content: flex-end;
-  }
-
-  /* ===== ACCESSIBILITY ENHANCEMENTS ===== */
-  .dialog-content:focus,
-  .popover-content:focus,
+  /* ===== ACCESSIBILITY ===== */
   [data-radix-dialog-content]:focus,
   [data-radix-popover-content]:focus {
-    outline: 2px solid hsl(var(--primary));
+    outline: 2px solid #3b82f6;
     outline-offset: 2px;
-  }
-
-  /* ===== RESPONSIVE DIALOG STYLING ===== */
-  @media (max-width: 640px) {
-    .dialog-content,
-    .popover-content,
-    [data-radix-dialog-content],
-    [data-radix-popover-content] {
-      padding: 1rem !important;
-      margin: 1rem;
-      max-width: calc(100vw - 2rem);
-      max-height: calc(100vh - 2rem);
-    }
-  }
-
-  /* ===== ANIMATION ENHANCEMENTS ===== */
-  .dialog-content,
-  .popover-content,
-  [data-radix-dialog-content],
-  [data-radix-popover-content] {
-    animation-duration: 0.2s;
-    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  /* ===== HIGH CONTRAST MODE SUPPORT ===== */
-  @media (forced-colors: active) {
-    .select-content,
-    .dialog-content,
-    .popover-content,
-    [data-radix-popper-content-wrapper],
-    [data-radix-dropdown-menu-content],
-    [data-radix-dialog-content],
-    [data-radix-popover-content] {
-      border: 2px solid CanvasText !important;
-      background: Canvas !important;
-      color: CanvasText !important;
-    }
-  }
-
-  /* ===== FORCE SOLID BACKGROUNDS - ULTIMATE OVERRIDE ===== */
-  * [data-radix-dialog-content],
-  * [data-radix-popover-content] {
-    background-color: hsl(var(--popover)) !important;
-    opacity: 1 !important;
   }
 }
