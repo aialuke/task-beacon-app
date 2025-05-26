@@ -40,7 +40,7 @@ export function FloatingTextarea({
       <div className="relative">
         {icon && (
           <div className={cn(
-            "absolute left-3 top-6 z-10 transition-all duration-300", // Adjusted top position for larger textarea
+            "absolute left-3 top-3 z-10 transition-all duration-300", // Changed from top-6 to top-3
             isFloating ? "text-primary scale-95" : "text-muted-foreground"
           )}>
             {icon}
@@ -69,8 +69,8 @@ export function FloatingTextarea({
             "absolute transition-all duration-300 pointer-events-none select-none font-medium",
             icon ? "left-11" : "left-4",
             isFloating
-              ? "top-2 text-xs text-primary"
-              : "top-6 text-sm text-muted-foreground" // Adjusted top position for centered label in larger field
+              ? "top-2 text-xs text-primary" // Keeps the floated label at top-2
+              : "top-3 text-sm text-muted-foreground" // Changed from top-6 to top-3 for better alignment
           )}
         >
           {label}

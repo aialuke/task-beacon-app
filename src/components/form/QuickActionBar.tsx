@@ -142,7 +142,7 @@ export function QuickActionBar({
   );
 
   return (
-    <div className="flex flex-wrap gap-2 p-4 bg-background/30 backdrop-blur-sm rounded-xl justify-center">
+    <div className="flex flex-wrap gap-2 px-4 py-2 bg-background/30 backdrop-blur-sm rounded-xl justify-center">
       {/* Date Picker Button */}
       <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
         <PopoverTrigger asChild>
