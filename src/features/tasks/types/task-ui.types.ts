@@ -1,12 +1,9 @@
 
-import { TaskStatus } from "@/lib/types";
+import { TaskStatus, TaskFilter } from "@/types/shared.types";
 
 /**
  * UI-related types for task components
  */
-
-export type TaskFilter = TaskStatus | "all" | "assigned";
-
 export interface TaskListUIProps {
   className?: string;
   showFilters?: boolean;

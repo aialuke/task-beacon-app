@@ -1,12 +1,10 @@
 
-import { Task, TaskStatus } from "@/lib/types";
+import { Task, TaskStatus, TaskFilter } from "@/types/shared.types";
 
 // Re-export specialized type modules for easier imports
 export * from './types/task-api.types';
 export * from './types/task-ui.types';
-
-// Types
-export type TaskFilter = TaskStatus | "all" | "assigned";
+export * from "@/types/shared.types";
 
 // Legacy type kept for backward compatibility
 // New code should use specific context types from TaskContext.tsx and TaskUIContext.tsx

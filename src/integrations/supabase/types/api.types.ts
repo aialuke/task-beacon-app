@@ -2,28 +2,10 @@
 import { Database } from '@/integrations/supabase/types';
 import { PostgrestError } from '@supabase/supabase-js';
 
-export type ApiResponse<T> = {
-  data: T | null;
-  error: Error | null;
-  isLoading: boolean;
-};
+// Re-export centralized API types
+export * from "@/types/api.types";
 
-export type ApiError = {
-  message: string;
-  name: string; // Added name property to match Error interface
-  code?: string;
-  details?: unknown;
-  hint?: string;
-  originalError?: PostgrestError | Error;
-};
-
-export type TablesResponse<T> = {
-  data: T | null;
-  error: ApiError | null;
-};
-
-// We need to manually define these table types as they're not yet generated correctly
-// in the Database type. In a real project, these would be generated automatically.
+// Legacy exports for backward compatibility
 export type Tables = {
   tasks: {
     Row: {
@@ -51,6 +33,3 @@ export type Tables = {
     };
   };
 };
-
-export type TaskRow = Tables['tasks']['Row'];
-export type UserRow = Tables['users']['Row'];

@@ -22,7 +22,7 @@ export const updateTaskSchema = baseTaskSchema.partial();
 // Schema for completing a task
 export const completeTaskSchema = z.object({
   id: z.string(),
-  status: z.enum(["pending", "completed"]),
+  status: z.enum(["pending", "complete"]),
 });
 
 // Type definitions derived from schemas

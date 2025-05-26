@@ -1,7 +1,8 @@
+
 import { supabase } from '@/integrations/supabase/client';
 import { apiRequest, getCurrentUserId } from './base.api';
-import { TablesResponse, TaskRow } from '../types/api.types';
-import { Task } from '@/lib/types';
+import { TablesResponse, TaskRow, TaskCreateParams, TaskUpdateParams } from '@/types/api.types';
+import { Task } from '@/types/shared.types';
 import { isMockingSupabase } from '@/integrations/supabase/client';
 
 // Mock data import for development

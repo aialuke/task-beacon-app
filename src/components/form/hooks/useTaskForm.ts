@@ -1,8 +1,9 @@
 
 import { useState, useCallback } from "react";
-import { useFormState, UseFormStateOptions } from "./useFormState";
+import { useFormState } from "./useFormState";
 import { usePhotoUpload } from "./usePhotoUpload";
 import { useFormValidation } from "./useFormValidation";
+import { UseFormStateOptions } from "@/types/form.types";
 
 export interface UseTaskFormOptions extends UseFormStateOptions {
   onClose?: () => void;

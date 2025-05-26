@@ -1,8 +1,8 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import { apiRequest } from './base.api';
-import { TablesResponse, UserRow } from '../types/api.types';
-import { User } from '@/lib/types';
+import { TablesResponse, UserRow } from '@/types/api.types';
+import { User } from '@/types/shared.types';
 import { isMockingSupabase } from '@/integrations/supabase/client';
 
 // Mock users for development
