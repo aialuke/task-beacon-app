@@ -93,23 +93,30 @@
     -webkit-text-fill-color: transparent;
   }
 
-  /* Gradient Background Utilities - MISSING GRADIENTS RESTORED */
+  /* Gradient Background Utilities - FIXED WITH PROPER CSS VARIABLES */
   .bg-gradient-primary {
-    background: var(--gradient-blue);
-    /* Fallback for older browsers */
-    background-color: hsl(var(--primary));
+    background: var(--gradient-primary);
   }
   
   .bg-gradient-primary-dark {
-    background: var(--gradient-blue-dark);
-    /* Fallback for older browsers */
-    background-color: hsl(var(--primary));
+    background: var(--gradient-primary-dark);
   }
   
   .hover\:bg-gradient-primary-dark:hover {
-    background: var(--gradient-blue-dark);
-    /* Fallback for older browsers */
-    background-color: hsl(var(--primary));
+    background: var(--gradient-primary-dark);
+  }
+
+  /* Fallback gradient utilities using Tailwind colors */
+  .bg-gradient-blue {
+    background: linear-gradient(45deg, #4C6DE1, #6B82F6);
+  }
+  
+  .bg-gradient-blue-dark {
+    background: linear-gradient(45deg, #3B5BDB, #4C6DE1);
+  }
+  
+  .hover\:bg-gradient-blue-dark:hover {
+    background: linear-gradient(45deg, #3B5BDB, #4C6DE1);
   }
 
   /* Interactive Color State Utilities */

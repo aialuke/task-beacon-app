@@ -14,10 +14,12 @@
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   --shadow-focus: 0 0 0 3px hsl(225 77% 60% / 0.2);
   
-  /* Gradient backgrounds - Updated with new primary color */
+  /* Gradient backgrounds - Fixed to use actual color values */
   --gradient-light: linear-gradient(to bottom right, #FFFFFF, #F9FAFB);
-  --gradient-blue: linear-gradient(45deg, hsl(225 77% 60%), hsl(225 77% 70%));
-  --gradient-blue-dark: linear-gradient(45deg, hsl(225 77% 50%), hsl(225 77% 60%));
+  --gradient-blue: linear-gradient(45deg, #4C6DE1, #6B82F6);
+  --gradient-blue-dark: linear-gradient(45deg, #3B5BDB, #4C6DE1);
+  --gradient-primary: linear-gradient(45deg, #4C6DE1, #6B82F6);
+  --gradient-primary-dark: linear-gradient(45deg, #3B5BDB, #4C6DE1);
 }
 
 /* Dark mode design tokens */
@@ -31,10 +33,12 @@
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
   --shadow-focus: 0 0 0 3px hsl(225 77% 70% / 0.4);
   
-  /* Dark mode gradients - Updated with new primary color */
+  /* Dark mode gradients - Fixed to use actual color values */
   --gradient-light: linear-gradient(to bottom right, #141B2B, #0A0F1C);
-  --gradient-blue: linear-gradient(45deg, hsl(225 77% 70%), hsl(225 77% 80%));
-  --gradient-blue-dark: linear-gradient(45deg, hsl(225 77% 60%), hsl(225 77% 70%));
+  --gradient-blue: linear-gradient(45deg, #6B82F6, #8B92F6);
+  --gradient-blue-dark: linear-gradient(45deg, #4C6DE1, #6B82F6);
+  --gradient-primary: linear-gradient(45deg, #6B82F6, #8B92F6);
+  --gradient-primary-dark: linear-gradient(45deg, #4C6DE1, #6B82F6);
 }
 
 /* Light mode explicit override */
@@ -47,6 +51,8 @@
   --shadow-focus: 0 0 0 3px hsl(225 77% 60% / 0.2);
   
   --gradient-light: linear-gradient(to bottom right, #FFFFFF, #F9FAFB);
-  --gradient-blue: linear-gradient(45deg, hsl(225 77% 60%), hsl(225 77% 70%));
-  --gradient-blue-dark: linear-gradient(45deg, hsl(225 77% 50%), hsl(225 77% 60%));
+  --gradient-blue: linear-gradient(45deg, #4C6DE1, #6B82F6);
+  --gradient-blue-dark: linear-gradient(45deg, #3B5BDB, #4C6DE1);
+  --gradient-primary: linear-gradient(45deg, #4C6DE1, #6B82F6);
+  --gradient-primary-dark: linear-gradient(45deg, #3B5BDB, #4C6DE1);
 }
