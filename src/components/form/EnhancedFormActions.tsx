@@ -25,7 +25,7 @@ export function EnhancedFormActions({
           onClick={onCancel}
           disabled={isSubmitting}
           className={cn(
-            "h-12 px-6 rounded-xl transition-all duration-300 font-medium order-2 sm:order-1",
+            "h-12 px-6 rounded-xl transition-all duration-300 font-medium order-2 sm:order-1 group",
             "hover:shadow-md hover:scale-102 active:scale-98",
             "focus:ring-2 focus:ring-ring/30 focus:ring-offset-2"
           )}
@@ -41,9 +41,10 @@ export function EnhancedFormActions({
         disabled={isSubmitting}
         variant="brand"
         className={cn(
-          "h-12 px-8 rounded-xl transition-all duration-300 font-semibold order-1 sm:order-2 shadow-lg hover:shadow-xl",
+          "h-12 px-8 rounded-xl transition-all duration-300 font-semibold order-1 sm:order-2 shadow-lg hover:shadow-xl group",
           "hover:scale-102 active:scale-98 disabled:hover:scale-100",
           "focus:ring-2 focus:ring-primary/30 focus:ring-offset-2",
+          "hover:shadow-primary/20",
           isSubmitting && "cursor-not-allowed"
         )}
       >
@@ -55,7 +56,7 @@ export function EnhancedFormActions({
             </>
           ) : (
             <>
-              <span>{submitLabel}</span>
+              <span className="transition-transform duration-200 group-hover:scale-105">{submitLabel}</span>
               <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
             </>
           )}
