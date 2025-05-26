@@ -34,20 +34,7 @@
     box-shadow: 0 0 0 4px hsl(var(--primary) / 0.2) !important;
   }
 
-  /* ===== BUTTON VARIANT OVERRIDES ===== */
-  /* Ensure shadcn button variants work properly */
-  .bg-primary {
-    background-color: hsl(var(--primary)) !important;
-  }
-
-  .bg-destructive {
-    background-color: hsl(var(--destructive)) !important;
-  }
-
-  .bg-secondary {
-    background-color: hsl(var(--secondary)) !important;
-  }
-
+  /* ===== TEXT COLOR OVERRIDES (KEEP THESE) ===== */
   .text-primary-foreground {
     color: hsl(var(--primary-foreground)) !important;
   }
