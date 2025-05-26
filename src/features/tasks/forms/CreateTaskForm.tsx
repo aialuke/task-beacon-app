@@ -1,15 +1,10 @@
 
-import { Link, FileText } from "lucide-react";
-import { useState } from "react";
+import { FileText } from "lucide-react";
 import { useCreateTask } from "@/features/tasks/hooks/useCreateTask";
 import { FloatingInput } from "@/components/form/FloatingInput";
 import { FloatingTextarea } from "@/components/form/FloatingTextarea";
-import { EnhancedDatePicker } from "@/components/form/EnhancedDatePicker";
-import { EnhancedPhotoUpload } from "@/components/form/EnhancedPhotoUpload";
-import { EnhancedUserSearch } from "@/components/form/EnhancedUserSearch";
 import { EnhancedFormActions } from "@/components/form/EnhancedFormActions";
 import { QuickActionBar } from "@/components/form/QuickActionBar";
-import { ProgressiveFieldContainer } from "@/components/form/ProgressiveFieldContainer";
 
 export default function CreateTaskForm({
   onClose,
@@ -33,19 +28,8 @@ export default function CreateTaskForm({
     handleSubmit
   } = useCreateTask({ onClose });
 
-  // Toggle states for progressive disclosure (removed description)
-  const [activeToggles, setActiveToggles] = useState({
-    dueDate: false,
-    assignee: false,
-    photo: false,
-    url: false
-  });
-
-  const handleToggle = (toggle: keyof typeof activeToggles) => {
-    setActiveToggles(prev => ({
-      ...prev,
-      [toggle]: !prev[toggle]
-    }));
+  const handleUrlChange = (newUrl: string) => {
+    setUrl(newUrl);
   };
 
   return (
@@ -85,56 +69,18 @@ export default function CreateTaskForm({
           label="Description"
         />
         
-        {/* Quick Action Toggle Bar */}
+        {/* Quick Action Bar with Direct Popups */}
         <QuickActionBar
-          activeToggles={activeToggles}
-          onToggle={handleToggle}
+          dueDate={dueDate}
+          onDueDateChange={setDueDate}
+          assigneeId={assigneeId}
+          onAssigneeChange={setAssigneeId}
+          onPhotoChange={handlePhotoChange}
+          photoPreview={photoPreview}
+          url={url}
+          onUrlChange={handleUrlChange}
           disabled={loading}
-          hasUrl={!!url}
         />
-        
-        {/* Progressive Field Reveals */}
-        <div className="space-y-2">
-          {/* Date and URL Row */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <ProgressiveFieldContainer isVisible={activeToggles.dueDate}>
-              <EnhancedDatePicker 
-                value={dueDate}
-                onChange={(e) => setDueDate(e.target.value)}
-              />
-            </ProgressiveFieldContainer>
-            
-            <ProgressiveFieldContainer isVisible={activeToggles.url}>
-              <FloatingInput
-                id="url"
-                type="url"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                placeholder="https://example.com"
-                label="Reference URL"
-                icon={<Link className="h-4 w-4" />}
-              />
-            </ProgressiveFieldContainer>
-          </div>
-          
-          {/* Assignment and Photo Row */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <ProgressiveFieldContainer isVisible={activeToggles.assignee}>
-              <EnhancedUserSearch
-                value={assigneeId}
-                onChange={setAssigneeId}
-                disabled={loading}
-              />
-            </ProgressiveFieldContainer>
-            
-            <ProgressiveFieldContainer isVisible={activeToggles.photo}>
-              <EnhancedPhotoUpload
-                onChange={handlePhotoChange}
-                preview={photoPreview}
-              />
-            </ProgressiveFieldContainer>
-          </div>
-        </div>
         
         {/* Enhanced Actions */}
         <EnhancedFormActions
