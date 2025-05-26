@@ -1,5 +1,4 @@
-
-import { useFormWithValidation } from "@/features/tasks/hooks/useFormWithValidation";
+import { useFormWithValidation } from "@/components/form/useFormWithValidation";
 import { createTaskSchema, CreateTaskInput } from "@/features/tasks/schemas/taskSchema";
 import { Form } from "@/components/ui/form";
 import { FormField } from "@/components/ui/form";

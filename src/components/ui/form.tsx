@@ -16,7 +16,7 @@ import {
   FormFieldContext,
   FormItemContext,
   useFormField,
-} from "@/lib/form-utils";
+} from "@/components/form/form-utils";
 
 const Form = FormProvider;
 
