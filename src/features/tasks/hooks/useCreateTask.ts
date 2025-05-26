@@ -1,10 +1,10 @@
+
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "@/lib/toast";
 import { useTaskForm } from "./useTaskForm";
 import { useTaskFormValidation } from "./useTaskFormValidation";
-import { createTask, uploadTaskPhoto } from "@/integrations/supabase/api/tasks.api";
-import { getCurrentUserId } from "@/integrations/supabase/api/base.api";
+import { useCreateTaskAPI } from "./useCreateTaskAPI";
+import { useCreateTaskPhotoUpload } from "./useCreateTaskPhotoUpload";
 
 interface UseCreateTaskProps {
   onClose?: () => void;
@@ -12,10 +12,13 @@ interface UseCreateTaskProps {
 
 /**
  * Hook for creating new tasks with standardized validation
+ * Orchestrates form state, validation, photo upload, and API operations
  */
 export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
   const navigate = useNavigate();
   const { validateTaskForm } = useTaskFormValidation();
+  const { executeCreateTask } = useCreateTaskAPI();
+  const { uploadPhotoIfPresent } = useCreateTaskPhotoUpload();
   
   const taskForm = useTaskForm({ 
     onClose: onClose || (() => navigate("/"))
@@ -40,40 +43,25 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
     
     taskForm.setLoading(true);
     try {
-      let photoUrl = null;
-      if (taskForm.photo) {
-        const { data: uploadedUrl, error: uploadError } = await uploadTaskPhoto(taskForm.photo);
-        if (uploadError) throw uploadError;
-        photoUrl = uploadedUrl;
-      }
+      // Handle photo upload
+      const photoUrl = await uploadPhotoIfPresent(taskForm.photo);
 
-      const currentUserId = await getCurrentUserId();
-      const finalAssigneeId = taskForm.assigneeId || currentUserId;
-
-      const { error } = await createTask({
-        title: taskForm.title,
-        description: taskForm.description || null,
-        due_date: new Date(taskForm.dueDate).toISOString(),
-        photo_url: photoUrl,
-        url_link: taskForm.url || null,
-        assignee_id: finalAssigneeId,
-        pinned: taskForm.pinned,
+      // Create task
+      const result = await executeCreateTask({
+        ...formData,
+        photoUrl,
       });
 
-      if (error) throw error;
-      
-      toast.success("Task created successfully");
-      taskForm.resetForm();
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error("An unexpected error occurred.");
+      if (result.success) {
+        taskForm.resetForm();
       }
+    } catch (error: unknown) {
+      // Error handling is done in the individual hooks
+      console.error("Error in task creation flow:", error);
     } finally {
       taskForm.setLoading(false);
     }
-  }, [taskForm, validateTaskForm]);
+  }, [taskForm, validateTaskForm, executeCreateTask, uploadPhotoIfPresent]);
 
   return {
     ...taskForm,
