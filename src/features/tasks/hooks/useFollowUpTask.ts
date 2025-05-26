@@ -4,7 +4,7 @@ import { Task } from "@/lib/types";
 import { toast } from "@/lib/toast";
 import { useNavigate } from "react-router-dom";
 import { showBrowserNotification, triggerHapticFeedback } from "@/lib/notification";
-import { useBaseTaskForm } from "./useBaseTaskForm";
+import { useTaskForm } from "@/components/form/hooks/useTaskForm";
 import { createFollowUpTask, uploadTaskPhoto } from "@/integrations/supabase/api/tasks.api";
 
 interface UseFollowUpTaskProps {
@@ -15,39 +15,12 @@ interface UseFollowUpTaskProps {
 /**
  * Custom hook for follow-up task creation functionality
  * 
- * Provides specialized functionality for creating follow-up tasks from a parent task, including:
- * - Form state management
- * - Task submission handling
- * - Photo upload logic
- * - Notifications and feedback when tasks are created
- * 
- * @param props - Configuration options
- * @param props.parentTask - The parent task to create a follow-up for
- * @param props.onClose - Optional callback to execute when the form is closed
- * @returns Form state and handlers for creating a follow-up task
+ * Builds on useTaskForm to provide specialized functionality for creating follow-up tasks
  */
 export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
   const navigate = useNavigate();
   
-  const {
-    title,
-    setTitle,
-    description,
-    setDescription,
-    dueDate,
-    setDueDate,
-    url,
-    setUrl,
-    photo,
-    photoPreview,
-    pinned,
-    setPinned,
-    loading,
-    setLoading,
-    handlePhotoChange,
-    resetForm,
-    validateTitle
-  } = useBaseTaskForm({
+  const taskForm = useTaskForm({
     onClose: onClose || (() => navigate("/"))
   });
 
@@ -57,26 +30,26 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
     e.preventDefault();
     
     // Validate title length
-    if (!validateTitle(title)) return;
+    if (!taskForm.validateTitle(taskForm.title)) return;
     
-    setLoading(true);
+    taskForm.setLoading(true);
 
     try {
       let photoUrl = null;
-      if (photo) {
-        const { data: uploadedUrl, error: uploadError } = await uploadTaskPhoto(photo);
+      if (taskForm.photo) {
+        const { data: uploadedUrl, error: uploadError } = await uploadTaskPhoto(taskForm.photo);
         if (uploadError) throw uploadError;
         photoUrl = uploadedUrl;
       }
 
       const { error } = await createFollowUpTask(parentTask.id, {
-        title,
-        description: description || null,
-        due_date: dueDate ? new Date(dueDate).toISOString() : null,
+        title: taskForm.title,
+        description: taskForm.description || null,
+        due_date: taskForm.dueDate ? new Date(taskForm.dueDate).toISOString() : null,
         photo_url: photoUrl,
-        url_link: url || null,
+        url_link: taskForm.url || null,
         assignee_id: assigneeId || null,
-        pinned,
+        pinned: taskForm.pinned,
       });
 
       if (error) throw error;
@@ -87,11 +60,11 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
       if (assigneeId) {
         showBrowserNotification(
           "Task Assigned",
-          `Follow-up task "${title}" has been assigned`
+          `Follow-up task "${taskForm.title}" has been assigned`
         );
       }
 
-      resetForm();
+      taskForm.resetForm();
     } catch (error: unknown) {
       if (error instanceof Error) {
         toast.error(error.message);
@@ -99,39 +72,18 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
         toast.error("An unexpected error occurred.");
       }
     } finally {
-      setLoading(false);
+      taskForm.setLoading(false);
     }
   }, [
-    photo,
-    title,
-    description,
-    dueDate,
-    url,
-    pinned,
+    taskForm,
     assigneeId,
     parentTask.id,
-    resetForm,
-    setLoading,
-    validateTitle
   ]);
 
   return {
-    title,
-    setTitle,
-    description,
-    setDescription,
-    dueDate,
-    setDueDate,
-    url,
-    setUrl,
-    photo,
-    photoPreview,
-    pinned,
-    setPinned,
+    ...taskForm,
     assigneeId,
     setAssigneeId,
-    loading,
-    handlePhotoChange,
-    handleSubmit
+    handleSubmit,
   };
 }
