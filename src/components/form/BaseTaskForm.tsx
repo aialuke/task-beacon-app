@@ -63,14 +63,14 @@ export function BaseTaskForm({
   };
 
   return (
-    <div className="w-full bg-card/40 backdrop-blur-xl text-card-foreground p-8 rounded-3xl border border-border/30 shadow-2xl shadow-black/5 bg-gradient-to-br from-card via-card to-muted/10 transition-all duration-300 hover:shadow-3xl hover:shadow-primary/5">
+    <div className="w-full bg-card/40 backdrop-blur-xl text-card-foreground p-8 rounded-3xl border border-border/30 shadow-2xl shadow-black/5">
       {/* Header */}
       <div className="mb-8 text-center">
         <div className="relative inline-block">
           <h1 className="text-2xl font-bold text-foreground mb-2 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">
             {headerTitle}
           </h1>
-          <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-16 h-0.5 bg-gradient-to-r from-primary/50 to-primary rounded-full transition-all duration-500 hover:w-20 hover:from-primary hover:to-primary/80"></div>
+          <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-16 h-0.5 bg-gradient-to-r from-primary/50 to-primary rounded-full"></div>
         </div>
         <p className="text-muted-foreground text-sm mt-3 font-medium">
           {headerSubtitle}
@@ -79,48 +79,42 @@ export function BaseTaskForm({
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Main Title Input */}
-        <div className="relative group">
-          <FloatingInput
-            id="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder={titlePlaceholder}
-            label={titleLabel}
-            icon={<FileText className="h-4 w-4 transition-colors duration-200 group-focus-within:text-primary" />}
-            maxLength={22}
-            required
-          />
-        </div>
+        <FloatingInput
+          id="title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder={titlePlaceholder}
+          label={titleLabel}
+          icon={<FileText className="h-4 w-4" />}
+          maxLength={22}
+          required
+        />
         
         {/* Description Field */}
-        <div className="relative group">
-          <FloatingTextarea
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder={descriptionPlaceholder}
-            label={descriptionLabel}
-            icon={<Sparkles className="h-4 w-4 transition-colors duration-200 group-focus-within:text-primary" />}
-          />
-        </div>
+        <FloatingTextarea
+          id="description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder={descriptionPlaceholder}
+          label={descriptionLabel}
+          icon={<Sparkles className="h-4 w-4" />}
+        />
         
         {/* Quick Action Bar */}
-        <div className="transform transition-all duration-300 hover:scale-[1.02]">
-          <QuickActionBar
-            dueDate={dueDate}
-            onDueDateChange={handleDueDateChange}
-            assigneeId={assigneeId}
-            onAssigneeChange={setAssigneeId}
-            onPhotoChange={handlePhotoChange}
-            photoPreview={photoPreview}
-            url={url}
-            onUrlChange={handleUrlChange}
-            onSubmit={handleSubmit}
-            isSubmitting={loading}
-            submitLabel={submitLabel}
-            disabled={loading}
-          />
-        </div>
+        <QuickActionBar
+          dueDate={dueDate}
+          onDueDateChange={handleDueDateChange}
+          assigneeId={assigneeId}
+          onAssigneeChange={setAssigneeId}
+          onPhotoChange={handlePhotoChange}
+          photoPreview={photoPreview}
+          url={url}
+          onUrlChange={handleUrlChange}
+          onSubmit={handleSubmit}
+          isSubmitting={loading}
+          submitLabel={submitLabel}
+          disabled={loading}
+        />
 
         {/* Additional content */}
         {children}

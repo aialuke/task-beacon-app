@@ -3,7 +3,7 @@
 @layer utilities {
   /* Enhanced color utilities with improved contrast and accessibility */
   
-  /* Status Color Utilities */
+  /* Status Colors */
   .text-warning {
     color: hsl(var(--warning));
   }
@@ -16,7 +16,7 @@
     border-color: hsl(var(--warning));
   }
 
-  /* Success Color Utilities */
+  /* Success Colors */
   .text-success {
     color: hsl(var(--success));
   }
@@ -29,7 +29,7 @@
     border-color: hsl(var(--success));
   }
 
-  /* Error/Destructive Color Utilities */
+  /* Error/Destructive Colors */
   .text-error {
     color: hsl(var(--destructive));
   }
@@ -42,7 +42,7 @@
     border-color: hsl(var(--destructive));
   }
 
-  /* Accent Color Utilities */
+  /* Accent Colors */
   .text-accent-blue {
     color: hsl(var(--accent-blue));
   }
@@ -59,15 +59,7 @@
     background-color: hsl(var(--accent-green));
   }
 
-  .text-accent-yellow {
-    color: hsl(var(--accent-yellow));
-  }
-  
-  .bg-accent-yellow {
-    background-color: hsl(var(--accent-yellow));
-  }
-
-  /* Glass Effect Utilities */
+  /* Glass Effect Colors */
   .bg-glass {
     background-color: hsl(var(--background) / 0.8);
     backdrop-filter: blur(8px);
@@ -78,7 +70,7 @@
     backdrop-filter: blur(12px);
   }
 
-  /* Gradient Text Utilities */
+  /* Gradient Text */
   .text-gradient-primary {
     background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary) / 0.8));
     -webkit-background-clip: text;
@@ -93,7 +85,7 @@
     -webkit-text-fill-color: transparent;
   }
 
-  /* Interactive Color State Utilities */
+  /* Interactive Color States */
   .hover-accent:hover {
     color: hsl(var(--accent-blue));
     transition: color 0.2s ease-in-out;
@@ -104,7 +96,7 @@
     transition: color 0.2s ease-in-out;
   }
 
-  /* Focus Ring Color Utilities */
+  /* Focus ring colors */
   .focus-ring-primary:focus {
     outline: 2px solid hsl(var(--primary));
     outline-offset: 2px;
@@ -114,19 +106,13 @@
     outline: 2px solid hsl(var(--accent-blue));
     outline-offset: 2px;
   }
+}
 
-  /* Surface Utilities */
-  .bg-surface {
-    background-color: hsl(var(--surface));
-    color: hsl(var(--surface-foreground));
-  }
+/* CSS Variables for warning color fallback */
+:root {
+  --warning: 38 92% 50%; /* Orange/amber color */
+}
 
-  /* Brand Utilities */
-  .bg-brand-light {
-    background-color: hsl(var(--brand-light));
-  }
-
-  .text-brand {
-    color: hsl(var(--primary));
-  }
+[data-theme="dark"] {
+  --warning: 38 92% 50%;
 }

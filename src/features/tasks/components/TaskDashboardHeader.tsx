@@ -36,7 +36,7 @@ export default function TaskDashboardHeader() {
         <ThemeToggle />
         <DropdownMenu open={open} onOpenChange={setOpen}>
           <DropdownMenuTrigger asChild>
-            <Avatar className="cursor-pointer h-8 w-8 transition-all duration-200 hover:scale-105 hover:shadow-lg hover:shadow-primary/20 active:scale-95 focus:ring-2 focus:ring-primary focus:ring-offset-2">
+            <Avatar className="cursor-pointer h-8 w-8">
               <AvatarFallback className="text-sm bg-primary text-primary-foreground">
                 {getAvatarInitial(user?.email)}
               </AvatarFallback>
@@ -44,10 +44,14 @@ export default function TaskDashboardHeader() {
           </DropdownMenuTrigger>
           <DropdownMenuContent 
             align="end" 
-            className="p-2"
+            className="p-2 bg-popover border-border"
+            style={{
+              backgroundColor: "hsl(var(--popover))",
+              borderColor: "hsl(var(--border))"
+            }}
           >
-            <DropdownMenuItem onClick={signOut} className="cursor-pointer transition-colors duration-200 hover:bg-accent">
-              <LogOut className="mr-2 h-4 w-4" />
+            <DropdownMenuItem onClick={signOut} className="cursor-pointer text-popover-foreground hover:bg-accent">
+              <LogOut className="mr-2 h-4 w-4 text-foreground" />
               <span>Sign out</span>
             </DropdownMenuItem>
           </DropdownMenuContent>

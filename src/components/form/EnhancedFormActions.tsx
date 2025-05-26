@@ -25,7 +25,7 @@ export function EnhancedFormActions({
           onClick={onCancel}
           disabled={isSubmitting}
           className={cn(
-            "h-12 px-6 rounded-xl transition-all duration-300 font-medium order-2 sm:order-1 group",
+            "h-12 px-6 bg-background/60 backdrop-blur-sm text-foreground border-border/60 hover:bg-background/80 hover:border-border/80 rounded-xl transition-all duration-300 font-medium order-2 sm:order-1",
             "hover:shadow-md hover:scale-102 active:scale-98",
             "focus:ring-2 focus:ring-ring/30 focus:ring-offset-2"
           )}
@@ -39,12 +39,10 @@ export function EnhancedFormActions({
       <Button 
         type="submit" 
         disabled={isSubmitting}
-        variant="brand"
         className={cn(
-          "h-12 px-8 rounded-xl transition-all duration-300 font-semibold order-1 sm:order-2 shadow-lg hover:shadow-xl group",
+          "h-12 px-8 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 text-primary-foreground rounded-xl transition-all duration-300 font-semibold order-1 sm:order-2 shadow-lg hover:shadow-xl",
           "hover:scale-102 active:scale-98 disabled:hover:scale-100",
           "focus:ring-2 focus:ring-primary/30 focus:ring-offset-2",
-          "hover:shadow-primary/20",
           isSubmitting && "cursor-not-allowed"
         )}
       >
@@ -56,7 +54,7 @@ export function EnhancedFormActions({
             </>
           ) : (
             <>
-              <span className="transition-transform duration-200 group-hover:scale-105">{submitLabel}</span>
+              <span>{submitLabel}</span>
               <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
             </>
           )}
