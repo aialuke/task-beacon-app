@@ -1,4 +1,3 @@
-
 import { Calendar, User, ImageUp, Link, FileCheck, Send } from "lucide-react";
 import { useState, useRef } from "react";
 import { cn } from "@/lib/utils";
@@ -53,13 +52,13 @@ export function QuickActionBar({
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
-  const selectedDate = dueDate ? new Date(dueDate) : undefined;
+  const selectedDate: Date | undefined = dueDate ? new Date(dueDate) : undefined;
   const hasUrl = !!url;
   const hasPhoto = !!photoPreview;
   const hasAssignee = !!assigneeId;
   const hasDate = !!selectedDate;
 
-  const handleDateSelect = (date: Date | undefined) => {
+  const handleDateSelect = (date: Date | undefined): void => {
     if (date) {
       const isoString = date.toISOString();
       const localDateTime = isoString.slice(0, 16);
@@ -94,7 +93,8 @@ export function QuickActionBar({
               size="icon"
               disabled={disabled}
               className={cn(
-                "w-12 h-12 rounded-full flex items-center justify-center",
+                "w-[48px] h-[48px] rounded-full flex items-center justify-center",
+                "aspect-square [aspect-ratio:1/1]",
                 "hover:scale-105 active:scale-95 transition-all duration-200",
                 hasDate 
                   ? "bg-primary/20 text-primary border border-primary/30 shadow-md shadow-primary/10" 
@@ -113,7 +113,7 @@ export function QuickActionBar({
               mode="single"
               selected={selectedDate}
               onSelect={handleDateSelect}
-              disabled={(date) => date < new Date()}
+              disabled={(date: Date) => date < new Date()}
               initialFocus
               className="p-4 pointer-events-auto"
             />
@@ -127,7 +127,8 @@ export function QuickActionBar({
           onClick={() => setIsUserModalOpen(true)}
           disabled={disabled}
           className={cn(
-            "w-12 h-12 rounded-full flex items-center justify-center",
+            "w-[48px] h-[48px] rounded-full flex items-center justify-center",
+            "aspect-square [aspect-ratio:1/1]",
             "hover:scale-105 active:scale-95 transition-all duration-200",
             hasAssignee 
               ? "bg-primary/20 text-primary border border-primary/30 shadow-md shadow-primary/10" 
@@ -144,7 +145,8 @@ export function QuickActionBar({
           onClick={handlePhotoClick}
           disabled={disabled}
           className={cn(
-            "w-12 h-12 rounded-full flex items-center justify-center",
+            "w-[48px] h-[48px] rounded-full flex items-center justify-center",
+            "aspect-square [aspect-ratio:1/1]",
             "hover:scale-105 active:scale-95 transition-all duration-200",
             hasPhoto 
               ? "bg-primary/20 text-primary border border-primary/30 shadow-md shadow-primary/10" 
@@ -161,7 +163,8 @@ export function QuickActionBar({
           onClick={() => setIsUrlModalOpen(true)}
           disabled={disabled}
           className={cn(
-            "w-12 h-12 rounded-full flex items-center justify-center",
+            "w-[48px] h-[48px] rounded-full flex items-center justify-center",
+            "aspect-square [aspect-ratio:1/1]",
             "hover:scale-105 active:scale-95 transition-all duration-200",
             hasUrl 
               ? "bg-primary/20 text-primary border border-primary/30 shadow-md shadow-primary/10" 
@@ -183,7 +186,8 @@ export function QuickActionBar({
           disabled={disabled || isSubmitting}
           size="icon"
           className={cn(
-            "w-12 h-12 rounded-full flex items-center justify-center",
+            "w-[48px] h-[48px] rounded-full flex items-center justify-center",
+            "aspect-square [aspect-ratio:1/1]",
             "bg-primary text-primary-foreground hover:bg-primary/90",
             "hover:scale-105 active:scale-95 transition-all duration-200",
             "shadow-md hover:shadow-lg"

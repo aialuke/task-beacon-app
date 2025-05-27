@@ -1,4 +1,3 @@
-
 /* src/styles/components/buttons.css - Enhanced button styling for dark mode */
 
 @layer components {
@@ -6,10 +5,16 @@
   button, 
   .button,
   [role="button"] {
-    border-radius: var(--radius-full) !important;
     transition: all 0.2s ease-in-out !important;
     font-weight: 500 !important;
     cursor: pointer !important;
+  }
+
+  /* Apply border-radius only for buttons with rounded-full */
+  button.rounded-full,
+  .button.rounded-full,
+  [role="button"].rounded-full {
+    border-radius: 9999px !important; /* Matches Tailwind's rounded-full */
   }
 
   button:hover, 
