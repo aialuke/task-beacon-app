@@ -39,11 +39,16 @@ const DialogContent = React.forwardRef<
   const modalRef = React.useRef<HTMLDivElement>(null);
   const [modalHeight, setModalHeight] = React.useState<number>(0);
   const [isStandalone, setIsStandalone] = React.useState<boolean>(false);
+  const [safeAreaTop, setSafeAreaTop] = React.useState<number>(0);
 
-  // Detect PWA standalone mode
+  // Detect PWA standalone mode and safe area inset top
   React.useEffect(() => {
     const standalone = 'standalone' in window.navigator ? window.navigator.standalone : false;
     setIsStandalone(!!standalone);
+
+    const sat = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sat')) || 0;
+    setSafeAreaTop(sat);
+    console.log("safeAreaTop:", sat); // Debug log
   }, []);
 
   // Update modal height when content changes
@@ -68,12 +73,10 @@ const DialogContent = React.forwardRef<
 
     // When keyboard is visible, position the top of the modal
     const modalMaxHeight = Math.min(availableHeight * 0.7, 400);
-    let topPosition = 237; // Fixed to match UserSearchModal's desired top position
+    let topPosition = availableHeight * (isStandalone ? 0.65 : 0.61); // 65% in PWA mode, 61% in Safari
 
     // Adjust for PWA standalone mode (account for safe area inset top)
     if (isStandalone) {
-      const safeAreaTop = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sat')) || 0;
-      console.log("safeAreaTop:", safeAreaTop); // Debug log
       topPosition += safeAreaTop; // Add safe area inset top to position below the status bar
     }
 
@@ -82,7 +85,7 @@ const DialogContent = React.forwardRef<
       transform: "translateX(-50%)",
       maxHeight: `${modalMaxHeight}px`,
     };
-  }, [keyboardVisible, availableHeight, isStandalone]);
+  }, [keyboardVisible, availableHeight, isStandalone, safeAreaTop]);
 
   const modalStyle = getModalPosition();
 
@@ -115,7 +118,7 @@ const DialogContent = React.forwardRef<
         window.visualViewport.removeEventListener('resize', updatePosition);
       }
     };
-  }, [keyboardVisible, availableHeight, modalHeight, getModalPosition, isStandalone]);
+  }, [keyboardVisible, availableHeight, modalHeight, getModalPosition, isStandalone, safeAreaTop]);
 
   return (
     <DialogPortal>

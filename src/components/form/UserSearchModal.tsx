@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { EnhancedUserSearch } from "@/components/form/EnhancedUserSearch";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 interface UserSearchModalProps {
   isOpen: boolean;
@@ -26,7 +27,9 @@ export function UserSearchModal({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md pb-8">
         <DialogHeader>
-          {/* DialogTitle can be added if needed */}
+          <VisuallyHidden asChild>
+            <DialogTitle>Assign Task</DialogTitle>
+          </VisuallyHidden>
         </DialogHeader>
         
         <div className="space-y-4 pb-4">
