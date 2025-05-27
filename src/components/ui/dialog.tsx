@@ -46,9 +46,9 @@ const DialogContent = React.forwardRef<
       };
     }
 
-    // When keyboard is visible, position modal closer to the center of available space
-    const modalMaxHeight = Math.min(availableHeight * 0.7, 400); // Increased max height to 70% of viewport or 400px
-    const topPosition = (availableHeight - modalMaxHeight) * 0.3; // Position at 30% from the top of available height
+    // When keyboard is visible, position modal at 40% from the top of available space
+    const modalMaxHeight = Math.min(availableHeight * 0.7, 400);
+    const topPosition = availableHeight * 0.4; // Position at 40% of available height
 
     return {
       top: `${Math.max(40, topPosition)}px`,

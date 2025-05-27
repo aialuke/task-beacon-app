@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 
 interface MobileViewportState {
@@ -21,7 +20,7 @@ export function useMobileViewport(): MobileViewportState {
   });
 
   useEffect(() => {
-    let initialHeight = window.innerHeight;
+    const initialHeight = window.innerHeight;
     
     const updateViewportState = () => {
       const currentHeight = window.visualViewport?.height || window.innerHeight;
@@ -29,8 +28,8 @@ export function useMobileViewport(): MobileViewportState {
       const keyboardHeight = Math.max(0, screenHeight - currentHeight);
       const keyboardVisible = keyboardHeight > 150; // Threshold for keyboard detection
       
-      // Calculate available height above keyboard with padding
-      const availableHeight = keyboardVisible ? currentHeight - 80 : currentHeight;
+      // Use the full visible viewport height
+      const availableHeight = currentHeight;
       
       setState({
         keyboardVisible,
