@@ -81,6 +81,61 @@ export function QuickActionBar({
     onSubmit?.(e);
   };
 
+  const getButtonContent = (type: 'date' | 'assignee' | 'photo' | 'url' | 'submit') => {
+    switch (type) {
+      case 'date':
+        return {
+          icon: Calendar,
+          label: hasDate ? format(selectedDate!, "MMM d") : "Due Date",
+          active: hasDate
+        };
+      case 'assignee':
+        return {
+          icon: User,
+          label: hasAssignee ? "Assigned" : "Assign",
+          active: hasAssignee
+        };
+      case 'photo':
+        return {
+          icon: ImageUp,
+          label: hasPhoto ? "Photo Added" : "Attach",
+          active: hasPhoto
+        };
+      case 'url':
+        return {
+          icon: hasUrl ? FileCheck : Link,
+          label: hasUrl ? "Link Added" : "Link",
+          active: hasUrl
+        };
+      case 'submit':
+        return {
+          icon: Send,
+          label: submitLabel,
+          active: false
+        };
+      default:
+        return { icon: Calendar, label: "", active: false };
+    }
+  };
+
+  const buttonBaseClasses = cn(
+    "flex items-center justify-center gap-2 transition-all duration-200 touch-manipulation",
+    "hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30",
+    // Mobile: fixed size for icon-only, Desktop: min-width to accommodate label
+    "w-[48px] h-[48px] sm:min-w-[48px] sm:h-[48px] sm:px-4 sm:py-2",
+    "rounded-full aspect-square [aspect-ratio:1/1]",
+    disabled && "opacity-50 cursor-not-allowed hover:scale-100"
+  );
+
+  const getButtonClasses = (active: boolean, isSubmit?: boolean) => cn(
+    buttonBaseClasses,
+    isSubmit
+      ? "bg-primary text-primary-foreground border border-primary shadow-md hover:bg-primary/90"
+      : active
+        ? "bg-primary/20 text-primary border border-primary/30 shadow-md shadow-primary/10"
+        : "bg-background/60 text-muted-foreground border border-border/40 hover:bg-background/80 hover:text-foreground hover:border-border/60"
+  );
+
   return (
     <div className="flex items-center justify-center gap-4 px-4 py-1.5 bg-background/30 backdrop-blur-sm rounded-xl">
       {/* Action buttons container */}
@@ -90,18 +145,16 @@ export function QuickActionBar({
           <PopoverTrigger asChild>
             <Button
               variant="ghost"
-              size="icon"
               disabled={disabled}
-              className={cn(
-                "w-[48px] h-[48px] rounded-full flex items-center justify-center",
-                "aspect-square [aspect-ratio:1/1]",
-                "hover:scale-105 active:scale-95 transition-all duration-200",
-                hasDate 
-                  ? "bg-primary/20 text-primary border border-primary/30 shadow-md shadow-primary/10" 
-                  : "bg-background/60 text-muted-foreground border border-border/40 hover:bg-background/80 hover:text-foreground"
-              )}
+              className={getButtonClasses(hasDate)}
             >
-              <Calendar className="h-5 w-5" />
+              <Calendar className={cn(
+                "h-5 w-5 sm:h-4 sm:w-4 transition-all duration-200 flex-shrink-0",
+                hasDate && "scale-110"
+              )} />
+              <span className="text-sm font-medium hidden sm:inline whitespace-nowrap">
+                {getButtonContent('date').label}
+              </span>
             </Button>
           </PopoverTrigger>
           <PopoverContent 
@@ -123,59 +176,50 @@ export function QuickActionBar({
         {/* Assignee Button */}
         <Button
           variant="ghost"
-          size="icon"
           onClick={() => setIsUserModalOpen(true)}
           disabled={disabled}
-          className={cn(
-            "w-[48px] h-[48px] rounded-full flex items-center justify-center",
-            "aspect-square [aspect-ratio:1/1]",
-            "hover:scale-105 active:scale-95 transition-all duration-200",
-            hasAssignee 
-              ? "bg-primary/20 text-primary border border-primary/30 shadow-md shadow-primary/10" 
-              : "bg-background/60 text-muted-foreground border border-border/40 hover:bg-background/80 hover:text-foreground"
-          )}
+          className={getButtonClasses(hasAssignee)}
         >
-          <User className="h-5 w-5" />
+          <User className={cn(
+            "h-5 w-5 sm:h-4 sm:w-4 transition-all duration-200 flex-shrink-0",
+            hasAssignee && "scale-110"
+          )} />
+          <span className="text-sm font-medium hidden sm:inline whitespace-nowrap">
+            {getButtonContent('assignee').label}
+          </span>
         </Button>
 
         {/* Photo Button */}
         <Button
           variant="ghost"
-          size="icon"
           onClick={handlePhotoClick}
           disabled={disabled}
-          className={cn(
-            "w-[48px] h-[48px] rounded-full flex items-center justify-center",
-            "aspect-square [aspect-ratio:1/1]",
-            "hover:scale-105 active:scale-95 transition-all duration-200",
-            hasPhoto 
-              ? "bg-primary/20 text-primary border border-primary/30 shadow-md shadow-primary/10" 
-              : "bg-background/60 text-muted-foreground border border-border/40 hover:bg-background/80 hover:text-foreground"
-          )}
+          className={getButtonClasses(hasPhoto)}
         >
-          <ImageUp className="h-5 w-5" />
+          <ImageUp className={cn(
+            "h-5 w-5 sm:h-4 sm:w-4 transition-all duration-200 flex-shrink-0",
+            hasPhoto && "scale-110"
+          )} />
+          <span className="text-sm font-medium hidden sm:inline whitespace-nowrap">
+            {getButtonContent('photo').label}
+          </span>
         </Button>
 
         {/* URL Button */}
         <Button
           variant="ghost"
-          size="icon"
           onClick={() => setIsUrlModalOpen(true)}
           disabled={disabled}
-          className={cn(
-            "w-[48px] h-[48px] rounded-full flex items-center justify-center",
-            "aspect-square [aspect-ratio:1/1]",
-            "hover:scale-105 active:scale-95 transition-all duration-200",
-            hasUrl 
-              ? "bg-primary/20 text-primary border border-primary/30 shadow-md shadow-primary/10" 
-              : "bg-background/60 text-muted-foreground border border-border/40 hover:bg-background/80 hover:text-foreground"
-          )}
+          className={getButtonClasses(hasUrl)}
         >
           {hasUrl ? (
-            <FileCheck className="h-5 w-5" />
+            <FileCheck className="h-5 w-5 sm:h-4 sm:w-4 transition-all duration-200 flex-shrink-0 scale-110" />
           ) : (
-            <Link className="h-5 w-5" />
+            <Link className="h-5 w-5 sm:h-4 sm:w-4 transition-all duration-200 flex-shrink-0" />
           )}
+          <span className="text-sm font-medium hidden sm:inline whitespace-nowrap">
+            {getButtonContent('url').label}
+          </span>
         </Button>
       </div>
 
@@ -185,19 +229,16 @@ export function QuickActionBar({
           onClick={handleSubmit}
           disabled={disabled || isSubmitting}
           size="icon"
-          className={cn(
-            "w-[48px] h-[48px] rounded-full flex items-center justify-center",
-            "aspect-square [aspect-ratio:1/1]",
-            "bg-primary text-primary-foreground hover:bg-primary/90",
-            "hover:scale-105 active:scale-95 transition-all duration-200",
-            "shadow-md hover:shadow-lg"
-          )}
+          className={getButtonClasses(false, true)}
         >
           {isSubmitting ? (
-            <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
+            <div className="h-5 w-5 sm:h-4 sm:w-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
           ) : (
-            <Send className="h-5 w-5" />
+            <Send className="h-5 w-5 sm:h-4 sm:w-4 transition-all duration-200 flex-shrink-0" />
           )}
+          <span className="text-sm font-medium hidden sm:inline whitespace-nowrap">
+            {getButtonContent('submit').label}
+          </span>
         </Button>
       )}
 
