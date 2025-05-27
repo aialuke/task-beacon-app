@@ -38,6 +38,13 @@ const DialogContent = React.forwardRef<
   const { keyboardVisible, availableHeight } = useMobileViewport();
   const modalRef = React.useRef<HTMLDivElement>(null);
   const [modalHeight, setModalHeight] = React.useState<number>(0);
+  const [isStandalone, setIsStandalone] = React.useState<boolean>(false);
+
+  // Detect PWA standalone mode
+  React.useEffect(() => {
+    const standalone = 'standalone' in window.navigator ? window.navigator.standalone : false;
+    setIsStandalone(!!standalone);
+  }, []);
 
   // Update modal height when content changes
   React.useEffect(() => {
@@ -50,6 +57,7 @@ const DialogContent = React.forwardRef<
 
   const getModalPosition = React.useCallback(() => {
     console.log("availableHeight:", availableHeight); // Debug log
+    console.log("isStandalone:", isStandalone); // Debug log
     if (!keyboardVisible) {
       return {
         top: "50%",
@@ -58,31 +66,56 @@ const DialogContent = React.forwardRef<
       };
     }
 
-    // When keyboard is visible, position the bottom of the modal 3px above the keyboard
+    // When keyboard is visible, position the top of the modal
     const modalMaxHeight = Math.min(availableHeight * 0.7, 400);
-    const keyboardTop = availableHeight;
-    const paddingAboveKeyboard = 3; // 3px above the keyboard
-    const currentHeight = modalHeight || modalMaxHeight;
-    const topPosition = keyboardTop - currentHeight - paddingAboveKeyboard;
+    let topPosition = 237; // Fixed to match UserSearchModal's desired top position
+
+    // Adjust for PWA standalone mode (account for safe area inset top)
+    if (isStandalone) {
+      const safeAreaTop = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sat')) || 0;
+      console.log("safeAreaTop:", safeAreaTop); // Debug log
+      topPosition += safeAreaTop; // Add safe area inset top to position below the status bar
+    }
 
     return {
       top: `${Math.max(40, topPosition)}px`,
       transform: "translateX(-50%)",
       maxHeight: `${modalMaxHeight}px`,
     };
-  }, [keyboardVisible, availableHeight, modalHeight]);
+  }, [keyboardVisible, availableHeight, isStandalone]);
 
   const modalStyle = getModalPosition();
 
-  // Update position if modal height or viewport changes
+  // Ensure position updates on every render when keyboard is visible
   React.useEffect(() => {
-    if (keyboardVisible && modalRef.current) {
-      const updatedStyle = getModalPosition();
-      modalRef.current.style.top = updatedStyle.top;
-      modalRef.current.style.transform = updatedStyle.transform;
-      modalRef.current.style.maxHeight = updatedStyle.maxHeight;
+    const updatePosition = () => {
+      if (keyboardVisible && modalRef.current) {
+        const updatedStyle = getModalPosition();
+        modalRef.current.style.top = updatedStyle.top;
+        modalRef.current.style.transform = updatedStyle.transform;
+        modalRef.current.style.maxHeight = updatedStyle.maxHeight;
+      }
+    };
+
+    updatePosition(); // Initial update
+
+    // Add a small delay to ensure DOM is fully rendered
+    const timer = setTimeout(updatePosition, 100);
+
+    // Update on window resize (e.g., keyboard show/hide)
+    window.addEventListener('resize', updatePosition);
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', updatePosition);
     }
-  }, [keyboardVisible, availableHeight, modalHeight, getModalPosition]);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', updatePosition);
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', updatePosition);
+      }
+    };
+  }, [keyboardVisible, availableHeight, modalHeight, getModalPosition, isStandalone]);
 
   return (
     <DialogPortal>
