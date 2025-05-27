@@ -73,7 +73,7 @@ const DialogContent = React.forwardRef<
 
     // When keyboard is visible, position the top of the modal
     const modalMaxHeight = Math.min(availableHeight * 0.7, 400);
-    let topPosition = availableHeight * (isStandalone ? 0.65 : 0.61); // 65% in PWA mode, 61% in Safari
+    let topPosition = availableHeight * (isStandalone ? 0.55 : 0.61); // 55% in PWA mode, 61% in Safari
 
     // Adjust for PWA standalone mode (account for safe area inset top)
     if (isStandalone) {
@@ -97,6 +97,7 @@ const DialogContent = React.forwardRef<
         modalRef.current.style.top = updatedStyle.top;
         modalRef.current.style.transform = updatedStyle.transform;
         modalRef.current.style.maxHeight = updatedStyle.maxHeight;
+        console.log("Applied top position:", updatedStyle.top); // Debug log
       }
     };
 
