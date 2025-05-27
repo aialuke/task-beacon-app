@@ -121,20 +121,28 @@ export function QuickActionBar({
   const buttonBaseClasses = cn(
     "flex items-center justify-center gap-2 transition-all duration-200 touch-manipulation",
     "hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30",
-    // Mobile: fixed size for icon-only, Desktop: min-width to accommodate label
-    "w-[48px] h-[48px] sm:min-w-[48px] sm:h-[48px] sm:pl-3 sm:pr-4 sm:py-2",
+    // Mobile: fixed size for icon-only, Desktop: auto width to accommodate label
+    "w-[48px] h-[48px] sm:w-auto sm:h-[48px] sm:pl-3 sm:pr-4 sm:py-2",
     // Circular on mobile, pill shape on desktop
     "rounded-full aspect-square [aspect-ratio:1/1] sm:aspect-auto sm:[aspect-ratio:unset]",
     disabled && "opacity-50 cursor-not-allowed hover:scale-100"
   );
 
-  const getButtonClasses = (active: boolean, isSubmit?: boolean) => cn(
+  const submitButtonClasses = cn(
+    "flex items-center justify-center gap-2 transition-all duration-200 touch-manipulation",
+    "hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30",
+    // Always fixed size for icon-only
+    "w-[48px] h-[48px]",
+    "rounded-full aspect-square [aspect-ratio:1/1]",
+    "bg-primary text-primary-foreground border border-primary shadow-md hover:bg-primary/90",
+    disabled && "opacity-50 cursor-not-allowed hover:scale-100"
+  );
+
+  const getButtonClasses = (active: boolean) => cn(
     buttonBaseClasses,
-    isSubmit
-      ? "bg-primary text-primary-foreground border border-primary shadow-md hover:bg-primary/90"
-      : active
-        ? "bg-primary/20 text-primary border border-primary/30 shadow-md shadow-primary/10"
-        : "bg-background/60 text-muted-foreground border border-border/40 hover:bg-background/80 hover:text-foreground hover:border-border/60"
+    active
+      ? "bg-primary/20 text-primary border border-primary/30 shadow-md shadow-primary/10"
+      : "bg-background/60 text-muted-foreground border border-border/40 hover:bg-background/80 hover:text-foreground hover:border-border/60"
   );
 
   return (
@@ -230,16 +238,13 @@ export function QuickActionBar({
           onClick={handleSubmit}
           disabled={disabled || isSubmitting}
           size="icon"
-          className={getButtonClasses(false, true)}
+          className={submitButtonClasses}
         >
           {isSubmitting ? (
-            <div className="h-5 w-5 sm:h-4 sm:w-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
+            <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
           ) : (
-            <Send className="h-5 w-5 sm:h-4 sm:w-4 transition-all duration-200 flex-shrink-0" />
+            <Send className="h-5 w-5 transition-all duration-200 flex-shrink-0" />
           )}
-          <span className="text-sm font-medium hidden sm:inline whitespace-nowrap">
-            {getButtonContent('submit').label}
-          </span>
         </Button>
       )}
 
