@@ -48,7 +48,6 @@ const DialogContent = React.forwardRef<
 
     const sat = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sat')) || 0;
     setSafeAreaTop(sat);
-    console.log("safeAreaTop:", sat); // Debug log
   }, []);
 
   // Update modal height when content changes
@@ -56,13 +55,10 @@ const DialogContent = React.forwardRef<
     if (modalRef.current) {
       const height = modalRef.current.offsetHeight;
       setModalHeight(height);
-      console.log("modalHeight:", height); // Debug log
     }
   }, [children]);
 
   const getModalPosition = React.useCallback(() => {
-    console.log("availableHeight:", availableHeight); // Debug log
-    console.log("isStandalone:", isStandalone); // Debug log
     if (!keyboardVisible) {
       return {
         top: "50%",
@@ -97,7 +93,6 @@ const DialogContent = React.forwardRef<
         modalRef.current.style.top = updatedStyle.top;
         modalRef.current.style.transform = updatedStyle.transform;
         modalRef.current.style.maxHeight = updatedStyle.maxHeight;
-        console.log("Applied top position:", updatedStyle.top); // Debug log
       }
     };
 
