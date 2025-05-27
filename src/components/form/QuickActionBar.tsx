@@ -1,3 +1,4 @@
+
 import { Calendar, User, ImageUp, Link, FileCheck, Send } from "lucide-react";
 import { useState, useRef } from "react";
 import { cn } from "@/lib/utils";
@@ -81,84 +82,31 @@ export function QuickActionBar({
     onSubmit?.(e);
   };
 
-  const getButtonContent = (type: 'date' | 'assignee' | 'photo' | 'url' | 'submit') => {
-    switch (type) {
-      case 'date':
-        return {
-          icon: Calendar,
-          label: hasDate ? format(selectedDate!, "MMM d") : "Due Date",
-          active: hasDate
-        };
-      case 'assignee':
-        return {
-          icon: User,
-          label: hasAssignee ? "Assigned" : "Assign",
-          active: hasAssignee
-        };
-      case 'photo':
-        return {
-          icon: ImageUp,
-          label: hasPhoto ? "Photo Added" : "Attach",
-          active: hasPhoto
-        };
-      case 'url':
-        return {
-          icon: hasUrl ? FileCheck : Link,
-          label: hasUrl ? "Link Added" : "Link",
-          active: hasUrl
-        };
-      case 'submit':
-        return {
-          icon: Send,
-          label: submitLabel,
-          active: false
-        };
-      default:
-        return { icon: Calendar, label: "", active: false };
-    }
-  };
-
-  const buttonBaseClasses = cn(
-    "flex items-center justify-center gap-2 px-3 py-2 rounded-full transition-all duration-300 min-h-[44px] touch-manipulation flex-shrink-0",
-    "hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30",
-    disabled && "opacity-50 cursor-not-allowed hover:scale-100"
-  );
-
-  const getButtonClasses = (active: boolean, isSubmit?: boolean) => cn(
-    buttonBaseClasses,
-    isSubmit
-      ? "bg-primary text-primary-foreground border border-primary shadow-md hover:bg-primary/90"
-      : active
-        ? "bg-primary/20 text-primary border border-primary/30 shadow-md shadow-primary/10"
-        : "bg-background/60 text-muted-foreground border border-border/40 hover:bg-background/80 hover:text-foreground hover:border-border/60"
-  );
-
-  // Updated submit button styling for better mobile layout
-  const submitButtonClasses = cn(
-    "flex items-center justify-center rounded-full transition-all duration-300 min-w-[44px] min-h-[44px] touch-manipulation flex-shrink-0",
-    "hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30",
-    "bg-primary text-primary-foreground border border-primary shadow-md hover:bg-primary/90 px-4",
-    disabled && "opacity-50 cursor-not-allowed hover:scale-100"
-  );
-
   return (
-    <div className="flex flex-wrap gap-2 px-4 py-2 bg-background/30 backdrop-blur-sm rounded-xl">
-      {/* Action buttons container - improved mobile layout */}
-      <div className="flex gap-2 flex-1 min-w-0 justify-center sm:justify-start">
+    <div className="flex items-center gap-2 px-4 py-2 bg-background/30 backdrop-blur-sm rounded-xl">
+      {/* Action buttons container - improved desktop layout */}
+      <div className="flex items-center gap-2 flex-1">
         {/* Date Picker Button */}
         <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
           <PopoverTrigger asChild>
             <Button
               variant="ghost"
+              size="sm"
               disabled={disabled}
-              className={getButtonClasses(hasDate)}
+              className={cn(
+                "flex items-center justify-center gap-2 min-h-[44px] touch-manipulation",
+                "hover:scale-105 active:scale-95 transition-all duration-200",
+                hasDate 
+                  ? "bg-primary/20 text-primary border border-primary/30 shadow-md shadow-primary/10" 
+                  : "bg-background/60 text-muted-foreground border border-border/40 hover:bg-background/80 hover:text-foreground"
+              )}
             >
               <Calendar className={cn(
                 "h-4 w-4 transition-all duration-200 flex-shrink-0",
                 hasDate && "scale-110"
               )} />
               <span className="text-sm font-medium hidden sm:inline whitespace-nowrap">
-                {getButtonContent('date').label}
+                {hasDate ? format(selectedDate!, "MMM d") : "Due Date"}
               </span>
             </Button>
           </PopoverTrigger>
@@ -179,43 +127,64 @@ export function QuickActionBar({
         </Popover>
 
         {/* Assignee Button */}
-        <button
-          type="button"
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={() => setIsUserModalOpen(true)}
           disabled={disabled}
-          className={getButtonClasses(hasAssignee)}
+          className={cn(
+            "flex items-center justify-center gap-2 min-h-[44px] touch-manipulation",
+            "hover:scale-105 active:scale-95 transition-all duration-200",
+            hasAssignee 
+              ? "bg-primary/20 text-primary border border-primary/30 shadow-md shadow-primary/10" 
+              : "bg-background/60 text-muted-foreground border border-border/40 hover:bg-background/80 hover:text-foreground"
+          )}
         >
           <User className={cn(
             "h-4 w-4 transition-all duration-200 flex-shrink-0",
             hasAssignee && "scale-110"
           )} />
           <span className="text-sm font-medium hidden sm:inline whitespace-nowrap">
-            {getButtonContent('assignee').label}
+            {hasAssignee ? "Assigned" : "Assign"}
           </span>
-        </button>
+        </Button>
 
         {/* Photo Button */}
-        <button
-          type="button"
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={handlePhotoClick}
           disabled={disabled}
-          className={getButtonClasses(hasPhoto)}
+          className={cn(
+            "flex items-center justify-center gap-2 min-h-[44px] touch-manipulation",
+            "hover:scale-105 active:scale-95 transition-all duration-200",
+            hasPhoto 
+              ? "bg-primary/20 text-primary border border-primary/30 shadow-md shadow-primary/10" 
+              : "bg-background/60 text-muted-foreground border border-border/40 hover:bg-background/80 hover:text-foreground"
+          )}
         >
           <ImageUp className={cn(
             "h-4 w-4 transition-all duration-200 flex-shrink-0",
             hasPhoto && "scale-110"
           )} />
           <span className="text-sm font-medium hidden sm:inline whitespace-nowrap">
-            {getButtonContent('photo').label}
+            {hasPhoto ? "Photo Added" : "Attach"}
           </span>
-        </button>
+        </Button>
 
         {/* URL Button */}
-        <button
-          type="button"
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={() => setIsUrlModalOpen(true)}
           disabled={disabled}
-          className={getButtonClasses(hasUrl)}
+          className={cn(
+            "flex items-center justify-center gap-2 min-h-[44px] touch-manipulation",
+            "hover:scale-105 active:scale-95 transition-all duration-200",
+            hasUrl 
+              ? "bg-primary/20 text-primary border border-primary/30 shadow-md shadow-primary/10" 
+              : "bg-background/60 text-muted-foreground border border-border/40 hover:bg-background/80 hover:text-foreground"
+          )}
         >
           {hasUrl ? (
             <FileCheck className="h-4 w-4 transition-all duration-200 flex-shrink-0 scale-110" />
@@ -223,31 +192,35 @@ export function QuickActionBar({
             <Link className="h-4 w-4 transition-all duration-200 flex-shrink-0" />
           )}
           <span className="text-sm font-medium hidden sm:inline whitespace-nowrap">
-            {getButtonContent('url').label}
+            {hasUrl ? "Link Added" : "Link"}
           </span>
-        </button>
+        </Button>
       </div>
 
-      {/* Submit Button - Always on same row but flex to end */}
+      {/* Submit Button - Grouped with action buttons */}
       {onSubmit && (
-        <button
-          type="submit"
+        <Button
           onClick={handleSubmit}
           disabled={disabled || isSubmitting}
-          className={submitButtonClasses}
-          title={isSubmitting ? "Creating..." : submitLabel}
+          size="sm"
+          className={cn(
+            "flex items-center justify-center gap-2 min-h-[44px] touch-manipulation ml-2",
+            "bg-primary text-primary-foreground hover:bg-primary/90",
+            "hover:scale-105 active:scale-95 transition-all duration-200",
+            "shadow-md hover:shadow-lg"
+          )}
         >
           {isSubmitting ? (
             <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
           ) : (
             <>
               <Send className="h-4 w-4 transition-all duration-200 flex-shrink-0" />
-              <span className="text-sm font-medium ml-1 hidden xs:inline whitespace-nowrap">
+              <span className="text-sm font-medium hidden xs:inline whitespace-nowrap">
                 {submitLabel}
               </span>
             </>
           )}
-        </button>
+        </Button>
       )}
 
       {/* Hidden file input */}
