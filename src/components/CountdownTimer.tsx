@@ -1,16 +1,11 @@
-
 import React, { useMemo } from "react";
-import { useSpring, animated, config } from "@react-spring/web";
+import { useSpring, animated } from "@react-spring/web";
 import { TaskStatus } from "@/types";
 import TimerRing from "./timer/TimerRing";
 import TimerDisplay from "./timer/TimerDisplay";
 import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
 import { Tooltip, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import TimerTooltip from "@/features/tasks/components/TimerTooltip";
-import { 
-  setupAnimationVariables,
-  prefersReducedMotion 
-} from "@/lib/animationUtils";
 import { useCountdown } from "@/hooks/useCountdown";
 
 /**

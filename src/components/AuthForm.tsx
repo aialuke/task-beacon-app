@@ -157,7 +157,7 @@ export default function AuthForm() {
             <div className="text-center text-sm">
               {mode === "signin" ? (
                 <>
-                  Don't have an account?{" "}
+                  Don&apos;t have an account?{" "}
                   <button
                     type="button"
                     onClick={() => setMode("signup")}

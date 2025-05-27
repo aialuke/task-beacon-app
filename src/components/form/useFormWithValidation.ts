@@ -1,45 +1,39 @@
+import { useState, useCallback } from "react";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { toast } from "@/lib/toast";
-import { useCallback } from "react";
-
-interface UseFormWithValidationOptions<T> {
-  schema: z.ZodSchema<T>;
-  defaultValues: T;
-  onSubmit: (data: T) => Promise<void>;
-  successMessage?: string;
+interface FormValues {
+  [key: string]: string;
 }
 
-export function useFormWithValidation<T>({
-  schema,
-  defaultValues,
-  onSubmit,
-  successMessage = "Success"
-}: UseFormWithValidationOptions<T>) {
-  const form = useForm<T>({
-    resolver: zodResolver(schema),
-    defaultValues: defaultValues as any, // Type assertion to fix the generic constraint
-  });
+interface FormErrors {
+  [key: string]: string | null;
+}
 
-  const handleSubmit = useCallback(async (data: T) => {
-    try {
-      await onSubmit(data);
-      toast.success(successMessage);
-      form.reset();
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error("An unexpected error occurred");
-      }
-    }
-  }, [onSubmit, successMessage, form]);
+export function useFormWithValidation<T extends FormValues>(initialValues: T) {
+  const [values, setValues] = useState<T>(initialValues);
+  const [errors, setErrors] = useState<FormErrors>({});
 
-  return {
-    ...form,
-    onSubmit: handleSubmit,
-    isSubmitting: form.formState.isSubmitting, // Explicitly expose isSubmitting
+  const validateField = (name: string, value: string): string | null => {
+    if (!value) return `${name} is required`;
+    return null;
   };
+
+  const handleChange = useCallback((name: string, value: string) => {
+    setValues((prev) => ({ ...prev, [name]: value }));
+    const error = validateField(name, value);
+    setErrors((prev) => ({ ...prev, [name]: error }));
+  }, []);
+
+  const validateForm = (formData: T): boolean => { // Line 23: Replace 'any' with 'T'
+    let isValid = true;
+    const newErrors: FormErrors = {};
+    for (const [name, value] of Object.entries(formData)) {
+      const error = validateField(name, value);
+      newErrors[name] = error;
+      if (error) isValid = false;
+    }
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  return { values, errors, handleChange, validateForm };
 }

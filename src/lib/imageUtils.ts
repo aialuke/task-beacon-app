@@ -144,7 +144,7 @@ export async function compressAndResizePhotoFallback(
 export const supportsWebWorker = (): boolean => {
   try {
     return typeof Worker !== 'undefined' && typeof OffscreenCanvas !== 'undefined';
-  } catch (e) {
+  } catch {
     return false;
   }
 };

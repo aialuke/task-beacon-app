@@ -1,4 +1,4 @@
-import { Task, TaskStatus, User } from './shared.types';
+import { Task, TaskStatus } from './shared.types';
 
 // API response types
 export interface ApiResponse<T> {
@@ -13,7 +13,7 @@ export interface ApiError {
   code?: string;
   details?: unknown;
   hint?: string;
-  originalError?: any;
+  originalError?: unknown; // Changed from any to unknown
 }
 
 export interface TablesResponse<T> {
@@ -67,7 +67,7 @@ export interface TaskQueryParams {
 export interface TaskError {
   message: string;
   code: string;
-  details?: any;
+  details?: unknown; // Changed from any to unknown
 }
 
 export interface TaskActionResult<T = void> {

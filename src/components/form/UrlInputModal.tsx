@@ -1,92 +1,67 @@
-import { useState } from "react";
-import { Link } from "lucide-react";
+import * as React from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { FloatingInput } from "@/components/form/FloatingInput";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { FormActions } from "@/components/form/FormActions";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 interface UrlInputModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSubmit?: (url: string) => void; // Make onSubmit optional
   value: string;
   onChange: (value: string) => void;
 }
 
-export function UrlInputModal({ isOpen, onClose, value, onChange }: UrlInputModalProps) {
-  const [tempValue, setTempValue] = useState(value);
-  const [error, setError] = useState<string | null>(null);
+export function UrlInputModal({ isOpen, onClose, onSubmit, value, onChange }: UrlInputModalProps) {
+  const [error, setError] = React.useState<string | null>(null);
 
-  const validateUrl = (url: string): boolean => {
-    // Simple URL validation regex
-    const urlPattern = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)(\/[\w-./?%&=]*)?$/i;
-    return urlPattern.test(url);
-  };
-
-  const handleSave = () => {
-    if (!tempValue) {
-      // Allow empty URL (optional field)
-      onChange(tempValue);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!value) {
+      setError("URL is required");
+      return;
+    }
+    try {
+      new URL(value);
+      onSubmit(value);
       onClose();
-      return;
+    } catch {
+      setError("Please enter a valid URL");
     }
-
-    if (!validateUrl(tempValue)) {
-      setError("Please enter a valid URL (e.g., https://example.com)");
-      return;
-    }
-
-    setError(null);
-    onChange(tempValue);
-    onClose();
   };
 
-  const handleCancel = () => {
-    setTempValue(value);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChange(e.target.value);
     setError(null);
-    onClose();
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Link className="h-5 w-5" />
-            Add Reference URL
-          </DialogTitle>
+          <VisuallyHidden asChild>
+            <DialogTitle>Add URL</DialogTitle>
+          </VisuallyHidden>
         </DialogHeader>
         
-        <div className="space-y-4">
-          <div>
-            <FloatingInput
-              id="url-input"
-              type="text"
-              value={tempValue}
-              onChange={(e) => {
-                setTempValue(e.target.value);
-                setError(null); // Clear error on input change
-              }}
-              placeholder="https://example.com"
-              label="URL"
-              icon={<Link className="h-4 w-4" />}
-              autoFocus
-            />
-            {error && (
-              <p className={cn(
-                "mt-1 text-sm text-destructive",
-                "animate-in fade-in-0"
-              )}>
-                {error}
-              </p>
-            )}
-          </div>
-          
-          <div className="flex justify-end">
-            <Button onClick={handleSave}>
-              Save URL
-            </Button>
-          </div>
+        <div className="space-y-4 pb-4">
+          <FloatingInput
+            id="url-input"
+            label="URL"
+            value={value}
+            onChange={handleInputChange}
+            error={error ?? undefined}
+          />
         </div>
+
+        <FormActions
+          onSubmit={handleSubmit}
+          onCancel={() => {
+            onChange(""); // Clear the URL on cancel
+            onClose();
+          }}
+          submitLabel="Add"
+        />
       </DialogContent>
     </Dialog>
   );

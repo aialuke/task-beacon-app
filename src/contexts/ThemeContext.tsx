@@ -1,15 +1,7 @@
+import React, { useEffect, useState } from 'react';
+import { ThemeContext } from '@/hooks/useTheme'; // Import ThemeContext
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
-
-type Theme = 'dark' | 'light' | 'system';
-
-interface ThemeContextType {
-  theme: Theme;
-  setTheme: (theme: Theme) => void;
-  actualTheme: 'dark' | 'light';
-}
-
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+export type Theme = 'dark' | 'light' | 'system'; // Export for use elsewhere
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>('dark'); // Default to dark
@@ -73,12 +65,4 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       {children}
     </ThemeContext.Provider>
   );
-}
-
-export function useTheme() {
-  const context = useContext(ThemeContext);
-  if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider');
-  }
-  return context;
 }

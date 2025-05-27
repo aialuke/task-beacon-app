@@ -1,16 +1,17 @@
-
 import { Button } from "@/components/ui/button";
 
 interface FormActionsProps {
+  onSubmit: (e: React.FormEvent) => void;
   onCancel?: () => void;
-  isSubmitting: boolean;
+  isSubmitting?: boolean;
   submitLabel?: string;
   cancelLabel?: string;
 }
 
 export function FormActions({ 
+  onSubmit,
   onCancel, 
-  isSubmitting, 
+  isSubmitting = false, 
   submitLabel = "Create Task", 
   cancelLabel = "Cancel" 
 }: FormActionsProps) {
@@ -30,6 +31,7 @@ export function FormActions({
       )}
       <Button 
         type="submit" 
+        onClick={onSubmit}
         disabled={isSubmitting}
         size="sm"
         variant="default"

@@ -34,12 +34,30 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
->(({ className, children, ...props }, ref) => {
+>(({ className, children, ...props }, forwardedRef) => {
   const { keyboardVisible, availableHeight } = useMobileViewport();
-  const modalRef = React.useRef<HTMLDivElement>(null);
   const [modalHeight, setModalHeight] = React.useState<number>(0);
   const [isStandalone, setIsStandalone] = React.useState<boolean>(false);
   const [safeAreaTop, setSafeAreaTop] = React.useState<number>(0);
+
+  // Ref callback to handle both forwarded ref and internal logic
+  const setRef = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      // Handle the forwarded ref
+      if (typeof forwardedRef === "function") {
+        forwardedRef(node);
+      } else if (forwardedRef) {
+        forwardedRef.current = node;
+      }
+
+      // Internal logic for measuring height
+      if (node) {
+        const height = node.offsetHeight;
+        setModalHeight(height);
+      }
+    },
+    [forwardedRef]
+  );
 
   // Detect PWA standalone mode and safe area inset top
   React.useEffect(() => {
@@ -50,14 +68,6 @@ const DialogContent = React.forwardRef<
     setSafeAreaTop(sat);
   }, []);
 
-  // Update modal height when content changes
-  React.useEffect(() => {
-    if (modalRef.current) {
-      const height = modalRef.current.offsetHeight;
-      setModalHeight(height);
-    }
-  }, [children]);
-
   const getModalPosition = React.useCallback(() => {
     if (!keyboardVisible) {
       return {
@@ -67,13 +77,11 @@ const DialogContent = React.forwardRef<
       };
     }
 
-    // When keyboard is visible, position the top of the modal
     const modalMaxHeight = Math.min(availableHeight * 0.7, 400);
-    let topPosition = availableHeight * (isStandalone ? 0.55 : 0.61); // 55% in PWA mode, 61% in Safari
+    let topPosition = availableHeight * (isStandalone ? 0.55 : 0.61);
 
-    // Adjust for PWA standalone mode (account for safe area inset top)
     if (isStandalone) {
-      topPosition += safeAreaTop; // Add safe area inset top to position below the status bar
+      topPosition += safeAreaTop;
     }
 
     return {
@@ -85,23 +93,20 @@ const DialogContent = React.forwardRef<
 
   const modalStyle = getModalPosition();
 
-  // Ensure position updates on every render when keyboard is visible
   React.useEffect(() => {
     const updatePosition = () => {
-      if (keyboardVisible && modalRef.current) {
+      if (keyboardVisible && forwardedRef && "current" in forwardedRef && forwardedRef.current) {
         const updatedStyle = getModalPosition();
-        modalRef.current.style.top = updatedStyle.top;
-        modalRef.current.style.transform = updatedStyle.transform;
-        modalRef.current.style.maxHeight = updatedStyle.maxHeight;
+        forwardedRef.current.style.top = updatedStyle.top;
+        forwardedRef.current.style.transform = updatedStyle.transform;
+        forwardedRef.current.style.maxHeight = updatedStyle.maxHeight;
       }
     };
 
-    updatePosition(); // Initial update
+    updatePosition();
 
-    // Add a small delay to ensure DOM is fully rendered
     const timer = setTimeout(updatePosition, 100);
 
-    // Update on window resize (e.g., keyboard show/hide)
     window.addEventListener('resize', updatePosition);
     if (window.visualViewport) {
       window.visualViewport.addEventListener('resize', updatePosition);
@@ -114,13 +119,13 @@ const DialogContent = React.forwardRef<
         window.visualViewport.removeEventListener('resize', updatePosition);
       }
     };
-  }, [keyboardVisible, availableHeight, modalHeight, getModalPosition, isStandalone, safeAreaTop]);
+  }, [keyboardVisible, availableHeight, modalHeight, getModalPosition, isStandalone, safeAreaTop, forwardedRef]);
 
   return (
     <DialogPortal>
       <DialogOverlay />
       <DialogPrimitive.Content
-        ref={modalRef}
+        ref={setRef} // Use the ref callback
         className={cn(
           "fixed left-[50%] z-50 grid w-full max-w-lg gap-4 border p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=open]:slide-in-from-left-1/2 sm:rounded-xl overflow-y-auto",
           keyboardVisible && "data-[state=closed]:slide-out-to-top-[40px] data-[state=open]:slide-in-from-top-[40px]",
