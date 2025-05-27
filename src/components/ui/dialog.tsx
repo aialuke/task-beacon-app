@@ -36,8 +36,9 @@ const DialogContent = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
 >(({ className, children, ...props }, ref) => {
   const { keyboardVisible, availableHeight } = useMobileViewport();
+  const modalRef = React.useRef<HTMLDivElement>(null);
 
-  const getModalPosition = () => {
+  const getModalPosition = React.useCallback(() => {
     if (!keyboardVisible) {
       return {
         top: "50%",
@@ -46,24 +47,37 @@ const DialogContent = React.forwardRef<
       };
     }
 
-    // When keyboard is visible, position modal at 40% from the top of available space
+    // When keyboard is visible, position the bottom of the modal 5px above the keyboard
     const modalMaxHeight = Math.min(availableHeight * 0.7, 400);
-    const topPosition = availableHeight * 0.4; // Position at 40% of available height
+    const keyboardTop = availableHeight;
+    const paddingAboveKeyboard = 5; // 5px above the keyboard
+    const modalHeight = modalRef.current?.offsetHeight || modalMaxHeight; // Use actual height if available
+    const topPosition = keyboardTop - (modalHeight || modalMaxHeight) - paddingAboveKeyboard;
 
     return {
       top: `${Math.max(40, topPosition)}px`,
       transform: "translateX(-50%)",
       maxHeight: `${modalMaxHeight}px`,
     };
-  };
+  }, [keyboardVisible, availableHeight, modalRef]);
 
   const modalStyle = getModalPosition();
+
+  // Update position if modal height changes
+  React.useEffect(() => {
+    if (keyboardVisible && modalRef.current) {
+      const updatedStyle = getModalPosition();
+      modalRef.current.style.top = updatedStyle.top;
+      modalRef.current.style.transform = updatedStyle.transform;
+      modalRef.current.style.maxHeight = updatedStyle.maxHeight;
+    }
+  }, [keyboardVisible, availableHeight, children, getModalPosition]);
 
   return (
     <DialogPortal>
       <DialogOverlay />
       <DialogPrimitive.Content
-        ref={ref}
+        ref={modalRef}
         className={cn(
           "fixed left-[50%] z-50 grid w-full max-w-lg gap-4 border p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=open]:slide-in-from-left-1/2 sm:rounded-xl overflow-y-auto",
           keyboardVisible && "data-[state=closed]:slide-out-to-top-[40px] data-[state=open]:slide-in-from-top-[40px]",
