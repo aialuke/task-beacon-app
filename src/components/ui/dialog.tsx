@@ -1,17 +1,17 @@
-import * as React from "react"
-import * as DialogPrimitive from "@radix-ui/react-dialog"
-import { X } from "lucide-react"
-import { useMobileViewport } from "@/hooks/useMobileViewport"
+import * as React from "react";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { X } from "lucide-react";
+import { useMobileViewport } from "@/hooks/useMobileViewport";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
-const Dialog = DialogPrimitive.Root
+const Dialog = DialogPrimitive.Root;
 
-const DialogTrigger = DialogPrimitive.Trigger
+const DialogTrigger = DialogPrimitive.Trigger;
 
-const DialogPortal = DialogPrimitive.Portal
+const DialogPortal = DialogPrimitive.Portal;
 
-const DialogClose = DialogPrimitive.Close
+const DialogClose = DialogPrimitive.Close;
 
 const DialogOverlay = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Overlay>,
@@ -24,12 +24,12 @@ const DialogOverlay = React.forwardRef<
       className
     )}
     style={{
-      backgroundColor: "rgba(0, 0, 0, 0.8)"
+      backgroundColor: "rgba(0, 0, 0, 0.8)",
     }}
     {...props}
   />
-))
-DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
+));
+DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
@@ -42,18 +42,18 @@ const DialogContent = React.forwardRef<
       return {
         top: "50%",
         transform: "translate(-50%, -50%)",
-        maxHeight: "90vh"
+        maxHeight: "90vh",
       };
     }
 
-    // When keyboard is visible, position modal in the upper portion of available space
-    const modalMaxHeight = Math.min(availableHeight * 0.6, 300);
-    const topPosition = Math.max(40, (availableHeight - modalMaxHeight) / 3);
+    // When keyboard is visible, position modal closer to the center of available space
+    const modalMaxHeight = Math.min(availableHeight * 0.7, 400); // Increased max height to 70% of viewport or 400px
+    const topPosition = (availableHeight - modalMaxHeight) * 0.3; // Position at 30% from the top of available height
 
     return {
-      top: `${topPosition}px`,
+      top: `${Math.max(40, topPosition)}px`,
       transform: "translateX(-50%)",
-      maxHeight: `${modalMaxHeight}px`
+      maxHeight: `${modalMaxHeight}px`,
     };
   };
 
@@ -70,11 +70,11 @@ const DialogContent = React.forwardRef<
           !keyboardVisible && "data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-top-[48%]",
           className
         )}
-        style={{ 
+        style={{
           backgroundColor: "#1a1a1a",
           color: "#ffffff",
           borderColor: "#404040",
-          ...modalStyle
+          ...modalStyle,
         }}
         {...props}
       >
@@ -85,23 +85,20 @@ const DialogContent = React.forwardRef<
         </DialogPrimitive.Close>
       </DialogPrimitive.Content>
     </DialogPortal>
-  )
-})
-DialogContent.displayName = DialogPrimitive.Content.displayName
+  );
+});
+DialogContent.displayName = DialogPrimitive.Content.displayName;
 
 const DialogHeader = ({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={cn(
-      "flex flex-col space-y-1.5 text-center sm:text-left",
-      className
-    )}
+    className={cn("flex flex-col space-y-1.5 text-center sm:text-left", className)}
     {...props}
   />
-)
-DialogHeader.displayName = "DialogHeader"
+);
+DialogHeader.displayName = "DialogHeader";
 
 const DialogFooter = ({
   className,
@@ -114,8 +111,8 @@ const DialogFooter = ({
     )}
     {...props}
   />
-)
-DialogFooter.displayName = "DialogFooter"
+);
+DialogFooter.displayName = "DialogFooter";
 
 const DialogTitle = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Title>,
@@ -123,15 +120,12 @@ const DialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cn(
-      "text-lg font-semibold leading-none tracking-tight",
-      className
-    )}
+    className={cn("text-lg font-semibold leading-none tracking-tight", className)}
     style={{ color: "#ffffff" }}
     {...props}
   />
-))
-DialogTitle.displayName = DialogPrimitive.Title.displayName
+));
+DialogTitle.displayName = DialogPrimitive.Title.displayName;
 
 const DialogDescription = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Description>,
@@ -143,8 +137,8 @@ const DialogDescription = React.forwardRef<
     style={{ color: "#a3a3a3" }}
     {...props}
   />
-))
-DialogDescription.displayName = DialogPrimitive.Description.displayName
+));
+DialogDescription.displayName = DialogPrimitive.Description.displayName;
 
 export {
   Dialog,
@@ -157,4 +151,4 @@ export {
   DialogFooter,
   DialogTitle,
   DialogDescription,
-}
+};
