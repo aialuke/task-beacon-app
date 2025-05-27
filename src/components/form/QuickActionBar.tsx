@@ -83,31 +83,25 @@ export function QuickActionBar({
   };
 
   return (
-    <div className="flex items-center gap-2 px-4 py-2 bg-background/30 backdrop-blur-sm rounded-xl">
-      {/* Action buttons container - improved desktop layout */}
-      <div className="flex items-center gap-2 flex-1">
+    <div className="flex items-center justify-between gap-4 px-4 py-1.5 bg-background/30 backdrop-blur-sm rounded-xl">
+      {/* Action buttons container */}
+      <div className="flex items-center gap-3">
         {/* Date Picker Button */}
         <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
           <PopoverTrigger asChild>
             <Button
               variant="ghost"
-              size="sm"
+              size="icon"
               disabled={disabled}
               className={cn(
-                "flex items-center justify-center gap-2 min-h-[44px] touch-manipulation",
+                "w-12 h-12 rounded-full flex items-center justify-center",
                 "hover:scale-105 active:scale-95 transition-all duration-200",
                 hasDate 
                   ? "bg-primary/20 text-primary border border-primary/30 shadow-md shadow-primary/10" 
                   : "bg-background/60 text-muted-foreground border border-border/40 hover:bg-background/80 hover:text-foreground"
               )}
             >
-              <Calendar className={cn(
-                "h-4 w-4 transition-all duration-200 flex-shrink-0",
-                hasDate && "scale-110"
-              )} />
-              <span className="text-sm font-medium hidden sm:inline whitespace-nowrap">
-                {hasDate ? format(selectedDate!, "MMM d") : "Due Date"}
-              </span>
+              <Calendar className="h-5 w-5" />
             </Button>
           </PopoverTrigger>
           <PopoverContent 
@@ -129,57 +123,45 @@ export function QuickActionBar({
         {/* Assignee Button */}
         <Button
           variant="ghost"
-          size="sm"
+          size="icon"
           onClick={() => setIsUserModalOpen(true)}
           disabled={disabled}
           className={cn(
-            "flex items-center justify-center gap-2 min-h-[44px] touch-manipulation",
+            "w-12 h-12 rounded-full flex items-center justify-center",
             "hover:scale-105 active:scale-95 transition-all duration-200",
             hasAssignee 
               ? "bg-primary/20 text-primary border border-primary/30 shadow-md shadow-primary/10" 
               : "bg-background/60 text-muted-foreground border border-border/40 hover:bg-background/80 hover:text-foreground"
           )}
         >
-          <User className={cn(
-            "h-4 w-4 transition-all duration-200 flex-shrink-0",
-            hasAssignee && "scale-110"
-          )} />
-          <span className="text-sm font-medium hidden sm:inline whitespace-nowrap">
-            {hasAssignee ? "Assigned" : "Assign"}
-          </span>
+          <User className="h-5 w-5" />
         </Button>
 
         {/* Photo Button */}
         <Button
           variant="ghost"
-          size="sm"
+          size="icon"
           onClick={handlePhotoClick}
           disabled={disabled}
           className={cn(
-            "flex items-center justify-center gap-2 min-h-[44px] touch-manipulation",
+            "w-12 h-12 rounded-full flex items-center justify-center",
             "hover:scale-105 active:scale-95 transition-all duration-200",
             hasPhoto 
               ? "bg-primary/20 text-primary border border-primary/30 shadow-md shadow-primary/10" 
               : "bg-background/60 text-muted-foreground border border-border/40 hover:bg-background/80 hover:text-foreground"
           )}
         >
-          <ImageUp className={cn(
-            "h-4 w-4 transition-all duration-200 flex-shrink-0",
-            hasPhoto && "scale-110"
-          )} />
-          <span className="text-sm font-medium hidden sm:inline whitespace-nowrap">
-            {hasPhoto ? "Photo Added" : "Attach"}
-          </span>
+          <ImageUp className="h-5 w-5" />
         </Button>
 
         {/* URL Button */}
         <Button
           variant="ghost"
-          size="sm"
+          size="icon"
           onClick={() => setIsUrlModalOpen(true)}
           disabled={disabled}
           className={cn(
-            "flex items-center justify-center gap-2 min-h-[44px] touch-manipulation",
+            "w-12 h-12 rounded-full flex items-center justify-center",
             "hover:scale-105 active:scale-95 transition-all duration-200",
             hasUrl 
               ? "bg-primary/20 text-primary border border-primary/30 shadow-md shadow-primary/10" 
@@ -187,38 +169,30 @@ export function QuickActionBar({
           )}
         >
           {hasUrl ? (
-            <FileCheck className="h-4 w-4 transition-all duration-200 flex-shrink-0 scale-110" />
+            <FileCheck className="h-5 w-5" />
           ) : (
-            <Link className="h-4 w-4 transition-all duration-200 flex-shrink-0" />
+            <Link className="h-5 w-5" />
           )}
-          <span className="text-sm font-medium hidden sm:inline whitespace-nowrap">
-            {hasUrl ? "Link Added" : "Link"}
-          </span>
         </Button>
       </div>
 
-      {/* Submit Button - Grouped with action buttons */}
+      {/* Submit Button */}
       {onSubmit && (
         <Button
           onClick={handleSubmit}
           disabled={disabled || isSubmitting}
-          size="sm"
+          size="icon"
           className={cn(
-            "flex items-center justify-center gap-2 min-h-[44px] touch-manipulation ml-2",
+            "w-12 h-12 rounded-full flex items-center justify-center",
             "bg-primary text-primary-foreground hover:bg-primary/90",
             "hover:scale-105 active:scale-95 transition-all duration-200",
             "shadow-md hover:shadow-lg"
           )}
         >
           {isSubmitting ? (
-            <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
+            <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
           ) : (
-            <>
-              <Send className="h-4 w-4 transition-all duration-200 flex-shrink-0" />
-              <span className="text-sm font-medium hidden xs:inline whitespace-nowrap">
-                {submitLabel}
-              </span>
-            </>
+            <Send className="h-5 w-5" />
           )}
         </Button>
       )}
