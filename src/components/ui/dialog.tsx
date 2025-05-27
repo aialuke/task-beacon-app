@@ -37,8 +37,19 @@ const DialogContent = React.forwardRef<
 >(({ className, children, ...props }, ref) => {
   const { keyboardVisible, availableHeight } = useMobileViewport();
   const modalRef = React.useRef<HTMLDivElement>(null);
+  const [modalHeight, setModalHeight] = React.useState<number>(0);
+
+  // Update modal height when content changes
+  React.useEffect(() => {
+    if (modalRef.current) {
+      const height = modalRef.current.offsetHeight;
+      setModalHeight(height);
+      console.log("modalHeight:", height); // Debug log
+    }
+  }, [children]);
 
   const getModalPosition = React.useCallback(() => {
+    console.log("availableHeight:", availableHeight); // Debug log
     if (!keyboardVisible) {
       return {
         top: "50%",
@@ -47,23 +58,23 @@ const DialogContent = React.forwardRef<
       };
     }
 
-    // When keyboard is visible, position the bottom of the modal 5px above the keyboard
+    // When keyboard is visible, position the bottom of the modal 3px above the keyboard
     const modalMaxHeight = Math.min(availableHeight * 0.7, 400);
     const keyboardTop = availableHeight;
-    const paddingAboveKeyboard = 5; // 5px above the keyboard
-    const modalHeight = modalRef.current?.offsetHeight || modalMaxHeight; // Use actual height if available
-    const topPosition = keyboardTop - (modalHeight || modalMaxHeight) - paddingAboveKeyboard;
+    const paddingAboveKeyboard = 3; // 3px above the keyboard
+    const currentHeight = modalHeight || modalMaxHeight;
+    const topPosition = keyboardTop - currentHeight - paddingAboveKeyboard;
 
     return {
       top: `${Math.max(40, topPosition)}px`,
       transform: "translateX(-50%)",
       maxHeight: `${modalMaxHeight}px`,
     };
-  }, [keyboardVisible, availableHeight, modalRef]);
+  }, [keyboardVisible, availableHeight, modalHeight]);
 
   const modalStyle = getModalPosition();
 
-  // Update position if modal height changes
+  // Update position if modal height or viewport changes
   React.useEffect(() => {
     if (keyboardVisible && modalRef.current) {
       const updatedStyle = getModalPosition();
@@ -71,7 +82,7 @@ const DialogContent = React.forwardRef<
       modalRef.current.style.transform = updatedStyle.transform;
       modalRef.current.style.maxHeight = updatedStyle.maxHeight;
     }
-  }, [keyboardVisible, availableHeight, children, getModalPosition]);
+  }, [keyboardVisible, availableHeight, modalHeight, getModalPosition]);
 
   return (
     <DialogPortal>

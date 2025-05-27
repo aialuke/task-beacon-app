@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Check, User, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -144,6 +143,8 @@ export default function UserSearchInput({
               onBlur={handleInputBlur}
               className="flex-1 text-foreground bg-transparent border-none focus:ring-0 p-0 h-auto text-sm"
               disabled={disabled}
+              required={false}
+              formNoValidate // Explicitly disable validation
             />
             <Search className="h-4 w-4 text-muted-foreground ml-2 flex-shrink-0" />
           </>
