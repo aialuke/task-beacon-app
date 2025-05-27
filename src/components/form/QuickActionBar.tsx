@@ -82,7 +82,7 @@ export function QuickActionBar({
   };
 
   return (
-    <div className="flex items-center justify-between gap-4 px-4 py-1.5 bg-background/30 backdrop-blur-sm rounded-xl">
+    <div className="flex items-center justify-center gap-4 px-4 py-1.5 bg-background/30 backdrop-blur-sm rounded-xl">
       {/* Action buttons container */}
       <div className="flex items-center gap-3">
         {/* Date Picker Button */}
