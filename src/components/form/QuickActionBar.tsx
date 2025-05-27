@@ -122,9 +122,9 @@ export function QuickActionBar({
     "flex items-center justify-center gap-2 transition-all duration-200 touch-manipulation",
     "hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30",
     // Mobile: fixed size for icon-only, Desktop: min-width to accommodate label
-    "w-[48px] h-[48px] sm:min-w-[48px] sm:h-[48px] sm:px-4 sm:py-2",
+    "w-[48px] h-[48px] sm:min-w-[48px] sm:h-[48px] sm:pl-3 sm:pr-4 sm:py-2",
     // Circular on mobile, pill shape on desktop
-    "rounded-full aspect-square [aspect-ratio:1/1] sm:aspect-auto",
+    "rounded-full aspect-square [aspect-ratio:1/1] sm:aspect-auto sm:[aspect-ratio:unset]",
     disabled && "opacity-50 cursor-not-allowed hover:scale-100"
   );
 
