@@ -119,7 +119,7 @@ export function QuickActionBar({
   };
 
   const buttonBaseClasses = cn(
-    "flex items-center justify-center gap-2 px-4 py-2 rounded-full transition-all duration-300 min-h-[44px] min-w-[44px] touch-manipulation",
+    "flex items-center justify-center gap-2 px-3 py-2 rounded-full transition-all duration-300 min-h-[44px] touch-manipulation flex-shrink-0",
     "hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30",
     disabled && "opacity-50 cursor-not-allowed hover:scale-100"
   );
@@ -133,99 +133,102 @@ export function QuickActionBar({
         : "bg-background/60 text-muted-foreground border border-border/40 hover:bg-background/80 hover:text-foreground hover:border-border/60"
   );
 
-  // Special styling for icon-only submit button
+  // Updated submit button styling for better mobile layout
   const submitButtonClasses = cn(
-    "flex items-center justify-center rounded-full transition-all duration-300 w-[44px] h-[44px] touch-manipulation",
+    "flex items-center justify-center rounded-full transition-all duration-300 min-w-[44px] min-h-[44px] touch-manipulation flex-shrink-0",
     "hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30",
-    "bg-primary text-primary-foreground border border-primary shadow-md hover:bg-primary/90",
+    "bg-primary text-primary-foreground border border-primary shadow-md hover:bg-primary/90 px-4",
     disabled && "opacity-50 cursor-not-allowed hover:scale-100"
   );
 
   return (
-    <div className="flex flex-wrap gap-2 px-4 py-2 bg-background/30 backdrop-blur-sm rounded-xl justify-center">
-      {/* Date Picker Button */}
-      <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="ghost"
-            disabled={disabled}
-            className={getButtonClasses(hasDate)}
+    <div className="flex flex-wrap gap-2 px-4 py-2 bg-background/30 backdrop-blur-sm rounded-xl">
+      {/* Action buttons container - improved mobile layout */}
+      <div className="flex gap-2 flex-1 min-w-0 justify-center sm:justify-start">
+        {/* Date Picker Button */}
+        <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="ghost"
+              disabled={disabled}
+              className={getButtonClasses(hasDate)}
+            >
+              <Calendar className={cn(
+                "h-4 w-4 transition-all duration-200 flex-shrink-0",
+                hasDate && "scale-110"
+              )} />
+              <span className="text-sm font-medium hidden sm:inline whitespace-nowrap">
+                {getButtonContent('date').label}
+              </span>
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent 
+            className="w-auto p-0 bg-popover text-popover-foreground border-border shadow-lg" 
+            align="start"
+            sideOffset={8}
           >
-            <Calendar className={cn(
-              "h-4 w-4 transition-all duration-200 flex-shrink-0",
-              hasDate && "scale-110"
-            )} />
-            <span className="text-sm font-medium hidden sm:inline whitespace-nowrap">
-              {getButtonContent('date').label}
-            </span>
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent 
-          className="w-auto p-0 bg-popover text-popover-foreground border-border shadow-lg" 
-          align="start"
-          sideOffset={8}
+            <CalendarComponent
+              mode="single"
+              selected={selectedDate}
+              onSelect={handleDateSelect}
+              disabled={(date) => date < new Date()}
+              initialFocus
+              className="p-4 pointer-events-auto"
+            />
+          </PopoverContent>
+        </Popover>
+
+        {/* Assignee Button */}
+        <button
+          type="button"
+          onClick={() => setIsUserModalOpen(true)}
+          disabled={disabled}
+          className={getButtonClasses(hasAssignee)}
         >
-          <CalendarComponent
-            mode="single"
-            selected={selectedDate}
-            onSelect={handleDateSelect}
-            disabled={(date) => date < new Date()}
-            initialFocus
-            className="p-4 pointer-events-auto"
-          />
-        </PopoverContent>
-      </Popover>
+          <User className={cn(
+            "h-4 w-4 transition-all duration-200 flex-shrink-0",
+            hasAssignee && "scale-110"
+          )} />
+          <span className="text-sm font-medium hidden sm:inline whitespace-nowrap">
+            {getButtonContent('assignee').label}
+          </span>
+        </button>
 
-      {/* Assignee Button */}
-      <button
-        type="button"
-        onClick={() => setIsUserModalOpen(true)}
-        disabled={disabled}
-        className={getButtonClasses(hasAssignee)}
-      >
-        <User className={cn(
-          "h-4 w-4 transition-all duration-200 flex-shrink-0",
-          hasAssignee && "scale-110"
-        )} />
-        <span className="text-sm font-medium hidden sm:inline whitespace-nowrap">
-          {getButtonContent('assignee').label}
-        </span>
-      </button>
+        {/* Photo Button */}
+        <button
+          type="button"
+          onClick={handlePhotoClick}
+          disabled={disabled}
+          className={getButtonClasses(hasPhoto)}
+        >
+          <ImageUp className={cn(
+            "h-4 w-4 transition-all duration-200 flex-shrink-0",
+            hasPhoto && "scale-110"
+          )} />
+          <span className="text-sm font-medium hidden sm:inline whitespace-nowrap">
+            {getButtonContent('photo').label}
+          </span>
+        </button>
 
-      {/* Photo Button */}
-      <button
-        type="button"
-        onClick={handlePhotoClick}
-        disabled={disabled}
-        className={getButtonClasses(hasPhoto)}
-      >
-        <ImageUp className={cn(
-          "h-4 w-4 transition-all duration-200 flex-shrink-0",
-          hasPhoto && "scale-110"
-        )} />
-        <span className="text-sm font-medium hidden sm:inline whitespace-nowrap">
-          {getButtonContent('photo').label}
-        </span>
-      </button>
+        {/* URL Button */}
+        <button
+          type="button"
+          onClick={() => setIsUrlModalOpen(true)}
+          disabled={disabled}
+          className={getButtonClasses(hasUrl)}
+        >
+          {hasUrl ? (
+            <FileCheck className="h-4 w-4 transition-all duration-200 flex-shrink-0 scale-110" />
+          ) : (
+            <Link className="h-4 w-4 transition-all duration-200 flex-shrink-0" />
+          )}
+          <span className="text-sm font-medium hidden sm:inline whitespace-nowrap">
+            {getButtonContent('url').label}
+          </span>
+        </button>
+      </div>
 
-      {/* URL Button */}
-      <button
-        type="button"
-        onClick={() => setIsUrlModalOpen(true)}
-        disabled={disabled}
-        className={getButtonClasses(hasUrl)}
-      >
-        {hasUrl ? (
-          <FileCheck className="h-4 w-4 transition-all duration-200 flex-shrink-0 scale-110" />
-        ) : (
-          <Link className="h-4 w-4 transition-all duration-200 flex-shrink-0" />
-        )}
-        <span className="text-sm font-medium hidden sm:inline whitespace-nowrap">
-          {getButtonContent('url').label}
-        </span>
-      </button>
-
-      {/* Submit Button - Icon Only */}
+      {/* Submit Button - Always on same row but flex to end */}
       {onSubmit && (
         <button
           type="submit"
@@ -237,7 +240,12 @@ export function QuickActionBar({
           {isSubmitting ? (
             <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
           ) : (
-            <Send className="h-4 w-4 transition-all duration-200 flex-shrink-0" />
+            <>
+              <Send className="h-4 w-4 transition-all duration-200 flex-shrink-0" />
+              <span className="text-sm font-medium ml-1 hidden xs:inline whitespace-nowrap">
+                {submitLabel}
+              </span>
+            </>
           )}
         </button>
       )}
