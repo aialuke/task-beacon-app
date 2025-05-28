@@ -8,10 +8,11 @@ import { toast } from '@/lib/toast';
 import { isValidEmail } from '@/lib/utils/validation';
 import { cn } from '@/lib/utils';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
+import { AuthError } from '@supabase/supabase-js';
 
 type AuthMode = 'signin' | 'signup';
 
-export const ModernAuthForm: React.FC = () => {
+const ModernAuthForm: React.FC = () => {
   const [mode, setMode] = useState<AuthMode>('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -52,7 +53,7 @@ export const ModernAuthForm: React.FC = () => {
     const passwordError = validatePassword(password);
     
     setErrors({
-      email: emailError,
+      email:emailError,
       password: passwordError,
     });
 
@@ -94,8 +95,14 @@ export const ModernAuthForm: React.FC = () => {
         window.location.href = '/';
       }, 1500);
 
-    } catch (error: any) {
-      toast.error(error.message || 'An unexpected error occurred');
+    } catch (error: unknown) {
+      if (error instanceof AuthError) {
+        toast.error(error.message || 'An unexpected error occurred');
+      } else if (error instanceof Error) {
+        toast.error(error.message || 'An unexpected error occurred');
+      } else {
+        toast.error('An unexpected error occurred');
+      }
     } finally {
       setLoading(false);
     }
@@ -231,3 +238,5 @@ export const ModernAuthForm: React.FC = () => {
     </div>
   );
 };
+
+export default ModernAuthForm;
