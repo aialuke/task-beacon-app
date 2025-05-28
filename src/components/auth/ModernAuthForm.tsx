@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card'; // Removed CardHeader import
 import { FloatingInput } from './FloatingInput';
 import { PasswordStrengthIndicator } from './PasswordStrengthIndicator';
 import { supabase, isMockingSupabase } from '@/integrations/supabase/client';
@@ -152,13 +152,7 @@ const ModernAuthForm: React.FC = () => {
         </div>
 
         {/* Glass Morphism Card */}
-        <Card className="bg-gray-800/70 animate-scale-in border-none"> {/* Removed backdrop-blur-xl, changed bg-background/40 to bg-gray-800/70 */}
-          <CardHeader className="text-center pb-2">
-            <h2 className="text-xl font-semibold">
-              {mode === 'signin' ? 'Sign In' : 'Create Account'}
-            </h2>
-          </CardHeader>
-
+        <Card className="bg-gray-800/70 animate-scale-in border-none">
           <CardContent className="space-y-4">
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Name Input (only for signup) */}
