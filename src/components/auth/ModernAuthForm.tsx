@@ -16,9 +16,10 @@ const ModernAuthForm: React.FC = () => {
   const [mode, setMode] = useState<AuthMode>('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState(''); // New state for name
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [errors, setErrors] = useState<{ email?: string; password?: string; name?: string }>({}); // Added name to errors
 
   const validateEmail = (value: string) => {
     if (!value) return 'Email is required';
@@ -29,6 +30,12 @@ const ModernAuthForm: React.FC = () => {
   const validatePassword = (value: string) => {
     if (!value) return 'Password is required';
     if (value.length < 8) return 'Password must be at least 8 characters';
+    return '';
+  };
+
+  const validateName = (value: string) => {
+    if (!value) return 'Name is required';
+    if (value.length < 2) return 'Name must be at least 2 characters';
     return '';
   };
 
@@ -48,16 +55,26 @@ const ModernAuthForm: React.FC = () => {
     }
   };
 
+  const handleNameChange = (value: string) => {
+    setName(value);
+    if (errors.name) {
+      const error = validateName(value);
+      setErrors(prev => ({ ...prev, name: error }));
+    }
+  };
+
   const validateForm = () => {
     const emailError = validateEmail(email);
     const passwordError = validatePassword(password);
+    const nameError = mode === 'signup' ? validateName(name) : ''; // Validate name only for signup
     
     setErrors({
       email: emailError,
       password: passwordError,
+      name: nameError,
     });
 
-    return !emailError && !passwordError;
+    return !emailError && !passwordError && !nameError;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -79,17 +96,21 @@ const ModernAuthForm: React.FC = () => {
         return;
       }
 
-      const { error } = mode === 'signin'
-        ? await supabase.auth.signInWithPassword({ email, password })
-        : await supabase.auth.signUp({ email, password });
-
-      if (error) throw error;
-
-      toast.success(
-        mode === 'signin' 
-          ? 'Welcome back! Redirecting to your dashboard...' 
-          : 'Account created! Check your email for verification.'
-      );
+      if (mode === 'signin') {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        toast.success('Welcome back! Redirecting to your dashboard...');
+      } else {
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: { full_name: name }, // Pass the name as user metadata
+          },
+        });
+        if (error) throw error;
+        toast.success('Account created! Check your email for verification.');
+      }
 
       setTimeout(() => {
         window.location.href = '/';
@@ -140,6 +161,21 @@ const ModernAuthForm: React.FC = () => {
 
           <CardContent className="space-y-6">
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Name Input (only for signup) */}
+              {mode === 'signup' && (
+                <FloatingInput
+                  id="name"
+                  label="Name"
+                  type="text"
+                  value={name}
+                  onChange={handleNameChange}
+                  error={errors.name}
+                  autoComplete="name"
+                  disabled={loading}
+                  required
+                />
+              )}
+
               {/* Email Input */}
               <FloatingInput
                 id="email"
