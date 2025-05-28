@@ -16,10 +16,10 @@ const ModernAuthForm: React.FC = () => {
   const [mode, setMode] = useState<AuthMode>('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState(''); // New state for name
+  const [name, setName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<{ email?: string; password?: string; name?: string }>({}); // Added name to errors
+  const [errors, setErrors] = useState<{ email?: string; password?: string; name?: string }>({});
 
   const validateEmail = (value: string) => {
     if (!value) return 'Email is required';
@@ -66,7 +66,7 @@ const ModernAuthForm: React.FC = () => {
   const validateForm = () => {
     const emailError = validateEmail(email);
     const passwordError = validatePassword(password);
-    const nameError = mode === 'signup' ? validateName(name) : ''; // Validate name only for signup
+    const nameError = mode === 'signup' ? validateName(name) : '';
     
     setErrors({
       email: emailError,
@@ -105,7 +105,7 @@ const ModernAuthForm: React.FC = () => {
           email,
           password,
           options: {
-            data: { full_name: name }, // Pass the name as user metadata
+            data: { full_name: name },
           },
         });
         if (error) throw error;
@@ -135,17 +135,17 @@ const ModernAuthForm: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-background via-background to-primary/5">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center p-2 bg-gradient-to-br from-background via-background to-primary/5">
+      <div className="w-full max-w-sm">
         {/* Logo and Branding */}
-        <div className="text-center mb-8 animate-fade-in">
-          <div className="flex items-center justify-center gap-3 mb-2">
+        <div className="text-center mb-4 animate-fade-in">
+          <div className="flex items-center justify-center gap-2 mb-1">
             <img 
               src="/assets/hourglass_logo.svg" 
               alt="Flow State Logo" 
               className="w-8 h-8"
             />
-            <h1 className="text-xl font-bold text-gradient-primary">
+            <h1 className="text-lg font-bold text-gradient-primary">
               Flow State
             </h1>
           </div>
@@ -153,14 +153,14 @@ const ModernAuthForm: React.FC = () => {
 
         {/* Glass Morphism Card */}
         <Card className="bg-background/40 backdrop-blur-xl border-border/50 shadow-xl animate-scale-in">
-          <CardHeader className="text-center pb-4">
-            <h2 className="text-2xl font-semibold">
+          <CardHeader className="text-center pb-2">
+            <h2 className="text-xl font-semibold">
               {mode === 'signin' ? 'Sign In' : 'Create Account'}
             </h2>
           </CardHeader>
 
-          <CardContent className="space-y-6">
-            <form onSubmit={handleSubmit} className="space-y-6">
+          <CardContent className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               {/* Name Input (only for signup) */}
               {mode === 'signup' && (
                 <FloatingInput
@@ -173,6 +173,7 @@ const ModernAuthForm: React.FC = () => {
                   autoComplete="name"
                   disabled={loading}
                   required
+                  className="h-10 text-sm" // Adjusted to match new default height
                 />
               )}
 
@@ -187,6 +188,7 @@ const ModernAuthForm: React.FC = () => {
                 autoComplete="email"
                 disabled={loading}
                 required
+                className="h-10 text-sm" // Adjusted to match new default height
               />
 
               {/* Password Input */}
@@ -201,18 +203,19 @@ const ModernAuthForm: React.FC = () => {
                   autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
                   disabled={loading}
                   required
+                  className="h-10 text-sm" // Adjusted to match new default height
                 />
                 
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors"
                   disabled={loading}
                 >
                   {showPassword ? (
-                    <EyeOff className="w-5 h-5" />
+                    <EyeOff className="w-4 h-4" />
                   ) : (
-                    <Eye className="w-5 h-5" />
+                    <Eye className="w-4 h-4" />
                   )}
                 </button>
               </div>
@@ -229,7 +232,7 @@ const ModernAuthForm: React.FC = () => {
               <Button
                 type="submit"
                 className={cn(
-                  "w-full h-12 text-base font-medium transition-all duration-300",
+                  "w-full h-10 text-sm font-medium transition-all duration-300",
                   "hover:scale-[1.02] hover:shadow-lg",
                   loading && "cursor-not-allowed"
                 )}
@@ -237,7 +240,7 @@ const ModernAuthForm: React.FC = () => {
               >
                 {loading ? (
                   <div className="flex items-center space-x-2">
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <Loader2 className="w-3 h-3 animate-spin" />
                     <span>
                       {mode === 'signin' ? 'Signing in...' : 'Creating account...'}
                     </span>
@@ -250,7 +253,7 @@ const ModernAuthForm: React.FC = () => {
 
             {/* Mode Toggle */}
             <div className="text-center">
-              <p className="text-sm text-muted-foreground">
+              <p className="text-xs text-muted-foreground">
                 {mode === 'signin' 
                   ? "Don't have an account? " 
                   : "Already have an account? "}
