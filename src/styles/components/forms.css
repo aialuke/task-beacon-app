@@ -5,6 +5,12 @@
     @apply min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-background via-background to-primary/5 mobile-safe-area;
   }
 
+  @media (min-width: 640px) {
+    .form-page-bg {
+      @apply p-6;
+    }
+  }
+
   /* ===== FORM CONTAINER ===== */
   .form-container {
     @apply w-full max-w-md;

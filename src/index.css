@@ -87,7 +87,7 @@ html {
 /* Global icon handling - improved for dark mode */
 svg {
   fill: none;
-  transition: stroke 0.3s ease; /* Removed fill transition */
+  transition: stroke 0.3s ease;
 }
 
 /* Dark mode specific adjustments */

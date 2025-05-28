@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { FloatingInput } from './FloatingInput';
@@ -9,10 +9,13 @@ import { isValidEmail } from '@/lib/utils/validation';
 import { cn } from '@/lib/utils';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { AuthError } from '@supabase/supabase-js';
+import { useAuth } from '@/contexts/AuthContext';
+import { LoadingSpinner } from '@/components/ui/layout';
 
 type AuthMode = 'signin' | 'signup';
 
 const ModernAuthForm: React.FC = () => {
+  const { user, loading: authLoading } = useAuth();
   const [mode, setMode] = useState<AuthMode>('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -20,6 +23,12 @@ const ModernAuthForm: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string; name?: string }>({});
+
+  useEffect(() => {
+    if (!authLoading && user) {
+      window.location.href = '/';
+    }
+  }, [user, authLoading]);
 
   const showToastError = (message: string) => {
     toast.error(message);
@@ -136,127 +145,133 @@ const ModernAuthForm: React.FC = () => {
     setErrors({});
   };
 
+  if (authLoading) {
+    return <LoadingSpinner />;
+  }
+
+  if (user) {
+    return null; // Will redirect due to useEffect
+  }
+
   return (
-    <div className="form-page-bg">
-      <div className="form-container">
-        {/* Logo and Branding */}
-        <div className="text-center mb-8 animate-fade-in">
-          <div className="flex items-center justify-center gap-3 mb-2">
-            <img 
-              src="/assets/hourglass_logo.svg" 
-              alt="Flow State Logo" 
-              className="w-8 h-8"
-            />
-            <h1 className="header-text text-[22.77px] font-normal tracking-[0.0242em] text-gradient-primary">
-              Flow State
-            </h1>
-          </div>
+    <>
+      {/* Logo and Branding */}
+      <div className="text-center mb-8 animate-fade-in">
+        <div className="flex items-center justify-center gap-3 mb-2">
+          <img 
+            src="/assets/hourglass_logo.svg" 
+            alt="Flow State Logo" 
+            className="w-8 h-8"
+          />
+          <h1 className="header-text text-[22.77px] font-normal tracking-[0.0242em] text-gradient-primary">
+            Flow State
+          </h1>
         </div>
+      </div>
 
-        {/* Card */}
-        <Card className="bg-background animate-fade-in border-none shadow-none">
-          <CardContent className="form-field-group space-y-6">
-            <form onSubmit={handleSubmit} className="form-field-group space-y-6">
-              {/* Name Input (only for signup) */}
-              {mode === 'signup' && (
-                <FloatingInput
-                  id="name"
-                  label="Name"
-                  type="text"
-                  value={name}
-                  onChange={handleNameChange}
-                  error={errors.name}
-                  autoComplete="name"
-                  disabled={loading}
-                  required
-                />
-              )}
-
-              {/* Email Input */}
+      {/* Card */}
+      <Card className="bg-background animate-fade-in border-none shadow-none">
+        <CardContent className="form-field-group space-y-6">
+          <form onSubmit={handleSubmit} className="form-field-group space-y-6">
+            {/* Name Input (only for signup) */}
+            {mode === 'signup' && (
               <FloatingInput
-                id="email"
-                label="Email Address"
-                type="email"
-                value={email}
-                onChange={handleEmailChange}
-                error={errors.email}
-                autoComplete="email"
+                id="name"
+                label="Name"
+                type="text"
+                value={name}
+                onChange={handleNameChange}
+                error={errors.name}
+                autoComplete="name"
                 disabled={loading}
                 required
               />
+            )}
 
-              {/* Password Input */}
-              <div className="relative">
-                <FloatingInput
-                  id="password"
-                  label="Password"
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={handlePasswordChange}
-                  error={errors.password}
-                  autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
-                  disabled={loading}
-                  required
-                />
-                
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors focus-visible"
-                  disabled={loading}
-                >
-                  {showPassword ? (<EyeOff className="w-5 h-5 icon-stroked" />) : (<Eye className="w-5 h-5 icon-stroked" />)}
-                  <span className="sr-only">{showPassword ? 'Hide password' : 'Show password'}</span>
-                </button>
-              </div>
+            {/* Email Input */}
+            <FloatingInput
+              id="email"
+              label="Email Address"
+              type="email"
+              value={email}
+              onChange={handleEmailChange}
+              error={errors.email}
+              autoComplete="email"
+              disabled={loading}
+              required
+            />
 
-              {/* Password Strength Indicator for Signup */}
-              {mode === 'signup' && (
-                <PasswordStrengthIndicator 
-                  password={password} 
-                  show={password.length > 0} 
-                />
-              )}
-
-              {/* Submit Button */}
-              <Button
-                type="submit"
-                className={cn(
-                  "hover:shadow-custom-lg", // Removed hover:scale-[1.02], focus-visible
-                  loading && "cursor-not-allowed"
-                )}
+            {/* Password Input */}
+            <div className="relative">
+              <FloatingInput
+                id="password"
+                label="Password"
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={handlePasswordChange}
+                error={errors.password}
+                autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
+                disabled={loading}
+                required
+              />
+              
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors focus-visible"
                 disabled={loading}
               >
-                {loading ? (
-                  <div className="flex items-center space-x-2">
-                    <Loader2 className="w-4 h-4 animate-spin icon-stroked" />
-                    <span>
-                      {mode === 'signin' ? 'Signing in...' : 'Creating account...'}
-                    </span>
-                  </div>
-                ) : (
-                  mode === 'signin' ? 'Sign In' : 'Create Account'
-                )}
-              </Button>
-            </form>
-
-            {/* Mode Toggle */}
-            <div className="form-mode-toggle">
-              <p>
-                {mode === 'signin' ? "Don't have an account? " : "Already have an account? "}
-                <button
-                  onClick={toggleMode}
-                  className="text-primary hover:underline font-medium transition-colors focus-visible"
-                  disabled={loading}
-                >
-                  {mode === 'signin' ? 'Sign Up' : 'Sign In'}
-                </button>
-              </p>
+                {showPassword ? (<EyeOff className="w-5 h-5 icon-stroked" />) : (<Eye className="w-5 h-5 icon-stroked" />)}
+                <span className="sr-only">{showPassword ? 'Hide password' : 'Show password'}</span>
+              </button>
             </div>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+
+            {/* Password Strength Indicator for Signup */}
+            {mode === 'signup' && (
+              <PasswordStrengthIndicator 
+                password={password} 
+                show={password.length > 0} 
+              />
+            )}
+
+            {/* Submit Button */}
+            <Button
+              type="submit"
+              className={cn(
+                "hover:shadow-custom-lg",
+                loading && "cursor-not-allowed"
+              )}
+              disabled={loading}
+            >
+              {loading ? (
+                <div className="flex items-center space-x-2">
+                  <Loader2 className="w-4 h-4 animate-spin icon-stroked" />
+                  <span>
+                    {mode === 'signin' ? 'Signing in...' : 'Creating account...'}
+                  </span>
+                </div>
+              ) : (
+                mode === 'signin' ? 'Sign In' : 'Create Account'
+              )}
+            </Button>
+          </form>
+
+          {/* Mode Toggle */}
+          <div className="form-mode-toggle">
+            <p>
+              {mode === 'signin' ? "Don't have an account? " : "Already have an account? "}
+              <button
+                onClick={toggleMode}
+                className="text-primary hover:underline font-medium transition-colors focus-visible"
+                disabled={loading}
+              >
+                {mode === 'signin' ? 'Sign Up' : 'Sign In'}
+              </button>
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    </>
   );
 };
 
