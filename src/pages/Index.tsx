@@ -3,7 +3,6 @@ import { lazy, Suspense } from "react";
 import { isMockingSupabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
-const AuthForm = lazy(() => import("@/components/AuthForm"));
 const TaskDashboard = lazy(() => import("@/features/tasks/components/TaskDashboard"));
 
 const LoadingSpinner = () => (
@@ -19,9 +18,15 @@ const Index = () => {
     return <LoadingSpinner />;
   }
 
+  // If user is not authenticated, redirect to auth page
+  if (!isMockingSupabase && !user) {
+    window.location.href = '/auth';
+    return <LoadingSpinner />;
+  }
+
   return (
     <Suspense fallback={<LoadingSpinner />}>
-      {isMockingSupabase || user ? <TaskDashboard /> : <AuthForm />}
+      <TaskDashboard />
     </Suspense>
   );
 };
