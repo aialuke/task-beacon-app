@@ -129,8 +129,8 @@ const ModernAuthForm: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-background via-background to-primary/5">
-      <div className="w-full max-w-md">
+    <div className="form-page-bg">
+      <div className="form-container">
         {/* Logo and Branding */}
         <div className="text-center mb-8 animate-fade-in">
           <div className="flex items-center justify-center gap-3 mb-2">
@@ -214,7 +214,7 @@ const ModernAuthForm: React.FC = () => {
               <Button
                 type="submit"
                 className={cn(
-                  "w-full hover:scale-[1.02] hover:shadow-custom-lg focus-visible", // Removed h-12
+                  "hover:scale-[1.02] hover:shadow-custom-lg focus-visible",
                   loading && "cursor-not-allowed"
                 )}
                 disabled={loading}

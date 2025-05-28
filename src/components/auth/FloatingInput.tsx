@@ -41,7 +41,7 @@ export const FloatingInput: React.FC<FloatingInputProps> = ({
         <label
           htmlFor={id}
           className={cn(
-            "absolute left-4 top-1/2 -translate-y-1/2 text-base font-medium text-muted-foreground pointer-events-none transition-opacity duration-300",
+            "form-label absolute left-4 top-1/2 -translate-y-1/2",
             error && "text-destructive"
           )}
         >
