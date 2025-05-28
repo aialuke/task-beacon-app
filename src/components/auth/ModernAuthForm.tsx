@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { FloatingInput } from './FloatingInput';
@@ -9,13 +9,10 @@ import { isValidEmail } from '@/lib/utils/validation';
 import { cn } from '@/lib/utils';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { AuthError } from '@supabase/supabase-js';
-import { useAuth } from '@/contexts/AuthContext';
-import { LoadingSpinner } from '@/components/ui/layout';
 
 type AuthMode = 'signin' | 'signup';
 
 const ModernAuthForm: React.FC = () => {
-  const { user, loading: authLoading } = useAuth();
   const [mode, setMode] = useState<AuthMode>('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -24,19 +21,8 @@ const ModernAuthForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string; name?: string }>({});
 
-  useEffect(() => {
-    if (!authLoading && user) {
-      window.location.href = '/';
-    }
-  }, [user, authLoading]);
-
-  const showToastError = (message: string) => {
-    toast.error(message);
-  };
-
-  const showToastSuccess = (message: string) => {
-    toast.success(message);
-  };
+  const nameInputRef = useRef<HTMLInputElement>(null);
+  const emailInputRef = useRef<HTMLInputElement>(null);
 
   const validateEmail = (value: string) => {
     if (!value) return 'Email is required';
@@ -98,7 +84,7 @@ const ModernAuthForm: React.FC = () => {
     e.preventDefault();
     
     if (!validateForm()) {
-      showToastError('Please fix the errors before continuing');
+      toast.error('Please fix the errors before continuing');
       return;
     }
 
@@ -106,24 +92,28 @@ const ModernAuthForm: React.FC = () => {
 
     try {
       if (isMockingSupabase) {
-        showToastSuccess('Using mock authentication');
+        toast.success('Using mock authentication');
         setTimeout(() => {
           window.location.href = '/';
         }, 1000);
         return;
       }
 
-      const { error } = mode === 'signin'
-        ? await supabase.auth.signInWithPassword({ email, password })
-        : await supabase.auth.signUp({ email, password });
-
-      if (error) throw error;
-
-      showToastSuccess(
-        mode === 'signin' 
-          ? 'Welcome back! Redirecting to your dashboard...' 
-          : 'Account created! Check your email for verification.'
-      );
+      if (mode === 'signin') {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        toast.success('Welcome back! Redirecting to your dashboard...');
+      } else {
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: { full_name: name },
+          },
+        });
+        if (error) throw error;
+        toast.success('Account created! Check your email for verification.');
+      }
 
       setTimeout(() => {
         window.location.href = '/';
@@ -131,9 +121,11 @@ const ModernAuthForm: React.FC = () => {
 
     } catch (error: unknown) {
       if (error instanceof AuthError) {
-        showToastError(error.message || 'An unexpected error occurred');
+        toast.error(error.message || 'An unexpected error occurred');
+      } else if (error instanceof Error) {
+        toast.error(error.message || 'An unexpected error occurred');
       } else {
-        showToastError('An unexpected error occurred');
+        toast.error('An unexpected error occurred');
       }
     } finally {
       setLoading(false);
@@ -141,137 +133,155 @@ const ModernAuthForm: React.FC = () => {
   };
 
   const toggleMode = () => {
-    setMode(mode === 'signin' ? 'signup' : 'signin');
+    setMode(prevMode => (prevMode === 'signin' ? 'signup' : 'signin'));
     setErrors({});
+    setEmail('');
+    setPassword('');
+    setName('');
+    setShowPassword(false);
   };
 
-  if (authLoading) {
-    return <LoadingSpinner />;
-  }
-
-  if (user) {
-    return null; // Will redirect due to useEffect
-  }
+  // Focus the first input field when mode changes
+  useEffect(() => {
+    if (mode === 'signup' && nameInputRef.current) {
+      nameInputRef.current.focus();
+    } else if (mode === 'signin' && emailInputRef.current) {
+      emailInputRef.current.focus();
+    }
+  }, [mode]);
 
   return (
-    <>
-      {/* Logo and Branding */}
-      <div className="text-center mb-8 animate-fade-in">
-        <div className="flex items-center justify-center gap-3 mb-2">
-          <img 
-            src="/assets/hourglass_logo.svg" 
-            alt="Flow State Logo" 
-            className="w-8 h-8"
-          />
-          <h1 className="header-text text-[22.77px] font-normal tracking-[0.0242em] text-gradient-primary">
-            Flow State
-          </h1>
-        </div>
-      </div>
-
-      {/* Card */}
-      <Card className="bg-background animate-fade-in border-none shadow-none">
-        <CardContent className="form-field-group space-y-6">
-          <form onSubmit={handleSubmit} className="form-field-group space-y-6">
-            {/* Name Input (only for signup) */}
-            {mode === 'signup' && (
-              <FloatingInput
-                id="name"
-                label="Name"
-                type="text"
-                value={name}
-                onChange={handleNameChange}
-                error={errors.name}
-                autoComplete="name"
-                disabled={loading}
-                required
-              />
-            )}
-
-            {/* Email Input */}
-            <FloatingInput
-              id="email"
-              label="Email Address"
-              type="email"
-              value={email}
-              onChange={handleEmailChange}
-              error={errors.email}
-              autoComplete="email"
-              disabled={loading}
-              required
+    <div className="min-h-screen flex items-center justify-center p-2 bg-gradient-to-br from-background via-background to-primary/5">
+      <div className="w-full max-w-sm">
+        {/* Logo and Branding */}
+        <div className="text-center mb-4 animate-fade-in">
+          <div className="flex items-center justify-center gap-2 mb-1">
+            <img 
+              src="/assets/hourglass_logo.svg" 
+              alt="Flow State Logo" 
+              className="w-10 h-10"
             />
+            <h1 className="text-[26.19px] font-normal tracking-[0.02662em] text-gradient-primary"> {/* Updated font size to 26.19px, tracking to 0.02662em */}
+              Flow State
+            </h1>
+          </div>
+        </div>
 
-            {/* Password Input */}
-            <div className="relative">
+        {/* Card */}
+        <Card className="bg-background animate-fade-in border-none">
+          <CardContent className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Name Input (only for signup) */}
+              {mode === 'signup' && (
+                <FloatingInput
+                  id="name"
+                  label="Name"
+                  type="text"
+                  value={name}
+                  onChange={handleNameChange}
+                  error={errors.name}
+                  autoComplete="name"
+                  disabled={loading}
+                  required
+                  className="h-10 text-sm"
+                  ref={nameInputRef}
+                />
+              )}
+
+              {/* Email Input */}
               <FloatingInput
-                id="password"
-                label="Password"
-                type={showPassword ? 'text' : 'password'}
-                value={password}
-                onChange={handlePasswordChange}
-                error={errors.password}
-                autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
+                id="email"
+                label="Email Address"
+                type="email"
+                value={email}
+                onChange={handleEmailChange}
+                error={errors.email}
+                autoComplete="email"
                 disabled={loading}
                 required
+                className="h-10 text-sm"
+                ref={emailInputRef}
               />
-              
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors focus-visible"
+
+              {/* Password Input */}
+              <div className="relative">
+                <FloatingInput
+                  id="password"
+                  label="Password"
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={handlePasswordChange}
+                  error={errors.password}
+                  autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
+                  disabled={loading}
+                  required
+                  className="h-10 text-sm"
+                />
+                
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors"
+                  disabled={loading}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
+
+              {/* Password Strength Indicator for Signup */}
+              {mode === 'signup' && (
+                <PasswordStrengthIndicator 
+                  password={password} 
+                  show={password.length > 0} 
+                />
+              )}
+
+              {/* Submit Button */}
+              <Button
+                type="submit"
+                className={cn(
+                  "w-full h-10 text-sm font-medium transition-all duration-300",
+                  "hover:scale-[1.02] hover:shadow-lg",
+                  loading && "cursor-not-allowed"
+                )}
                 disabled={loading}
               >
-                {showPassword ? (<EyeOff className="w-5 h-5 icon-stroked" />) : (<Eye className="w-5 h-5 icon-stroked" />)}
-                <span className="sr-only">{showPassword ? 'Hide password' : 'Show password'}</span>
-              </button>
+                {loading ? (
+                  <div className="flex items-center space-x-2">
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                    <span>
+                      {mode === 'signin' ? 'Signing in...' : 'Creating account...'}
+                    </span>
+                  </div>
+                ) : (
+                  mode === 'signin' ? 'Sign In' : 'Create Account'
+                )}
+              </Button>
+            </form>
+
+            {/* Mode Toggle */}
+            <div className="text-center">
+              <p className="text-xs text-muted-foreground">
+                {mode === 'signin' ? "Don't have an account? " : "Already have an account? "}
+                <button
+                  onClick={toggleMode}
+                  className="text-primary hover:underline font-medium transition-colors"
+                  disabled={loading}
+                  aria-label={mode === 'signin' ? 'Switch to sign up' : 'Switch to sign in'}
+                >
+                  {mode === 'signin' ? 'Sign Up' : 'Sign In'}
+                </button>
+              </p>
             </div>
-
-            {/* Password Strength Indicator for Signup */}
-            {mode === 'signup' && (
-              <PasswordStrengthIndicator 
-                password={password} 
-                show={password.length > 0} 
-              />
-            )}
-
-            {/* Submit Button */}
-            <Button
-              type="submit"
-              className={cn(
-                "hover:shadow-custom-lg",
-                loading && "cursor-not-allowed"
-              )}
-              disabled={loading}
-            >
-              {loading ? (
-                <div className="flex items-center space-x-2">
-                  <Loader2 className="w-4 h-4 animate-spin icon-stroked" />
-                  <span>
-                    {mode === 'signin' ? 'Signing in...' : 'Creating account...'}
-                  </span>
-                </div>
-              ) : (
-                mode === 'signin' ? 'Sign In' : 'Create Account'
-              )}
-            </Button>
-          </form>
-
-          {/* Mode Toggle */}
-          <div className="form-mode-toggle">
-            <p>
-              {mode === 'signin' ? "Don't have an account? " : "Already have an account? "}
-              <button
-                onClick={toggleMode}
-                className="text-primary hover:underline font-medium transition-colors focus-visible"
-                disabled={loading}
-              >
-                {mode === 'signin' ? 'Sign Up' : 'Sign In'}
-              </button>
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-    </>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
   );
 };
 

@@ -1,3 +1,4 @@
+
 /* src/styles/utilities/icons.css - Icon styling utilities */
 @layer utilities {
   /* ===== ENHANCED ICON UTILITIES ===== */
@@ -8,12 +9,5 @@
   .icon-stroked {
     stroke: currentColor;
     fill: none;
-  }
-
-  /* High contrast mode support for SVGs */
-  @media (forced-colors: active) {
-    svg {
-      forced-color-adjust: auto;
-    }
   }
 }
