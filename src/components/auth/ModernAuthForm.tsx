@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card'; // Removed CardHeader import
+import { Card, CardContent } from '@/components/ui/card';
 import { FloatingInput } from './FloatingInput';
 import { PasswordStrengthIndicator } from './PasswordStrengthIndicator';
 import { supabase, isMockingSupabase } from '@/integrations/supabase/client';
@@ -143,9 +143,9 @@ const ModernAuthForm: React.FC = () => {
             <img 
               src="/assets/hourglass_logo.svg" 
               alt="Flow State Logo" 
-              className="w-8 h-8"
+              className="w-10 h-10" // Increased from w-8 h-8 to w-10 h-10 (20% increase)
             />
-            <h1 className="text-lg font-bold text-gradient-primary">
+            <h1 className="text-lg font-semibold text-gradient-primary"> {/* Removed font-manrope, kept font-semibold */}
               Flow State
             </h1>
           </div>
