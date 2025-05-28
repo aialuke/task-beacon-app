@@ -1,9 +1,13 @@
-
 /* src/styles/components/forms.css - Simplified form styling for consistent theming */
 @layer components {
   /* ===== FORM STYLES ===== */
   .form-field-group {
     @apply space-y-2;
+  }
+
+  /* ===== MODE TOGGLE STYLES ===== */
+  .form-mode-toggle {
+    @apply text-center text-sm;
   }
 
   /* ===== MINIMAL FORM FIELD OVERRIDES ===== */

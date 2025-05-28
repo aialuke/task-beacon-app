@@ -194,7 +194,7 @@ const ModernAuthForm: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors focus-visible"
                   disabled={loading}
                 >
                   {showPassword ? (<EyeOff className="w-5 h-5 icon-stroked" />) : (<Eye className="w-5 h-5 icon-stroked" />)}
@@ -214,7 +214,7 @@ const ModernAuthForm: React.FC = () => {
               <Button
                 type="submit"
                 className={cn(
-                  "w-full h-12 hover:scale-[1.02] hover:shadow-custom-lg focus-visible",
+                  "w-full hover:scale-[1.02] hover:shadow-custom-lg focus-visible", // Removed h-12
                   loading && "cursor-not-allowed"
                 )}
                 disabled={loading}
@@ -233,8 +233,8 @@ const ModernAuthForm: React.FC = () => {
             </form>
 
             {/* Mode Toggle */}
-            <div className="text-center">
-              <p className="text-sm">
+            <div className="form-mode-toggle">
+              <p>
                 {mode === 'signin' ? "Don't have an account? " : "Already have an account? "}
                 <button
                   onClick={toggleMode}
