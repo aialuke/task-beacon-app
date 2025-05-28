@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -112,16 +111,16 @@ export const ModernAuthForm: React.FC = () => {
       <div className="w-full max-w-md">
         {/* Logo and Branding */}
         <div className="text-center mb-8 animate-fade-in">
-          <div className="flex items-center justify-center mb-4">
+          <div className="flex items-center justify-center gap-3 mb-2">
             <img 
               src="/assets/hourglass_logo.svg" 
               alt="Flow State Logo" 
-              className="w-16 h-16 text-primary"
+              className="w-8 h-8"
             />
+            <h1 className="text-xl font-bold text-gradient-primary">
+              Flow State
+            </h1>
           </div>
-          <h1 className="text-3xl font-bold text-gradient-primary mb-2">
-            Flow State
-          </h1>
           <p className="text-muted-foreground text-sm">
             {mode === 'signin' 
               ? 'Welcome back! Sign in to continue your journey.' 
@@ -228,11 +227,6 @@ export const ModernAuthForm: React.FC = () => {
             </div>
           </CardContent>
         </Card>
-
-        {/* Footer */}
-        <div className="text-center mt-6 text-xs text-muted-foreground">
-          By continuing, you agree to our Terms of Service and Privacy Policy.
-        </div>
       </div>
     </div>
   );
