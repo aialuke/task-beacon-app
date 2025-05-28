@@ -152,7 +152,7 @@ const ModernAuthForm: React.FC = () => {
         </div>
 
         {/* Glass Morphism Card */}
-        <Card className="bg-background/40 backdrop-blur-xl border-border/50 shadow-xl animate-scale-in">
+        <Card className="bg-background/40 backdrop-blur-xl shadow-xl animate-scale-in border-none"> {/* Removed border-border/50, added border-none */}
           <CardHeader className="text-center pb-2">
             <h2 className="text-xl font-semibold">
               {mode === 'signin' ? 'Sign In' : 'Create Account'}
@@ -173,7 +173,7 @@ const ModernAuthForm: React.FC = () => {
                   autoComplete="name"
                   disabled={loading}
                   required
-                  className="h-10 text-sm" // Adjusted to match new default height
+                  className="h-10 text-sm"
                 />
               )}
 
@@ -188,7 +188,7 @@ const ModernAuthForm: React.FC = () => {
                 autoComplete="email"
                 disabled={loading}
                 required
-                className="h-10 text-sm" // Adjusted to match new default height
+                className="h-10 text-sm"
               />
 
               {/* Password Input */}
@@ -203,7 +203,7 @@ const ModernAuthForm: React.FC = () => {
                   autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
                   disabled={loading}
                   required
-                  className="h-10 text-sm" // Adjusted to match new default height
+                  className="h-10 text-sm"
                 />
                 
                 <button
