@@ -1,7 +1,8 @@
+
 import { useState, useCallback } from "react";
 
 interface FormValues {
-  [key: string]: string;
+  [key: string]: string | boolean;
 }
 
 interface FormErrors {
@@ -12,18 +13,19 @@ export function useFormWithValidation<T extends FormValues>(initialValues: T) {
   const [values, setValues] = useState<T>(initialValues);
   const [errors, setErrors] = useState<FormErrors>({});
 
-  const validateField = (name: string, value: string): string | null => {
+  const validateField = (name: string, value: string | boolean): string | null => {
+    if (typeof value === 'boolean') return null;
     if (!value) return `${name} is required`;
     return null;
   };
 
-  const handleChange = useCallback((name: string, value: string) => {
+  const handleChange = useCallback((name: string, value: string | boolean) => {
     setValues((prev) => ({ ...prev, [name]: value }));
     const error = validateField(name, value);
     setErrors((prev) => ({ ...prev, [name]: error }));
   }, []);
 
-  const validateForm = (formData: T): boolean => { // Line 23: Replace 'any' with 'T'
+  const validateForm = (formData: T): boolean => {
     let isValid = true;
     const newErrors: FormErrors = {};
     for (const [name, value] of Object.entries(formData)) {
