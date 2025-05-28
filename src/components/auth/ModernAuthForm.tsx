@@ -161,7 +161,7 @@ const ModernAuthForm: React.FC = () => {
               alt="Flow State Logo" 
               className="w-10 h-10"
             />
-            <h1 className="text-[22.77px] font-normal tracking-[0.0242em] text-gradient-primary"> {/* Updated font size to 22.77px, tracking to 0.0242em */}
+            <h1 className="text-[26.19px] font-normal tracking-[0.02662em] text-gradient-primary"> {/* Updated font size to 26.19px, tracking to 0.02662em */}
               Flow State
             </h1>
           </div>
