@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { FloatingInput } from './FloatingInput';
@@ -20,6 +20,9 @@ const ModernAuthForm: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string; name?: string }>({});
+
+  const nameInputRef = useRef<HTMLInputElement>(null);
+  const emailInputRef = useRef<HTMLInputElement>(null);
 
   const validateEmail = (value: string) => {
     if (!value) return 'Email is required';
@@ -130,9 +133,22 @@ const ModernAuthForm: React.FC = () => {
   };
 
   const toggleMode = () => {
-    setMode(mode === 'signin' ? 'signup' : 'signin');
+    setMode(prevMode => (prevMode === 'signin' ? 'signup' : 'signin'));
     setErrors({});
+    setEmail('');
+    setPassword('');
+    setName('');
+    setShowPassword(false);
   };
+
+  // Focus the first input field when mode changes
+  useEffect(() => {
+    if (mode === 'signup' && nameInputRef.current) {
+      nameInputRef.current.focus();
+    } else if (mode === 'signin' && emailInputRef.current) {
+      emailInputRef.current.focus();
+    }
+  }, [mode]);
 
   return (
     <div className="min-h-screen flex items-center justify-center p-2 bg-gradient-to-br from-background via-background to-primary/5">
@@ -143,16 +159,16 @@ const ModernAuthForm: React.FC = () => {
             <img 
               src="/assets/hourglass_logo.svg" 
               alt="Flow State Logo" 
-              className="w-10 h-10" // Increased from w-8 h-8 to w-10 h-10 (20% increase)
+              className="w-10 h-10"
             />
-            <h1 className="text-lg font-semibold text-gradient-primary"> {/* Removed font-manrope, kept font-semibold */}
+            <h1 className="text-lg font-semibold text-gradient-primary">
               Flow State
             </h1>
           </div>
         </div>
 
-        {/* Glass Morphism Card */}
-        <Card className="bg-gray-800/70 animate-scale-in border-none">
+        {/* Card */}
+        <Card className="bg-card/70 animate-fade-in border-none"> {/* Changed bg-gray-800/70 to bg-card/70, animate-scale-in to animate-fade-in */}
           <CardContent className="space-y-4">
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Name Input (only for signup) */}
@@ -168,6 +184,7 @@ const ModernAuthForm: React.FC = () => {
                   disabled={loading}
                   required
                   className="h-10 text-sm"
+                  ref={nameInputRef} // Added ref for focus management
                 />
               )}
 
@@ -183,6 +200,7 @@ const ModernAuthForm: React.FC = () => {
                 disabled={loading}
                 required
                 className="h-10 text-sm"
+                ref={emailInputRef} // Added ref for focus management
               />
 
               {/* Password Input */}
@@ -205,6 +223,7 @@ const ModernAuthForm: React.FC = () => {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors"
                   disabled={loading}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'} // Added aria-label
                 >
                   {showPassword ? (
                     <EyeOff className="w-4 h-4" />
@@ -248,13 +267,12 @@ const ModernAuthForm: React.FC = () => {
             {/* Mode Toggle */}
             <div className="text-center">
               <p className="text-xs text-muted-foreground">
-                {mode === 'signin' 
-                  ? "Don't have an account? " 
-                  : "Already have an account? "}
+                {mode === 'signin' ? "Don't have an account? " : "Already have an account? "}
                 <button
                   onClick={toggleMode}
                   className="text-primary hover:underline font-medium transition-colors"
                   disabled={loading}
+                  aria-label={mode === 'signin' ? 'Switch to sign up' : 'Switch to sign in'} // Added aria-label
                 >
                   {mode === 'signin' ? 'Sign Up' : 'Sign In'}
                 </button>
