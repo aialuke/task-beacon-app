@@ -161,14 +161,14 @@ const ModernAuthForm: React.FC = () => {
               alt="Flow State Logo" 
               className="w-10 h-10"
             />
-            <h1 className="text-lg font-semibold text-gradient-primary">
+            <h1 className="text-[19.8px] font-normal tracking-[0.022em] text-gradient-primary"> {/* Changed text-lg to text-[19.8px], font-semibold to font-normal, added tracking-[0.022em] */}
               Flow State
             </h1>
           </div>
         </div>
 
         {/* Card */}
-        <Card className="bg-background animate-fade-in border-none"> {/* Changed bg-card/70 to bg-background */}
+        <Card className="bg-background animate-fade-in border-none">
           <CardContent className="space-y-4">
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Name Input (only for signup) */}
