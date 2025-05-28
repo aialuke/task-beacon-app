@@ -2,6 +2,7 @@
 import { memo, useMemo } from "react";
 import { animated, SpringValue } from "@react-spring/web";
 import { TaskStatus } from "@/types";
+import { getTimerColor } from "@/lib/uiUtils";
 
 /**
  * TimerRing Component

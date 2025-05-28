@@ -20,6 +20,8 @@ export function useMobileViewport(): MobileViewportState {
   });
 
   useEffect(() => {
+    const initialHeight = window.innerHeight;
+    
     const updateViewportState = () => {
       const currentHeight = window.visualViewport?.height || window.innerHeight;
       const screenHeight = window.innerHeight;

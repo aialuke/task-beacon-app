@@ -1,16 +1,18 @@
-import { useState, useEffect, ReactNode } from "react";
+
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/lib/toast";
 import { User } from "@/types";
 import { getCurrentUser } from "@/integrations/supabase/api/users.api";
-import { AuthContext } from "@/hooks/useAuth.ts"; // Import AuthContext
 
-export interface AuthContextType {
+interface AuthContextType {
   user: User | null;
   loading: boolean;
   error: Error | null;
   signOut: () => Promise<void>;
 }
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -73,4 +75,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       {children}
     </AuthContext.Provider>
   );
+}
+
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 }

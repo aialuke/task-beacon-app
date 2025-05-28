@@ -1,3 +1,4 @@
+
 import { toast } from "@/hooks/use-toast";
 import { ApiError } from "@/integrations/supabase/types/api.types";
 
@@ -24,15 +25,6 @@ const defaultOptions: ErrorHandlingOptions = {
 };
 
 /**
- * Custom error interface that extends Error with additional properties
- */
-interface CustomError extends Error {
-  code?: string;
-  details?: unknown;
-  originalError?: unknown;
-}
-
-/**
  * Process API errors in a standardized way
  * 
  * @param error - The error to process
@@ -43,17 +35,17 @@ export const handleApiError = (
   error: Error | ApiError | unknown, 
   customMessage?: string,
   options: ErrorHandlingOptions = {}
-): CustomError => { // Use CustomError instead of Error
+): Error => {
   // Merge with default options
   const opts = { ...defaultOptions, ...options };
   
   let errorMessage = customMessage || "An unexpected error occurred";
-  let errorObject: CustomError; // Use CustomError
+  let errorObject: Error;
   
   // Process different error types
   if (error instanceof Error) {
     errorMessage = customMessage || error.message;
-    errorObject = error as CustomError; // Cast to CustomError since it extends Error
+    errorObject = error;
   } else if (
     typeof error === 'object' && 
     error !== null && 
@@ -62,19 +54,19 @@ export const handleApiError = (
   ) {
     // Handle API error objects
     errorMessage = customMessage || error.message;
-    errorObject = new Error(errorMessage) as CustomError; // Cast to CustomError
+    errorObject = new Error(errorMessage);
     
     // Copy properties from ApiError
     if ('code' in error) {
-      errorObject.code = error.code as string;
+      (errorObject as any).code = error.code;
     }
     if ('details' in error) {
-      errorObject.details = error.details;
+      (errorObject as any).details = error.details;
     }
   } else {
     // Handle unexpected error types
-    errorObject = new Error(errorMessage) as CustomError;
-    errorObject.originalError = error;
+    errorObject = new Error(errorMessage);
+    (errorObject as any).originalError = error;
   }
   
   // Display error toast if enabled
@@ -128,14 +120,14 @@ export async function safeAsync<T>(
  * @param options - Error handling options
  * @returns A wrapped function with error handling
  */
-export function withErrorHandling<T extends (...args: never[]) => Promise<R>, R>(
+export function withErrorHandling<T extends (...args: any[]) => Promise<any>>(
   fn: T,
   errorMessage?: string,
   options?: ErrorHandlingOptions
-): (...args: Parameters<T>) => Promise<R | null> {
-  return async (...args: Parameters<T>): Promise<R | null> => {
+): (...args: Parameters<T>) => Promise<ReturnType<T> | null> {
+  return async (...args: Parameters<T>): Promise<ReturnType<T> | null> => {
     try {
-      return await fn(...args); // Now correctly typed as R
+      return await fn(...args);
     } catch (error) {
       handleApiError(error, errorMessage, options);
       return null;

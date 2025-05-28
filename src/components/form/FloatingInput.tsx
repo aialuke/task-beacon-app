@@ -1,70 +1,99 @@
-import * as React from "react";
+import { Input } from "@/components/ui/input";
+import { useState, ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import { ReactNode } from "react";
+import { AnimatedCharacterCount } from "./AnimatedCharacterCount";
 
 interface FloatingInputProps {
   id: string;
   type?: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  placeholder: string;
   label: string;
   icon?: ReactNode;
   maxLength?: number;
   required?: boolean;
   autoFocus?: boolean;
   className?: string;
-  error?: string;
-  placeholder?: string; // Add placeholder prop
 }
 
-const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputProps>(
-  ({ label, type = "text", className, error, placeholder, ...props }, ref) => {
-    const [isFocused, setIsFocused] = React.useState(false);
-    const [value, setValue] = React.useState("");
-    const inputId = React.useId();
+export function FloatingInput({
+  id,
+  type = "text",
+  value,
+  onChange,
+  placeholder,
+  label,
+  icon,
+  maxLength,
+  required = false,
+  autoFocus = false,
+  className
+}: FloatingInputProps) {
+  const [isFocused, setIsFocused] = useState(false);
+  const hasValue = value.length > 0;
+  const isFloating = isFocused || hasValue;
+  const showCounter = maxLength && (isFocused || hasValue);
 
-    const handleFocus = () => setIsFocused(true);
-    const handleBlur = () => setIsFocused(!!value);
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setValue(e.target.value);
-    };
-
-    return (
+  return (
+    <div className={cn("relative group", className)}>
       <div className="relative">
-        <input
-          type={type}
-          id={inputId}
-          className={cn(
-            "peer block w-full appearance-none border-0 border-b-2 border-input bg-transparent px-0 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-0",
-            error && "border-destructive focus:border-destructive",
-            className
-          )}
-          ref={ref}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          onChange={handleChange}
-          placeholder={placeholder} // Pass placeholder to input
-          {...props}
-        />
-        {label && (
-          <label
-            htmlFor={inputId}
-            className={cn(
-              "absolute left-0 top-2.5 -translate-y-5 scale-75 transform text-sm font-semibold text-muted-foreground transition-all duration-150 ease-in-out peer-focus:-translate-y-5 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-primary",
-              (isFocused || value) && "-translate-y-5 scale-75 font-medium",
-              error && "text-destructive peer-focus:text-destructive"
-            )}
-          >
-            {label}
-          </label>
+        {icon && (
+          <div className={cn(
+            "absolute left-3 top-1/2 transform -translate-y-1/2 z-10 transition-all duration-300",
+            isFloating ? "text-primary scale-95" : "text-muted-foreground"
+          )}>
+            {icon}
+          </div>
         )}
-        {error && <p className="mt-1 text-xs text-destructive">{error}</p>}
+        
+        <Input
+          id={id}
+          type={type}
+          value={value}
+          onChange={onChange}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          placeholder=""
+          maxLength={maxLength}
+          required={required}
+          autoFocus={autoFocus}
+          className={cn(
+            "peer h-14 pt-6 pb-2 bg-background/60 backdrop-blur-sm border-border/40 rounded-2xl transition-all duration-300 focus:bg-background/80 focus:border-primary/60 focus:shadow-lg focus:shadow-primary/10 hover:bg-background/70 hover:border-border/60",
+            icon ? "pl-11" : "pl-4",
+            maxLength ? "pr-16" : "pr-4"
+          )}
+        />
+        
+        <label
+          htmlFor={id}
+          className={cn(
+            "absolute transition-all duration-300 pointer-events-none select-none font-medium",
+            icon ? "left-11" : "left-4",
+            isFloating
+              ? "top-2 text-xs text-primary"
+              : "top-1/2 -translate-y-1/2 text-sm text-muted-foreground"
+          )}
+        >
+          {label}
+        </label>
+
+        {/* Character counter inside input field */}
+        {showCounter && (
+          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 z-10">
+            <AnimatedCharacterCount 
+              current={value.length} 
+              max={maxLength} 
+            />
+          </div>
+        )}
       </div>
-    );
-  }
-);
 
-FloatingInput.displayName = "FloatingInput";
-
-export { FloatingInput };
+      {/* Enhanced focus ring */}
+      <div className={cn(
+        "absolute inset-0 rounded-2xl transition-all duration-300 pointer-events-none",
+        isFocused && "ring-2 ring-primary/30 ring-offset-2 ring-offset-background"
+      )} />
+    </div>
+  );
+}

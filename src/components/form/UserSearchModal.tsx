@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { EnhancedUserSearch } from "@/components/form/EnhancedUserSearch";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
@@ -16,7 +16,7 @@ export function UserSearchModal({
   value,
   onChange
 }: UserSearchModalProps) {
-  const [tempValue] = React.useState(value);
+  const [tempValue, setTempValue] = useState(value);
 
   const handleUserSelect = (selectedValue: string) => {
     onChange(selectedValue);

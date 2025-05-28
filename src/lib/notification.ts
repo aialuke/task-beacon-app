@@ -6,7 +6,7 @@ export const triggerHapticFeedback = () => {
   if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
     try {
       navigator.vibrate(200);
-    } catch {
+    } catch (error) {
       console.log('Haptic feedback not supported or permission denied');
     }
   }
