@@ -53,7 +53,7 @@ const ModernAuthForm: React.FC = () => {
     const passwordError = validatePassword(password);
     
     setErrors({
-      email:emailError,
+      email: emailError,
       password: passwordError,
     });
 
@@ -128,11 +128,6 @@ const ModernAuthForm: React.FC = () => {
               Flow State
             </h1>
           </div>
-          <p className="text-muted-foreground text-sm">
-            {mode === 'signin' 
-              ? 'Welcome back! Sign in to continue your journey.' 
-              : 'Start your productivity journey today.'}
-          </p>
         </div>
 
         {/* Glass Morphism Card */}
