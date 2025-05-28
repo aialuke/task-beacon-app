@@ -1,53 +1,16 @@
+/* src/styles/base/accessibility.css - Base accessibility styles for global focus, high contrast mode, and color scheme indicators. 
+   Enhanced focus utilities and reduced motion preferences are handled in utilities/accessibility/*. */
 
-/* src/styles/base/accessibility.css - Essential accessibility base styles */
-
-/* Focus management */
-:focus-visible {
-  outline: 2px solid hsl(var(--primary));
-  outline-offset: 2px;
-}
-
-/* Keyboard navigation improvements */
-[tabindex]:not([tabindex="-1"]):focus-visible {
-  outline: 2px solid hsl(var(--primary));
-  outline-offset: 2px;
-}
-
-/* High contrast mode support */
-@media (forced-colors: active) {
-  .timer-ring {
-    stroke: CanvasText;
-  }
+@layer base {
+  /* High contrast mode support */
+  @media (forced-colors: active) {
+    .timer-ring {
+      stroke: CanvasText;
+    }
   
-  button, 
-  a[role="button"],
-  .btn-primary,
-  .btn-secondary {
-    border: 1px solid CanvasText;
+    button, 
+    a[role="button"] {
+      border: 1px solid CanvasText;
+    }
   }
-  
-  svg {
-    forced-color-adjust: auto;
-  }
-}
-
-/* Respect user's motion preferences */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-/* Color scheme indicators */
-.dark {
-  color-scheme: dark;
-}
-
-.light {
-  color-scheme: light;
 }
