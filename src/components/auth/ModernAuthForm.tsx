@@ -152,7 +152,7 @@ const ModernAuthForm: React.FC = () => {
         </div>
 
         {/* Glass Morphism Card */}
-        <Card className="bg-background/40 backdrop-blur-xl shadow-xl animate-scale-in border-none"> {/* Removed border-border/50, added border-none */}
+        <Card className="bg-background/40 backdrop-blur-xl animate-scale-in border-none"> {/* Removed shadow-xl */}
           <CardHeader className="text-center pb-2">
             <h2 className="text-xl font-semibold">
               {mode === 'signin' ? 'Sign In' : 'Create Account'}
