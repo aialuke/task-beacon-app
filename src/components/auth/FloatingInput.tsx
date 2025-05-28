@@ -70,7 +70,7 @@ export const FloatingInput: React.FC<FloatingInputProps> = ({
       />
       
       {error && (
-        <p className="mt-2 text-sm text-error animate-fade-in">
+        <p className="form-error-text">
           {error}
         </p>
       )}

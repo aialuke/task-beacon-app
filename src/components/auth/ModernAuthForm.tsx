@@ -21,6 +21,14 @@ const ModernAuthForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string; name?: string }>({});
 
+  const showToastError = (message: string) => {
+    toast.error(message);
+  };
+
+  const showToastSuccess = (message: string) => {
+    toast.success(message);
+  };
+
   const validateEmail = (value: string) => {
     if (!value) return 'Email is required';
     if (!isValidEmail(value)) return 'Please enter a valid email address';
@@ -81,7 +89,7 @@ const ModernAuthForm: React.FC = () => {
     e.preventDefault();
     
     if (!validateForm()) {
-      toast.error('Please fix the errors before continuing');
+      showToastError('Please fix the errors before continuing');
       return;
     }
 
@@ -89,7 +97,7 @@ const ModernAuthForm: React.FC = () => {
 
     try {
       if (isMockingSupabase) {
-        toast.success('Using mock authentication');
+        showToastSuccess('Using mock authentication');
         setTimeout(() => {
           window.location.href = '/';
         }, 1000);
@@ -102,7 +110,7 @@ const ModernAuthForm: React.FC = () => {
 
       if (error) throw error;
 
-      toast.success(
+      showToastSuccess(
         mode === 'signin' 
           ? 'Welcome back! Redirecting to your dashboard...' 
           : 'Account created! Check your email for verification.'
@@ -114,9 +122,9 @@ const ModernAuthForm: React.FC = () => {
 
     } catch (error: unknown) {
       if (error instanceof AuthError) {
-        toast.error(error.message || 'An unexpected error occurred');
+        showToastError(error.message || 'An unexpected error occurred');
       } else {
-        toast.error('An unexpected error occurred');
+        showToastError('An unexpected error occurred');
       }
     } finally {
       setLoading(false);
@@ -214,7 +222,7 @@ const ModernAuthForm: React.FC = () => {
               <Button
                 type="submit"
                 className={cn(
-                  "hover:scale-[1.02] hover:shadow-custom-lg focus-visible",
+                  "hover:shadow-custom-lg", // Removed hover:scale-[1.02], focus-visible
                   loading && "cursor-not-allowed"
                 )}
                 disabled={loading}
