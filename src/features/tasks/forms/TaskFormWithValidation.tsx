@@ -1,4 +1,6 @@
-import { useFormWithValidation } from "@/components/form/useFormWithValidation";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { createTaskSchema, CreateTaskInput } from "@/features/tasks/schemas/taskSchema";
 import { Form } from "@/components/ui/form";
 import { FormField } from "@/components/ui/form";
@@ -23,8 +25,8 @@ export default function TaskFormWithValidation({ onSubmit, onClose }: TaskFormPr
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   
-  const form = useFormWithValidation<CreateTaskInput>({
-    schema: createTaskSchema,
+  const form = useForm<CreateTaskInput>({
+    resolver: zodResolver(createTaskSchema),
     defaultValues: {
       title: "",
       description: "",
@@ -33,10 +35,6 @@ export default function TaskFormWithValidation({ onSubmit, onClose }: TaskFormPr
       pinned: false,
       assigneeId: "",
     },
-    onSubmit: async (data) => {
-      await onSubmit({ ...data, photo });
-    },
-    successMessage: "Task created successfully",
   });
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,9 +46,13 @@ export default function TaskFormWithValidation({ onSubmit, onClose }: TaskFormPr
     }
   };
 
+  const handleFormSubmit = async (data: CreateTaskInput) => {
+    await onSubmit({ ...data, photo });
+  };
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit((data) => form.onSubmit(data))} className="space-y-4">
+      <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="title"
@@ -130,7 +132,7 @@ export default function TaskFormWithValidation({ onSubmit, onClose }: TaskFormPr
                 <UserSearchField
                   value={field.value}
                   onChange={field.onChange}
-                  disabled={form.isSubmitting}
+                  disabled={form.formState.isSubmitting}
                 />
               </FormControl>
               <FormMessage />
@@ -139,8 +141,9 @@ export default function TaskFormWithValidation({ onSubmit, onClose }: TaskFormPr
         />
         
         <FormActions
+          onSubmit={form.handleSubmit(handleFormSubmit)}
           onCancel={onClose}
-          isSubmitting={form.isSubmitting}
+          isSubmitting={form.formState.isSubmitting}
         />
       </form>
     </Form>
