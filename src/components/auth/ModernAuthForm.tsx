@@ -168,7 +168,7 @@ const ModernAuthForm: React.FC = () => {
         </div>
 
         {/* Card */}
-        <Card className="bg-card/70 animate-fade-in border-none"> {/* Changed bg-gray-800/70 to bg-card/70, animate-scale-in to animate-fade-in */}
+        <Card className="bg-background animate-fade-in border-none"> {/* Changed bg-card/70 to bg-background */}
           <CardContent className="space-y-4">
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Name Input (only for signup) */}
@@ -184,7 +184,7 @@ const ModernAuthForm: React.FC = () => {
                   disabled={loading}
                   required
                   className="h-10 text-sm"
-                  ref={nameInputRef} // Added ref for focus management
+                  ref={nameInputRef}
                 />
               )}
 
@@ -200,7 +200,7 @@ const ModernAuthForm: React.FC = () => {
                 disabled={loading}
                 required
                 className="h-10 text-sm"
-                ref={emailInputRef} // Added ref for focus management
+                ref={emailInputRef}
               />
 
               {/* Password Input */}
@@ -223,7 +223,7 @@ const ModernAuthForm: React.FC = () => {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors"
                   disabled={loading}
-                  aria-label={showPassword ? 'Hide password' : 'Show password'} // Added aria-label
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? (
                     <EyeOff className="w-4 h-4" />
@@ -272,7 +272,7 @@ const ModernAuthForm: React.FC = () => {
                   onClick={toggleMode}
                   className="text-primary hover:underline font-medium transition-colors"
                   disabled={loading}
-                  aria-label={mode === 'signin' ? 'Switch to sign up' : 'Switch to sign in'} // Added aria-label
+                  aria-label={mode === 'signin' ? 'Switch to sign up' : 'Switch to sign in'}
                 >
                   {mode === 'signin' ? 'Sign Up' : 'Sign In'}
                 </button>
