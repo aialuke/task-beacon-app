@@ -11,7 +11,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import { LoadingSpinner } from "@/components/ui/layout";
 
 const NotFound = lazy(() => import("./pages/NotFound"));
-const TaskDetailsPage = lazy(() => import("./features/tasks/pages/TaskDetailsPage"));
+const TaskDetailsPage = lazy(() => import("./pages/TaskDetailsPage"));
 const CreateTaskPage = lazy(() => import("./pages/CreateTaskPage"));
 const FollowUpTaskPage = lazy(() => import("./pages/FollowUpTaskPage"));
 
