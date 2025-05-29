@@ -1,18 +1,6 @@
 
 /* src/styles/base/accessibility.css - Essential accessibility base styles */
 
-/* Focus management */
-:focus-visible {
-  outline: 2px solid hsl(var(--primary));
-  outline-offset: 2px;
-}
-
-/* Keyboard navigation improvements */
-[tabindex]:not([tabindex="-1"]):focus-visible {
-  outline: 2px solid hsl(var(--primary));
-  outline-offset: 2px;
-}
-
 /* High contrast mode support */
 @media (forced-colors: active) {
   .timer-ring {

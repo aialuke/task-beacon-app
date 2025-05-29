@@ -1,4 +1,3 @@
-
 // tailwind.config.ts
 import type { Config } from "tailwindcss";
 import animate from "tailwindcss-animate";
@@ -7,47 +6,26 @@ export default {
   darkMode: ["class"],
   content: ["./src/**/*.{ts,tsx}"],
   safelist: [
+    // Status colors - keep these as they're dynamically used
     'text-destructive',
     'text-success',
     'text-primary',
-    'text-gray-600',
-    'text-gray-900',
-    'text-gray-500',
-    'text-foreground',
-    'text-white',
-    'bg-gray-50',
-    'bg-white',
-    'bg-primary',
-    'bg-card',
-    'bg-popover',
-    'bg-background',
-    'border-gray-200',
-    'border-gray-300',
-    'border-secondary',
-    'border',
-    'border-primary',
-    'hover:border-secondary',
-    'hover:underline',
     'bg-destructive', 
     'bg-success',
     'fill-destructive',
     'fill-success',
     'fill-primary',
-    'fill-white',
-    'fill-gray-500',
-    'fill-gray-900',
     'stroke-destructive',
     'stroke-success',
     'stroke-primary',
-    'stroke-white',
-    'stroke-gray-500',
-    'stroke-gray-900',
-    'rounded-full',
-    'rounded-xl',
-    'rounded-lg',
-    'rounded-md',
-    'rounded-sm',
-    // Dark mode classes
+    // Task status colors - dynamically applied
+    'bg-task-pending',
+    'bg-task-overdue', 
+    'bg-task-complete',
+    'text-task-pending',
+    'text-task-overdue',
+    'text-task-complete',
+    // Dark mode variants for dynamic content
     'dark:bg-gray-800',
     'dark:bg-gray-900',
     'dark:text-gray-100',
@@ -76,7 +54,7 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(225 77% 60%)", // Fixed: added hsl() wrapper
+          DEFAULT: "hsl(225 77% 60%)",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
@@ -112,7 +90,7 @@ export default {
           foreground: "hsl(var(--success-foreground))",
         },
         brand: {
-          DEFAULT: "hsl(225 77% 60%)", // Fixed: added hsl() wrapper
+          DEFAULT: "hsl(225 77% 60%)",
           light: "hsl(var(--brand-light))",
         },
         "task-pending": "var(--status-pending)",
@@ -152,7 +130,7 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in": "fade-in 0.3s ease-out",
         "fade-out": "fade-out 0.3s ease-out",
-        "pulse-subtle": "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite --pulse-opacity=0.8",
+        "pulse-subtle": "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
       },
     },
   },

@@ -1,38 +1,27 @@
 
-/* src/styles/utilities/shadows.css - Shadow utility classes using design tokens */
+/* src/styles/utilities/shadows.css - Enhanced shadow utilities beyond Tailwind defaults */
 
 @layer utilities {
-  /* Shadow utilities using design system tokens */
-  .shadow-custom-sm {
-    box-shadow: var(--shadow-sm);
-  }
-
-  .shadow-custom {
-    box-shadow: var(--shadow);
-  }
-
-  .shadow-custom-md {
-    box-shadow: var(--shadow-md);
-  }
-
-  .shadow-custom-lg {
-    box-shadow: var(--shadow-lg);
-  }
-
-  .shadow-custom-xl {
-    box-shadow: var(--shadow-xl);
-  }
-
+  /* Custom focus shadow - specific enhancement */
   .shadow-focus {
     box-shadow: var(--shadow-focus);
   }
 
-  /* Enhanced focus states for interactive elements */
-  .focus-ring {
+  /* Enhanced focus ring with transition */
+  .focus-ring-enhanced {
     transition: box-shadow 0.2s ease-in-out;
   }
 
-  .focus-ring:focus-visible {
+  .focus-ring-enhanced:focus-visible {
     box-shadow: var(--shadow-focus);
+  }
+
+  /* Specific task-related shadow enhancement */
+  .shadow-task-card {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.06);
+  }
+
+  .dark .shadow-task-card {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.1);
   }
 }

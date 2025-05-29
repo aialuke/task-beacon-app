@@ -64,18 +64,18 @@ export function BaseTaskForm({
 
   return (
     <div className="w-full bg-card/40 backdrop-blur-xl text-card-foreground p-8 rounded-3xl border border-border/30 shadow-2xl shadow-black/5">
-      {/* Header */}
-      <div className="mb-8 text-center">
+      {/* Header - Optimized classes */}
+      <header className="mb-8 text-center">
         <div className="relative inline-block">
           <h1 className="text-2xl font-bold text-foreground mb-2 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">
             {headerTitle}
           </h1>
-          <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-16 h-0.5 bg-gradient-to-r from-primary/50 to-primary rounded-full"></div>
+          <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-gradient-to-r from-primary/50 to-primary rounded-full" />
         </div>
         <p className="text-muted-foreground text-sm mt-3 font-medium">
           {headerSubtitle}
         </p>
-      </div>
+      </header>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Main Title Input */}

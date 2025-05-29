@@ -98,7 +98,7 @@ function CountdownTimer({
             role="timer"
             tabIndex={0}
             aria-label={ariaLabel}
-            className={`relative focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-full timer-container ${
+            className={`relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-full timer-container ${
               status === "pending" && Number(timeDisplay) === 0 && !shouldReduceMotion ? "animate-pulse-subtle" : ""
             } ${shouldReduceMotion ? "reduce-motion-duration" : "gpu-accelerated"}`}
             style={containerStyles}

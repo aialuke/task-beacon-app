@@ -1,42 +1,9 @@
 
 /* src/styles/utilities/accessibility/focus.css - Focus management utilities */
 @layer utilities {
-  /* ===== ENHANCED FOCUS UTILITIES ===== */
-  .focus-visible {
-    outline: 2px solid hsl(var(--primary));
-    outline-offset: 2px;
-    transition: outline-color 0.2s ease;
-  }
-
-  .focus-visible:focus-visible {
-    outline: 2px solid hsl(var(--primary));
-    outline-offset: 2px;
-    box-shadow: 0 0 0 4px hsl(var(--primary) / 0.2);
-  }
-
-  .focus-ring {
-    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
-  }
-
-  .focus-ring-destructive {
-    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive focus-visible:ring-offset-2;
-  }
-
-  .focus-ring-success {
-    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-success focus-visible:ring-offset-2;
-  }
-
-  /* ===== KEYBOARD NAVIGATION ENHANCEMENTS ===== */
-  .keyboard-only:focus:not(:focus-visible) {
-    outline: none;
-    box-shadow: none;
-  }
-
-  .keyboard-focusable {
-    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
-  }
-
-  /* ===== SKIP LINK UTILITIES ===== */
+  /* ===== ENHANCED FOCUS UTILITIES (Non-redundant with Tailwind) ===== */
+  
+  /* Skip link utilities - Tailwind doesn't provide these */
   .skip-link {
     position: absolute;
     top: -40px;
@@ -55,19 +22,30 @@
     top: 6px;
   }
 
-  /* ===== DARK MODE FOCUS ENHANCEMENTS ===== */
-  .dark .focus-visible:focus-visible {
+  /* Keyboard-only focus (complement to Tailwind's focus-visible) */
+  .keyboard-only:focus:not(:focus-visible) {
+    outline: none;
+    box-shadow: none;
+  }
+
+  /* Enhanced focus with glow effect - specific enhancement over Tailwind */
+  .focus-glow:focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px hsl(var(--primary) / 0.2);
+  }
+
+  /* Dark mode focus enhancements */
+  .dark .focus-glow:focus-visible {
     box-shadow: 0 0 0 4px hsl(var(--primary) / 0.3);
   }
 
   .dark .skip-link {
-    background: hsl(var(--primary));
-    color: hsl(var(--primary-foreground));
     box-shadow: var(--shadow-lg);
   }
 
-  /* ===== LIGHT MODE FOCUS OVERRIDES ===== */
-  .light .focus-visible:focus-visible {
+  /* Light mode focus overrides */
+  .light .focus-glow:focus-visible {
     box-shadow: 0 0 0 4px rgba(54, 98, 227, 0.2);
   }
 

@@ -1,12 +1,18 @@
 
-/* src/styles/utilities/borders.css - Border radius and border utilities */
+/* src/styles/utilities/borders.css - Enhanced border utilities beyond Tailwind defaults */
 @layer utilities {
-  /* ===== ENHANCED BORDER RADIUS UTILITIES ===== */
+  /* Custom border radius using design tokens - specific to design system */
   .rounded-xl-container {
     border-radius: var(--radius-xl);
   }
 
   .rounded-full-container {
     border-radius: var(--radius-full);
+  }
+
+  /* Enhanced border with gradient - not available in Tailwind */
+  .border-gradient {
+    border: 1px solid;
+    border-image: linear-gradient(45deg, hsl(var(--primary)), hsl(var(--primary) / 0.5)) 1;
   }
 }
