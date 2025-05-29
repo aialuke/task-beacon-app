@@ -1,6 +1,6 @@
 
 import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { Home, Settings, Calendar } from 'lucide-react';
 import { SimpleNavbar } from '../simple-navbar';
 

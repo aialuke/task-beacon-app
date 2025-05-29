@@ -1,4 +1,6 @@
 
+import * as React from 'react';
+
 /**
  * Performance monitoring utilities for animations and components
  */
