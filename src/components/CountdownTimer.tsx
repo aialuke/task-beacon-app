@@ -9,9 +9,10 @@ import { Tooltip, TooltipProvider, TooltipTrigger } from "@/components/ui/toolti
 import TimerTooltip from "@/features/tasks/components/TimerTooltip";
 import { 
   setupAnimationVariables,
-  prefersReducedMotion 
+  getSpringConfig
 } from "@/lib/animationUtils";
 import { useCountdown } from "@/hooks/useCountdown";
+import { useMotionPreferences } from "@/hooks/useMotionPreferences";
 
 /**
  * CountdownTimer component displays a circular timer that visualizes the time remaining
@@ -23,6 +24,7 @@ import { useCountdown } from "@/hooks/useCountdown";
  * - Shows different styling based on priority
  * - Resizes based on mobile/desktop view
  * - Provides detailed due date information via tooltip
+ * - Respects user motion preferences for accessibility
  * 
  * @param dueDate - The due date of the task as an ISO string
  * @param status - The current status of the task
@@ -45,6 +47,7 @@ function CountdownTimer({
   priority = "medium",
 }: CountdownTimerProps) {
   const { isMobile } = useTaskUIContext();
+  const { shouldReduceMotion, getAnimationConfig } = useMotionPreferences();
   
   // Calculate and memoize size-related values to avoid recalculation
   const { dynamicSize, radius, circumference } = useMemo(() => {
@@ -65,12 +68,27 @@ function CountdownTimer({
     circumference
   );
 
-  // Animation for the timer ring
+  // Animation configuration based on motion preferences
+  const springConfig = useMemo(() => 
+    getAnimationConfig(
+      { tension: 120, friction: 14 },
+      { tension: 300, friction: 30 }
+    ), [shouldReduceMotion, getAnimationConfig]
+  );
+
+  // Animation for the timer ring with motion preference support
   const { strokeDashoffset } = useSpring({
     strokeDashoffset: dashOffset,
-    config: { tension: 120, friction: 14 },
-    immediate: status === "complete" || status === "overdue" || !dueDate,
+    config: springConfig,
+    immediate: status === "complete" || status === "overdue" || !dueDate || shouldReduceMotion,
   });
+
+  // Apply GPU acceleration for better performance on non-reduced motion
+  const containerStyles = useMemo(() => ({
+    width: dynamicSize, 
+    height: dynamicSize,
+    ...(shouldReduceMotion ? {} : { transform: 'translateZ(0)' })
+  }), [dynamicSize, shouldReduceMotion]);
 
   return (
     <TooltipProvider>
@@ -81,12 +99,9 @@ function CountdownTimer({
             tabIndex={0}
             aria-label={ariaLabel}
             className={`relative focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-full timer-container ${
-              status === "pending" && Number(timeDisplay) === 0 ? "animate-pulse-subtle" : ""
-            }`}
-            style={{ 
-              width: dynamicSize, 
-              height: dynamicSize
-            }}
+              status === "pending" && Number(timeDisplay) === 0 && !shouldReduceMotion ? "animate-pulse-subtle" : ""
+            } ${shouldReduceMotion ? "reduce-motion-duration" : "gpu-accelerated"}`}
+            style={containerStyles}
           >
             <TimerRing
               size={dynamicSize}

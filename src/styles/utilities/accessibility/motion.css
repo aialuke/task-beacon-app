@@ -1,20 +1,55 @@
 
-/* src/styles/utilities/accessibility/motion.css - Motion preference utilities */
+/* src/styles/utilities/accessibility/motion.css - Enhanced motion preference utilities */
 @layer utilities {
-  /* ===== MOTION PREFERENCES ===== */
+  /* ===== REFINED MOTION PREFERENCES ===== */
   @media (prefers-reduced-motion: reduce) {
-    .reduce-motion {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-      scroll-behavior: auto !important;
+    /* Only disable non-essential decorative animations */
+    .animate-pulse-subtle,
+    .animate-flash,
+    .animate-bounce,
+    .animate-ping {
+      animation: none !important;
     }
 
-    * {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-      scroll-behavior: auto !important;
+    /* Reduce duration for essential animations instead of disabling */
+    .timer-container,
+    .animate-fade-in,
+    .animate-accordion-down,
+    .animate-accordion-up {
+      animation-duration: 0.1s !important;
+      transition-duration: 0.1s !important;
+    }
+
+    /* Preserve critical animations but reduce motion */
+    .timer-progress {
+      transition-duration: 0.2s !important;
+    }
+
+    /* Remove transforms that cause motion sickness */
+    .hover-scale:hover {
+      transform: none !important;
+    }
+
+    /* Disable parallax and sliding effects */
+    .animate-slide-in-right,
+    .animate-slide-out-right {
+      animation: none !important;
+      transform: none !important;
+    }
+  }
+
+  /* ===== MOTION PREFERENCE CLASSES ===== */
+  .reduce-motion-optional {
+    @media (prefers-reduced-motion: reduce) {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+
+  .reduce-motion-duration {
+    @media (prefers-reduced-motion: reduce) {
+      animation-duration: 0.1s !important;
+      transition-duration: 0.1s !important;
     }
   }
 
@@ -27,5 +62,15 @@
     .tooltip-touch {
       @apply visible opacity-100;
     }
+  }
+
+  /* ===== GPU-ACCELERATED ANIMATIONS ===== */
+  .gpu-accelerated {
+    transform: translateZ(0);
+    will-change: transform, opacity;
+  }
+
+  .gpu-accelerated-complete {
+    will-change: auto;
   }
 }

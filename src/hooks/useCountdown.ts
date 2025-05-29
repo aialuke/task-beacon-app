@@ -7,9 +7,10 @@ import {
   getUpdateInterval
 } from "@/lib/dateUtils";
 import { calculateTimerOffset } from "@/lib/animationUtils";
+import { performanceMonitor } from "@/lib/performanceUtils";
 
 /**
- * Custom hook for countdown timer functionality
+ * Custom hook for countdown timer functionality with performance monitoring
  * 
  * Manages the timer state, calculations, and update intervals for task countdown displays
  * 
@@ -21,8 +22,13 @@ import { calculateTimerOffset } from "@/lib/animationUtils";
 export function useCountdown(dueDate: string | null, status: TaskStatus, circumference: number) {
   // Memoize initial calculations to prevent unnecessary work
   const initialValues = useMemo(() => {
+    const measurementId = performanceMonitor.startMeasurement('countdown-initial-calc');
+    
     const daysLeft = dueDate ? getDaysRemaining(dueDate) : 0;
     const timeDisplay = dueDate ? formatTimeDisplay(daysLeft, dueDate, status) : "No due date";
+    
+    performanceMonitor.endMeasurement(measurementId);
+    
     return { daysLeft, timeDisplay };
   }, [dueDate, status]);
   
@@ -53,11 +59,13 @@ export function useCountdown(dueDate: string | null, status: TaskStatus, circumf
     }
   }, [dueDate, status]);
 
-  // Memoize stroke dash offset calculation
-  const dashOffset = useMemo(() => 
-    calculateTimerOffset(circumference, daysLeft, status, dueDate), 
-    [circumference, daysLeft, status, dueDate]
-  );
+  // Memoize stroke dash offset calculation with performance monitoring
+  const dashOffset = useMemo(() => {
+    const measurementId = performanceMonitor.startMeasurement('countdown-offset-calc');
+    const result = calculateTimerOffset(circumference, daysLeft, status, dueDate);
+    performanceMonitor.endMeasurement(measurementId);
+    return result;
+  }, [circumference, daysLeft, status, dueDate]);
 
   // Memoize the update interval calculation
   const updateInterval = useMemo(() => 
@@ -69,9 +77,13 @@ export function useCountdown(dueDate: string | null, status: TaskStatus, circumf
   const updateTimeLeft = useCallback(() => {
     if (!dueDate) return;
     
+    const measurementId = performanceMonitor.startMeasurement('countdown-update');
+    
     const days = getDaysRemaining(dueDate);
     setDaysLeft(days);
     setTimeDisplay(formatTimeDisplay(days, dueDate, status));
+    
+    performanceMonitor.endMeasurement(measurementId);
   }, [dueDate, status]);
 
   useEffect(() => {
