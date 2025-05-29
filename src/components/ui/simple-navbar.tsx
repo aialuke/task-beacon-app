@@ -1,7 +1,10 @@
+
 import React, { useRef, useEffect, useState } from "react"
 import { useSpring, animated } from "@react-spring/web"
 import { LucideIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { computeNavbarColors, setupThemeObserver } from "@/lib/utils/navbarColors"
+import { calculateActiveButtonBounds, setButtonRef } from "@/lib/utils/navbarGeometry"
 
 interface NavItem {
   name: string
@@ -21,149 +24,53 @@ export function SimpleNavbar({ items, activeItem, onItemChange, className }: Sim
   const buttonRefs = useRef<(HTMLButtonElement | null)[]>([])
   const [activeButtonBounds, setActiveButtonBounds] = useState({ x: 0, width: 0 })
   const [isInitialized, setIsInitialized] = useState(false)
-  const [computedColors, setComputedColors] = useState({
-    primary: '#3662E3',
-    primaryWithOpacity: 'rgba(54, 98, 227, 0.8)',
-    primaryLight: 'rgba(54, 98, 227, 0.2)',
-    primaryVeryLight: 'rgba(54, 98, 227, 0.1)',
-    primaryGlow: 'rgba(54, 98, 227, 0.3)',
-    indicatorColor: 'hsl(0 0% 98% / 1)',
-    highlightColor: 'hsl(240 5.9% 10%)',
-    isDarkMode: false
-  })
+  const [computedColors, setComputedColors] = useState(() => computeNavbarColors())
 
   // Get computed CSS variable values and detect theme
   useEffect(() => {
-    const getComputedColors = () => {
-      const root = document.documentElement
-      const computedStyle = getComputedStyle(root)
-      const isDarkMode = root.classList.contains('dark')
-      
-      // Get the primary color HSL values
-      const primaryHSL = computedStyle.getPropertyValue('--primary').trim()
-      console.log('🎨 Raw primary HSL value:', primaryHSL)
-      console.log('🌓 Dark mode detected:', isDarkMode)
-      
-      if (primaryHSL) {
-        // Convert HSL to RGB for better control
-        const tempDiv = document.createElement('div')
-        tempDiv.style.color = `hsl(${primaryHSL})`
-        document.body.appendChild(tempDiv)
-        const rgbColor = getComputedStyle(tempDiv).color
-        document.body.removeChild(tempDiv)
-        
-        console.log('🎨 Computed RGB color:', rgbColor)
-        
-        // Extract RGB values to create variations
-        const rgbMatch = rgbColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/)
-        if (rgbMatch) {
-          const [, r, g, b] = rgbMatch
-          
-          const newColors = {
-            primary: `rgb(${r}, ${g}, ${b})`,
-            primaryWithOpacity: `rgba(${r}, ${g}, ${b}, 0.8)`,
-            primaryLight: `rgba(${r}, ${g}, ${b}, 0.2)`,
-            primaryVeryLight: `rgba(${r}, ${g}, ${b}, 0.1)`,
-            primaryGlow: `rgba(${r}, ${g}, ${b}, 0.3)`,
-            indicatorColor: 'hsl(0 0% 98% / 1)',
-            highlightColor: 'hsl(240 5.9% 10%)',
-            isDarkMode
-          }
-          
-          console.log('🎨 Computed color variations:', newColors)
-          setComputedColors(newColors)
-        }
-      }
+    const updateColors = () => {
+      setComputedColors(computeNavbarColors())
     }
     
     // Get colors on mount and when theme changes
-    getComputedColors()
+    updateColors()
     
     // Listen for theme changes
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.attributeName === 'class') {
-          console.log('🌓 Theme change detected, updating colors')
-          setTimeout(getComputedColors, 50) // Small delay to ensure CSS is applied
-        }
-      })
-    })
+    const cleanup = setupThemeObserver(updateColors)
     
-    observer.observe(document.documentElement, { attributes: true })
-    
-    return () => observer.disconnect()
+    return cleanup
   }, [])
 
   // Calculate active button position with proper timing
   const updateActiveButtonBounds = () => {
-    console.log('🔄 updateActiveButtonBounds called')
-    console.log('📍 Current activeItem:', activeItem)
-    console.log('📋 Available items:', items.map(item => item.value))
-    
     const activeIndex = items.findIndex(item => item.value === activeItem)
-    console.log('🎯 Active index:', activeIndex)
-    
-    const activeButton = buttonRefs.current[activeIndex]
     const container = containerRef.current
 
-    console.log('🔲 Active button element:', activeButton)
-    console.log('📦 Container element:', container)
-
-    if (activeButton && container) {
-      const buttonRect = activeButton.getBoundingClientRect()
-      const containerRect = container.getBoundingClientRect()
-      
-      console.log('📏 Button rect:', {
-        left: buttonRect.left,
-        top: buttonRect.top,
-        width: buttonRect.width,
-        height: buttonRect.height
-      })
-      console.log('📏 Container rect:', {
-        left: containerRect.left,
-        top: containerRect.top,
-        width: containerRect.width,
-        height: containerRect.height
-      })
-      
-      // Account for container padding (8px on each side)
+    if (activeIndex >= 0 && container) {
       const containerPadding = 8
-      
-      const newBounds = {
-        x: buttonRect.left - containerRect.left - containerPadding,
-        width: buttonRect.width
-      }
-      
-      console.log('📐 Calculated bounds:', newBounds)
-      console.log('🎨 Container padding:', containerPadding)
-      console.log('🎨 Using computed colors:', computedColors)
+      const newBounds = calculateActiveButtonBounds(
+        activeIndex,
+        buttonRefs.current,
+        container,
+        containerPadding
+      )
       
       setActiveButtonBounds(newBounds)
       
       if (!isInitialized) {
-        console.log('✅ Setting isInitialized to true')
         setIsInitialized(true)
-      } else {
-        console.log('ℹ️ Already initialized')
       }
-    } else {
-      console.log('❌ Missing elements - activeButton:', !!activeButton, 'container:', !!container)
     }
   }
 
   // Initialize and update on changes
   useEffect(() => {
-    console.log('🚀 useEffect triggered - activeItem changed to:', activeItem)
-    console.log('📊 Current isInitialized state:', isInitialized)
-    
     // Use requestAnimationFrame to ensure DOM is ready
     const frame = requestAnimationFrame(() => {
-      console.log('⏰ requestAnimationFrame callback executing')
       updateActiveButtonBounds()
     })
     
     return () => {
-      console.log('🧹 Cleaning up requestAnimationFrame')
       cancelAnimationFrame(frame)
     }
   }, [activeItem, items, computedColors])
@@ -171,7 +78,6 @@ export function SimpleNavbar({ items, activeItem, onItemChange, className }: Sim
   // Handle window resize
   useEffect(() => {
     const handleResize = () => {
-      console.log('📱 Window resize detected')
       updateActiveButtonBounds()
     }
     
@@ -188,13 +94,6 @@ export function SimpleNavbar({ items, activeItem, onItemChange, className }: Sim
       tension: 300,
       friction: 30
     }
-  })
-
-  console.log('🎭 Indicator line spring values:', {
-    transform: `translateX(${activeButtonBounds.x}px)`,
-    width: 40,
-    opacity: isInitialized ? 1 : 0,
-    isInitialized
   })
 
   // Spring animation for button background
@@ -218,8 +117,6 @@ export function SimpleNavbar({ items, activeItem, onItemChange, className }: Sim
       friction: 35
     }
   })
-
-  console.log('🌟 All spring animations configured with activeButtonBounds:', activeButtonBounds)
 
   return (
     <div className={cn("flex justify-center w-full", className)}>
@@ -282,10 +179,7 @@ export function SimpleNavbar({ items, activeItem, onItemChange, className }: Sim
           return (
             <button
               key={item.value}
-              ref={el => {
-                buttonRefs.current[index] = el
-                console.log(`🔗 Button ref set for index ${index} (${item.value}):`, !!el)
-              }}
+              ref={el => setButtonRef(buttonRefs, index, el)}
               onClick={() => onItemChange(item.value)}
               className={cn(
                 "relative cursor-pointer text-sm font-medium py-2 px-4 rounded-full transition-all duration-200 z-10 border-none bg-transparent min-w-[48px]",
