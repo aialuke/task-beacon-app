@@ -21,23 +21,33 @@ export function useMobileViewport(): MobileViewportState {
 
   useEffect(() => {
     const initialHeight = window.innerHeight;
-    
+
     const updateViewportState = () => {
       const currentHeight = window.visualViewport?.height || window.innerHeight;
       const screenHeight = window.innerHeight;
       const keyboardHeight = Math.max(0, screenHeight - currentHeight);
       const keyboardVisible = keyboardHeight > 150; // Threshold for keyboard detection
-      
+
       // Use the full visible viewport height
       const availableHeight = currentHeight;
-      
+
       setState({
         keyboardVisible,
         viewportHeight: currentHeight,
         availableHeight,
         keyboardHeight,
-        safeAreaTop: parseInt(getComputedStyle(document.documentElement).getPropertyValue('env(safe-area-inset-top)')) || 0,
-        safeAreaBottom: parseInt(getComputedStyle(document.documentElement).getPropertyValue('env(safe-area-inset-bottom)')) || 0,
+        safeAreaTop:
+          parseInt(
+            getComputedStyle(document.documentElement).getPropertyValue(
+              'env(safe-area-inset-top)'
+            )
+          ) || 0,
+        safeAreaBottom:
+          parseInt(
+            getComputedStyle(document.documentElement).getPropertyValue(
+              'env(safe-area-inset-bottom)'
+            )
+          ) || 0,
       });
     };
 
@@ -52,8 +62,14 @@ export function useMobileViewport(): MobileViewportState {
     // Listen for viewport changes
     window.addEventListener('resize', handleResize);
     if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', handleVisualViewportChange);
-      window.visualViewport.addEventListener('scroll', handleVisualViewportChange);
+      window.visualViewport.addEventListener(
+        'resize',
+        handleVisualViewportChange
+      );
+      window.visualViewport.addEventListener(
+        'scroll',
+        handleVisualViewportChange
+      );
     }
 
     // Initial setup
@@ -62,8 +78,14 @@ export function useMobileViewport(): MobileViewportState {
     return () => {
       window.removeEventListener('resize', handleResize);
       if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', handleVisualViewportChange);
-        window.visualViewport.removeEventListener('scroll', handleVisualViewportChange);
+        window.visualViewport.removeEventListener(
+          'resize',
+          handleVisualViewportChange
+        );
+        window.visualViewport.removeEventListener(
+          'scroll',
+          handleVisualViewportChange
+        );
       }
     };
   }, []);

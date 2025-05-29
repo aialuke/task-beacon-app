@@ -1,7 +1,6 @@
-
 /**
  * Legacy date utils file - kept for backward compatibility
- * 
+ *
  * This file now re-exports from the organized date utility module.
  * For new code, prefer importing directly from "@/lib/utils/date"
  */
@@ -15,5 +14,5 @@ export {
   getDueDateTooltip,
   formatTimeDisplay,
   getTooltipContent,
-  getUpdateInterval
+  getUpdateInterval,
 } from './utils/date';

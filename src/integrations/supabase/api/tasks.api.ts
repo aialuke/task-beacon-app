@@ -1,22 +1,29 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { apiRequest, getCurrentUserId } from './base.api';
-import { TablesResponse, TaskRow, TaskCreateParams, TaskUpdateParams } from '@/types/api.types';
+import {
+  TablesResponse,
+  TaskRow,
+  TaskCreateParams,
+  TaskUpdateParams,
+} from '@/types/api.types';
 import { Task } from '@/types/shared.types';
 import { isMockingSupabase } from '@/integrations/supabase/client';
 
 // Mock data import for development
-const getMockTasks = async (page = 1, pageSize = 10): Promise<{data: Task[], totalCount: number, hasNextPage: boolean}> => {
+const getMockTasks = async (
+  page = 1,
+  pageSize = 10
+): Promise<{ data: Task[]; totalCount: number; hasNextPage: boolean }> => {
   const { mockDataTasks } = await import('@/lib/mockDataTasks');
-  
+
   const startIndex = (page - 1) * pageSize;
   const endIndex = startIndex + pageSize;
   const paginatedTasks = mockDataTasks.slice(startIndex, endIndex);
-  
+
   return {
     data: paginatedTasks,
     totalCount: mockDataTasks.length,
-    hasNextPage: endIndex < mockDataTasks.length
+    hasNextPage: endIndex < mockDataTasks.length,
   };
 };
 
@@ -44,15 +51,20 @@ export const getTask = async (taskId: string): Promise<Task> => {
 
 /**
  * Fetches paginated tasks with their parent tasks
- * 
+ *
  * @param page Current page number (1-based)
  * @param pageSize Number of items per page
  */
-export const getAllTasks = async (page = 1, pageSize = 10): Promise<TablesResponse<{
-  data: Task[];
-  totalCount: number;
-  hasNextPage: boolean;
-}>> => {
+export const getAllTasks = async (
+  page = 1,
+  pageSize = 10
+): Promise<
+  TablesResponse<{
+    data: Task[];
+    totalCount: number;
+    hasNextPage: boolean;
+  }>
+> => {
   if (isMockingSupabase) {
     const result = await getMockTasks(page, pageSize);
     return { data: result, error: null };
@@ -65,14 +77,19 @@ export const getAllTasks = async (page = 1, pageSize = 10): Promise<TablesRespon
 /**
  * Creates a new task
  */
-export const createTask = async (taskData: Partial<TaskRow>): Promise<TablesResponse<TaskRow>> => {
+export const createTask = async (
+  taskData: Partial<TaskRow>
+): Promise<TablesResponse<TaskRow>> => {
   if (isMockingSupabase) {
-    return { data: { id: `mock-${Date.now()}`, ...taskData } as TaskRow, error: null };
+    return {
+      data: { id: `mock-${Date.now()}`, ...taskData } as TaskRow,
+      error: null,
+    };
   }
 
   return apiRequest(async () => {
     const userId = await getCurrentUserId();
-    
+
     // Mock implementation
     return {
       id: `mock-${Date.now()}`,
@@ -89,7 +106,7 @@ export const createTask = async (taskData: Partial<TaskRow>): Promise<TablesResp
  * Updates a task's status (complete/pending)
  */
 export const updateTaskStatus = async (
-  taskId: string, 
+  taskId: string,
   status: 'pending' | 'complete' | 'overdue'
 ): Promise<TablesResponse<TaskRow>> => {
   if (isMockingSupabase) {
@@ -98,10 +115,10 @@ export const updateTaskStatus = async (
 
   // Mock implementation
   return apiRequest(async () => {
-    return { 
+    return {
       id: taskId,
       status,
-      updated_at: new Date().toISOString()
+      updated_at: new Date().toISOString(),
     } as TaskRow;
   });
 };
@@ -119,10 +136,10 @@ export const toggleTaskPin = async (
 
   // Mock implementation
   return apiRequest(async () => {
-    return { 
+    return {
       id: taskId,
       pinned,
-      updated_at: new Date().toISOString()
+      updated_at: new Date().toISOString(),
     } as TaskRow;
   });
 };
@@ -135,19 +152,19 @@ export const createFollowUpTask = async (
   taskData: Partial<TaskRow>
 ): Promise<TablesResponse<TaskRow>> => {
   if (isMockingSupabase) {
-    return { 
-      data: { 
-        id: `mock-followup-${Date.now()}`, 
-        ...taskData, 
-        parent_task_id: parentTaskId 
-      } as TaskRow, 
-      error: null 
+    return {
+      data: {
+        id: `mock-followup-${Date.now()}`,
+        ...taskData,
+        parent_task_id: parentTaskId,
+      } as TaskRow,
+      error: null,
     };
   }
 
   return apiRequest(async () => {
     const userId = await getCurrentUserId();
-    
+
     // Mock implementation
     return {
       id: `mock-followup-${Date.now()}`,
@@ -164,7 +181,9 @@ export const createFollowUpTask = async (
 /**
  * Uploads a photo for a task
  */
-export const uploadTaskPhoto = async (file: File): Promise<TablesResponse<string>> => {
+export const uploadTaskPhoto = async (
+  file: File
+): Promise<TablesResponse<string>> => {
   if (isMockingSupabase) {
     return { data: URL.createObjectURL(file), error: null };
   }

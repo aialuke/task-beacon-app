@@ -1,4 +1,3 @@
-
 /* src/styles/utilities/layout.css - Layout utility classes with proper specificity */
 @layer utilities {
   /* ===== LAYOUT UTILITIES ===== */
@@ -46,11 +45,11 @@
     .task-list {
       gap: 1.75rem !important;
     }
-    
+
     .task-list-section {
       padding: 0 16px;
     }
-    
+
     .navbar-section {
       padding: 0 16px;
     }
@@ -60,11 +59,11 @@
     .task-list {
       gap: 2rem !important;
     }
-    
+
     .task-list-section {
       padding: 0 20px;
     }
-    
+
     .navbar-section {
       padding: 0 20px;
     }

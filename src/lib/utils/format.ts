@@ -1,4 +1,3 @@
-
 /**
  * Text and data formatting utilities
  */
@@ -17,12 +16,12 @@ export function truncateText(text: string, maxLength: number = 100): string {
 export function truncateUrl(url: string, maxLength: number = 30): string {
   // Remove protocol and www
   let cleanUrl = url.replace(/^(https?:\/\/)?(www\.)?/, '');
-  
+
   // Truncate if still too long
   if (cleanUrl.length > maxLength) {
     cleanUrl = cleanUrl.substring(0, maxLength - 3) + '...';
   }
-  
+
   return cleanUrl;
 }
 
@@ -31,12 +30,14 @@ export function truncateUrl(url: string, maxLength: number = 30): string {
  */
 export function formatFileSize(bytes: number, decimals: number = 2): string {
   if (bytes === 0) return '0 Bytes';
-  
+
   const k = 1024;
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
-  
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(decimals)) + ' ' + sizes[i];
+
+  return (
+    parseFloat((bytes / Math.pow(k, i)).toFixed(decimals)) + ' ' + sizes[i]
+  );
 }
 
 /**

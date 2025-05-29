@@ -55,7 +55,7 @@ export interface TaskUpdateParams {
 }
 
 export interface TaskQueryParams {
-  status?: TaskStatus | 'all'; 
+  status?: TaskStatus | 'all';
   assignedToMe?: boolean;
   page?: number;
   pageSize?: number;
@@ -87,7 +87,7 @@ export interface TaskRow {
   owner_id: string;
   parent_task_id: string | null;
   pinned: boolean;
-  status: "pending" | "complete" | "overdue";
+  status: 'pending' | 'complete' | 'overdue';
   assignee_id: string | null;
   created_at: string;
   updated_at: string;

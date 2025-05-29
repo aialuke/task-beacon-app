@@ -1,7 +1,6 @@
-
-import { createContext, useContext, ReactNode } from "react";
-import { useTaskQueries } from "@/features/tasks/hooks/useTaskQueries";
-import { Task } from "@/types/shared.types";
+import { createContext, useContext, ReactNode } from 'react';
+import { useTaskQueries } from '@/features/tasks/hooks/useTaskQueries';
+import { Task } from '@/types/shared.types';
 
 interface TaskDataContextValue {
   tasks: Task[];
@@ -17,13 +16,17 @@ interface TaskDataContextValue {
   goToPreviousPage: () => void;
 }
 
-const TaskDataContext = createContext<TaskDataContextValue | undefined>(undefined);
+const TaskDataContext = createContext<TaskDataContextValue | undefined>(
+  undefined
+);
 
 interface TaskDataContextProviderProps {
   children: ReactNode;
 }
 
-export function TaskDataContextProvider({ children }: TaskDataContextProviderProps) {
+export function TaskDataContextProvider({
+  children,
+}: TaskDataContextProviderProps) {
   const taskQueries = useTaskQueries();
 
   return (
@@ -36,7 +39,9 @@ export function TaskDataContextProvider({ children }: TaskDataContextProviderPro
 export function useTaskDataContext() {
   const context = useContext(TaskDataContext);
   if (context === undefined) {
-    throw new Error('useTaskDataContext must be used within a TaskDataContextProvider');
+    throw new Error(
+      'useTaskDataContext must be used within a TaskDataContextProvider'
+    );
   }
   return context;
 }

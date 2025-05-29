@@ -1,8 +1,7 @@
-
 // Shared types used across multiple features
-export type TaskStatus = "pending" | "complete" | "overdue";
-export type UserRole = "admin" | "manager";
-export type TaskFilter = TaskStatus | "all" | "assigned";
+export type TaskStatus = 'pending' | 'complete' | 'overdue';
+export type UserRole = 'admin' | 'manager';
+export type TaskFilter = TaskStatus | 'all' | 'assigned';
 
 export interface ParentTask {
   id: string;

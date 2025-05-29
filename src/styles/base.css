@@ -1,11 +1,10 @@
-
 /* src/styles/base.css - Consolidated base styles imports */
 
 /* Import design system tokens first */
-@import "./tokens/colors.css";
-@import "./tokens/design-tokens.css";
+@import './tokens/colors.css';
+@import './tokens/design-tokens.css';
 
 /* Import base styles in dependency order */
-@import "./base/reset.css";
-@import "./base/typography.css";
-@import "./base/accessibility.css";
+@import './base/reset.css';
+@import './base/typography.css';
+@import './base/accessibility.css';

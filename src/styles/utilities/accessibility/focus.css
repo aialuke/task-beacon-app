@@ -1,8 +1,7 @@
-
 /* src/styles/utilities/accessibility/focus.css - Focus management utilities */
 @layer utilities {
   /* ===== ENHANCED FOCUS UTILITIES (Non-redundant with Tailwind) ===== */
-  
+
   /* Skip link utilities - Tailwind doesn't provide these */
   .skip-link {
     position: absolute;
@@ -50,7 +49,7 @@
   }
 
   .light .skip-link {
-    background: #3662E3;
+    background: #3662e3;
     color: white;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }

@@ -1,9 +1,10 @@
-
 /* src/styles/base/typography.css - Typography and font definitions */
 
 body {
-  font-feature-settings: "rlig" 1, "calt" 1;
-  font-family: "Manrope", sans-serif;
+  font-feature-settings:
+    'rlig' 1,
+    'calt' 1;
+  font-family: 'Manrope', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: hsl(var(--foreground));
@@ -11,7 +12,11 @@ body {
 }
 
 /* Reset buttons and form elements to inherit typography */
-button, input, optgroup, select, textarea {
+button,
+input,
+optgroup,
+select,
+textarea {
   font-family: inherit;
   font-size: 100%;
   line-height: 1.15;

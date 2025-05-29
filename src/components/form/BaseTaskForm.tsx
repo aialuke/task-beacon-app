@@ -1,9 +1,8 @@
-
-import React from "react";
-import { FileText, Sparkles } from "lucide-react";
-import { FloatingInput } from "@/components/form/FloatingInput";
-import { FloatingTextarea } from "@/components/form/FloatingTextarea";
-import { QuickActionBar } from "@/components/form/QuickActionBar";
+import React from 'react';
+import { FileText, Sparkles } from 'lucide-react';
+import { FloatingInput } from '@/components/form/FloatingInput';
+import { FloatingTextarea } from '@/components/form/FloatingTextarea';
+import { QuickActionBar } from '@/components/form/QuickActionBar';
 
 interface BaseTaskFormProps {
   title: string;
@@ -48,11 +47,11 @@ export function BaseTaskForm({
   headerTitle,
   headerSubtitle,
   submitLabel,
-  titlePlaceholder = "Enter task title",
-  titleLabel = "Task Title",
-  descriptionPlaceholder = "Describe your task...",
-  descriptionLabel = "Description",
-  children
+  titlePlaceholder = 'Enter task title',
+  titleLabel = 'Task Title',
+  descriptionPlaceholder = 'Describe your task...',
+  descriptionLabel = 'Description',
+  children,
 }: BaseTaskFormProps) {
   const handleUrlChange = (newUrl: string) => {
     setUrl(newUrl);
@@ -63,16 +62,16 @@ export function BaseTaskForm({
   };
 
   return (
-    <div className="w-full bg-card/40 backdrop-blur-xl text-card-foreground p-8 rounded-3xl border border-border/30 shadow-2xl shadow-black/5">
+    <div className="w-full rounded-3xl border border-border/30 bg-card/40 p-8 text-card-foreground shadow-2xl shadow-black/5 backdrop-blur-xl">
       {/* Header - Optimized classes */}
       <header className="mb-8 text-center">
         <div className="relative inline-block">
-          <h1 className="text-2xl font-bold text-foreground mb-2 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">
+          <h1 className="mb-2 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-2xl font-bold text-foreground">
             {headerTitle}
           </h1>
-          <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-gradient-to-r from-primary/50 to-primary rounded-full" />
+          <div className="absolute -bottom-1 left-1/2 h-0.5 w-16 -translate-x-1/2 rounded-full bg-gradient-to-r from-primary/50 to-primary" />
         </div>
-        <p className="text-muted-foreground text-sm mt-3 font-medium">
+        <p className="mt-3 text-sm font-medium text-muted-foreground">
           {headerSubtitle}
         </p>
       </header>
@@ -82,24 +81,24 @@ export function BaseTaskForm({
         <FloatingInput
           id="title"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={e => setTitle(e.target.value)}
           placeholder={titlePlaceholder}
           label={titleLabel}
           icon={<FileText className="h-4 w-4" />}
           maxLength={22}
           required
         />
-        
+
         {/* Description Field */}
         <FloatingTextarea
           id="description"
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={e => setDescription(e.target.value)}
           placeholder={descriptionPlaceholder}
           label={descriptionLabel}
           icon={<Sparkles className="h-4 w-4" />}
         />
-        
+
         {/* Quick Action Bar */}
         <QuickActionBar
           dueDate={dueDate}

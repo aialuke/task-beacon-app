@@ -1,2 +1,2 @@
 // src/lib/toast.ts
-export { toast } from "sonner";
+export { toast } from 'sonner';

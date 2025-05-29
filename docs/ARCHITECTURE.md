@@ -1,4 +1,3 @@
-
 # Task Management Application Architecture
 
 ## Overview
@@ -63,6 +62,7 @@ src/
 The application uses a feature-based folder structure which groups related components, hooks, and utilities by feature rather than by type. This makes it easier to understand the codebase and to locate related code.
 
 Key principles:
+
 - Each feature has its own directory with subdirectories for components, hooks, context, etc.
 - Features should be self-contained with minimal dependencies on other features
 - Common/shared code is placed in the root-level directories (components, lib, hooks)
@@ -103,6 +103,7 @@ The application uses custom hooks extensively to:
 4. Enable reuse across components
 
 Hook organization:
+
 - **Mutation Hooks**: Centralized in `useTaskMutations` for all task operations
 - **Query Hooks**: Specific hooks for data fetching (e.g., `useTaskQueries`)
 - **UI Hooks**: Handle component state and interactions (e.g., `useTaskCard`)
@@ -113,6 +114,7 @@ Hook organization:
 The application uses React's Context API for sharing state across components:
 
 1. **Global contexts**: Located in `/contexts`
+
    - `AuthContext`: Handles user authentication state
    - `ThemeContext`: Manages theme state
 
@@ -125,20 +127,22 @@ The application uses React's Context API for sharing state across components:
 We follow these import standards throughout the codebase:
 
 1. **Direct Imports (Preferred)**:
+
    ```typescript
-   import { formatDate } from "@/lib/dateUtils";
-   import { compressAndResizePhoto } from "@/lib/imageUtils";
-   import { isValidEmail } from "@/lib/validationUtils";
+   import { formatDate } from '@/lib/dateUtils';
+   import { compressAndResizePhoto } from '@/lib/imageUtils';
+   import { isValidEmail } from '@/lib/validationUtils';
    ```
 
 2. **Selective Barrel Imports**:
+
    ```typescript
-   import { cn, formatDate, truncateText } from "@/lib/utils";
+   import { cn, formatDate, truncateText } from '@/lib/utils';
    ```
 
 3. **Feature Imports**:
    ```typescript
-   import { useTaskMutations } from "@/features/tasks/hooks/useTaskMutations";
+   import { useTaskMutations } from '@/features/tasks/hooks/useTaskMutations';
    ```
 
 ### Utility Function Organization

@@ -1,4 +1,3 @@
-
 # State Management and Testing Patterns
 
 This document covers state management strategies and testing conventions.
@@ -17,10 +16,10 @@ This document covers state management strategies and testing conventions.
 interface ContextValue {
   // State
   data: DataType;
-  
+
   // Actions
   updateData: (data: DataType) => void;
-  
+
   // Computed values
   isLoading: boolean;
 }
@@ -37,7 +36,7 @@ const form = useFormWithValidation({
   schema: validationSchema,
   defaultValues,
   onSubmit: handleSubmit,
-  successMessage: "Success message"
+  successMessage: 'Success message',
 });
 ```
 

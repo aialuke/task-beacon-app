@@ -1,4 +1,3 @@
-
 /**
  * Navbar geometry calculation utilities
  * Handles button positioning and bounds calculations
@@ -19,17 +18,17 @@ export function calculateActiveButtonBounds(
   containerPadding: number = 8
 ): ButtonBounds {
   const activeButton = buttonRefs[activeIndex];
-  
+
   if (!activeButton || !container) {
     return { x: 0, width: 0 };
   }
 
   const buttonRect = activeButton.getBoundingClientRect();
   const containerRect = container.getBoundingClientRect();
-  
+
   return {
     x: buttonRect.left - containerRect.left - containerPadding,
-    width: buttonRect.width
+    width: buttonRect.width,
   };
 }
 

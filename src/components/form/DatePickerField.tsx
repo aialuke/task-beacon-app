@@ -1,11 +1,14 @@
-
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar as CalendarIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { format } from "date-fns";
-import { useState } from "react";
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { Calendar as CalendarIcon } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
+import { useState } from 'react';
 
 interface DatePickerFieldProps {
   value: string;
@@ -14,18 +17,18 @@ interface DatePickerFieldProps {
 
 export function DatePickerField({ value, onChange }: DatePickerFieldProps) {
   const [isOpen, setIsOpen] = useState(false);
-  
+
   const selectedDate = value ? new Date(value) : undefined;
-  
+
   const handleDateSelect = (date: Date | undefined) => {
     if (date) {
       const isoString = date.toISOString();
       const localDateTime = isoString.slice(0, 16);
-      
+
       const syntheticEvent = {
-        target: { value: localDateTime }
+        target: { value: localDateTime },
       } as React.ChangeEvent<HTMLInputElement>;
-      
+
       onChange(syntheticEvent);
     }
     setIsOpen(false);
@@ -38,36 +41,36 @@ export function DatePickerField({ value, onChange }: DatePickerFieldProps) {
           <Button
             variant="outline"
             className={cn(
-              "w-full h-8 px-3 justify-start text-left font-normal bg-background/80 border-border/60 rounded-xl hover:bg-accent/50 transition-all duration-200 text-sm",
-              !selectedDate && "text-muted-foreground/70"
+              'h-8 w-full justify-start rounded-xl border-border/60 bg-background/80 px-3 text-left text-sm font-normal transition-all duration-200 hover:bg-accent/50',
+              !selectedDate && 'text-muted-foreground/70'
             )}
           >
-            <CalendarIcon className="h-4 w-4 mr-2 text-muted-foreground" />
+            <CalendarIcon className="mr-2 h-4 w-4 text-muted-foreground" />
             {selectedDate ? (
-              format(selectedDate, "MMM d, yyyy")
+              format(selectedDate, 'MMM d, yyyy')
             ) : (
               <span>Due Date</span>
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent 
-          className="w-auto p-0" 
+        <PopoverContent
+          className="w-auto p-0"
           align="start"
-          style={{ 
-            backgroundColor: "hsl(var(--popover))",
-            border: "1px solid hsl(var(--border))"
+          style={{
+            backgroundColor: 'hsl(var(--popover))',
+            border: '1px solid hsl(var(--border))',
           }}
         >
           <Calendar
             mode="single"
             selected={selectedDate}
             onSelect={handleDateSelect}
-            disabled={(date) => date < new Date()}
+            disabled={date => date < new Date()}
             initialFocus
-            className={cn("p-3 pointer-events-auto")}
-            style={{ 
-              backgroundColor: "hsl(var(--popover))",
-              color: "hsl(var(--popover-foreground))"
+            className={cn('pointer-events-auto p-3')}
+            style={{
+              backgroundColor: 'hsl(var(--popover))',
+              color: 'hsl(var(--popover-foreground))',
             }}
           />
         </PopoverContent>

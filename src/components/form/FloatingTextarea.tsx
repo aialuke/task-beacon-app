@@ -1,7 +1,6 @@
-
-import { Textarea } from "@/components/ui/textarea";
-import { useState, useRef, useEffect, ReactNode } from "react";
-import { cn } from "@/lib/utils";
+import { Textarea } from '@/components/ui/textarea';
+import { useState, useRef, useEffect, ReactNode } from 'react';
+import { cn } from '@/lib/utils';
 
 interface FloatingTextareaProps {
   id: string;
@@ -20,7 +19,7 @@ export function FloatingTextarea({
   placeholder,
   label,
   icon,
-  className
+  className,
 }: FloatingTextareaProps) {
   const [isFocused, setIsFocused] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -36,17 +35,19 @@ export function FloatingTextarea({
   }, [value]);
 
   return (
-    <div className={cn("relative group", className)}>
+    <div className={cn('group relative', className)}>
       <div className="relative">
         {icon && (
-          <div className={cn(
-            "absolute left-3 top-3 z-10 transition-all duration-300", // Changed from top-6 to top-3
-            isFloating ? "text-primary scale-95" : "text-muted-foreground"
-          )}>
+          <div
+            className={cn(
+              'absolute left-3 top-3 z-10 transition-all duration-300', // Changed from top-6 to top-3
+              isFloating ? 'scale-95 text-primary' : 'text-muted-foreground'
+            )}
+          >
             {icon}
           </div>
         )}
-        
+
         <Textarea
           ref={textareaRef}
           id={id}
@@ -57,20 +58,20 @@ export function FloatingTextarea({
           placeholder=""
           rows={1}
           className={cn(
-            "peer min-h-28 pt-6 pb-2 bg-background/60 backdrop-blur-sm border-border/40 rounded-2xl transition-all duration-300 focus:bg-background/80 focus:border-primary/60 focus:shadow-lg focus:shadow-primary/10 hover:bg-background/70 hover:border-border/60 resize-none overflow-hidden", // Changed min-h-14 to min-h-28 (doubled)
-            icon ? "pl-11" : "pl-4",
-            "pr-4"
+            'peer min-h-28 resize-none overflow-hidden rounded-2xl border-border/40 bg-background/60 pb-2 pt-6 backdrop-blur-sm transition-all duration-300 hover:border-border/60 hover:bg-background/70 focus:border-primary/60 focus:bg-background/80 focus:shadow-lg focus:shadow-primary/10', // Changed min-h-14 to min-h-28 (doubled)
+            icon ? 'pl-11' : 'pl-4',
+            'pr-4'
           )}
         />
-        
+
         <label
           htmlFor={id}
           className={cn(
-            "absolute transition-all duration-300 pointer-events-none select-none font-medium",
-            icon ? "left-11" : "left-4",
+            'pointer-events-none absolute select-none font-medium transition-all duration-300',
+            icon ? 'left-11' : 'left-4',
             isFloating
-              ? "top-2 text-xs text-primary" // Keeps the floated label at top-2
-              : "top-3 text-sm text-muted-foreground" // Changed from top-6 to top-3 for better alignment
+              ? 'top-2 text-xs text-primary' // Keeps the floated label at top-2
+              : 'top-3 text-sm text-muted-foreground' // Changed from top-6 to top-3 for better alignment
           )}
         >
           {label}
@@ -78,10 +79,13 @@ export function FloatingTextarea({
       </div>
 
       {/* Elegant focus ring with animation */}
-      <div className={cn(
-        "absolute inset-0 rounded-2xl transition-all duration-300 pointer-events-none",
-        isFocused && "ring-2 ring-primary/30 ring-offset-2 ring-offset-background"
-      )} />
+      <div
+        className={cn(
+          'pointer-events-none absolute inset-0 rounded-2xl transition-all duration-300',
+          isFocused &&
+            'ring-2 ring-primary/30 ring-offset-2 ring-offset-background'
+        )}
+      />
     </div>
   );
 }

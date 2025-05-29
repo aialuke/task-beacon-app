@@ -7,7 +7,7 @@ describe('SimpleNavbar', () => {
   const mockItems = [
     { name: 'Home', value: 'home', icon: Home },
     { name: 'Settings', value: 'settings', icon: Settings },
-    { name: 'Calendar', value: 'calendar', icon: Calendar }
+    { name: 'Calendar', value: 'calendar', icon: Calendar },
   ];
 
   const mockOnItemChange = vi.fn();
@@ -18,7 +18,7 @@ describe('SimpleNavbar', () => {
 
   it('renders all navigation items', () => {
     render(
-      <SimpleNavbar 
+      <SimpleNavbar
         items={mockItems}
         activeItem="home"
         onItemChange={mockOnItemChange}
@@ -30,7 +30,7 @@ describe('SimpleNavbar', () => {
 
   it('highlights active item', () => {
     render(
-      <SimpleNavbar 
+      <SimpleNavbar
         items={mockItems}
         activeItem="settings"
         onItemChange={mockOnItemChange}
@@ -39,13 +39,13 @@ describe('SimpleNavbar', () => {
 
     const buttons = screen.getAllByRole('button');
     const settingsButton = buttons[1]; // Second button is settings
-    
+
     expect(settingsButton).toHaveClass('text-white');
   });
 
   it('calls onItemChange when item is clicked', () => {
     render(
-      <SimpleNavbar 
+      <SimpleNavbar
         items={mockItems}
         activeItem="home"
         onItemChange={mockOnItemChange}
@@ -60,7 +60,7 @@ describe('SimpleNavbar', () => {
 
   it('applies custom className', () => {
     const { container } = render(
-      <SimpleNavbar 
+      <SimpleNavbar
         items={mockItems}
         activeItem="home"
         onItemChange={mockOnItemChange}
@@ -73,7 +73,7 @@ describe('SimpleNavbar', () => {
 
   it('renders icons for each item', () => {
     const { container } = render(
-      <SimpleNavbar 
+      <SimpleNavbar
         items={mockItems}
         activeItem="home"
         onItemChange={mockOnItemChange}

@@ -1,4 +1,3 @@
-
 /* src/styles/base/accessibility.css - Essential accessibility base styles */
 
 /* High contrast mode support */
@@ -6,14 +5,14 @@
   .timer-ring {
     stroke: CanvasText;
   }
-  
-  button, 
-  a[role="button"],
+
+  button,
+  a[role='button'],
   .btn-primary,
   .btn-secondary {
     border: 1px solid CanvasText;
   }
-  
+
   svg {
     forced-color-adjust: auto;
   }

@@ -1,10 +1,9 @@
-
-import { toast } from "@/hooks/use-toast";
-import { ApiError } from "@/integrations/supabase/types/api.types";
+import { toast } from '@/hooks/use-toast';
+import { ApiError } from '@/integrations/supabase/types/api.types';
 
 /**
  * Standardized error handling utilities for the application.
- * 
+ *
  * These utilities provide consistent error handling patterns
  * across different parts of the application.
  */
@@ -21,41 +20,41 @@ export interface ErrorHandlingOptions {
 const defaultOptions: ErrorHandlingOptions = {
   showToast: true,
   logToConsole: true,
-  rethrow: false
+  rethrow: false,
 };
 
 /**
  * Process API errors in a standardized way
- * 
+ *
  * @param error - The error to process
  * @param customMessage - Optional custom message to display instead of the error message
  * @param options - Error handling configuration options
  */
 export const handleApiError = (
-  error: Error | ApiError | unknown, 
+  error: Error | ApiError | unknown,
   customMessage?: string,
   options: ErrorHandlingOptions = {}
 ): Error => {
   // Merge with default options
   const opts = { ...defaultOptions, ...options };
-  
-  let errorMessage = customMessage || "An unexpected error occurred";
+
+  let errorMessage = customMessage || 'An unexpected error occurred';
   let errorObject: Error;
-  
+
   // Process different error types
   if (error instanceof Error) {
     errorMessage = customMessage || error.message;
     errorObject = error;
   } else if (
-    typeof error === 'object' && 
-    error !== null && 
+    typeof error === 'object' &&
+    error !== null &&
     'message' in error &&
     typeof error.message === 'string'
   ) {
     // Handle API error objects
     errorMessage = customMessage || error.message;
     errorObject = new Error(errorMessage);
-    
+
     // Copy properties from ApiError
     if ('code' in error) {
       (errorObject as any).code = error.code;
@@ -68,32 +67,32 @@ export const handleApiError = (
     errorObject = new Error(errorMessage);
     (errorObject as any).originalError = error;
   }
-  
+
   // Display error toast if enabled
   if (opts.showToast) {
     toast({
-      title: "Error",
+      title: 'Error',
       description: errorMessage,
-      variant: "destructive",
+      variant: 'destructive',
     });
   }
-  
+
   // Log error to console if enabled
   if (opts.logToConsole) {
-    console.error("[Error]:", errorMessage, errorObject);
+    console.error('[Error]:', errorMessage, errorObject);
   }
-  
+
   // Rethrow if required
   if (opts.rethrow) {
     throw errorObject;
   }
-  
+
   return errorObject;
 };
 
 /**
  * Utility to safely execute async functions with standardized error handling
- * 
+ *
  * @param asyncFn - The async function to execute
  * @param errorMessage - Optional custom error message
  * @param options - Error handling options
@@ -114,7 +113,7 @@ export async function safeAsync<T>(
 
 /**
  * Higher-order function that wraps an async function with error handling
- * 
+ *
  * @param fn - The async function to wrap
  * @param errorMessage - Optional custom error message
  * @param options - Error handling options

@@ -1,7 +1,6 @@
-
 /**
  * Legacy utils file - kept for backward compatibility
- * 
+ *
  * This file now re-exports from the organized utility modules.
  * For new code, prefer importing directly from the specific utility modules:
  * - import { cn, getTaskStatus } from "@/lib/utils/ui";

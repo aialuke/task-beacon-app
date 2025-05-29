@@ -6,8 +6,8 @@ import { TaskStatus } from '@/types';
 // Mock the TaskUIContext
 vi.mock('@/features/tasks/context/TaskUIContext', () => ({
   useTaskUIContext: () => ({
-    isMobile: false
-  })
+    isMobile: false,
+  }),
 }));
 
 // Mock useCountdown hook
@@ -16,8 +16,8 @@ vi.mock('@/hooks/useCountdown', () => ({
     timeDisplay: '5',
     dashOffset: 50,
     tooltipContent: 'Due in 5 days',
-    ariaLabel: 'Task timer: 5 days remaining'
-  })
+    ariaLabel: 'Task timer: 5 days remaining',
+  }),
 }));
 
 describe('CountdownTimer', () => {
@@ -27,9 +27,9 @@ describe('CountdownTimer', () => {
 
   it('renders timer with pending status', () => {
     render(
-      <CountdownTimer 
-        dueDate="2025-06-05T10:00:00Z" 
-        status="pending" 
+      <CountdownTimer
+        dueDate="2025-06-05T10:00:00Z"
+        status="pending"
         size={48}
         priority="medium"
       />
@@ -45,14 +45,14 @@ describe('CountdownTimer', () => {
         timeDisplay: '',
         dashOffset: 0,
         tooltipContent: 'Task completed',
-        ariaLabel: 'Task timer: Completed'
-      })
+        ariaLabel: 'Task timer: Completed',
+      }),
     }));
 
     render(
-      <CountdownTimer 
-        dueDate="2025-06-05T10:00:00Z" 
-        status="complete" 
+      <CountdownTimer
+        dueDate="2025-06-05T10:00:00Z"
+        status="complete"
         size={48}
         priority="medium"
       />
@@ -64,9 +64,9 @@ describe('CountdownTimer', () => {
 
   it('applies correct size and priority styling', () => {
     render(
-      <CountdownTimer 
-        dueDate="2025-06-05T10:00:00Z" 
-        status="pending" 
+      <CountdownTimer
+        dueDate="2025-06-05T10:00:00Z"
+        status="pending"
         size={64}
         priority="high"
       />
@@ -78,9 +78,9 @@ describe('CountdownTimer', () => {
 
   it('handles null due date gracefully', () => {
     render(
-      <CountdownTimer 
-        dueDate={null} 
-        status="pending" 
+      <CountdownTimer
+        dueDate={null}
+        status="pending"
         size={48}
         priority="medium"
       />
@@ -91,9 +91,9 @@ describe('CountdownTimer', () => {
 
   it('has proper accessibility attributes', () => {
     render(
-      <CountdownTimer 
-        dueDate="2025-06-05T10:00:00Z" 
-        status="pending" 
+      <CountdownTimer
+        dueDate="2025-06-05T10:00:00Z"
+        status="pending"
         size={48}
         priority="medium"
       />

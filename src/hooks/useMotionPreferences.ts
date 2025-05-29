@@ -1,9 +1,8 @@
-
 import { useState, useEffect } from 'react';
 
 /**
  * Hook to detect and manage user motion preferences
- * 
+ *
  * @returns Object containing motion preference state and utilities
  */
 export function useMotionPreferences() {
@@ -18,7 +17,7 @@ export function useMotionPreferences() {
     }
 
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    
+
     // Set initial value
     setPrefersReducedMotion(mediaQuery.matches);
     setIsLoaded(true);
@@ -39,7 +38,7 @@ export function useMotionPreferences() {
     prefersReducedMotion,
     isLoaded,
     shouldReduceMotion: prefersReducedMotion,
-    getAnimationConfig: (normalConfig: any, reducedConfig: any) => 
-      prefersReducedMotion ? reducedConfig : normalConfig
+    getAnimationConfig: (normalConfig: any, reducedConfig: any) =>
+      prefersReducedMotion ? reducedConfig : normalConfig,
   };
 }

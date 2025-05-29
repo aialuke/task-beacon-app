@@ -1,7 +1,8 @@
-
 /* src/styles/base/reset.css - CSS reset and normalization */
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -14,6 +15,9 @@ body {
   transition: background-color 0.3s ease;
 }
 
-[type="button"], [type="reset"], [type="submit"], button {
+[type='button'],
+[type='reset'],
+[type='submit'],
+button {
   -webkit-appearance: button;
 }

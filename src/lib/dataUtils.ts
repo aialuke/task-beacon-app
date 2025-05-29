@@ -1,7 +1,6 @@
-
 /**
  * Legacy data utils file - kept for backward compatibility
- * 
+ *
  * This file now re-exports from the organized data utility module.
  * For new code, prefer importing directly from "@/lib/utils/data"
  */
@@ -12,5 +11,5 @@ export {
   searchByTerm,
   groupBy,
   uniqueBy,
-  paginateArray
+  paginateArray,
 } from './utils/data';

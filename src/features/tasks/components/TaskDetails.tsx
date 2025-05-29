@@ -1,11 +1,10 @@
-
-import { memo } from "react";
-import { Task } from "@/types";
-import { animated, SpringValue } from "@react-spring/web";
-import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
-import TaskActions from "./TaskActions";
-import TaskMetadata from "./TaskMetadata";
-import ParentTaskInfo from "./ParentTaskInfo";
+import { memo } from 'react';
+import { Task } from '@/types';
+import { animated, SpringValue } from '@react-spring/web';
+import { useTaskUIContext } from '@/features/tasks/context/TaskUIContext';
+import TaskActions from './TaskActions';
+import TaskMetadata from './TaskMetadata';
+import ParentTaskInfo from './ParentTaskInfo';
 
 interface TaskDetailsProps {
   task: Task;
@@ -31,17 +30,17 @@ function TaskDetails({
       style={{
         height: animationState.height,
         opacity: animationState.opacity,
-        willChange: "height, opacity",
-        overflowY: "hidden",
+        willChange: 'height, opacity',
+        overflowY: 'hidden',
         minHeight: 0,
         zIndex: 2,
-        visibility: isExpanded ? "visible" : "hidden",
+        visibility: isExpanded ? 'visible' : 'hidden',
       }}
-      className="w-full mt-1"
+      className="mt-1 w-full"
     >
       <div
-        className={`space-y-3 ${isMobile ? "pl-4 pt-2 pb-4" : "pl-6 pt-2 pb-4"}`}
-        style={{ height: isExpanded ? "auto" : "0", overflowY: "hidden" }}
+        className={`space-y-3 ${isMobile ? 'pb-4 pl-4 pt-2' : 'pb-4 pl-6 pt-2'}`}
+        style={{ height: isExpanded ? 'auto' : '0', overflowY: 'hidden' }}
       >
         {task.description && (
           <div className="text-sm text-muted-foreground">
@@ -52,16 +51,21 @@ function TaskDetails({
         <TaskMetadata dueDate={task.due_date} url={task.url_link} />
 
         {task.parent_task && task.parent_task_id && (
-          <ParentTaskInfo parentTask={task.parent_task} parentTaskId={task.parent_task_id} />
+          <ParentTaskInfo
+            parentTask={task.parent_task}
+            parentTaskId={task.parent_task_id}
+          />
         )}
 
         {task.photo_url && (
           <div>
-            <span className="text-sm font-medium text-muted-foreground">Photo:</span>
+            <span className="text-sm font-medium text-muted-foreground">
+              Photo:
+            </span>
             <img
               src={task.photo_url}
               alt="Task attachment"
-              className="mt-1 h-20 w-20 object-cover rounded-xl"
+              className="mt-1 h-20 w-20 rounded-xl object-cover"
               loading="lazy"
             />
           </div>

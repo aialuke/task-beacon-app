@@ -1,7 +1,6 @@
-
 /**
  * Centralized utility exports
- * 
+ *
  * This file provides convenient access to all utility functions
  * organized by domain. Import specific utilities directly for better
  * tree-shaking, or use this index for convenience.
@@ -21,52 +20,44 @@ export * as validation from './validation';
 export * as core from './core';
 
 // Individual utility exports for direct imports
-export { 
-  getTaskStatus, 
-  getStatusColor, 
+export {
+  getTaskStatus,
+  getStatusColor,
   getTimerColor,
   getTimerGradient,
   getStatusTooltipClass,
   getTooltipArrowClass,
   isElementInViewport,
-  isDarkMode
+  isDarkMode,
 } from './ui';
 
-export { 
-  sortByProperty, 
-  searchByTerm, 
-  groupBy, 
-  uniqueBy, 
+export {
+  sortByProperty,
+  searchByTerm,
+  groupBy,
+  uniqueBy,
   paginateArray,
   isEmpty,
-  safeJsonParse
+  safeJsonParse,
 } from './data';
 
-export { 
-  truncateUrl, 
-  formatFileSize, 
-  formatPercentage 
-} from './format';
+export { truncateUrl, formatFileSize, formatPercentage } from './format';
 
-export { 
-  getDaysRemaining, 
-  getTimeUntilDue, 
-  isDatePast, 
+export {
+  getDaysRemaining,
+  getTimeUntilDue,
+  isDatePast,
   getDueDateTooltip,
   formatTimeDisplay,
   getTooltipContent,
-  getUpdateInterval
+  getUpdateInterval,
 } from './date';
 
-export { 
-  isValidEmail, 
-  isValidUrl, 
-  isValidPassword, 
-  isDateInFuture 
+export {
+  isValidEmail,
+  isValidUrl,
+  isValidPassword,
+  isDateInFuture,
 } from './validation';
 
-export { 
-  generateUUID, 
-  debounce, 
-  throttle 
-} from './core';
+export { generateUUID, debounce, throttle } from './core';

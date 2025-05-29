@@ -1,5 +1,4 @@
-
-import { toast } from "sonner";
+import { toast } from 'sonner';
 
 // Function to trigger haptic feedback if available
 export const triggerHapticFeedback = () => {

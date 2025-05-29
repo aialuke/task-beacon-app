@@ -1,4 +1,3 @@
-
 /* src/styles/utilities/shadows.css - Enhanced shadow utilities beyond Tailwind defaults */
 
 @layer utilities {
@@ -18,10 +17,14 @@
 
   /* Specific task-related shadow enhancement */
   .shadow-task-card {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.06);
+    box-shadow:
+      0 2px 8px rgba(0, 0, 0, 0.04),
+      0 1px 3px rgba(0, 0, 0, 0.06);
   }
 
   .dark .shadow-task-card {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow:
+      0 2px 8px rgba(0, 0, 0, 0.2),
+      0 1px 3px rgba(0, 0, 0, 0.1);
   }
 }

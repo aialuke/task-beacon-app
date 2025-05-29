@@ -1,9 +1,8 @@
-
 /* src/styles/utilities/accessibility.css - Accessibility utility imports */
 @layer utilities {
   /* Import focused accessibility modules */
-  @import "./accessibility/focus.css";
-  @import "./accessibility/screen-reader.css";
-  @import "./accessibility/motion.css";
-  @import "./accessibility/contrast.css";
+  @import './accessibility/focus.css';
+  @import './accessibility/screen-reader.css';
+  @import './accessibility/motion.css';
+  @import './accessibility/contrast.css';
 }

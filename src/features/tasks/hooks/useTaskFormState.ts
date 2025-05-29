@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback } from 'react';
 
 export interface UseTaskFormStateOptions {
   initialUrl?: string;
@@ -8,22 +8,25 @@ export interface UseTaskFormStateOptions {
 /**
  * Basic task form state management
  */
-export function useTaskFormState({ initialUrl = "", onClose }: UseTaskFormStateOptions = {}) {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [dueDate, setDueDate] = useState("");
+export function useTaskFormState({
+  initialUrl = '',
+  onClose,
+}: UseTaskFormStateOptions = {}) {
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [dueDate, setDueDate] = useState('');
   const [url, setUrl] = useState(initialUrl);
   const [pinned, setPinned] = useState(false);
-  const [assigneeId, setAssigneeId] = useState("");
+  const [assigneeId, setAssigneeId] = useState('');
   const [loading, setLoading] = useState(false);
 
   const resetFormState = useCallback(() => {
-    setTitle("");
-    setDescription("");
-    setDueDate("");
+    setTitle('');
+    setDescription('');
+    setDueDate('');
     setUrl(initialUrl);
     setPinned(false);
-    setAssigneeId("");
+    setAssigneeId('');
     if (onClose) onClose();
   }, [initialUrl, onClose]);
 
@@ -41,11 +44,11 @@ export function useTaskFormState({ initialUrl = "", onClose }: UseTaskFormStateO
     setPinned,
     assigneeId,
     setAssigneeId,
-    
+
     // Loading state
     loading,
     setLoading,
-    
+
     // Form actions
     resetFormState,
   };

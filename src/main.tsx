@@ -1,8 +1,7 @@
-
-import { createRoot } from "react-dom/client";
-import { StrictMode, Component, ReactNode } from "react";
-import App from "./App.tsx";
-import "./index.css";
+import { createRoot } from 'react-dom/client';
+import { StrictMode, Component, ReactNode } from 'react';
+import App from './App.tsx';
+import './index.css';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -22,8 +21,10 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center bg-background">
-          <h1 className="text-2xl font-bold text-destructive">Something went wrong.</h1>
+        <div className="flex min-h-screen items-center justify-center bg-background">
+          <h1 className="text-2xl font-bold text-destructive">
+            Something went wrong.
+          </h1>
         </div>
       );
     }
@@ -31,7 +32,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   }
 }
 
-const rootElement = document.getElementById("root");
+const rootElement = document.getElementById('root');
 if (!rootElement) {
   throw new Error("Root element with ID 'root' not found in the document.");
 }

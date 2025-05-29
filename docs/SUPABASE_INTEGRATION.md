@@ -1,4 +1,3 @@
-
 # Supabase Integration
 
 This document outlines how the Task Management application integrates with Supabase for backend functionality.
@@ -33,6 +32,7 @@ src/integrations/supabase/
 The Supabase client is configured in `src/integrations/supabase/client.ts` and exported as a singleton. This ensures consistent usage throughout the application.
 
 Key features:
+
 - Persistent session storage
 - Auto-refreshing tokens
 - Development mode with mock data
@@ -42,11 +42,13 @@ Key features:
 The API layer provides a standardized interface for interacting with Supabase:
 
 1. **Base API** (`base.api.ts`)
+
    - Error handling utilities
    - Current user utilities
    - Generic request wrapper
 
 2. **Tasks API** (`tasks.api.ts`)
+
    - CRUD operations for tasks
    - Task status updates
    - Task relationship management
@@ -108,6 +110,7 @@ const { error: createError } = await createTask({
 ## Database Schema
 
 Task table structure:
+
 - `id`: UUID primary key
 - `title`: Task title (string)
 - `description`: Task description (nullable string)
@@ -125,6 +128,7 @@ Task table structure:
 ## Security
 
 Row Level Security policies enforce:
+
 1. Users can only see their own tasks
 2. Users can only modify their own tasks
 3. Users can assign tasks to other users
@@ -132,6 +136,7 @@ Row Level Security policies enforce:
 ## Storage
 
 Task photos are stored in a dedicated "task-photos" bucket with:
+
 1. Automatic path generation based on timestamp and filename
 2. Signed URLs for secure access
 3. Size and type restrictions

@@ -1,12 +1,11 @@
-
-import { useCallback } from "react";
-import { useTaskFormState, UseTaskFormStateOptions } from "./useTaskFormState";
-import { useTaskPhotoUpload } from "./useTaskPhotoUpload";
-import { useTaskValidation } from "./useTaskValidation";
+import { useCallback } from 'react';
+import { useTaskFormState, UseTaskFormStateOptions } from './useTaskFormState';
+import { useTaskPhotoUpload } from './useTaskPhotoUpload';
+import { useTaskValidation } from './useTaskValidation';
 
 /**
  * Coordinated task form hook
- * 
+ *
  * Orchestrates form state, photo upload, and validation
  * while keeping individual concerns separated
  */
@@ -30,20 +29,20 @@ export function useTaskForm(options: UseTaskFormStateOptions = {}) {
     // Form state
     ...formState,
     setTitle, // Override with validation
-    
+
     // Photo upload
     photo: photoUpload.photo,
     photoPreview: photoUpload.photoPreview,
     handlePhotoChange: photoUpload.handlePhotoChange,
     uploadPhoto: photoUpload.uploadPhoto,
-    
+
     // Validation
     validateTitle: validation.validateTitle,
     validateTaskForm: validation.validateTaskForm,
-    
+
     // Combined state
     loading,
-    
+
     // Form actions
     resetForm,
   };

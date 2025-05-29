@@ -1,11 +1,10 @@
-
 /**
  * UI-specific utility functions
  */
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
-import { Task, TaskStatus } from "@/types";
-import { getDaysRemaining } from "./date";
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+import { Task, TaskStatus } from '@/types';
+import { getDaysRemaining } from './date';
 
 /**
  * Merges Tailwind CSS classes with proper conflict resolution
@@ -18,19 +17,19 @@ export function cn(...inputs: ClassValue[]) {
  * Determines task status based on due date and completion status
  */
 export function getTaskStatus(task: Task): TaskStatus {
-  if (task.status === "complete") {
-    return "complete";
+  if (task.status === 'complete') {
+    return 'complete';
   }
-  
+
   if (!task.due_date) {
-    return "pending";
+    return 'pending';
   }
-  
+
   const daysRemaining = getDaysRemaining(task.due_date);
   if (daysRemaining !== null && daysRemaining < 0) {
-    return "overdue";
+    return 'overdue';
   }
-  return "pending";
+  return 'pending';
 }
 
 /**
@@ -38,13 +37,13 @@ export function getTaskStatus(task: Task): TaskStatus {
  */
 export function getStatusColor(status: TaskStatus): string {
   switch (status) {
-    case "complete":
-      return "bg-success";
-    case "overdue":
-      return "bg-destructive";
-    case "pending":
+    case 'complete':
+      return 'bg-success';
+    case 'overdue':
+      return 'bg-destructive';
+    case 'pending':
     default:
-      return "bg-accent";
+      return 'bg-accent';
   }
 }
 
@@ -53,13 +52,13 @@ export function getStatusColor(status: TaskStatus): string {
  */
 export function getTimerColor(status: TaskStatus): string {
   switch (status) {
-    case "complete":
-      return "var(--status-complete)";
-    case "overdue":
-      return "var(--status-overdue)";
-    case "pending":
+    case 'complete':
+      return 'var(--status-complete)';
+    case 'overdue':
+      return 'var(--status-overdue)';
+    case 'pending':
     default:
-      return "var(--status-pending)";
+      return 'var(--status-pending)';
   }
 }
 
@@ -68,13 +67,13 @@ export function getTimerColor(status: TaskStatus): string {
  */
 export function getTimerGradient(status: TaskStatus): string {
   switch (status) {
-    case "complete":
-      return "url(#gradientComplete)";
-    case "overdue":
-      return "url(#gradientOverdue)";
-    case "pending":
+    case 'complete':
+      return 'url(#gradientComplete)';
+    case 'overdue':
+      return 'url(#gradientOverdue)';
+    case 'pending':
     default:
-      return "url(#gradientPending)";
+      return 'url(#gradientPending)';
   }
 }
 
@@ -82,18 +81,18 @@ export function getTimerGradient(status: TaskStatus): string {
  * Gets appropriate CSS classes for tooltip based on task status
  */
 export function getStatusTooltipClass(status: TaskStatus): string {
-  if (status === "overdue") return "bg-destructive text-destructive-foreground";
-  if (status === "complete") return "bg-success text-success-foreground";
-  return "bg-popover text-popover-foreground border border-border";
+  if (status === 'overdue') return 'bg-destructive text-destructive-foreground';
+  if (status === 'complete') return 'bg-success text-success-foreground';
+  return 'bg-popover text-popover-foreground border border-border';
 }
 
 /**
  * Gets appropriate CSS classes for tooltip arrow based on task status
  */
 export function getTooltipArrowClass(status: TaskStatus): string {
-  if (status === "overdue") return "fill-destructive";
-  if (status === "complete") return "fill-success";
-  return "fill-popover";
+  if (status === 'overdue') return 'fill-destructive';
+  if (status === 'complete') return 'fill-success';
+  return 'fill-popover';
 }
 
 /**
@@ -104,7 +103,8 @@ export function isElementInViewport(element: HTMLElement): boolean {
   return (
     rect.top >= 0 &&
     rect.left >= 0 &&
-    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+    rect.bottom <=
+      (window.innerHeight || document.documentElement.clientHeight) &&
     rect.right <= (window.innerWidth || document.documentElement.clientWidth)
   );
 }
@@ -113,5 +113,8 @@ export function isElementInViewport(element: HTMLElement): boolean {
  * Checks if the device is in dark mode
  */
 export function isDarkMode(): boolean {
-  return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  return (
+    window.matchMedia &&
+    window.matchMedia('(prefers-color-scheme: dark)').matches
+  );
 }

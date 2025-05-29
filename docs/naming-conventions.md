@@ -1,29 +1,33 @@
-
 # Naming Conventions
 
 This document outlines the naming conventions used throughout the codebase.
 
 ## Components
+
 - **Components**: PascalCase (e.g., `TaskCard`, `CreateTaskForm`)
 - **Files**:
   - React components: PascalCase (e.g., `TaskCard.tsx`)
   - Context files: PascalCase with `Context` suffix (e.g., `TaskContext.tsx`)
 
 ## Hooks
+
 - **Hooks**: camelCase with `use` prefix (e.g., `useTaskContext`, `useTaskMutations`)
 - **Files**: camelCase (e.g., `useTaskMutations.ts`)
 
 ## Utilities and Functions
+
 - **Utility functions**: camelCase (e.g., `formatDate`, `truncateUrl`)
 - **Files**: camelCase (e.g., `dateUtils.ts`)
 
 ## Constants
+
 - **Global constants**: UPPER_SNAKE_CASE
 - **Component-level constants**: camelCase
 
 ## Examples
 
 ### Good Examples
+
 ```typescript
 // Components
 const TaskCard = () => { ... };
@@ -43,6 +47,7 @@ const defaultPageSize = 10;
 ```
 
 ### Avoid
+
 ```typescript
 // Inconsistent casing
 const taskcard = () => { ... }; // Should be TaskCard

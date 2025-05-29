@@ -1,14 +1,13 @@
-
 /* src/styles/utilities/text.css - Text styling utility classes */
 @layer utilities {
   /* ===== TEXT UTILITIES ===== */
   .header-text {
-    @apply text-lg font-semibold my-2;
+    @apply my-2 text-lg font-semibold;
     color: hsl(var(--foreground));
   }
 
   .owner-name {
-    @apply text-xs text-muted-foreground mr-2 whitespace-nowrap overflow-hidden;
+    @apply mr-2 overflow-hidden whitespace-nowrap text-xs text-muted-foreground;
   }
 
   /* ===== LINK UTILITIES ===== */

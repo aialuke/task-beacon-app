@@ -1,9 +1,8 @@
-
 import { Database } from '@/integrations/supabase/types';
 import { PostgrestError } from '@supabase/supabase-js';
 
 // Re-export centralized API types
-export * from "@/types/api.types";
+export * from '@/types/api.types';
 
 // Legacy exports for backward compatibility
 export type Tables = {
@@ -18,7 +17,7 @@ export type Tables = {
       owner_id: string;
       parent_task_id: string | null;
       pinned: boolean;
-      status: "pending" | "complete" | "overdue";
+      status: 'pending' | 'complete' | 'overdue';
       assignee_id: string | null;
       created_at: string;
       updated_at: string;

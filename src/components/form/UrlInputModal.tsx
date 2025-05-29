@@ -1,9 +1,14 @@
-import { useState } from "react";
-import { Link } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { FloatingInput } from "@/components/form/FloatingInput";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { useState } from 'react';
+import { Link } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { FloatingInput } from '@/components/form/FloatingInput';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 interface UrlInputModalProps {
   isOpen: boolean;
@@ -12,7 +17,12 @@ interface UrlInputModalProps {
   onChange: (value: string) => void;
 }
 
-export function UrlInputModal({ isOpen, onClose, value, onChange }: UrlInputModalProps) {
+export function UrlInputModal({
+  isOpen,
+  onClose,
+  value,
+  onChange,
+}: UrlInputModalProps) {
   const [tempValue, setTempValue] = useState(value);
   const [error, setError] = useState<string | null>(null);
 
@@ -31,7 +41,7 @@ export function UrlInputModal({ isOpen, onClose, value, onChange }: UrlInputModa
     }
 
     if (!validateUrl(tempValue)) {
-      setError("Please enter a valid URL (e.g., https://example.com)");
+      setError('Please enter a valid URL (e.g., https://example.com)');
       return;
     }
 
@@ -55,14 +65,14 @@ export function UrlInputModal({ isOpen, onClose, value, onChange }: UrlInputModa
             Add Reference URL
           </DialogTitle>
         </DialogHeader>
-        
+
         <div className="space-y-4">
           <div>
             <FloatingInput
               id="url-input"
               type="text"
               value={tempValue}
-              onChange={(e) => {
+              onChange={e => {
                 setTempValue(e.target.value);
                 setError(null); // Clear error on input change
               }}
@@ -72,19 +82,19 @@ export function UrlInputModal({ isOpen, onClose, value, onChange }: UrlInputModa
               autoFocus
             />
             {error && (
-              <p className={cn(
-                "mt-1 text-sm text-destructive",
-                "animate-in fade-in-0"
-              )}>
+              <p
+                className={cn(
+                  'mt-1 text-sm text-destructive',
+                  'animate-in fade-in-0'
+                )}
+              >
                 {error}
               </p>
             )}
           </div>
-          
+
           <div className="flex justify-end">
-            <Button onClick={handleSave}>
-              Save URL
-            </Button>
+            <Button onClick={handleSave}>Save URL</Button>
           </div>
         </div>
       </DialogContent>

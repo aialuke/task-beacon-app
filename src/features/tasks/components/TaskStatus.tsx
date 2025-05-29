@@ -1,17 +1,22 @@
-import { memo } from "react";
-import { Task } from "@/types/shared.types";
-import { getTaskStatus } from "@/lib/uiUtils";
-import CountdownTimer from "@/components/CountdownTimer";
+import { memo } from 'react';
+import { Task } from '@/types/shared.types';
+import { getTaskStatus } from '@/lib/uiUtils';
+import CountdownTimer from '@/components/CountdownTimer';
 
 interface TaskStatusProps {
   task: Task;
 }
 
 // Custom equality function for TaskStatus props
-const arePropsEqual = (prevProps: TaskStatusProps, nextProps: TaskStatusProps): boolean => {
+const arePropsEqual = (
+  prevProps: TaskStatusProps,
+  nextProps: TaskStatusProps
+): boolean => {
   // Only compare properties that affect status rendering
-  return prevProps.task.due_date === nextProps.task.due_date &&
-         prevProps.task.status === nextProps.task.status;
+  return (
+    prevProps.task.due_date === nextProps.task.due_date &&
+    prevProps.task.status === nextProps.task.status
+  );
 };
 
 function TaskStatus({ task }: TaskStatusProps) {

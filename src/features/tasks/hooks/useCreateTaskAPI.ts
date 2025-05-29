@@ -1,8 +1,7 @@
-
-import { useCallback } from "react";
-import { createTask } from "@/integrations/supabase/api/tasks.api";
-import { getCurrentUserId } from "@/integrations/supabase/api/base.api";
-import { toast } from "@/lib/toast";
+import { useCallback } from 'react';
+import { createTask } from '@/integrations/supabase/api/tasks.api';
+import { getCurrentUserId } from '@/integrations/supabase/api/base.api';
+import { toast } from '@/lib/toast';
 
 interface CreateTaskData {
   title: string;
@@ -34,11 +33,14 @@ export function useCreateTaskAPI() {
       });
 
       if (error) throw error;
-      
-      toast.success("Task created successfully");
+
+      toast.success('Task created successfully');
       return { success: true, error: null };
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred.";
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'An unexpected error occurred.';
       toast.error(errorMessage);
       return { success: false, error: errorMessage };
     }

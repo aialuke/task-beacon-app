@@ -2,9 +2,9 @@
 
 @layer components {
   /* ===== BUTTON STYLING CONSISTENCY ===== */
-  button, 
+  button,
   .button,
-  [role="button"] {
+  [role='button'] {
     transition: all 0.2s ease-in-out !important;
     font-weight: 500 !important;
     cursor: pointer !important;
@@ -13,27 +13,27 @@
   /* Apply border-radius only for buttons with rounded-full */
   button.rounded-full,
   .button.rounded-full,
-  [role="button"].rounded-full {
+  [role='button'].rounded-full {
     border-radius: 9999px !important; /* Matches Tailwind's rounded-full */
   }
 
-  button:hover, 
+  button:hover,
   .button:hover,
-  [role="button"]:hover {
+  [role='button']:hover {
     box-shadow: var(--shadow-md) !important;
     transform: translateY(-1px) !important;
   }
 
-  button:active, 
+  button:active,
   .button:active,
-  [role="button"]:active {
+  [role='button']:active {
     transform: translateY(0) !important;
   }
 
   /* Enhanced focus states for accessibility */
   button:focus-visible,
   .button:focus-visible,
-  [role="button"]:focus-visible {
+  [role='button']:focus-visible {
     outline: 2px solid hsl(var(--primary)) !important;
     outline-offset: 2px !important;
     box-shadow: 0 0 0 4px hsl(var(--primary) / 0.2) !important;

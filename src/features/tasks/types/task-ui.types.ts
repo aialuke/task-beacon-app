@@ -1,5 +1,4 @@
-
-import { TaskStatus, TaskFilter } from "@/types/shared.types";
+import { TaskStatus, TaskFilter } from '@/types/shared.types';
 
 /**
  * UI-related types for task components
@@ -36,11 +35,11 @@ export interface TaskUIContextType {
   // UI filters
   filter: TaskFilter;
   setFilter: (filter: TaskFilter) => void;
-  
+
   // Expanded state
   expandedTaskId: string | null;
   setExpandedTaskId: (id: string | null) => void;
-  
+
   // Mobile detection
   isMobile: boolean;
 }

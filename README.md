@@ -5,6 +5,7 @@ This project is a Task Management Progressive Web Application that allows users 
 ### Task Card Animations
 
 The task cards feature smooth in-place expansion using React Spring animations:
+
 - Cards expand vertically with height animation when clicked
 - Content fades in/out with opacity transitions
 - Cards below an expanded card shift down smoothly
@@ -13,13 +14,14 @@ The task cards feature smooth in-place expansion using React Spring animations:
 #### Testing Notes
 
 When testing the Task Card animations:
+
 1. **Device Compatibility**: Test on various screen sizes (mobile, tablet, desktop) to ensure proper responsive behavior
 2. **Animation Performance**: Verify smooth transitions without jank, especially on lower-end devices
-3. **Interaction Testing**: 
+3. **Interaction Testing**:
    - Expanding a card should push other cards down smoothly
    - Collapsing a card should pull other cards up smoothly
    - Multiple rapid expansions/collapses should work properly
-4. **Accessibility**: 
+4. **Accessibility**:
    - Animations respect reduced-motion preferences
    - Expanded state is keyboard navigable
    - Focus management works correctly when cards expand/collapse

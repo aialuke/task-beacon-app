@@ -1,7 +1,12 @@
-import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { EnhancedUserSearch } from "@/components/form/EnhancedUserSearch";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { useState } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { EnhancedUserSearch } from '@/components/form/EnhancedUserSearch';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 
 interface UserSearchModalProps {
   isOpen: boolean;
@@ -14,7 +19,7 @@ export function UserSearchModal({
   isOpen,
   onClose,
   value,
-  onChange
+  onChange,
 }: UserSearchModalProps) {
   const [tempValue, setTempValue] = useState(value);
 
@@ -25,13 +30,13 @@ export function UserSearchModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md pb-8">
+      <DialogContent className="pb-8 sm:max-w-md">
         <DialogHeader>
           <VisuallyHidden asChild>
             <DialogTitle>Assign Task</DialogTitle>
           </VisuallyHidden>
         </DialogHeader>
-        
+
         <div className="space-y-4 pb-4">
           <EnhancedUserSearch value={tempValue} onChange={handleUserSelect} />
         </div>

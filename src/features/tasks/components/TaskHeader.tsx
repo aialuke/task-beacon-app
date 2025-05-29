@@ -1,10 +1,10 @@
-import { memo } from "react";
-import { Button } from "@/components/ui/button";
-import { Task } from "@/types/shared.types";
-import { Pin } from "lucide-react";
-import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
-import TaskStatus from "./TaskStatus";
-import TaskExpandButton from "./TaskExpandButton";
+import { memo } from 'react';
+import { Button } from '@/components/ui/button';
+import { Task } from '@/types/shared.types';
+import { Pin } from 'lucide-react';
+import { useTaskUIContext } from '@/features/tasks/context/TaskUIContext';
+import TaskStatus from './TaskStatus';
+import TaskExpandButton from './TaskExpandButton';
 
 interface TaskHeaderProps {
   task: Task;
@@ -20,11 +20,14 @@ function TaskHeader({
   handleTogglePin,
 }: TaskHeaderProps) {
   return (
-    <div className="flex items-center w-full gap-2 task-header-container">
+    <div className="task-header-container flex w-full items-center gap-2">
       <TaskStatus task={task} />
 
-      <div className="flex-1 min-w-0 flex items-center">
-        <h3 className="text-base sm:text-lg text-card-foreground mb-0" title={task.title}>
+      <div className="flex min-w-0 flex-1 items-center">
+        <h3
+          className="mb-0 text-base text-card-foreground sm:text-lg"
+          title={task.title}
+        >
           {task.title}
         </h3>
       </div>
@@ -32,12 +35,12 @@ function TaskHeader({
       <Button
         variant="ghost"
         size="icon"
-        className="shrink-0 h-8 w-8 ml-1 no-shadow"
+        className="no-shadow ml-1 h-8 w-8 shrink-0"
         onClick={handleTogglePin}
-        title={task.pinned ? "Unpin task" : "Pin task"}
+        title={task.pinned ? 'Unpin task' : 'Pin task'}
       >
         {task.pinned ? (
-          <Pin size={16} className="text-card-foreground fill-current" />
+          <Pin size={16} className="fill-current text-card-foreground" />
         ) : (
           <Pin size={16} className="text-card-foreground opacity-80" />
         )}

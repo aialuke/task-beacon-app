@@ -1,17 +1,16 @@
-
 /* src/styles/utilities/colors.css */
 @layer utilities {
   /* Enhanced color utilities with improved contrast and accessibility */
-  
+
   /* Status Colors */
   .text-warning {
     color: hsl(var(--warning));
   }
-  
+
   .bg-warning {
     background-color: hsl(var(--warning));
   }
-  
+
   .border-warning {
     border-color: hsl(var(--warning));
   }
@@ -20,11 +19,11 @@
   .text-success {
     color: hsl(var(--success));
   }
-  
+
   .bg-success {
     background-color: hsl(var(--success));
   }
-  
+
   .border-success {
     border-color: hsl(var(--success));
   }
@@ -33,11 +32,11 @@
   .text-error {
     color: hsl(var(--destructive));
   }
-  
+
   .bg-error {
     background-color: hsl(var(--destructive));
   }
-  
+
   .border-error {
     border-color: hsl(var(--destructive));
   }
@@ -46,15 +45,15 @@
   .text-accent-blue {
     color: hsl(var(--accent-blue));
   }
-  
+
   .bg-accent-blue {
     background-color: hsl(var(--accent-blue));
   }
-  
+
   .text-accent-green {
     color: hsl(var(--accent-green));
   }
-  
+
   .bg-accent-green {
     background-color: hsl(var(--accent-green));
   }
@@ -64,7 +63,7 @@
     background-color: hsl(var(--background) / 0.8);
     backdrop-filter: blur(8px);
   }
-  
+
   .bg-glass-dark {
     background-color: hsl(var(--background) / 0.6);
     backdrop-filter: blur(12px);
@@ -72,14 +71,22 @@
 
   /* Gradient Text */
   .text-gradient-primary {
-    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary) / 0.8));
+    background: linear-gradient(
+      135deg,
+      hsl(var(--primary)),
+      hsl(var(--primary) / 0.8)
+    );
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
   .text-gradient-accent {
-    background: linear-gradient(135deg, hsl(var(--accent-blue)), hsl(var(--accent-green)));
+    background: linear-gradient(
+      135deg,
+      hsl(var(--accent-blue)),
+      hsl(var(--accent-green))
+    );
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -90,7 +97,7 @@
     color: hsl(var(--accent-blue));
     transition: color 0.2s ease-in-out;
   }
-  
+
   .hover-primary:hover {
     color: hsl(var(--primary));
     transition: color 0.2s ease-in-out;
@@ -101,7 +108,7 @@
     outline: 2px solid hsl(var(--primary));
     outline-offset: 2px;
   }
-  
+
   .focus-ring-accent:focus {
     outline: 2px solid hsl(var(--accent-blue));
     outline-offset: 2px;
@@ -116,7 +123,7 @@
   --accent-green: 152 76% 50%; /* Green color */
 }
 
-[data-theme="dark"] {
+[data-theme='dark'] {
   --warning: 38 92% 50%;
   --success: 152 76% 50%;
   --accent-blue: 225 77% 70%;

@@ -1,7 +1,7 @@
-import { memo } from "react";
-import { Link } from "react-router-dom";
-import { ExternalLink } from "lucide-react";
-import { ParentTask } from "@/types/shared.types";
+import { memo } from 'react';
+import { Link } from 'react-router-dom';
+import { ExternalLink } from 'lucide-react';
+import { ParentTask } from '@/types/shared.types';
 
 interface ParentTaskInfoProps {
   parentTask: ParentTask;
@@ -10,7 +10,7 @@ interface ParentTaskInfoProps {
 
 function ParentTaskInfo({ parentTask, parentTaskId }: ParentTaskInfoProps) {
   return (
-    <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded border border-gray-200">
+    <div className="rounded border border-gray-200 bg-gray-50 p-3 text-sm text-gray-600">
       <span className="font-medium">Following up on: </span>
       <div className="mt-1">
         {parentTask.description ? (
@@ -18,9 +18,9 @@ function ParentTaskInfo({ parentTask, parentTaskId }: ParentTaskInfoProps) {
         ) : (
           <p>{parentTask.title}</p>
         )}
-        <Link 
+        <Link
           to={`/tasks/${parentTaskId}`}
-          className="text-primary hover:underline inline-flex items-center gap-1 mt-2"
+          className="mt-2 inline-flex items-center gap-1 text-primary hover:underline"
           aria-label={`View details for original task ${parentTask.title}`}
         >
           <ExternalLink size={14} />

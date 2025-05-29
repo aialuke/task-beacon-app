@@ -1,7 +1,6 @@
-
 /**
  * Legacy UI utils file - kept for backward compatibility
- * 
+ *
  * This file now re-exports from the organized UI utility module.
  * For new code, prefer importing directly from "@/lib/utils/ui"
  */
@@ -16,5 +15,5 @@ export {
   getStatusTooltipClass,
   getTooltipArrowClass,
   isElementInViewport,
-  isDarkMode
+  isDarkMode,
 } from './utils/ui';

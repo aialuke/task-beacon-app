@@ -1,6 +1,5 @@
-
-import React from "react";
-import { Input } from "@/components/ui/input";
+import React from 'react';
+import { Input } from '@/components/ui/input';
 
 interface UrlFieldProps {
   value: string;

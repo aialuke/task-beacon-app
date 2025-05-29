@@ -1,6 +1,5 @@
-
-import React from "react";
-import { Link, ExternalLink } from "lucide-react";
+import React from 'react';
+import { Link, ExternalLink } from 'lucide-react';
 
 interface ReferenceCardProps {
   title: string;
@@ -11,29 +10,31 @@ interface ReferenceCardProps {
   className?: string;
 }
 
-export function ReferenceCard({ 
-  title, 
-  description, 
-  url, 
-  label, 
+export function ReferenceCard({
+  title,
+  description,
+  url,
+  label,
   icon,
-  className = ""
+  className = '',
 }: ReferenceCardProps) {
   return (
-    <div className={`p-4 bg-accent/30 backdrop-blur-sm rounded-xl border border-accent/40 shadow-sm ${className}`}>
+    <div
+      className={`rounded-xl border border-accent/40 bg-accent/30 p-4 shadow-sm backdrop-blur-sm ${className}`}
+    >
       <div className="flex items-start gap-3">
-        <div className="p-2 bg-accent/50 rounded-lg mt-0.5">
+        <div className="mt-0.5 rounded-lg bg-accent/50 p-2">
           {icon || <Link className="h-4 w-4 text-accent-foreground" />}
         </div>
         <div className="flex-1 space-y-1">
-          <p className="text-xs font-medium text-muted-foreground tracking-wide uppercase">
+          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
             {label}
           </p>
-          <h4 className="font-semibold text-sm text-foreground leading-relaxed">
+          <h4 className="text-sm font-semibold leading-relaxed text-foreground">
             {title}
           </h4>
           {description && (
-            <p className="text-xs text-muted-foreground/80 line-clamp-2">
+            <p className="line-clamp-2 text-xs text-muted-foreground/80">
               {description}
             </p>
           )}
@@ -43,12 +44,10 @@ export function ReferenceCard({
                 href={url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs text-primary hover:text-primary/80 transition-colors"
+                className="inline-flex items-center gap-1.5 text-xs text-primary transition-colors hover:text-primary/80"
               >
                 <ExternalLink className="h-3 w-3" />
-                <span className="truncate max-w-[200px]">
-                  {url}
-                </span>
+                <span className="max-w-[200px] truncate">{url}</span>
               </a>
             </div>
           )}

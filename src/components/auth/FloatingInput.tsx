@@ -43,17 +43,17 @@ const FloatingInput = forwardRef<HTMLInputElement, FloatingInputProps>(
     }, [error]);
 
     return (
-      <div className="relative group">
+      <div className="group relative">
         {showLabel && (
           <label
             htmlFor={id}
             className={cn(
-              "absolute left-3 top-1/2 -translate-y-1/2 text-sm font-medium text-muted-foreground pointer-events-none transition-opacity duration-200", // Added transition for smooth disappearance
-              error && "text-destructive"
+              'pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm font-medium text-muted-foreground transition-opacity duration-200', // Added transition for smooth disappearance
+              error && 'text-destructive'
             )}
           >
             {label}
-            {required && <span className="text-destructive ml-1">*</span>}
+            {required && <span className="ml-1 text-destructive">*</span>}
           </label>
         )}
         <input
@@ -61,26 +61,26 @@ const FloatingInput = forwardRef<HTMLInputElement, FloatingInputProps>(
           id={id}
           type={type}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={e => onChange(e.target.value)}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           autoComplete={autoComplete}
           disabled={disabled}
           required={required}
           className={cn(
-            "peer w-full h-10 px-3 py-2 bg-input/20 border rounded-xl transition-all duration-300 outline-none", // Changed bg-background/20 to bg-input/20
-            "focus:bg-input/30 focus:border-primary focus:ring-2 focus:ring-primary/20",
-            "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2", // Added focus-visible styles
-            error 
-              ? "border-destructive focus:border-destructive focus:ring-destructive/20 focus-visible:ring-destructive focus-visible:ring-offset-2" 
-              : "border-border hover:border-primary/50",
-            disabled && "opacity-50 cursor-not-allowed",
+            'peer h-10 w-full rounded-xl border bg-input/20 px-3 py-2 outline-none transition-all duration-300', // Changed bg-background/20 to bg-input/20
+            'focus:border-primary focus:bg-input/30 focus:ring-2 focus:ring-primary/20',
+            'focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2', // Added focus-visible styles
+            error
+              ? 'border-destructive focus:border-destructive focus:ring-destructive/20 focus-visible:ring-destructive focus-visible:ring-offset-2'
+              : 'border-border hover:border-primary/50',
+            disabled && 'cursor-not-allowed opacity-50',
             className
           )}
         />
-        
+
         {error && (
-          <p className="mt-1 text-xs text-destructive animate-fade-in">
+          <p className="mt-1 animate-fade-in text-xs text-destructive">
             {error}
           </p>
         )}

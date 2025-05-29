@@ -1,4 +1,3 @@
-
 /**
  * Data manipulation and processing utilities
  */
@@ -7,35 +6,33 @@
  * Sorts an array of objects by a specific property
  */
 export function sortByProperty<T>(
-  array: T[], 
-  key: keyof T, 
+  array: T[],
+  key: keyof T,
   direction: 'asc' | 'desc' = 'asc'
 ): T[] {
   return [...array].sort((a, b) => {
     const valueA = a[key];
     const valueB = b[key];
-    
+
     // Handle string comparison
     if (typeof valueA === 'string' && typeof valueB === 'string') {
-      return direction === 'asc' 
-        ? valueA.localeCompare(valueB) 
+      return direction === 'asc'
+        ? valueA.localeCompare(valueB)
         : valueB.localeCompare(valueA);
     }
-    
+
     // Handle number comparison
     if (typeof valueA === 'number' && typeof valueB === 'number') {
-      return direction === 'asc' 
-        ? valueA - valueB 
-        : valueB - valueA;
+      return direction === 'asc' ? valueA - valueB : valueB - valueA;
     }
-    
+
     // Handle date comparison
     if (valueA instanceof Date && valueB instanceof Date) {
-      return direction === 'asc' 
-        ? valueA.getTime() - valueB.getTime() 
+      return direction === 'asc'
+        ? valueA.getTime() - valueB.getTime()
         : valueB.getTime() - valueA.getTime();
     }
-    
+
     return 0;
   });
 }
@@ -43,12 +40,16 @@ export function sortByProperty<T>(
 /**
  * Filters an array of objects based on a search term across multiple properties
  */
-export function searchByTerm<T>(array: T[], searchTerm: string, keys: (keyof T)[]): T[] {
+export function searchByTerm<T>(
+  array: T[],
+  searchTerm: string,
+  keys: (keyof T)[]
+): T[] {
   if (!searchTerm) return array;
-  
+
   const term = searchTerm.toLowerCase().trim();
-  
-  return array.filter(item => 
+
+  return array.filter(item =>
     keys.some(key => {
       const value = item[key];
       if (value === null || value === undefined) return false;
@@ -61,14 +62,17 @@ export function searchByTerm<T>(array: T[], searchTerm: string, keys: (keyof T)[
  * Groups an array of objects by a specific property
  */
 export function groupBy<T>(array: T[], key: keyof T): Record<string, T[]> {
-  return array.reduce((result, item) => {
-    const groupKey = String(item[key]);
-    if (!result[groupKey]) {
-      result[groupKey] = [];
-    }
-    result[groupKey].push(item);
-    return result;
-  }, {} as Record<string, T[]>);
+  return array.reduce(
+    (result, item) => {
+      const groupKey = String(item[key]);
+      if (!result[groupKey]) {
+        result[groupKey] = [];
+      }
+      result[groupKey].push(item);
+      return result;
+    },
+    {} as Record<string, T[]>
+  );
 }
 
 /**
@@ -89,7 +93,11 @@ export function uniqueBy<T>(array: T[], key: keyof T): T[] {
 /**
  * Creates a paginated subset of an array
  */
-export function paginateArray<T>(array: T[], page: number = 1, pageSize: number = 10): T[] {
+export function paginateArray<T>(
+  array: T[],
+  page: number = 1,
+  pageSize: number = 10
+): T[] {
   const startIndex = (page - 1) * pageSize;
   return array.slice(startIndex, startIndex + pageSize);
 }
@@ -101,7 +109,8 @@ export function isEmpty(value: unknown): boolean {
   if (value === null || value === undefined) return true;
   if (typeof value === 'string') return value.trim() === '';
   if (Array.isArray(value)) return value.length === 0;
-  if (typeof value === 'object') return Object.keys(value as object).length === 0;
+  if (typeof value === 'object')
+    return Object.keys(value as object).length === 0;
   return false;
 }
 

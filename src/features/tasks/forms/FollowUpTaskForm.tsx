@@ -1,15 +1,18 @@
-import React from "react";
-import { Task } from "@/types/shared.types";
-import { useFollowUpTask } from "@/features/tasks/hooks/useFollowUpTask";
-import { BaseTaskForm } from "@/components/form/BaseTaskForm";
-import { ParentTaskReference } from "@/components/form/ParentTaskReference";
+import React from 'react';
+import { Task } from '@/types/shared.types';
+import { useFollowUpTask } from '@/features/tasks/hooks/useFollowUpTask';
+import { BaseTaskForm } from '@/components/form/BaseTaskForm';
+import { ParentTaskReference } from '@/components/form/ParentTaskReference';
 
 interface FollowUpTaskFormProps {
   parentTask: Task;
   onClose?: () => void;
 }
 
-export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFormProps) {
+export default function FollowUpTaskForm({
+  parentTask,
+  onClose,
+}: FollowUpTaskFormProps) {
   const {
     title,
     setTitle,
@@ -24,7 +27,7 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
     setAssigneeId,
     loading,
     handlePhotoChange,
-    handleSubmit
+    handleSubmit,
   } = useFollowUpTask({ parentTask, onClose });
 
   return (
@@ -51,7 +54,7 @@ export default function FollowUpTaskForm({ parentTask, onClose }: FollowUpTaskFo
       descriptionPlaceholder="Describe your follow-up task..."
     >
       {/* Parent Task Reference moved to bottom */}
-      <div className="mt-8 pt-6 border-t border-border/20">
+      <div className="mt-8 border-t border-border/20 pt-6">
         <ParentTaskReference parentTask={parentTask} />
       </div>
     </BaseTaskForm>

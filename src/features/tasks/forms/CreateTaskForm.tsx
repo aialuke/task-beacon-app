@@ -1,12 +1,7 @@
+import { useCreateTask } from '@/features/tasks/hooks/useCreateTask';
+import { BaseTaskForm } from '@/components/form/BaseTaskForm';
 
-import { useCreateTask } from "@/features/tasks/hooks/useCreateTask";
-import { BaseTaskForm } from "@/components/form/BaseTaskForm";
-
-export default function CreateTaskForm({
-  onClose,
-}: {
-  onClose?: () => void;
-}) {
+export default function CreateTaskForm({ onClose }: { onClose?: () => void }) {
   const {
     title,
     setTitle,
@@ -21,7 +16,7 @@ export default function CreateTaskForm({
     setAssigneeId,
     loading,
     handlePhotoChange,
-    handleSubmit
+    handleSubmit,
   } = useCreateTask({ onClose });
 
   return (

@@ -1,7 +1,6 @@
-
 /**
  * Legacy format utils file - kept for backward compatibility
- * 
+ *
  * This file now re-exports from the organized format utility module.
  * For new code, prefer importing directly from "@/lib/utils/format"
  */
@@ -11,5 +10,5 @@ export {
   truncateText,
   truncateUrl,
   formatFileSize,
-  formatPercentage
+  formatPercentage,
 } from './utils/format';

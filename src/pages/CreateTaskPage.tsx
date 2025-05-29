@@ -1,30 +1,29 @@
-
-import { ArrowLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
-import CreateTaskForm from "@/features/tasks/forms/CreateTaskForm";
+import { ArrowLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
+import CreateTaskForm from '@/features/tasks/forms/CreateTaskForm';
 
 export default function CreateTaskPage() {
   const navigate = useNavigate();
 
   const handleClose = () => {
-    navigate("/");
+    navigate('/');
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 animate-fade-in">
-      <div className="container max-w-2xl mx-auto px-4 py-8">
-        <div className="flex items-center mb-8">
+    <div className="min-h-screen animate-fade-in bg-gradient-to-br from-background via-background to-muted/20">
+      <div className="container mx-auto max-w-2xl px-4 py-8">
+        <div className="mb-8 flex items-center">
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigate("/")}
-            className="p-3 hover:bg-accent/80 transition-all duration-200 hover:scale-105 rounded-full shadow-sm hover:shadow-md"
+            onClick={() => navigate('/')}
+            className="rounded-full p-3 shadow-sm transition-all duration-200 hover:scale-105 hover:bg-accent/80 hover:shadow-md"
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
         </div>
-        
+
         <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
           <CreateTaskForm onClose={handleClose} />
         </div>

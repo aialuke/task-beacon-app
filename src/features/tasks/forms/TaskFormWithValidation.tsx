@@ -1,42 +1,48 @@
-import { useFormWithValidation } from "@/components/form/useFormWithValidation";
-import { createTaskSchema, CreateTaskInput } from "@/features/tasks/schemas/taskSchema";
-import { Form } from "@/components/ui/form";
-import { FormField } from "@/components/ui/form";
-import { FormItem } from "@/components/ui/form";
-import { FormLabel } from "@/components/ui/form";
-import { FormControl } from "@/components/ui/form";
-import { FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { DatePickerField } from "@/components/form/DatePickerField";
-import { PhotoUploadField } from "@/components/form/PhotoUploadField";
-import { FormActions } from "@/components/form/FormActions";
-import { UserSearchField } from "@/components/form/UserSearchField";
-import { useState } from "react";
+import { useFormWithValidation } from '@/components/form/useFormWithValidation';
+import {
+  createTaskSchema,
+  CreateTaskInput,
+} from '@/features/tasks/schemas/taskSchema';
+import { Form } from '@/components/ui/form';
+import { FormField } from '@/components/ui/form';
+import { FormItem } from '@/components/ui/form';
+import { FormLabel } from '@/components/ui/form';
+import { FormControl } from '@/components/ui/form';
+import { FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { DatePickerField } from '@/components/form/DatePickerField';
+import { PhotoUploadField } from '@/components/form/PhotoUploadField';
+import { FormActions } from '@/components/form/FormActions';
+import { UserSearchField } from '@/components/form/UserSearchField';
+import { useState } from 'react';
 
 interface TaskFormProps {
   onSubmit: (data: CreateTaskInput & { photo: File | null }) => Promise<void>;
   onClose?: () => void;
 }
 
-export default function TaskFormWithValidation({ onSubmit, onClose }: TaskFormProps) {
+export default function TaskFormWithValidation({
+  onSubmit,
+  onClose,
+}: TaskFormProps) {
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
-  
+
   const form = useFormWithValidation<CreateTaskInput>({
     schema: createTaskSchema,
     defaultValues: {
-      title: "",
-      description: "",
-      dueDate: "",
-      url: "",
+      title: '',
+      description: '',
+      dueDate: '',
+      url: '',
       pinned: false,
-      assigneeId: "",
+      assigneeId: '',
     },
-    onSubmit: async (data) => {
+    onSubmit: async data => {
       await onSubmit({ ...data, photo });
     },
-    successMessage: "Task created successfully",
+    successMessage: 'Task created successfully',
   });
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,7 +56,10 @@ export default function TaskFormWithValidation({ onSubmit, onClose }: TaskFormPr
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit((data) => form.onSubmit(data))} className="space-y-4">
+      <form
+        onSubmit={form.handleSubmit(data => form.onSubmit(data))}
+        className="space-y-4"
+      >
         <FormField
           control={form.control}
           name="title"
@@ -61,7 +70,9 @@ export default function TaskFormWithValidation({ onSubmit, onClose }: TaskFormPr
                 <Input placeholder="Task title" {...field} maxLength={22} />
               </FormControl>
               <div className="flex justify-end">
-                <span className={`text-xs ${field.value.length > 22 ? "text-destructive" : "text-muted-foreground"}`}>
+                <span
+                  className={`text-xs ${field.value.length > 22 ? 'text-destructive' : 'text-muted-foreground'}`}
+                >
                   {field.value.length}/22
                 </span>
               </div>
@@ -69,7 +80,7 @@ export default function TaskFormWithValidation({ onSubmit, onClose }: TaskFormPr
             </FormItem>
           )}
         />
-        
+
         <FormField
           control={form.control}
           name="description"
@@ -83,7 +94,7 @@ export default function TaskFormWithValidation({ onSubmit, onClose }: TaskFormPr
             </FormItem>
           )}
         />
-        
+
         <FormField
           control={form.control}
           name="dueDate"
@@ -91,13 +102,16 @@ export default function TaskFormWithValidation({ onSubmit, onClose }: TaskFormPr
             <FormItem>
               <FormLabel>Due Date</FormLabel>
               <FormControl>
-                <DatePickerField value={field.value} onChange={(e) => field.onChange(e.target.value)} />
+                <DatePickerField
+                  value={field.value}
+                  onChange={e => field.onChange(e.target.value)}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        
+
         <FormField
           control={form.control}
           name="url"
@@ -105,13 +119,17 @@ export default function TaskFormWithValidation({ onSubmit, onClose }: TaskFormPr
             <FormItem>
               <FormLabel>URL</FormLabel>
               <FormControl>
-                <Input placeholder="https://example.com" {...field} type="url" />
+                <Input
+                  placeholder="https://example.com"
+                  {...field}
+                  type="url"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        
+
         <div className="space-y-2">
           <FormLabel>Photo</FormLabel>
           <PhotoUploadField
@@ -119,7 +137,7 @@ export default function TaskFormWithValidation({ onSubmit, onClose }: TaskFormPr
             preview={photoPreview}
           />
         </div>
-        
+
         <FormField
           control={form.control}
           name="assigneeId"
@@ -137,11 +155,8 @@ export default function TaskFormWithValidation({ onSubmit, onClose }: TaskFormPr
             </FormItem>
           )}
         />
-        
-        <FormActions
-          onCancel={onClose}
-          isSubmitting={form.isSubmitting}
-        />
+
+        <FormActions onCancel={onClose} isSubmitting={form.isSubmitting} />
       </form>
     </Form>
   );

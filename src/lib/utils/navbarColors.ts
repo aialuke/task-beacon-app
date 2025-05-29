@@ -1,4 +1,3 @@
-
 /**
  * Navbar color computation utilities
  * Handles theme-aware color calculations for navbar components
@@ -22,10 +21,10 @@ export function computeNavbarColors(): NavbarColors {
   const root = document.documentElement;
   const computedStyle = getComputedStyle(root);
   const isDarkMode = root.classList.contains('dark');
-  
+
   // Get the primary color HSL values
   const primaryHSL = computedStyle.getPropertyValue('--primary').trim();
-  
+
   if (primaryHSL) {
     // Convert HSL to RGB for better control
     const tempDiv = document.createElement('div');
@@ -33,12 +32,12 @@ export function computeNavbarColors(): NavbarColors {
     document.body.appendChild(tempDiv);
     const rgbColor = getComputedStyle(tempDiv).color;
     document.body.removeChild(tempDiv);
-    
+
     // Extract RGB values to create variations
     const rgbMatch = rgbColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
     if (rgbMatch) {
       const [, r, g, b] = rgbMatch;
-      
+
       return {
         primary: `rgb(${r}, ${g}, ${b})`,
         primaryWithOpacity: `rgba(${r}, ${g}, ${b}, 0.8)`,
@@ -47,11 +46,11 @@ export function computeNavbarColors(): NavbarColors {
         primaryGlow: `rgba(${r}, ${g}, ${b}, 0.3)`,
         indicatorColor: 'hsl(0 0% 98% / 1)',
         highlightColor: 'hsl(240 5.9% 10%)',
-        isDarkMode
+        isDarkMode,
       };
     }
   }
-  
+
   // Fallback colors
   return {
     primary: '#3662E3',
@@ -61,7 +60,7 @@ export function computeNavbarColors(): NavbarColors {
     primaryGlow: 'rgba(54, 98, 227, 0.3)',
     indicatorColor: 'hsl(0 0% 98% / 1)',
     highlightColor: 'hsl(240 5.9% 10%)',
-    isDarkMode: false
+    isDarkMode: false,
   };
 }
 
@@ -69,15 +68,15 @@ export function computeNavbarColors(): NavbarColors {
  * Sets up a theme change observer for color updates
  */
 export function setupThemeObserver(callback: () => void): () => void {
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
+  const observer = new MutationObserver(mutations => {
+    mutations.forEach(mutation => {
       if (mutation.attributeName === 'class') {
         setTimeout(callback, 50); // Small delay to ensure CSS is applied
       }
     });
   });
-  
+
   observer.observe(document.documentElement, { attributes: true });
-  
+
   return () => observer.disconnect();
 }

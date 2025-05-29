@@ -1,7 +1,6 @@
-
-import { Moon, Sun } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useTheme } from "@/contexts/ThemeContext";
+import { Moon, Sun } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useTheme } from '@/contexts/ThemeContext';
 
 export function ThemeToggle() {
   const { theme, setTheme, actualTheme } = useTheme();
@@ -20,18 +19,14 @@ export function ThemeToggle() {
       title={`Switch to ${actualTheme === 'dark' ? 'light' : 'dark'} theme`}
     >
       {actualTheme === 'dark' ? (
-        <Sun 
-          className="h-4 w-4 text-foreground" 
-          aria-hidden="true"
-        />
+        <Sun className="h-4 w-4 text-foreground" aria-hidden="true" />
       ) : (
-        <Moon 
-          className="h-4 w-4 text-foreground" 
-          aria-hidden="true"
-        />
+        <Moon className="h-4 w-4 text-foreground" aria-hidden="true" />
       )}
       <span className="sr-only">
-        {actualTheme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+        {actualTheme === 'dark'
+          ? 'Switch to light theme'
+          : 'Switch to dark theme'}
       </span>
     </Button>
   );

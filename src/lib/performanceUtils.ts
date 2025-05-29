@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 
 /**
@@ -27,15 +26,15 @@ class PerformanceMonitor {
     const id = `${name}-${Date.now()}`;
     const metric: PerformanceMetrics = {
       name: id,
-      startTime: performance.now()
+      startTime: performance.now(),
     };
-    
+
     this.metrics.push(metric);
-    
+
     if (process.env.NODE_ENV === 'development') {
       console.log(`🚀 Performance measurement started: ${name}`);
     }
-    
+
     return id;
   }
 
@@ -55,10 +54,15 @@ class PerformanceMonitor {
     }
 
     if (process.env.NODE_ENV === 'development') {
-      console.log(`⏱️ Performance measurement completed: ${id} - ${metric.duration.toFixed(2)}ms`);
-      
-      if (metric.duration > 16.67) { // More than one frame at 60fps
-        console.warn(`⚠️ Slow operation detected: ${id} took ${metric.duration.toFixed(2)}ms`);
+      console.log(
+        `⏱️ Performance measurement completed: ${id} - ${metric.duration.toFixed(2)}ms`
+      );
+
+      if (metric.duration > 16.67) {
+        // More than one frame at 60fps
+        console.warn(
+          `⚠️ Slow operation detected: ${id} took ${metric.duration.toFixed(2)}ms`
+        );
       }
     }
 
@@ -76,22 +80,25 @@ class PerformanceMonitor {
     const updateFPS = () => {
       this.frameCount++;
       const now = performance.now();
-      
-      if (now - this.lastFPSUpdate >= 1000) { // Update every second
-        this.currentFPS = Math.round((this.frameCount * 1000) / (now - this.lastFPSUpdate));
-        
+
+      if (now - this.lastFPSUpdate >= 1000) {
+        // Update every second
+        this.currentFPS = Math.round(
+          (this.frameCount * 1000) / (now - this.lastFPSUpdate)
+        );
+
         if (process.env.NODE_ENV === 'development') {
           console.log(`📊 Current FPS: ${this.currentFPS}`);
-          
+
           if (this.currentFPS < 30) {
             console.warn(`⚠️ Low FPS detected: ${this.currentFPS}`);
           }
         }
-        
+
         this.frameCount = 0;
         this.lastFPSUpdate = now;
       }
-      
+
       animationId = requestAnimationFrame(updateFPS);
     };
 
@@ -138,7 +145,7 @@ export function withPerformanceMonitoring<T extends object>(
   return function PerformanceMonitoredComponent(props: T) {
     React.useEffect(() => {
       const id = performanceMonitor.startMeasurement(`${componentName}-render`);
-      
+
       return () => {
         performanceMonitor.endMeasurement(id);
       };
@@ -154,17 +161,22 @@ export function withPerformanceMonitoring<T extends object>(
 export function usePerformanceMonitoring(componentName: string) {
   React.useEffect(() => {
     const id = performanceMonitor.startMeasurement(`${componentName}-mount`);
-    
+
     return () => {
       performanceMonitor.endMeasurement(id);
     };
   }, [componentName]);
 
-  const measureOperation = React.useCallback((operationName: string, operation: () => void) => {
-    const id = performanceMonitor.startMeasurement(`${componentName}-${operationName}`);
-    operation();
-    performanceMonitor.endMeasurement(id);
-  }, [componentName]);
+  const measureOperation = React.useCallback(
+    (operationName: string, operation: () => void) => {
+      const id = performanceMonitor.startMeasurement(
+        `${componentName}-${operationName}`
+      );
+      operation();
+      performanceMonitor.endMeasurement(id);
+    },
+    [componentName]
+  );
 
   return { measureOperation };
 }

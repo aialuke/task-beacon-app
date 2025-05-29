@@ -19,7 +19,11 @@ const ModernAuthForm: React.FC = () => {
   const [name, setName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<{ email?: string; password?: string; name?: string }>({});
+  const [errors, setErrors] = useState<{
+    email?: string;
+    password?: string;
+    name?: string;
+  }>({});
 
   const nameInputRef = useRef<HTMLInputElement>(null);
   const emailInputRef = useRef<HTMLInputElement>(null);
@@ -70,7 +74,7 @@ const ModernAuthForm: React.FC = () => {
     const emailError = validateEmail(email);
     const passwordError = validatePassword(password);
     const nameError = mode === 'signup' ? validateName(name) : '';
-    
+
     setErrors({
       email: emailError,
       password: passwordError,
@@ -82,7 +86,7 @@ const ModernAuthForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       toast.error('Please fix the errors before continuing');
       return;
@@ -100,7 +104,10 @@ const ModernAuthForm: React.FC = () => {
       }
 
       if (mode === 'signin') {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
         if (error) throw error;
         toast.success('Welcome back! Redirecting to your dashboard...');
       } else {
@@ -118,7 +125,6 @@ const ModernAuthForm: React.FC = () => {
       setTimeout(() => {
         window.location.href = '/';
       }, 1500);
-
     } catch (error: unknown) {
       if (error instanceof AuthError) {
         toast.error(error.message || 'An unexpected error occurred');
@@ -151,24 +157,26 @@ const ModernAuthForm: React.FC = () => {
   }, [mode]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-2 bg-gradient-to-br from-background via-background to-primary/5">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background via-background to-primary/5 p-2">
       <div className="w-full max-w-sm">
         {/* Logo and Branding */}
-        <div className="text-center mb-4 animate-fade-in">
-          <div className="flex items-center justify-center gap-2 mb-1">
-            <img 
-              src="/assets/hourglass_logo.svg" 
-              alt="Flow State Logo" 
-              className="w-10 h-10"
+        <div className="mb-4 animate-fade-in text-center">
+          <div className="mb-1 flex items-center justify-center gap-2">
+            <img
+              src="/assets/hourglass_logo.svg"
+              alt="Flow State Logo"
+              className="h-10 w-10"
             />
-            <h1 className="text-[26.19px] font-normal tracking-[0.02662em] text-gradient-primary"> {/* Updated font size to 26.19px, tracking to 0.02662em */}
+            <h1 className="text-gradient-primary text-[26.19px] font-normal tracking-[0.02662em]">
+              {' '}
+              {/* Updated font size to 26.19px, tracking to 0.02662em */}
               Flow State
             </h1>
           </div>
         </div>
 
         {/* Card */}
-        <Card className="bg-background animate-fade-in border-none">
+        <Card className="animate-fade-in border-none bg-background">
           <CardContent className="space-y-4">
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Name Input (only for signup) */}
@@ -212,32 +220,34 @@ const ModernAuthForm: React.FC = () => {
                   value={password}
                   onChange={handlePasswordChange}
                   error={errors.password}
-                  autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
+                  autoComplete={
+                    mode === 'signin' ? 'current-password' : 'new-password'
+                  }
                   disabled={loading}
                   required
                   className="h-10 text-sm"
                 />
-                
+
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-primary"
                   disabled={loading}
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? (
-                    <EyeOff className="w-4 h-4" />
+                    <EyeOff className="h-4 w-4" />
                   ) : (
-                    <Eye className="w-4 h-4" />
+                    <Eye className="h-4 w-4" />
                   )}
                 </button>
               </div>
 
               {/* Password Strength Indicator for Signup */}
               {mode === 'signup' && (
-                <PasswordStrengthIndicator 
-                  password={password} 
-                  show={password.length > 0} 
+                <PasswordStrengthIndicator
+                  password={password}
+                  show={password.length > 0}
                 />
               )}
 
@@ -245,21 +255,25 @@ const ModernAuthForm: React.FC = () => {
               <Button
                 type="submit"
                 className={cn(
-                  "w-full h-10 text-sm font-medium transition-all duration-300",
-                  "hover:scale-[1.02] hover:shadow-lg",
-                  loading && "cursor-not-allowed"
+                  'h-10 w-full text-sm font-medium transition-all duration-300',
+                  'hover:scale-[1.02] hover:shadow-lg',
+                  loading && 'cursor-not-allowed'
                 )}
                 disabled={loading}
               >
                 {loading ? (
                   <div className="flex items-center space-x-2">
-                    <Loader2 className="w-3 h-3 animate-spin" />
+                    <Loader2 className="h-3 w-3 animate-spin" />
                     <span>
-                      {mode === 'signin' ? 'Signing in...' : 'Creating account...'}
+                      {mode === 'signin'
+                        ? 'Signing in...'
+                        : 'Creating account...'}
                     </span>
                   </div>
+                ) : mode === 'signin' ? (
+                  'Sign In'
                 ) : (
-                  mode === 'signin' ? 'Sign In' : 'Create Account'
+                  'Create Account'
                 )}
               </Button>
             </form>
@@ -267,12 +281,18 @@ const ModernAuthForm: React.FC = () => {
             {/* Mode Toggle */}
             <div className="text-center">
               <p className="text-xs text-muted-foreground">
-                {mode === 'signin' ? "Don't have an account? " : "Already have an account? "}
+                {mode === 'signin'
+                  ? "Don't have an account? "
+                  : 'Already have an account? '}
                 <button
                   onClick={toggleMode}
-                  className="text-primary hover:underline font-medium transition-colors"
+                  className="font-medium text-primary transition-colors hover:underline"
                   disabled={loading}
-                  aria-label={mode === 'signin' ? 'Switch to sign up' : 'Switch to sign in'}
+                  aria-label={
+                    mode === 'signin'
+                      ? 'Switch to sign up'
+                      : 'Switch to sign in'
+                  }
                 >
                   {mode === 'signin' ? 'Sign Up' : 'Sign In'}
                 </button>

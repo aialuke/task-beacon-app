@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 type Theme = 'dark' | 'light' | 'system';
@@ -28,12 +27,12 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const root = window.document.documentElement;
-    
+
     // Remove existing theme classes
     root.classList.remove('light', 'dark');
-    
+
     let effectiveTheme: 'dark' | 'light';
-    
+
     if (theme === 'system') {
       effectiveTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
         ? 'dark'
@@ -41,11 +40,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     } else {
       effectiveTheme = theme;
     }
-    
+
     // Apply the theme class
     root.classList.add(effectiveTheme);
     setActualTheme(effectiveTheme);
-    
+
     // Store the preference
     localStorage.setItem('theme', theme);
   }, [theme]);
@@ -58,7 +57,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const handleChange = () => {
       const root = window.document.documentElement;
       root.classList.remove('light', 'dark');
-      
+
       const effectiveTheme = mediaQuery.matches ? 'dark' : 'light';
       root.classList.add(effectiveTheme);
       setActualTheme(effectiveTheme);

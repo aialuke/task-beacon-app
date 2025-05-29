@@ -1,5 +1,4 @@
-
-import UserSearchInput from "@/components/UserSearchInput";
+import UserSearchInput from '@/components/UserSearchInput';
 
 interface UserSearchFieldProps {
   value: string;
@@ -7,7 +6,11 @@ interface UserSearchFieldProps {
   disabled?: boolean;
 }
 
-export function UserSearchField({ value, onChange, disabled = false }: UserSearchFieldProps) {
+export function UserSearchField({
+  value,
+  onChange,
+  disabled = false,
+}: UserSearchFieldProps) {
   return (
     <UserSearchInput
       value={value}

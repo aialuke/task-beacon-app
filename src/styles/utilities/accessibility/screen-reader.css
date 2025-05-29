@@ -1,4 +1,3 @@
-
 /* src/styles/utilities/accessibility/screen-reader.css - Screen reader utilities */
 @layer utilities {
   /* ===== SCREEN READER UTILITIES ===== */
@@ -64,7 +63,7 @@
   }
 
   .loading-indicator::after {
-    content: "Loading...";
+    content: 'Loading...';
     position: absolute;
     left: -10000px;
     width: 1px;
@@ -84,7 +83,7 @@
   .light .sr-only-focusable:focus {
     background-color: white;
     color: #1a202c;
-    border-color: #3662E3;
+    border-color: #3662e3;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
 }

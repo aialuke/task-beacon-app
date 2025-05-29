@@ -1,4 +1,3 @@
-
 # Import Patterns and Styling Guidelines
 
 This document covers import organization, styling patterns, and file structure guidelines.
@@ -8,7 +7,7 @@ This document covers import organization, styling patterns, and file structure g
 ### Standardized Import Order
 
 1. React and React-related imports
-2. Third-party libraries  
+2. Third-party libraries
 3. UI components (from `@/components/ui`)
 4. Business components (from `@/components/business`)
 5. Feature components
@@ -20,22 +19,25 @@ This document covers import organization, styling patterns, and file structure g
 ### Import Pattern Standards
 
 #### 1. Direct Imports (Preferred)
+
 ```typescript
-import { formatDate } from "@/lib/dateUtils";
-import { compressAndResizePhoto } from "@/lib/imageUtils";
-import { useTaskMutations } from "@/features/tasks/hooks/useTaskMutations";
+import { formatDate } from '@/lib/dateUtils';
+import { compressAndResizePhoto } from '@/lib/imageUtils';
+import { useTaskMutations } from '@/features/tasks/hooks/useTaskMutations';
 ```
 
 #### 2. Feature Imports
+
 ```typescript
-import { TaskCard } from "@/features/tasks/components/TaskCard";
-import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
+import { TaskCard } from '@/features/tasks/components/TaskCard';
+import { useTaskUIContext } from '@/features/tasks/context/TaskUIContext';
 ```
 
 #### 3. Type Imports
+
 ```typescript
-import { Task, TaskStatus, TaskFilter } from "@/types";
-import { ApiResponse, ApiError } from "@/types";
+import { Task, TaskStatus, TaskFilter } from '@/types';
+import { ApiResponse, ApiError } from '@/types';
 ```
 
 ## Context Boundaries
@@ -43,7 +45,7 @@ import { ApiResponse, ApiError } from "@/types";
 ### Strict Context Separation
 
 - **Data Context**: Task queries, mutations, and data operations
-- **UI Context**: Filters, expanded state, mobile detection  
+- **UI Context**: Filters, expanded state, mobile detection
 - **Auth Context**: User authentication and session management
 
 ### Context Usage Guidelines
@@ -72,7 +74,7 @@ export function useComplexForm() {
   const state = useFormState();
   const validation = useFormValidation();
   const upload = usePhotoUpload();
-  
+
   return {
     ...state,
     ...validation,

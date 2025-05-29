@@ -1,7 +1,7 @@
-import { Input } from "@/components/ui/input";
-import { useState, ReactNode } from "react";
-import { cn } from "@/lib/utils";
-import { AnimatedCharacterCount } from "./AnimatedCharacterCount";
+import { Input } from '@/components/ui/input';
+import { useState, ReactNode } from 'react';
+import { cn } from '@/lib/utils';
+import { AnimatedCharacterCount } from './AnimatedCharacterCount';
 
 interface FloatingInputProps {
   id: string;
@@ -19,7 +19,7 @@ interface FloatingInputProps {
 
 export function FloatingInput({
   id,
-  type = "text",
+  type = 'text',
   value,
   onChange,
   placeholder,
@@ -28,7 +28,7 @@ export function FloatingInput({
   maxLength,
   required = false,
   autoFocus = false,
-  className
+  className,
 }: FloatingInputProps) {
   const [isFocused, setIsFocused] = useState(false);
   const hasValue = value.length > 0;
@@ -36,17 +36,19 @@ export function FloatingInput({
   const showCounter = maxLength && (isFocused || hasValue);
 
   return (
-    <div className={cn("relative group", className)}>
+    <div className={cn('group relative', className)}>
       <div className="relative">
         {icon && (
-          <div className={cn(
-            "absolute left-3 top-1/2 transform -translate-y-1/2 z-10 transition-all duration-300",
-            isFloating ? "text-primary scale-95" : "text-muted-foreground"
-          )}>
+          <div
+            className={cn(
+              'absolute left-3 top-1/2 z-10 -translate-y-1/2 transform transition-all duration-300',
+              isFloating ? 'scale-95 text-primary' : 'text-muted-foreground'
+            )}
+          >
             {icon}
           </div>
         )}
-        
+
         <Input
           id={id}
           type={type}
@@ -59,20 +61,20 @@ export function FloatingInput({
           required={required}
           autoFocus={autoFocus}
           className={cn(
-            "peer h-14 pt-6 pb-2 bg-background/60 backdrop-blur-sm border-border/40 rounded-2xl transition-all duration-300 focus:bg-background/80 focus:border-primary/60 focus:shadow-lg focus:shadow-primary/10 hover:bg-background/70 hover:border-border/60",
-            icon ? "pl-11" : "pl-4",
-            maxLength ? "pr-16" : "pr-4"
+            'peer h-14 rounded-2xl border-border/40 bg-background/60 pb-2 pt-6 backdrop-blur-sm transition-all duration-300 hover:border-border/60 hover:bg-background/70 focus:border-primary/60 focus:bg-background/80 focus:shadow-lg focus:shadow-primary/10',
+            icon ? 'pl-11' : 'pl-4',
+            maxLength ? 'pr-16' : 'pr-4'
           )}
         />
-        
+
         <label
           htmlFor={id}
           className={cn(
-            "absolute transition-all duration-300 pointer-events-none select-none font-medium",
-            icon ? "left-11" : "left-4",
+            'pointer-events-none absolute select-none font-medium transition-all duration-300',
+            icon ? 'left-11' : 'left-4',
             isFloating
-              ? "top-2 text-xs text-primary"
-              : "top-1/2 -translate-y-1/2 text-sm text-muted-foreground"
+              ? 'top-2 text-xs text-primary'
+              : 'top-1/2 -translate-y-1/2 text-sm text-muted-foreground'
           )}
         >
           {label}
@@ -80,20 +82,20 @@ export function FloatingInput({
 
         {/* Character counter inside input field */}
         {showCounter && (
-          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 z-10">
-            <AnimatedCharacterCount 
-              current={value.length} 
-              max={maxLength} 
-            />
+          <div className="absolute right-3 top-1/2 z-10 -translate-y-1/2 transform">
+            <AnimatedCharacterCount current={value.length} max={maxLength} />
           </div>
         )}
       </div>
 
       {/* Enhanced focus ring */}
-      <div className={cn(
-        "absolute inset-0 rounded-2xl transition-all duration-300 pointer-events-none",
-        isFocused && "ring-2 ring-primary/30 ring-offset-2 ring-offset-background"
-      )} />
+      <div
+        className={cn(
+          'pointer-events-none absolute inset-0 rounded-2xl transition-all duration-300',
+          isFocused &&
+            'ring-2 ring-primary/30 ring-offset-2 ring-offset-background'
+        )}
+      />
     </div>
   );
 }
