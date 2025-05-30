@@ -100,8 +100,16 @@ export const createTask = async (
     const { data, error } = await supabase
       .from('tasks')
       .insert({
-        ...taskData,
+        title: taskData.title || '',
+        description: taskData.description || null,
+        due_date: taskData.due_date || null,
+        photo_url: taskData.photo_url || null,
+        url_link: taskData.url_link || null,
         owner_id: userId,
+        parent_task_id: taskData.parent_task_id || null,
+        pinned: taskData.pinned || false,
+        status: taskData.status || 'pending',
+        assignee_id: taskData.assignee_id || null,
       })
       .select()
       .single();
@@ -164,9 +172,16 @@ export const createFollowUpTask = async (
     const { data, error } = await supabase
       .from('tasks')
       .insert({
-        ...taskData,
+        title: taskData.title || '',
+        description: taskData.description || null,
+        due_date: taskData.due_date || null,
+        photo_url: taskData.photo_url || null,
+        url_link: taskData.url_link || null,
         owner_id: userId,
         parent_task_id: parentTaskId,
+        pinned: taskData.pinned || false,
+        status: taskData.status || 'pending',
+        assignee_id: taskData.assignee_id || null,
       })
       .select()
       .single();
