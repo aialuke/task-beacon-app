@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { User as UserIcon, Search, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -21,7 +20,7 @@ interface EnhancedUserSearchProps {
 export function EnhancedUserSearch({
   value,
   onChange,
-  placeholder = "Search users...",
+  placeholder = 'Search users...',
   disabled = false,
   className,
 }: EnhancedUserSearchProps) {
@@ -30,16 +29,11 @@ export function EnhancedUserSearch({
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const {
-    filteredUsers,
-    loading,
-    searchTerm,
-    setSearchTerm,
-    users,
-  } = useUserSearch(5); // Limit to 5 results
+  const { filteredUsers, loading, searchTerm, setSearchTerm, users } =
+    useUserSearch(5); // Limit to 5 results
 
   // Find selected user
-  const selectedUser = users.find(user => user.id === value);
+  const selectedUser = users.find((user) => user.id === value);
 
   const handleSelect = (userId: string) => {
     onChange(userId);
@@ -92,14 +86,15 @@ export function EnhancedUserSearch({
   const isFloating = isFocused || selectedUser || searchTerm;
 
   return (
-    <div className={cn("relative w-full", className)}>
+    <div className={cn('relative w-full', className)}>
       <div className="group relative">
         <div
           className={cn(
             'flex h-14 items-center rounded-2xl border border-border/40 bg-background/60 p-2 backdrop-blur-sm transition-all duration-300',
             'hover:border-border/60 hover:bg-background/70',
-            isFocused && 'border-primary/60 bg-background/80 shadow-lg shadow-primary/10',
-            disabled && 'opacity-50 cursor-not-allowed'
+            isFocused &&
+              'border-primary/60 bg-background/80 shadow-lg shadow-primary/10',
+            disabled && 'cursor-not-allowed opacity-50'
           )}
         >
           <UserIcon className="mr-3 h-5 w-5 flex-shrink-0 text-muted-foreground" />
@@ -175,7 +170,7 @@ export function EnhancedUserSearch({
               </div>
             ) : (
               <div className="space-y-1">
-                {filteredUsers.map(user => (
+                {filteredUsers.map((user) => (
                   <button
                     key={user.id}
                     onClick={() => handleSelect(user.id)}

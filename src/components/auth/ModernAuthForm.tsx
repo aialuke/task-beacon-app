@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -65,7 +64,7 @@ const ModernAuthForm: React.FC = () => {
     setEmail(value);
     if (errors.email) {
       const error = validateEmail(value);
-      setErrors(prev => ({ ...prev, email: error }));
+      setErrors((prev) => ({ ...prev, email: error }));
     }
   };
 
@@ -73,7 +72,7 @@ const ModernAuthForm: React.FC = () => {
     setPassword(value);
     if (errors.password) {
       const error = validatePassword(value);
-      setErrors(prev => ({ ...prev, password: error }));
+      setErrors((prev) => ({ ...prev, password: error }));
     }
   };
 
@@ -81,7 +80,7 @@ const ModernAuthForm: React.FC = () => {
     setName(value);
     if (errors.name) {
       const error = validateName(value);
-      setErrors(prev => ({ ...prev, name: error }));
+      setErrors((prev) => ({ ...prev, name: error }));
     }
   };
 
@@ -112,7 +111,7 @@ const ModernAuthForm: React.FC = () => {
     try {
       // Clean up existing state before any auth operation
       cleanupAuthState();
-      
+
       // Attempt global sign out first
       try {
         await supabase.auth.signOut({ scope: 'global' });
@@ -125,9 +124,9 @@ const ModernAuthForm: React.FC = () => {
           email,
           password,
         });
-        
+
         if (error) throw error;
-        
+
         if (data.user) {
           toast.success('Welcome back! Redirecting to your dashboard...');
           // Force page reload for clean state
@@ -140,15 +139,15 @@ const ModernAuthForm: React.FC = () => {
           email,
           password,
           options: {
-            data: { 
+            data: {
               full_name: name,
-              name: name 
+              name: name,
             },
           },
         });
-        
+
         if (error) throw error;
-        
+
         if (data.user) {
           if (data.user.email_confirmed_at) {
             toast.success('Account created successfully! Redirecting...');
@@ -156,13 +155,15 @@ const ModernAuthForm: React.FC = () => {
               window.location.href = '/';
             }, 1500);
           } else {
-            toast.success('Account created! Please check your email for verification.');
+            toast.success(
+              'Account created! Please check your email for verification.'
+            );
           }
         }
       }
     } catch (error: unknown) {
       console.error('Auth error:', error);
-      
+
       if (error instanceof AuthError) {
         // Handle specific auth errors
         switch (error.message) {
@@ -170,10 +171,14 @@ const ModernAuthForm: React.FC = () => {
             toast.error('Invalid email or password. Please try again.');
             break;
           case 'User already registered':
-            toast.error('An account with this email already exists. Try signing in instead.');
+            toast.error(
+              'An account with this email already exists. Try signing in instead.'
+            );
             break;
           case 'Email not confirmed':
-            toast.error('Please check your email and confirm your account before signing in.');
+            toast.error(
+              'Please check your email and confirm your account before signing in.'
+            );
             break;
           default:
             toast.error(error.message || 'An authentication error occurred');
@@ -189,7 +194,7 @@ const ModernAuthForm: React.FC = () => {
   };
 
   const toggleMode = () => {
-    setMode(prevMode => (prevMode === 'signin' ? 'signup' : 'signin'));
+    setMode((prevMode) => (prevMode === 'signin' ? 'signup' : 'signin'));
     setErrors({});
     setEmail('');
     setPassword('');

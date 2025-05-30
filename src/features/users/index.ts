@@ -1,4 +1,3 @@
-
 // Components
 export { default as UserProfile } from './components/UserProfile';
 export { EnhancedUserSearch } from './components/EnhancedUserSearch';

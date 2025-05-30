@@ -1,4 +1,3 @@
-
 import { memo } from 'react';
 import { User } from '@/types/shared.types';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -15,7 +14,11 @@ interface UserProfileProps {
 /**
  * Display component for user profile information
  */
-function UserProfile({ user, showRole = false, compact = false }: UserProfileProps) {
+function UserProfile({
+  user,
+  showRole = false,
+  compact = false,
+}: UserProfileProps) {
   const displayName = user.name || user.email.split('@')[0];
   const initials = displayName.charAt(0).toUpperCase();
 
@@ -26,13 +29,11 @@ function UserProfile({ user, showRole = false, compact = false }: UserProfilePro
           <AvatarImage src={user.avatar_url || undefined} alt={displayName} />
           <AvatarFallback className="text-xs">{initials}</AvatarFallback>
         </Avatar>
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-foreground truncate">
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-medium text-foreground">
             {displayName}
           </p>
-          <p className="text-xs text-muted-foreground truncate">
-            {user.email}
-          </p>
+          <p className="truncate text-xs text-muted-foreground">{user.email}</p>
         </div>
         {showRole && user.role && (
           <Badge variant="outline" className="text-xs">

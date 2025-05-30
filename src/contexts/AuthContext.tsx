@@ -1,4 +1,3 @@
-
 import {
   createContext,
   useContext,
@@ -47,7 +46,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const { data, error } = await supabase.auth.refreshSession();
       if (error) throw error;
-      
+
       setSession(data.session);
       setUser(data.session?.user ?? null);
     } catch (error: unknown) {
@@ -62,24 +61,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signOut = async () => {
     try {
       setLoading(true);
-      
+
       // Clean up auth state first
       cleanupAuthState();
-      
+
       // Attempt global sign out
       try {
         await supabase.auth.signOut({ scope: 'global' });
       } catch (err) {
-        console.warn('Global sign out failed, continuing with local cleanup:', err);
+        console.warn(
+          'Global sign out failed, continuing with local cleanup:',
+          err
+        );
       }
-      
+
       // Clear local state
       setUser(null);
       setSession(null);
       setError(null);
-      
+
       toast.success('Signed out successfully');
-      
+
       // Force page reload for clean state
       setTimeout(() => {
         window.location.href = '/auth';
@@ -100,13 +102,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log('Auth state change:', event, session?.user?.id);
-      
+
       if (!mounted) return;
 
       // Update session and user state
       setSession(session);
       setUser(session?.user ?? null);
-      
+
       // Handle different auth events
       if (event === 'SIGNED_IN' && session?.user) {
         // Defer any additional data fetching to prevent deadlocks
@@ -129,13 +131,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // THEN check for existing session
     const initializeAuth = async () => {
       try {
-        const { data: { session }, error } = await supabase.auth.getSession();
-        
+        const {
+          data: { session },
+          error,
+        } = await supabase.auth.getSession();
+
         if (error) {
           console.error('Error getting session:', error);
           setError(error);
         }
-        
+
         if (mounted) {
           setSession(session);
           setUser(session?.user ?? null);

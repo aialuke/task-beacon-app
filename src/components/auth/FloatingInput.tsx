@@ -61,7 +61,7 @@ const FloatingInput = forwardRef<HTMLInputElement, FloatingInputProps>(
           id={id}
           type={type}
           value={value}
-          onChange={e => onChange(e.target.value)}
+          onChange={(e) => onChange(e.target.value)}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           autoComplete={autoComplete}

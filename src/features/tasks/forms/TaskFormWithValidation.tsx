@@ -39,7 +39,7 @@ export default function TaskFormWithValidation({
       pinned: false,
       assigneeId: '',
     },
-    onSubmit: async data => {
+    onSubmit: async (data) => {
       await onSubmit({ ...data, photo });
     },
     successMessage: 'Task created successfully',
@@ -57,7 +57,7 @@ export default function TaskFormWithValidation({
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(data => form.onSubmit(data))}
+        onSubmit={form.handleSubmit((data) => form.onSubmit(data))}
         className="space-y-4"
       >
         <FormField
@@ -104,7 +104,7 @@ export default function TaskFormWithValidation({
               <FormControl>
                 <DatePickerField
                   value={field.value}
-                  onChange={e => field.onChange(e.target.value)}
+                  onChange={(e) => field.onChange(e.target.value)}
                 />
               </FormControl>
               <FormMessage />

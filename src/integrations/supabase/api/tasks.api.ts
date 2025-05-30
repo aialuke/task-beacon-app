@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { apiRequest, getCurrentUserId } from './base.api';
 import {
@@ -15,7 +14,8 @@ import { Task } from '@/types/shared.types';
 export const getTask = async (taskId: string): Promise<Task> => {
   const { data, error } = await supabase
     .from('tasks')
-    .select(`
+    .select(
+      `
       *,
       parent_task:parent_task_id (
         id,
@@ -24,7 +24,8 @@ export const getTask = async (taskId: string): Promise<Task> => {
         photo_url,
         url_link
       )
-    `)
+    `
+    )
     .eq('id', taskId)
     .single();
 
@@ -62,7 +63,8 @@ export const getAllTasks = async (
     // Get paginated tasks with parent task data
     const { data: tasks, error } = await supabase
       .from('tasks')
-      .select(`
+      .select(
+        `
         *,
         parent_task:parent_task_id (
           id,
@@ -71,7 +73,8 @@ export const getAllTasks = async (
           photo_url,
           url_link
         )
-      `)
+      `
+      )
       .order('created_at', { ascending: false })
       .range(startIndex, endIndex);
 

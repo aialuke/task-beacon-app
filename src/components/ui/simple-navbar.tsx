@@ -58,7 +58,7 @@ export function SimpleNavbar({
 
   // Calculate active button position with proper timing
   const updateActiveButtonBounds = () => {
-    const activeIndex = items.findIndex(item => item.value === activeItem);
+    const activeIndex = items.findIndex((item) => item.value === activeItem);
     const container = containerRef.current;
 
     if (activeIndex >= 0 && container) {
@@ -194,7 +194,7 @@ export function SimpleNavbar({
           return (
             <button
               key={item.value}
-              ref={el => setButtonRef(buttonRefs, index, el)}
+              ref={(el) => setButtonRef(buttonRefs, index, el)}
               onClick={() => onItemChange(item.value)}
               className={cn(
                 'relative z-10 min-w-[48px] cursor-pointer rounded-full border-none bg-transparent px-4 py-2 text-sm font-medium transition-all duration-200',

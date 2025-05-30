@@ -19,7 +19,7 @@ export const showBrowserNotification = (title: string, body?: string) => {
       new Notification(title, { body });
       return true;
     } else if (Notification.permission === 'default') {
-      Notification.requestPermission().then(permission => {
+      Notification.requestPermission().then((permission) => {
         if (permission === 'granted') {
           new Notification(title, { body });
           return true;

@@ -92,7 +92,7 @@ export function animateElement(
 ): Promise<void> {
   if (!element) return Promise.resolve();
 
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     // Enable GPU acceleration if requested
     if (useGPU) {
       element.style.transform = 'translateZ(0)';

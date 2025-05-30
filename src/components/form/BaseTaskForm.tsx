@@ -81,7 +81,7 @@ export function BaseTaskForm({
         <FloatingInput
           id="title"
           value={title}
-          onChange={e => setTitle(e.target.value)}
+          onChange={(e) => setTitle(e.target.value)}
           placeholder={titlePlaceholder}
           label={titleLabel}
           icon={<FileText className="h-4 w-4" />}
@@ -93,7 +93,7 @@ export function BaseTaskForm({
         <FloatingTextarea
           id="description"
           value={description}
-          onChange={e => setDescription(e.target.value)}
+          onChange={(e) => setDescription(e.target.value)}
           placeholder={descriptionPlaceholder}
           label={descriptionLabel}
           icon={<Sparkles className="h-4 w-4" />}

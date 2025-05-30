@@ -68,8 +68,8 @@ export function computeNavbarColors(): NavbarColors {
  * Sets up a theme change observer for color updates
  */
 export function setupThemeObserver(callback: () => void): () => void {
-  const observer = new MutationObserver(mutations => {
-    mutations.forEach(mutation => {
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
       if (mutation.attributeName === 'class') {
         setTimeout(callback, 50); // Small delay to ensure CSS is applied
       }

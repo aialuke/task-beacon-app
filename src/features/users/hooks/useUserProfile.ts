@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { getUserById } from '@/integrations/supabase/api/users.api';
@@ -35,13 +34,12 @@ export function useUserProfile(userId?: string): UseUserProfileReturn {
 
     try {
       const { data, error } = await getUserById(targetUserId);
-      
+
       if (error) throw error;
       setProfile(data);
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error 
-        ? error.message 
-        : 'Failed to fetch user profile';
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to fetch user profile';
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {

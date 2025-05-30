@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { apiRequest } from './base.api';
 import { TablesResponse, UserRow } from '@/types/api.types';
@@ -9,9 +8,7 @@ import { User } from '@/types/shared.types';
  */
 export const getAllUsers = async (): Promise<TablesResponse<User[]>> => {
   return apiRequest(async () => {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*');
+    const { data, error } = await supabase.from('profiles').select('*');
 
     if (error) throw error;
     return data as User[];
@@ -41,7 +38,9 @@ export const getUserById = async (
  */
 export const getCurrentUser = async (): Promise<TablesResponse<User>> => {
   return apiRequest(async () => {
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) throw new Error('No authenticated user');
 
     const { data, error } = await supabase

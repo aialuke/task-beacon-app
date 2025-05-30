@@ -49,8 +49,8 @@ export function searchByTerm<T>(
 
   const term = searchTerm.toLowerCase().trim();
 
-  return array.filter(item =>
-    keys.some(key => {
+  return array.filter((item) =>
+    keys.some((key) => {
       const value = item[key];
       if (value === null || value === undefined) return false;
       return String(value).toLowerCase().includes(term);
@@ -80,7 +80,7 @@ export function groupBy<T>(array: T[], key: keyof T): Record<string, T[]> {
  */
 export function uniqueBy<T>(array: T[], key: keyof T): T[] {
   const seen = new Set();
-  return array.filter(item => {
+  return array.filter((item) => {
     const value = item[key];
     if (seen.has(value)) {
       return false;

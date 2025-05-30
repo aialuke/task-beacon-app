@@ -72,7 +72,7 @@ export function UrlInputModal({
               id="url-input"
               type="text"
               value={tempValue}
-              onChange={e => {
+              onChange={(e) => {
                 setTempValue(e.target.value);
                 setError(null); // Clear error on input change
               }}

@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useMemo } from 'react';
 import { getAllUsers } from '@/integrations/supabase/api/users.api';
 import { User } from '@/types/shared.types';
@@ -29,13 +28,12 @@ export function useUserSearch(limitResults = 10): UseUserSearchReturn {
 
     try {
       const { data, error } = await getAllUsers();
-      
+
       if (error) throw error;
       setUsers(data || []);
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error 
-        ? error.message 
-        : 'Failed to fetch users';
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to fetch users';
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {
@@ -53,13 +51,15 @@ export function useUserSearch(limitResults = 10): UseUserSearchReturn {
       return users.slice(0, limitResults);
     }
 
-    const filtered = users.filter(user => {
+    const filtered = users.filter((user) => {
       const displayName = user.name || user.email.split('@')[0];
       const email = user.email;
       const term = searchTerm.toLowerCase();
 
-      return displayName.toLowerCase().includes(term) || 
-             email.toLowerCase().includes(term);
+      return (
+        displayName.toLowerCase().includes(term) ||
+        email.toLowerCase().includes(term)
+      );
     });
 
     return filtered.slice(0, limitResults);

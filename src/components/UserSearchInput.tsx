@@ -1,4 +1,3 @@
-
 import { EnhancedUserSearch } from '@/features/users/components/EnhancedUserSearch';
 
 interface UserSearchInputProps {

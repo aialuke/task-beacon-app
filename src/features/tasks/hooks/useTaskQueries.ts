@@ -1,4 +1,3 @@
-
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getAllTasks } from '@/integrations/supabase/api/tasks.api';
 import { useState } from 'react';
@@ -50,8 +49,8 @@ export function useTaskQueries(pageSize = 10) {
     pageSize,
     hasNextPage,
     hasPreviousPage: currentPage > 1,
-    goToNextPage: () => setCurrentPage(old => old + 1),
-    goToPreviousPage: () => setCurrentPage(old => Math.max(1, old - 1)),
+    goToNextPage: () => setCurrentPage((old) => old + 1),
+    goToPreviousPage: () => setCurrentPage((old) => Math.max(1, old - 1)),
     isLoading,
     isFetching,
     error: error || response?.error || null,

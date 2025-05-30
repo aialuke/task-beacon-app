@@ -42,7 +42,7 @@ class PerformanceMonitor {
    * End measurement and calculate duration
    */
   endMeasurement(id: string): number | null {
-    const metric = this.metrics.find(m => m.name === id);
+    const metric = this.metrics.find((m) => m.name === id);
     if (!metric) return null;
 
     metric.endTime = performance.now();
@@ -114,7 +114,7 @@ class PerformanceMonitor {
    * Get performance report
    */
   getReport(): PerformanceMetrics[] {
-    return this.metrics.filter(m => m.duration !== undefined);
+    return this.metrics.filter((m) => m.duration !== undefined);
   }
 
   /**

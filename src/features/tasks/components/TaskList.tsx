@@ -62,7 +62,7 @@ export default function TaskList() {
           </div>
         ) : filteredTasks.length > 0 ? (
           <div className="space-y-6">
-            {filteredTasks.map(task => (
+            {filteredTasks.map((task) => (
               <Suspense key={task.id} fallback={<TaskCardSkeleton />}>
                 <TaskCard task={task} />
               </Suspense>

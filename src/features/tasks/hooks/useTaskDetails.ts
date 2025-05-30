@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Task } from '@/types/shared.types';
 import { getTask } from '@/integrations/supabase/api/tasks.api';

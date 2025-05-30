@@ -65,7 +65,7 @@ export function DatePickerField({ value, onChange }: DatePickerFieldProps) {
             mode="single"
             selected={selectedDate}
             onSelect={handleDateSelect}
-            disabled={date => date < new Date()}
+            disabled={(date) => date < new Date()}
             initialFocus
             className={cn('pointer-events-auto p-3')}
             style={{

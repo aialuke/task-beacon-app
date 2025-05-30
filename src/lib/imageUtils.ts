@@ -25,7 +25,7 @@ export async function compressAndResizePhoto(
     );
 
     // Handle the worker response
-    worker.onmessage = event => {
+    worker.onmessage = (event) => {
       // Terminate worker after use
       worker.terminate();
 
@@ -43,7 +43,7 @@ export async function compressAndResizePhoto(
     };
 
     // Handle worker errors
-    worker.onerror = error => {
+    worker.onerror = (error) => {
       worker.terminate();
       reject(new Error('Worker error: ' + error.message));
     };
@@ -100,7 +100,7 @@ export async function compressAndResizePhotoFallback(
 
         // Convert the canvas to a Blob
         canvas.toBlob(
-          blob => {
+          (blob) => {
             if (!blob) {
               reject(new Error('Failed to create blob from image'));
               return;
