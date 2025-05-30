@@ -68,7 +68,7 @@ function UserProfile({ user, showRole = false, compact = false }: UserProfilePro
         </div>
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <UserIcon className="h-4 w-4" />
-          <span>Member since {new Date(user.created_at).toLocaleDateString()}</span>
+          <span>User profile</span>
         </div>
       </CardContent>
     </Card>
