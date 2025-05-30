@@ -1,7 +1,9 @@
+
 import { useState, useEffect } from 'react';
 import { Task } from '@/types/shared.types';
-import { supabase, isMockingSupabase } from '@/integrations/supabase/client';
+import { getTask } from '@/integrations/supabase/api/tasks.api';
 import { toast } from '@/lib/toast';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface UseTaskDetailsReturn {
   task: Task | null;
@@ -24,6 +26,7 @@ export function useTaskDetails(
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isPinned, setIsPinned] = useState(false);
+  const { user, session } = useAuth();
 
   useEffect(() => {
     const fetchTask = async () => {
@@ -33,51 +36,19 @@ export function useTaskDetails(
         return;
       }
 
+      if (!user || !session) {
+        setError('User not authenticated');
+        setLoading(false);
+        return;
+      }
+
       setLoading(true);
       setError(null);
 
       try {
-        if (isMockingSupabase) {
-          const { mockDataTasks } = await import('@/lib/mockDataTasks');
-          const mockTask = mockDataTasks.find(t => t.id === taskId);
-          if (mockTask) {
-            setTask(mockTask);
-            setIsPinned(mockTask.pinned);
-          } else {
-            setError('Task not found');
-            toast.error('Task not found');
-          }
-          return;
-        }
-
-        // Use type assertion to work around empty Database type
-        const { data, error: supabaseError } = await (supabase as any)
-          .from('tasks')
-          .select(
-            `
-            *,
-            parent_task:parent_task_id (
-              title,
-              description,
-              photo_url,
-              url_link
-            )
-          `
-          )
-          .eq('id', taskId)
-          .single();
-
-        if (supabaseError) {
-          throw new Error(supabaseError.message);
-        }
-
-        if (data) {
-          setTask(data as Task);
-          setIsPinned(data.pinned);
-        } else {
-          setError('Task not found');
-          toast.error('Task not found');
-        }
+        const taskData = await getTask(taskId);
+        setTask(taskData);
+        setIsPinned(taskData.pinned);
       } catch (error: unknown) {
         const errorMessage =
           error instanceof Error
@@ -91,7 +62,7 @@ export function useTaskDetails(
     };
 
     fetchTask();
-  }, [taskId]);
+  }, [taskId, user, session]);
 
   return {
     task,

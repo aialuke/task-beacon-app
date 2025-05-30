@@ -1,5 +1,5 @@
+
 import { lazy, Suspense } from 'react';
-import { isMockingSupabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 
 const TaskDashboard = lazy(
@@ -20,7 +20,7 @@ const Index = () => {
   }
 
   // If user is not authenticated, redirect to auth page
-  if (!isMockingSupabase && !user) {
+  if (!user) {
     window.location.href = '/auth';
     return <LoadingSpinner />;
   }

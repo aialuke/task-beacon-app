@@ -1,9 +1,10 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { FloatingInput } from './FloatingInput';
 import { PasswordStrengthIndicator } from './PasswordStrengthIndicator';
-import { supabase, isMockingSupabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/lib/toast';
 import { isValidEmail } from '@/lib/utils/validation';
 import { cn } from '@/lib/utils';
@@ -27,6 +28,20 @@ const ModernAuthForm: React.FC = () => {
 
   const nameInputRef = useRef<HTMLInputElement>(null);
   const emailInputRef = useRef<HTMLInputElement>(null);
+
+  // Clean up auth state utility
+  const cleanupAuthState = () => {
+    Object.keys(localStorage).forEach((key) => {
+      if (key.startsWith('supabase.auth.') || key.includes('sb-')) {
+        localStorage.removeItem(key);
+      }
+    });
+    Object.keys(sessionStorage || {}).forEach((key) => {
+      if (key.startsWith('supabase.auth.') || key.includes('sb-')) {
+        sessionStorage.removeItem(key);
+      }
+    });
+  };
 
   const validateEmail = (value: string) => {
     if (!value) return 'Email is required';
@@ -95,39 +110,74 @@ const ModernAuthForm: React.FC = () => {
     setLoading(true);
 
     try {
-      if (isMockingSupabase) {
-        toast.success('Using mock authentication');
-        setTimeout(() => {
-          window.location.href = '/';
-        }, 1000);
-        return;
+      // Clean up existing state before any auth operation
+      cleanupAuthState();
+      
+      // Attempt global sign out first
+      try {
+        await supabase.auth.signOut({ scope: 'global' });
+      } catch (err) {
+        console.warn('Pre-auth cleanup sign out failed, continuing:', err);
       }
 
       if (mode === 'signin') {
-        const { error } = await supabase.auth.signInWithPassword({
+        const { data, error } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
+        
         if (error) throw error;
-        toast.success('Welcome back! Redirecting to your dashboard...');
+        
+        if (data.user) {
+          toast.success('Welcome back! Redirecting to your dashboard...');
+          // Force page reload for clean state
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 1000);
+        }
       } else {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
-            data: { full_name: name },
+            data: { 
+              full_name: name,
+              name: name 
+            },
           },
         });
+        
         if (error) throw error;
-        toast.success('Account created! Check your email for verification.');
+        
+        if (data.user) {
+          if (data.user.email_confirmed_at) {
+            toast.success('Account created successfully! Redirecting...');
+            setTimeout(() => {
+              window.location.href = '/';
+            }, 1500);
+          } else {
+            toast.success('Account created! Please check your email for verification.');
+          }
+        }
       }
-
-      setTimeout(() => {
-        window.location.href = '/';
-      }, 1500);
     } catch (error: unknown) {
+      console.error('Auth error:', error);
+      
       if (error instanceof AuthError) {
-        toast.error(error.message || 'An unexpected error occurred');
+        // Handle specific auth errors
+        switch (error.message) {
+          case 'Invalid login credentials':
+            toast.error('Invalid email or password. Please try again.');
+            break;
+          case 'User already registered':
+            toast.error('An account with this email already exists. Try signing in instead.');
+            break;
+          case 'Email not confirmed':
+            toast.error('Please check your email and confirm your account before signing in.');
+            break;
+          default:
+            toast.error(error.message || 'An authentication error occurred');
+        }
       } else if (error instanceof Error) {
         toast.error(error.message || 'An unexpected error occurred');
       } else {
@@ -168,8 +218,6 @@ const ModernAuthForm: React.FC = () => {
               className="h-10 w-10"
             />
             <h1 className="text-gradient-primary text-[26.19px] font-normal tracking-[0.02662em]">
-              {' '}
-              {/* Updated font size to 26.19px, tracking to 0.02662em */}
               Flow State
             </h1>
           </div>

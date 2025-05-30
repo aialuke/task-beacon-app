@@ -18,9 +18,10 @@ export const supabase = createClient<Database>(
       storage: localStorage,
       persistSession: true,
       autoRefreshToken: true,
+      detectSessionInUrl: true,
     },
   }
 );
 
-// Disable mock functionality now that we have real database
+// Mock functionality is now completely disabled
 export const isMockingSupabase = false;
