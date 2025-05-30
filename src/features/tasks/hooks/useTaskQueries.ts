@@ -6,7 +6,7 @@ import { Task } from '@/types/shared.types';
 import { useAuth } from '@/contexts/AuthContext';
 
 /**
- * Custom hook for paginated task queries
+ * Custom hook for paginated task queries with real database integration
  *
  * @param pageSize Number of tasks to fetch per page
  * @returns Object containing tasks array, loading state, pagination controls and error
@@ -16,7 +16,7 @@ export function useTaskQueries(pageSize = 10) {
   const queryClient = useQueryClient();
   const { user, session } = useAuth();
 
-  // Fetch tasks with pagination - only if user is authenticated
+  // Fetch tasks with database-level pagination - only if user is authenticated
   const {
     data: response,
     isLoading,
@@ -27,13 +27,15 @@ export function useTaskQueries(pageSize = 10) {
     queryFn: () => getAllTasks(currentPage, pageSize),
     staleTime: 5 * 60 * 1000, // 5 minutes
     enabled: !!user && !!session, // Only run query if user is authenticated
+    retry: 2, // Retry failed requests twice
+    refetchOnWindowFocus: false, // Don't refetch on window focus
   });
 
   // Determine if we have a next page
   const hasNextPage = response?.data?.hasNextPage || false;
 
   // Prefetch next page if available and user is authenticated
-  if (hasNextPage && user && session) {
+  if (hasNextPage && user && session && !isLoading) {
     queryClient.prefetchQuery({
       queryKey: ['tasks', currentPage + 1, pageSize, user.id],
       queryFn: () => getAllTasks(currentPage + 1, pageSize),
