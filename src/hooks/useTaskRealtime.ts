@@ -7,7 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Task } from '@/types/shared.types';
 
 /**
- * Hook for real-time task updates with notifications
+ * Optimized hook for real-time task updates with notifications
  */
 export function useTaskRealtime() {
   const { user } = useAuth();

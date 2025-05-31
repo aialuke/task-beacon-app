@@ -27,6 +27,3 @@ export const supabase = createClient<Database>(
     },
   }
 );
-
-// Mock functionality is now completely disabled
-export const isMockingSupabase = false;

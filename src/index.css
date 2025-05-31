@@ -1,4 +1,5 @@
-/* CSS Reset - BEFORE Tailwind directives */
+
+/* Optimized CSS with minimal imports */
 * {
   margin: 0;
   padding: 0;
@@ -10,7 +11,6 @@
   box-sizing: inherit;
 }
 
-/* Base Tailwind directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -20,44 +20,24 @@ html {
   @apply dark;
 }
 
-/* Initialize core Tailwind CSS variables */
+/* Optimized CSS variables initialization */
 *,
 ::before,
 ::after {
-  /* Transform variables */
+  /* Essential transform variables */
   --tw-translate-x: 0;
   --tw-translate-y: 0;
-  --tw-translate-z: 0;
   --tw-rotate: 0;
-  --tw-skew-x: 0;
-  --tw-skew-y: 0;
   --tw-scale-x: 1;
   --tw-scale-y: 1;
 
-  /* Ring/outline variables */
+  /* Essential ring/shadow variables */
   --tw-ring-offset-shadow: 0 0 #0000;
   --tw-ring-shadow: 0 0 #0000;
-  --tw-ring-offset-width: 0px;
-  --tw-ring-offset-color: #fff;
-  --tw-ring-color: rgb(59 130 246 / 0.5);
-  --tw-ring-inset: initial;
-
-  /* Shadow variables */
   --tw-shadow: 0 0 #0000;
   --tw-shadow-colored: 0 0 #0000;
 
-  /* Filter variables */
-  --tw-blur: initial;
-  --tw-brightness: initial;
-  --tw-contrast: initial;
-  --tw-grayscale: initial;
-  --tw-hue-rotate: initial;
-  --tw-invert: initial;
-  --tw-saturate: initial;
-  --tw-sepia: initial;
-  --tw-drop-shadow: initial;
-
-  /* Backdrop-filter variables - Explicitly initialize ALL required variables */
+  /* Essential backdrop-filter variables */
   --tw-backdrop-blur: initial;
   --tw-backdrop-brightness: initial;
   --tw-backdrop-contrast: initial;
@@ -69,7 +49,6 @@ html {
   --tw-backdrop-sepia: initial;
 }
 
-/* Minimal base styles using Tailwind's recommended approach */
 @layer base {
   button {
     cursor: pointer;
@@ -80,20 +59,18 @@ html {
   }
 }
 
-/* Import custom styles after Tailwind directives */
+/* Import optimized custom styles */
 @import './styles/base.css';
 @import './styles/components.css';
 @import './styles/utilities.css';
 
-/* Global icon handling - improved for dark mode */
+/* Optimized icon handling */
 svg {
   fill: none;
-  transition:
-    stroke 0.3s ease,
-    fill 0.3s ease;
+  transition: stroke 0.3s ease, fill 0.3s ease;
 }
 
-/* Dark mode specific adjustments */
+/* Theme handling */
 .dark {
   color-scheme: dark;
 }
@@ -102,7 +79,7 @@ svg {
   color-scheme: light;
 }
 
-/* Ensure backdrop-blur works consistently */
+/* Optimized backdrop-blur */
 .backdrop-blur-fix {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);

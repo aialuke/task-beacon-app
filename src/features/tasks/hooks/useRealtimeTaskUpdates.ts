@@ -3,7 +3,7 @@ import { useState, useCallback, useRef } from 'react';
 import { useTaskRealtime } from '@/hooks/useTaskRealtime';
 
 /**
- * Hook for tracking real-time task updates and showing visual indicators
+ * Optimized hook for tracking real-time task updates and showing visual indicators
  */
 export function useRealtimeTaskUpdates() {
   const [updatedTasks, setUpdatedTasks] = useState<Set<string>>(new Set());

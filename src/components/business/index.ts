@@ -1,4 +1,5 @@
-// Business logic component exports
+
+// Optimized business logic component exports
 export { default as ModernAuthForm } from '@/components/auth/ModernAuthForm';
 export { default as CountdownTimer } from '../CountdownTimer';
 export { ErrorBoundary as default } from '../ErrorBoundary';

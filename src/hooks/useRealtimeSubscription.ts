@@ -15,7 +15,7 @@ interface RealtimeSubscriptionOptions {
 }
 
 /**
- * Hook for managing real-time subscriptions with proper cleanup
+ * Optimized hook for managing real-time subscriptions with proper cleanup
  */
 export function useRealtimeSubscription({
   table,
