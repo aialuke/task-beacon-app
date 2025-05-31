@@ -1,7 +1,8 @@
+
 import { useState } from 'react';
 import TaskFormWithValidation from './TaskFormWithValidation';
 import { CreateTaskInput } from '../schemas/taskSchema';
-import { supabase, isMockingSupabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/client';
 import {
   compressAndResizePhoto,
   supportsWebWorker,
@@ -26,18 +27,14 @@ export default function TaskFormExample({ onClose }: { onClose?: () => void }) {
           : compressAndResizePhotoFallback;
         const processedFile = await processImage(data.photo);
 
-        if (isMockingSupabase) {
-          photoUrl = URL.createObjectURL(processedFile);
-        } else {
-          // Upload to Supabase storage
-          const { data: uploadData, error: uploadError } =
-            await supabase.storage
-              .from('task-photos')
-              .upload(`photos/${Date.now()}-${data.photo.name}`, processedFile);
+        // Upload to Supabase storage
+        const { data: uploadData, error: uploadError } =
+          await supabase.storage
+            .from('task-photos')
+            .upload(`photos/${Date.now()}-${data.photo.name}`, processedFile);
 
-          if (uploadError) throw uploadError;
-          photoUrl = uploadData.path;
-        }
+        if (uploadError) throw uploadError;
+        photoUrl = uploadData.path;
       }
 
       // Create task with photo URL

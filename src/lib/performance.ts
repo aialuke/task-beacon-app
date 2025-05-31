@@ -1,4 +1,6 @@
 
+import React from 'react';
+
 /**
  * Performance optimization utilities
  */
@@ -31,9 +33,9 @@ export function throttle<T extends (...args: any[]) => any>(
 }
 
 // Lazy loading utility
-export function createLazyComponent<T>(
+export function createLazyComponent<T extends React.ComponentType<any>>(
   importFunc: () => Promise<{ default: T }>
-) {
+): React.LazyExoticComponent<T> {
   return React.lazy(importFunc);
 }
 
