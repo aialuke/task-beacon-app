@@ -1,53 +1,64 @@
-import { z } from 'zod';
 
-// Custom validation messages
+import { z } from 'zod';
+import { 
+  validateTaskTitle, 
+  validateTaskDescription, 
+  validateUrl, 
+  validateDueDate 
+} from '@/lib/validation/databaseValidation';
+
+// Custom validation messages aligned with database constraints
 const VALIDATION_MESSAGES = {
   TITLE_REQUIRED: 'Task title is required',
   TITLE_TOO_LONG: 'Task title cannot exceed 22 characters',
   TITLE_TOO_SHORT: 'Task title must be at least 1 character',
   DUE_DATE_REQUIRED: 'Due date is required',
   DUE_DATE_INVALID: 'Please enter a valid date',
+  DUE_DATE_PAST: 'Due date cannot be in the past',
   URL_INVALID: 'Please enter a valid URL',
   ASSIGNEE_INVALID: 'Please select a valid assignee',
   DESCRIPTION_TOO_LONG: 'Description cannot exceed 500 characters',
 } as const;
 
-// Custom validation functions
+// Custom validation functions that match database constraints
 const isValidUrl = (url: string): boolean => {
-  if (!url || url.length === 0) return true; // Optional field
-  try {
-    new URL(url);
-    return true;
-  } catch {
-    return false;
-  }
+  const result = validateUrl(url);
+  return result.isValid;
 };
 
 const isValidDate = (date: string): boolean => {
-  if (!date) return false;
-  const parsed = new Date(date);
-  return (
-    !isNaN(parsed.getTime()) &&
-    parsed > new Date(Date.now() - 24 * 60 * 60 * 1000)
-  ); // Not in the past
+  const result = validateDueDate(date);
+  return result.isValid;
 };
 
-// Base schema for task validation
+const isValidTitle = (title: string): boolean => {
+  const result = validateTaskTitle(title);
+  return result.isValid;
+};
+
+const isValidDescription = (description: string | undefined): boolean => {
+  const result = validateTaskDescription(description);
+  return result.isValid;
+};
+
+// Base schema for task validation - aligned with database constraints
 export const baseTaskSchema = z.object({
   title: z
     .string()
     .min(1, VALIDATION_MESSAGES.TITLE_REQUIRED)
     .max(22, VALIDATION_MESSAGES.TITLE_TOO_LONG)
-    .trim(),
+    .refine(isValidTitle, VALIDATION_MESSAGES.TITLE_TOO_LONG)
+    .transform(val => val.trim()),
   description: z
     .string()
     .max(500, VALIDATION_MESSAGES.DESCRIPTION_TOO_LONG)
+    .refine(isValidDescription, VALIDATION_MESSAGES.DESCRIPTION_TOO_LONG)
     .optional()
     .or(z.literal('')),
   dueDate: z
     .string()
     .min(1, VALIDATION_MESSAGES.DUE_DATE_REQUIRED)
-    .refine(isValidDate, VALIDATION_MESSAGES.DUE_DATE_INVALID),
+    .refine(isValidDate, VALIDATION_MESSAGES.DUE_DATE_PAST),
   url: z
     .string()
     .refine(isValidUrl, VALIDATION_MESSAGES.URL_INVALID)
