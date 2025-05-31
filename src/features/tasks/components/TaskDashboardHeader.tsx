@@ -1,64 +1,36 @@
-import { useState } from 'react';
-import { LogOut } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
-import { ThemeToggle } from '@/components/ui/theme-toggle';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
-export default function TaskDashboardHeader() {
-  const [open, setOpen] = useState(false);
-  const { signOut, user } = useAuth();
+import { memo } from 'react';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import RealtimeStatus from '@/components/RealtimeStatus';
 
-  const getAvatarInitial = (email: string | undefined) => {
-    if (!email) return 'U';
-    return email.charAt(0).toUpperCase();
-  };
+function TaskDashboardHeader() {
+  const navigate = useNavigate();
 
   return (
-    <header className="mb-6 flex items-center justify-between">
-      <div className="flex items-center gap-3">
-        <img
-          src="/assets/hourglass_logo.svg"
-          alt="Task Beacon Logo"
-          width={29}
-          height={29}
-          className="text-primary"
-        />
-        <h1 className="text-xl font-medium text-foreground">Flow State</h1>
+    <header className="mb-8 flex items-center justify-between">
+      <div className="flex items-center gap-4">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+            Tasks
+          </h1>
+          <p className="text-sm text-muted-foreground sm:text-base">
+            Manage your tasks and stay organized
+          </p>
+        </div>
+        <RealtimeStatus />
       </div>
-      <div className="flex items-center gap-2">
-        <ThemeToggle />
-        <DropdownMenu open={open} onOpenChange={setOpen}>
-          <DropdownMenuTrigger asChild>
-            <Avatar className="h-8 w-8 cursor-pointer">
-              <AvatarFallback className="bg-primary text-sm text-primary-foreground">
-                {getAvatarInitial(user?.email)}
-              </AvatarFallback>
-            </Avatar>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="end"
-            className="border-border bg-popover p-2"
-            style={{
-              backgroundColor: 'hsl(var(--popover))',
-              borderColor: 'hsl(var(--border))',
-            }}
-          >
-            <DropdownMenuItem
-              onClick={signOut}
-              className="cursor-pointer text-popover-foreground hover:bg-accent"
-            >
-              <LogOut className="mr-2 h-4 w-4 text-foreground" />
-              <span>Sign out</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+
+      <Button
+        onClick={() => navigate('/create-task')}
+        className="flex items-center gap-2"
+      >
+        <Plus size={16} />
+        <span className="hidden sm:inline">Create Task</span>
+      </Button>
     </header>
   );
 }
+
+export default memo(TaskDashboardHeader);

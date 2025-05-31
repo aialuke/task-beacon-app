@@ -1,17 +1,15 @@
+
 import { memo } from 'react';
 import { Task } from '@/types';
 import { useTaskCard } from '../hooks/useTaskCard';
+import { useRealtimeTaskUpdates } from '../hooks/useRealtimeTaskUpdates';
 import { getTaskCardStyles, getTaskCardClasses } from '../utils/taskCardStyles';
 import TaskCardHeader from './TaskCardHeader';
 import TaskCardContent from './TaskCardContent';
+import TaskUpdateIndicator from '@/components/TaskUpdateIndicator';
 
 /**
- * TaskCard component
- *
- * Displays a task with expandable details and provides interactions for
- * viewing, pinning, and managing task data.
- *
- * @param task - The task data to display
+ * TaskCard component with real-time update indicators
  */
 interface TaskCardProps {
   task: Task;
@@ -34,7 +32,8 @@ const arePropsEqual = (
     prevTask.url_link === nextTask.url_link &&
     prevTask.pinned === nextTask.pinned &&
     prevTask.status === nextTask.status &&
-    prevTask.photo_url === nextTask.photo_url
+    prevTask.photo_url === nextTask.photo_url &&
+    prevTask.updated_at === nextTask.updated_at
   );
 };
 
@@ -48,11 +47,19 @@ function TaskCard({ task }: TaskCardProps) {
     handleTogglePin,
   } = useTaskCard(task);
 
+  const { isTaskUpdated } = useRealtimeTaskUpdates();
+
   const cardStyles = getTaskCardStyles(task, isExpanded);
   const cardClasses = getTaskCardClasses(isExpanded);
 
   return (
-    <div ref={cardRef} className={cardClasses} style={cardStyles}>
+    <div ref={cardRef} className={`relative ${cardClasses}`} style={cardStyles}>
+      <TaskUpdateIndicator
+        taskId={task.id}
+        show={isTaskUpdated(task.id)}
+        type="updated"
+      />
+      
       <TaskCardHeader
         task={task}
         isExpanded={isExpanded}
