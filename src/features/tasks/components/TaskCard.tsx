@@ -6,34 +6,27 @@ import { useRealtimeTaskUpdates } from '../hooks/useRealtimeTaskUpdates';
 import { getTaskCardStyles, getTaskCardClasses } from '../utils/taskCardStyles';
 import TaskCardHeader from './TaskCardHeader';
 import TaskCardContent from './TaskCardContent';
-import TaskUpdateIndicator from '@/components/TaskUpdateIndicator';
+import RealtimeUpdateIndicator from '@/components/RealtimeUpdateIndicator';
 
-/**
- * TaskCard component with real-time update indicators
- */
 interface TaskCardProps {
   task: Task;
 }
 
-// Custom equality function for TaskCard props
-const arePropsEqual = (
-  prevProps: TaskCardProps,
-  nextProps: TaskCardProps
-): boolean => {
-  const prevTask = prevProps.task;
-  const nextTask = nextProps.task;
+// Optimized equality check for memoization
+const arePropsEqual = (prevProps: TaskCardProps, nextProps: TaskCardProps): boolean => {
+  const prev = prevProps.task;
+  const next = nextProps.task;
 
-  // Perform a shallow comparison of task properties that affect rendering
   return (
-    prevTask.id === nextTask.id &&
-    prevTask.title === nextTask.title &&
-    prevTask.description === nextTask.description &&
-    prevTask.due_date === nextTask.due_date &&
-    prevTask.url_link === nextTask.url_link &&
-    prevTask.pinned === nextTask.pinned &&
-    prevTask.status === nextTask.status &&
-    prevTask.photo_url === nextTask.photo_url &&
-    prevTask.updated_at === nextTask.updated_at
+    prev.id === next.id &&
+    prev.title === next.title &&
+    prev.description === next.description &&
+    prev.due_date === next.due_date &&
+    prev.url_link === next.url_link &&
+    prev.pinned === next.pinned &&
+    prev.status === next.status &&
+    prev.photo_url === next.photo_url &&
+    prev.updated_at === next.updated_at
   );
 };
 
@@ -54,8 +47,7 @@ function TaskCard({ task }: TaskCardProps) {
 
   return (
     <div ref={cardRef} className={`relative ${cardClasses}`} style={cardStyles}>
-      <TaskUpdateIndicator
-        taskId={task.id}
+      <RealtimeUpdateIndicator
         show={isTaskUpdated(task.id)}
         type="updated"
       />

@@ -1,24 +1,19 @@
 
-import React, { useEffect, useCallback } from 'react';
+import { useEffect, useCallback } from 'react';
 import { performanceMonitor } from '@/lib/performanceUtils';
 
 /**
- * Hook to measure component performance
+ * Simplified hook for component performance monitoring
  */
 export function usePerformanceMonitoring(componentName: string) {
   useEffect(() => {
     const id = performanceMonitor.startMeasurement(`${componentName}-mount`);
-
-    return () => {
-      performanceMonitor.endMeasurement(id);
-    };
+    return () => performanceMonitor.endMeasurement(id);
   }, [componentName]);
 
   const measureOperation = useCallback(
     (operationName: string, operation: () => void) => {
-      const id = performanceMonitor.startMeasurement(
-        `${componentName}-${operationName}`
-      );
+      const id = performanceMonitor.startMeasurement(`${componentName}-${operationName}`);
       operation();
       performanceMonitor.endMeasurement(id);
     },
@@ -29,15 +24,16 @@ export function usePerformanceMonitoring(componentName: string) {
 }
 
 /**
- * HOC to monitor component render performance
+ * Simple performance measurement wrapper for functions
  */
-export function withPerformanceMonitoring<T extends Record<string, any>>(
-  Component: React.ComponentType<T>,
-  componentName: string
-): React.ComponentType<T> {
-  return function PerformanceMonitoredComponent(props: T) {
-    const { measureOperation } = usePerformanceMonitoring(componentName);
-
-    return React.createElement(Component, props);
+export function measurePerformance<T extends any[], R>(
+  name: string,
+  fn: (...args: T) => R
+): (...args: T) => R {
+  return (...args: T): R => {
+    const id = performanceMonitor.startMeasurement(name);
+    const result = fn(...args);
+    performanceMonitor.endMeasurement(id);
+    return result;
   };
 }
