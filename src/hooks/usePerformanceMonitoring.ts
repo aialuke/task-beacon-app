@@ -38,6 +38,6 @@ export function withPerformanceMonitoring<T extends Record<string, any>>(
   return function PerformanceMonitoredComponent(props: T) {
     const { measureOperation } = usePerformanceMonitoring(componentName);
 
-    return <Component {...props} />;
+    return React.createElement(Component, props);
   };
 }
