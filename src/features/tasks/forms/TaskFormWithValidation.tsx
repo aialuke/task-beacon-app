@@ -1,4 +1,4 @@
-import { useFormWithValidation } from '@/components/form/useFormWithValidation';
+import { useFormWithZod } from '@/components/ui/form/useFormWithZod';
 import {
   createTaskSchema,
   CreateTaskInput,
@@ -15,7 +15,7 @@ import { DatePickerField } from '@/components/form/DatePickerField';
 import { PhotoUploadField } from '@/components/form/PhotoUploadField';
 import { FormActions } from '@/components/form/FormActions';
 import { UserSearchField } from '@/components/form/UserSearchField';
-import { useState, useEffect } from 'react';
+import { useState} from 'react';
 import { toast } from '@/lib/toast';
 
 interface TaskFormProps {
@@ -32,7 +32,7 @@ export default function TaskFormWithValidation({
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
 
-  const form = useFormWithValidation<CreateTaskInput>({
+  const form = useFormWithZod<CreateTaskInput>({
     schema: createTaskSchema,
     defaultValues: {
       title: '',
@@ -42,23 +42,16 @@ export default function TaskFormWithValidation({
       pinned: false,
       assigneeId: '',
     },
-    onSubmit: async (data) => {
-      await onSubmit({ ...data, photo });
-    },
-    successMessage: 'Task created successfully',
   });
 
-  useEffect(() => {
-    if (form.formError) {
-      toast.error(form.formError);
+  const handleFormSubmit = async (data: CreateTaskInput) => {
+    try {
+      await onSubmit({ ...data, photo });
+      toast.success('Task created successfully');
+    } catch (error) {
+      toast.error('Failed to create task');
     }
-  }, [form.formError]);
-
-  useEffect(() => {
-    if (form.formSuccess) {
-      toast.success(form.formSuccess);
-    }
-  }, [form.formSuccess]);
+  };
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -72,7 +65,7 @@ export default function TaskFormWithValidation({
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit((data) => form.onSubmit(data))}
+        onSubmit={form.handleSubmit(handleFormSubmit)}
         className="space-y-4"
       >
         <FormField
@@ -163,7 +156,7 @@ export default function TaskFormWithValidation({
                 <UserSearchField
                   value={field.value}
                   onChange={field.onChange}
-                  disabled={form.isSubmitting}
+                  disabled={form.formState.isSubmitting}
                 />
               </FormControl>
               <FormMessage />
@@ -171,7 +164,7 @@ export default function TaskFormWithValidation({
           )}
         />
 
-        <FormActions onCancel={onClose} isSubmitting={isSubmitting || form.isSubmitting} />
+        <FormActions onCancel={onClose} isSubmitting={isSubmitting || form.formState.isSubmitting} />
       </form>
     </Form>
   );

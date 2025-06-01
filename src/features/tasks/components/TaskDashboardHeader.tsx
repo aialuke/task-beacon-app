@@ -1,9 +1,6 @@
 import { memo } from "react";
-import { useNavigate } from "react-router-dom";
 
 function TaskDashboardHeader() {
-  const navigate = useNavigate();
-
   return (
     <header className="mb-8 flex items-center justify-between">
       <div className="flex items-center gap-4">

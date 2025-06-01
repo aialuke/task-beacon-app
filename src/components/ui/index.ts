@@ -52,9 +52,6 @@ export * from './sidebar';
 // Layout Components
 export * from './layout';
 
-// Chart Components
-export * from './chart';
-
 // Sonner Components (specific export to avoid conflicts)
 export { Toaster as SonnerToaster } from './sonner';
 

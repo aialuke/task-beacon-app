@@ -12,8 +12,5 @@ export * from './base';
 export * from './tasks.service';
 export * from './users.service';
 
-// Export auth-specific types for convenience
-export type { AuthResponse, SignUpOptions } from './base';
-
 // Re-export commonly used Supabase client for edge cases
 export { supabase } from '@/integrations/supabase/client'; 

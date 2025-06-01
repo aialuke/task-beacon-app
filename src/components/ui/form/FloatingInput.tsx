@@ -8,7 +8,6 @@ interface FloatingInputProps {
   type?: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  placeholder: string;
   label: string;
   icon?: ReactNode;
   maxLength?: number;
@@ -22,7 +21,6 @@ export function FloatingInput({
   type = 'text',
   value,
   onChange,
-  placeholder,
   label,
   icon,
   maxLength,

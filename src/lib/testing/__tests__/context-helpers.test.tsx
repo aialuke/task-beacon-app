@@ -1,5 +1,5 @@
-import React from 'react';
 import { screen } from '@testing-library/react';
+import { describe, it, expect } from 'vitest';
 import { 
   renderWithProviders,
   renderWithAllProviders,
@@ -129,7 +129,7 @@ describe('Context Testing Helpers', () => {
 describe('Context Error Handling', () => {
   it('should handle context provider errors gracefully', () => {
     // Component that throws an error
-    function ErrorComponent() {
+    function ErrorComponent(): JSX.Element {
       throw new Error('Test error');
     }
 

@@ -14,8 +14,6 @@ import { logger } from '@/lib/logger';
 import type { 
   ApiResponse, 
   ApiError, 
-  PaginationOptions, 
-  PaginatedResponse,
   AuthResponse,
   SignUpOptions 
 } from '@/types/shared';

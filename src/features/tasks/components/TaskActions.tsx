@@ -7,10 +7,9 @@ import { toast } from '@/lib/toast';
 
 interface TaskActionsProps {
   task: Task;
-  detailView?: boolean;
 }
 
-function TaskActions({ task, detailView }: TaskActionsProps) {
+function TaskActions({ task }: TaskActionsProps) {
   const navigate = useNavigate();
   const { toggleTaskComplete } = useTaskMutations();
 

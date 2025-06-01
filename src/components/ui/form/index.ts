@@ -5,5 +5,4 @@ export { AnimatedCharacterCount } from './AnimatedCharacterCount';
 
 // Form hooks
 export { useFormWithZod } from './useFormWithZod';
-export { useFormWithValidation } from './useFormWithValidation';
 export { useFormSubmission } from './useFormSubmission'; 

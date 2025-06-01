@@ -6,7 +6,6 @@ import { PasswordStrengthIndicator } from './PasswordStrengthIndicator';
 import { AuthService } from '@/lib/api';
 import { toast } from '@/lib/toast';
 import { isValidEmail } from '@/lib/utils/validation';
-import { cn } from '@/lib/utils';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 
 type AuthMode = 'signin' | 'signup';

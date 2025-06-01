@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Calendar1, ExternalLink } from 'lucide-react';
@@ -136,7 +135,7 @@ const TaskDetailsPage = () => {
         )}
 
         <div className="border-t pt-4">
-          <TaskActions task={{ ...task, pinned: isPinned }} detailView />
+          <TaskActions task={{ ...task, pinned: isPinned }} />
         </div>
       </div>
     </div>
