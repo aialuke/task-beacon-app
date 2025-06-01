@@ -1,6 +1,4 @@
 import { memo } from "react";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 function TaskDashboardHeader() {
@@ -18,14 +16,6 @@ function TaskDashboardHeader() {
           </p>
         </div>
       </div>
-
-      <Button
-        onClick={() => navigate("/create-task")}
-        className="flex items-center gap-2"
-      >
-        <Plus size={16} />
-        <span className="hidden sm:inline">Create Task</span>
-      </Button>
     </header>
   );
 }
