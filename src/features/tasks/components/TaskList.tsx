@@ -1,11 +1,10 @@
 import { lazy, Suspense } from 'react';
 import { useTaskDataContext } from '@/features/tasks/context/TaskDataContext';
-import { useTaskUIContext } from '@/features/tasks/context/TaskUIContext';
-import { useFilteredTasks } from '@/features/tasks/hooks/useFilteredTasks';
+import { useTaskFiltering } from '@/features/tasks/providers/TaskProviders';
 import TaskFilterNavbar from './TaskFilterNavbar';
 import TaskPagination from './TaskPagination';
 import { Skeleton } from '@/components/ui/skeleton';
-import { FabButton } from '@/components/FabButton';
+import { FabButton } from './FabButton';
 
 // Lazy load components that aren't needed on initial render
 const TaskCard = lazy(() => import('./TaskCard'));
@@ -24,9 +23,8 @@ const TaskCardSkeleton = () => (
 );
 
 export default function TaskList() {
-  // Get data and functions from data context
+  // Get data context for pagination functionality
   const {
-    tasks,
     isLoading,
     isFetching,
     // Pagination props
@@ -39,11 +37,8 @@ export default function TaskList() {
     pageSize,
   } = useTaskDataContext();
 
-  // Get UI state from UI context
-  const { filter, setFilter } = useTaskUIContext();
-
-  // Get filtered tasks
-  const filteredTasks = useFilteredTasks(tasks, filter);
+  // Use the new convenience hook for filtering operations
+  const { tasks: filteredTasks, filter, setFilter } = useTaskFiltering();
 
   return (
     <>

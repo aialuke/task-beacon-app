@@ -1,5 +1,4 @@
-import React from 'react';
-import ModernAuthForm from '@/components/auth/ModernAuthForm'; // Changed to default import
+import { ModernAuthForm } from '@/components/ui/auth';
 
 const AuthPage: React.FC = () => {
   return <ModernAuthForm />;

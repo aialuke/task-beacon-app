@@ -1,13 +1,6 @@
 /* src/styles/utilities/borders.css - Enhanced border utilities beyond Tailwind defaults */
 @layer utilities {
-  /* Custom border radius using design tokens - specific to design system */
-  .rounded-xl-container {
-    border-radius: var(--radius-xl);
-  }
-
-  .rounded-full-container {
-    border-radius: var(--radius-full);
-  }
+  /* Removed .rounded-xl-container and .rounded-full-container (use Tailwind's rounded-*) */
 
   /* Enhanced border with gradient - not available in Tailwind */
   .border-gradient {

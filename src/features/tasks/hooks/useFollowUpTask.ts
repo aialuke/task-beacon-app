@@ -1,17 +1,17 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from '@/lib/toast';
+import { TaskService } from '@/lib/api/tasks.service';
+
+// Clean imports from organized type system
+import type { Task } from '@/types';
 import {
   showBrowserNotification,
   triggerHapticFeedback,
-} from '@/lib/notification';
+} from '@/lib/utils/notification';
 import { useTaskForm } from './useTaskForm';
 import { useTaskFormValidation } from './useTaskFormValidation';
-import {
-  createFollowUpTask,
-  uploadTaskPhoto,
-} from '@/integrations/supabase/api/tasks.api';
-import { Task } from '@/types/shared.types';
+import { useTaskMutations } from './useTaskMutations';
 
 interface UseFollowUpTaskProps {
   parentTask: Task;
@@ -24,6 +24,7 @@ interface UseFollowUpTaskProps {
 export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
   const navigate = useNavigate();
   const { validateTitle } = useTaskFormValidation();
+  const { createFollowUpTask } = useTaskMutations();
 
   const taskForm = useTaskForm({
     onClose: onClose || (() => navigate('/')),
@@ -42,13 +43,14 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
       try {
         let photoUrl = null;
         if (taskForm.photo) {
-          const { data: uploadedUrl, error: uploadError } =
-            await uploadTaskPhoto(taskForm.photo);
-          if (uploadError) throw uploadError;
-          photoUrl = uploadedUrl;
+          const uploadResponse = await TaskService.uploadPhoto(taskForm.photo);
+          if (!uploadResponse.success) {
+            throw new Error(uploadResponse.error?.message || 'Photo upload failed');
+          }
+          photoUrl = uploadResponse.data;
         }
 
-        const { error } = await createFollowUpTask(parentTask.id, {
+        const result = await createFollowUpTask(parentTask, {
           title: taskForm.title,
           description: taskForm.description || null,
           due_date: taskForm.dueDate
@@ -60,19 +62,19 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
           pinned: taskForm.pinned,
         });
 
-        if (error) throw error;
-
-        triggerHapticFeedback();
-        toast.success('Follow-up task created successfully');
-
-        if (assigneeId) {
-          showBrowserNotification(
-            'Task Assigned',
-            `Follow-up task "${taskForm.title}" has been assigned`
-          );
+        if (result.success) {
+          triggerHapticFeedback();
+          toast.success(result.message);
+          if (assigneeId) {
+            showBrowserNotification(
+              'Task Assigned',
+              `Follow-up task "${taskForm.title}" has been assigned`
+            );
+          }
+          taskForm.resetForm();
+        } else {
+          toast.error(result.message);
         }
-
-        taskForm.resetForm();
       } catch (error: unknown) {
         if (error instanceof Error) {
           toast.error(error.message);
@@ -83,7 +85,7 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
         taskForm.setLoading(false);
       }
     },
-    [taskForm, assigneeId, parentTask.id, validateTitle]
+    [taskForm, assigneeId, parentTask, validateTitle, createFollowUpTask]
   );
 
   return {

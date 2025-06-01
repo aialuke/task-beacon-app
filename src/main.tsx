@@ -1,36 +1,12 @@
 import { createRoot } from 'react-dom/client';
-import { StrictMode, Component, ReactNode } from 'react';
+import { StrictMode } from 'react';
 import App from './App.tsx';
 import './index.css';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { setupGlobalErrorHandlers } from '@/lib/utils/error';
 
-interface ErrorBoundaryProps {
-  children: ReactNode;
-}
-
-interface ErrorBoundaryState {
-  hasError: boolean;
-}
-
-class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  state: ErrorBoundaryState = { hasError: false };
-
-  static getDerivedStateFromError(): ErrorBoundaryState {
-    return { hasError: true };
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div className="flex min-h-screen items-center justify-center bg-background">
-          <h1 className="text-2xl font-bold text-destructive">
-            Something went wrong.
-          </h1>
-        </div>
-      );
-    }
-    return this.props.children;
-  }
-}
+// Setup global error handlers for unhandled errors and promise rejections
+setupGlobalErrorHandlers();
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {

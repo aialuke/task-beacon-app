@@ -38,7 +38,7 @@ export function useMotionPreferences() {
     prefersReducedMotion,
     isLoaded,
     shouldReduceMotion: prefersReducedMotion,
-    getAnimationConfig: (normalConfig: any, reducedConfig: any) =>
+    getAnimationConfig: (normalConfig: unknown, reducedConfig: unknown) =>
       prefersReducedMotion ? reducedConfig : normalConfig,
   };
 }

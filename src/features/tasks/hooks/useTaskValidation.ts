@@ -11,10 +11,10 @@ export function useTaskValidation() {
     useTaskFormValidation();
 
   const validateField = useCallback(
-    (fieldName: string, value: any) => {
+    (fieldName: string, value: unknown) => {
       switch (fieldName) {
         case 'title':
-          return validateTitle(value);
+          return validateTitle(value as string);
         default:
           return true;
       }

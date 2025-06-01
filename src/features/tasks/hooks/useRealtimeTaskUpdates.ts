@@ -1,6 +1,5 @@
-
 import { useState, useCallback, useRef } from 'react';
-import { useTaskRealtime } from '@/hooks/useTaskRealtime';
+import { useTaskRealtime } from '@/features/tasks/hooks/useTaskRealtime';
 
 /**
  * Optimized hook for tracking real-time task updates and showing visual indicators

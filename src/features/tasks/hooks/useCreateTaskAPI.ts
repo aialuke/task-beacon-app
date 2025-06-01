@@ -1,9 +1,7 @@
-
 import { useCallback } from 'react';
-import { createTask } from '@/integrations/supabase/api/tasks.api';
-import { getCurrentUserId } from '@/integrations/supabase/api/base.api';
-import { useDataValidation } from '@/hooks/useDataValidation';
-import { toast } from '@/lib/toast';
+import { TaskService, type TaskCreateData as ServiceTaskCreateData } from '@/lib/api/tasks.service';
+import { AuthService } from '@/lib/api/base';
+import { useTaskValidation } from '@/hooks/useTaskValidation';
 
 interface CreateTaskData {
   title: string;
@@ -19,7 +17,7 @@ interface CreateTaskData {
  * Hook for API operations related to task creation with validation
  */
 export function useCreateTaskAPI() {
-  const { validateTask } = useDataValidation();
+  const { validateTask } = useTaskValidation();
 
   const executeCreateTask = useCallback(async (taskData: CreateTaskData) => {
     try {
@@ -32,29 +30,35 @@ export function useCreateTaskAPI() {
       });
 
       if (!validationResult.isValid) {
-        return { success: false, error: 'Validation failed' };
+        return { success: false, error: 'Validation failed', validation: validationResult };
       }
 
-      const currentUserId = await getCurrentUserId();
+      const userResponse = await AuthService.getCurrentUserId();
+      if (!userResponse.success || !userResponse.data) {
+        return { success: false, error: 'Failed to get current user' };
+      }
+      const currentUserId = userResponse.data;
       const finalAssigneeId = taskData.assigneeId || currentUserId;
 
-      const { error } = await createTask({
+      const serviceTaskData: ServiceTaskCreateData = {
         title: taskData.title.trim(),
-        description: taskData.description || null,
-        due_date: new Date(taskData.dueDate).toISOString(),
-        photo_url: taskData.photoUrl,
-        url_link: taskData.url || null,
-        assignee_id: finalAssigneeId,
+        description: taskData.description || undefined,
+        dueDate: new Date(taskData.dueDate).toISOString(),
+        photoUrl: taskData.photoUrl,
+        urlLink: taskData.url || undefined,
+        assigneeId: finalAssigneeId,
         pinned: taskData.pinned,
-      });
+      };
 
-      if (error) throw error;
+      const response = await TaskService.create(serviceTaskData);
 
-      toast.success('Task created successfully');
-      return { success: true, error: null };
+      if (!response.success) {
+        throw new Error(response.error?.message || 'Failed to create task');
+      }
+
+      return { success: true, error: null, message: 'Task created successfully' };
     } catch (error: unknown) {
       let errorMessage = 'An unexpected error occurred.';
-      
       if (error instanceof Error) {
         // Check for database constraint violations
         if (error.message.includes('check constraint')) {
@@ -71,8 +75,6 @@ export function useCreateTaskAPI() {
           errorMessage = error.message;
         }
       }
-      
-      toast.error(errorMessage);
       return { success: false, error: errorMessage };
     }
   }, [validateTask]);

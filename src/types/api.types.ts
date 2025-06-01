@@ -13,7 +13,7 @@ export interface ApiError {
   code?: string;
   details?: unknown;
   hint?: string;
-  originalError?: any;
+  originalError?: unknown;
 }
 
 export interface TablesResponse<T> {
@@ -67,7 +67,7 @@ export interface TaskQueryParams {
 export interface TaskError {
   message: string;
   code: string;
-  details?: any;
+  details?: unknown;
 }
 
 export interface TaskActionResult<T = void> {

@@ -1,24 +1,22 @@
 import { useEffect, useCallback } from "react";
-import { performanceMonitor } from "@/lib/performanceUtils";
+import { performanceMonitor } from '@/lib/utils/performance';
 
 /**
  * Simplified hook for component performance monitoring
  */
 export function usePerformanceMonitoring(componentName: string) {
   useEffect(() => {
-    const id = performanceMonitor.startMeasurement(`${componentName}-mount`);
+    performanceMonitor.start(`${componentName}-mount`);
     return () => {
-      performanceMonitor.endMeasurement(id); // Fixed: No return value
+      performanceMonitor.end(`${componentName}-mount`);
     };
   }, [componentName]);
 
   const measureOperation = useCallback(
     (operationName: string, operation: () => void) => {
-      const id = performanceMonitor.startMeasurement(
-        `${componentName}-${operationName}`
-      );
+      performanceMonitor.start(`${componentName}-${operationName}`);
       operation();
-      performanceMonitor.endMeasurement(id);
+      performanceMonitor.end(`${componentName}-${operationName}`);
     },
     [componentName]
   );
@@ -34,9 +32,9 @@ export function measurePerformance<T extends unknown[], R>(
   fn: (...args: T) => R
 ): (...args: T) => R {
   return (...args: T): R => {
-    const id = performanceMonitor.startMeasurement(name);
+    performanceMonitor.start(name);
     const result = fn(...args);
-    performanceMonitor.endMeasurement(id);
+    performanceMonitor.end(name);
     return result;
   };
 }

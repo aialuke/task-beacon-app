@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link, ExternalLink } from 'lucide-react';
 
 interface ReferenceCardProps {

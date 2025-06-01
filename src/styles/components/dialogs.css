@@ -3,10 +3,10 @@
   /* ===== SOLID BACKGROUND ENFORCEMENT ===== */
   [data-radix-dialog-content],
   [data-radix-popover-content] {
-    background-color: #1a1a1a !important;
-    color: #ffffff !important;
-    border: 1px solid #404040 !important;
-    opacity: 1 !important;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    border: 1px solid #404040;
+    opacity: 1;
   }
 
   /* ===== LIGHT MODE OVERRIDES ===== */
@@ -14,20 +14,20 @@
   .light [data-radix-popover-content],
   html:not(.dark) [data-radix-dialog-content],
   html:not(.dark) [data-radix-popover-content] {
-    background-color: #ffffff !important;
-    color: #000000 !important;
-    border: 1px solid #e5e5e5 !important;
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #e5e5e5;
   }
 
   /* ===== CALENDAR SPECIFIC STYLING ===== */
   [data-radix-popover-content] .rdp {
-    background-color: inherit !important;
-    color: inherit !important;
+    background-color: inherit;
+    color: inherit;
   }
 
   /* ===== OVERLAY STYLING ===== */
   [data-radix-dialog-overlay] {
-    background-color: rgba(0, 0, 0, 0.8) !important;
+    background-color: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(4px);
   }
 

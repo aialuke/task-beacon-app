@@ -1,14 +1,13 @@
-
 import { useState } from 'react';
 import TaskFormWithValidation from './TaskFormWithValidation';
 import { CreateTaskInput } from '../schemas/taskSchema';
-import { uploadTaskPhoto } from '@/integrations/supabase/api/tasks.api';
+import { TaskService } from '@/lib/api/tasks.service';
 import { useCreateTaskAPI } from '../hooks/useCreateTaskAPI';
 import {
   compressAndResizePhoto,
   supportsWebWorker,
   compressAndResizePhotoFallback,
-} from '@/lib/imageUtils';
+} from '@/lib/utils/image';
 import { toast } from '@/lib/toast';
 
 export default function TaskFormExample({ onClose }: { onClose?: () => void }) {
@@ -29,11 +28,12 @@ export default function TaskFormExample({ onClose }: { onClose?: () => void }) {
           : compressAndResizePhotoFallback;
         const processedFile = await processImage(data.photo);
 
-        // Upload via API layer instead of direct Supabase usage
-        const { data: uploadedUrl, error: uploadError } = await uploadTaskPhoto(processedFile);
-
-        if (uploadError) throw new Error(uploadError.message);
-        photoUrl = uploadedUrl;
+        // Upload via TaskService
+        const uploadResponse = await TaskService.uploadPhoto(processedFile);
+        if (!uploadResponse.success) {
+          throw new Error(uploadResponse.error?.message || 'Photo upload failed');
+        }
+        photoUrl = uploadResponse.data;
       }
 
       // Use API layer for task creation

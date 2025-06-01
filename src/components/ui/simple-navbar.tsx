@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { useSpring, animated } from '@react-spring/web';
 import { LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -56,8 +56,8 @@ export function SimpleNavbar({
     return cleanup;
   }, []);
 
-  // Calculate active button position with proper timing
-  const updateActiveButtonBounds = () => {
+  // Calculate active button position with proper timing - wrapped in useCallback
+  const updateActiveButtonBounds = useCallback(() => {
     const activeIndex = items.findIndex((item) => item.value === activeItem);
     const container = containerRef.current;
 
@@ -76,7 +76,7 @@ export function SimpleNavbar({
         setIsInitialized(true);
       }
     }
-  };
+  }, [items, activeItem, isInitialized]);
 
   // Initialize and update on changes
   useEffect(() => {
@@ -88,7 +88,7 @@ export function SimpleNavbar({
     return () => {
       cancelAnimationFrame(frame);
     };
-  }, [activeItem, items, computedColors]);
+  }, [updateActiveButtonBounds]);
 
   // Handle window resize
   useEffect(() => {
@@ -98,7 +98,41 @@ export function SimpleNavbar({
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [activeItem]);
+  }, [updateActiveButtonBounds]);
+
+  // Keyboard navigation handler
+  const handleKeyDown = useCallback((event: React.KeyboardEvent<HTMLDivElement>) => {
+    const activeIndex = items.findIndex((item) => item.value === activeItem);
+    let newIndex = activeIndex;
+
+    switch (event.key) {
+      case 'ArrowLeft':
+        event.preventDefault();
+        newIndex = activeIndex > 0 ? activeIndex - 1 : items.length - 1;
+        break;
+      case 'ArrowRight':
+        event.preventDefault();
+        newIndex = activeIndex < items.length - 1 ? activeIndex + 1 : 0;
+        break;
+      case 'Home':
+        event.preventDefault();
+        newIndex = 0;
+        break;
+      case 'End':
+        event.preventDefault();
+        newIndex = items.length - 1;
+        break;
+      default:
+        return;
+    }
+
+    const newItem = items[newIndex];
+    if (newItem) {
+      onItemChange(newItem.value);
+      // Focus the new active button
+      buttonRefs.current[newIndex]?.focus();
+    }
+  }, [items, activeItem, onItemChange]);
 
   // Spring animation for active indicator line
   const indicatorLineSpring = useSpring({
@@ -137,10 +171,15 @@ export function SimpleNavbar({
     <div className={cn('flex w-full justify-center', className)}>
       <div
         ref={containerRef}
+        role="tablist"
+        aria-orientation="horizontal"
+        aria-label="Navigation"
+        onKeyDown={handleKeyDown}
         className="relative flex items-center gap-1 rounded-full border border-gray-300 bg-gray-50/80 p-2 shadow-lg backdrop-blur-md dark:border-gray-600 dark:bg-gray-900/90"
       >
         {/* Active indicator line above button */}
         <animated.div
+          aria-hidden="true"
           style={{
             position: 'absolute',
             top: '-4px',
@@ -159,6 +198,7 @@ export function SimpleNavbar({
 
         {/* Button background highlight */}
         <animated.div
+          aria-hidden="true"
           style={{
             position: 'absolute',
             left: '8px',
@@ -173,6 +213,7 @@ export function SimpleNavbar({
 
         {/* Ambient glow effect */}
         <animated.div
+          aria-hidden="true"
           style={{
             position: 'absolute',
             top: '0px',
@@ -196,15 +237,20 @@ export function SimpleNavbar({
               key={item.value}
               ref={(el) => setButtonRef(buttonRefs, index, el)}
               onClick={() => onItemChange(item.value)}
+              role="tab"
+              aria-selected={isActive}
+              aria-current={isActive ? 'page' : undefined}
+              aria-label={`${item.name}${isActive ? ' (current)' : ''}`}
+              tabIndex={isActive ? 0 : -1}
               className={cn(
-                'relative z-10 min-w-[48px] cursor-pointer rounded-full border-none bg-transparent px-4 py-2 text-sm font-medium transition-all duration-200',
+                'relative z-10 min-w-[48px] cursor-pointer rounded-full border-none bg-transparent px-4 py-2 text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
                 isActive
                   ? 'text-white dark:text-white'
                   : 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200'
               )}
             >
               <span className="relative z-20 flex items-center justify-center">
-                <Icon size={18} strokeWidth={2.5} />
+                <Icon size={18} strokeWidth={2.5} aria-hidden="true" />
               </span>
             </button>
           );

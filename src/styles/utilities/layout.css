@@ -4,10 +4,10 @@
   .task-list {
     @apply flex flex-col;
     transition: all 0.3s ease-out;
-    padding: 0 !important;
-    gap: 1.5rem !important;
+    padding: 0;
+    gap: 1.5rem;
     overflow-y: hidden;
-    width: 100% !important;
+    width: 100%;
     box-sizing: border-box;
   }
 
@@ -15,7 +15,7 @@
   .navbar-section {
     @apply w-full;
     padding: 0 8px;
-    margin-bottom: 2rem !important;
+    margin-bottom: 2rem;
   }
 
   /* ===== TASK LIST SECTION ===== */
@@ -43,7 +43,7 @@
   /* ===== RESPONSIVE SPACING ===== */
   @media (min-width: 640px) {
     .task-list {
-      gap: 1.75rem !important;
+      gap: 1.75rem;
     }
 
     .task-list-section {
@@ -57,7 +57,7 @@
 
   @media (min-width: 768px) {
     .task-list {
-      gap: 2rem !important;
+      gap: 2rem;
     }
 
     .task-list-section {

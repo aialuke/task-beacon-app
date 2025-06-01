@@ -1,4 +1,4 @@
-import UserSearchInput from '@/components/UserSearchInput';
+import UserSearchInput from '@/features/users/components/UserSearchInput';
 
 interface UserSearchFieldProps {
   value: string;

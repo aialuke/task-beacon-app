@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { toast } from '@/lib/toast';
-import { compressAndResizePhoto } from '@/lib/imageUtils';
-import { uploadTaskPhoto } from '@/integrations/supabase/api/tasks.api';
+import { compressAndResizePhoto } from '@/lib/utils/image';
+import { TaskService } from '@/lib/api/tasks.service';
 
 /**
  * Hook for managing photo upload functionality
@@ -48,9 +48,11 @@ export function usePhotoUpload() {
     if (!photo) return null;
 
     try {
-      const { data: photoUrl, error } = await uploadTaskPhoto(photo);
-      if (error) throw error;
-      return photoUrl || null;
+      const response = await TaskService.uploadPhoto(photo);
+      if (!response.success) {
+        throw new Error(response.error?.message || 'Photo upload failed');
+      }
+      return response.data || null;
     } catch (error) {
       console.error('Error uploading photo:', error);
       return null;

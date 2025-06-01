@@ -1,4 +1,4 @@
-import { TaskStatus, TaskFilter } from '@/types/shared.types';
+import type { TaskStatus, TaskFilter } from '@/types';
 
 /**
  * UI-related types for task components

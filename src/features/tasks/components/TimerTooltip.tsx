@@ -1,6 +1,6 @@
 import { TooltipContent, TooltipArrow } from '@/components/ui/tooltip';
-import { TaskStatus } from '@/types/shared.types';
-import { getStatusTooltipClass, getTooltipArrowClass } from '@/lib/uiUtils';
+import type { TaskStatus } from '@/types';
+import { getStatusTooltipClass, getTooltipArrowClass } from '@/features/tasks/utils/taskUiUtils';
 
 interface TimerTooltipProps {
   tooltipContent: string;

@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { uploadTaskPhoto } from '@/integrations/supabase/api/tasks.api';
+import { TaskService } from '@/lib/api/tasks.service';
 
 /**
  * Hook for handling photo upload during task creation
@@ -10,10 +10,11 @@ export function useCreateTaskPhotoUpload() {
       if (!photo) return null;
 
       try {
-        const { data: uploadedUrl, error: uploadError } =
-          await uploadTaskPhoto(photo);
-        if (uploadError) throw uploadError;
-        return uploadedUrl;
+        const response = await TaskService.uploadPhoto(photo);
+        if (!response.success) {
+          throw new Error(response.error?.message || 'Photo upload failed');
+        }
+        return response.data || null;
       } catch (error) {
         console.error('Error uploading photo:', error);
         throw error;

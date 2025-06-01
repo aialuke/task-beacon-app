@@ -64,11 +64,11 @@ describe('SimpleNavbar', () => {
         items={mockItems}
         activeItem="home"
         onItemChange={mockOnItemChange}
-        className="custom-navbar"
+        className="bg-gray-100 border rounded"
       />
     );
 
-    expect(container.firstChild).toHaveClass('custom-navbar');
+    expect(container.firstChild).toHaveClass('bg-gray-100 border rounded');
   });
 
   it('renders icons for each item', () => {

@@ -1,6 +1,8 @@
-import { createContext, useContext, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
+
+// Clean imports from organized type system  
+import type { Task } from '@/types';
 import { useTaskQueries } from '@/features/tasks/hooks/useTaskQueries';
-import { Task } from '@/types/shared.types';
 
 interface TaskDataContextValue {
   tasks: Task[];

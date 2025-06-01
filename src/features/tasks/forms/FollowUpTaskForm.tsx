@@ -1,5 +1,5 @@
 import React from 'react';
-import { Task } from '@/types/shared.types';
+import type { Task } from '@/types';
 import { useFollowUpTask } from '@/features/tasks/hooks/useFollowUpTask';
 import { BaseTaskForm } from '@/components/form/BaseTaskForm';
 import { ParentTaskReference } from '@/components/form/ParentTaskReference';

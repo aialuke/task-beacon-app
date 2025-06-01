@@ -5,15 +5,9 @@
  * For new code, prefer importing directly from "@/lib/utils/ui"
  */
 
-// Re-export all UI utilities for backward compatibility
+// Re-export only generic UI utilities for backward compatibility
 export {
   cn,
-  getTaskStatus,
-  getStatusColor,
-  getTimerColor,
-  getTimerGradient,
-  getStatusTooltipClass,
-  getTooltipArrowClass,
   isElementInViewport,
   isDarkMode,
 } from './utils/ui';

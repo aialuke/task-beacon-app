@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Task, TaskFilter } from '@/types/shared.types';
+import type { Task, TaskFilter } from '@/types';
 
 /**
  * Hook for filtering tasks based on the selected filter

@@ -6,22 +6,20 @@ import {
   ReactNode,
 } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { AuthService } from '@/lib/api';
 import { toast } from '@/lib/toast';
-import { User, Session } from '@supabase/supabase-js';
-import { getCurrentUser } from '@/integrations/supabase/api/users.api';
+import { authLogger } from '@/lib/logger';
 
-interface AuthContextType {
-  user: User | null;
-  session: Session | null;
-  loading: boolean;
-  error: Error | null;
-  signOut: () => Promise<void>;
-  refreshSession: () => Promise<void>;
+// Clean imports from organized type system
+import type { User, Session, AuthContextType } from '@/types/shared';
+
+interface AuthProviderProps {
+  children: ReactNode;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
@@ -41,38 +39,51 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  // Refresh session function
+  // Refresh session function using AuthService
   const refreshSession = async () => {
     try {
-      const { data, error } = await supabase.auth.refreshSession();
-      if (error) throw error;
+      const response = await AuthService.refreshSession();
+      
+      if (response.success) {
+        setSession(response.data?.session ?? null);
+        setUser(response.data?.user ?? null);
+        authLogger.info('Session refreshed successfully via AuthService');
+      } else {
+        authLogger.warn('AuthService refresh failed, attempting direct refresh', { error: response.error?.message });
+        // Fallback to direct Supabase refresh
+        const { data, error } = await supabase.auth.refreshSession();
+        if (error) throw error;
 
-      setSession(data.session);
-      setUser(data.session?.user ?? null);
+        setSession(data.session);
+        setUser(data.session?.user ?? null);
+        authLogger.info('Session refreshed successfully via fallback');
+      }
     } catch (error: unknown) {
-      console.error('Session refresh error:', error);
+      authLogger.error('Session refresh failed', error as Error);
       if (error instanceof Error) {
         setError(error);
       }
     }
   };
 
-  // Sign out function with enhanced cleanup
+  // Sign out function with enhanced cleanup using AuthService
   const signOut = async () => {
     try {
       setLoading(true);
+      authLogger.info('Starting sign out process');
 
       // Clean up auth state first
       cleanupAuthState();
 
-      // Attempt global sign out
-      try {
+      // Use AuthService for sign out
+      const response = await AuthService.signOut();
+      
+      if (response.success) {
+        authLogger.info('Sign out completed via AuthService');
+      } else {
+        authLogger.warn('AuthService sign out failed, attempting direct sign out', { error: response.error?.message });
+        // Fallback to direct sign out
         await supabase.auth.signOut({ scope: 'global' });
-      } catch (err) {
-        console.warn(
-          'Global sign out failed, continuing with local cleanup:',
-          err
-        );
       }
 
       // Clear local state
@@ -81,13 +92,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setError(null);
 
       toast.success('Signed out successfully');
+      authLogger.info('Sign out completed successfully');
 
       // Force page reload for clean state
       setTimeout(() => {
         window.location.href = '/auth';
       }, 500);
     } catch (error: unknown) {
-      console.error('Sign-out error:', error);
+      authLogger.error('Sign out failed', error as Error);
       toast.error('Failed to sign out');
     } finally {
       setLoading(false);
@@ -101,7 +113,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('Auth state change:', event, session?.user?.id);
+      authLogger.debug('Auth state change detected', { 
+        event, 
+        userId: session?.user?.id,
+        hasSession: !!session 
+      });
 
       if (!mounted) return;
 
@@ -116,6 +132,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           if (mounted) {
             setError(null);
             setLoading(false);
+            authLogger.info('User signed in successfully', { userId: session.user.id });
           }
         }, 0);
       } else if (event === 'SIGNED_OUT') {
@@ -123,36 +140,44 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setSession(null);
         setError(null);
         setLoading(false);
+        authLogger.info('User signed out');
       } else if (event === 'TOKEN_REFRESHED') {
-        console.log('Token refreshed successfully');
+        authLogger.debug('Auth token refreshed');
       }
     });
 
     // THEN check for existing session
     const initializeAuth = async () => {
       try {
+        authLogger.debug('Initializing auth state');
         const {
           data: { session },
           error,
         } = await supabase.auth.getSession();
 
         if (error) {
-          console.error('Error getting session:', error);
+          authLogger.error('Error getting session', error);
           setError(error);
         }
 
         if (mounted) {
           setSession(session);
           setUser(session?.user ?? null);
+          if (session?.user) {
+            authLogger.info('Existing session found', { userId: session.user.id });
+          } else {
+            authLogger.debug('No existing session found');
+          }
         }
       } catch (error: unknown) {
-        console.error('Auth initialization error:', error);
+        authLogger.error('Auth initialization failed', error as Error);
         if (mounted && error instanceof Error) {
           setError(error);
         }
       } finally {
         if (mounted) {
           setLoading(false);
+          authLogger.debug('Auth initialization completed');
         }
       }
     };
@@ -162,6 +187,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => {
       mounted = false;
       subscription.unsubscribe();
+      authLogger.debug('Auth context cleanup completed');
     };
   }, []);
 

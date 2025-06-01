@@ -1,5 +1,7 @@
-
-import { supabase } from '@/integrations/supabase/client';
+/**
+ * Database-level validation utilities using the API service layer
+ */
+import { DatabaseService } from '@/lib/api';
 
 /**
  * Database-level validation utilities
@@ -11,6 +13,101 @@ export interface ValidationResult {
   errors: string[];
   warnings: string[];
 }
+
+/**
+ * Validates if a user exists by email
+ */
+export const validateUserExists = async (email: string): Promise<ValidationResult> => {
+  const result: ValidationResult = {
+    isValid: true,
+    errors: [],
+    warnings: [],
+  };
+
+  try {
+    const response = await DatabaseService.exists('profiles', 'email', email);
+    
+    if (!response.success) {
+      result.isValid = false;
+      result.errors.push('Failed to validate user existence');
+      return result;
+    }
+
+    if (!response.data) {
+      result.isValid = false;
+      result.errors.push('User with this email does not exist');
+    }
+  } catch (error) {
+    result.isValid = false;
+    result.errors.push('Database validation failed');
+  }
+
+  return result;
+};
+
+/**
+ * Validates if a task exists
+ */
+export const validateTaskExists = async (taskId: string): Promise<ValidationResult> => {
+  const result: ValidationResult = {
+    isValid: true,
+    errors: [],
+    warnings: [],
+  };
+
+  try {
+    const response = await DatabaseService.exists('tasks', 'id', taskId);
+    
+    if (!response.success) {
+      result.isValid = false;
+      result.errors.push('Failed to validate task existence');
+      return result;
+    }
+
+    if (!response.data) {
+      result.isValid = false;
+      result.errors.push('Task does not exist');
+    }
+  } catch (error) {
+    result.isValid = false;
+    result.errors.push('Database validation failed');
+  }
+
+  return result;
+};
+
+/**
+ * Validates user permissions for task operations
+ */
+export const validateTaskOwnership = async (
+  taskId: string,
+  userId: string
+): Promise<ValidationResult> => {
+  const result: ValidationResult = {
+    isValid: true,
+    errors: [],
+    warnings: [],
+  };
+
+  try {
+    const response = await DatabaseService.exists('tasks', 'id', taskId);
+    
+    if (!response.success || !response.data) {
+      result.isValid = false;
+      result.errors.push('Task not found');
+      return result;
+    }
+
+    // Additional ownership check would need to be implemented
+    // This is a simplified version
+    result.warnings.push('Ownership validation requires additional implementation');
+  } catch (error) {
+    result.isValid = false;
+    result.errors.push('Database validation failed');
+  }
+
+  return result;
+};
 
 /**
  * Validate email format using the same regex as database

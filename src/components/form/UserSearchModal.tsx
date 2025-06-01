@@ -21,8 +21,6 @@ export function UserSearchModal({
   value,
   onChange,
 }: UserSearchModalProps) {
-  const [tempValue, setTempValue] = useState(value);
-
   const handleUserSelect = (selectedValue: string) => {
     onChange(selectedValue);
     onClose();
@@ -38,7 +36,7 @@ export function UserSearchModal({
         </DialogHeader>
 
         <div className="space-y-4 pb-4">
-          <EnhancedUserSearch value={tempValue} onChange={handleUserSelect} />
+          <EnhancedUserSearch value={value} onChange={handleUserSelect} />
         </div>
       </DialogContent>
     </Dialog>

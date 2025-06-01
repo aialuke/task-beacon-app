@@ -1,8 +1,9 @@
 import { useCallback, memo } from 'react';
 import { Button } from '@/components/ui/button';
-import { Task } from '@/types/shared.types';
+import type { Task } from '@/types';
 import { useNavigate } from 'react-router-dom';
 import { useTaskMutations } from '../hooks/useTaskMutations';
+import { toast } from '@/lib/toast';
 
 interface TaskActionsProps {
   task: Task;
@@ -18,7 +19,12 @@ function TaskActions({ task, detailView }: TaskActionsProps) {
   }, [navigate, task.id]);
 
   const handleToggleComplete = useCallback(async () => {
-    await toggleTaskComplete(task);
+    const result = await toggleTaskComplete(task);
+    if (result.success) {
+      toast.success(result.message);
+    } else if (result.error) {
+      toast.error(result.message);
+    }
   }, [toggleTaskComplete, task]);
 
   return (

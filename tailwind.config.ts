@@ -97,11 +97,26 @@ export default {
         'task-overdue': 'var(--status-overdue)',
         'task-complete': 'var(--status-complete)',
         'task-timer': 'var(--status-pending)',
+        sidebar: '#1a1a1a',
+        'sidebar-foreground': '#f3f3f3',
+        'sidebar-accent': '#23272f',
+        'sidebar-accent-foreground': '#fff',
+        'sidebar-border': '#333',
+        destructive: '#ef4444', // Tailwind's red-500
+        'destructive-foreground': '#fff',
       },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
+      },
+      borderColor: {
+        'sidebar-border': '#333',
+      },
+      boxShadow: {
+        'task-card': '0 2px 8px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06)',
+        'task-card-dark': '0 2px 8px rgba(0,0,0,0.2), 0 1px 3px rgba(0,0,0,0.1)',
+        'focus': 'var(--shadow-focus)',
       },
       keyframes: {
         'accordion-down': {
@@ -124,13 +139,32 @@ export default {
           '0%, 100%': { opacity: '1' },
           '50%': { opacity: 'var(--pulse-opacity, 0.8)' },
         },
+        'caret-blink': {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0' },
+        },
+        flash: {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.7' },
+        },
+        'pulse-subtle': {
+          '0%, 100%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.03)' },
+        },
+        'ring-fill': {
+          from: { strokeDashoffset: 'var(--full-circumference)' },
+          to: { strokeDashoffset: 'var(--target-offset)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'fade-in': 'fade-in 0.3s ease-out',
         'fade-out': 'fade-out 0.3s ease-out',
-        'pulse-subtle': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'caret-blink': 'caret-blink 1s steps(1) infinite',
+        'flash': 'flash 2s infinite',
+        'ring-fill': 'ring-fill 1.5s ease-out forwards',
+        'pulse-subtle': 'pulse-subtle 3s infinite ease-in-out',
       },
     },
   },

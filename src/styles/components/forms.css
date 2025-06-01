@@ -1,9 +1,7 @@
 /* src/styles/components/forms.css - Simplified form styling for consistent theming */
 @layer components {
   /* ===== FORM STYLES ===== */
-  .form-field-group {
-    @apply space-y-2;
-  }
+  /* Removed .form-field-group (use Tailwind's space-y-*) */
 
   /* ===== MINIMAL FORM FIELD OVERRIDES ===== */
   /* Let components handle their own styling via Tailwind classes */

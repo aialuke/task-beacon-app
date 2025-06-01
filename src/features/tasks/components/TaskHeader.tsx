@@ -1,8 +1,7 @@
 import { memo } from 'react';
 import { Button } from '@/components/ui/button';
-import { Task } from '@/types/shared.types';
+import type { Task } from '@/types';
 import { Pin } from 'lucide-react';
-import { useTaskUIContext } from '@/features/tasks/context/TaskUIContext';
 import TaskStatus from './TaskStatus';
 import TaskExpandButton from './TaskExpandButton';
 
@@ -20,7 +19,7 @@ function TaskHeader({
   handleTogglePin,
 }: TaskHeaderProps) {
   return (
-    <div className="task-header-container flex w-full items-center gap-2">
+    <div className="flex w-full items-center gap-2">
       <TaskStatus task={task} />
 
       <div className="flex min-w-0 flex-1 items-center">
@@ -35,7 +34,7 @@ function TaskHeader({
       <Button
         variant="ghost"
         size="icon"
-        className="no-shadow ml-1 h-8 w-8 shrink-0"
+        className="shadow-none ml-1 h-8 w-8 shrink-0"
         onClick={handleTogglePin}
         title={task.pinned ? 'Unpin task' : 'Pin task'}
       >

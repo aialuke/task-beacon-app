@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useValidation } from '@/hooks/useValidation';
+import { validateObject, validateWithError } from '@/hooks/validationUtils';
 import { createTaskSchema } from '@/features/tasks/schemas/taskSchema';
 import { createTextSchema } from '@/schemas/commonValidation';
 
@@ -9,30 +9,26 @@ import { createTextSchema } from '@/schemas/commonValidation';
  * Provides consistent validation patterns for all task forms using Zod schemas
  */
 export function useTaskFormValidation() {
-  const { validateWithToast, validateField } = useValidation();
-
   /**
    * Validate complete task form data using the task schema
    */
   const validateTaskForm = useCallback(
-    (data: any) => {
-      return validateWithToast(createTaskSchema, data);
+    (data: unknown) => {
+      return validateWithError(createTaskSchema, data);
     },
-    [validateWithToast]
+    []
   );
 
   /**
-   * Validate title with character limit and toast feedback
+   * Validate title with character limit
    */
   const validateTitle = useCallback(
     (value: string): boolean => {
       const titleSchema = createTextSchema(1, 22, true);
-      const result = validateField(titleSchema, value, 'title', {
-        showToast: true,
-      });
+      const result = validateObject(titleSchema, value);
       return result.isValid;
     },
-    [validateField]
+    []
   );
 
   /**

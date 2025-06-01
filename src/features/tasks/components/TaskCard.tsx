@@ -1,4 +1,3 @@
-
 import { memo } from 'react';
 import { Task } from '@/types';
 import { useTaskCard } from '../hooks/useTaskCard';
@@ -6,7 +5,7 @@ import { useRealtimeTaskUpdates } from '../hooks/useRealtimeTaskUpdates';
 import { getTaskCardStyles, getTaskCardClasses } from '../utils/taskCardStyles';
 import TaskCardHeader from './TaskCardHeader';
 import TaskCardContent from './TaskCardContent';
-import RealtimeUpdateIndicator from '@/components/RealtimeUpdateIndicator';
+import RealtimeUpdateIndicator from './RealtimeUpdateIndicator';
 
 interface TaskCardProps {
   task: Task;

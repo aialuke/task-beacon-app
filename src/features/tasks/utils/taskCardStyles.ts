@@ -1,5 +1,5 @@
 import { Task, TaskStatus } from '@/types';
-import { getTaskStatus } from '@/lib/utils/ui';
+import { getTaskStatus } from '@/features/tasks/utils/taskUiUtils';
 
 /**
  * Get status-specific styles for task cards

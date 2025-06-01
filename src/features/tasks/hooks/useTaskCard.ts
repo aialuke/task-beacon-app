@@ -3,6 +3,7 @@ import { Task } from '@/types';
 import { useTaskUIContext } from '@/features/tasks/context/TaskUIContext';
 import { useTaskAnimation } from '@/features/tasks/hooks/useTaskAnimation';
 import { useTaskMutations } from './useTaskMutations';
+import { toast } from '@/lib/toast';
 
 /**
  * Custom hook for TaskCard functionality
@@ -40,8 +41,13 @@ export function useTaskCard(task: Task) {
    * Optimized: Only recreate when task.id or task.pinned changes
    */
   const handleTogglePin = useCallback(async () => {
-    await toggleTaskPin(task);
-  }, [toggleTaskPin, task.id, task.pinned]);
+    const result = await toggleTaskPin(task);
+    if (result.success) {
+      toast.success(result.message);
+    } else if (result.error) {
+      toast.error(result.message);
+    }
+  }, [toggleTaskPin, task]);
 
   // Memoize the return object to prevent unnecessary re-renders
   return useMemo(

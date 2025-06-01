@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FileText, Sparkles } from 'lucide-react';
-import { FloatingInput } from '@/components/form/FloatingInput';
-import { FloatingTextarea } from '@/components/form/FloatingTextarea';
+import { FloatingInput } from '@/components/ui/form/FloatingInput';
+import { FloatingTextarea } from '@/components/ui/form/FloatingTextarea';
 import { QuickActionBar } from '@/components/form/QuickActionBar';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface BaseTaskFormProps {
   title: string;

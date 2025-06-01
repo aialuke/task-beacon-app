@@ -15,7 +15,8 @@ import { DatePickerField } from '@/components/form/DatePickerField';
 import { PhotoUploadField } from '@/components/form/PhotoUploadField';
 import { FormActions } from '@/components/form/FormActions';
 import { UserSearchField } from '@/components/form/UserSearchField';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { toast } from '@/lib/toast';
 
 interface TaskFormProps {
   onSubmit: (data: CreateTaskInput & { photo: File | null }) => Promise<void>;
@@ -46,6 +47,18 @@ export default function TaskFormWithValidation({
     },
     successMessage: 'Task created successfully',
   });
+
+  useEffect(() => {
+    if (form.formError) {
+      toast.error(form.formError);
+    }
+  }, [form.formError]);
+
+  useEffect(() => {
+    if (form.formSuccess) {
+      toast.success(form.formSuccess);
+    }
+  }, [form.formSuccess]);
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

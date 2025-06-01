@@ -16,7 +16,7 @@ export function generateUUID(): string {
 /**
  * Debounces a function to limit how often it can be called
  */
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: unknown[]) => unknown>(
   func: T,
   wait: number
 ): (...args: Parameters<T>) => void {
@@ -38,7 +38,7 @@ export function debounce<T extends (...args: any[]) => any>(
 /**
  * Creates a throttled function that only invokes the provided function at most once per specified interval
  */
-export function throttle<T extends (...args: any[]) => any>(
+export function throttle<T extends (...args: unknown[]) => unknown>(
   func: T,
   limit: number
 ): (...args: Parameters<T>) => void {

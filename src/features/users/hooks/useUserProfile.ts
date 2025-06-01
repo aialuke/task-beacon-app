@@ -1,8 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { getUserById } from '@/integrations/supabase/api/users.api';
-import { User } from '@/types/shared.types';
-import { toast } from '@/lib/toast';
+import { UserService } from '@/lib/api';
+
+// Clean imports from organized type system
+import type { User } from '@/types';
+import { handleApiError } from '@/lib/utils/error';
+import { useQuery } from '@tanstack/react-query';
 
 interface UseUserProfileReturn {
   profile: User | null;
@@ -12,53 +15,39 @@ interface UseUserProfileReturn {
 }
 
 /**
- * Hook for fetching and managing user profile data
+ * Hook to fetch and manage user profile data
+ * Uses React Query for caching and background updates
  */
 export function useUserProfile(userId?: string): UseUserProfileReturn {
   const { user } = useAuth();
-  const [profile, setProfile] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
   const targetUserId = userId || user?.id;
 
-  const fetchProfile = async () => {
-    if (!targetUserId) {
-      setError('No user ID provided');
-      setLoading(false);
-      return;
-    }
+  const {
+    data: profileResponse,
+    isLoading,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ['user', 'profile', targetUserId],
+    queryFn: () => {
+      if (!targetUserId) throw new Error('No user ID provided');
+      return UserService.getById(targetUserId);
+    },
+    enabled: !!targetUserId,
+    retry: 2,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
 
-    setLoading(true);
-    setError(null);
-
-    try {
-      const { data, error } = await getUserById(targetUserId);
-
-      if (error) throw error;
-      setProfile(data);
-    } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'Failed to fetch user profile';
-      setError(errorMessage);
-      toast.error(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const refreshProfile = async () => {
-    await fetchProfile();
-  };
-
-  useEffect(() => {
-    fetchProfile();
-  }, [targetUserId]);
+  const refreshProfile = useCallback(async () => {
+    await refetch();
+  }, [refetch]);
 
   return {
-    profile,
-    loading,
-    error,
+    profile: profileResponse?.data ?? null,
+    loading: isLoading,
+    error: error 
+      ? handleApiError(error, 'Failed to load user profile', { showToast: false, rethrow: false }).message 
+      : null,
     refreshProfile,
   };
 }

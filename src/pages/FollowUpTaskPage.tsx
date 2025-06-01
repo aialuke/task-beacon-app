@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import FollowUpTaskForm from '@/features/tasks/forms/FollowUpTaskForm';
-import { getTask } from '@/integrations/supabase/api/tasks.api';
+import { TaskService } from '@/lib/api/tasks.service';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function FollowUpTaskPage() {
@@ -16,7 +16,13 @@ export default function FollowUpTaskPage() {
     error,
   } = useQuery({
     queryKey: ['task', parentTaskId],
-    queryFn: () => getTask(parentTaskId!),
+    queryFn: async () => {
+      const response = await TaskService.getById(parentTaskId!);
+      if (!response.success) {
+        throw new Error(response.error?.message || 'Failed to load parent task');
+      }
+      return response.data;
+    },
     enabled: !!parentTaskId,
   });
 

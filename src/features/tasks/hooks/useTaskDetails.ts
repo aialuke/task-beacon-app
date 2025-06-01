@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Task } from '@/types/shared.types';
-import { getTask } from '@/integrations/supabase/api/tasks.api';
-import { toast } from '@/lib/toast';
+import type { Task } from '@/types';
+import { TaskService } from '@/lib/api/tasks.service';
 import { useAuth } from '@/contexts/AuthContext';
+import { useQuery } from '@tanstack/react-query';
+import { handleApiError } from '@/lib/utils/error';
 
 interface UseTaskDetailsReturn {
   task: Task | null;
@@ -21,52 +22,38 @@ interface UseTaskDetailsReturn {
 export function useTaskDetails(
   taskId: string | undefined
 ): UseTaskDetailsReturn {
-  const [task, setTask] = useState<Task | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [isPinned, setIsPinned] = useState(false);
   const { user, session } = useAuth();
 
+  const {
+    data: taskResponse,
+    isLoading: loading,
+    error,
+  } = useQuery({
+    queryKey: ['task', taskId],
+    queryFn: async () => {
+      const response = await TaskService.getById(taskId!);
+      if (!response.success) {
+        const errorMessage = response.error?.message || 'Failed to load task';
+        throw new Error(errorMessage);
+      }
+      return response.data;
+    },
+    enabled: !!taskId && !!user && !!session,
+    retry: 2,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const [isPinned, setIsPinned] = useState(false);
   useEffect(() => {
-    const fetchTask = async () => {
-      if (!taskId) {
-        setError('No task ID provided');
-        setLoading(false);
-        return;
-      }
-
-      if (!user || !session) {
-        setError('User not authenticated');
-        setLoading(false);
-        return;
-      }
-
-      setLoading(true);
-      setError(null);
-
-      try {
-        const taskData = await getTask(taskId);
-        setTask(taskData);
-        setIsPinned(taskData.pinned);
-      } catch (error: unknown) {
-        const errorMessage =
-          error instanceof Error
-            ? error.message
-            : 'An unexpected error occurred.';
-        setError(errorMessage);
-        toast.error(errorMessage);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTask();
-  }, [taskId, user, session]);
+    if (taskResponse && typeof taskResponse === 'object' && 'pinned' in taskResponse) {
+      setIsPinned((taskResponse as Task).pinned);
+    }
+  }, [taskResponse]);
 
   return {
-    task,
+    task: taskResponse ?? null,
     loading,
-    error,
+    error: error ? (error as Error).message : null,
     isPinned,
     setIsPinned,
   };

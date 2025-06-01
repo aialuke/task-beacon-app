@@ -5,8 +5,9 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from '@/components/ui/dialog';
-import { FloatingInput } from '@/components/form/FloatingInput';
+import { FloatingInput } from '@/components/ui/form/FloatingInput';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 

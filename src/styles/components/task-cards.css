@@ -25,9 +25,9 @@
     .task-card-enter-active,
     .task-card-exit,
     .task-card-exit-active {
-      transition: none !important;
-      animation: none !important;
-      transform: none !important;
+      transition: none;
+      animation: none;
+      transform: none;
     }
   }
 }

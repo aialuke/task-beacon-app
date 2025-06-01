@@ -3,7 +3,8 @@ import { User as UserIcon, Search, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { useUserSearch } from '../hooks/useUserSearch';
+import { useUserList } from '../hooks/useUserList';
+import { useUserFilter } from '../hooks/useUserFilter';
 import UserProfile from './UserProfile';
 
 interface EnhancedUserSearchProps {
@@ -29,8 +30,9 @@ export function EnhancedUserSearch({
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const { filteredUsers, loading, searchTerm, setSearchTerm, users } =
-    useUserSearch(5); // Limit to 5 results
+  const [searchTerm, setSearchTerm] = useState('');
+  const { users, loading } = useUserList();
+  const filteredUsers = useUserFilter(users, searchTerm, 5); // Limit to 5 results
 
   // Find selected user
   const selectedUser = users.find((user) => user.id === value);

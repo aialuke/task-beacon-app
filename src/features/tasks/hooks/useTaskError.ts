@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { handleApiError, ErrorHandlingOptions } from '@/lib/errorHandling';
+import { handleApiError, ErrorHandlingOptions } from '@/lib/utils/error';
 import { TaskError } from '../types/task-api.types';
 
 /**
