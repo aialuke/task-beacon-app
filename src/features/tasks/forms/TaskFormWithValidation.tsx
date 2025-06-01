@@ -20,11 +20,13 @@ import { useState } from 'react';
 interface TaskFormProps {
   onSubmit: (data: CreateTaskInput & { photo: File | null }) => Promise<void>;
   onClose?: () => void;
+  isSubmitting?: boolean;
 }
 
 export default function TaskFormWithValidation({
   onSubmit,
   onClose,
+  isSubmitting,
 }: TaskFormProps) {
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
@@ -156,7 +158,7 @@ export default function TaskFormWithValidation({
           )}
         />
 
-        <FormActions onCancel={onClose} isSubmitting={form.isSubmitting} />
+        <FormActions onCancel={onClose} isSubmitting={isSubmitting || form.isSubmitting} />
       </form>
     </Form>
   );
