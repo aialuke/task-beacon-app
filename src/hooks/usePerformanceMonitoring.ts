@@ -31,7 +31,7 @@ export function usePerformanceMonitoring(componentName: string) {
 /**
  * HOC to monitor component render performance
  */
-export function withPerformanceMonitoring<T extends object>(
+export function withPerformanceMonitoring<T extends Record<string, any>>(
   Component: React.ComponentType<T>,
   componentName: string
 ) {
