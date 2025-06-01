@@ -34,7 +34,7 @@ export function usePerformanceMonitoring(componentName: string) {
 export function withPerformanceMonitoring<T extends Record<string, any>>(
   Component: React.ComponentType<T>,
   componentName: string
-) {
+): React.ComponentType<T> {
   return function PerformanceMonitoredComponent(props: T) {
     const { measureOperation } = usePerformanceMonitoring(componentName);
 
