@@ -5,3 +5,4 @@ export { formatDate, getDaysRemaining, getTimeUntilDue, isDatePast } from './dat
 export { sortByProperty, searchByTerm, groupBy, uniqueBy, paginateArray } from './data';
 export { truncateText, truncateUrl, formatFileSize, formatPercentage } from './format';
 export { isValidEmail, isValidUrl, isValidPassword, isDateInFuture } from './validation';
+export { cn } from './ui';

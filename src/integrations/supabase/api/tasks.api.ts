@@ -1,10 +1,9 @@
+
 import { supabase } from '@/integrations/supabase/client';
 import { apiRequest, getCurrentUserId } from './base.api';
 import {
   TablesResponse,
   TaskRow,
-  TaskCreateParams,
-  TaskUpdateParams,
 } from '@/types/api.types';
 import { Task } from '@/types/shared.types';
 
@@ -37,9 +36,6 @@ export const getTask = async (taskId: string): Promise<Task> => {
 
 /**
  * Fetches paginated tasks with their parent tasks
- *
- * @param page Current page number (1-based)
- * @param pageSize Number of items per page
  */
 export const getAllTasks = async (
   page = 1,
@@ -123,7 +119,7 @@ export const createTask = async (
 };
 
 /**
- * Updates a task's status (complete/pending)
+ * Updates a task's status
  */
 export const updateTaskStatus = async (
   taskId: string,

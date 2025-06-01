@@ -1,7 +1,6 @@
-import * as React from 'react';
 
 /**
- * Performance monitoring utilities for animations and components
+ * Core performance monitoring utilities (React-agnostic)
  */
 
 interface PerformanceMetrics {
@@ -134,49 +133,3 @@ class PerformanceMonitor {
 
 // Export singleton instance
 export const performanceMonitor = new PerformanceMonitor();
-
-/**
- * HOC to monitor component render performance
- */
-export function withPerformanceMonitoring<T extends object>(
-  Component: React.ComponentType<T>,
-  componentName: string
-) {
-  return function PerformanceMonitoredComponent(props: T) {
-    React.useEffect(() => {
-      const id = performanceMonitor.startMeasurement(`${componentName}-render`);
-
-      return () => {
-        performanceMonitor.endMeasurement(id);
-      };
-    });
-
-    return React.createElement(Component, props);
-  };
-}
-
-/**
- * Hook to measure component performance
- */
-export function usePerformanceMonitoring(componentName: string) {
-  React.useEffect(() => {
-    const id = performanceMonitor.startMeasurement(`${componentName}-mount`);
-
-    return () => {
-      performanceMonitor.endMeasurement(id);
-    };
-  }, [componentName]);
-
-  const measureOperation = React.useCallback(
-    (operationName: string, operation: () => void) => {
-      const id = performanceMonitor.startMeasurement(
-        `${componentName}-${operationName}`
-      );
-      operation();
-      performanceMonitor.endMeasurement(id);
-    },
-    [componentName]
-  );
-
-  return { measureOperation };
-}

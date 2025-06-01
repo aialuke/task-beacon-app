@@ -1,43 +1,16 @@
 
-import React from 'react';
-
 /**
- * Performance optimization utilities
+ * Legacy performance file - kept for backward compatibility
+ *
+ * This file now re-exports from the organized performance modules.
+ * For new code, prefer importing directly from the specific modules:
+ * - import { performanceMonitor } from "@/lib/performanceUtils";
+ * - import { usePerformanceMonitoring } from "@/hooks/usePerformanceMonitoring";
  */
 
-// Debounce function for search inputs
-export function debounce<T extends (...args: any[]) => any>(
-  func: T,
-  wait: number
-): (...args: Parameters<T>) => void {
-  let timeout: NodeJS.Timeout;
-  return (...args: Parameters<T>) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func(...args), wait);
-  };
-}
-
-// Throttle function for scroll handlers
-export function throttle<T extends (...args: any[]) => any>(
-  func: T,
-  limit: number
-): (...args: Parameters<T>) => void {
-  let inThrottle: boolean;
-  return (...args: Parameters<T>) => {
-    if (!inThrottle) {
-      func(...args);
-      inThrottle = true;
-      setTimeout(() => (inThrottle = false), limit);
-    }
-  };
-}
-
-// Lazy loading utility
-export function createLazyComponent<T extends React.ComponentType<any>>(
-  importFunc: () => Promise<{ default: T }>
-): React.LazyExoticComponent<T> {
-  return React.lazy(importFunc);
-}
+// Re-export core performance utilities for backward compatibility
+export { performanceMonitor } from './performanceUtils';
+export { debounce, throttle } from './utils/core';
 
 // Memory optimization for large lists
 export function createVirtualizedList<T>(
