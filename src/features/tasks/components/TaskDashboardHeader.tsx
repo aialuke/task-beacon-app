@@ -1,9 +1,7 @@
-
-import { memo } from 'react';
-import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import RealtimeStatus from '@/components/RealtimeStatus';
+import { memo } from "react";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function TaskDashboardHeader() {
   const navigate = useNavigate();
@@ -19,11 +17,10 @@ function TaskDashboardHeader() {
             Manage your tasks and stay organized
           </p>
         </div>
-        <RealtimeStatus />
       </div>
 
       <Button
-        onClick={() => navigate('/create-task')}
+        onClick={() => navigate("/create-task")}
         className="flex items-center gap-2"
       >
         <Plus size={16} />
