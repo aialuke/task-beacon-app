@@ -1,28 +1,32 @@
-import { useState, useEffect } from 'react';
 
-// Clean imports from organized type system
-import type { User } from '@/types';
 import { useQuery } from '@tanstack/react-query';
-import { UserService } from '@/lib/api';
-import { handleApiError } from '@/lib/utils/error';
+import { UserService } from '@/lib/api/users.service';
+import type { User } from '@/types/shared';
 
-export function useUserList() {
+export function useUserList(enabled = true) {
   const {
-    data: usersResponse,
-    isLoading: loading,
+    data: response,
+    isLoading,
     error,
-    refetch: refreshUsers,
+    refetch,
   } = useQuery({
     queryKey: ['users'],
-    queryFn: () => UserService.getAll(),
+    queryFn: async () => {
+      const result = await UserService.getAll();
+      if (!result.success) {
+        throw new Error(result.error?.message || 'Failed to fetch users');
+      }
+      return result.data || [];
+    },
+    enabled,
+    staleTime: 5 * 60 * 1000, // 5 minutes
     retry: 2,
-    staleTime: 5 * 60 * 1000,
   });
 
   return {
-    users: usersResponse?.data ?? [],
-    loading,
-    error: error ? handleApiError(error, 'Failed to load users', { showToast: false, rethrow: false }).message : null,
-    refreshUsers,
+    users: response || [],
+    isLoading,
+    error: error ? (error as Error).message : null,
+    refetch,
   };
-} 
+}

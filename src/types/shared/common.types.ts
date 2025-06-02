@@ -1,28 +1,65 @@
+
 /**
- * Shared Common Types
+ * Common Types
  * 
- * Basic utility types, generic interfaces, and common patterns
- * used throughout the application.
+ * Shared utility types used across the application for common patterns.
+ * These types provide consistency for data structures, state management,
+ * and component interfaces.
  */
 
-// Basic utility types
+// === Core Identifier Types ===
 export type ID = string;
-export type Timestamp = string;
+export type Timestamp = string; // ISO 8601 timestamp
+
+// === Utility Object Types ===
 export type OptionalExcept<T, K extends keyof T> = Partial<T> & Pick<T, K>;
 export type RequiredExcept<T, K extends keyof T> = Required<T> & Partial<Pick<T, K>>;
 
-// Generic status types
+// === Status and State Types ===
 export type Status = 'idle' | 'loading' | 'success' | 'error';
-export type AsyncState = 'pending' | 'fulfilled' | 'rejected';
 
-// Generic entity interface
+export interface AsyncState<T = unknown> {
+  data: T | null;
+  loading: boolean;
+  error: string | null;
+}
+
+export interface LoadingState {
+  isLoading: boolean;
+  isSubmitting?: boolean;
+  isValidating?: boolean;
+}
+
+export interface AsyncOperationState extends LoadingState {
+  error: string | null;
+  success: boolean;
+}
+
+// === API Response Types ===
+export interface ApiResponse<T = unknown> {
+  success: boolean;
+  data: T | null;
+  error: {
+    message: string;
+    code?: string;
+    name: string;
+  } | null;
+}
+
+export interface ApiError {
+  message: string;
+  code?: string;
+  name: string;
+}
+
+// === Base Entity Types ===
 export interface BaseEntity {
   id: ID;
   created_at: Timestamp;
   updated_at: Timestamp;
 }
 
-// Generic form state
+// === Form and Validation Types ===
 export interface FormState<T = Record<string, unknown>> {
   values: T;
   errors: Partial<Record<keyof T, string>>;
@@ -31,62 +68,6 @@ export interface FormState<T = Record<string, unknown>> {
   isValid: boolean;
 }
 
-// Generic loading state
-export interface LoadingState {
-  isLoading: boolean;
-  error: string | null;
-}
-
-// Generic async operation state
-export interface AsyncOperationState<T = unknown> {
-  data: T | null;
-  loading: boolean;
-  error: string | null;
-  lastUpdated: Date | null;
-}
-
-// Generic filter interface
-export interface FilterOptions {
-  search?: string;
-  sortBy?: string;
-  sortDirection?: 'asc' | 'desc';
-  filters?: Record<string, unknown>;
-}
-
-// Generic select option
-export interface SelectOption<T = string> {
-  label: string;
-  value: T;
-  disabled?: boolean;
-  description?: string;
-}
-
-// Generic modal state
-export interface ModalState {
-  isOpen: boolean;
-  type?: string;
-  data?: unknown;
-}
-
-// Generic notification types
-export type NotificationType = 'info' | 'success' | 'warning' | 'error';
-
-export interface Notification {
-  id: ID;
-  type: NotificationType;
-  title: string;
-  message?: string;
-  duration?: number;
-  actions?: NotificationAction[];
-}
-
-export interface NotificationAction {
-  label: string;
-  action: () => void;
-  style?: 'primary' | 'secondary' | 'danger';
-}
-
-// Generic validation types
 export interface ValidationRule<T = unknown> {
   required?: boolean;
   minLength?: number;
@@ -97,29 +78,71 @@ export interface ValidationRule<T = unknown> {
 
 export interface ValidationResult {
   isValid: boolean;
-  errors: string[];
-  warnings?: string[];
+  errors: Record<string, string>;
 }
 
-// Generic metadata interface
+// === UI Component Types ===
+export interface FilterOptions<T = string> {
+  value: T;
+  label: string;
+  count?: number;
+}
+
+export interface SelectOption<T = string> {
+  value: T;
+  label: string;
+  disabled?: boolean;
+}
+
+export interface ModalState {
+  isOpen: boolean;
+  data?: unknown;
+}
+
+// === Notification Types ===
+export type NotificationType = 'info' | 'success' | 'warning' | 'error';
+
+export interface Notification {
+  id: ID;
+  type: NotificationType;
+  title: string;
+  message: string;
+  timestamp: Timestamp;
+  read: boolean;
+  actions?: NotificationAction[];
+}
+
+export interface NotificationAction {
+  label: string;
+  action: () => void;
+  variant?: 'primary' | 'secondary' | 'destructive';
+}
+
+// === Metadata and Context Types ===
 export interface Metadata {
-  [key: string]: string | number | boolean | null | undefined;
+  version: string;
+  lastModified: Timestamp;
+  author?: string;
+  tags?: string[];
 }
 
-// Generic response wrapper
 export interface ResponseWrapper<T> {
   data: T;
-  meta?: Metadata;
-  timestamp: Timestamp;
+  meta: {
+    total: number;
+    page: number;
+    pageSize: number;
+    hasMore: boolean;
+  };
 }
 
-// Generic event handler types
+// === Event Handler Types ===
 export type EventHandler<T = Event> = (event: T) => void;
 export type AsyncEventHandler<T = Event> = (event: T) => Promise<void>;
 
-// Generic component props
+// === Component Props Types ===
 export interface BaseComponentProps {
   className?: string;
-  children?: React.ReactNode;
-  'data-testid'?: string;
-} 
+  id?: string;
+  testId?: string;
+}

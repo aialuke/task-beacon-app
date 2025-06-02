@@ -1,7 +1,11 @@
+
 import { useTaskStatusMutations } from './useTaskStatusMutations';
 import { useTaskPinMutations } from './useTaskPinMutations';
 import { useTaskDeleteMutations } from './useTaskDeleteMutations';
 import { useTaskOptimisticUpdates } from './useTaskOptimisticUpdates';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { TaskService } from '@/lib/api/tasks.service';
+import type { Task } from '@/types';
 
 /**
  * Composed task mutations hook
@@ -17,10 +21,34 @@ import { useTaskOptimisticUpdates } from './useTaskOptimisticUpdates';
  * Each specific hook can also be imported individually for more targeted usage.
  */
 export function useTaskMutations() {
+  const queryClient = useQueryClient();
   const statusMutations = useTaskStatusMutations();
   const pinMutations = useTaskPinMutations();
   const deleteMutations = useTaskDeleteMutations();
   const optimisticUpdates = useTaskOptimisticUpdates();
+
+  // Create follow-up task mutation
+  const createFollowUpTaskMutation = useMutation({
+    mutationFn: async ({ parentTask, taskData }: { parentTask: Task; taskData: any }) => {
+      const response = await TaskService.createFollowUpTask(parentTask.id, taskData);
+      if (!response.success) {
+        throw new Error(response.error?.message || 'Failed to create follow-up task');
+      }
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+    },
+  });
+
+  const createFollowUpTask = async (parentTask: Task, taskData: any) => {
+    try {
+      await createFollowUpTaskMutation.mutateAsync({ parentTask, taskData });
+      return { success: true, message: 'Follow-up task created successfully' };
+    } catch (error) {
+      return { success: false, message: error instanceof Error ? error.message : 'Failed to create follow-up task' };
+    }
+  };
 
   return {
     // Status mutations
@@ -37,6 +65,9 @@ export function useTaskMutations() {
     deleteTask: deleteMutations.deleteTask,
     deleteMultipleTasks: deleteMutations.deleteMultipleTasks,
 
+    // Follow-up task creation
+    createFollowUpTask,
+
     // Optimistic updates (for backward compatibility)
     updateTaskOptimistically: optimisticUpdates.updateTaskOptimistically,
   };
@@ -46,4 +77,4 @@ export function useTaskMutations() {
 export { useTaskStatusMutations } from './useTaskStatusMutations';
 export { useTaskPinMutations } from './useTaskPinMutations';
 export { useTaskDeleteMutations } from './useTaskDeleteMutations';
-export { useTaskOptimisticUpdates } from './useTaskOptimisticUpdates'; 
+export { useTaskOptimisticUpdates } from './useTaskOptimisticUpdates';

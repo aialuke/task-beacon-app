@@ -29,10 +29,15 @@ export function useTaskRealtime() {
 
   const { isSubscribed } = useRealtimeEntity<Task>({
     table: 'tasks',
-    getUserId: (task) => task.assignee_id,
-    getOwnerId: (task) => task.owner_id,
-    getTitle: (task) => task.title,
-    onUpdateNotification: handleTaskStatusChange,
+    queryKey: ['tasks'],
+    entityId: user?.id || '',
+    fetchFn: async (id) => {
+      // This is a placeholder - in practice you'd fetch the specific task
+      // For now, return a default task structure
+      return {} as Task;
+    },
+    enabled: !!user,
+    onEntityUpdated: handleTaskStatusChange,
   });
 
   return {

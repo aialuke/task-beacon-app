@@ -49,6 +49,7 @@ export function BaseTaskForm({
   submitLabel,
   titleLabel = 'Task Title',
   descriptionLabel = 'Description',
+  descriptionPlaceholder = 'Describe your task...',
   children,
 }: BaseTaskFormProps) {
   const handleUrlChange = (newUrl: string) => {
@@ -91,6 +92,7 @@ export function BaseTaskForm({
           id="description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+          placeholder={descriptionPlaceholder}
           label={descriptionLabel}
           icon={<Sparkles className="h-4 w-4" />}
         />

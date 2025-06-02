@@ -1,6 +1,7 @@
+
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import CountdownTimer from '../../CountdownTimer';
+import CountdownTimer from '../CountdownTimer';
 import { TaskStatus } from '@/types';
 
 // Mock the TaskUIContext
