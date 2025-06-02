@@ -1,6 +1,9 @@
+
 import { lazy, Suspense } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
 import { AuthenticatedApp } from '@/components/layout/AuthenticatedApp';
 
 // Lazy load components with better chunking
@@ -29,6 +32,37 @@ const TaskDashboardSkeleton = () => (
   </div>
 );
 
+// Welcome component for unauthenticated users
+const WelcomeScreen = () => {
+  const navigate = useNavigate();
+
+  const handleSignIn = () => {
+    navigate('/auth');
+  };
+
+  return (
+    <div className="flex h-96 items-center justify-center">
+      <div className="text-center space-y-6">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">
+            Welcome to Task Beacon
+          </h1>
+          <p className="mt-4 text-lg text-muted-foreground">
+            Please sign in to access your tasks
+          </p>
+        </div>
+        <Button 
+          onClick={handleSignIn}
+          size="lg"
+          className="px-8"
+        >
+          Sign In
+        </Button>
+      </div>
+    </div>
+  );
+};
+
 /**
  * Index page - Layout only
  * 
@@ -43,18 +77,7 @@ export default function Index() {
         <AuthenticatedApp
           loadingComponent={<TaskDashboardSkeleton />}
           authenticatedComponent={<TaskDashboard />}
-          unauthenticatedFallback={
-            <div className="flex h-96 items-center justify-center">
-              <div className="text-center">
-                <h1 className="text-3xl font-bold tracking-tight">
-                  Welcome to Task Beacon
-                </h1>
-                <p className="mt-4 text-lg text-muted-foreground">
-                  Please sign in to access your tasks
-                </p>
-              </div>
-            </div>
-          }
+          unauthenticatedFallback={<WelcomeScreen />}
         />
       </Suspense>
     </ErrorBoundary>
