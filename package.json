@@ -20,7 +20,9 @@
     "test:hooks": "vitest run src/**/hooks/**/*.test.* --pool=forks --maxConcurrency=1 --maxWorkers=1",
     "test:api": "vitest run src/**/api/**/*.test.* --pool=forks --maxConcurrency=1 --maxWorkers=1",
     "test:critical": "vitest run --testNamePattern='(auth|task.*workflow|user.*flow|critical)' --pool=forks --maxConcurrency=1 --maxWorkers=1",
-    "test:ci": "vitest run --coverage --reporter=junit --outputFile=test-results.xml --pool=forks --maxConcurrency=1 --maxWorkers=1"
+    "test:ci": "vitest run --coverage --reporter=junit --outputFile=test-results.xml --pool=forks --maxConcurrency=1 --maxWorkers=1",
+    "analyze": "knip",
+    "analyze:fix": "knip --fix"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
