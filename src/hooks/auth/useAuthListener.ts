@@ -1,98 +1,48 @@
+
 /**
  * Auth Listener Hook
  * 
- * Manages Supabase auth state change subscription and handles different auth events.
- * Provides clean subscription management and event handling.
+ * Sets up Supabase auth state change listener.
  */
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { authLogger } from '@/lib/logger';
-import type { UseAuthStateReturn } from './useAuthState';
+import type { ApiError } from '@/types/shared';
 
-interface UseAuthListenerProps {
-  updateSessionAndUser: UseAuthStateReturn['updateSessionAndUser'];
-  setError: UseAuthStateReturn['setError'];
-  setLoading: UseAuthStateReturn['setLoading'];
+export interface UseAuthListenerProps {
+  updateSessionAndUser: (session: any) => void;
+  setError: (error: ApiError | null) => void;
+  setLoading: (loading: boolean) => void;
 }
 
-/**
- * Hook for handling auth state changes
- */
 export function useAuthListener({
   updateSessionAndUser,
   setError,
   setLoading,
-}: UseAuthListenerProps): void {
-  const mountedRef = useRef(true);
-
+}: UseAuthListenerProps) {
   useEffect(() => {
-    mountedRef.current = true;
-
-    // Set up auth state listener
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      authLogger.debug('Auth state change detected', { 
-        event, 
-        userId: session?.user?.id,
-        hasSession: !!session 
-      });
-
-      if (!mountedRef.current) return;
-
-      // Update session and user state
-      updateSessionAndUser(session);
-
-      // Handle different auth events
-      switch (event) {
-        case 'SIGNED_IN':
-          if (session?.user) {
-            // Defer any additional processing to prevent deadlocks
-            setTimeout(() => {
-              if (mountedRef.current) {
-                setError(null);
-                setLoading(false);
-                authLogger.info('User signed in successfully', { userId: session.user.id });
-              }
-            }, 0);
-          }
-          break;
-
-        case 'SIGNED_OUT':
+    console.log('Setting up auth listener');
+    
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        console.log('Auth state change:', { event, session: !!session });
+        
+        // Update auth state synchronously
+        updateSessionAndUser(session);
+        
+        // Handle specific events
+        if (event === 'SIGNED_OUT') {
           setError(null);
-          setLoading(false);
-          authLogger.info('User signed out');
-          break;
-
-        case 'TOKEN_REFRESHED':
-          authLogger.debug('Auth token refreshed');
-          break;
-
-        case 'PASSWORD_RECOVERY':
-          authLogger.info('Password recovery initiated');
-          break;
-
-        case 'USER_UPDATED':
-          authLogger.debug('User profile updated');
-          break;
-
-        default:
-          authLogger.debug('Unhandled auth event', { event });
+        }
+        
+        // Set loading to false after auth state is determined
+        setLoading(false);
       }
-    });
+    );
 
     return () => {
-      mountedRef.current = false;
+      console.log('Cleaning up auth listener');
       subscription.unsubscribe();
-      authLogger.debug('Auth listener cleanup completed');
     };
   }, [updateSessionAndUser, setError, setLoading]);
-
-  // Cleanup ref on unmount
-  useEffect(() => {
-    return () => {
-      mountedRef.current = false;
-    };
-  }, []);
-} 
+}

@@ -1,82 +1,53 @@
+
 /**
- * Auth State Management Hook
+ * Auth State Hook
  * 
- * Manages authentication state including user, session, loading, and error states.
- * Handles session initialization and state updates.
+ * Manages the core authentication state (user, session, loading, error).
  */
 
 import { useState, useCallback } from 'react';
-import type { User, Session } from '@supabase/supabase-js';
-import { authLogger } from '@/lib/logger';
-import { handleAuthError } from '@/lib/auth-utils';
+import { User, Session } from '@supabase/supabase-js';
+import type { ApiError } from '@/types/shared';
 
-interface AuthState {
+export interface UseAuthStateReturn {
   user: User | null;
   session: Session | null;
   loading: boolean;
-  error: Error | null;
-}
-
-interface AuthStateActions {
-  setUser: (user: User | null) => void;
-  setSession: (session: Session | null) => void;
-  setLoading: (loading: boolean) => void;
-  setError: (error: Error | null) => void;
+  error: ApiError | null;
   updateSessionAndUser: (session: Session | null) => void;
   clearAuthState: () => void;
+  setLoading: (loading: boolean) => void;
+  setError: (error: ApiError | null) => void;
 }
 
-export interface UseAuthStateReturn extends AuthState, AuthStateActions {}
-
-/**
- * Hook for managing authentication state
- */
 export function useAuthState(): UseAuthStateReturn {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<ApiError | null>(null);
 
-  // Update both session and user atomically
   const updateSessionAndUser = useCallback((newSession: Session | null) => {
-    try {
-      setSession(newSession);
-      setUser(newSession?.user ?? null);
-      authLogger.debug('Auth state updated', { 
-        hasSession: !!newSession, 
-        userId: newSession?.user?.id 
-      });
-    } catch (error) {
-      const authError = handleAuthError(error, 'updateSessionAndUser');
-      setError(authError);
-    }
+    console.log('Auth state update:', { session: !!newSession, user: !!newSession?.user });
+    setSession(newSession);
+    setUser(newSession?.user ?? null);
+    setError(null);
   }, []);
 
-  // Clear all auth state
   const clearAuthState = useCallback(() => {
-    try {
-      setUser(null);
-      setSession(null);
-      setError(null);
-      setLoading(false);
-      authLogger.debug('Auth state cleared');
-    } catch (error) {
-      authLogger.error('Failed to clear auth state', error instanceof Error ? error : new Error(String(error)));
-    }
+    console.log('Clearing auth state');
+    setSession(null);
+    setUser(null);
+    setError(null);
   }, []);
 
   return {
-    // State
     user,
     session,
     loading,
     error,
-    // Actions
-    setUser,
-    setSession,
-    setLoading,
-    setError,
     updateSessionAndUser,
     clearAuthState,
+    setLoading,
+    setError,
   };
-} 
+}

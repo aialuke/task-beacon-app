@@ -1,3 +1,4 @@
+
 /**
  * Authentication Context
  * 
@@ -7,7 +8,12 @@
 
 import React, { createContext, useContext, ReactNode } from 'react';
 import type { AuthContextType } from '@/types/shared/auth.types';
-import { useAuthState, useAuthOperations, useAuthListener, useAuthInitialization } from '@/hooks/auth';
+import { 
+  useAuthState, 
+  useAuthOperations, 
+  useAuthListener, 
+  useAuthInitialization 
+} from '@/hooks/auth';
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -16,6 +22,8 @@ interface AuthProviderProps {
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: AuthProviderProps) {
+  console.log('AuthProvider rendering');
+  
   // Use auth state management hook
   const authState = useAuthState();
   
@@ -41,17 +49,22 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setError: authState.setError,
   });
 
+  const contextValue: AuthContextType = {
+    user: authState.user,
+    session: authState.session,
+    loading: authState.loading,
+    error: authState.error,
+    signOut: authOperations.signOut,
+    refreshSession: authOperations.refreshSession,
+  };
+
+  console.log('AuthProvider context value:', { 
+    user: !!contextValue.user, 
+    loading: contextValue.loading 
+  });
+
   return (
-    <AuthContext.Provider
-      value={{
-        user: authState.user,
-        session: authState.session,
-        loading: authState.loading,
-        error: authState.error,
-        signOut: authOperations.signOut,
-        refreshSession: authOperations.refreshSession,
-      }}
-    >
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,23 +1,19 @@
+
 /**
  * Auth Operations Hook
  * 
- * Handles authentication operations like sign out and session refresh.
- * Provides consistent error handling and fallback mechanisms.
+ * Handles authentication operations (sign out, refresh session).
  */
 
 import { useCallback } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { AuthService } from '@/lib/api';
-import { authLogger } from '@/lib/logger';
-import { toast } from '@/lib/toast';
-import { cleanupAuthState, handleAuthError } from '@/lib/auth-utils';
-import type { UseAuthStateReturn } from './useAuthState';
+import { AuthService } from '@/lib/api/auth.service';
+import type { ApiError } from '@/types/shared';
 
-interface UseAuthOperationsProps {
-  updateSessionAndUser: UseAuthStateReturn['updateSessionAndUser'];
-  clearAuthState: UseAuthStateReturn['clearAuthState'];
-  setLoading: UseAuthStateReturn['setLoading'];
-  setError: UseAuthStateReturn['setError'];
+export interface UseAuthOperationsProps {
+  updateSessionAndUser: (session: any) => void;
+  clearAuthState: () => void;
+  setLoading: (loading: boolean) => void;
+  setError: (error: ApiError | null) => void;
 }
 
 export interface UseAuthOperationsReturn {
@@ -25,9 +21,6 @@ export interface UseAuthOperationsReturn {
   refreshSession: () => Promise<void>;
 }
 
-/**
- * Hook for authentication operations
- */
 export function useAuthOperations({
   updateSessionAndUser,
   clearAuthState,
@@ -35,78 +28,53 @@ export function useAuthOperations({
   setError,
 }: UseAuthOperationsProps): UseAuthOperationsReturn {
   
-  // Refresh session function with fallback
-  const refreshSession = useCallback(async () => {
-    try {
-      authLogger.debug('Starting session refresh');
-      
-      const response = await AuthService.refreshSession();
-      
-      if (response.success) {
-        updateSessionAndUser(response.data?.session ?? null);
-        authLogger.info('Session refreshed successfully via AuthService');
-      } else {
-        authLogger.warn('AuthService refresh failed, attempting direct refresh', { 
-          error: response.error?.message 
-        });
-        
-        // Fallback to direct Supabase refresh
-        const { data, error } = await supabase.auth.refreshSession();
-        if (error) throw error;
-
-        updateSessionAndUser(data.session);
-        authLogger.info('Session refreshed successfully via fallback');
-      }
-    } catch (error) {
-      const authError = handleAuthError(error, 'refreshSession');
-      setError(authError);
-    }
-  }, [updateSessionAndUser, setError]);
-
-  // Sign out function with enhanced cleanup
   const signOut = useCallback(async () => {
+    console.log('Sign out initiated');
+    setLoading(true);
+    setError(null);
+    
     try {
-      setLoading(true);
-      authLogger.info('Starting sign out process');
-
-      // Clean up auth state first
-      cleanupAuthState();
-
-      // Use AuthService for sign out
-      const response = await AuthService.signOut();
-      
-      if (response.success) {
-        authLogger.info('Sign out completed via AuthService');
+      const { error } = await AuthService.signOut();
+      if (error) {
+        console.error('Sign out error:', error);
+        setError(error);
       } else {
-        authLogger.warn('AuthService sign out failed, attempting direct sign out', { 
-          error: response.error?.message 
-        });
-        
-        // Fallback to direct sign out
-        await supabase.auth.signOut({ scope: 'global' });
+        clearAuthState();
+        console.log('Sign out successful');
       }
-
-      // Clear local state
-      clearAuthState();
-
-      toast.success('Signed out successfully');
-      authLogger.info('Sign out completed successfully');
-
-      // Navigate to auth page
-      setTimeout(() => {
-        window.location.href = '/auth';
-      }, 500);
-    } catch (error) {
-      const authError = handleAuthError(error, 'signOut');
-      setError(authError);
-      toast.error('Failed to sign out');
+    } catch (err) {
+      console.error('Sign out failed:', err);
+      setError({ name: 'SignOutError', message: 'Failed to sign out' });
     } finally {
       setLoading(false);
     }
-  }, [setLoading, clearAuthState, setError]);
+  }, [clearAuthState, setLoading, setError]);
+
+  const refreshSession = useCallback(async () => {
+    console.log('Refresh session initiated');
+    setLoading(true);
+    
+    try {
+      const { data, error } = await AuthService.refreshSession();
+      if (error) {
+        console.error('Refresh session error:', error);
+        setError(error);
+        clearAuthState();
+      } else {
+        updateSessionAndUser(data.session);
+        console.log('Session refreshed successfully');
+      }
+    } catch (err) {
+      console.error('Session refresh failed:', err);
+      setError({ name: 'RefreshError', message: 'Failed to refresh session' });
+      clearAuthState();
+    } finally {
+      setLoading(false);
+    }
+  }, [updateSessionAndUser, clearAuthState, setLoading, setError]);
 
   return {
     signOut,
     refreshSession,
   };
-} 
+}

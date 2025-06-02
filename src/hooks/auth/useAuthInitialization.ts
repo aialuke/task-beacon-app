@@ -1,85 +1,48 @@
+
 /**
  * Auth Initialization Hook
  * 
- * Handles initial authentication state setup by checking for existing sessions.
- * Runs once on mount to establish initial auth state.
+ * Handles initial auth state setup and session checking.
  */
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { authLogger } from '@/lib/logger';
-import { handleAuthError } from '@/lib/auth-utils';
-import type { UseAuthStateReturn } from './useAuthState';
+import type { ApiError } from '@/types/shared';
 
-interface UseAuthInitializationProps {
-  updateSessionAndUser: UseAuthStateReturn['updateSessionAndUser'];
-  setLoading: UseAuthStateReturn['setLoading'];
-  setError: UseAuthStateReturn['setError'];
+export interface UseAuthInitializationProps {
+  updateSessionAndUser: (session: any) => void;
+  setLoading: (loading: boolean) => void;
+  setError: (error: ApiError | null) => void;
 }
 
-/**
- * Hook for initializing authentication state
- */
 export function useAuthInitialization({
   updateSessionAndUser,
   setLoading,
   setError,
-}: UseAuthInitializationProps): void {
-  const mountedRef = useRef(true);
-
+}: UseAuthInitializationProps) {
   useEffect(() => {
-    mountedRef.current = true;
-
+    console.log('Initializing auth state');
+    
     const initializeAuth = async () => {
       try {
-        authLogger.debug('Initializing auth state');
+        setLoading(true);
+        const { data: { session }, error } = await supabase.auth.getSession();
         
-        const {
-          data: { session },
-          error,
-        } = await supabase.auth.getSession();
-
         if (error) {
-          authLogger.error('Error getting session', error);
-          if (mountedRef.current) {
-            setError(error);
-          }
-          return;
-        }
-
-        if (mountedRef.current) {
+          console.error('Error getting session:', error);
+          setError({ name: 'SessionError', message: error.message });
+        } else {
+          console.log('Initial session check:', { session: !!session });
           updateSessionAndUser(session);
-          
-          if (session?.user) {
-            authLogger.info('Existing session found', { userId: session.user.id });
-          } else {
-            authLogger.debug('No existing session found');
-          }
         }
-      } catch (error) {
-        const authError = handleAuthError(error, 'auth initialization');
-        if (mountedRef.current) {
-          setError(authError);
-        }
+      } catch (err) {
+        console.error('Auth initialization failed:', err);
+        setError({ name: 'InitError', message: 'Failed to initialize authentication' });
       } finally {
-        if (mountedRef.current) {
-          setLoading(false);
-          authLogger.debug('Auth initialization completed');
-        }
+        setLoading(false);
       }
     };
 
     initializeAuth();
-
-    return () => {
-      mountedRef.current = false;
-    };
   }, [updateSessionAndUser, setLoading, setError]);
-
-  // Cleanup ref on unmount
-  useEffect(() => {
-    return () => {
-      mountedRef.current = false;
-    };
-  }, []);
-} 
+}
