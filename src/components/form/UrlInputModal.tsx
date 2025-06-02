@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Link } from 'lucide-react';
 import {
@@ -76,7 +77,6 @@ export function UrlInputModal({
                 setTempValue(e.target.value);
                 setError(null); // Clear error on input change
               }}
-              placeholder="https://example.com"
               label="URL"
               icon={<Link className="h-4 w-4" />}
               autoFocus

@@ -1,3 +1,4 @@
+
 import { useEffect, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -28,7 +29,6 @@ export function useTaskRealtime() {
 
   const { isSubscribed } = useRealtimeEntity<Task>({
     table: 'tasks',
-    entityName: 'task',
     getUserId: (task) => task.assignee_id,
     getOwnerId: (task) => task.owner_id,
     getTitle: (task) => task.title,

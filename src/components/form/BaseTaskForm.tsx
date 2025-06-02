@@ -1,3 +1,4 @@
+
 import { FileText, Sparkles } from 'lucide-react';
 import { FloatingInput } from '@/components/ui/form/FloatingInput';
 import { FloatingTextarea } from '@/components/ui/form/FloatingTextarea';
@@ -46,9 +47,7 @@ export function BaseTaskForm({
   headerTitle,
   headerSubtitle,
   submitLabel,
-  titlePlaceholder = 'Enter task title',
   titleLabel = 'Task Title',
-  descriptionPlaceholder = 'Describe your task...',
   descriptionLabel = 'Description',
   children,
 }: BaseTaskFormProps) {
@@ -81,7 +80,6 @@ export function BaseTaskForm({
           id="title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder={titlePlaceholder}
           label={titleLabel}
           icon={<FileText className="h-4 w-4" />}
           maxLength={22}
@@ -93,7 +91,6 @@ export function BaseTaskForm({
           id="description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder={descriptionPlaceholder}
           label={descriptionLabel}
           icon={<Sparkles className="h-4 w-4" />}
         />

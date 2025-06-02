@@ -1,3 +1,4 @@
+
 /**
  * Enhanced Error Handling Utilities
  * 
@@ -72,11 +73,7 @@ function handleGlobalError(error: Error, source: string) {
   });
 
   // Show user-friendly notification for global errors
-  toast({
-    title: 'Unexpected Error',
-    description: 'Something went wrong. Please refresh the page if the problem persists.',
-    variant: 'destructive',
-  });
+  toast.error('Something went wrong. Please refresh the page if the problem persists.');
 }
 
 /**
@@ -129,7 +126,7 @@ function extractErrorMessage(error: unknown): string {
  * Centralized error handling utility for API operations
  */
 export function handleApiError(
-  error: ApiError | null,
+  error: unknown,
   operation?: string,
   options: ErrorHandlingOptions = {}
 ): void {
@@ -152,11 +149,7 @@ export function handleApiError(
 
   // Show user notification if requested
   if (showToast) {
-    toast({
-      title: 'Error',
-      description: userMessage,
-      variant: 'destructive',
-    });
+    toast.error(userMessage);
   }
 
   // Re-throw if requested (useful for upstream error handling)
@@ -174,12 +167,21 @@ export function handleApiError(
 export function handleAuthError(error: unknown, operation: string): ProcessedError {
   const authSpecificMessage = `Failed to ${operation}. Please check your credentials and try again.`;
   
-  return handleApiError(error, authSpecificMessage, {
+  // Handle the error and create a ProcessedError response
+  handleApiError(error, authSpecificMessage, {
     showToast: true,
     logToConsole: true,
     rethrow: false,
     logPrefix: 'Auth Error',
   });
+
+  return {
+    originalError: error,
+    message: authSpecificMessage,
+    code: isPostgrestError(error) ? error.code : undefined,
+    details: extractErrorMessage(error),
+    handled: true,
+  };
 }
 
 /**
@@ -188,12 +190,21 @@ export function handleAuthError(error: unknown, operation: string): ProcessedErr
 export function handleValidationError(error: unknown, fieldName: string): ProcessedError {
   const validationMessage = `Invalid ${fieldName}. Please check your input and try again.`;
   
-  return handleApiError(error, validationMessage, {
+  // Handle the error and create a ProcessedError response
+  handleApiError(error, validationMessage, {
     showToast: false, // Validation errors usually shown inline
     logToConsole: true,
     rethrow: false,
     logPrefix: 'Validation Error',
   });
+
+  return {
+    originalError: error,
+    message: validationMessage,
+    code: isPostgrestError(error) ? error.code : undefined,
+    details: extractErrorMessage(error),
+    handled: true,
+  };
 }
 
 /**
@@ -241,4 +252,4 @@ export const errorUtils = {
 };
 
 // Re-export types
-export type { ErrorHandlingOptions, ProcessedError }; 
+export type { ErrorHandlingOptions, ProcessedError };

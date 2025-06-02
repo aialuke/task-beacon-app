@@ -1,11 +1,11 @@
+
 import { useState } from 'react';
 import { useQuery, useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
 import { TaskService } from '@/lib/api/tasks.service';
 import { useAuth } from '@/hooks/useAuth';
 
 // Clean imports from organized type system
-import type { Task } from '@/types/shared';
-import type { TaskListParams, TaskSortOption } from '@/types/task';
+import type { Task } from '@/types';
 
 /**
  * Custom hook for paginated task queries with real database integration

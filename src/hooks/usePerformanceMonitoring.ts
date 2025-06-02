@@ -12,7 +12,7 @@ export function usePerformanceMonitoring(componentName: string) {
     return () => {
       const endTime = performance.now();
       const renderTime = endTime - startTime;
-      performanceMonitor.recordComponentRender(componentName, renderTime);
+      performanceMonitor.trackComponentRender(componentName, renderTime);
     };
   }, [componentName]);
 }
