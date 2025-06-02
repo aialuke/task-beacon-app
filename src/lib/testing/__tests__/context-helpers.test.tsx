@@ -37,7 +37,7 @@ function TaskTestComponent() {
   const { tasks, isLoading, error } = useTaskDataContext();
   
   if (isLoading) return <div>Loading tasks...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+  if (error) return <div>Error: {error}</div>;
   
   return (
     <div>
@@ -175,4 +175,4 @@ describe('Context Performance', () => {
     rerender(<CountingComponent />);
     expect(renderCount).toBe(2); // Expected due to rerender call
   });
-}); 
+});

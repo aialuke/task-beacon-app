@@ -5,9 +5,9 @@ import { ReactNode } from 'react';
 import { useTaskWorkflow } from '../hooks/useTaskWorkflow';
 import { setupIntegrationTest, mockDatabaseQuery, createTestTask, createTestUser } from '@/test/integration/setup';
 import { TaskService } from '@/lib/api/tasks.service';
-import { TaskProviders } from '@/components/TaskProviders';
+import { TaskProviders } from '@/features/tasks/providers/TaskProviders';
 import type { Task, TaskStatus } from '@/types/feature-types/task.types';
-import type { ApiResponse } from '@/types/shared/common.types';
+import type { ApiResponse } from '@/types/shared/api.types';
 
 interface WorkflowResult {
   success: boolean;
@@ -154,7 +154,7 @@ describe('Task Workflow Integration Tests', () => {
       }), { wrapper });
 
       // Act: Update task status
-      let updateResult: ApiResponse<Task>;
+      let updateResult: { success: boolean; data?: Task; error?: string };
       await act(async () => {
         updateResult = await result.current.updateTaskWithWorkflow(
           originalTask,
@@ -198,4 +198,4 @@ describe('Task Workflow Integration Tests', () => {
       });
     });
   });
-}); 
+});
