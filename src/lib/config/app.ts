@@ -58,8 +58,9 @@ export const appConfig: AppConfig = {
     environment: getEnvironment(),
   },
   api: {
-    supabaseUrl: import.meta.env.VITE_SUPABASE_URL || '',
-    supabaseAnonKey: import.meta.env.VITE_SUPABASE_ANON_KEY || '',
+    // Use the actual Supabase configuration values
+    supabaseUrl: 'https://wkossxqvqntqhzdiyfdn.supabase.co',
+    supabaseAnonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indrb3NzeHF2cW50cWh6ZGl5ZmRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc0ODYzMTgsImV4cCI6MjA2MzA2MjMxOH0.cOtb4R51ffsp70R3TR16bMAHeO1WFnnAzsGSeCkp5RM',
     apiTimeout: 30000, // 30 seconds
     retryAttempts: 3,
   },
@@ -108,4 +109,4 @@ export const getUIConfig = () => appConfig.ui;
 /**
  * Get cache configuration
  */
-export const getCacheConfig = () => appConfig.cache; 
+export const getCacheConfig = () => appConfig.cache;
