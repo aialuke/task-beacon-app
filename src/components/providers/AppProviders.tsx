@@ -1,23 +1,12 @@
 import React from 'react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
 import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { LoadingSpinner } from '@/components/ui/layout';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
-
-// Create optimized query client
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 1,
-      staleTime: 1000 * 60, // 1 minute
-      refetchOnWindowFocus: true,
-      refetchInterval: 30000, // 30 seconds for active queries
-    },
-  },
-});
+import { queryClient } from '@/lib/query-client';
 
 interface ErrorBoundaryState {
   hasError: boolean;
@@ -105,12 +94,4 @@ export function AppProviders({ children }: AppProvidersProps) {
       </ThemeProvider>
     </AppErrorBoundary>
   );
-}
-
-/**
- * Hook to access the query client instance
- * Useful for programmatic query operations
- */
-export function useQueryClient() {
-  return queryClient;
 } 

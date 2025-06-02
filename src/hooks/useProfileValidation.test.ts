@@ -1,4 +1,5 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
+import { describe, it, expect } from 'vitest';
 import { useProfileValidation } from './useProfileValidation';
 
 describe('useProfileValidation', () => {

@@ -1,6 +1,7 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, memo, useMemo } from 'react';
 import { useTaskDataContext } from '@/features/tasks/context/TaskDataContext';
 import { useTaskFiltering } from '@/features/tasks/providers/TaskProviders';
+import { useRenderTracking, useOptimizedMemo } from '@/hooks/useOptimizedMemo';
 import TaskFilterNavbar from './TaskFilterNavbar';
 import TaskPagination from './TaskPagination';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -9,8 +10,8 @@ import { FabButton } from './FabButton';
 // Lazy load components that aren't needed on initial render
 const TaskCard = lazy(() => import('./TaskCard'));
 
-// Skeleton component for lazy-loaded task cards
-const TaskCardSkeleton = () => (
+// Skeleton component for lazy-loaded task cards - memoized to prevent recreation
+const TaskCardSkeleton = memo(() => (
   <div className="animate-pulse rounded-xl border-2 border-border/40 bg-muted/20 p-4 sm:p-5">
     <div className="flex items-start gap-3">
       <div className="h-10 w-10 rounded-full bg-muted" />
@@ -20,9 +21,59 @@ const TaskCardSkeleton = () => (
       </div>
     </div>
   </div>
-);
+));
 
-export default function TaskList() {
+TaskCardSkeleton.displayName = 'TaskCardSkeleton';
+
+// Optimized loading skeleton grid - memoized with smart key generation
+const LoadingSkeletonGrid = memo(({ count }: { count: number }) => {
+  const skeletonElements = useOptimizedMemo(
+    () => Array.from({ length: count }, (_, i) => (
+      <TaskCardSkeleton key={`skeleton-${i}`} />
+    )),
+    [count],
+    { name: 'skeleton-grid', warnOnSlowComputation: false }
+  );
+
+  return <div className="space-y-6">{skeletonElements}</div>;
+});
+
+LoadingSkeletonGrid.displayName = 'LoadingSkeletonGrid';
+
+// Optimized task grid with virtualization considerations
+const TaskGrid = memo(({ tasks }: { tasks: any[] }) => {
+  const taskElements = useOptimizedMemo(
+    () => tasks.map((task) => (
+      <Suspense key={task.id} fallback={<TaskCardSkeleton />}>
+        <TaskCard task={task} />
+      </Suspense>
+    )),
+    [tasks],
+    { 
+      name: 'task-grid',
+      warnOnSlowComputation: true,
+      trackDependencyChanges: true
+    }
+  );
+
+  return <div className="space-y-6">{taskElements}</div>;
+});
+
+TaskGrid.displayName = 'TaskGrid';
+
+// Empty state component - memoized since it never changes
+const EmptyState = memo(() => (
+  <div className="flex items-center justify-center rounded-xl border-2 border-dashed border-border/60 bg-muted/20 p-8">
+    <p className="text-muted-foreground">No tasks found</p>
+  </div>
+));
+
+EmptyState.displayName = 'EmptyState';
+
+function TaskList() {
+  // Track component render performance
+  const { renderCount, markRenderComplete } = useRenderTracking('TaskList');
+
   // Get data context for pagination functionality
   const {
     isLoading,
@@ -40,6 +91,48 @@ export default function TaskList() {
   // Use the new convenience hook for filtering operations
   const { tasks: filteredTasks, filter, setFilter } = useTaskFiltering();
 
+  // Memoize pagination props to prevent unnecessary re-renders of TaskPagination
+  const paginationProps = useMemo(() => ({
+    currentPage,
+    totalCount,
+    pageSize,
+    hasNextPage,
+    hasPreviousPage,
+    goToNextPage,
+    goToPreviousPage,
+    isFetching,
+    isLoading,
+  }), [
+    currentPage,
+    totalCount,
+    pageSize,
+    hasNextPage,
+    hasPreviousPage,
+    goToNextPage,
+    goToPreviousPage,
+    isFetching,
+    isLoading,
+  ]);
+
+  // Optimize content rendering based on state
+  const taskListContent = useOptimizedMemo(() => {
+    if (isLoading) {
+      return <LoadingSkeletonGrid count={pageSize} />;
+    }
+    
+    if (filteredTasks.length > 0) {
+      return <TaskGrid tasks={filteredTasks} />;
+    }
+    
+    return <EmptyState />;
+  }, [isLoading, filteredTasks, pageSize], { 
+    name: 'task-list-content',
+    warnOnSlowComputation: true 
+  });
+
+  // Mark render completion for performance tracking
+  markRenderComplete();
+
   return (
     <>
       {/* Navbar Section - Completely isolated */}
@@ -47,40 +140,12 @@ export default function TaskList() {
         <TaskFilterNavbar filter={filter} onFilterChange={setFilter} />
       </div>
 
-      {/* Task List Section - Completely isolated with no shared containers */}
+      {/* Task List Section - Optimized content rendering */}
       <div className="w-full px-4 sm:px-6">
-        {isLoading ? (
-          <div className="space-y-6">
-            {Array.from({ length: pageSize }).map((_, i) => (
-              <TaskCardSkeleton key={i} />
-            ))}
-          </div>
-        ) : filteredTasks.length > 0 ? (
-          <div className="space-y-6">
-            {filteredTasks.map((task) => (
-              <Suspense key={task.id} fallback={<TaskCardSkeleton />}>
-                <TaskCard task={task} />
-              </Suspense>
-            ))}
-          </div>
-        ) : (
-          <div className="flex items-center justify-center rounded-xl border-2 border-dashed border-border/60 bg-muted/20 p-8">
-            <p className="text-muted-foreground">No tasks found</p>
-          </div>
-        )}
+        {taskListContent}
 
-        {/* Pagination Controls */}
-        <TaskPagination
-          currentPage={currentPage}
-          totalCount={totalCount}
-          pageSize={pageSize}
-          hasNextPage={hasNextPage}
-          hasPreviousPage={hasPreviousPage}
-          goToNextPage={goToNextPage}
-          goToPreviousPage={goToPreviousPage}
-          isFetching={isFetching}
-          isLoading={isLoading}
-        />
+        {/* Pagination Controls - Memoized props prevent unnecessary re-renders */}
+        <TaskPagination {...paginationProps} />
       </div>
 
       {/* Create Task FAB */}
@@ -88,3 +153,6 @@ export default function TaskList() {
     </>
   );
 }
+
+// Export memoized component with shallow equality check for props
+export default memo(TaskList);

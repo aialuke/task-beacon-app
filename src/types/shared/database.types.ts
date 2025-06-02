@@ -13,14 +13,14 @@ export type RealTimeEvent = 'INSERT' | 'UPDATE' | 'DELETE' | '*';
 
 // Table row base interface
 export interface TableRow extends BaseEntity {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 // Database query filters
 export interface QueryFilter {
   column: string;
   operator: 'eq' | 'neq' | 'gt' | 'gte' | 'lt' | 'lte' | 'like' | 'ilike' | 'in' | 'is' | 'not';
-  value: any;
+  value: unknown;
 }
 
 export interface QueryOptions {
@@ -45,11 +45,11 @@ export interface RealtimeSubscription {
   filter?: string;
 }
 
-export interface RealtimePayload<T = any> {
+export interface RealtimePayload<T = unknown> {
   eventType: RealTimeEvent;
   new: T | null;
   old: T | null;
-  errors: any[] | null;
+  errors: unknown[] | null;
 }
 
 // Database transaction types
@@ -76,7 +76,7 @@ export interface ColumnDefinition {
   name: string;
   type: 'text' | 'integer' | 'boolean' | 'timestamp' | 'uuid' | 'json' | 'array';
   nullable?: boolean;
-  default?: any;
+  default?: unknown;
   primaryKey?: boolean;
   foreignKey?: {
     table: string;
@@ -131,8 +131,8 @@ export interface DatabaseHealth {
 export interface AuditLog extends BaseEntity {
   table_name: string;
   operation: DatabaseOperation;
-  old_values?: Record<string, any>;
-  new_values?: Record<string, any>;
+  old_values?: Record<string, unknown>;
+  new_values?: Record<string, unknown>;
   user_id?: string;
   ip_address?: string;
   user_agent?: string;

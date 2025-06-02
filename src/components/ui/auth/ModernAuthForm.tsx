@@ -199,15 +199,15 @@ const ModernAuthForm: React.FC = () => {
     setShowPassword(false);
   };
 
-  const focusFirstInput = () => {
-    if (mode === 'signup' && nameInputRef.current) {
-      nameInputRef.current.focus();
-    } else if (emailInputRef.current) {
-      emailInputRef.current.focus();
-    }
-  };
-
   useEffect(() => {
+    const focusFirstInput = () => {
+      if (mode === 'signup' && nameInputRef.current) {
+        nameInputRef.current.focus();
+      } else if (emailInputRef.current) {
+        emailInputRef.current.focus();
+      }
+    };
+
     const timer = setTimeout(focusFirstInput, 100);
     return () => clearTimeout(timer);
   }, [mode]);

@@ -23,7 +23,7 @@ export interface BaseEntity {
 }
 
 // Generic form state
-export interface FormState<T = Record<string, any>> {
+export interface FormState<T = Record<string, unknown>> {
   values: T;
   errors: Partial<Record<keyof T, string>>;
   touched: Partial<Record<keyof T, boolean>>;
@@ -38,7 +38,7 @@ export interface LoadingState {
 }
 
 // Generic async operation state
-export interface AsyncOperationState<T = any> {
+export interface AsyncOperationState<T = unknown> {
   data: T | null;
   loading: boolean;
   error: string | null;
@@ -50,7 +50,7 @@ export interface FilterOptions {
   search?: string;
   sortBy?: string;
   sortDirection?: 'asc' | 'desc';
-  filters?: Record<string, any>;
+  filters?: Record<string, unknown>;
 }
 
 // Generic select option
@@ -65,7 +65,7 @@ export interface SelectOption<T = string> {
 export interface ModalState {
   isOpen: boolean;
   type?: string;
-  data?: any;
+  data?: unknown;
 }
 
 // Generic notification types
@@ -87,7 +87,7 @@ export interface NotificationAction {
 }
 
 // Generic validation types
-export interface ValidationRule<T = any> {
+export interface ValidationRule<T = unknown> {
   required?: boolean;
   minLength?: number;
   maxLength?: number;

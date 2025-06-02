@@ -218,7 +218,7 @@ export interface UserActivity extends BaseEntity {
   user_id: ID;
   activity_type: 'login' | 'logout' | 'task_created' | 'task_updated' | 'task_completed' | 'profile_updated';
   description: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   ip_address?: string;
   user_agent?: string;
 }

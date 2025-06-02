@@ -1,7 +1,7 @@
 import { useEffect, useCallback, useState } from 'react';
 import { useRealtimeSubscription } from './useRealtimeSubscription';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { realtimeLogger } from '@/lib/logger';
 
 interface EntityWithId {

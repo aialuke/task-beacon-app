@@ -21,7 +21,7 @@ export interface SignUpOptions {
   data?: {
     full_name?: string;
     name?: string;
-    [key: string]: any;
+    [key: string]: unknown;
   };
   redirectTo?: string;
 }

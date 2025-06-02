@@ -9,6 +9,7 @@ import { createClient } from '@supabase/supabase-js';
 import type { Database } from '@/integrations/supabase/types';
 import { PostgrestError, User, AuthError } from '@supabase/supabase-js';
 import { logger } from '@/lib/logger';
+import { getApiConfig } from '@/lib/config/app';
 
 // Import consolidated types from organized type system
 import type { 
@@ -18,15 +19,14 @@ import type {
   SignUpOptions 
 } from '@/types/shared';
 
-// Supabase client configuration
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// Supabase client configuration using centralized config
+const apiConfig = getApiConfig();
 
-if (!supabaseUrl || !supabaseAnonKey) {
+if (!apiConfig.supabaseUrl || !apiConfig.supabaseAnonKey) {
   throw new Error('Missing Supabase environment variables');
 }
 
-const supabaseClient = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+const supabaseClient = createClient<Database>(apiConfig.supabaseUrl, apiConfig.supabaseAnonKey, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,

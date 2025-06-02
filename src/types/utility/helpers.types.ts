@@ -32,11 +32,11 @@ export type KeysOfType<T, U> = {
 }[keyof T];
 
 export type OptionalKeys<T> = {
-  [K in keyof T]-?: {} extends Pick<T, K> ? K : never;
+  [K in keyof T]-?: Record<string, never> extends Pick<T, K> ? K : never;
 }[keyof T];
 
 export type RequiredKeys<T> = {
-  [K in keyof T]-?: {} extends Pick<T, K> ? never : K;
+  [K in keyof T]-?: Record<string, never> extends Pick<T, K> ? never : K;
 }[keyof T];
 
 // Object manipulation types
@@ -57,29 +57,29 @@ export type PickByType<T, U> = {
 };
 
 // Function type helpers
-export type ArgumentTypes<F> = F extends (...args: infer A) => any ? A : never;
+export type ArgumentTypes<F> = F extends (...args: infer A) => unknown ? A : never;
 
-export type ReturnTypeAsync<F> = F extends (...args: any[]) => Promise<infer R> ? R : never;
+export type ReturnTypeAsync<F> = F extends (...args: unknown[]) => Promise<infer R> ? R : never;
 
-export type FirstArgument<F> = F extends (arg: infer A, ...rest: any[]) => any ? A : never;
+export type FirstArgument<F> = F extends (arg: infer A, ...rest: unknown[]) => unknown ? A : never;
 
-export type LastArgument<F> = F extends (...args: [...any[], infer L]) => any ? L : never;
+export type LastArgument<F> = F extends (...args: [...unknown[], infer L]) => unknown ? L : never;
 
 // Array and tuple helpers
-export type Head<T extends readonly any[]> = T extends readonly [infer H, ...any[]] ? H : never;
+export type Head<T extends readonly unknown[]> = T extends readonly [infer H, ...unknown[]] ? H : never;
 
-export type Tail<T extends readonly any[]> = T extends readonly [any, ...infer R] ? R : never;
+export type Tail<T extends readonly unknown[]> = T extends readonly [unknown, ...infer R] ? R : never;
 
-export type Last<T extends readonly any[]> = T extends readonly [...any[], infer L] ? L : never;
+export type Last<T extends readonly unknown[]> = T extends readonly [...unknown[], infer L] ? L : never;
 
-export type Length<T extends readonly any[]> = T['length'];
+export type Length<T extends readonly unknown[]> = T['length'];
 
-export type Reverse<T extends readonly any[]> = T extends readonly [...infer Rest, infer Last]
+export type Reverse<T extends readonly unknown[]> = T extends readonly [...infer Rest, infer Last]
   ? [Last, ...Reverse<Rest>]
   : [];
 
-export type Flatten<T extends readonly any[]> = T extends readonly [infer First, ...infer Rest]
-  ? First extends readonly any[]
+export type Flatten<T extends readonly unknown[]> = T extends readonly [infer First, ...infer Rest]
+  ? First extends readonly unknown[]
     ? [...Flatten<First>, ...Flatten<Rest>]
     : [First, ...Flatten<Rest>]
   : [];
@@ -131,14 +131,14 @@ export type IsUnknown<T> = IsAny<T> extends true ? false : unknown extends T ? t
 
 export type IsEqual<T, U> = [T] extends [U] ? ([U] extends [T] ? true : false) : false;
 
-export type IsArray<T> = T extends readonly any[] ? true : false;
+export type IsArray<T> = T extends readonly unknown[] ? true : false;
 
-export type IsFunction<T> = T extends (...args: any[]) => any ? true : false;
+export type IsFunction<T> = T extends (...args: unknown[]) => unknown ? true : false;
 
 export type IsObject<T> = T extends object 
-  ? T extends any[] 
+  ? T extends unknown[] 
     ? false 
-    : T extends Function 
+    : T extends (...args: unknown[]) => unknown
     ? false 
     : true 
   : false;
@@ -148,11 +148,11 @@ export type Brand<T, B> = T & { __brand: B };
 
 export type Branded<T, B extends string> = T & { readonly __brand: unique symbol; readonly __type: B };
 
-export type Unbrand<T> = T extends Brand<infer U, any> ? U : T;
+export type Unbrand<T> = T extends Brand<infer U, unknown> ? U : T;
 
 // Event handler types
 export type EventMap = {
-  [K: string]: any[];
+  [K: string]: unknown[];
 };
 
 export type EventHandler<T extends EventMap, K extends keyof T> = (...args: T[K]) => void;
@@ -252,9 +252,9 @@ export type FormErrors<T> = {
 };
 
 // Component prop helpers
-export type PropsWithClassName<T = {}> = T & { className?: string };
+export type PropsWithClassName<T = Record<string, never>> = T & { className?: string };
 
-export type PropsWithChildren<T = {}> = T & { children?: React.ReactNode };
+export type PropsWithChildren<T = Record<string, never>> = T & { children?: React.ReactNode };
 
 export type ComponentProps<T> = T extends React.ComponentType<infer P> ? P : never;
 

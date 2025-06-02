@@ -151,8 +151,8 @@ export interface TaskHistoryEntry extends BaseEntity {
   user_id: ID;
   action: 'created' | 'updated' | 'completed' | 'deleted' | 'assigned' | 'unassigned';
   field_name?: string;
-  old_value?: any;
-  new_value?: any;
+  old_value?: unknown;
+  new_value?: unknown;
   description?: string;
 }
 

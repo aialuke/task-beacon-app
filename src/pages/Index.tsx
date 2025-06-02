@@ -1,7 +1,7 @@
 import { lazy, Suspense } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { Skeleton } from '@/components/ui/skeleton';
+import { AuthenticatedApp } from '@/components/layout/AuthenticatedApp';
 
 // Lazy load components with better chunking
 const TaskDashboard = lazy(() => 
@@ -29,36 +29,34 @@ const TaskDashboardSkeleton = () => (
   </div>
 );
 
+/**
+ * Index page - Layout only
+ * 
+ * This page is responsible only for rendering the main app layout.
+ * All authentication logic and conditional rendering has been moved
+ * to the AuthenticatedApp component for better separation of concerns.
+ */
 export default function Index() {
-  const { user, loading } = useAuth();
-
-  // Show loading state while auth is initializing
-  if (loading) {
-    return <TaskDashboardSkeleton />;
-  }
-
-  // Show task dashboard for authenticated users
-  if (user) {
-    return (
-      <ErrorBoundary>
-        <Suspense fallback={<TaskDashboardSkeleton />}>
-          <TaskDashboard />
-        </Suspense>
-      </ErrorBoundary>
-    );
-  }
-
-  // Redirect unauthenticated users
   return (
-    <div className="flex h-96 items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold tracking-tight">
-          Welcome to Task Beacon
-        </h1>
-        <p className="mt-4 text-lg text-muted-foreground">
-          Please sign in to access your tasks
-        </p>
-      </div>
-    </div>
+    <ErrorBoundary>
+      <Suspense fallback={<TaskDashboardSkeleton />}>
+        <AuthenticatedApp
+          loadingComponent={<TaskDashboardSkeleton />}
+          authenticatedComponent={<TaskDashboard />}
+          unauthenticatedFallback={
+            <div className="flex h-96 items-center justify-center">
+              <div className="text-center">
+                <h1 className="text-3xl font-bold tracking-tight">
+                  Welcome to Task Beacon
+                </h1>
+                <p className="mt-4 text-lg text-muted-foreground">
+                  Please sign in to access your tasks
+                </p>
+              </div>
+            </div>
+          }
+        />
+      </Suspense>
+    </ErrorBoundary>
   );
 }

@@ -6,7 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import type { Task } from '@/types';
 import { useRealtimeEntity } from '@/hooks/useRealtimeEntity';
 import { toast, triggerHapticFeedback } from '@/lib/utils/notification';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 
 /**
  * Task-specific real-time updates using the generalized entity hook

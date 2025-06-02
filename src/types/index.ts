@@ -2,10 +2,10 @@
  * Main Types Index
  * 
  * Centralized type exports for the entire application.
- * Provides convenient access to all type categories.
+ * Provides convenient access to all type categories with clear organization.
  */
 
-// Most commonly used types (for convenience)
+// === MOST COMMONLY USED TYPES (for convenience) ===
 export type {
   // Core shared patterns
   ID,
@@ -16,6 +16,9 @@ export type {
   ValidationResult,
   LoadingState,
   UserRole,
+  Status,
+  AsyncState,
+  BaseEntity,
 } from './shared';
 
 export type {
@@ -23,15 +26,20 @@ export type {
   Task,
   User,
   TaskStatus,
+  TaskPriority,
   TaskFilter,
   ParentTask,
 } from './feature-types';
 
-// Comprehensive exports by category
+// === COMPREHENSIVE EXPORTS BY CATEGORY ===
+
+// Shared/Common Types
 export type * from './shared';
+
+// Feature-Specific Types  
 export type * from './feature-types';
 
-// Utility types (avoiding conflicts with shared types)
+// Utility Types
 export type {
   // Form utilities
   UseFormStateOptions,
@@ -60,8 +68,8 @@ export type {
   PropsWithChildren,
 } from './utility';
 
-// Legacy exports for backward compatibility
+// === LEGACY EXPORTS (for backward compatibility) ===
 export type {
   Task as TaskType,
   User as UserType,
-} from './feature-types';
+} from './feature-types'; 

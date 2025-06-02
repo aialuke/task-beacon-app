@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
+import React, { ReactNode } from 'react';
+import { createStandardContext } from '@/lib/utils/createContext';
 
 // Clean imports from organized type system  
 import type { Task } from '@/types';
@@ -8,7 +9,7 @@ interface TaskDataContextValue {
   tasks: Task[];
   isLoading: boolean;
   isFetching: boolean;
-  error: Error | null;
+  error: string | null;
   totalCount: number;
   currentPage: number;
   pageSize: number;
@@ -18,32 +19,33 @@ interface TaskDataContextValue {
   goToPreviousPage: () => void;
 }
 
-const TaskDataContext = createContext<TaskDataContextValue | undefined>(
-  undefined
-);
+// Create standardized context
+const { Provider: TaskDataProvider, useContext: useTaskDataContext } = createStandardContext<TaskDataContextValue>({
+  name: 'TaskData',
+  errorMessage: 'useTaskDataContext must be used within a TaskDataContextProvider'
+});
 
 interface TaskDataContextProviderProps {
   children: ReactNode;
 }
 
+/**
+ * Task Data Context Provider
+ * 
+ * Provides task data state and pagination controls to child components.
+ * Uses the standardized context pattern for consistent error handling.
+ */
 export function TaskDataContextProvider({
   children,
 }: TaskDataContextProviderProps) {
   const taskQueries = useTaskQueries();
 
   return (
-    <TaskDataContext.Provider value={taskQueries}>
+    <TaskDataProvider value={taskQueries}>
       {children}
-    </TaskDataContext.Provider>
+    </TaskDataProvider>
   );
 }
 
-export function useTaskDataContext() {
-  const context = useContext(TaskDataContext);
-  if (context === undefined) {
-    throw new Error(
-      'useTaskDataContext must be used within a TaskDataContextProvider'
-    );
-  }
-  return context;
-}
+// Export the standardized hook
+export { useTaskDataContext };

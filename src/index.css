@@ -1,5 +1,20 @@
-
 /* Optimized CSS with minimal imports */
+
+/* Import Tailwind CSS directives first */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import enhanced CSS architecture */
+@import './styles/architecture/css-variables.css';
+@import './styles/architecture/performance-optimizations.css';
+
+/* Import optimized custom styles */
+@import './styles/base.css';
+@import './styles/components.css';
+@import './styles/utilities.css';
+
+/* Reset and base styles */
 * {
   margin: 0;
   padding: 0;
@@ -10,10 +25,6 @@
 *::after {
   box-sizing: inherit;
 }
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 /* Set dark mode as default */
 html {
@@ -57,17 +68,32 @@ html {
   button:disabled {
     cursor: not-allowed;
   }
-}
 
-/* Import optimized custom styles */
-@import './styles/base.css';
-@import './styles/components.css';
-@import './styles/utilities.css';
+  /* Enhanced base styles for performance */
+  html {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-variant-ligatures: common-ligatures;
+  }
+
+  body {
+    line-height: var(--line-height-normal);
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+
+  /* Optimize focus indicators */
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+}
 
 /* Optimized icon handling */
 svg {
   fill: none;
-  transition: stroke 0.3s ease, fill 0.3s ease;
+  transition: stroke var(--duration-300) var(--ease-out), 
+              fill var(--duration-300) var(--ease-out);
 }
 
 /* Theme handling */
@@ -84,3 +110,16 @@ svg {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
 }
+
+/* 
+Performance optimization classes are available directly from performance-optimizations.css:
+- task-card-optimized
+- interactive 
+- hw-accelerated
+- skeleton-optimized
+- debug-performance, debug-layout, debug-paint (development only)
+
+Use these classes directly in components:
+<div className="task-card-optimized interactive hw-accelerated">
+<div className="skeleton-optimized">
+*/

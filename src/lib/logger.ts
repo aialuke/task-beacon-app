@@ -57,7 +57,7 @@ class Logger {
       case 'production':
         return 'warn'; // Only warnings and errors in production
       case 'test':
-        return 'error'; // Only errors in tests to reduce noise
+        return 'debug'; // Allow all logs in tests for better debugging
       case 'development':
       default:
         return 'debug'; // All logs in development

@@ -1,0 +1,421 @@
+/**
+ * Performance-Optimized CSS
+ * 
+ * Contains CSS optimizations for better rendering performance,
+ * efficient animations, and reduced layout thrashing.
+ */
+
+/* === PERFORMANCE FOUNDATION === */
+
+/* Force hardware acceleration for specific elements */
+.hw-accelerated {
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Optimize for animations */
+.animate-optimized {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Remove will-change after animation completes */
+.animate-optimized.animation-finished {
+  will-change: auto;
+}
+
+/* === LAYOUT OPTIMIZATION === */
+
+/* Prevent layout thrashing on common interactive elements */
+.no-layout-shift {
+  contain: layout style;
+}
+
+/* Optimize for frequent updates */
+.frequent-updates {
+  contain: layout style paint;
+  will-change: contents;
+}
+
+/* Grid optimizations for dynamic content */
+.optimized-grid {
+  display: grid;
+  grid-template-rows: min-content;
+  contain: layout;
+}
+
+.optimized-flex {
+  display: flex;
+  contain: layout style;
+}
+
+/* === PAINT OPTIMIZATION === */
+
+/* Optimize for painting performance */
+.paint-optimized {
+  contain: paint;
+  isolation: isolate;
+}
+
+/* Reduce paint on scroll */
+.scroll-optimized {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  -webkit-overflow-scrolling: touch;
+  overflow-scrolling: touch;
+}
+
+/* === ANIMATION OPTIMIZATIONS === */
+
+/* High-performance fade animations */
+@keyframes optimized-fade-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes optimized-fade-out {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, -10px, 0);
+  }
+}
+
+/* Slide animations using transform only */
+@keyframes optimized-slide-up {
+  from {
+    transform: translate3d(0, 100%, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes optimized-slide-down {
+  from {
+    transform: translate3d(0, -100%, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes optimized-slide-left {
+  from {
+    transform: translate3d(100%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes optimized-slide-right {
+  from {
+    transform: translate3d(-100%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Scale animations */
+@keyframes optimized-scale-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes optimized-scale-out {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(0.95);
+  }
+}
+
+/* Bounce animation using transform */
+@keyframes optimized-bounce {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  40%, 43% {
+    transform: translate3d(0, -30px, 0);
+  }
+  70% {
+    transform: translate3d(0, -15px, 0);
+  }
+  90% {
+    transform: translate3d(0, -4px, 0);
+  }
+}
+
+/* === PERFORMANCE UTILITIES === */
+
+/* Enable GPU acceleration */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Force layer creation */
+.force-layer {
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+}
+
+/* Optimize for opacity changes */
+.opacity-optimized {
+  will-change: opacity;
+}
+
+/* Optimize for transform changes */
+.transform-optimized {
+  will-change: transform;
+}
+
+/* === SPECIFIC COMPONENT OPTIMIZATIONS === */
+
+/* Task Card optimizations */
+.task-card-optimized {
+  contain: layout style;
+  transform: translateZ(0);
+  transition: transform var(--duration-150) var(--ease-out),
+              box-shadow var(--duration-150) var(--ease-out);
+}
+
+.task-card-optimized:hover {
+  transform: translate3d(0, -2px, 0);
+}
+
+/* Button optimizations */
+.button-optimized {
+  contain: layout style;
+  will-change: transform, box-shadow;
+  transition: all var(--duration-150) var(--ease-out);
+}
+
+.button-optimized:active {
+  transform: scale(0.98);
+}
+
+/* Modal optimizations */
+.modal-optimized {
+  contain: layout style paint;
+  will-change: opacity, transform;
+}
+
+.modal-backdrop-optimized {
+  contain: strict;
+  will-change: opacity;
+}
+
+/* List optimizations for virtual scrolling */
+.virtual-list-optimized {
+  contain: strict;
+  overflow: hidden;
+}
+
+.virtual-list-item-optimized {
+  contain: layout style;
+  will-change: transform;
+}
+
+/* === LOADING STATES === */
+
+/* Optimized skeleton loading */
+@keyframes optimized-shimmer {
+  0% {
+    transform: translate3d(-100%, 0, 0);
+  }
+  100% {
+    transform: translate3d(100%, 0, 0);
+  }
+}
+
+.skeleton-optimized {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--color-muted);
+}
+
+.skeleton-optimized::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  transform: translate3d(-100%, 0, 0);
+  animation: optimized-shimmer 1.5s infinite;
+}
+
+/* Optimized spinner */
+@keyframes optimized-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner-optimized {
+  animation: optimized-spin 1s linear infinite;
+  will-change: transform;
+}
+
+/* === SCROLL OPTIMIZATIONS === */
+
+/* Smooth scrolling with momentum */
+.scroll-container-optimized {
+  -webkit-overflow-scrolling: touch;
+  overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  contain: style layout;
+}
+
+/* Sticky positioning optimization */
+.sticky-optimized {
+  position: sticky;
+  will-change: transform;
+  contain: layout style;
+}
+
+/* === RESPONSIVE OPTIMIZATIONS === */
+
+/* Optimize for mobile devices */
+@media (max-width: 768px) {
+  .mobile-optimized {
+    contain: layout style;
+    will-change: transform;
+  }
+  
+  /* Reduce animations on mobile for performance */
+  .reduce-mobile-animations {
+    animation-duration: 0.2s !important;
+    transition-duration: 0.2s !important;
+  }
+}
+
+/* Optimize for high-density displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .retina-optimized {
+    transform: translateZ(0);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* === PRINT OPTIMIZATIONS === */
+@media print {
+  .no-print-optimize {
+    display: none !important;
+  }
+  
+  .print-optimize {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
+
+/* === ACCESSIBILITY OPTIMIZATIONS === */
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .motion-safe-optimize {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .motion-reduce-optimize {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode optimizations */
+@media (prefers-contrast: high) {
+  .high-contrast-optimize {
+    filter: contrast(1.2);
+    border-width: 2px;
+  }
+}
+
+/* === DEVELOPER TOOLS === */
+
+/* Debug performance issues in development */
+.debug-performance {
+  outline: 2px solid red;
+  background: rgba(255, 0, 0, 0.1) !important;
+}
+
+.debug-performance::before {
+  content: 'PERF DEBUG';
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: red;
+  color: white;
+  font-size: 10px;
+  padding: 2px 4px;
+  z-index: 9999;
+}
+
+/* Paint flash visualization */
+.debug-paint {
+  animation: debug-paint-flash 0.5s infinite alternate;
+}
+
+@keyframes debug-paint-flash {
+  0% { background-color: rgba(255, 0, 0, 0.3); }
+  100% { background-color: rgba(0, 255, 0, 0.3); }
+}
+
+/* Layout shift indicator */
+.debug-layout {
+  outline: 3px dashed orange;
+  outline-offset: 2px;
+}
+
+/* === CLEANUP UTILITIES === */
+
+/* Reset will-change after animations */
+.cleanup-will-change {
+  will-change: auto;
+}
+
+/* Remove transform after animation */
+.cleanup-transform {
+  transform: none;
+}
+
+/* Remove contain after layout is stable */
+.cleanup-contain {
+  contain: none;
+} 

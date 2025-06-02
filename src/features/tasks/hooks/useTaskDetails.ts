@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { Task } from '@/types';
 import { TaskService } from '@/lib/api/tasks.service';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
 import { handleApiError } from '@/lib/utils/error';
 

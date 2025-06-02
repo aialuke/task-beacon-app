@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { RealtimeService } from '@/lib/api';
 import { useQueryClient } from '@tanstack/react-query';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import type { RealtimeChannel, RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 import { realtimeLogger } from '@/lib/logger';
 

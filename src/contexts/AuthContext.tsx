@@ -1,23 +1,24 @@
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import type { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { AuthService } from '@/lib/api';
-import { toast } from '@/lib/toast';
 import { authLogger } from '@/lib/logger';
+import { toast } from '@/lib/toast';
 
-// Clean imports from organized type system
-import type { User, Session, AuthContextType } from '@/types/shared';
+interface AuthContextType {
+  user: User | null;
+  session: Session | null;
+  loading: boolean;
+  error: Error | null;
+  signOut: () => Promise<void>;
+  refreshSession: () => Promise<void>;
+}
 
 interface AuthProviderProps {
   children: ReactNode;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
@@ -205,12 +206,4 @@ export function AuthProvider({ children }: AuthProviderProps) {
       {children}
     </AuthContext.Provider>
   );
-}
-
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
 }

@@ -106,16 +106,16 @@ export interface BreadcrumbItem {
 }
 
 // Table types
-export interface TableColumn<T = any> {
+export interface TableColumn<T = Record<string, unknown>> {
   key: keyof T;
   label: string;
   sortable?: boolean;
   width?: string;
   align?: 'left' | 'center' | 'right';
-  render?: (value: any, row: T) => React.ReactNode;
+  render?: (value: unknown, row: T) => React.ReactNode;
 }
 
-export interface TableProps<T = any> {
+export interface TableProps<T = Record<string, unknown>> {
   data: T[];
   columns: TableColumn<T>[];
   loading?: boolean;
@@ -187,7 +187,7 @@ export interface SkeletonProps {
 export interface DragItem {
   id: string;
   type: string;
-  data: any;
+  data: unknown;
 }
 
 export interface DropTarget {
