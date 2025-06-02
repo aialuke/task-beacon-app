@@ -4,7 +4,7 @@ import {
   getDaysRemaining,
   formatTimeDisplay,
   getUpdateInterval,
-} from '@/lib/dateUtils';
+} from '@/lib/utils/shared';
 import { calculateTimerOffset } from '@/lib/utils/animation';
 import { performanceMonitor } from '@/lib/utils/performance';
 

@@ -1,5 +1,5 @@
 import { Task, TaskStatus } from '@/types';
-import { getDaysRemaining } from '@/lib/utils/date';
+import { getDaysRemaining } from '@/lib/utils/shared';
 
 /**
  * Determines task status based on due date and completion status

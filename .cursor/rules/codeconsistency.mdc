@@ -1,0 +1,6 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+Maintain consistency with the existing codebase in terms of style, patterns, and approaches. Analyze the code to identify naming conventions, formatting preferences, and architectural patterns. Follow these established patterns when implementing new features or fixes. Use the same error handling strategies, logging approaches, and testing methodologies present in the project. This preserves readability and maintainability while reducing the cognitive load for developers.

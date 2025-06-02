@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Calendar1, ExternalLink } from 'lucide-react';
-import { formatDate } from '@/lib/dateUtils';
+import { formatDate } from '@/lib/utils/shared';
 import CountdownTimer from '@/features/tasks/components/CountdownTimer';
 import { getTaskStatus } from '@/features/tasks/utils/taskUiUtils';
 import TaskActions from '@/features/tasks/components/TaskActions';

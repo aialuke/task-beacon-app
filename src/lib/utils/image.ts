@@ -6,6 +6,7 @@
  */
 
 import { logger } from '../logger';
+import { formatFileSize } from './shared';
 
 /**
  * Image processing options
@@ -51,9 +52,9 @@ export const supportsWebWorker = (): boolean => {
 };
 
 /**
- * Fallback function for environments where Web Workers are not supported
+ * Compresses and resizes a photo for upload
  */
-export async function compressAndResizePhotoFallback(
+async function compressAndResizePhotoImplementation(
   file: File,
   maxWidth = 1200,
   maxHeight = 1200,
@@ -125,11 +126,23 @@ export async function compressAndResizePhotoFallback(
 }
 
 /**
- * Compresses and resizes a photo for upload using a Web Worker
+ * Fallback function for environments where Web Workers are not supported
+ * @deprecated Use compressAndResizePhoto instead
+ */
+export async function compressAndResizePhotoFallback(
+  file: File,
+  maxWidth = 1200,
+  maxHeight = 1200,
+  quality = 0.85
+): Promise<File> {
+  return compressAndResizePhotoImplementation(file, maxWidth, maxHeight, quality);
+}
+
+/**
+ * Compresses and resizes a photo for upload
  *
- * This utility function takes a File object (image), sends it to a Web Worker for processing,
- * which compresses it and resizes it to reduce file size while maintaining reasonable quality.
- * This implementation prevents blocking the main thread during image processing.
+ * This utility function takes a File object (image) and processes it 
+ * to compress and resize it to reduce file size while maintaining reasonable quality.
  *
  * @param file - The image File object to process
  * @param maxWidth - Maximum width of the processed image (default: 1200px)
@@ -143,52 +156,7 @@ export async function compressAndResizePhoto(
   maxHeight = 1200,
   quality = 0.85
 ): Promise<File> {
-  return new Promise((resolve, reject) => {
-    // Check if Web Worker is supported, use fallback if not
-    if (!supportsWebWorker()) {
-      return compressAndResizePhotoFallback(file, maxWidth, maxHeight, quality)
-        .then(resolve)
-        .catch(reject);
-    }
-
-    // Create a worker only when needed
-    const worker = new Worker(
-      new URL('../../workers/imageProcessorWorker.js', import.meta.url),
-      { type: 'module' }
-    );
-
-    // Handle the worker response
-    worker.onmessage = (event) => {
-      // Terminate worker after use
-      worker.terminate();
-
-      if (event.data.success) {
-        // Convert blob back to File object with original name
-        const processedFile = new File([event.data.processedFile], file.name, {
-          type: 'image/jpeg',
-          lastModified: Date.now(),
-        });
-
-        resolve(processedFile);
-      } else {
-        reject(new Error(event.data.error || 'Image processing failed'));
-      }
-    };
-
-    // Handle worker errors
-    worker.onerror = (error) => {
-      worker.terminate();
-      reject(new Error('Worker error: ' + error.message));
-    };
-
-    // Send the file to the worker
-    worker.postMessage({
-      file,
-      maxWidth,
-      maxHeight,
-      quality,
-    });
-  });
+  return compressAndResizePhotoImplementation(file, maxWidth, maxHeight, quality);
 }
 
 /**
@@ -453,22 +421,6 @@ export function supportsWebP(): boolean {
  */
 export function getOptimalImageFormat(): 'webp' | 'jpeg' {
   return supportsWebP() ? 'webp' : 'jpeg';
-}
-
-/**
- * Format file size for display
- */
-export function formatFileSize(bytes: number): string {
-  const units = ['B', 'KB', 'MB', 'GB'];
-  let size = bytes;
-  let unitIndex = 0;
-  
-  while (size >= 1024 && unitIndex < units.length - 1) {
-    size /= 1024;
-    unitIndex++;
-  }
-  
-  return `${size.toFixed(unitIndex === 0 ? 0 : 1)} ${units[unitIndex]}`;
 }
 
 // Legacy export for backward compatibility
