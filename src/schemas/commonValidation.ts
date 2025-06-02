@@ -48,29 +48,6 @@ export const isDateInFuture = (dateString: string): boolean => {
   return date > new Date();
 };
 
-// Common schema patterns
-export const emailSchema = z
-  .string()
-  .min(1, COMMON_VALIDATION_MESSAGES.EMAIL_REQUIRED)
-  .refine(isValidEmail, COMMON_VALIDATION_MESSAGES.EMAIL_INVALID);
-
-export const passwordSchema = z
-  .string()
-  .min(1, COMMON_VALIDATION_MESSAGES.PASSWORD_REQUIRED)
-  .min(8, COMMON_VALIDATION_MESSAGES.PASSWORD_TOO_SHORT)
-  .refine(isValidPassword, COMMON_VALIDATION_MESSAGES.PASSWORD_TOO_WEAK);
-
-export const urlSchema = z
-  .string()
-  .refine(isValidUrl, COMMON_VALIDATION_MESSAGES.URL_INVALID)
-  .optional()
-  .or(z.literal(''));
-
-export const futureDateSchema = z
-  .string()
-  .min(1, COMMON_VALIDATION_MESSAGES.REQUIRED_FIELD)
-  .refine(isDateInFuture, COMMON_VALIDATION_MESSAGES.DATE_IN_PAST);
-
 // Generic text validation with configurable limits
 export const createTextSchema = (
   minLength = 0,
