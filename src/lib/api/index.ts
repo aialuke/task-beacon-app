@@ -1,3 +1,4 @@
+
 /**
  * API Layer - Centralized exports for all API services
  * 
@@ -12,5 +13,14 @@ export * from './base';
 export * from './tasks.service';
 export * from './users.service';
 
+// Individual service exports for better tree-shaking
+export { AuthService } from './auth.service';
+export { StorageService } from './storage.service';
+export { RealtimeService } from './realtime.service';
+export { DatabaseService } from './database.service';
+
+// Error handling utilities
+export { formatApiError, apiRequest } from './error-handling';
+
 // Re-export commonly used Supabase client for edge cases
-export { supabase } from '@/integrations/supabase/client'; 
+export { supabase } from '@/integrations/supabase/client';

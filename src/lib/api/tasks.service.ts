@@ -5,7 +5,9 @@
  * providing a consistent API that can be easily tested and modified.
  */
 
-import { apiRequest, AuthService, StorageService } from './base';
+import { apiRequest } from './error-handling';
+import { AuthService } from './auth.service';
+import { StorageService } from './storage.service';
 import { supabase } from '@/integrations/supabase/client';
 
 // Clean imports from organized type system
@@ -390,4 +392,4 @@ export class TaskService {
       return response.data?.data || [];
     });
   }
-} 
+}

@@ -5,7 +5,8 @@
  * providing a consistent API that can be easily tested and modified.
  */
 
-import { apiRequest, AuthService } from './base';
+import { apiRequest } from './error-handling';
+import { AuthService } from './auth.service';
 import { supabase } from '@/integrations/supabase/client';
 import type { Database } from '@/integrations/supabase/types';
 
@@ -247,4 +248,4 @@ export class UserService {
       return data as User;
     });
   }
-} 
+}
