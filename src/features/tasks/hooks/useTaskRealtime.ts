@@ -15,9 +15,9 @@ import { useAuth } from '@/hooks/useAuth';
 export function useTaskRealtime() {
   const { user } = useAuth();
 
-  const handleTaskStatusChange = useCallback((oldTask: Task, newTask: Task, isForCurrentUser: boolean) => {
+  const handleTaskStatusChange = useCallback((newTask: Task) => {
     // Notify about status changes for assigned tasks
-    if (oldTask.status !== newTask.status && isForCurrentUser && newTask.owner_id !== user?.id) {
+    if (newTask.assignee_id === user?.id && newTask.owner_id !== user?.id) {
       const statusMessage = newTask.status === 'complete' 
         ? 'Task completed' 
         : `Task status changed to ${newTask.status}`;

@@ -1,3 +1,4 @@
+
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { useUserList } from './useUserList';
@@ -18,7 +19,7 @@ describe('useUserList', () => {
     const { result } = renderHook(() => useUserList());
     await waitFor(() => {
       expect(result.current.users).toEqual(users);
-      expect(result.current.loading).toBe(false);
+      expect(result.current.isLoading).toBe(false);
       expect(result.current.error).toBeNull();
     });
   });
@@ -28,8 +29,8 @@ describe('useUserList', () => {
     const { result } = renderHook(() => useUserList());
     await waitFor(() => {
       expect(result.current.users).toEqual([]);
-      expect(result.current.loading).toBe(false);
+      expect(result.current.isLoading).toBe(false);
       expect(result.current.error).toBe('fail');
     });
   });
-}); 
+});

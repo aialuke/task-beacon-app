@@ -30,7 +30,7 @@ export function useTaskMutations() {
   // Create follow-up task mutation
   const createFollowUpTaskMutation = useMutation({
     mutationFn: async ({ parentTask, taskData }: { parentTask: Task; taskData: any }) => {
-      const response = await TaskService.createFollowUpTask(parentTask.id, taskData);
+      const response = await TaskService.createFollowUp(parentTask.id, taskData);
       if (!response.success) {
         throw new Error(response.error?.message || 'Failed to create follow-up task');
       }

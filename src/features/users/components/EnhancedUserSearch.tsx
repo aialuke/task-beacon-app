@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from 'react';
 import { User as UserIcon, Search, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -31,7 +32,7 @@ export function EnhancedUserSearch({
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const [searchTerm, setSearchTerm] = useState('');
-  const { users, loading } = useUserList();
+  const { users, isLoading } = useUserList();
   const filteredUsers = useUserFilter(users, searchTerm, 5); // Limit to 5 results
 
   // Find selected user
@@ -162,7 +163,7 @@ export function EnhancedUserSearch({
           className="absolute z-[9999] mt-2 w-full overflow-hidden rounded-xl border border-border bg-popover shadow-lg"
         >
           <div className="max-h-60 overflow-y-auto p-2">
-            {loading ? (
+            {isLoading ? (
               <div className="py-3 text-center text-sm text-muted-foreground">
                 Loading users...
               </div>
