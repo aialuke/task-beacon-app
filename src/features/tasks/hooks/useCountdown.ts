@@ -109,8 +109,17 @@ export function useCountdown(
   const computedValues = useMemo(() => {
     const { timeLeft } = state;
     
+    console.log('🕐 Countdown calculation:', {
+      dueDate,
+      status,
+      timeLeft: timeLeft.days,
+      isOverdue: timeLeft.isOverdue
+    });
+    
     // Format the time display
     const timeDisplay = formatTimeDisplay(timeLeft.days, dueDate, status);
+    
+    console.log('🎯 Formatted time display:', timeDisplay);
     
     // Calculate dash offset for the timer ring
     const dashOffset = calculateTimerOffset(
