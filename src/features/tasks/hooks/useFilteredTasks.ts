@@ -11,6 +11,12 @@ import type { Task, TaskFilter } from '@/types';
 export function useFilteredTasks(tasks: Task[], filter: TaskFilter) {
   // Optimized: Create filter functions only once and memoize the result
   return useMemo(() => {
+    // Defensive check: ensure tasks is an array
+    if (!Array.isArray(tasks)) {
+      console.warn('useFilteredTasks received non-array tasks:', tasks);
+      return [];
+    }
+
     switch (filter) {
       case 'all':
         return tasks.filter((task) => task.status !== 'complete');
