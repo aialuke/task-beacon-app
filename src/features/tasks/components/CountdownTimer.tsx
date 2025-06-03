@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { useSpring, animated, config } from '@react-spring/web';
+import { useMemo } from 'react';
+import { useSpring, animated } from '@react-spring/web';
 import { TaskStatus } from '@/types';
 import TimerRing from './timer/TimerRing';
 import TimerDisplay from './timer/TimerDisplay';
@@ -10,7 +10,6 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import TimerTooltip from '@/features/tasks/components/TimerTooltip';
-import { setupAnimationVariables, getSpringConfig } from '@/lib/utils/animation';
 import { useCountdown } from '@/features/tasks/hooks/useCountdown';
 import { useMotionPreferences } from '@/hooks/useMotionPreferences';
 
