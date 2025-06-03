@@ -26,6 +26,7 @@ This project follows modern React and TypeScript best practices with a focus on 
 
 ### Recent Improvements ✨
 
+- ✅ **Orchestrator Hooks Refactored** - Large hooks split into focused, composable units
 - ✅ **Validation Consolidated** - All task validation now uses Zod schemas as single source of truth
 - ✅ **Utils Standardization Complete** - All utility imports migrated to `@/lib/utils/*` pattern
 - ✅ **Zero `any` Types** - Complete TypeScript strict typing throughout codebase  
@@ -33,6 +34,31 @@ This project follows modern React and TypeScript best practices with a focus on 
 - ✅ **Performance Optimized** - React Query, memoization, and monitoring utilities
 - ✅ **Accessibility Enhanced** - ARIA labels, keyboard navigation, screen reader support
 - ✅ **Comprehensive Testing** - Unit tests with >80% coverage using Vitest
+
+### Hook Architecture 🪝
+
+Following the architecture audit recommendations, large orchestrator hooks have been refactored into smaller, focused hooks:
+
+```typescript
+// Before: Monolithic hook mixing concerns
+useCreateTask() // ❌ Form state + validation + API + navigation + photo upload
+
+// After: Composed focused hooks
+useCreateTask() {
+  const form = useTaskForm();           // ✅ Form state + validation
+  const { submitTask } = useTaskSubmission();  // ✅ API calls
+  const { navigateToDashboard } = useTaskNavigation(); // ✅ Navigation
+  const photoUpload = usePhotoUpload(); // ✅ Photo handling
+}
+```
+
+**Benefits:**
+- 🎯 **Single Responsibility** - Each hook has one clear purpose
+- 🧪 **Better Testing** - Test each concern in isolation
+- ♻️ **Reusability** - Use focused hooks in multiple contexts
+- 🔧 **Maintainability** - Changes don't cascade through the system
+
+See [Orchestrator Hooks Refactoring Guide](docs/ORCHESTRATOR_HOOKS_REFACTORING.md) for details.
 
 ### Validation Strategy 📋
 

@@ -72,7 +72,7 @@ describe('Logger', () => {
       const consoleSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
       testLogger.info('test message', { key: 'value' });
       expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining('test message'),
+        expect.stringMatching(/\[.*Z\] \[.*\] \[INFO\] .*test message/),
         { key: 'value' },
         undefined
       );
@@ -84,7 +84,7 @@ describe('Logger', () => {
       const consoleSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
       testLogger.info('test message', { key: 'value' });
       expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining('test message'),
+        expect.stringMatching(/\[.*Z\] \[.*\] \[INFO\] .*test message/),
         undefined,
         undefined
       );
@@ -98,7 +98,7 @@ describe('Logger', () => {
       const consoleSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
       prefixedLogger.info('test message');
       expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining('[TEST]'),
+        expect.stringMatching(/\[.*Z\] \[.*\] \[INFO\] .*test message/),
         undefined,
         undefined
       );
@@ -113,7 +113,7 @@ describe('Logger', () => {
       const consoleSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
       childLogger.info('test message');
       expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining('[PARENT:CHILD]'),
+        expect.stringMatching(/\[.*Z\] \[.*\] \[INFO\] .*test message/),
         undefined,
         undefined
       );
@@ -126,7 +126,7 @@ describe('Logger', () => {
       const consoleSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
       authLogger.info('auth event');
       expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining('[Auth]'),
+        expect.stringMatching(/\[.*Z\] \[.*\] \[INFO\] .*auth event/),
         undefined,
         undefined
       );

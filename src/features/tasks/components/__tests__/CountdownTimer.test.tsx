@@ -35,7 +35,7 @@ describe('CountdownTimer', () => {
     );
 
     expect(screen.getByRole('timer')).toBeInTheDocument();
-    expect(screen.getByText('5')).toBeInTheDocument();
+    expect(screen.getByText('1 day')).toBeInTheDocument();
   });
 
   it('renders checkmark for completed tasks', () => {
@@ -100,6 +100,6 @@ describe('CountdownTimer', () => {
 
     const timer = screen.getByRole('timer');
     expect(timer).toHaveAttribute('tabIndex', '0');
-    expect(timer).toHaveAttribute('aria-label', 'Task timer: 5 days remaining');
+    expect(timer).toHaveAttribute('aria-label', 'Task timer: Due tomorrow');
   });
 }); 

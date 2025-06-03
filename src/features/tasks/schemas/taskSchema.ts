@@ -96,20 +96,3 @@ export const taskFormSchema = z.object({
 export type CreateTaskInput = z.infer<typeof createTaskSchema>;
 export type UpdateTaskInput = z.infer<typeof updateTaskSchema>;
 export type TaskFormInput = z.infer<typeof taskFormSchema>;
-
-// Validation helpers for specific fields
-export const validateTaskTitle = (title: unknown) => {
-  return taskTitleSchema.safeParse(title);
-};
-
-export const validateTaskDescription = (description: unknown) => {
-  return taskDescriptionSchema.safeParse(description);
-};
-
-// Helper to get field-specific error messages
-export const getFieldError = (result: z.SafeParseReturnType<any, any>, field: string): string | undefined => {
-  if (result.success) return undefined;
-  
-  const fieldError = result.error.errors.find(err => err.path.includes(field));
-  return fieldError?.message;
-};

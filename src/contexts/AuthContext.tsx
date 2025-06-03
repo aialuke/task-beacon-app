@@ -28,6 +28,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const authOperations = useAuthOperations({
     setLoading: authState.setLoading,
     setError: authState.setError,
+    setUser: authState.setUser,
+    setSession: authState.setSession,
   });
 
   // Set up auth listener
@@ -47,6 +49,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     error: authState.error,
     signOut: authOperations.signOut,
     refreshSession: authOperations.refreshSession,
+    signIn: authOperations.signIn,
   };
 
   return (

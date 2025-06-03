@@ -6,6 +6,7 @@ import { useTaskWorkflow } from '../hooks/useTaskWorkflow';
 import { setupIntegrationTest, mockDatabaseQuery, createTestTask } from '@/test/integration/setup';
 import { TaskProviders } from '@/features/tasks/providers/TaskProviders';
 import type { TaskStatus } from '@/types/feature-types/task.types';
+import { AuthProvider } from '@/contexts/AuthContext';
 
 // Integration test for complete task workflow
 describe('Task Workflow Integration Tests', () => {
@@ -28,11 +29,13 @@ describe('Task Workflow Integration Tests', () => {
   });
 
   const wrapper = ({ children }: { children: ReactNode }) => (
-    <QueryClientProvider client={queryClient}>
-      <TaskProviders>
-        {children}
-      </TaskProviders>
-    </QueryClientProvider>
+    <AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <TaskProviders>
+          {children}
+        </TaskProviders>
+      </QueryClientProvider>
+    </AuthProvider>
   );
 
   // TODO: Re-implement task creation tests when createTaskWithWorkflow is re-added

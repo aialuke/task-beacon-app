@@ -1,79 +1,112 @@
 import { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useTaskForm } from './useTaskForm';
-import { useTaskFormValidation } from './useTaskFormValidation';
-import { useCreateTaskAPI } from './useCreateTaskAPI';
-import { useCreateTaskPhotoUpload } from './useCreateTaskPhotoUpload';
+import { useTaskSubmission } from './useTaskSubmission';
+import { useTaskNavigation } from './useTaskNavigation';
+import { useEnhancedTaskPhotoUpload } from '@/components/form/hooks/usePhotoUpload';
 
 interface UseCreateTaskProps {
   onClose?: () => void;
 }
 
 /**
- * Hook for creating new tasks with standardized validation
- * Orchestrates form state, validation, photo upload, and API operations
+ * Refactored hook for creating new tasks
+ * 
+ * Now acts as a thin orchestrator that composes:
+ * - Form state management
+ * - Photo upload handling
+ * - Task submission
+ * - Navigation
+ * 
+ * Each concern is handled by a focused hook, making this easier to test and maintain.
  */
 export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
-  const navigate = useNavigate();
-  const { validateTaskForm } = useTaskFormValidation();
-  const { executeCreateTask } = useCreateTaskAPI();
-  const { uploadPhotoIfPresent } = useCreateTaskPhotoUpload();
-
+  const { navigateToDashboard } = useTaskNavigation();
+  const { submitTask } = useTaskSubmission();
   const taskForm = useTaskForm({
-    onClose: onClose || (() => navigate('/')),
+    onClose: onClose || navigateToDashboard,
+  });
+  
+  // Photo upload is now composed separately
+  const photoUpload = useEnhancedTaskPhotoUpload({
+    processingOptions: {
+      maxWidth: 1920,
+      maxHeight: 1080,
+      quality: 0.85,
+      format: 'auto',
+    },
+    autoProcess: true,
   });
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
 
-      const formData = {
-        title: taskForm.title,
-        description: taskForm.description,
-        dueDate: taskForm.dueDate,
-        url: taskForm.url,
-        pinned: taskForm.pinned,
-        assigneeId: taskForm.assigneeId,
-        priority: 'medium',
-      };
-
-      const validationResult = await validateTaskForm(formData);
+      // Validate form
+      const validationResult = taskForm.validateForm();
       if (!validationResult.isValid) {
+        taskForm.showValidationErrors(validationResult.errors);
         return;
       }
 
       taskForm.setLoading(true);
       
       try {
-        // Handle photo upload
-        const photoUrl = await uploadPhotoIfPresent(taskForm.photo);
+        // Handle photo upload if present
+        let photoUrl: string | null = null;
+        if (photoUpload.photo) {
+          const uploadResult = await photoUpload.uploadPhoto();
+          if (uploadResult) {
+            photoUrl = uploadResult;
+          }
+        }
 
-        // Create task
-        const result = await executeCreateTask({
-          ...formData,
+        // Submit task
+        const result = await submitTask({
+          title: taskForm.title,
+          description: taskForm.description,
+          dueDate: taskForm.dueDate,
+          url: taskForm.url,
+          pinned: taskForm.pinned,
+          assigneeId: taskForm.assigneeId,
           photoUrl,
+          priority: 'medium',
         });
 
         if (result.success) {
-          taskForm.resetForm();
+          // Reset form
+          taskForm.resetFormState();
+          photoUpload.resetPhoto();
           
-          // Navigate back to dashboard after successful task creation
-          const closeCallback = onClose || (() => navigate('/'));
+          // Navigate or call onClose
+          const closeCallback = onClose || navigateToDashboard;
           closeCallback();
-        } else {
-          // Error is already handled in executeCreateTask
         }
-      } catch (error: unknown) {
-        // Error handling is done in the individual hooks
       } finally {
         taskForm.setLoading(false);
       }
     },
-    [taskForm, validateTaskForm, executeCreateTask, uploadPhotoIfPresent, onClose, navigate]
+    [taskForm, photoUpload, submitTask, onClose, navigateToDashboard]
   );
 
+  // Combine loading states
+  const loading = taskForm.loading || photoUpload.photoLoading;
+
   return {
+    // Form state
     ...taskForm,
+    loading, // Combined loading state
+    
+    // Photo upload
+    photo: photoUpload.photo,
+    photoPreview: photoUpload.photoPreview,
+    handlePhotoChange: photoUpload.handlePhotoChange,
+    isPhotoModalOpen: photoUpload.isPhotoModalOpen,
+    openPhotoModal: photoUpload.openPhotoModal,
+    closePhotoModal: photoUpload.closePhotoModal,
+    handleModalPhotoSelect: photoUpload.handleModalPhotoSelect,
+    handlePhotoRemove: photoUpload.handlePhotoRemove,
+    
+    // Submit handler
     handleSubmit,
   };
 }

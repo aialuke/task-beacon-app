@@ -17,6 +17,8 @@ export interface UseAuthStateReturn {
   clearAuthState: () => void;
   setLoading: (loading: boolean) => void;
   setError: (error: ApiError | null) => void;
+  setUser: (user: User | null) => void;
+  setSession: (session: Session | null) => void;
 }
 
 export function useAuthState(): UseAuthStateReturn {
@@ -46,5 +48,7 @@ export function useAuthState(): UseAuthStateReturn {
     clearAuthState,
     setLoading,
     setError,
+    setUser,
+    setSession,
   };
 }

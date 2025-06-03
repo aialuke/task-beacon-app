@@ -46,6 +46,7 @@ export interface AuthContextType {
   error: Error | null;
   signOut: () => Promise<void>;
   refreshSession: () => Promise<void>;
+  signIn: (email: string, password: string) => Promise<void>;
 }
 
 // Auth state management

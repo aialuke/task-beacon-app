@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactNode } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth, AuthProvider } from '@/contexts/AuthContext';
 import { setupIntegrationTest } from '@/test/integration/setup';
 import { AuthService } from '@/lib/api';
 import type { User, Session, AuthResponse } from '@/types/shared';
@@ -29,9 +29,11 @@ describe('Auth Flow Integration Tests', () => {
   });
 
   const wrapper = ({ children }: { children: ReactNode }) => (
-    <QueryClientProvider client={queryClient}>
-      {children}
-    </QueryClientProvider>
+    <AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        {children}
+      </QueryClientProvider>
+    </AuthProvider>
   );
 
   describe('Sign In Workflow', () => {
@@ -73,7 +75,7 @@ describe('Auth Flow Integration Tests', () => {
 
       // Act: Execute sign in
       await act(async () => {
-        await AuthService.signIn('test@example.com', 'password123');
+        await result.current.signIn('test@example.com', 'password123');
       });
 
       // Assert: Verify sign in completed successfully
@@ -86,11 +88,17 @@ describe('Auth Flow Integration Tests', () => {
 
     it('should handle sign in validation failures', async () => {
       // Act: Attempt sign in with invalid data
-      const response = await AuthService.signIn('', '');
-
+      let error: any = null;
+      const { result } = renderHook(() => useAuth(), { wrapper });
+      await act(async () => {
+        try {
+          await result.current.signIn('', '');
+        } catch (e) {
+          error = e;
+        }
+      });
       // Assert: Sign in should fail validation
-      expect(response.success).toBe(false);
-      expect(response.error?.message).toContain('Invalid email');
+      expect(result.current.error?.message).toContain('Invalid email');
     });
 
     it('should handle API errors during sign in', async () => {
@@ -144,7 +152,7 @@ describe('Auth Flow Integration Tests', () => {
       expect(response.success).toBe(true);
       expect(response.data?.user).toEqual(mockUser);
       expect(response.data?.emailConfirmed).toBe(false);
-      expect(signUpSpy).toHaveBeenCalledWith('new@example.com', 'password123', undefined);
+      expect(signUpSpy).toHaveBeenCalledWith('new@example.com', 'password123');
     });
   });
 

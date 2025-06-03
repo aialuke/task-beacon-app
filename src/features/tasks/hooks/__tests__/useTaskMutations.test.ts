@@ -51,6 +51,11 @@ describe('Task Mutation Hooks', () => {
     // Create wrapper with QueryClient using createElement
     wrapper = ({ children }: { children: ReactNode }) =>
       createElement(QueryClientProvider, { client: queryClient }, children);
+
+    // At the top or in beforeEach, add:
+    // vi.spyOn(TaskService, 'updateStatus').mockResolvedValue({ success: true });
+    // vi.spyOn(TaskService, 'update').mockResolvedValue({ success: true });
+    // vi.spyOn(TaskService, 'delete').mockResolvedValue({ success: true });
   });
 
   describe('useTaskStatusMutations', () => {

@@ -7,6 +7,12 @@ export interface UseTaskFormStateOptions {
 
 /**
  * Basic task form state management
+ * 
+ * This is a focused hook that only handles form state.
+ * It doesn't mix validation, API calls, or side effects.
+ * 
+ * @param options - Configuration options for form state
+ * @returns Form state values and setters
  */
 export function useTaskFormState({
   initialUrl = '',

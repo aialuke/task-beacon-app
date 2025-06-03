@@ -11,6 +11,7 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useTaskDataContext } from '@/features/tasks/context/TaskDataContext';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // Example component that uses auth context
 function AuthTestComponent() {
