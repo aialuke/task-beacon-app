@@ -56,12 +56,18 @@ describe('Auth Flow Integration Tests', () => {
         user: mockUser,
       };
 
-      // Mock successful sign in
+      const mockAuthResponse: AuthResponse = {
+        user: mockUser,
+        session: mockSession,
+        emailConfirmed: true,
+      };
+
+      // Mock successful sign in with proper typing
       const signInSpy = vi.spyOn(AuthService, 'signIn').mockResolvedValue({
         success: true,
-        data: { user: mockUser, session: mockSession, emailConfirmed: true },
+        data: mockAuthResponse,
         error: null,
-      });
+      } as ApiResponse<AuthResponse>);
 
       const { result } = renderHook(() => useAuth(), { wrapper });
 
@@ -79,8 +85,6 @@ describe('Auth Flow Integration Tests', () => {
     });
 
     it('should handle sign in validation failures', async () => {
-      const { result } = renderHook(() => useAuth(), { wrapper });
-
       // Act: Attempt sign in with invalid data
       const response = await AuthService.signIn('', '');
 
@@ -90,14 +94,12 @@ describe('Auth Flow Integration Tests', () => {
     });
 
     it('should handle API errors during sign in', async () => {
-      // Mock API failure
+      // Mock API failure with proper typing
       const signInSpy = vi.spyOn(AuthService, 'signIn').mockResolvedValue({
         success: false,
         data: null,
         error: { message: 'Invalid credentials', code: 'AUTH_ERROR', name: 'AuthError' },
-      });
-
-      const { result } = renderHook(() => useAuth(), { wrapper });
+      } as ApiResponse<AuthResponse>);
 
       // Act: Attempt sign in with API failure
       const response = await AuthService.signIn('test@example.com', 'wrong-password');
@@ -122,14 +124,18 @@ describe('Auth Flow Integration Tests', () => {
         updated_at: '2024-01-01T00:00:00Z',
       };
 
-      // Mock successful sign up
+      const mockAuthResponse: AuthResponse = {
+        user: mockUser,
+        session: null,
+        emailConfirmed: false,
+      };
+
+      // Mock successful sign up with proper typing
       const signUpSpy = vi.spyOn(AuthService, 'signUp').mockResolvedValue({
         success: true,
-        data: { user: mockUser, session: null, emailConfirmed: false },
+        data: mockAuthResponse,
         error: null,
-      });
-
-      const { result } = renderHook(() => useAuth(), { wrapper });
+      } as ApiResponse<AuthResponse>);
 
       // Act: Execute sign up
       const response = await AuthService.signUp('new@example.com', 'password123');
@@ -137,6 +143,7 @@ describe('Auth Flow Integration Tests', () => {
       // Assert: Verify sign up completed successfully
       expect(response.success).toBe(true);
       expect(response.data?.user).toEqual(mockUser);
+      expect(response.data?.emailConfirmed).toBe(false);
       expect(signUpSpy).toHaveBeenCalledWith('new@example.com', 'password123', undefined);
     });
   });
@@ -163,12 +170,12 @@ describe('Auth Flow Integration Tests', () => {
         user: mockUser,
       };
 
-      // Mock successful session refresh
+      // Mock successful session refresh with proper typing
       const refreshSpy = vi.spyOn(AuthService, 'refreshSession').mockResolvedValue({
         success: true,
         data: { user: mockUser, session: mockSession },
         error: null,
-      });
+      } as ApiResponse<{ user: User; session: Session }>);
 
       const { result } = renderHook(() => useAuth(), { wrapper });
 

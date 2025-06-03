@@ -59,11 +59,6 @@ export type {
   DeepReadonly,
   Merge,
   Override,
-  Path,
-  PathValue,
-  SetPath,
-  Brand,
-  Branded,
   PropsWithClassName,
   PropsWithChildren,
 } from './utility';

@@ -1,7 +1,7 @@
 /**
  * Form Utility Types
  * 
- * Comprehensive types for form management, validation, and state handling.
+ * Core types for form management, validation, and state handling.
  * Used across all form components and form-related hooks.
  */
 
@@ -24,7 +24,7 @@ export interface UseFormStateOptions<T = Record<string, unknown>> {
   onSubmit?: (values: T) => Promise<void> | void;
 }
 
-// Field-level types
+// Field types
 export interface FieldState {
   value: unknown;
   error?: string;
@@ -123,125 +123,4 @@ export interface FieldArrayProps<T = unknown> {
   values: T[];
   helpers: FieldArrayHelpers<T>;
   error?: string;
-}
-
-// Multi-step form types
-export interface FormStep {
-  id: string;
-  title: string;
-  description?: string;
-  component: React.ComponentType<Record<string, unknown>>;
-  validationSchema?: ValidationSchema;
-  isOptional?: boolean;
-  canSkip?: boolean;
-}
-
-export interface MultiStepFormState {
-  currentStep: number;
-  completedSteps: number[];
-  formData: Record<string, unknown>;
-  isValid: boolean;
-  isLastStep: boolean;
-  isFirstStep: boolean;
-}
-
-export interface MultiStepFormHelpers {
-  nextStep: () => void;
-  prevStep: () => void;
-  goToStep: (step: number) => void;
-  setStepData: (step: number, data: Record<string, unknown>) => void;
-  validateCurrentStep: () => Promise<boolean>;
-  submitForm: () => Promise<void>;
-}
-
-// Conditional field types
-export interface ConditionalField {
-  condition: (values: Record<string, unknown>) => boolean;
-  fields: string[];
-  action: 'show' | 'hide' | 'enable' | 'disable' | 'require';
-}
-
-export interface DynamicFormConfig {
-  baseFields: string[];
-  conditionalFields: ConditionalField[];
-  dependencies: Record<string, string[]>;
-}
-
-// Form persistence types
-export interface FormPersistenceConfig {
-  key: string;
-  storage: 'localStorage' | 'sessionStorage';
-  include?: string[];
-  exclude?: string[];
-  debounceMs?: number;
-  encrypt?: boolean;
-}
-
-// Auto-save types
-export interface AutoSaveConfig {
-  enabled: boolean;
-  interval: number; // milliseconds
-  onSave: (values: Record<string, unknown>) => Promise<void>;
-  onError?: (error: Error) => void;
-  skipValidation?: boolean;
-}
-
-export interface AutoSaveState {
-  isSaving: boolean;
-  lastSaved?: Date;
-  error?: string;
-  saveCount: number;
-}
-
-// Form accessibility types
-export interface FormAccessibilityConfig {
-  announceErrors: boolean;
-  announceSuccess: boolean;
-  focusOnError: boolean;
-  keyboardNavigation: boolean;
-  ariaLabels: Record<string, string>;
-}
-
-// Form optimization types
-export interface FormOptimizationConfig {
-  debounceValidation: number;
-  throttleSubmission: number;
-  memoizeValidation: boolean;
-  lazyValidation: boolean;
-  asyncValidationTimeout: number;
-}
-
-// Form analytics types
-export interface FormAnalytics {
-  startTime: Date;
-  endTime?: Date;
-  fieldInteractions: Record<string, number>;
-  validationErrors: Record<string, number>;
-  abandonmentPoint?: string;
-  completionTime?: number;
-  submitAttempts: number;
-}
-
-// Error types specific to forms
-export interface FormError {
-  field?: string;
-  message: string;
-  type: 'validation' | 'submission' | 'network' | 'server';
-  code?: string;
-}
-
-export interface FormErrorBoundaryState {
-  hasError: boolean;
-  error?: Error;
-  errorInfo?: React.ErrorInfo;
-}
-
-// Form context types
-export interface FormContextValue<T = Record<string, unknown>> {
-  formState: FormState<T>;
-  formHelpers: FormHelpers<T>;
-  formConfig: FormConfig<T>;
-  submitForm: () => Promise<void>;
-  resetForm: () => void;
-  validateForm: () => Promise<ValidationResult>;
 } 
