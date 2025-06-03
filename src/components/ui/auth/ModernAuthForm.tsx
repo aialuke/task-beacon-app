@@ -213,14 +213,14 @@ const ModernAuthForm: React.FC = () => {
   }, [mode]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 via-white to-blue-50 p-4">
-      <Card className="w-full max-w-md border-0 bg-white/80 shadow-2xl backdrop-blur-sm">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background via-background to-muted/20 p-4">
+      <Card className="w-full max-w-md border shadow-2xl backdrop-blur-sm">
         <CardContent className="p-8">
           <div className="mb-8 text-center">
-            <h1 className="mb-2 text-3xl font-bold tracking-tight text-gray-900">
+            <h1 className="mb-2 text-3xl font-bold tracking-tight text-foreground">
               {mode === 'signin' ? 'Welcome back' : 'Create account'}
             </h1>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-muted-foreground">
               {mode === 'signin'
                 ? 'Sign in to your account to continue'
                 : 'Sign up to get started with our platform'}
@@ -268,7 +268,7 @@ const ModernAuthForm: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none"
                 disabled={loading}
                 tabIndex={-1}
               >
@@ -305,14 +305,14 @@ const ModernAuthForm: React.FC = () => {
           </form>
 
           <div className="mt-8 text-center">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-muted-foreground">
               {mode === 'signin'
                 ? "Don't have an account? "
                 : 'Already have an account? '}
               <button
                 type="button"
                 onClick={toggleMode}
-                className="font-medium text-blue-600 transition-colors hover:text-blue-500 focus:outline-none focus:underline"
+                className="font-medium text-primary transition-colors hover:text-primary/80 focus:outline-none focus:underline"
                 disabled={loading}
               >
                 {mode === 'signin' ? 'Sign up' : 'Sign in'}
