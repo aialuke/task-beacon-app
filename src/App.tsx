@@ -1,6 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
-import Index from './pages/Index';
 import AuthPage from './pages/AuthPage';
 import { AppProviders } from './components/providers/AppProviders';
 
@@ -13,8 +12,7 @@ const FollowUpTaskPage = lazy(() => import('./pages/FollowUpTaskPage'));
 const App = () => (
   <AppProviders>
     <Routes>
-      <Route path="/" element={<Index />} />
-      <Route path="/auth" element={<AuthPage />} />
+      <Route path="/" element={<AuthPage />} />
       <Route path="/create-task" element={<CreateTaskPage />} />
       <Route
         path="/follow-up-task/:parentTaskId"
