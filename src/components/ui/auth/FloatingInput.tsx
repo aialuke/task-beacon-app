@@ -33,8 +33,8 @@ const FloatingInput = forwardRef<HTMLInputElement, FloatingInputProps>(
     const [isFocused, setIsFocused] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
 
-    // Label is visible only when the input is not focused and has no value
-    const showLabel = !isFocused && value.length === 0;
+    // Label is visible only when the input has no value (regardless of focus state)
+    const showLabel = value.length === 0;
 
     useEffect(() => {
       if (error && inputRef.current) {
