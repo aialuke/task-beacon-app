@@ -67,6 +67,59 @@ export function useTaskMutations() {
 
     // Optimistic updates (for backward compatibility)
     updateTaskOptimistically: optimisticUpdates.updateTaskOptimistically,
+
+    // Convenience wrapper functions for TaskActions compatibility
+    toggleTaskComplete: async (task: Task) => {
+      try {
+        if (task.status === 'complete') {
+          statusMutations.markAsIncomplete(task.id);
+        } else {
+          statusMutations.markAsComplete(task.id);
+        }
+        return { 
+          success: true, 
+          message: task.status === 'complete' ? 'Task marked as incomplete' : 'Task completed successfully' 
+        };
+      } catch (error) {
+        return { 
+          success: false, 
+          error: true,
+          message: error instanceof Error ? error.message : 'Failed to update task status' 
+        };
+      }
+    },
+
+    toggleTaskPin: async (task: Task) => {
+      try {
+        pinMutations.togglePin(task);
+        return { 
+          success: true, 
+          message: task.pinned ? 'Task unpinned' : 'Task pinned' 
+        };
+      } catch (error) {
+        return { 
+          success: false, 
+          error: true,
+          message: error instanceof Error ? error.message : 'Failed to update task pin status' 
+        };
+      }
+    },
+
+    deleteTaskById: async (taskId: string) => {
+      try {
+        deleteMutations.deleteTask(taskId);
+        return { 
+          success: true, 
+          message: 'Task deleted successfully' 
+        };
+      } catch (error) {
+        return { 
+          success: false, 
+          error: true,
+          message: error instanceof Error ? error.message : 'Failed to delete task' 
+        };
+      }
+    },
   };
 }
 
