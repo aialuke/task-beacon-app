@@ -53,12 +53,12 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
         const result = await createFollowUpTask(parentTask, {
           title: taskForm.title,
           description: taskForm.description || null,
-          due_date: taskForm.dueDate
+          dueDate: taskForm.dueDate
             ? new Date(taskForm.dueDate).toISOString()
             : null,
-          photo_url: photoUrl,
-          url_link: taskForm.url || null,
-          assignee_id: assigneeId || null,
+          photoUrl: photoUrl,
+          urlLink: taskForm.url || null,
+          assigneeId: assigneeId || null,
           pinned: taskForm.pinned,
         });
 
@@ -72,6 +72,10 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
             );
           }
           taskForm.resetForm();
+          
+          // Navigate back to dashboard after successful task creation
+          const closeCallback = onClose || (() => navigate('/'));
+          closeCallback();
         } else {
           toast.error(result.message);
         }
@@ -85,7 +89,7 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
         taskForm.setLoading(false);
       }
     },
-    [taskForm, assigneeId, parentTask, validateTitle, createFollowUpTask]
+    [taskForm, assigneeId, parentTask, validateTitle, createFollowUpTask, onClose, navigate]
   );
 
   return {
