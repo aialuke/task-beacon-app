@@ -105,7 +105,7 @@ const ModernAuthForm: React.FC = () => {
       try {
         await AuthService.signOut();
       } catch (err) {
-        console.warn('Pre-auth cleanup sign out failed, continuing:', err);
+        // Pre-auth cleanup failed, continue with sign-in
       }
       if (mode === 'signin') {
         const response = await AuthService.signIn(email, password);
@@ -140,7 +140,6 @@ const ModernAuthForm: React.FC = () => {
         }
       }
     } catch (error: unknown) {
-      console.error('Auth error:', error);
       if (error instanceof Error) {
         // Handle specific auth errors based on message content
         const errorMessage = error.message;

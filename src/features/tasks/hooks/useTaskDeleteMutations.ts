@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { TaskService } from '@/lib/api/tasks/task.service';
 import { useTaskOptimisticUpdates } from './useTaskOptimisticUpdates';
+import { showSuccessMessage, showErrorMessage } from '@/lib/utils/notification';
 
 /**
  * Custom hook for task deletion mutations
@@ -30,18 +31,26 @@ export function useTaskDeleteMutations() {
       removeTaskOptimistically(taskId);
       
       // Return context for potential rollback
-      return { previousData };
+      return { previousData, taskId };
     },
-    onError: (err, taskId, context) => {
-      // Rollback on error
+    onError: (err: Error, taskId: string, context) => {
+      // Rollback on error using context data
       if (context?.previousData) {
         rollbackToData(context.previousData);
       }
       
+      // Show user-friendly error message
+      showErrorMessage('Failed to delete task. Please try again.');
+      
+      // Log error for debugging
       console.error(`Failed to delete task ${taskId}:`, err);
     },
-    onSuccess: () => {
-      // toast.success('Task deleted successfully');
+    onSuccess: (data, taskId: string) => {
+      // Show success message to user
+      showSuccessMessage('Task deleted successfully');
+      
+      // Log success for debugging/analytics
+      console.info(`Task deleted successfully:`, { taskId, result: data });
     },
     onSettled: () => {
       // Always refetch after error or success to ensure consistency
@@ -52,5 +61,6 @@ export function useTaskDeleteMutations() {
   return {
     deleteTask: (taskId: string) => deleteMutation.mutate(taskId),
     isLoading: deleteMutation.isPending,
+    mutation: deleteMutation,
   };
 } 

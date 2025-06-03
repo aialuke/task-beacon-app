@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { TaskService } from '@/lib/api/tasks/task.service';
 import { useTaskOptimisticUpdates } from './useTaskOptimisticUpdates';
+import { showSuccessMessage, showErrorMessage } from '@/lib/utils/notification';
 
 /**
  * Custom hook for task status mutations (complete/incomplete/pin/unpin)
@@ -33,7 +34,7 @@ export function useTaskStatusMutations() {
       
       throw new Error('Invalid status update operation');
     },
-    onMutate: async ({ taskId, updates }) => {
+    onMutate: async ({ taskId, updates, action }) => {
       // Cancel any outgoing refetches
       await queryClient.cancelQueries({ queryKey: ['tasks'] });
       
@@ -44,19 +45,26 @@ export function useTaskStatusMutations() {
       updateTaskOptimistically(taskId, updates);
       
       // Return context for potential rollback
-      return { previousData };
+      return { previousData, taskId, updates, action };
     },
-    onError: (err, { taskId, action }, context) => {
-      // Rollback on error
+    onError: (err: Error, { taskId, updates, action }, context) => {
+      // Rollback on error using context data
       if (context?.previousData) {
         rollbackToData(context.previousData);
       }
       
-      const actionText = action === 'complete' ? 'complete' : 
-                        action === 'incomplete' ? 'mark as incomplete' :
-                        action === 'pin' ? 'pin' : 'unpin';
+      // Show user-friendly error message
+      showErrorMessage(`Failed to ${action} task. Please try again.`);
       
-      console.error(`Failed to ${actionText} task ${taskId}:`, err);
+      // Log error for debugging
+      console.error(`Failed to ${action} task ${taskId}:`, err, { updates });
+    },
+    onSuccess: (data, { taskId, action }) => {
+      // Show success message to user
+      showSuccessMessage(`Task ${action} successfully`);
+      
+      // Log success for debugging/analytics
+      console.info(`Task ${action} successfully:`, { taskId, updatedTask: data });
     },
     onSettled: () => {
       // Always refetch after error or success to ensure consistency

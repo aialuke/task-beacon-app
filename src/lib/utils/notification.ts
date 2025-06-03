@@ -76,31 +76,65 @@ export function triggerHapticFeedback(pattern: number | number[] = 100): void {
   if ("vibrate" in navigator) {
     try {
       navigator.vibrate(pattern);
-    } catch (error) {
-      // Silently fail - haptic feedback is nice-to-have
-      console.debug("Haptic feedback not available:", error);
+    } catch (error: unknown) {
+      // Haptic feedback not available - fail silently
     }
   }
 }
 
 /**
- * Simple console-based notification system
- * These replace the previous toast notifications to avoid UI blocking issues
+ * Show success message to user
+ * Uses browser notifications if available, falls back to console
  */
 export function showSuccessMessage(message: string): void {
-  console.log(`✅ Success: ${message}`);
+  // Try to show browser notification first
+  showBrowserNotification('Success', message, {
+    icon: '/favicon.ico',
+    tag: 'success',
+    silent: true,
+  }).catch(() => {
+    // Fallback to console if browser notifications fail
+    console.info(`✅ ${message}`);
+  });
 }
 
+/**
+ * Show error message to user
+ * Uses browser notifications if available, falls back to console
+ */
 export function showErrorMessage(message: string): void {
-  console.error(`❌ Error: ${message}`);
+  // Try to show browser notification first
+  showBrowserNotification('Error', message, {
+    icon: '/favicon.ico',
+    tag: 'error',
+    requireInteraction: true,
+  }).catch(() => {
+    // Fallback to console if browser notifications fail
+    console.error(`❌ ${message}`);
+  });
 }
 
+/**
+ * Show warning message to user
+ * Uses browser notifications if available, falls back to console
+ */
 export function showWarningMessage(message: string): void {
-  console.warn(`⚠️ Warning: ${message}`);
+  // Try to show browser notification first
+  showBrowserNotification('Warning', message, {
+    icon: '/favicon.ico',
+    tag: 'warning',
+  }).catch(() => {
+    // Fallback to console if browser notifications fail
+    console.warn(`⚠️ ${message}`);
+  });
 }
 
+/**
+ * Show info message to user
+ * Always uses console for info messages
+ */
 export function showInfoMessage(message: string): void {
-  console.info(`ℹ️ Info: ${message}`);
+  console.info(`ℹ️ ${message}`);
 }
 
 /**

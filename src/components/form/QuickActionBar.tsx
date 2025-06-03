@@ -11,8 +11,8 @@ import {
 import { format } from 'date-fns';
 import { UrlInputModal } from './UrlInputModal';
 import { UserSearchModal } from './UserSearchModal';
-import { EnhancedPhotoUploadModal } from './EnhancedPhotoUploadModal';
-import type { ProcessingResult } from '@/lib/utils/image';
+import EnhancedPhotoUploadModal from './enhanced-photo-upload/EnhancedPhotoUploadModal';
+import type { ProcessingResult } from '@/lib/utils/image/types';
 
 interface QuickActionBarProps {
   // Date picker props
@@ -103,9 +103,7 @@ export function QuickActionBar({
   };
 
   const handleSubmit = (e: React.FormEvent) => {
-    console.log('🔘 QuickActionBar submit button clicked');
     e.preventDefault();
-    console.log('🔘 Calling onSubmit prop:', onSubmit);
     onSubmit?.(e);
   };
 

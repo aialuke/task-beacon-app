@@ -2,7 +2,7 @@ import { FileText, Sparkles } from 'lucide-react';
 import { FloatingInput } from '@/components/ui/form/FloatingInput';
 import { FloatingTextarea } from '@/components/ui/form/FloatingTextarea';
 import { QuickActionBar } from '@/components/form/QuickActionBar';
-import type { ProcessingResult } from '@/lib/utils/image';
+import type { ProcessingResult } from '@/lib/utils/image/types';
 
 interface BaseTaskFormProps {
   title: string;

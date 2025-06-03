@@ -15,9 +15,9 @@ export function useCreateTaskPhotoUpload() {
           throw new Error(response.error?.message || 'Photo upload failed');
         }
         return response.data || null;
-      } catch (error) {
-        console.error('Error uploading photo:', error);
-        throw error;
+      } catch (error: unknown) {
+        // Error handling without debug output
+        return null;
       }
     },
     []

@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { TaskService } from '@/lib/api/tasks/task.service';
+import { AuthService } from '@/lib/api/auth.service';
 
 // Clean imports from organized type system
 import type { Task } from '@/types';
@@ -30,6 +31,8 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
   });
 
   const [assigneeId, setAssigneeId] = useState<string>('');
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -40,59 +43,59 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
       taskForm.setLoading(true);
 
       try {
-        let photoUrl = null;
-        if (taskForm.photo) {
-          const uploadResponse = await TaskService.uploadPhoto(taskForm.photo);
-          if (!uploadResponse.success) {
-            throw new Error(uploadResponse.error?.message || 'Photo upload failed');
-          }
-          photoUrl = uploadResponse.data;
+        // Get current user
+        const userResponse = await AuthService.getCurrentUserId();
+        if (!userResponse.success || !userResponse.data) {
+          setError('Failed to get current user');
+          return { success: false, error: 'Failed to get current user' };
+        }
+        const currentUserId = userResponse.data;
+
+        // Create follow-up task data
+        const followUpTaskData = {
+          title: `${parentTask.title} (Follow-up)`,
+          description: parentTask.description || `Follow-up from task: ${parentTask.title}`,
+          assigneeId: currentUserId,
+          pinned: false,
+          url: parentTask.url_link || '',
+          dueDate: '',
+          photoUrl: undefined,
+        };
+
+        // Create the follow-up task
+        const createResult = await TaskService.createFollowUp(parentTask.id, followUpTaskData);
+
+        if (!createResult.success) {
+          return { success: false, error: createResult.error || 'Failed to create follow-up task' };
         }
 
-        // Direct call to TaskService instead of using useTaskMutations
-        const response = await TaskService.createFollowUp(parentTask.id, {
-          title: taskForm.title,
-          description: taskForm.description || null,
-          dueDate: taskForm.dueDate
-            ? new Date(taskForm.dueDate).toISOString()
-            : null,
-          photoUrl: photoUrl,
-          urlLink: taskForm.url || null,
-          assigneeId: assigneeId || null,
-          pinned: taskForm.pinned,
-        });
-
-        if (response.success) {
-          // Invalidate queries to refresh the task list
-          queryClient.invalidateQueries({ queryKey: ['tasks'] });
-          
-          triggerHapticFeedback();
-          console.log('Follow-up task created successfully');
-          if (assigneeId) {
-            showBrowserNotification(
-              'Task Assigned',
-              `Follow-up task "${taskForm.title}" has been assigned`
-            );
-          }
-          taskForm.resetForm();
-          
-          // Navigate back to dashboard after successful task creation
-          const closeCallback = onClose || (() => navigate('/'));
-          closeCallback();
-        } else {
-          console.error('Failed to create follow-up task:', response.error?.message);
+        // Invalidate queries to refresh the task list
+        queryClient.invalidateQueries({ queryKey: ['tasks'] });
+        
+        triggerHapticFeedback();
+        if (currentUserId) {
+          showBrowserNotification(
+            'Task Assigned',
+            `Follow-up task "${taskForm.title}" has been assigned`
+          );
         }
+        taskForm.resetForm();
+        
+        // Navigate back to dashboard after successful task creation
+        const closeCallback = onClose || (() => navigate('/'));
+        closeCallback();
+
+        return { success: true };
       } catch (error: unknown) {
-        if (error instanceof Error) {
-          console.error('Follow-up task creation error:', error.message);
-        } else {
-          console.error('An unexpected error occurred during follow-up task creation.');
-        }
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        setError(errorMessage);
+        return { success: false, error: errorMessage };
       } finally {
         taskForm.setLoading(false);
+        setIsLoading(false);
       }
     },
-    [taskForm, assigneeId, parentTask, validateTitle, onClose, navigate, queryClient]
+    [taskForm, parentTask, validateTitle, onClose, navigate, queryClient]
   );
 
   return {
@@ -100,5 +103,7 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
     assigneeId,
     setAssigneeId,
     handleSubmit,
+    error,
+    isLoading,
   };
 }

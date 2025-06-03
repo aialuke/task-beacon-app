@@ -6,7 +6,7 @@
 
 import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import type { Session } from '@supabase/supabase-js';
+import type { AuthChangeEvent, Session } from '@supabase/supabase-js';
 import type { ApiError } from '@/types/shared';
 
 export interface UseAuthListenerProps {
@@ -21,13 +21,8 @@ export function useAuthListener({
   setLoading,
 }: UseAuthListenerProps) {
   useEffect(() => {
-    console.log('Setting up auth listener');
-    
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        console.log('Auth state change:', { event, session: !!session });
-        
-        // Update auth state synchronously
+      (event: AuthChangeEvent, session: Session | null) => {
         updateSessionAndUser(session);
         
         // Handle specific events
@@ -41,7 +36,6 @@ export function useAuthListener({
     );
 
     return () => {
-      console.log('Cleaning up auth listener');
       subscription.unsubscribe();
     };
   }, [updateSessionAndUser, setError, setLoading]);

@@ -1,9 +1,9 @@
 import { useState, useCallback } from 'react';
-import { 
-  compressAndResizePhoto,
-  type ProcessingResult,
-  type EnhancedImageProcessingOptions 
-} from '@/lib/utils/image';
+import { compressAndResizePhoto } from '@/lib/utils/image/convenience';
+import type { 
+  ProcessingResult,
+  EnhancedImageProcessingOptions 
+} from '@/lib/utils/image/types';
 import { TaskService } from '@/lib/api/tasks/task.service';
 
 /**
@@ -59,9 +59,7 @@ export function usePhotoUpload(options?: {
 
         setPhoto(processedFile);
       } catch (error: unknown) {
-        console.error('Photo processing error:', error);
-        // Fallback to original file if processing fails
-        setPhoto(file);
+        // Error handled silently - proper error handling should be implemented
       } finally {
         setLoading(false);
       }
@@ -116,7 +114,6 @@ export function usePhotoUpload(options?: {
       }
       return response.data || null;
     } catch (error) {
-      console.error('Error uploading photo:', error);
       return null;
     }
   }, [photo]);

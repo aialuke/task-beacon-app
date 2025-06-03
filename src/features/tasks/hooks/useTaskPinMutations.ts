@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Task } from '@/types';
 import { TaskService } from '@/lib/api/tasks/task.service';
 import { useTaskOptimisticUpdates } from './useTaskOptimisticUpdates';
+import { showSuccessMessage, showErrorMessage } from '@/lib/utils/notification';
 
 /**
  * Custom hook for task pin mutations
@@ -31,30 +32,36 @@ export function useTaskPinMutations() {
       updateTaskOptimistically(taskId, { pinned });
       
       // Return context for potential rollback
-      return { previousData };
+      return { previousData, taskId, pinned };
     },
-    onError: (err, { taskId, pinned }, context) => {
-      // Rollback on error
+    onError: (err: Error, { taskId, pinned }, context) => {
+      // Rollback on error using context data
       if (context?.previousData) {
         rollbackToData(context.previousData);
       }
       
       const action = pinned ? 'pin' : 'unpin';
-      console.error(`Task ${action} failed for task ${taskId}:`, err);
       
-      // TODO: Consider adding user notification here
-      // toast.error(`Failed to ${action} task`);
+      // Show user-friendly error message
+      showErrorMessage(`Failed to ${action} task. Please try again.`);
+      
+      // Log error for debugging (could be enhanced with proper error tracking)
+      console.error(`Failed to ${action} task ${taskId}:`, err);
     },
-    onSuccess: (data, { pinned }) => {
+    onSuccess: (data, { taskId, pinned }) => {
       const action = pinned ? 'pinned' : 'unpinned';
-      console.log(`Task ${action} successfully. Updated task:`, data);
       
-      // TODO: Consider adding user notification here
-      // toast.success(`Task ${action}`);
+      // Show success message to user
+      showSuccessMessage(`Task ${action} successfully`);
+      
+      // Log success for debugging/analytics
+      console.info(`Task ${action} successfully:`, { taskId, updatedTask: data });
     },
-    onSettled: () => {
+    onSettled: async () => {
       // Always refetch after error or success to ensure consistency
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      return await queryClient.invalidateQueries({
+        queryKey: ['tasks'],
+      });
     },
   });
 
@@ -71,5 +78,8 @@ export function useTaskPinMutations() {
     
     // Loading state for UI feedback
     isLoading: pinMutation.isPending,
+    
+    // Expose mutation for advanced use cases
+    mutation: pinMutation,
   };
 } 

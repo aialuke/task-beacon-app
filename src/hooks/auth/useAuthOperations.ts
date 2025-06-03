@@ -5,15 +5,12 @@
  */
 
 import { useCallback } from 'react';
-import { AuthService } from '@/lib/api/auth.service';
-import type { Session } from '@supabase/supabase-js';
+import { supabase } from '@/integrations/supabase/client';
 import type { ApiError } from '@/types/shared';
 
 export interface UseAuthOperationsProps {
-  updateSessionAndUser: (session: Session | null) => void;
-  clearAuthState: () => void;
-  setLoading: (loading: boolean) => void;
   setError: (error: ApiError | null) => void;
+  setLoading: (loading: boolean) => void;
 }
 
 export interface UseAuthOperationsReturn {
@@ -21,57 +18,47 @@ export interface UseAuthOperationsReturn {
   refreshSession: () => Promise<void>;
 }
 
-export function useAuthOperations({
-  updateSessionAndUser,
-  clearAuthState,
-  setLoading,
-  setError,
-}: UseAuthOperationsProps): UseAuthOperationsReturn {
-  
+/**
+ * Hook for authentication operations (sign out, refresh session)
+ */
+export function useAuthOperations({ setError, setLoading }: UseAuthOperationsProps): UseAuthOperationsReturn {
   const signOut = useCallback(async () => {
-    console.log('Sign out initiated');
-    setLoading(true);
-    setError(null);
-    
     try {
-      const { error } = await AuthService.signOut();
+      setLoading(true);
+      setError(null);
+
+      const { error } = await supabase.auth.signOut();
+      
       if (error) {
-        console.error('Sign out error:', error);
-        setError(error);
-      } else {
-        clearAuthState();
-        console.log('Sign out successful');
+        setError({ name: 'SignOutError', message: error.message });
+        return;
       }
+
     } catch (err) {
-      console.error('Sign out failed:', err);
-      setError({ name: 'SignOutError', message: 'Failed to sign out' });
+      setError({ name: 'SignOutError', message: 'An unexpected error occurred during sign out' });
     } finally {
       setLoading(false);
     }
-  }, [clearAuthState, setLoading, setError]);
+  }, [setError, setLoading]);
 
   const refreshSession = useCallback(async () => {
-    console.log('Refresh session initiated');
-    setLoading(true);
-    
     try {
-      const { data, error } = await AuthService.refreshSession();
+      setLoading(true);
+      setError(null);
+
+      const { error } = await supabase.auth.refreshSession();
+      
       if (error) {
-        console.error('Refresh session error:', error);
-        setError(error);
-        clearAuthState();
-      } else {
-        updateSessionAndUser(data.session);
-        console.log('Session refreshed successfully');
+        setError({ name: 'RefreshError', message: error.message });
+        return;
       }
+
     } catch (err) {
-      console.error('Session refresh failed:', err);
       setError({ name: 'RefreshError', message: 'Failed to refresh session' });
-      clearAuthState();
     } finally {
       setLoading(false);
     }
-  }, [updateSessionAndUser, clearAuthState, setLoading, setError]);
+  }, [setError, setLoading]);
 
   return {
     signOut,

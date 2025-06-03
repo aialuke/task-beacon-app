@@ -1,4 +1,3 @@
-import React from 'react';
 import { animated } from '@react-spring/web';
 import { LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';

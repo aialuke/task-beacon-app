@@ -13,7 +13,6 @@ export function useFilteredTasks(tasks: Task[], filter: TaskFilter) {
   return useMemo(() => {
     // Defensive check: ensure tasks is an array
     if (!Array.isArray(tasks)) {
-      console.warn('useFilteredTasks received non-array tasks:', tasks);
       return [];
     }
 

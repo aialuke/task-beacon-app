@@ -1,4 +1,3 @@
-
 /**
  * Auth State Hook
  * 
@@ -27,14 +26,12 @@ export function useAuthState(): UseAuthStateReturn {
   const [error, setError] = useState<ApiError | null>(null);
 
   const updateSessionAndUser = useCallback((newSession: Session | null) => {
-    console.log('Auth state update:', { session: !!newSession, user: !!newSession?.user });
     setSession(newSession);
     setUser(newSession?.user ?? null);
     setError(null);
   }, []);
 
   const clearAuthState = useCallback(() => {
-    console.log('Clearing auth state');
     setSession(null);
     setUser(null);
     setError(null);

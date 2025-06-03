@@ -37,9 +37,8 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
         priority: 'medium',
       };
 
-      const validationResult = validateTaskForm(formData);
+      const validationResult = await validateTaskForm(formData);
       if (!validationResult.isValid) {
-        console.error('❌ Validation failed:', validationResult);
         return;
       }
 
@@ -62,11 +61,10 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
           const closeCallback = onClose || (() => navigate('/'));
           closeCallback();
         } else {
-          console.error('❌ Task creation failed:', result.error);
+          // Error is already handled in executeCreateTask
         }
       } catch (error: unknown) {
         // Error handling is done in the individual hooks
-        console.error('💥 Error in task creation flow:', error);
       } finally {
         taskForm.setLoading(false);
       }
