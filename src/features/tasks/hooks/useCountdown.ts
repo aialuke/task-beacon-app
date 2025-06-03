@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { getUpdateInterval } from '@/lib/utils/date';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { getUpdateInterval, formatTimeDisplay } from '@/lib/utils/date';
+import { calculateTimerOffset } from '@/lib/utils/animation';
 
 // Clean imports from organized type system
 import type { TaskStatus } from '@/types';
@@ -18,14 +19,26 @@ interface CountdownState {
   interval: number;
 }
 
+interface CountdownTimerResult {
+  timeDisplay: string;
+  dashOffset: number;
+  tooltipContent: string;
+  ariaLabel: string;
+}
+
 /**
  * Custom hook for countdown functionality with performance optimizations
  *
  * @param dueDate - ISO date string or null for task due date
  * @param status - Current task status
- * @returns Object containing countdown values and overdue state
+ * @param circumference - The circumference of the timer ring for calculating dash offset
+ * @returns Object containing formatted time display, dash offset, tooltip content, and aria label
  */
-export function useCountdown(dueDate: string | null, status: TaskStatus): CountdownResult {
+export function useCountdown(
+  dueDate: string | null, 
+  status: TaskStatus, 
+  circumference: number
+): CountdownTimerResult {
   const [state, setState] = useState<CountdownState>(() => {
     const initialTimeLeft = calculateTimeLeft(dueDate, status);
     const initialInterval = getUpdateInterval(initialTimeLeft.days, status);
@@ -92,7 +105,68 @@ export function useCountdown(dueDate: string | null, status: TaskStatus): Countd
     };
   }, [state.interval, updateCountdown]);
 
-  return state.timeLeft;
+  // Memoize the computed values that depend on the countdown state
+  const computedValues = useMemo(() => {
+    const { timeLeft } = state;
+    
+    // Format the time display
+    const timeDisplay = formatTimeDisplay(timeLeft.days, dueDate, status);
+    
+    // Calculate dash offset for the timer ring
+    const dashOffset = calculateTimerOffset(
+      circumference,
+      timeLeft.days || 0,
+      status,
+      dueDate
+    );
+    
+    // Generate tooltip content
+    let tooltipContent = '';
+    if (status === 'complete') {
+      tooltipContent = 'Task completed';
+    } else if (status === 'overdue') {
+      tooltipContent = 'Task is overdue';
+    } else if (!dueDate) {
+      tooltipContent = 'No due date set';
+    } else if (timeLeft.isOverdue) {
+      tooltipContent = 'Task is overdue';
+    } else if (timeLeft.days === 0) {
+      tooltipContent = 'Due today';
+    } else if (timeLeft.days === 1) {
+      tooltipContent = 'Due tomorrow';
+    } else if (timeLeft.days !== null && timeLeft.days > 1) {
+      tooltipContent = `Due in ${timeLeft.days} days`;
+    } else {
+      tooltipContent = 'Due date approaching';
+    }
+    
+    // Generate aria label for accessibility
+    let ariaLabel = '';
+    if (status === 'complete') {
+      ariaLabel = 'Task timer: Completed';
+    } else if (status === 'overdue') {
+      ariaLabel = 'Task timer: Overdue';
+    } else if (!dueDate) {
+      ariaLabel = 'Task timer: No due date';
+    } else if (timeLeft.days === 0) {
+      ariaLabel = 'Task timer: Due today';
+    } else if (timeLeft.days === 1) {
+      ariaLabel = 'Task timer: Due tomorrow';
+    } else if (timeLeft.days !== null && timeLeft.days > 1) {
+      ariaLabel = `Task timer: ${timeLeft.days} days remaining`;
+    } else {
+      ariaLabel = 'Task timer: Due soon';
+    }
+    
+    return {
+      timeDisplay,
+      dashOffset,
+      tooltipContent,
+      ariaLabel,
+    };
+  }, [state.timeLeft, dueDate, status, circumference]);
+
+  return computedValues;
 }
 
 /**

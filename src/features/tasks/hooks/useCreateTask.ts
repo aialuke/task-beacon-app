@@ -54,6 +54,10 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
 
         if (result.success) {
           taskForm.resetForm();
+          
+          // Navigate back to dashboard after successful task creation
+          const closeCallback = onClose || (() => navigate('/'));
+          closeCallback();
         }
       } catch (error: unknown) {
         // Error handling is done in the individual hooks
@@ -62,7 +66,7 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
         taskForm.setLoading(false);
       }
     },
-    [taskForm, validateTaskForm, executeCreateTask, uploadPhotoIfPresent]
+    [taskForm, validateTaskForm, executeCreateTask, uploadPhotoIfPresent, onClose, navigate]
   );
 
   return {
