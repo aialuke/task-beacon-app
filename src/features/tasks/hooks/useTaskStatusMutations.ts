@@ -75,5 +75,6 @@ export function useTaskStatusMutations() {
     togglePin: (taskId: string, pinned: boolean) =>
       statusMutation.mutate({ taskId, updates: { pinned }, action: pinned ? 'pin' : 'unpin' }),
     isLoading: statusMutation.isPending,
+    statusMutation,
   };
 } 

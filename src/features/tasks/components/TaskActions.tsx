@@ -69,42 +69,44 @@ function TaskActions({ task }: TaskActionsProps) {
       </Button>
       
       {/* Delete button inline with other buttons */}
-      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <DialogTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-white hover:bg-white/10 hover:text-white"
-            disabled={isDeleting}
-          >
-            <Trash2 size={16} />
-          </Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Delete Task</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to delete "{task.title}"? This action cannot be undone.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
+      <div className="ml-auto">
+        <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+          <DialogTrigger asChild>
             <Button
-              variant="outline"
-              onClick={() => setIsDeleteDialogOpen(false)}
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-white hover:bg-white/10 hover:text-white"
               disabled={isDeleting}
             >
-              Cancel
+              <Trash2 size={16} />
             </Button>
-            <Button
-              variant="destructive"
-              onClick={handleDelete}
-              disabled={isDeleting}
-            >
-              {isDeleting ? 'Deleting...' : 'Delete'}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Delete Task</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to delete "{task.title}"? This action cannot be undone.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setIsDeleteDialogOpen(false)}
+                disabled={isDeleting}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={handleDelete}
+                disabled={isDeleting}
+              >
+                {isDeleting ? 'Deleting...' : 'Delete'}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
     </div>
   );
 }

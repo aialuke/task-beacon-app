@@ -71,11 +71,18 @@ export function useTaskMutations() {
     // Convenience wrapper functions for TaskActions compatibility
     toggleTaskComplete: async (task: Task) => {
       try {
-        if (task.status === 'complete') {
-          statusMutations.markAsIncomplete(task.id);
-        } else {
-          statusMutations.markAsComplete(task.id);
-        }
+        // Use the mutation directly for proper async handling
+        const updates = task.status === 'complete' 
+          ? { status: 'pending' as const } 
+          : { status: 'complete' as const };
+        const action = task.status === 'complete' ? 'incomplete' : 'complete';
+        
+        await statusMutations.statusMutation.mutateAsync({ 
+          taskId: task.id, 
+          updates, 
+          action 
+        });
+        
         return { 
           success: true, 
           message: task.status === 'complete' ? 'Task marked as incomplete' : 'Task completed successfully' 
