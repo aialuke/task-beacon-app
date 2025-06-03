@@ -1,57 +1,73 @@
-import { useCallback, useMemo, useRef, useEffect } from 'react';
-import { performanceMonitor } from '@/lib/utils/performance';
+import { useRef, useEffect } from 'react';
 
 /**
- * Enhanced useMemo with performance tracking and optimization warnings
+ * Enhanced useMemo with optimization warnings
  */
 export function useOptimizedMemo<T>(
   factory: () => T,
-  deps: React.DependencyList | undefined,
+  deps: React.DependencyList,
   options?: {
     name?: string;
     warnOnSlowComputation?: boolean;
+    slowComputationThreshold?: number;
     trackDependencyChanges?: boolean;
   }
 ): T {
-  const { name = 'anonymous', warnOnSlowComputation = true, trackDependencyChanges = true } = options || {};
-  const prevDepsRef = useRef<React.DependencyList | undefined>();
+  const {
+    name = 'anonymous',
+    warnOnSlowComputation = true,
+    slowComputationThreshold = 10,
+    trackDependencyChanges = true,
+  } = options || {};
+
+  const memoizedValueRef = useRef<T>();
+  const previousDepsRef = useRef<React.DependencyList>();
   const computationCountRef = useRef(0);
+  const isInitialRenderRef = useRef(true);
 
-  // Track dependency changes for optimization insights
-  useEffect(() => {
-    if (trackDependencyChanges && prevDepsRef.current) {
-      const changedDeps = deps?.filter((dep, index) => dep !== prevDepsRef.current?.[index]) || [];
-      if (changedDeps.length > 0) {
-        console.debug(`📊 Memo dependencies changed in ${name}:`, { 
-          totalDeps: deps?.length,
-          changedCount: changedDeps.length,
-          computationCount: computationCountRef.current 
-        });
-      }
-    }
-    prevDepsRef.current = deps;
-  });
+  // Check if dependencies have changed
+  const depsChanged = !previousDepsRef.current || 
+    deps.some((dep, index) => !Object.is(dep, previousDepsRef.current![index]));
 
-  return useMemo(() => {
+  if (depsChanged || isInitialRenderRef.current) {
     const startTime = performance.now();
+    
+    memoizedValueRef.current = factory();
     computationCountRef.current++;
     
-    const result = factory();
-    const duration = performance.now() - startTime;
+    const computationTime = performance.now() - startTime;
     
-    if (warnOnSlowComputation && duration > 5) {
-      console.warn(`🐌 Slow memo computation in ${name}: ${duration.toFixed(2)}ms`, {
-        computationCount: computationCountRef.current,
-        duration
-      });
+    // Warn about slow computations in development
+    if (process.env.NODE_ENV === 'development' && warnOnSlowComputation && computationTime > slowComputationThreshold) {
+      console.warn(
+        `🐌 Slow computation detected in useOptimizedMemo (${name}): ${computationTime.toFixed(2)}ms`,
+        { computationTime, threshold: slowComputationThreshold, computationCount: computationCountRef.current }
+      );
     }
     
-    return result;
-  }, deps);
+    // Log dependency changes in development
+    if (process.env.NODE_ENV === 'development' && trackDependencyChanges && !isInitialRenderRef.current) {
+      const changedIndices = deps
+        .map((dep, index) => (!Object.is(dep, previousDepsRef.current![index]) ? index : -1))
+        .filter(index => index !== -1);
+        
+      if (changedIndices.length > 0) {
+        console.debug(
+          `📊 Dependencies changed in useOptimizedMemo (${name}):`,
+          { changedIndices, computationCount: computationCountRef.current }
+        );
+      }
+    }
+    
+    previousDepsRef.current = deps;
+    isInitialRenderRef.current = false;
+  }
+
+  return memoizedValueRef.current!;
 }
 
 /**
- * Enhanced useCallback with dependency change tracking
+ * Enhanced useCallback with performance tracking
  */
 export function useOptimizedCallback<T extends (...args: any[]) => any>(
   callback: T,
@@ -61,68 +77,60 @@ export function useOptimizedCallback<T extends (...args: any[]) => any>(
     trackDependencyChanges?: boolean;
   }
 ): T {
-  const { name = 'anonymous', trackDependencyChanges = true } = options || {};
-  const prevDepsRef = useRef<React.DependencyList>();
-  const recreationCountRef = useRef(0);
+  const {
+    name = 'anonymous',
+    trackDependencyChanges = true,
+  } = options || {};
 
-  // Track callback recreations
-  useEffect(() => {
-    if (trackDependencyChanges && prevDepsRef.current) {
-      const changedDeps = deps.filter((dep, index) => dep !== prevDepsRef.current?.[index]);
-      if (changedDeps.length > 0) {
-        recreationCountRef.current++;
-        console.debug(`🔄 Callback recreated in ${name}:`, { 
-          totalDeps: deps.length,
-          changedCount: changedDeps.length,
-          recreationCount: recreationCountRef.current 
-        });
-      }
-    }
-    prevDepsRef.current = deps;
-  });
-
-  return useCallback(callback, deps);
+  return useOptimizedMemo(
+    () => callback,
+    deps,
+    { name: `callback-${name}`, trackDependencyChanges, warnOnSlowComputation: false }
+  ) as T;
 }
 
 /**
- * Hook for tracking component render performance
+ * Hook for tracking render performance
  */
-export function useRenderTracking(componentName: string, props?: Record<string, any>) {
+export function useRenderTracking(componentName: string, options?: {
+  warnOnSlowRenders?: boolean;
+  slowRenderThreshold?: number;
+}) {
+  const {
+    warnOnSlowRenders = true,
+    slowRenderThreshold = 16, // 60fps threshold
+  } = options || {};
+
+  const renderStartTimeRef = useRef<number>();
   const renderCountRef = useRef(0);
   const lastRenderTimeRef = useRef(0);
-  const propsRef = useRef(props);
+
+  // Track render start
+  if (!renderStartTimeRef.current) {
+    renderStartTimeRef.current = performance.now();
+  }
 
   useEffect(() => {
-    const renderTime = performance.now();
+    if (!renderStartTimeRef.current) return;
+
+    const renderTime = performance.now() - renderStartTimeRef.current;
     renderCountRef.current++;
     
-    // Check if props changed
-    const propsChanged = props && propsRef.current && 
-      JSON.stringify(props) !== JSON.stringify(propsRef.current);
-    
-    // Track render performance
-    performanceMonitor.trackComponentRender(componentName, renderTime, !!propsChanged);
-    
-    // Warn about frequent renders
-    if (renderCountRef.current > 5 && renderTime - lastRenderTimeRef.current < 100) {
-      console.warn(`🔄 Frequent renders detected in ${componentName}:`, {
-        renderCount: renderCountRef.current,
-        timeSinceLastRender: renderTime - lastRenderTimeRef.current
-      });
+    // Warn about slow renders in development
+    if (process.env.NODE_ENV === 'development' && warnOnSlowRenders && renderTime > slowRenderThreshold) {
+      console.warn(
+        `🐌 Slow render detected in ${componentName}: ${renderTime.toFixed(2)}ms`,
+        { renderTime, threshold: slowRenderThreshold, renderCount: renderCountRef.current }
+      );
     }
-    
+
     lastRenderTimeRef.current = renderTime;
-    propsRef.current = props;
+    renderStartTimeRef.current = undefined;
   });
 
   return {
     renderCount: renderCountRef.current,
-    markRenderComplete: () => {
-      const renderTime = performance.now() - lastRenderTimeRef.current;
-      if (renderTime > 16) { // More than one frame
-        console.warn(`🐌 Slow render in ${componentName}: ${renderTime.toFixed(2)}ms`);
-      }
-    }
+    lastRenderTime: lastRenderTimeRef.current,
   };
 }
 
@@ -141,7 +149,7 @@ export function useSmartMemo<T>(
   const { maxCacheSize = 10, ttl, name = 'smart-memo' } = options || {};
   const cacheRef = useRef<Map<string, { value: T; timestamp: number }>>(new Map());
   
-  return useMemo(() => {
+  return useOptimizedMemo(() => {
     const key = JSON.stringify(deps);
     const cache = cacheRef.current;
     const now = Date.now();

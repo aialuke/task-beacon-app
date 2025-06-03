@@ -1,113 +1,58 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { TaskService } from '@/lib/api/tasks.service';
-import { handleApiError } from '@/lib/utils/error';
-import { performanceMonitor } from '@/lib/utils/performance';
-import { useOptimizedCallback } from '@/hooks/useOptimizedMemo';
+import { toast } from '@/lib/toast';
 import { useTaskOptimisticUpdates } from './useTaskOptimisticUpdates';
 
-interface TaskDeleteMutationResult {
-  success: boolean;
-  error: string | null;
-  message: string;
-  taskId: string;
-}
-
 /**
- * Focused hook for task deletion
+ * Custom hook for task deletion mutations
  * 
- * Handles deleting tasks with optimistic updates,
- * error handling, and performance monitoring.
- * 
- * Separated from the monolithic useTaskMutations for better maintainability.
+ * Provides optimistic updates and proper error handling for task deletion.
  */
 export function useTaskDeleteMutations() {
+  const queryClient = useQueryClient();
   const {
     removeTaskOptimistically,
     getPreviousData,
     rollbackToData,
   } = useTaskOptimisticUpdates();
 
-  /**
-   * Delete a task by ID
-   */
-  const deleteTask = useOptimizedCallback(
-    async (taskId: string): Promise<TaskDeleteMutationResult> => {
-      const operationId = `delete-task-${taskId}`;
-      performanceMonitor.start(operationId, { taskId });
+  const deleteMutation = useMutation({
+    mutationFn: async (taskId: string) => {
+      return await TaskService.delete(taskId);
+    },
+    onMutate: async (taskId: string) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['tasks'] });
       
+      // Snapshot the previous value
       const previousData = getPreviousData();
-
-      try {
-        // Optimistically remove from cache
-        removeTaskOptimistically(taskId, previousData);
-
-        // API call
-        const response = await TaskService.delete(taskId);
-        if (!response.success) {
-          throw new Error(response.error?.message || 'Failed to delete task');
-        }
-
-        performanceMonitor.end(operationId);
-
-        return {
-          success: true,
-          error: null,
-          message: 'Task deleted successfully',
-          taskId,
-        };
-      } catch (error: unknown) {
-        // Rollback optimistic removal
-        rollbackToData(previousData);
-
-        // Handle error without showing toast (UI layer responsibility)
-        handleApiError(null, 'Failed to delete task', {
-          showToast: false,
-          logToConsole: true,
-          rethrow: false,
-        });
-
-        const errorMessage = error instanceof Error ? error.message : 'Failed to delete task';
-        performanceMonitor.end(operationId);
-
-        return {
-          success: false,
-          error: errorMessage,
-          message: `Failed to delete task: ${errorMessage}`,
-          taskId,
-        };
+      
+      // Optimistically remove the task
+      removeTaskOptimistically(taskId);
+      
+      // Return context for potential rollback
+      return { previousData };
+    },
+    onError: (err, taskId, context) => {
+      // Rollback on error
+      if (context?.previousData) {
+        rollbackToData(context.previousData);
       }
+      
+      toast.error('Failed to delete task');
+      console.error('Task deletion failed:', err);
     },
-    [removeTaskOptimistically, getPreviousData, rollbackToData],
-    { name: 'deleteTask' }
-  );
-
-  /**
-   * Delete multiple tasks by IDs
-   */
-  const deleteMultipleTasks = useOptimizedCallback(
-    async (taskIds: string[]): Promise<TaskDeleteMutationResult[]> => {
-      const results = await Promise.allSettled(
-        taskIds.map(taskId => deleteTask(taskId))
-      );
-
-      return results.map((result, index) => {
-        if (result.status === 'fulfilled') {
-          return result.value;
-        } else {
-          return {
-            success: false,
-            error: result.reason?.message || 'Failed to delete task',
-            message: `Failed to delete task: ${result.reason?.message || 'Unknown error'}`,
-            taskId: taskIds[index],
-          };
-        }
-      });
+    onSuccess: () => {
+      toast.success('Task deleted successfully');
     },
-    [deleteTask],
-    { name: 'deleteMultipleTasks' }
-  );
+    onSettled: () => {
+      // Always refetch after error or success to ensure consistency
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+    },
+  });
 
   return {
-    deleteTask,
-    deleteMultipleTasks,
+    deleteTask: (taskId: string) => deleteMutation.mutate(taskId),
+    isLoading: deleteMutation.isPending,
   };
 } 

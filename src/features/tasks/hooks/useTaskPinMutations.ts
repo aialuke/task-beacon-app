@@ -1,135 +1,66 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Task } from '@/types';
 import { TaskService } from '@/lib/api/tasks.service';
-import { handleApiError } from '@/lib/utils/error';
-import { performanceMonitor } from '@/lib/utils/performance';
-import { useOptimizedCallback } from '@/hooks/useOptimizedMemo';
+import { toast } from '@/lib/toast';
 import { useTaskOptimisticUpdates } from './useTaskOptimisticUpdates';
 
-interface TaskPinMutationResult {
-  success: boolean;
-  error: string | null;
-  message: string;
-  pinned: boolean;
-  task: Task;
-}
-
 /**
- * Focused hook for task pin mutations
+ * Custom hook for task pin mutations
  * 
- * Handles pinning and unpinning tasks with optimistic updates,
- * error handling, and performance monitoring.
- * 
- * Separated from the monolithic useTaskMutations for better maintainability.
+ * Provides optimistic updates and proper error handling for pinning/unpinning tasks.
  */
 export function useTaskPinMutations() {
+  const queryClient = useQueryClient();
   const {
     updateTaskOptimistically,
     getPreviousData,
+    rollbackToData,
   } = useTaskOptimisticUpdates();
 
-  /**
-   * Toggle task pin status (pinned ↔ unpinned)
-   */
-  const toggleTaskPin = useOptimizedCallback(
-    async (task: Task): Promise<TaskPinMutationResult> => {
-      const operationId = `toggle-pin-${task.id}`;
-      performanceMonitor.start(operationId, { 
-        taskId: task.id, 
-        currentPinned: task.pinned 
-      });
+  const pinMutation = useMutation({
+    mutationFn: async ({ taskId, pinned }: { taskId: string; pinned: boolean }) => {
+      return await TaskService.update(taskId, { pinned });
+    },
+    onMutate: async ({ taskId, pinned }) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['tasks'] });
       
-      const newPinnedState = !task.pinned;
+      // Snapshot the previous value
       const previousData = getPreviousData();
-
-      try {
-        // Optimistic update
-        updateTaskOptimistically(task.id, { pinned: newPinnedState });
-
-        // API call
-        const response = await TaskService.togglePin(task.id, newPinnedState);
-        if (!response.success) {
-          throw new Error(response.error?.message || 'Failed to toggle pin status');
-        }
-
-        performanceMonitor.end(operationId);
-
-        return {
-          success: true,
-          error: null,
-          message: `Task ${newPinnedState ? 'pinned' : 'unpinned'}`,
-          pinned: newPinnedState,
-          task: { ...task, pinned: newPinnedState },
-        };
-      } catch (error: unknown) {
-        // Rollback optimistic update
-        updateTaskOptimistically(task.id, { pinned: task.pinned }, previousData);
-
-        // Handle error without showing toast (UI layer responsibility)
-        handleApiError(null, `Failed to ${newPinnedState ? 'pin' : 'unpin'} task`, {
-          showToast: false,
-          logToConsole: true,
-          rethrow: false,
-        });
-
-        const errorMessage = error instanceof Error ? error.message : `Failed to ${newPinnedState ? 'pin' : 'unpin'} task`;
-        performanceMonitor.end(operationId);
-
-        return {
-          success: false,
-          error: errorMessage,
-          message: `Failed to ${newPinnedState ? 'pin' : 'unpin'} task: ${errorMessage}`,
-          pinned: task.pinned,
-          task,
-        };
-      }
+      
+      // Optimistically update the task
+      updateTaskOptimistically(taskId, { pinned });
+      
+      // Return context for potential rollback
+      return { previousData };
     },
-    [updateTaskOptimistically, getPreviousData],
-    { name: 'toggleTaskPin' }
-  );
-
-  /**
-   * Pin a task
-   */
-  const pinTask = useOptimizedCallback(
-    async (task: Task): Promise<TaskPinMutationResult> => {
-      if (task.pinned) {
-        return {
-          success: true,
-          error: null,
-          message: 'Task is already pinned',
-          pinned: true,
-          task,
-        };
+    onError: (err, { taskId, pinned }, context) => {
+      // Rollback on error
+      if (context?.previousData) {
+        rollbackToData(context.previousData);
       }
-      return toggleTaskPin(task);
+      
+      const action = pinned ? 'pin' : 'unpin';
+      toast.error(`Failed to ${action} task`);
+      console.error(`Task ${action} failed:`, err);
     },
-    [toggleTaskPin],
-    { name: 'pinTask' }
-  );
-
-  /**
-   * Unpin a task
-   */
-  const unpinTask = useOptimizedCallback(
-    async (task: Task): Promise<TaskPinMutationResult> => {
-      if (!task.pinned) {
-        return {
-          success: true,
-          error: null,
-          message: 'Task is not pinned',
-          pinned: false,
-          task,
-        };
-      }
-      return toggleTaskPin(task);
+    onSuccess: (data, { pinned }) => {
+      const action = pinned ? 'pinned' : 'unpinned';
+      toast.success(`Task ${action} successfully`);
     },
-    [toggleTaskPin],
-    { name: 'unpinTask' }
-  );
+    onSettled: () => {
+      // Always refetch after error or success to ensure consistency
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+    },
+  });
 
   return {
-    toggleTaskPin,
-    pinTask,
-    unpinTask,
+    togglePin: (task: Task) => 
+      pinMutation.mutate({ taskId: task.id, pinned: !task.pinned }),
+    pinTask: (taskId: string) =>
+      pinMutation.mutate({ taskId, pinned: true }),
+    unpinTask: (taskId: string) =>
+      pinMutation.mutate({ taskId, pinned: false }),
+    isLoading: pinMutation.isPending,
   };
 } 

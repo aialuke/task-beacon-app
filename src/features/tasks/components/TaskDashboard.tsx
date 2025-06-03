@@ -1,7 +1,6 @@
 import TaskList from './TaskList';
 import TaskDashboardHeader from './TaskDashboardHeader';
 import { TaskProviders } from '@/features/tasks/providers/TaskProviders';
-import PerformanceMonitor from '@/components/monitoring/PerformanceMonitor';
 import { TaskErrorBoundary } from './TaskErrorBoundary';
 
 export default function TaskDashboard() {
@@ -18,9 +17,6 @@ export default function TaskDashboard() {
             </main>
           </div>
         </div>
-
-        {/* Performance monitoring - only shows in development */}
-        <PerformanceMonitor />
       </TaskErrorBoundary>
     </TaskProviders>
   );

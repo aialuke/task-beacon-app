@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Task } from '@/types';
-import { performanceMonitor } from '@/lib/utils/performance';
 import { useOptimizedCallback } from '@/hooks/useOptimizedMemo';
 
 // Define proper types for React Query data structures
@@ -51,7 +50,7 @@ function isInfiniteResponse(data: unknown): data is InfiniteTasksResponse {
  * Focused hook for optimistic task updates
  * 
  * Provides utilities for optimistically updating task data in React Query cache
- * with proper performance monitoring and rollback capabilities.
+ * with rollback capabilities.
  * 
  * Used by other task mutation hooks to avoid code duplication.
  */
@@ -72,14 +71,12 @@ export function useTaskOptimisticUpdates() {
    */
   const updateTaskOptimistically = useOptimizedCallback(
     (taskId: string, updates: Partial<Task>, fallbackData?: unknown) => {
-      performanceMonitor.start('task-optimistic-update', { taskId, updates });
-      
       queryClient.setQueriesData({ queryKey: ['tasks'] }, (oldData: unknown) => {
         if (!oldData) return fallbackData || oldData;
 
         // Handle infinite query structure (pages)
         if (isInfiniteResponse(oldData)) {
-          const updatedData = {
+          return {
             ...oldData,
             pages: oldData.pages.map((page) => ({
               ...page,
@@ -88,13 +85,11 @@ export function useTaskOptimisticUpdates() {
               ),
             })),
           };
-          performanceMonitor.end('task-optimistic-update');
-          return updatedData;
         }
 
         // Handle regular paginated response
         if (isPaginatedResponse(oldData)) {
-          const updatedData = {
+          return {
             ...oldData,
             data: {
               ...oldData.data,
@@ -103,11 +98,8 @@ export function useTaskOptimisticUpdates() {
               ),
             },
           };
-          performanceMonitor.end('task-optimistic-update');
-          return updatedData;
         }
 
-        performanceMonitor.end('task-optimistic-update');
         // Return unchanged if structure is unrecognized
         return oldData;
       });
@@ -121,13 +113,11 @@ export function useTaskOptimisticUpdates() {
    */
   const removeTaskOptimistically = useOptimizedCallback(
     (taskId: string, fallbackData?: unknown) => {
-      performanceMonitor.start('task-optimistic-remove', { taskId });
-      
       queryClient.setQueriesData({ queryKey: ['tasks'] }, (oldData: unknown) => {
         if (!oldData) return fallbackData || oldData;
 
         if (isInfiniteResponse(oldData)) {
-          const updatedData = {
+          return {
             ...oldData,
             pages: oldData.pages.map((page) => ({
               ...page,
@@ -135,12 +125,10 @@ export function useTaskOptimisticUpdates() {
               totalCount: Math.max(0, page.totalCount - 1),
             })),
           };
-          performanceMonitor.end('task-optimistic-remove');
-          return updatedData;
         }
 
         if (isPaginatedResponse(oldData)) {
-          const updatedData = {
+          return {
             ...oldData,
             data: {
               ...oldData.data,
@@ -148,11 +136,8 @@ export function useTaskOptimisticUpdates() {
               totalCount: Math.max(0, oldData.data.totalCount - 1),
             },
           };
-          performanceMonitor.end('task-optimistic-remove');
-          return updatedData;
         }
 
-        performanceMonitor.end('task-optimistic-remove');
         return oldData;
       });
     },

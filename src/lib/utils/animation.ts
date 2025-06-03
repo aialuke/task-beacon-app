@@ -1,12 +1,11 @@
 /**
  * Animation utilities
  * 
- * Provides animation helpers, performance monitoring, and motion preference detection.
+ * Provides animation helpers and motion preference detection.
  * Migrated from src/lib/animationUtils.ts - use this path going forward.
  */
 
 import { TaskStatus } from '@/types';
-import { performanceLogger } from '../logger';
 
 /**
  * Calculate the offset for the timer ring based on days left and status
@@ -146,29 +145,6 @@ export function getSpringConfig(
   return prefersReducedMotion() ? reducedConfig : normalConfig;
 }
 
-/**
- * Animation performance monitoring
- */
-export function measureAnimationPerformance(animationName: string): () => void {
-  const start = performance.now();
-  
-  performanceLogger.debug(`Animation started: ${animationName}`, { 
-    startTime: start,
-    animationName 
-  });
-  
-  return () => {
-    const end = performance.now();
-    const duration = end - start;
-    
-    performanceLogger.debug(`Animation completed: ${animationName}`, {
-      duration: `${duration.toFixed(2)}ms`,
-      animationName,
-      performance: duration > 16.67 ? 'poor' : 'good' // 60fps threshold
-    });
-  };
-}
-
 // Legacy export for backward compatibility
 export const animationUtils = {
   calculateTimerOffset,
@@ -178,5 +154,4 @@ export const animationUtils = {
   pulseElement,
   prefersReducedMotion,
   getSpringConfig,
-  measureAnimationPerformance,
 }; 

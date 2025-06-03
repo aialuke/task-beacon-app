@@ -189,13 +189,6 @@ class Logger {
   }
 
   /**
-   * Log performance metrics
-   */
-  performance(message: string, metrics: Record<string, number | string>): void {
-    this.debug(`Performance: ${message}`, metrics);
-  }
-
-  /**
    * Log API operations
    */
   api(operation: string, context?: Record<string, unknown>): void {
@@ -261,7 +254,6 @@ export const logger = new Logger();
 // Export specialized loggers for different modules
 export const authLogger = logger.createChild('Auth');
 export const apiLogger = logger.createChild('API');
-export const performanceLogger = logger.createChild('Performance');
 export const realtimeLogger = logger.createChild('Realtime');
 export const componentLogger = logger.createChild('Component');
 
@@ -318,7 +310,7 @@ export async function logAsyncOperation<T>(
   try {
     const result = await operation();
     const duration = performance.now() - startTime;
-    logger.performance(`Async operation completed: ${operationName}`, {
+    logger.debug(`Async operation completed: ${operationName}`, {
       duration: `${duration.toFixed(2)}ms`,
       ...context,
     });

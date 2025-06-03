@@ -1,136 +1,79 @@
-import { Task } from '@/types';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { TaskService } from '@/lib/api/tasks.service';
-import { handleApiError } from '@/lib/utils/error';
-import { performanceMonitor } from '@/lib/utils/performance';
-import { useOptimizedCallback } from '@/hooks/useOptimizedMemo';
+import { toast } from '@/lib/toast';
 import { useTaskOptimisticUpdates } from './useTaskOptimisticUpdates';
 
-interface TaskStatusMutationResult {
-  success: boolean;
-  error: string | null;
-  message: string;
-  status: Task['status'];
-  task: Task;
-}
-
 /**
- * Focused hook for task status mutations
+ * Custom hook for task status mutations (complete/incomplete/pin/unpin)
  * 
- * Handles toggling task completion status with optimistic updates,
- * error handling, and performance monitoring.
- * 
- * Separated from the monolithic useTaskMutations for better maintainability.
+ * Provides optimistic updates and proper error handling for task status changes.
  */
 export function useTaskStatusMutations() {
+  const queryClient = useQueryClient();
   const {
     updateTaskOptimistically,
     getPreviousData,
     rollbackToData,
   } = useTaskOptimisticUpdates();
 
-  /**
-   * Toggle task completion status (complete ↔ pending)
-   */
-  const toggleTaskComplete = useOptimizedCallback(
-    async (task: Task): Promise<TaskStatusMutationResult> => {
-      const operationId = `toggle-complete-${task.id}`;
-      performanceMonitor.start(operationId, { 
-        taskId: task.id, 
-        currentStatus: task.status 
-      });
+  const statusMutation = useMutation({
+    mutationFn: async ({ 
+      taskId, 
+      updates, 
+      action 
+    }: { 
+      taskId: string; 
+      updates: { status?: 'complete' | 'pending' | 'overdue'; pinned?: boolean }; 
+      action: string;
+    }) => {
+      // Call the appropriate service method
+      if (updates.status) {
+        return await TaskService.updateStatus(taskId, updates.status);
+      } else if (typeof updates.pinned === 'boolean') {
+        return await TaskService.update(taskId, { pinned: updates.pinned });
+      }
       
-      const newStatus = task.status === 'complete' ? 'pending' : 'complete';
+      throw new Error('Invalid status update operation');
+    },
+    onMutate: async ({ taskId, updates }) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['tasks'] });
+      
+      // Snapshot the previous value
       const previousData = getPreviousData();
-
-      try {
-        // Optimistic update
-        updateTaskOptimistically(task.id, { status: newStatus });
-
-        // API call
-        const response = await TaskService.updateStatus(task.id, newStatus);
-        if (!response.success) {
-          throw new Error(response.error?.message || 'Failed to update task status');
-        }
-
-        performanceMonitor.end(operationId);
-        
-        return {
-          success: true,
-          error: null,
-          message: `Task marked ${newStatus}`,
-          status: newStatus,
-          task: { ...task, status: newStatus },
-        };
-      } catch (error: unknown) {
-        // Rollback optimistic update
-        updateTaskOptimistically(task.id, { status: task.status }, previousData);
-
-        // Handle error without showing toast (UI layer responsibility)
-        handleApiError(null, 'Failed to update task', {
-          showToast: false,
-          logToConsole: true,
-          rethrow: false,
-        });
-
-        const errorMessage = error instanceof Error ? error.message : 'Failed to update task';
-        performanceMonitor.end(operationId);
-
-        return {
-          success: false,
-          error: errorMessage,
-          message: `Failed to update task: ${errorMessage}`,
-          status: task.status,
-          task,
-        };
-      }
+      
+      // Optimistically update the cache
+      updateTaskOptimistically(taskId, updates);
+      
+      // Return context for potential rollback
+      return { previousData };
     },
-    [updateTaskOptimistically, getPreviousData],
-    { name: 'toggleTaskComplete' }
-  );
-
-  /**
-   * Mark task as complete
-   */
-  const markTaskComplete = useOptimizedCallback(
-    async (task: Task): Promise<TaskStatusMutationResult> => {
-      if (task.status === 'complete') {
-        return {
-          success: true,
-          error: null,
-          message: 'Task is already complete',
-          status: 'complete',
-          task,
-        };
+    onError: (err, { taskId, action }, context) => {
+      // Rollback on error
+      if (context?.previousData) {
+        rollbackToData(context.previousData);
       }
-      return toggleTaskComplete(task);
+      
+      const actionText = action === 'complete' ? 'complete' : 
+                        action === 'incomplete' ? 'mark as incomplete' :
+                        action === 'pin' ? 'pin' : 'unpin';
+      
+      toast.error(`Failed to ${actionText} task`);
+      console.error(`Task ${action} failed:`, err);
     },
-    [toggleTaskComplete],
-    { name: 'markTaskComplete' }
-  );
-
-  /**
-   * Mark task as pending
-   */
-  const markTaskPending = useOptimizedCallback(
-    async (task: Task): Promise<TaskStatusMutationResult> => {
-      if (task.status === 'pending') {
-        return {
-          success: true,
-          error: null,
-          message: 'Task is already pending',
-          status: 'pending',
-          task,
-        };
-      }
-      return toggleTaskComplete(task);
+    onSettled: () => {
+      // Always refetch after error or success to ensure consistency
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
     },
-    [toggleTaskComplete],
-    { name: 'markTaskPending' }
-  );
+  });
 
   return {
-    toggleTaskComplete,
-    markTaskComplete,
-    markTaskPending,
+    markAsComplete: (taskId: string) =>
+      statusMutation.mutate({ taskId, updates: { status: 'complete' }, action: 'complete' }),
+    markAsIncomplete: (taskId: string) =>
+      statusMutation.mutate({ taskId, updates: { status: 'pending' }, action: 'incomplete' }),
+    togglePin: (taskId: string, pinned: boolean) =>
+      statusMutation.mutate({ taskId, updates: { pinned }, action: pinned ? 'pin' : 'unpin' }),
+    isLoading: statusMutation.isPending,
   };
 } 

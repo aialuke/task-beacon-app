@@ -18,7 +18,6 @@ interface AppConfig {
     retryAttempts: number;
   };
   features: {
-    enablePerformanceMonitoring: boolean;
     enableRealtimeUpdates: boolean;
     enableHapticFeedback: boolean;
     enableBrowserNotifications: boolean;
@@ -65,7 +64,6 @@ export const appConfig: AppConfig = {
     retryAttempts: 3,
   },
   features: {
-    enablePerformanceMonitoring: getEnvironment() === 'development',
     enableRealtimeUpdates: true,
     enableHapticFeedback: true,
     enableBrowserNotifications: true,
