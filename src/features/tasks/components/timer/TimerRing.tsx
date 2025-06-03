@@ -71,7 +71,7 @@ const TimerRing = ({
 }: TimerRingProps) => {
   // Memoize derived values that don't need to be recalculated on every render
   const staticProps = useMemo(() => {
-    let gradientId;
+    let gradientId: string;
     
     // Use green for tasks with 5+ days remaining
     if (status === 'pending' && daysRemaining !== null && daysRemaining >= 5) {

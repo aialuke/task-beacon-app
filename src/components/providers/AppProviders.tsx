@@ -1,7 +1,6 @@
 import React from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
-import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { LoadingSpinner } from '@/components/ui/layout';
 import { AuthProvider } from '@/contexts/AuthContext';
@@ -85,7 +84,6 @@ export function AppProviders({ children }: AppProvidersProps) {
               <BrowserRouter>
                 <React.Suspense fallback={<LoadingSpinner />}>
                   {children}
-                  <Toaster />
                 </React.Suspense>
               </BrowserRouter>
             </TooltipProvider>

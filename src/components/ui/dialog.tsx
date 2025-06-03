@@ -41,6 +41,19 @@ const DialogContent = React.forwardRef<
   const [isStandalone, setIsStandalone] = React.useState<boolean>(false);
   const [safeAreaTop, setSafeAreaTop] = React.useState<number>(0);
 
+  // Combine forwarded ref with local modalRef
+  const combinedRef = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      modalRef.current = node;
+      if (typeof ref === 'function') {
+        ref(node);
+      } else if (ref) {
+        ref.current = node;
+      }
+    },
+    [ref]
+  );
+
   // Detect PWA standalone mode and safe area inset top
   React.useEffect(() => {
     const standalone =
@@ -131,7 +144,7 @@ const DialogContent = React.forwardRef<
     <DialogPortal>
       <DialogOverlay />
       <DialogPrimitive.Content
-        ref={modalRef}
+        ref={combinedRef}
         className={cn(
           'fixed left-[50%] z-50 grid w-full max-w-lg gap-4 overflow-y-auto border p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=open]:slide-in-from-left-1/2 sm:rounded-xl',
           keyboardVisible &&

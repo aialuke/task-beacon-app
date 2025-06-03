@@ -20,4 +20,5 @@ body {
 [type='submit'],
 button {
   -webkit-appearance: button;
+  appearance: button;
 }

@@ -1,7 +1,6 @@
 import { useState, useCallback } from 'react';
-import { toast } from '@/lib/toast';
 import { compressAndResizePhoto } from '@/lib/utils/image';
-import { TaskService } from '@/lib/api/tasks.service';
+import { TaskService } from '@/lib/api/tasks/task.service';
 
 /**
  * Hook for managing photo upload functionality
@@ -30,9 +29,9 @@ export function usePhotoUpload() {
         setPhoto(processedFile);
       } catch (error: unknown) {
         if (error instanceof Error) {
-          toast.error(error.message);
+          console.error(error.message);
         } else {
-          toast.error('An unexpected error occurred.');
+          console.error('An unexpected error occurred.');
         }
       } finally {
         setLoading(false);

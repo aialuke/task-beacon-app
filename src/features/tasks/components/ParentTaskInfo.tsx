@@ -1,7 +1,6 @@
 import { memo } from 'react';
 import { Link } from 'react-router-dom';
 import { ExternalLink } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
 
 // Clean imports from organized type system
 import type { ParentTask } from '@/types';

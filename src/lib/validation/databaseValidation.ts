@@ -2,6 +2,7 @@
  * Database-level validation utilities using the API service layer
  */
 import { DatabaseService } from '@/lib/api';
+import { supabase } from '@/integrations/supabase/client';
 
 /**
  * Database-level validation utilities
@@ -90,17 +91,34 @@ export const validateTaskOwnership = async (
   };
 
   try {
-    const response = await DatabaseService.exists('tasks', 'id', taskId);
+    // First check if task exists and get its data
+    const { data: taskData, error } = await supabase
+      .from('tasks')
+      .select('owner_id, assignee_id')
+      .eq('id', taskId)
+      .single();
     
-    if (!response.success || !response.data) {
-      result.isValid = false;
-      result.errors.push('Task not found');
-      return result;
+    if (error) {
+      if (error.code === 'PGRST116') {
+        // Task not found
+        result.isValid = false;
+        result.errors.push('Task not found');
+        return result;
+      }
+      throw error;
     }
 
-    // Additional ownership check would need to be implemented
-    // This is a simplified version
-    result.warnings.push('Ownership validation requires additional implementation');
+    // Check if user owns the task or is assigned to it
+    const isOwner = taskData.owner_id === userId;
+    const isAssignee = taskData.assignee_id === userId;
+
+    if (!isOwner && !isAssignee) {
+      result.isValid = false;
+      result.errors.push('User does not have permission to access this task');
+    } else if (isAssignee && !isOwner) {
+      result.warnings.push('User is assigned to task but not the owner');
+    }
+
   } catch (error) {
     result.isValid = false;
     result.errors.push('Database validation failed');

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, forwardRef } from 'react';
+import { useRef, useEffect, forwardRef } from 'react';
 import { cn } from '@/lib/utils';
 
 interface FloatingInputProps {
@@ -30,7 +30,6 @@ const FloatingInput = forwardRef<HTMLInputElement, FloatingInputProps>(
     },
     ref
   ) => {
-    const [isFocused, setIsFocused] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
 
     // Label is visible only when the input has no value (regardless of focus state)
@@ -62,8 +61,6 @@ const FloatingInput = forwardRef<HTMLInputElement, FloatingInputProps>(
           type={type}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
           autoComplete={autoComplete}
           disabled={disabled}
           required={required}

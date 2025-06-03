@@ -1,8 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { toast } from '@/lib/toast';
-import { TaskService } from '@/lib/api/tasks.service';
+import { TaskService } from '@/lib/api/tasks/task.service';
 
 // Clean imports from organized type system
 import type { Task } from '@/types';
@@ -68,7 +67,7 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
           queryClient.invalidateQueries({ queryKey: ['tasks'] });
           
           triggerHapticFeedback();
-          toast.success('Follow-up task created successfully');
+          console.log('Follow-up task created successfully');
           if (assigneeId) {
             showBrowserNotification(
               'Task Assigned',
@@ -81,13 +80,13 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
           const closeCallback = onClose || (() => navigate('/'));
           closeCallback();
         } else {
-          toast.error(response.error?.message || 'Failed to create follow-up task');
+          console.error('Failed to create follow-up task:', response.error?.message);
         }
       } catch (error: unknown) {
         if (error instanceof Error) {
-          toast.error(error.message);
+          console.error('Follow-up task creation error:', error.message);
         } else {
-          toast.error('An unexpected error occurred.');
+          console.error('An unexpected error occurred during follow-up task creation.');
         }
       } finally {
         taskForm.setLoading(false);

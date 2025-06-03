@@ -13,6 +13,25 @@ import type { Database } from '@/integrations/supabase/types';
 // Clean imports from organized type system
 import type { User, UserRole, ApiResponse } from '@/types';
 
+// Type-safe database references
+type ProfileRow = Database['public']['Tables']['profiles']['Row'];
+type ProfileInsert = Database['public']['Tables']['profiles']['Insert'];
+type ProfileUpdate = Database['public']['Tables']['profiles']['Update'];
+
+// Helper function to convert database row to User type
+const profileRowToUser = (profile: ProfileRow): User => {
+  return {
+    id: profile.id,
+    email: profile.email,
+    name: profile.name,
+    avatar_url: profile.avatar_url,
+    role: profile.role as UserRole,
+    is_active: true, // Default to active for existing profiles
+    created_at: profile.created_at,
+    updated_at: profile.updated_at,
+  };
+};
+
 export interface UserSearchOptions {
   query?: string;
   role?: UserRole;
@@ -45,7 +64,7 @@ export class UserService {
       if (error) throw error;
       if (!data) throw new Error('User not found');
 
-      return data as User;
+      return profileRowToUser(data);
     });
   }
 
@@ -83,7 +102,7 @@ export class UserService {
       const { data, error } = await queryBuilder;
 
       if (error) throw error;
-      return (data as User[]) || [];
+      return (data || []).map(profileRowToUser);
     });
   }
 
@@ -111,7 +130,7 @@ export class UserService {
         .single();
 
       if (error) throw error;
-      return data as User;
+      return profileRowToUser(data);
     });
   }
 
@@ -120,7 +139,7 @@ export class UserService {
    */
   static async updateProfile(userId: string, userData: UserUpdateData): Promise<ApiResponse<User>> {
     return apiRequest('users.updateProfile', async () => {
-      const updateData: Record<string, any> = {};
+      const updateData: ProfileUpdate = {};
 
       if (userData.name !== undefined) updateData.name = userData.name;
       if (userData.email !== undefined) updateData.email = userData.email;
@@ -135,7 +154,7 @@ export class UserService {
         .single();
 
       if (error) throw error;
-      return data as User;
+      return profileRowToUser(data);
     });
   }
 
@@ -233,19 +252,21 @@ export class UserService {
     role?: UserRole;
   }): Promise<ApiResponse<User>> {
     return apiRequest('users.createProfile', async () => {
+      const profileData: ProfileInsert = {
+        id: userData.id,
+        email: userData.email,
+        name: userData.name || null,
+        role: userData.role || ('user' as const),
+      };
+
       const { data, error } = await supabase
         .from('profiles')
-        .insert({
-          id: userData.id,
-          email: userData.email,
-          name: userData.name || null,
-          role: userData.role || ('user' as const),
-        })
+        .insert(profileData)
         .select()
         .single();
 
       if (error) throw error;
-      return data as User;
+      return profileRowToUser(data);
     });
   }
 }

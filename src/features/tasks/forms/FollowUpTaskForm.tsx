@@ -1,4 +1,3 @@
-import React from 'react';
 import type { Task } from '@/types';
 import { useFollowUpTask } from '@/features/tasks/hooks/useFollowUpTask';
 import { BaseTaskForm } from '@/components/form/BaseTaskForm';

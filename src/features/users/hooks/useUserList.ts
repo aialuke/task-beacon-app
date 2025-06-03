@@ -1,9 +1,15 @@
-
 import { useQuery } from '@tanstack/react-query';
 import { UserService } from '@/lib/api/users.service';
-import type { User } from '@/types/shared';
+import type { User } from '@/types';
 
-export function useUserList(enabled = true) {
+interface UseUserListReturn {
+  users: User[];
+  isLoading: boolean;
+  error: string | null;
+  refetch: () => void;
+}
+
+export function useUserList(enabled = true): UseUserListReturn {
   const {
     data: response,
     isLoading,

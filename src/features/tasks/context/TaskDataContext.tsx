@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { createStandardContext } from '@/lib/utils/createContext';
 
 // Clean imports from organized type system  

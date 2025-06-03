@@ -1,143 +1,131 @@
 /**
- * Notification utilities
+ * Notification utilities for providing user feedback through various channels
  * 
- * Provides notification, haptic feedback, and toast functionality.
- * Migrated from src/lib/notification.ts - use this path going forward.
+ * Supports browser notifications, haptic feedback, and other non-intrusive
+ * user notification methods. Gracefully handles permissions and fallbacks.
  */
 
-import { toast } from "sonner";
-import { logger } from '../logger';
-
-// Re-export toast
-export { toast };
+export interface NotificationOptions {
+  title: string;
+  body?: string;
+  icon?: string;
+  badge?: string;
+  tag?: string;
+  requireInteraction?: boolean;
+  silent?: boolean;
+}
 
 /**
- * Function to trigger haptic feedback if available
+ * Show a browser notification (requires user permission)
+ * 
+ * Automatically requests permission if not already granted.
+ * Falls back gracefully if notifications are not supported.
+ * 
+ * @param title - The notification title
+ * @param options - Additional notification options
+ * @returns Promise<boolean> - Success status
  */
-export function triggerHapticFeedback() {
-  if ('vibrate' in navigator) {
-    try {
-      navigator.vibrate(50); // Short vibration
-      logger.debug('Haptic feedback triggered');
-    } catch (error) {
-      logger.warn('Haptic feedback not supported or permission denied', { error: (error as Error).message });
+export async function showBrowserNotification(
+  title: string,
+  body?: string,
+  options: Partial<NotificationOptions> = {}
+): Promise<boolean> {
+  if (!("Notification" in window)) {
+    console.warn("This browser does not support notifications");
+    return false;
+  }
+
+  // Request permission if needed
+  if (Notification.permission === "default") {
+    const permission = await Notification.requestPermission();
+    if (permission !== "granted") {
+      console.warn("Notification permission denied");
+      return false;
     }
-  } else {
-    logger.debug('Haptic feedback not supported on this device');
+  }
+
+  if (Notification.permission === "granted") {
+    try {
+      new Notification(title, {
+        body,
+        icon: options.icon || "/favicon.ico",
+        badge: options.badge,
+        tag: options.tag,
+        requireInteraction: options.requireInteraction || false,
+        silent: options.silent || false,
+      });
+      return true;
+    } catch (error) {
+      console.error("Failed to show notification:", error);
+      return false;
+    }
+  }
+
+  return false;
+}
+
+/**
+ * Trigger haptic feedback on supported devices
+ * 
+ * Provides tactile feedback for user actions. Falls back gracefully
+ * on devices that don't support haptics.
+ * 
+ * @param pattern - Vibration pattern (default: short vibration)
+ */
+export function triggerHapticFeedback(pattern: number | number[] = 100): void {
+  if ("vibrate" in navigator) {
+    try {
+      navigator.vibrate(pattern);
+    } catch (error) {
+      // Silently fail - haptic feedback is nice-to-have
+      console.debug("Haptic feedback not available:", error);
+    }
   }
 }
 
 /**
- * Function to handle browser notifications with proper checks
+ * Simple console-based notification system
+ * These replace the previous toast notifications to avoid UI blocking issues
  */
-export function requestNotificationPermission() {
-  if ('Notification' in window) {
-    logger.debug('Requesting notification permission');
-    return Notification.requestPermission().then((permission) => {
-      logger.info('Notification permission result', { permission });
-      return permission;
-    });
-  } else {
-    logger.warn('Notifications not supported on this device');
-    return Promise.resolve('denied' as NotificationPermission);
+export function showSuccessMessage(message: string): void {
+  console.log(`✅ Success: ${message}`);
+}
+
+export function showErrorMessage(message: string): void {
+  console.error(`❌ Error: ${message}`);
+}
+
+export function showWarningMessage(message: string): void {
+  console.warn(`⚠️ Warning: ${message}`);
+}
+
+export function showInfoMessage(message: string): void {
+  console.info(`ℹ️ Info: ${message}`);
+}
+
+/**
+ * Check if browser notifications are supported and enabled
+ * 
+ * @returns Promise<boolean> - Whether notifications can be shown
+ */
+export async function checkNotificationSupport(): Promise<boolean> {
+  if (!("Notification" in window)) {
+    console.info("Your browser does not support notifications");
+    return false;
   }
-}
 
-/**
- * Show browser notification
- */
-export function showNotification(title: string, options?: NotificationOptions) {
-  if (Notification.permission === 'granted') {
-    logger.debug('Showing notification', { title, options: !!options });
-    return new Notification(title, options);
-  } else {
-    logger.warn('Cannot show notification - permission not granted', { 
-      permission: Notification.permission,
-      title 
-    });
-    return null;
+  if (Notification.permission === "denied") {
+    console.info("Notifications are blocked by your browser");
+    return false;
   }
-}
 
-/**
- * Show browser notification (alias for showNotification with simplified interface)
- */
-export function showBrowserNotification(title: string, body?: string, options?: NotificationOptions) {
-  const notificationOptions: NotificationOptions = {
-    body,
-    ...options,
-  };
-  
-  return showNotification(title, notificationOptions);
-}
-
-/**
- * Show toast notification with haptic feedback
- */
-export function showToastWithHaptic(
-  message: string, 
-  options?: { 
-    type?: 'success' | 'error' | 'warning' | 'info';
-    haptic?: boolean;
+  if (Notification.permission === "default") {
+    const permission = await Notification.requestPermission();
+    if (permission !== "granted") {
+      console.info("Notifications are blocked by your browser");
+      return false;
+    }
   }
-) {
-  const { type = 'info', haptic = true } = options || {};
-  
-  // Show toast based on type
-  switch (type) {
-    case 'success':
-      toast.success(message);
-      break;
-    case 'error':
-      toast.error(message);
-      break;
-    case 'warning':
-      toast.warning(message);
-      break;
-    case 'info':
-    default:
-      toast.info(message);
-      break;
-  }
-  
-  // Trigger haptic feedback if enabled
-  if (haptic) {
-    triggerHapticFeedback();
-  }
-  
-  logger.debug('Toast shown with haptic feedback', { message, type, haptic });
-}
 
-/**
- * Check if notifications are supported and enabled
- */
-export function isNotificationSupported(): boolean {
-  return 'Notification' in window;
-}
-
-/**
- * Check if notification permission is granted
- */
-export function isNotificationPermissionGranted(): boolean {
-  return isNotificationSupported() && Notification.permission === 'granted';
-}
-
-/**
- * Check if haptic feedback is supported
- */
-export function isHapticFeedbackSupported(): boolean {
-  return 'vibrate' in navigator;
-}
-
-// Legacy export for backward compatibility
-export const notificationUtils = {
-  toast,
-  triggerHapticFeedback,
-  requestNotificationPermission,
-  showNotification,
-  showBrowserNotification,
-  showToastWithHaptic,
-  isNotificationSupported,
-  isNotificationPermissionGranted,
-  isHapticFeedbackSupported,
-}; 
+  return true;
+} 

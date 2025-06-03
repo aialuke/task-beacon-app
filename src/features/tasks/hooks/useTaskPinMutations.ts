@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Task } from '@/types';
-import { TaskService } from '@/lib/api/tasks.service';
-import { toast } from '@/lib/toast';
+import { TaskService } from '@/lib/api/tasks/task.service';
 import { useTaskOptimisticUpdates } from './useTaskOptimisticUpdates';
 
 /**
@@ -41,12 +40,17 @@ export function useTaskPinMutations() {
       }
       
       const action = pinned ? 'pin' : 'unpin';
-      toast.error(`Failed to ${action} task`);
-      console.error(`Task ${action} failed:`, err);
+      console.error(`Task ${action} failed for task ${taskId}:`, err);
+      
+      // TODO: Consider adding user notification here
+      // toast.error(`Failed to ${action} task`);
     },
     onSuccess: (data, { pinned }) => {
       const action = pinned ? 'pinned' : 'unpinned';
-      toast.success(`Task ${action} successfully`);
+      console.log(`Task ${action} successfully. Updated task:`, data);
+      
+      // TODO: Consider adding user notification here
+      // toast.success(`Task ${action}`);
     },
     onSettled: () => {
       // Always refetch after error or success to ensure consistency
@@ -55,12 +59,17 @@ export function useTaskPinMutations() {
   });
 
   return {
+    // Main function used by the UI - toggles pin state
     togglePin: (task: Task) => 
       pinMutation.mutate({ taskId: task.id, pinned: !task.pinned }),
+    
+    // Helper functions for specific pin operations (exposed for flexibility)
     pinTask: (taskId: string) =>
       pinMutation.mutate({ taskId, pinned: true }),
     unpinTask: (taskId: string) =>
       pinMutation.mutate({ taskId, pinned: false }),
+    
+    // Loading state for UI feedback
     isLoading: pinMutation.isPending,
   };
 } 

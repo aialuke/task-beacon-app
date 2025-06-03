@@ -14,6 +14,7 @@ export interface TaskCardUIProps {
   isExpanded: boolean;
   toggleExpand: () => void;
   handleTogglePin: () => void;
+  isPinLoading?: boolean;
 }
 
 export interface TaskTimerProps {

@@ -1,4 +1,3 @@
-
 /**
  * Enhanced Error Handling Utilities
  * 
@@ -6,11 +5,9 @@
  * and type-safe error classification.
  */
 
-import { toast } from '@/lib/toast';
 import { logger } from '@/lib/logger';
 
 // Clean imports from organized type system
-import type { ApiError } from '@/types/shared';
 import { PostgrestError } from '@supabase/supabase-js';
 
 /**
@@ -71,9 +68,6 @@ function handleGlobalError(error: Error, source: string) {
     userAgent: navigator.userAgent,
     url: window.location.href,
   });
-
-  // Show user-friendly notification for global errors
-  toast.error('Something went wrong. Please refresh the page if the problem persists.');
 }
 
 /**
@@ -149,7 +143,7 @@ export function handleApiError(
 
   // Show user notification if requested
   if (showToast) {
-    toast.error(userMessage);
+    // toast.error(userMessage);
   }
 
   // Re-throw if requested (useful for upstream error handling)

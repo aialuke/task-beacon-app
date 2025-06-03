@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { TaskService, type TaskCreateData as ServiceTaskCreateData } from '@/lib/api/tasks.service';
+import { TaskService, type TaskCreateData as ServiceTaskCreateData } from '@/lib/api/tasks/task.service';
 import { AuthService } from '@/lib/api/base';
 import { useTaskValidation } from '@/hooks/useTaskValidation';
 

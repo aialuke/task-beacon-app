@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { TaskService } from '@/lib/api/tasks.service';
+import { TaskService } from '@/lib/api/tasks/task.service';
 
 /**
  * Hook for handling photo upload during task creation

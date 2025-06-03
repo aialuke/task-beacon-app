@@ -1,12 +1,9 @@
-
-import { useEffect, useCallback } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { useCallback } from 'react';
+import { Task } from '@/types';
+import { triggerHapticFeedback } from '@/lib/utils/notification';
 
 // Clean imports from organized type system
-import type { Task } from '@/types';
 import { useRealtimeEntity } from '@/hooks/useRealtimeEntity';
-import { toast, triggerHapticFeedback } from '@/lib/utils/notification';
 import { useAuth } from '@/hooks/useAuth';
 
 /**
@@ -22,7 +19,7 @@ export function useTaskRealtime() {
         ? 'Task completed' 
         : `Task status changed to ${newTask.status}`;
       
-      toast.info(`${statusMessage}: "${newTask.title}"`);
+      console.info(`${statusMessage}: "${newTask.title}"`);
       triggerHapticFeedback();
     }
   }, [user?.id]);

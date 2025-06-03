@@ -1,4 +1,3 @@
-
 /**
  * API Layer - Centralized exports for all API services
  * 
@@ -10,7 +9,7 @@
 export * from './base';
 
 // Service classes
-export * from './tasks.service';
+export * from './tasks/task.service';
 export * from './users.service';
 
 // Individual service exports for better tree-shaking

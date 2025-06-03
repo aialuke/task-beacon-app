@@ -1,6 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { TaskService } from '@/lib/api/tasks.service';
-import { toast } from '@/lib/toast';
+import { TaskService } from '@/lib/api/tasks/task.service';
 import { useTaskOptimisticUpdates } from './useTaskOptimisticUpdates';
 
 /**
@@ -19,8 +18,7 @@ export function useTaskStatusMutations() {
   const statusMutation = useMutation({
     mutationFn: async ({ 
       taskId, 
-      updates, 
-      action 
+      updates
     }: { 
       taskId: string; 
       updates: { status?: 'complete' | 'pending' | 'overdue'; pinned?: boolean }; 
@@ -58,8 +56,7 @@ export function useTaskStatusMutations() {
                         action === 'incomplete' ? 'mark as incomplete' :
                         action === 'pin' ? 'pin' : 'unpin';
       
-      toast.error(`Failed to ${actionText} task`);
-      console.error(`Task ${action} failed:`, err);
+      console.error(`Failed to ${actionText} task ${taskId}:`, err);
     },
     onSettled: () => {
       // Always refetch after error or success to ensure consistency

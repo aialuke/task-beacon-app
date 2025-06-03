@@ -11,16 +11,18 @@ const FollowUpTaskPage = lazy(() => import('./pages/FollowUpTaskPage'));
 
 const App = () => (
   <AppProviders>
-    <Routes>
-      <Route path="/" element={<AuthPage />} />
-      <Route path="/create-task" element={<CreateTaskPage />} />
-      <Route
-        path="/follow-up-task/:parentTaskId"
-        element={<FollowUpTaskPage />}
-      />
-      <Route path="/tasks/:id" element={<TaskDetailsPage />} />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
+      <Routes>
+        <Route path="/" element={<AuthPage />} />
+        <Route path="/create-task" element={<CreateTaskPage />} />
+        <Route
+          path="/follow-up-task/:parentTaskId"
+          element={<FollowUpTaskPage />}
+        />
+        <Route path="/tasks/:id" element={<TaskDetailsPage />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Suspense>
   </AppProviders>
 );
 

@@ -3,8 +3,8 @@ import { Button } from '@/components/ui/button';
 import type { Task } from '@/types';
 import { useNavigate } from 'react-router-dom';
 import { useTaskMutations } from '@/features/tasks/hooks/useTaskMutations';
-import { toast } from '@/lib/toast';
-import { Trash2 } from 'lucide-react';
+import { useTaskPinMutations } from '@/features/tasks/hooks/useTaskPinMutations';
+import { Trash2, Pin } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -17,11 +17,13 @@ import {
 
 interface TaskActionsProps {
   task: Task;
+  onPinChange?: (pinned: boolean) => void;
 }
 
-function TaskActions({ task }: TaskActionsProps) {
+function TaskActions({ task, onPinChange }: TaskActionsProps) {
   const navigate = useNavigate();
   const { toggleTaskComplete, deleteTaskById } = useTaskMutations();
+  const { togglePin, isLoading: isPinLoading } = useTaskPinMutations();
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
@@ -32,24 +34,32 @@ function TaskActions({ task }: TaskActionsProps) {
   const handleToggleComplete = useCallback(async () => {
     const result = await toggleTaskComplete(task);
     if (result.success) {
-      toast.success(result.message);
+      // toast.success(result.message);
     } else if (result.error) {
-      toast.error(result.message);
+      // toast.error(result.message);
     }
   }, [toggleTaskComplete, task]);
+
+  const handleTogglePin = useCallback(async () => {
+    togglePin(task);
+    // Update local state if callback provided
+    if (onPinChange) {
+      onPinChange(!task.pinned);
+    }
+  }, [togglePin, task, onPinChange]);
 
   const handleDelete = useCallback(async () => {
     setIsDeleting(true);
     try {
       const result = await deleteTaskById(task.id);
       if (result.success) {
-        toast.success(result.message);
+        // toast.success(result.message);
         setIsDeleteDialogOpen(false);
       } else if (result.error) {
-        toast.error(result.message);
+        // toast.error(result.message);
       }
     } catch (error) {
-      toast.error('Failed to delete task');
+      // toast.error('Failed to delete task');
     } finally {
       setIsDeleting(false);
     }
@@ -66,6 +76,16 @@ function TaskActions({ task }: TaskActionsProps) {
       </Button>
       <Button variant="outline" size="sm" onClick={handleCreateFollowUp}>
         Follow Up
+      </Button>
+      <Button
+        variant={task.pinned ? 'default' : 'outline'}
+        size="sm"
+        onClick={handleTogglePin}
+        disabled={isPinLoading}
+        className="flex items-center gap-1"
+      >
+        <Pin size={14} className={task.pinned ? 'fill-current' : ''} />
+        {isPinLoading ? 'Updating...' : task.pinned ? 'Unpin' : 'Pin'}
       </Button>
       
       {/* Delete button inline with other buttons */}

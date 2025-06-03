@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Link } from 'lucide-react';
 import {
@@ -93,7 +92,10 @@ export function UrlInputModal({
             )}
           </div>
 
-          <div className="flex justify-end">
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={handleCancel}>
+              Cancel
+            </Button>
             <Button onClick={handleSave}>Save URL</Button>
           </div>
         </div>

@@ -3,7 +3,7 @@ import { useTaskPinMutations } from './useTaskPinMutations';
 import { useTaskDeleteMutations } from './useTaskDeleteMutations';
 import { useTaskOptimisticUpdates } from './useTaskOptimisticUpdates';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { TaskService } from '@/lib/api/tasks.service';
+import { TaskService } from '@/lib/api/tasks/task.service';
 import type { Task } from '@/types';
 
 /**

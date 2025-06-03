@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import type { Task } from '@/types';
-import { TaskService } from '@/lib/api/tasks.service';
+import { TaskService } from '@/lib/api/tasks/task.service';
 import { useAuth } from '@/hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
-import { handleApiError } from '@/lib/utils/error';
 
 interface UseTaskDetailsReturn {
   task: Task | null;

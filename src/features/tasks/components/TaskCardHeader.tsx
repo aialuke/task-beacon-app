@@ -7,6 +7,7 @@ interface TaskCardHeaderProps {
   isExpanded: boolean;
   toggleExpand: () => void;
   handleTogglePin: () => void;
+  isPinLoading?: boolean;
 }
 
 function TaskCardHeader({
@@ -14,6 +15,7 @@ function TaskCardHeader({
   isExpanded,
   toggleExpand,
   handleTogglePin,
+  isPinLoading,
 }: TaskCardHeaderProps) {
   return (
     <TaskHeader
@@ -21,6 +23,7 @@ function TaskCardHeader({
       isExpanded={isExpanded}
       toggleExpand={toggleExpand}
       handleTogglePin={handleTogglePin}
+      isPinLoading={isPinLoading}
     />
   );
 }

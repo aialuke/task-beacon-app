@@ -135,7 +135,7 @@ const TaskDetailsPage = () => {
         )}
 
         <div className="border-t pt-4">
-          <TaskActions task={{ ...task, pinned: isPinned }} />
+          <TaskActions task={{ ...task, pinned: isPinned }} onPinChange={setIsPinned} />
         </div>
       </div>
     </div>

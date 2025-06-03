@@ -37,6 +37,7 @@ function TaskCard({ task }: TaskCardProps) {
     animationState,
     toggleExpand,
     handleTogglePin,
+    isPinLoading,
   } = useTaskCard(task);
 
   const { isTaskUpdated } = useRealtimeTaskUpdates();
@@ -56,6 +57,7 @@ function TaskCard({ task }: TaskCardProps) {
         isExpanded={isExpanded}
         toggleExpand={toggleExpand}
         handleTogglePin={handleTogglePin}
+        isPinLoading={isPinLoading}
       />
 
       <TaskCardContent

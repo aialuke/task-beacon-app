@@ -1,6 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { TaskService } from '@/lib/api/tasks.service';
-import { toast } from '@/lib/toast';
+import { TaskService } from '@/lib/api/tasks/task.service';
 import { useTaskOptimisticUpdates } from './useTaskOptimisticUpdates';
 
 /**
@@ -39,11 +38,10 @@ export function useTaskDeleteMutations() {
         rollbackToData(context.previousData);
       }
       
-      toast.error('Failed to delete task');
-      console.error('Task deletion failed:', err);
+      console.error(`Failed to delete task ${taskId}:`, err);
     },
     onSuccess: () => {
-      toast.success('Task deleted successfully');
+      // toast.success('Task deleted successfully');
     },
     onSettled: () => {
       // Always refetch after error or success to ensure consistency

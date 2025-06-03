@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import FollowUpTaskForm from '@/features/tasks/forms/FollowUpTaskForm';
-import { TaskService } from '@/lib/api/tasks.service';
+import { TaskService } from '@/lib/api/tasks/task.service';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function FollowUpTaskPage() {

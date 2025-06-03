@@ -4,7 +4,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { FloatingInput } from './FloatingInput';
 import { PasswordStrengthIndicator } from './PasswordStrengthIndicator';
 import { AuthService } from '@/lib/api';
-import { toast } from '@/lib/toast';
 import { isValidEmail } from '@/lib/utils/shared';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 type AuthMode = 'signin' | 'signup';
@@ -95,7 +94,6 @@ const ModernAuthForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) {
-      toast.error('Please fix the errors before continuing');
       return;
     }
     setLoading(true);
@@ -115,8 +113,6 @@ const ModernAuthForm: React.FC = () => {
           throw new Error(response.error?.message || 'Sign in failed');
         }
         if (response.data?.user) {
-          toast.success('Welcome back! Redirecting to your dashboard...');
-          // Force page reload for clean state
           setTimeout(() => {
             window.location.href = '/';
           }, 1000);
@@ -133,12 +129,13 @@ const ModernAuthForm: React.FC = () => {
         }
         if (response.data?.user) {
           if (response.data.emailConfirmed) {
-            toast.success('Account created successfully! Redirecting...');
             setTimeout(() => {
               window.location.href = '/';
             }, 1500);
           } else {
-            toast.success('Account created! Please check your email for verification.');
+            setTimeout(() => {
+              window.location.href = '/';
+            }, 1500);
           }
         }
       }
@@ -148,22 +145,22 @@ const ModernAuthForm: React.FC = () => {
         // Handle specific auth errors based on message content
         const errorMessage = error.message;
         if (errorMessage.includes('Invalid login credentials') || errorMessage.includes('invalid_credentials')) {
-          toast.error('Invalid email or password. Please try again.');
+          setErrors({ email: 'Invalid email or password. Please try again.' });
         } else if (errorMessage.includes('User already registered') || errorMessage.includes('already_registered')) {
-          toast.error('An account with this email already exists. Try signing in instead.');
+          setErrors({ email: 'An account with this email already exists. Try signing in instead.' });
         } else if (errorMessage.includes('Email not confirmed') || errorMessage.includes('email_not_confirmed')) {
-          toast.error('Please check your email and confirm your account before signing in.');
+          setErrors({ email: 'Please check your email and confirm your account before signing in.' });
         } else if (errorMessage.includes('Signup not allowed') || errorMessage.includes('signup_disabled')) {
-          toast.error('Account creation is currently disabled. Please contact support.');
+          setErrors({ email: 'Account creation is currently disabled. Please contact support.' });
         } else if (errorMessage.includes('Password should be at least')) {
-          toast.error('Password does not meet the minimum requirements.');
+          setErrors({ password: 'Password does not meet the minimum requirements.' });
         } else if (errorMessage.includes('Unable to validate email address')) {
-          toast.error('Please enter a valid email address.');
+          setErrors({ email: 'Please enter a valid email address.' });
         } else {
-          toast.error(errorMessage || 'An authentication error occurred');
+          setErrors({ email: errorMessage || 'An authentication error occurred' });
         }
       } else {
-        toast.error('An unexpected error occurred');
+        setErrors({ email: 'An unexpected error occurred' });
       }
     } finally {
       setLoading(false);

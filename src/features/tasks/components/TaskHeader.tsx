@@ -10,6 +10,7 @@ interface TaskHeaderProps {
   isExpanded: boolean;
   toggleExpand: () => void;
   handleTogglePin: () => void;
+  isPinLoading?: boolean;
 }
 
 function TaskHeader({
@@ -17,6 +18,7 @@ function TaskHeader({
   isExpanded,
   toggleExpand,
   handleTogglePin,
+  isPinLoading = false,
 }: TaskHeaderProps) {
   return (
     <div className="flex w-full items-center gap-2">
@@ -36,7 +38,8 @@ function TaskHeader({
         size="icon"
         className="shadow-none ml-1 h-8 w-8 shrink-0"
         onClick={handleTogglePin}
-        title={task.pinned ? 'Unpin task' : 'Pin task'}
+        disabled={isPinLoading}
+        title={isPinLoading ? 'Updating...' : (task.pinned ? 'Unpin task' : 'Pin task')}
       >
         {task.pinned ? (
           <Pin size={16} className="fill-current text-card-foreground" />

@@ -1,4 +1,3 @@
-
 /**
  * Authentication Context
  * 
@@ -6,7 +5,7 @@
  * Provides authentication state and operations to the application.
  */
 
-import React, { createContext, useContext, ReactNode } from 'react';
+import { createContext, useContext, ReactNode } from 'react';
 import type { AuthContextType } from '@/types/shared/auth.types';
 import { 
   useAuthState, 

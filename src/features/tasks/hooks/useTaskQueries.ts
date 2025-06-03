@@ -1,11 +1,24 @@
-
 import { useState } from 'react';
-import { useQuery, useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
-import { TaskService } from '@/lib/api/tasks.service';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { TaskService } from '@/lib/api/tasks/task.service';
 import { useAuth } from '@/hooks/useAuth';
 
 // Clean imports from organized type system
 import type { Task } from '@/types';
+
+interface UseTaskQueriesReturn {
+  tasks: Task[];
+  totalCount: number;
+  currentPage: number;
+  pageSize: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  goToNextPage: () => void;
+  goToPreviousPage: () => void;
+  isLoading: boolean;
+  isFetching: boolean;
+  error: string | null;
+}
 
 /**
  * Custom hook for paginated task queries with real database integration
@@ -13,7 +26,7 @@ import type { Task } from '@/types';
  * @param pageSize Number of tasks to fetch per page
  * @returns Object containing tasks array, loading state, pagination controls and error
  */
-export function useTaskQueries(pageSize = 10) {
+export function useTaskQueries(pageSize = 10): UseTaskQueriesReturn {
   const [currentPage, setCurrentPage] = useState(1);
   const queryClient = useQueryClient();
   const { user, session } = useAuth();

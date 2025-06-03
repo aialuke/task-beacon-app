@@ -1,7 +1,6 @@
 import { useEffect, useCallback, useState } from 'react';
 import { useRealtimeSubscription } from './useRealtimeSubscription';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
-import { useAuth } from '@/hooks/useAuth';
 import { realtimeLogger } from '@/lib/logger';
 
 interface EntityWithId {
@@ -103,7 +102,6 @@ export function useRealtimeEntity<T extends EntityWithId>({
   refetchInterval,
 }: UseRealtimeEntityOptions<T>) {
   const queryClient = useQueryClient();
-  const { user } = useAuth();
   const [isConnected, setIsConnected] = useState(false);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
 
@@ -205,5 +203,6 @@ export function useRealtimeEntity<T extends EntityWithId>({
     isConnected,
     isSubscribed,
     lastUpdate,
+    invalidateQueries,
   };
 }

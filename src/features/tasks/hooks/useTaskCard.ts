@@ -2,8 +2,7 @@ import { useRef, useCallback, useMemo } from 'react';
 import { Task } from '@/types';
 import { useTaskUIContext } from '@/features/tasks/context/TaskUIContext';
 import { useTaskAnimation } from '@/features/tasks/hooks/useTaskAnimation';
-import { useTaskMutations } from './useTaskMutations';
-import { toast } from '@/lib/toast';
+import { useTaskPinMutations } from './useTaskPinMutations';
 
 /**
  * Custom hook for TaskCard functionality
@@ -14,7 +13,7 @@ import { toast } from '@/lib/toast';
  * @returns Object containing refs, state, and handlers for the TaskCard component
  */
 export function useTaskCard(task: Task) {
-  const { toggleTaskPin } = useTaskMutations();
+  const { togglePin, isLoading: isPinLoading } = useTaskPinMutations();
   const { expandedTaskId, setExpandedTaskId } = useTaskUIContext();
   const contentRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -40,14 +39,9 @@ export function useTaskCard(task: Task) {
    * Toggle the pinned state of the task
    * Optimized: Only recreate when task.id or task.pinned changes
    */
-  const handleTogglePin = useCallback(async () => {
-    const result = await toggleTaskPin(task);
-    if (result.success) {
-      toast.success(result.message);
-    } else if (result.error) {
-      toast.error(result.message);
-    }
-  }, [toggleTaskPin, task]);
+  const handleTogglePin = useCallback(() => {
+    togglePin(task);
+  }, [togglePin, task]);
 
   // Memoize the return object to prevent unnecessary re-renders
   return useMemo(
@@ -58,7 +52,8 @@ export function useTaskCard(task: Task) {
       animationState,
       toggleExpand,
       handleTogglePin,
+      isPinLoading, // Expose pin loading state for UI feedback
     }),
-    [isExpanded, animationState, toggleExpand, handleTogglePin]
+    [isExpanded, animationState, toggleExpand, handleTogglePin, isPinLoading]
   );
 }
