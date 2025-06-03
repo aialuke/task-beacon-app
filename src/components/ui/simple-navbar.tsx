@@ -59,7 +59,7 @@ export function SimpleNavbar({
             left: '12px',
             height: '4px',
             borderRadius: '9999px',
-            zIndex: 20,
+            zIndex: 60,
             filter: 'blur(1px)',
             backgroundColor: computedColors.indicatorColor,
             boxShadow: computedColors.isDarkMode
@@ -78,7 +78,7 @@ export function SimpleNavbar({
             left: '8px',
             height: '40px',
             borderRadius: '9999px',
-            zIndex: 10,
+            zIndex: 55,
             backgroundColor: computedColors.highlightColor,
             ...buttonBackgroundSpring,
           }}
@@ -93,7 +93,7 @@ export function SimpleNavbar({
             left: '0px',
             height: '56px',
             borderRadius: '9999px',
-            zIndex: 5,
+            zIndex: 51,
             backgroundColor: computedColors.primaryVeryLight,
             filter: 'blur(8px)',
             opacity: 0.3,
@@ -116,7 +116,7 @@ export function SimpleNavbar({
               tabIndex={isActive ? 0 : -1}
               onClick={() => onItemChange(item.value)}
               className={cn(
-                'relative z-20 flex h-10 min-w-[2.5rem] items-center justify-center rounded-full px-3 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
+                'relative z-[60] flex h-10 min-w-[2.5rem] items-center justify-center rounded-full px-3 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
                 isActive
                   ? 'text-gray-900 dark:text-gray-100'
                   : 'text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200'
