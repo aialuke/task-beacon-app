@@ -27,6 +27,11 @@ export default function FollowUpTaskForm({
     loading,
     handlePhotoChange,
     handleSubmit,
+    isPhotoModalOpen,
+    openPhotoModal,
+    closePhotoModal,
+    handleModalPhotoSelect,
+    handlePhotoRemove,
   } = useFollowUpTask({ parentTask, onClose });
 
   return (
@@ -51,6 +56,11 @@ export default function FollowUpTaskForm({
       titlePlaceholder="Enter follow-up task title"
       titleLabel="Follow-up Title"
       descriptionPlaceholder="Describe your follow-up task..."
+      isPhotoModalOpen={isPhotoModalOpen}
+      onPhotoModalOpen={openPhotoModal}
+      onPhotoModalClose={closePhotoModal}
+      onModalPhotoSelect={handleModalPhotoSelect}
+      onPhotoRemove={handlePhotoRemove}
     >
       {/* Parent Task Reference moved to bottom */}
       <div className="mt-8 border-t border-border/20 pt-6">

@@ -11,6 +11,8 @@ import {
 import { format } from 'date-fns';
 import { UrlInputModal } from './UrlInputModal';
 import { UserSearchModal } from './UserSearchModal';
+import { EnhancedPhotoUploadModal } from './EnhancedPhotoUploadModal';
+import type { ProcessingResult } from '@/lib/utils/image';
 
 interface QuickActionBarProps {
   // Date picker props
@@ -21,9 +23,16 @@ interface QuickActionBarProps {
   assigneeId: string;
   onAssigneeChange: (value: string) => void;
 
-  // Photo upload props
+  // Photo upload props - legacy support for backward compatibility
   onPhotoChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   photoPreview: string | null;
+
+  // Enhanced photo upload props
+  isPhotoModalOpen?: boolean;
+  onPhotoModalOpen?: () => void;
+  onPhotoModalClose?: () => void;
+  onModalPhotoSelect?: (file: File, processedResult?: ProcessingResult) => void;
+  onPhotoRemove?: () => void;
 
   // URL props
   url: string;
@@ -44,6 +53,11 @@ export function QuickActionBar({
   onAssigneeChange,
   onPhotoChange,
   photoPreview,
+  isPhotoModalOpen = false,
+  onPhotoModalOpen,
+  onPhotoModalClose,
+  onModalPhotoSelect,
+  onPhotoRemove,
   url,
   onUrlChange,
   onSubmit,
@@ -79,7 +93,13 @@ export function QuickActionBar({
   };
 
   const handlePhotoClick = () => {
-    fileInputRef.current?.click();
+    if (onPhotoModalOpen && onPhotoModalClose && onModalPhotoSelect) {
+      // Use enhanced modal upload (preferred)
+      onPhotoModalOpen();
+    } else {
+      // Fallback to legacy file input for backward compatibility
+      fileInputRef.current?.click();
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -156,6 +176,9 @@ export function QuickActionBar({
         : 'bg-background/60 text-muted-foreground border border-border/40 hover:bg-background/80 hover:text-foreground hover:border-border/60'
     );
 
+  // Determine if we should use enhanced upload or legacy
+  const useEnhancedUpload = !!(onPhotoModalOpen && onPhotoModalClose && onModalPhotoSelect);
+
   return (
     <div className="flex items-center justify-center gap-4 rounded-xl bg-background/30 px-4 py-1.5 backdrop-blur-sm">
       {/* Action buttons container */}
@@ -213,7 +236,7 @@ export function QuickActionBar({
           </span>
         </Button>
 
-        {/* Photo Button */}
+        {/* Photo Button - Maintains existing styling and icon */}
         <Button
           variant="ghost"
           onClick={handlePhotoClick}
@@ -265,15 +288,17 @@ export function QuickActionBar({
         </Button>
       )}
 
-      {/* Hidden file input */}
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        onChange={onPhotoChange}
-        className="sr-only"
-        aria-label="Upload Image"
-      />
+      {/* Hidden file input - for legacy compatibility when modal props not provided */}
+      {!useEnhancedUpload && (
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={onPhotoChange}
+          className="sr-only"
+          aria-label="Upload Image"
+        />
+      )}
 
       {/* Modals */}
       <UrlInputModal
@@ -289,6 +314,19 @@ export function QuickActionBar({
         value={assigneeId}
         onChange={onAssigneeChange}
       />
+
+      {/* Enhanced Photo Upload Modal - rendered when modal props are provided */}
+      {useEnhancedUpload && (
+        <EnhancedPhotoUploadModal
+          isOpen={isPhotoModalOpen}
+          onClose={onPhotoModalClose!}
+          onImageSelect={onModalPhotoSelect!}
+          onImageRemove={onPhotoRemove}
+          currentImage={null} // Could be enhanced to track current image
+          title="Upload Task Image"
+          description="Add an image to your task for better visualization"
+        />
+      )}
     </div>
   );
 }

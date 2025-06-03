@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { validateProfileData } from '@/lib/validation/databaseValidation';
+import { validateProfileData } from '@/lib/validation';
 import { showValidationErrors } from './dataValidationUtils';
 
 export function useProfileValidation() {

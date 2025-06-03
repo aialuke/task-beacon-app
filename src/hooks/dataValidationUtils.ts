@@ -1,4 +1,4 @@
-import { ValidationResult } from '@/lib/validation/databaseValidation';
+import { ValidationResult } from '@/lib/validation';
 
 export function showValidationErrors(result: ValidationResult) {
   return {

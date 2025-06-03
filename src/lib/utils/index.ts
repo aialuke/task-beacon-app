@@ -37,6 +37,13 @@ export * from './format';
 export * from './validation';
 
 // =====================================================
+// ENHANCED UTILITIES (Now Available)
+// =====================================================
+
+// Enhanced image utilities with WebP support
+export * from './image';
+
+// =====================================================
 // NEW UTILITIES (Available after migration - Phase 3)
 // =====================================================
 
@@ -54,9 +61,6 @@ export * from './validation';
 
 // Navigation utilities - migrated to @/lib/utils/navigation
 // export * from './navigation';
-
-// Image utilities - migrated to @/lib/utils/image
-// export * from './image';
 
 // Mobile utilities - migrated to @/lib/utils/mobile
 // export * from './mobile';
@@ -80,13 +84,15 @@ export * as dataUtils from './data';
 export * as formatUtils from './format';
 export * as validationUtils from './validation';
 
+// Enhanced utility namespaces (now available)
+export * as imageUtils from './image';
+
 // New utility namespaces (will be available after Phase 3 migration)
 // export * as animationUtils from './animation';
 // export * as performanceUtils from './performance';
 // export * as errorUtils from './error';
 // export * as notificationUtils from './notification';
 // export * as navigationUtils from './navigation';
-// export * as imageUtils from './image';
 // export * as mobileUtils from './mobile';
 // export * as sidebarUtils from './sidebar';
 // export * as loggingUtils from './logging';
@@ -98,16 +104,17 @@ export * as validationUtils from './validation';
 /**
  * PHASE 3 MIGRATION STATUS:
  * 
+ * ✅ COMPLETED: Enhanced image utilities with WebP support
  * ✅ CREATED: All new utility files have been created
  * 🔄 PENDING: Import updates throughout codebase
  * 📦 READY: Files can be imported directly:
  * 
+ * import { imageUtils } from '@/lib/utils';
  * import { animationUtils } from '@/lib/utils/animation';
  * import { performanceUtils } from '@/lib/utils/performance';
  * import { errorUtils } from '@/lib/utils/error';
  * import { notificationUtils } from '@/lib/utils/notification';
  * import { navigationUtils } from '@/lib/utils/navigation';
- * import { imageUtils } from '@/lib/utils/image';
  * import { mobileUtils } from '@/lib/utils/mobile';
  * import { sidebarUtils } from '@/lib/utils/sidebar';
  * import { loggingUtils } from '@/lib/utils/logging';

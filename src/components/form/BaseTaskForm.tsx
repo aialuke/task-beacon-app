@@ -2,6 +2,7 @@ import { FileText, Sparkles } from 'lucide-react';
 import { FloatingInput } from '@/components/ui/form/FloatingInput';
 import { FloatingTextarea } from '@/components/ui/form/FloatingTextarea';
 import { QuickActionBar } from '@/components/form/QuickActionBar';
+import type { ProcessingResult } from '@/lib/utils/image';
 
 interface BaseTaskFormProps {
   title: string;
@@ -26,6 +27,13 @@ interface BaseTaskFormProps {
   descriptionPlaceholder?: string;
   descriptionLabel?: string;
   children?: React.ReactNode;
+
+  // Enhanced photo upload props - optional
+  isPhotoModalOpen?: boolean;
+  onPhotoModalOpen?: () => void;
+  onPhotoModalClose?: () => void;
+  onModalPhotoSelect?: (file: File, processedResult?: ProcessingResult) => void;
+  onPhotoRemove?: () => void;
 }
 
 export function BaseTaskForm({
@@ -50,6 +58,12 @@ export function BaseTaskForm({
   descriptionLabel = 'Description',
   descriptionPlaceholder = 'Describe your task...',
   children,
+  // Enhanced photo upload props with defaults
+  isPhotoModalOpen = false,
+  onPhotoModalOpen,
+  onPhotoModalClose,
+  onModalPhotoSelect,
+  onPhotoRemove,
 }: BaseTaskFormProps) {
   const handleUrlChange = (newUrl: string) => {
     setUrl(newUrl);
@@ -110,6 +124,12 @@ export function BaseTaskForm({
           isSubmitting={loading}
           submitLabel={submitLabel}
           disabled={loading}
+          // Enhanced photo upload props
+          isPhotoModalOpen={isPhotoModalOpen}
+          onPhotoModalOpen={onPhotoModalOpen}
+          onPhotoModalClose={onPhotoModalClose}
+          onModalPhotoSelect={onModalPhotoSelect}
+          onPhotoRemove={onPhotoRemove}
         />
 
         {/* Additional content */}

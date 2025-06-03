@@ -17,6 +17,11 @@ export default function CreateTaskForm({ onClose }: { onClose?: () => void }) {
     loading,
     handlePhotoChange,
     handleSubmit,
+    isPhotoModalOpen,
+    openPhotoModal,
+    closePhotoModal,
+    handleModalPhotoSelect,
+    handlePhotoRemove,
   } = useCreateTask({ onClose });
 
   return (
@@ -38,6 +43,11 @@ export default function CreateTaskForm({ onClose }: { onClose?: () => void }) {
       headerTitle="What would you like to accomplish?"
       headerSubtitle="For every minute spent organising, an hour is earnt.✨"
       submitLabel="Share Task"
+      isPhotoModalOpen={isPhotoModalOpen}
+      onPhotoModalOpen={openPhotoModal}
+      onPhotoModalClose={closePhotoModal}
+      onModalPhotoSelect={handleModalPhotoSelect}
+      onPhotoRemove={handlePhotoRemove}
     />
   );
 }

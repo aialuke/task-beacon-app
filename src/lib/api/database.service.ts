@@ -1,4 +1,3 @@
-
 /**
  * Database Service
  * 
@@ -66,6 +65,87 @@ export class DatabaseService {
       const { count, error } = await query;
       if (error) throw error;
       return count || 0;
+    });
+  }
+
+  /**
+   * Select specific fields from a table with filters
+   */
+  static async selectFields<T>(
+    table: string,
+    fields: string,
+    filters: Record<string, any>,
+    options?: {
+      single?: boolean;
+      orderBy?: { column: string; ascending?: boolean };
+    }
+  ): Promise<ApiResponse<T>> {
+    return apiRequest(`select.${table}`, async () => {
+      let query = (supabase as any).from(table).select(fields);
+      
+      // Apply filters
+      Object.entries(filters).forEach(([key, value]) => {
+        query = query.eq(key, value);
+      });
+
+      // Apply ordering if specified
+      if (options?.orderBy) {
+        query = query.order(options.orderBy.column, { 
+          ascending: options.orderBy.ascending ?? true 
+        });
+      }
+
+      // Execute as single or multiple
+      if (options?.single) {
+        const { data, error } = await query.single();
+        if (error) throw error;
+        return data;
+      } else {
+        const { data, error } = await query;
+        if (error) throw error;
+        return data;
+      }
+    });
+  }
+
+  /**
+   * Get task ownership data (owner_id, assignee_id)
+   */
+  static async getTaskOwnership(taskId: string): Promise<ApiResponse<{
+    owner_id: string;
+    assignee_id: string;
+  }>> {
+    return this.selectFields(
+      'tasks',
+      'owner_id, assignee_id',
+      { id: taskId },
+      { single: true }
+    );
+  }
+
+  /**
+   * Batch check existence of multiple records
+   */
+  static async batchExists(
+    table: string,
+    column: string,
+    values: any[]
+  ): Promise<ApiResponse<Array<{ value: any; exists: boolean }>>> {
+    return apiRequest(`batch-exists.${table}`, async () => {
+      const results = await Promise.allSettled(
+        values.map(async (value) => {
+          const response = await this.exists(table, column, value);
+          return {
+            value,
+            exists: response.success ? response.data : false
+          };
+        })
+      );
+
+      return results.map((result, index) => ({
+        value: values[index],
+        exists: result.status === 'fulfilled' ? result.value.exists : false
+      }));
     });
   }
 }

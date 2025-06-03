@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { validateTaskData } from '@/lib/validation/databaseValidation';
+import { validateTaskData } from '@/lib/validation';
 import { showValidationErrors } from './dataValidationUtils';
 
 export function useTaskValidation() {
