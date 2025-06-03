@@ -199,7 +199,7 @@ const ModernAuthForm: React.FC = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {mode === 'signup' && <FloatingInput ref={nameInputRef} id="name" type="text" label="Full Name" value={name} onChange={handleNameChange} error={errors.name} disabled={loading} autoComplete="name" />}
+            {mode === 'signup' && <FloatingInput ref={nameInputRef} id="name" type="text" label="Name" value={name} onChange={handleNameChange} error={errors.name} disabled={loading} autoComplete="name" />}
 
             <FloatingInput ref={emailInputRef} id="email" type="email" label="Email Address" value={email} onChange={handleEmailChange} error={errors.email} disabled={loading} autoComplete={mode === 'signin' ? 'username' : 'email'} />
 
