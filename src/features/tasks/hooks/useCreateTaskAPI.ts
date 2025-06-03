@@ -30,6 +30,7 @@ export function useCreateTaskAPI() {
       });
 
       if (!validationResult.isValid) {
+        console.error('Validation failed:', validationResult.errors);
         return { success: false, error: 'Validation failed', validation: validationResult };
       }
 
@@ -43,7 +44,7 @@ export function useCreateTaskAPI() {
       const serviceTaskData: ServiceTaskCreateData = {
         title: taskData.title.trim(),
         description: taskData.description || undefined,
-        dueDate: new Date(taskData.dueDate).toISOString(),
+        dueDate: taskData.dueDate ? new Date(taskData.dueDate).toISOString() : undefined,
         photoUrl: taskData.photoUrl,
         urlLink: taskData.url || undefined,
         assigneeId: finalAssigneeId,
@@ -53,11 +54,14 @@ export function useCreateTaskAPI() {
       const response = await TaskService.create(serviceTaskData);
 
       if (!response.success) {
+        console.error('TaskService.create failed:', response.error);
         throw new Error(response.error?.message || 'Failed to create task');
       }
 
+      console.log('Task created successfully:', response.data);
       return { success: true, error: null, message: 'Task created successfully' };
     } catch (error: unknown) {
+      console.error('Error in executeCreateTask:', error);
       let errorMessage = 'An unexpected error occurred.';
       if (error instanceof Error) {
         // Check for database constraint violations

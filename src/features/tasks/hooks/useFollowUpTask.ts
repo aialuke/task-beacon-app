@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { toast } from '@/lib/toast';
 import { TaskService } from '@/lib/api/tasks.service';
 
@@ -11,7 +12,6 @@ import {
 } from '@/lib/utils/notification';
 import { useTaskForm } from './useTaskForm';
 import { useTaskFormValidation } from './useTaskFormValidation';
-import { useTaskMutations } from './useTaskMutations';
 
 interface UseFollowUpTaskProps {
   parentTask: Task;
@@ -23,8 +23,8 @@ interface UseFollowUpTaskProps {
  */
 export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { validateTitle } = useTaskFormValidation();
-  const { createFollowUpTask } = useTaskMutations();
 
   const taskForm = useTaskForm({
     onClose: onClose || (() => navigate('/')),
@@ -50,7 +50,8 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
           photoUrl = uploadResponse.data;
         }
 
-        const result = await createFollowUpTask(parentTask, {
+        // Direct call to TaskService instead of using useTaskMutations
+        const response = await TaskService.createFollowUp(parentTask.id, {
           title: taskForm.title,
           description: taskForm.description || null,
           dueDate: taskForm.dueDate
@@ -62,9 +63,12 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
           pinned: taskForm.pinned,
         });
 
-        if (result.success) {
+        if (response.success) {
+          // Invalidate queries to refresh the task list
+          queryClient.invalidateQueries({ queryKey: ['tasks'] });
+          
           triggerHapticFeedback();
-          toast.success(result.message);
+          toast.success('Follow-up task created successfully');
           if (assigneeId) {
             showBrowserNotification(
               'Task Assigned',
@@ -77,7 +81,7 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
           const closeCallback = onClose || (() => navigate('/'));
           closeCallback();
         } else {
-          toast.error(result.message);
+          toast.error(response.error?.message || 'Failed to create follow-up task');
         }
       } catch (error: unknown) {
         if (error instanceof Error) {
@@ -89,7 +93,7 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
         taskForm.setLoading(false);
       }
     },
-    [taskForm, assigneeId, parentTask, validateTitle, createFollowUpTask, onClose, navigate]
+    [taskForm, assigneeId, parentTask, validateTitle, onClose, navigate, queryClient]
   );
 
   return {

@@ -1,4 +1,3 @@
-
 import { useTaskStatusMutations } from './useTaskStatusMutations';
 import { useTaskPinMutations } from './useTaskPinMutations';
 import { useTaskDeleteMutations } from './useTaskDeleteMutations';
@@ -52,18 +51,16 @@ export function useTaskMutations() {
 
   return {
     // Status mutations
-    toggleTaskComplete: statusMutations.toggleTaskComplete,
-    markTaskComplete: statusMutations.markTaskComplete,
-    markTaskPending: statusMutations.markTaskPending,
+    markAsComplete: statusMutations.markAsComplete,
+    markAsIncomplete: statusMutations.markAsIncomplete,
 
     // Pin mutations
-    toggleTaskPin: pinMutations.toggleTaskPin,
+    togglePin: pinMutations.togglePin,
     pinTask: pinMutations.pinTask,
     unpinTask: pinMutations.unpinTask,
 
     // Delete mutations
     deleteTask: deleteMutations.deleteTask,
-    deleteMultipleTasks: deleteMutations.deleteMultipleTasks,
 
     // Follow-up task creation
     createFollowUpTask,
