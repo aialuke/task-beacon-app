@@ -1,7 +1,7 @@
 import { lazy, Suspense, memo, useMemo } from 'react';
 import { useTaskDataContext } from '@/features/tasks/context/TaskDataContext';
 import { useTaskFiltering } from '@/features/tasks/providers/TaskProviders';
-import { useRenderTracking, useOptimizedMemo } from '@/hooks/useOptimizedMemo';
+import { useOptimizedMemo } from '@/hooks/useOptimizedMemo';
 import TaskFilterNavbar from './TaskFilterNavbar';
 import TaskPagination from './TaskPagination';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -71,9 +71,6 @@ const EmptyState = memo(() => (
 EmptyState.displayName = 'EmptyState';
 
 function TaskList() {
-  // Track component render performance
-  const { renderCount, markRenderComplete } = useRenderTracking('TaskList');
-
   // Get data context for pagination functionality
   const {
     isLoading,
@@ -129,9 +126,6 @@ function TaskList() {
     name: 'task-list-content',
     warnOnSlowComputation: true 
   });
-
-  // Mark render completion for performance tracking
-  markRenderComplete();
 
   return (
     <>
