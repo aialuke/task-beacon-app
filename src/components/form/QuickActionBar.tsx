@@ -83,7 +83,9 @@ export function QuickActionBar({
   };
 
   const handleSubmit = (e: React.FormEvent) => {
+    console.log('🔘 QuickActionBar submit button clicked');
     e.preventDefault();
+    console.log('🔘 Calling onSubmit prop:', onSubmit);
     onSubmit?.(e);
   };
 

@@ -1,4 +1,3 @@
-
 import { FileText, Sparkles } from 'lucide-react';
 import { FloatingInput } from '@/components/ui/form/FloatingInput';
 import { FloatingTextarea } from '@/components/ui/form/FloatingTextarea';
@@ -75,7 +74,7 @@ export function BaseTaskForm({
         </p>
       </header>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form className="space-y-6">
         {/* Main Title Input */}
         <FloatingInput
           id="title"
