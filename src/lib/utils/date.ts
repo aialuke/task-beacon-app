@@ -125,11 +125,9 @@ export function formatTimeDisplay(
   if (daysLeft < 0) return 'Due';
   if (daysLeft === 0) return 'Today';
   if (daysLeft === 1) return '1 day';
-  if (daysLeft <= 7) return `${daysLeft}d`;
-
-  // For tasks more than a week away, show the date
-  const date = new Date(dueDate);
-  return formatDate(date, { month: 'short', day: 'numeric' });
+  
+  // Always show days remaining, regardless of how many days
+  return `${daysLeft}d`;
 }
 
 /**

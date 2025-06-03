@@ -25,7 +25,6 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
-      console.log('🚀 Task creation started');
       e.preventDefault();
 
       const formData = {
@@ -38,34 +37,25 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
         priority: 'medium',
       };
 
-      console.log('📋 Form data:', formData);
-
       const validationResult = validateTaskForm(formData);
       if (!validationResult.isValid) {
         console.error('❌ Validation failed:', validationResult);
         return;
       }
 
-      console.log('✅ Validation passed');
       taskForm.setLoading(true);
       
       try {
-        console.log('📸 Starting photo upload...');
         // Handle photo upload
         const photoUrl = await uploadPhotoIfPresent(taskForm.photo);
-        console.log('📸 Photo upload result:', photoUrl);
 
-        console.log('💾 Creating task...');
         // Create task
         const result = await executeCreateTask({
           ...formData,
           photoUrl,
         });
 
-        console.log('💾 Task creation result:', result);
-
         if (result.success) {
-          console.log('🎉 Task created successfully, resetting form and navigating...');
           taskForm.resetForm();
           
           // Navigate back to dashboard after successful task creation

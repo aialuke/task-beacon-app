@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { getUpdateInterval, formatTimeDisplay } from '@/lib/utils/date';
+import { getUpdateInterval, formatTimeDisplay, getDaysRemaining } from '@/lib/utils/date';
 import { calculateTimerOffset } from '@/lib/utils/animation';
 
 // Clean imports from organized type system
@@ -109,17 +109,8 @@ export function useCountdown(
   const computedValues = useMemo(() => {
     const { timeLeft } = state;
     
-    console.log('🕐 Countdown calculation:', {
-      dueDate,
-      status,
-      timeLeft: timeLeft.days,
-      isOverdue: timeLeft.isOverdue
-    });
-    
     // Format the time display
     const timeDisplay = formatTimeDisplay(timeLeft.days, dueDate, status);
-    
-    console.log('🎯 Formatted time display:', timeDisplay);
     
     // Calculate dash offset for the timer ring
     const dashOffset = calculateTimerOffset(
@@ -195,6 +186,26 @@ function calculateTimeLeft(dueDate: string | null, status: TaskStatus): Countdow
     return nullResult;
   }
 
+  // Use the same day calculation logic as getDaysRemaining for consistency
+  const daysRemaining = getDaysRemaining(dueDate);
+  
+  if (daysRemaining === null) {
+    return nullResult;
+  }
+
+  if (daysRemaining < 0) {
+    return {
+      days: Math.abs(daysRemaining),
+      hours: 0,
+      minutes: 0,
+      seconds: 0,
+      isOverdue: true,
+      totalSecondsLeft: 0,
+    };
+  }
+
+  // For more detailed time calculations (hours, minutes, seconds), 
+  // still use the original method but base it on the normalized days
   const now = new Date().getTime();
   const targetDate = new Date(dueDate).getTime();
   const difference = targetDate - now;
@@ -210,14 +221,13 @@ function calculateTimeLeft(dueDate: string | null, status: TaskStatus): Countdow
     };
   }
 
-  const days = Math.floor(difference / (1000 * 60 * 60 * 24));
   const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
   const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
   const seconds = Math.floor((difference % (1000 * 60)) / 1000);
   const totalSecondsLeft = Math.floor(difference / 1000);
 
   return {
-    days: days > 0 ? days : 0,
+    days: daysRemaining,
     hours: hours > 0 ? hours : 0,
     minutes: minutes > 0 ? minutes : 0,
     seconds: seconds > 0 ? seconds : 0,
