@@ -193,7 +193,7 @@ const ModernAuthForm: React.FC = () => {
         <CardContent className="p-8">
           <div className="mb-8 text-center">
             <h1 className="mb-2 text-3xl font-bold tracking-tight text-foreground">
-              {mode === 'signin' ? 'Welcome back' : 'Create account'}
+              {mode === 'signin' ? 'Sign In' : 'Create an account'}
             </h1>
             
           </div>
