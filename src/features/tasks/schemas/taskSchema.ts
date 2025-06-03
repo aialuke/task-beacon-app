@@ -3,8 +3,8 @@ import { z } from 'zod';
 export const VALIDATION_MESSAGES = {
   TITLE_REQUIRED: 'Task title is required',
   TITLE_TOO_SHORT: 'Title must be at least 1 character',
-  TITLE_TOO_LONG: 'Title cannot exceed 200 characters',
-  DESCRIPTION_TOO_LONG: 'Description cannot exceed 2000 characters',
+  TITLE_TOO_LONG: 'Title cannot exceed 22 characters',
+  DESCRIPTION_TOO_LONG: 'Description cannot exceed 500 characters',
   PRIORITY_REQUIRED: 'Priority is required',
   PRIORITY_INVALID: 'Priority must be low, medium, high, or urgent',
   STATUS_REQUIRED: 'Status is required',
@@ -25,18 +25,28 @@ const isValidUrl = (url: string): boolean => {
   }
 };
 
+// Title schema with proper character limits (matching database constraints)
+export const taskTitleSchema = z
+  .string()
+  .min(1, VALIDATION_MESSAGES.TITLE_REQUIRED)
+  .max(22, VALIDATION_MESSAGES.TITLE_TOO_LONG)
+  .transform(str => str.trim());
+
+// Description schema
+export const taskDescriptionSchema = z
+  .string()
+  .max(500, VALIDATION_MESSAGES.DESCRIPTION_TOO_LONG)
+  .optional()
+  .nullable()
+  .transform(val => val?.trim() || null);
+
+// Base task schema for validation
 export const baseTaskSchema = z.object({
-  title: z
-    .string()
-    .min(1, VALIDATION_MESSAGES.TITLE_REQUIRED)
-    .max(200, VALIDATION_MESSAGES.TITLE_TOO_LONG),
-  description: z
-    .string()
-    .max(2000, VALIDATION_MESSAGES.DESCRIPTION_TOO_LONG)
-    .optional(),
+  title: taskTitleSchema,
+  description: taskDescriptionSchema,
   priority: z.enum(['low', 'medium', 'high', 'urgent'], {
     errorMap: () => ({ message: VALIDATION_MESSAGES.PRIORITY_INVALID }),
-  }),
+  }).default('medium'),
   status: z
     .enum(['pending', 'complete', 'overdue'], {
       errorMap: () => ({ message: VALIDATION_MESSAGES.STATUS_INVALID }),
@@ -45,20 +55,61 @@ export const baseTaskSchema = z.object({
   dueDate: z
     .string()
     .optional()
+    .nullable()
     .or(z.literal('')),
   photoUrl: z
     .string()
     .optional()
+    .nullable()
     .or(z.literal('')),
   url: z
     .string()
     .refine(isValidUrl, VALIDATION_MESSAGES.URL_INVALID)
     .optional()
+    .nullable()
     .or(z.literal('')),
   pinned: z.boolean().default(false),
-  assigneeId: z.string().optional().or(z.literal('')),
+  assigneeId: z.string().optional().nullable().or(z.literal('')),
 });
 
-export const createTaskSchema = baseTaskSchema;
+// Schema for creating tasks (more flexible)
+export const createTaskSchema = baseTaskSchema.partial({
+  priority: true,
+  status: true,
+});
 
+// Schema for updating tasks (all fields optional)
+export const updateTaskSchema = baseTaskSchema.partial();
+
+// Schema for form validation (compatible with existing form structure)
+export const taskFormSchema = z.object({
+  title: taskTitleSchema,
+  description: z.string().max(500, VALIDATION_MESSAGES.DESCRIPTION_TOO_LONG).default(''),
+  dueDate: z.string().default(''),
+  url: z.string().refine(isValidUrl, VALIDATION_MESSAGES.URL_INVALID).default(''),
+  pinned: z.boolean().default(false),
+  assigneeId: z.string().default(''),
+  priority: z.enum(['low', 'medium', 'high', 'urgent']).default('medium'),
+});
+
+// Type exports
 export type CreateTaskInput = z.infer<typeof createTaskSchema>;
+export type UpdateTaskInput = z.infer<typeof updateTaskSchema>;
+export type TaskFormInput = z.infer<typeof taskFormSchema>;
+
+// Validation helpers for specific fields
+export const validateTaskTitle = (title: unknown) => {
+  return taskTitleSchema.safeParse(title);
+};
+
+export const validateTaskDescription = (description: unknown) => {
+  return taskDescriptionSchema.safeParse(description);
+};
+
+// Helper to get field-specific error messages
+export const getFieldError = (result: z.SafeParseReturnType<any, any>, field: string): string | undefined => {
+  if (result.success) return undefined;
+  
+  const fieldError = result.error.errors.find(err => err.path.includes(field));
+  return fieldError?.message;
+};

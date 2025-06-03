@@ -1,31 +1,27 @@
-import { useCallback } from 'react';
 import { useTaskFormValidation } from './useTaskFormValidation';
 
 /**
- * Task form validation hook
+ * Task validation hook
  *
- * Provides validation functions specifically for task forms
+ * Provides task validation functions using the unified Zod-based validation
+ * This is now a thin wrapper around useTaskFormValidation for backward compatibility
+ * 
+ * @deprecated Use useTaskFormValidation directly for new code
  */
 export function useTaskValidation() {
-  const { validateTitle, createTitleSetter, validateTaskForm } =
-    useTaskFormValidation();
-
-  const validateField = useCallback(
-    (fieldName: string, value: unknown) => {
-      switch (fieldName) {
-        case 'title':
-          return validateTitle(value as string);
-        default:
-          return true;
-      }
-    },
-    [validateTitle]
-  );
+  const validation = useTaskFormValidation();
 
   return {
-    validateTitle,
-    validateTaskForm,
-    validateField,
-    createTitleSetter,
+    // Maintain backward compatibility
+    validateTitle: validation.validateTitle,
+    validateTaskForm: validation.validateTaskForm,
+    validateField: validation.validateField,
+    createTitleSetter: validation.createTitleSetter,
+    
+    // Expose new validation methods
+    validateCreateTask: validation.validateCreateTask,
+    validateUpdateTask: validation.validateUpdateTask,
+    showValidationErrors: validation.showValidationErrors,
+    prepareTaskData: validation.prepareTaskData,
   };
 }

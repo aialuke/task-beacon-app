@@ -1,43 +1,34 @@
 /**
- * Validation utilities public API
+ * Centralized validation module
  * 
- * This file maintains backward compatibility by re-exporting all validation
- * functions from their new modular locations. Import paths can remain the same.
+ * Provides comprehensive validation utilities for the application.
+ * Includes synchronous format validators, async database validators,
+ * and business logic validators.
  */
 
-// Export standardized types
-export type { 
-  BasicValidationResult as ValidationResult,
-  ValidationErrorCode,
-  ValidationWarningCode,
-  ValidationContext,
-  StandardValidationResult,
-  StandardValidationDetail,
-  AsyncValidationConfig
-} from './types';
+// Types and constants
+export * from './types';
 
-// Export error handling utilities
+// Error handling utilities
 export {
   createSuccessResult,
   createErrorResult,
   createStandardResult,
-  combineValidationResults,
+  createValidationDetail,
   getStandardMessage,
-  StandardErrorMessages,
-  StandardWarningMessages
+  combineValidationResults,
+  withErrorHandling,
 } from './error-handling';
 
-// Database validators (async operations)
+// Database validators (async)
 export {
   validateUserExists,
   validateTaskExists,
-  // New batch validation functions
   validateMultipleUsersExist,
   validateMultipleTasksExist,
-  validateUsersAndTasksExist
 } from './database-validators';
 
-// Business validators (domain rules)
+// Business validators (async)
 export {
   validateTaskOwnership,
 } from './business-validators';
@@ -46,34 +37,20 @@ export {
 export {
   validateEmail,
   validateUrl,
-  validateTaskTitle,
-  validateTaskDescription,
   validateUserName,
   validateDueDate,
 } from './format-validators';
 
-// Entity validators (composite validation)
+// Entity validators (composite)
 export {
-  validateTaskData,
   validateProfileData,
 } from './entity-validators';
 
-// Database operations (centralized utilities)
-export {
-  DatabaseValidationOps,
-  validateMultipleExistence,
-  validateEntityCollection,
-  type ValidationQueryOptions,
-  type BatchExistenceRequest,
-  type BatchExistenceResult,
-  type TaskOwnershipData
-} from './database-operations';
-
-// Convenience exports for organized imports
-export * as DatabaseValidators from './database-validators';
-export * as BusinessValidators from './business-validators';
-export * as FormatValidators from './format-validators';
-export * as EntityValidators from './entity-validators';
-export * as DatabaseOperations from './database-operations';
-export * as ValidationTypes from './types';
-export * as ErrorHandling from './error-handling'; 
+// Re-export commonly used combinations
+export type {
+  BasicValidationResult as ValidationResult,
+  StandardValidationResult as DetailedValidationResult,
+  ValidationContext,
+  ValidationErrorCode,
+  ValidationWarningCode,
+} from './types'; 

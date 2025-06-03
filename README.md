@@ -26,12 +26,38 @@ This project follows modern React and TypeScript best practices with a focus on 
 
 ### Recent Improvements ✨
 
+- ✅ **Validation Consolidated** - All task validation now uses Zod schemas as single source of truth
 - ✅ **Utils Standardization Complete** - All utility imports migrated to `@/lib/utils/*` pattern
 - ✅ **Zero `any` Types** - Complete TypeScript strict typing throughout codebase  
 - ✅ **Error Handling Standardized** - Consistent error handling with proper logging and user feedback
 - ✅ **Performance Optimized** - React Query, memoization, and monitoring utilities
 - ✅ **Accessibility Enhanced** - ARIA labels, keyboard navigation, screen reader support
 - ✅ **Comprehensive Testing** - Unit tests with >80% coverage using Vitest
+
+### Validation Strategy 📋
+
+All task validation is now unified using **Zod** schemas located in `src/features/tasks/schemas/`:
+
+```typescript
+// Single source of truth for task validation
+import { useTaskFormValidation } from '@/features/tasks/hooks/useTaskFormValidation';
+
+const { 
+  validateTaskForm,     // Validate complete form data
+  validateCreateTask,   // Validate for task creation
+  validateUpdateTask,   // Validate for task updates
+  validateField,        // Validate individual fields
+  createTitleSetter,    // Create setter with character limit
+} = useTaskFormValidation();
+```
+
+**Key Features:**
+- ✅ Type-safe validation with automatic type inference
+- ✅ Consistent error messages across the app
+- ✅ Field-level and form-level validation
+- ✅ Character limits enforced (Title: 22 chars, Description: 500 chars)
+- ✅ Automatic data transformation (trimming, defaults)
+- ✅ Toast notifications for validation errors
 
 ### Utils Organization 📁
 

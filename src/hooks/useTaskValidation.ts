@@ -1,17 +1,8 @@
-import { useCallback } from 'react';
-import { validateTaskData } from '@/lib/validation';
-import { showValidationErrors } from './dataValidationUtils';
-
-export function useTaskValidation() {
-  const validateTask = useCallback((taskData: {
-    title: string;
-    description?: string | null;
-    url_link?: string | null;
-    due_date?: string | null;
-  }) => {
-    const result = validateTaskData(taskData);
-    return showValidationErrors(result);
-  }, []);
-
-  return { validateTask };
-} 
+/**
+ * Global task validation hook
+ * 
+ * @deprecated This hook has been moved to @/features/tasks/hooks/useTaskFormValidation
+ * This file remains for backward compatibility only
+ */
+export { useTaskValidation } from '@/features/tasks/hooks/useTaskValidation';
+export { useTaskFormValidation } from '@/features/tasks/hooks/useTaskFormValidation'; 

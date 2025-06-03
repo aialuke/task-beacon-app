@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { TaskService, type TaskCreateData as ServiceTaskCreateData } from '@/lib/api/tasks/task.service';
 import { AuthService } from '@/lib/api/base';
-import { useTaskValidation } from '@/hooks/useTaskValidation';
+import { useTaskFormValidation } from './useTaskFormValidation';
 
 interface CreateTaskData {
   title: string;
@@ -17,19 +17,22 @@ interface CreateTaskData {
  * Hook for API operations related to task creation with validation
  */
 export function useCreateTaskAPI() {
-  const { validateTask } = useTaskValidation();
+  const { validateCreateTask, showValidationErrors } = useTaskFormValidation();
 
   const executeCreateTask = useCallback(async (taskData: CreateTaskData) => {
     try {
-      // Validate data before sending to database
-      const validationResult = validateTask({
+      // Validate data using Zod schema
+      const validationResult = validateCreateTask({
         title: taskData.title,
-        description: taskData.description || null,
-        url_link: taskData.url || null,
-        due_date: taskData.dueDate || null,
+        description: taskData.description || undefined,
+        url: taskData.url || undefined,
+        dueDate: taskData.dueDate || undefined,
+        pinned: taskData.pinned,
+        assigneeId: taskData.assigneeId || undefined,
       });
 
       if (!validationResult.isValid) {
+        showValidationErrors(validationResult.errors);
         return { success: false, error: 'Validation failed', validation: validationResult };
       }
 
@@ -77,7 +80,7 @@ export function useCreateTaskAPI() {
       }
       return { success: false, error: errorMessage };
     }
-  }, [validateTask]);
+  }, [validateCreateTask, showValidationErrors]);
 
   return {
     executeCreateTask,
