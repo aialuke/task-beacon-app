@@ -24,6 +24,7 @@ interface CountdownTimerResult {
   dashOffset: number;
   tooltipContent: string;
   ariaLabel: string;
+  daysRemaining: number | null;
 }
 
 /**
@@ -163,6 +164,7 @@ export function useCountdown(
       dashOffset,
       tooltipContent,
       ariaLabel,
+      daysRemaining: timeLeft.days,
     };
   }, [state.timeLeft, dueDate, status, circumference]);
 

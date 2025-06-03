@@ -14,6 +14,7 @@ import { getTimerColor } from '@/features/tasks/utils/taskUiUtils';
  * @param circumference - The circumference of the timer ring
  * @param strokeDashoffset - The animated stroke dash offset value
  * @param status - The current status of the task
+ * @param daysRemaining - The number of days remaining for the task
  */
 interface TimerRingProps {
   size: number;
@@ -21,6 +22,7 @@ interface TimerRingProps {
   circumference: number;
   strokeDashoffset: SpringValue<number> | number;
   status: TaskStatus;
+  daysRemaining: number | null;
 }
 
 // Define gradients once outside the component to avoid recreating them on each render
@@ -66,15 +68,22 @@ const TimerRing = ({
   circumference,
   strokeDashoffset,
   status,
+  daysRemaining,
 }: TimerRingProps) => {
   // Memoize derived values that don't need to be recalculated on every render
   const staticProps = useMemo(() => {
-    const gradientId =
-      status === 'pending'
-        ? 'url(#gradientPending)'
-        : status === 'overdue'
-          ? 'url(#gradientOverdue)'
-          : 'url(#gradientComplete)';
+    let gradientId;
+    
+    // Use green for tasks with 5+ days remaining
+    if (status === 'pending' && daysRemaining !== null && daysRemaining >= 5) {
+      gradientId = 'url(#gradientComplete)'; // Reuse green gradient
+    } else if (status === 'pending') {
+      gradientId = 'url(#gradientPending)'; // Yellow for < 5 days
+    } else if (status === 'overdue') {
+      gradientId = 'url(#gradientOverdue)'; // Red for overdue
+    } else {
+      gradientId = 'url(#gradientComplete)'; // Green for complete
+    }
 
     const filterId =
       status === 'overdue'
@@ -86,7 +95,7 @@ const TimerRing = ({
     const strokeWidth = status === 'overdue' ? '5px' : '4px';
 
     return { gradientId, filterId, strokeWidth };
-  }, [status]);
+  }, [status, daysRemaining]);
 
   return (
     <svg
@@ -140,6 +149,7 @@ export default memo(TimerRing, (prevProps, nextProps) => {
     prevProps.radius === nextProps.radius &&
     prevProps.circumference === nextProps.circumference &&
     prevProps.status === nextProps.status &&
+    prevProps.daysRemaining === nextProps.daysRemaining &&
     // For the strokeDashoffset, we need special handling since it might be a SpringValue
     (prevProps.strokeDashoffset === nextProps.strokeDashoffset ||
       (typeof prevProps.strokeDashoffset === 'number' &&

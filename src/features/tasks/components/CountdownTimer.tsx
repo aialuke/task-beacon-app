@@ -70,7 +70,7 @@ function CountdownTimer({
   }, [isMobile, priority, size]);
 
   // Use our custom hook to manage countdown logic
-  const { timeDisplay, dashOffset, tooltipContent, ariaLabel } = useCountdown(
+  const { timeDisplay, dashOffset, tooltipContent, ariaLabel, daysRemaining } = useCountdown(
     dueDate,
     status,
     circumference
@@ -130,6 +130,7 @@ function CountdownTimer({
               circumference={circumference}
               strokeDashoffset={strokeDashoffset}
               status={status}
+              daysRemaining={daysRemaining}
             />
             <TimerDisplay
               size={dynamicSize}
