@@ -162,7 +162,7 @@ export function createStandardContext<T>(
  * );
  * ```
  */
-export function withContextProvider<T, P = {}>(
+export function withContextProvider<T, P = Record<string, unknown>>(
   Provider: React.ComponentType<{ children: ReactNode; value: T }>,
   useValue: (props: P) => T
 ): React.ComponentType<P & { children: ReactNode }> {

@@ -17,9 +17,10 @@ export class DatabaseService {
    */
   static async executeRpc<T>(
     functionName: string,
-    params?: Record<string, any>
+    params?: Record<string, unknown>
   ): Promise<ApiResponse<T>> {
     return apiRequest(`rpc.${functionName}`, async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data, error } = await (supabase as any).rpc(functionName, params);
       if (error) throw error;
       return data;
@@ -32,9 +33,10 @@ export class DatabaseService {
   static async exists(
     table: string,
     column: string,
-    value: any
+    value: unknown
   ): Promise<ApiResponse<boolean>> {
     return apiRequest(`exists.${table}`, async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data, error } = await (supabase as any)
         .from(table)
         .select('id')
@@ -51,9 +53,10 @@ export class DatabaseService {
    */
   static async count(
     table: string,
-    filters?: Record<string, any>
+    filters?: Record<string, unknown>
   ): Promise<ApiResponse<number>> {
     return apiRequest(`count.${table}`, async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let query = (supabase as any).from(table).select('*', { count: 'exact', head: true });
       
       if (filters) {
@@ -74,13 +77,14 @@ export class DatabaseService {
   static async selectFields<T>(
     table: string,
     fields: string,
-    filters: Record<string, any>,
+    filters: Record<string, unknown>,
     options?: {
       single?: boolean;
       orderBy?: { column: string; ascending?: boolean };
     }
   ): Promise<ApiResponse<T>> {
     return apiRequest(`select.${table}`, async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let query = (supabase as any).from(table).select(fields);
       
       // Apply filters
@@ -129,8 +133,8 @@ export class DatabaseService {
   static async batchExists(
     table: string,
     column: string,
-    values: any[]
-  ): Promise<ApiResponse<Array<{ value: any; exists: boolean }>>> {
+    values: unknown[]
+  ): Promise<ApiResponse<Array<{ value: unknown; exists: boolean }>>> {
     return apiRequest(`batch-exists.${table}`, async () => {
       const results = await Promise.allSettled(
         values.map(async (value) => {

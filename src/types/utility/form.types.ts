@@ -6,7 +6,7 @@
  */
 
 // Form state management
-export interface FormState<T = Record<string, any>> {
+export interface FormState<T = Record<string, unknown>> {
   values: T;
   errors: Partial<Record<keyof T, string>>;
   touched: Partial<Record<keyof T, boolean>>;
@@ -16,7 +16,7 @@ export interface FormState<T = Record<string, any>> {
   initialValues: T;
 }
 
-export interface UseFormStateOptions<T = Record<string, any>> {
+export interface UseFormStateOptions<T = Record<string, unknown>> {
   initialValues: T;
   validate?: (values: T) => Partial<Record<keyof T, string>>;
   validateOnChange?: boolean;
@@ -26,13 +26,13 @@ export interface UseFormStateOptions<T = Record<string, any>> {
 
 // Field-level types
 export interface FieldState {
-  value: any;
+  value: unknown;
   error?: string;
   touched: boolean;
   dirty: boolean;
 }
 
-export interface FieldProps<T = any> {
+export interface FieldProps<T = unknown> {
   name: string;
   value: T;
   onChange: (value: T) => void;
@@ -44,7 +44,7 @@ export interface FieldProps<T = any> {
 }
 
 // Validation types
-export interface ValidationRule<T = any> {
+export interface ValidationRule<T = unknown> {
   required?: boolean;
   minLength?: number;
   maxLength?: number;
@@ -57,7 +57,7 @@ export interface ValidationRule<T = any> {
   asyncCustom?: (value: T) => Promise<string | null>;
 }
 
-export type ValidationSchema<T = Record<string, any>> = {
+export type ValidationSchema<T = Record<string, unknown>> = {
   [K in keyof T]?: ValidationRule<T[K]> | ValidationRule<T[K]>[];
 };
 
@@ -68,7 +68,7 @@ export interface ValidationResult {
 }
 
 // Form configuration
-export interface FormConfig<T = Record<string, any>> {
+export interface FormConfig<T = Record<string, unknown>> {
   initialValues: T;
   validationSchema?: ValidationSchema<T>;
   validateOnChange?: boolean;
@@ -80,11 +80,11 @@ export interface FormConfig<T = Record<string, any>> {
   onValuesChange?: (values: T, prevValues: T) => void;
 }
 
-export interface FormHelpers<T = Record<string, any>> {
+export interface FormHelpers<T = Record<string, unknown>> {
   setSubmitting: (isSubmitting: boolean) => void;
   setErrors: (errors: Partial<Record<keyof T, string>>) => void;
   setFieldError: (field: keyof T, error: string) => void;
-  setFieldValue: (field: keyof T, value: any) => void;
+  setFieldValue: (field: keyof T, value: unknown) => void;
   setValues: (values: T) => void;
   resetForm: (nextInitialValues?: T) => void;
   validateForm: () => Promise<ValidationResult>;
@@ -100,7 +100,7 @@ export interface FormSubmissionState {
   success: boolean;
 }
 
-export interface FormSubmissionResult<T = any> {
+export interface FormSubmissionResult<T = unknown> {
   success: boolean;
   data?: T;
   errors?: Record<string, string>;
@@ -108,7 +108,7 @@ export interface FormSubmissionResult<T = any> {
 }
 
 // Field array types
-export interface FieldArrayHelpers<T = any> {
+export interface FieldArrayHelpers<T = unknown> {
   push: (value: T) => void;
   pop: () => void;
   insert: (index: number, value: T) => void;
@@ -118,7 +118,7 @@ export interface FieldArrayHelpers<T = any> {
   replace: (index: number, value: T) => void;
 }
 
-export interface FieldArrayProps<T = any> {
+export interface FieldArrayProps<T = unknown> {
   name: string;
   values: T[];
   helpers: FieldArrayHelpers<T>;
@@ -130,7 +130,7 @@ export interface FormStep {
   id: string;
   title: string;
   description?: string;
-  component: React.ComponentType<any>;
+  component: React.ComponentType<Record<string, unknown>>;
   validationSchema?: ValidationSchema;
   isOptional?: boolean;
   canSkip?: boolean;
@@ -139,7 +139,7 @@ export interface FormStep {
 export interface MultiStepFormState {
   currentStep: number;
   completedSteps: number[];
-  formData: Record<string, any>;
+  formData: Record<string, unknown>;
   isValid: boolean;
   isLastStep: boolean;
   isFirstStep: boolean;
@@ -149,14 +149,14 @@ export interface MultiStepFormHelpers {
   nextStep: () => void;
   prevStep: () => void;
   goToStep: (step: number) => void;
-  setStepData: (step: number, data: Record<string, any>) => void;
+  setStepData: (step: number, data: Record<string, unknown>) => void;
   validateCurrentStep: () => Promise<boolean>;
   submitForm: () => Promise<void>;
 }
 
 // Conditional field types
 export interface ConditionalField {
-  condition: (values: Record<string, any>) => boolean;
+  condition: (values: Record<string, unknown>) => boolean;
   fields: string[];
   action: 'show' | 'hide' | 'enable' | 'disable' | 'require';
 }
@@ -181,7 +181,7 @@ export interface FormPersistenceConfig {
 export interface AutoSaveConfig {
   enabled: boolean;
   interval: number; // milliseconds
-  onSave: (values: Record<string, any>) => Promise<void>;
+  onSave: (values: Record<string, unknown>) => Promise<void>;
   onError?: (error: Error) => void;
   skipValidation?: boolean;
 }
@@ -237,7 +237,7 @@ export interface FormErrorBoundaryState {
 }
 
 // Form context types
-export interface FormContextValue<T = Record<string, any>> {
+export interface FormContextValue<T = Record<string, unknown>> {
   formState: FormState<T>;
   formHelpers: FormHelpers<T>;
   formConfig: FormConfig<T>;

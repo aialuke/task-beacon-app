@@ -6,6 +6,7 @@ import TaskFilterNavbar from './TaskFilterNavbar';
 import TaskPagination from './TaskPagination';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FabButton } from './FabButton';
+import type { Task } from '@/types';
 
 // Lazy load components that aren't needed on initial render
 const TaskCard = lazy(() => import('./TaskCard'));
@@ -41,7 +42,7 @@ const LoadingSkeletonGrid = memo(({ count }: { count: number }) => {
 LoadingSkeletonGrid.displayName = 'LoadingSkeletonGrid';
 
 // Optimized task grid with virtualization considerations
-const TaskGrid = memo(({ tasks }: { tasks: any[] }) => {
+const TaskGrid = memo(({ tasks }: { tasks: Task[] }) => {
   const taskElements = useOptimizedMemo(
     () => tasks.map((task) => (
       <Suspense key={task.id} fallback={<TaskCardSkeleton />}>

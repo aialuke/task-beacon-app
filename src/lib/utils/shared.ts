@@ -68,7 +68,7 @@ export const typeGuards = {
   isObject: (value: unknown): value is Record<string, unknown> => 
     typeof value === 'object' && value !== null && !Array.isArray(value),
   isArray: (value: unknown): value is unknown[] => Array.isArray(value),
-  isFunction: (value: unknown): value is Function => typeof value === 'function',
+  isFunction: (value: unknown): value is (...args: unknown[]) => unknown => typeof value === 'function',
   isNotNull: <T>(value: T | null): value is T => value !== null,
   isNotUndefined: <T>(value: T | undefined): value is T => value !== undefined,
   isDefined: <T>(value: T | null | undefined): value is T => 

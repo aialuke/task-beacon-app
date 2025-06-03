@@ -79,17 +79,17 @@ export default defineConfig(({ mode }) => ({
     hookTimeout: 10000,
     pool: 'forks',
     poolOptions: {
-      threads: {
-        singleThread: true,
-      },
       forks: {
         isolate: true,
+        minForks: 1,
+        maxForks: 1,
       },
     },
     maxConcurrency: 1,
-    maxWorkers: 1,
-    deps: {
-      inline: true,
+    server: {
+      deps: {
+        inline: true,
+      },
     },
     sourcemap: false,
   },

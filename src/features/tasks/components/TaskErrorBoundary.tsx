@@ -71,10 +71,13 @@ export class TaskErrorBoundary extends Component<
   private handleClearTaskData = () => {
     // Clear React Query cache for tasks
     try {
-      const queryClient = (window as any).__REACT_QUERY_CLIENT__;
-      if (queryClient) {
-        queryClient.removeQueries({ queryKey: ['tasks'] });
-        queryClient.removeQueries({ queryKey: ['task'] });
+      const queryClient = (window as Window & { __REACT_QUERY_CLIENT__?: unknown }).__REACT_QUERY_CLIENT__;
+      if (queryClient && typeof queryClient === 'object' && queryClient !== null) {
+        const client = queryClient as { 
+          removeQueries: (options: { queryKey: string[] }) => void 
+        };
+        client.removeQueries({ queryKey: ['tasks'] });
+        client.removeQueries({ queryKey: ['task'] });
       }
     } catch (e) {
       logger.warn('Failed to clear query cache', { error: (e as Error).message });

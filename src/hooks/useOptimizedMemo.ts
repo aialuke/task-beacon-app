@@ -69,7 +69,7 @@ export function useOptimizedMemo<T>(
 /**
  * Enhanced useCallback with performance tracking
  */
-export function useOptimizedCallback<T extends (...args: any[]) => any>(
+export function useOptimizedCallback<T extends (...args: unknown[]) => unknown>(
   callback: T,
   deps: React.DependencyList,
   options?: {

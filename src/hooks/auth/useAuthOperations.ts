@@ -1,4 +1,3 @@
-
 /**
  * Auth Operations Hook
  * 
@@ -7,10 +6,11 @@
 
 import { useCallback } from 'react';
 import { AuthService } from '@/lib/api/auth.service';
+import type { Session } from '@supabase/supabase-js';
 import type { ApiError } from '@/types/shared';
 
 export interface UseAuthOperationsProps {
-  updateSessionAndUser: (session: any) => void;
+  updateSessionAndUser: (session: Session | null) => void;
   clearAuthState: () => void;
   setLoading: (loading: boolean) => void;
   setError: (error: ApiError | null) => void;

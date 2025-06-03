@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import type { User } from '@/types';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Mail, User as UserIcon } from 'lucide-react';
@@ -22,22 +22,10 @@ function UserProfile({
   const displayName = user.name || user.email.split('@')[0];
   const initials = displayName.charAt(0).toUpperCase();
 
-  // Optimize avatar image with lazy loading and error handling
-  const avatarImageProps = {
-    src: user.avatar_url || undefined,
-    alt: `${displayName}'s profile picture`,
-    loading: 'lazy' as const,
-    onError: () => {
-      // Fallback handled by AvatarFallback component
-      console.warn(`Failed to load avatar for user: ${user.email}`);
-    },
-  };
-
   if (compact) {
     return (
       <div className="flex items-center gap-3">
         <Avatar className="h-8 w-8">
-          <AvatarImage {...avatarImageProps} />
           <AvatarFallback className="text-xs" aria-label={`${displayName} (initials)`}>
             {initials}
           </AvatarFallback>
@@ -62,7 +50,6 @@ function UserProfile({
       <CardHeader className="pb-4">
         <div className="flex items-center gap-4">
           <Avatar className="h-16 w-16">
-            <AvatarImage {...avatarImageProps} />
             <AvatarFallback className="text-lg" aria-label={`${displayName} (initials)`}>
               {initials}
             </AvatarFallback>

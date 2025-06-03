@@ -40,14 +40,12 @@ export type {
   TaskImportResult,
 } from './task.types';
 
-// Core user domain types
+// Core user domain types - simplified
 export type {
   // Core user entities
   User,
-  UserProfile,
   UserPreferences,
   NotificationPreferences,
-  UserPrivacySettings,
   
   // User operations
   UserCreateData,
@@ -56,22 +54,13 @@ export type {
   UserSearchFilters,
   UserListResponse,
   
-  // User features
-  UserStatistics,
+  // Team management
   Team,
   TeamMember,
-  TeamSettings,
-  UserInvitation,
-  UserSession,
-  UserActivity,
-  
-  // User security
-  UserAuthSettings,
-  TrustedDevice,
   
   // User bulk operations
-  UserBulkOperation,
-  UserBulkOperationResult,
+  UserBulkUpdateOperation,
+  UserBulkUpdateResult,
   
   // User import/export
   UserExportOptions,

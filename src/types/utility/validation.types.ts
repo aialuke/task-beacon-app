@@ -18,35 +18,35 @@ export interface ValidationDetail {
   rule: string;
   message: string;
   severity: 'error' | 'warning' | 'info';
-  value?: any;
+  value?: unknown;
 }
 
 export interface ValidationOptions {
   stopOnFirstError?: boolean;
   includeWarnings?: boolean;
-  context?: Record<string, any>;
+  context?: Record<string, unknown>;
   locale?: string;
   customMessages?: Record<string, string>;
 }
 
 // Validation rule types
-export interface ValidationRule<T = any> {
+export interface ValidationRule<T = unknown> {
   name: string;
   message?: string;
   severity?: 'error' | 'warning';
-  validate: (value: T, context?: any) => boolean | string | Promise<boolean | string>;
+  validate: (value: T, context?: unknown) => boolean | string | Promise<boolean | string>;
   dependsOn?: string[];
-  condition?: (context: any) => boolean;
+  condition?: (context: unknown) => boolean;
 }
 
-export interface AsyncValidationRule<T = any> extends ValidationRule<T> {
-  validate: (value: T, context?: any) => Promise<boolean | string>;
+export interface AsyncValidationRule<T = unknown> extends ValidationRule<T> {
+  validate: (value: T, context?: unknown) => Promise<boolean | string>;
   timeout?: number;
   debounce?: number;
 }
 
-export interface ConditionalValidationRule<T = any> extends ValidationRule<T> {
-  condition: (context: any) => boolean;
+export interface ConditionalValidationRule<T = unknown> extends ValidationRule<T> {
+  condition: (context: unknown) => boolean;
   rules: ValidationRule<T>[];
 }
 
@@ -102,9 +102,9 @@ export interface DateRule {
   message?: string;
 }
 
-export interface CustomRule<T = any> {
+export interface CustomRule<T = unknown> {
   type: 'custom';
-  validator: (value: T, context?: any) => boolean | string | Promise<boolean | string>;
+  validator: (value: T, context?: unknown) => boolean | string | Promise<boolean | string>;
   message?: string;
 }
 
@@ -119,7 +119,7 @@ export type FieldValidationRule =
   | DateRule
   | CustomRule;
 
-export type ValidationSchema<T = Record<string, any>> = {
+export type ValidationSchema<T = Record<string, unknown>> = {
   [K in keyof T]?: FieldValidationRule | FieldValidationRule[];
 };
 
@@ -131,12 +131,12 @@ export interface SchemaValidationOptions extends ValidationOptions {
 
 // Validation context and state
 export interface ValidationContext {
-  values: Record<string, any>;
+  values: Record<string, unknown>;
   touched: Record<string, boolean>;
   errors: Record<string, string>;
   warnings: Record<string, string>;
   isValidating: Record<string, boolean>;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface FieldValidationState {
@@ -163,19 +163,19 @@ export interface ValidationConfig {
 // Advanced validation features
 export interface CrossFieldValidation {
   fields: string[];
-  validator: (values: Record<string, any>) => boolean | string;
+  validator: (values: Record<string, unknown>) => boolean | string;
   message?: string;
   trigger?: 'any' | 'all';
 }
 
 export interface DependentValidation {
   dependsOn: string | string[];
-  condition: (dependentValues: any) => boolean;
+  condition: (dependentValues: unknown) => boolean;
   rules: FieldValidationRule[];
 }
 
 export interface ConditionalValidation {
-  when: (values: Record<string, any>) => boolean;
+  when: (values: Record<string, unknown>) => boolean;
   then: ValidationSchema;
   otherwise?: ValidationSchema;
 }
@@ -198,12 +198,11 @@ export interface AggregatedValidationResult {
 export interface ValidationMetrics {
   totalTime: number;
   fieldValidationTimes: Record<string, number>;
-  asyncValidationCount: number;
   cacheHitRate: number;
   validationCount: number;
 }
 
-// Validation cache
+// Validation caching
 export interface ValidationCache {
   get: (key: string) => ValidationResult | undefined;
   set: (key: string, result: ValidationResult, ttl?: number) => void;
@@ -211,7 +210,7 @@ export interface ValidationCache {
   size: number;
 }
 
-// Validation internationalization
+// Validation messages and localization
 export interface ValidationMessages {
   required: string;
   email: string;
@@ -232,22 +231,22 @@ export interface ValidationLocale {
   numberFormat: Intl.NumberFormatOptions;
 }
 
-// Validation transformers
-export interface ValidationTransformer<T = any, U = any> {
+// Validation transformers and pipelines
+export interface ValidationTransformer<T = unknown, U = unknown> {
   transform: (value: T) => U;
   validate?: (transformed: U) => boolean | string;
 }
 
-export interface ValidationPipeline<T = any> {
+export interface ValidationPipeline<T = unknown> {
   transformers: ValidationTransformer[];
   validators: ValidationRule<T>[];
-  finalTransform?: (value: any) => T;
+  finalTransform?: (value: unknown) => T;
 }
 
-// Error handling
+// Validation error handling
 export interface ValidationError extends Error {
   field?: string;
-  value?: any;
+  value?: unknown;
   rule?: string;
   code?: string;
   details?: ValidationDetail[];

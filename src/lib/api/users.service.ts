@@ -24,9 +24,7 @@ const profileRowToUser = (profile: ProfileRow): User => {
     id: profile.id,
     email: profile.email,
     name: profile.name,
-    avatar_url: profile.avatar_url,
     role: profile.role as UserRole,
-    is_active: true, // Default to active for existing profiles
     created_at: profile.created_at,
     updated_at: profile.updated_at,
   };
@@ -42,7 +40,6 @@ export interface UserSearchOptions {
 export interface UserUpdateData {
   name?: string;
   email?: string;
-  avatarUrl?: string;
   role?: UserRole;
 }
 
@@ -143,7 +140,6 @@ export class UserService {
 
       if (userData.name !== undefined) updateData.name = userData.name;
       if (userData.email !== undefined) updateData.email = userData.email;
-      if (userData.avatarUrl !== undefined) updateData.avatar_url = userData.avatarUrl;
       if (userData.role !== undefined) updateData.role = userData.role;
 
       const { data, error } = await supabase

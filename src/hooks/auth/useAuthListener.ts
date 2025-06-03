@@ -1,4 +1,3 @@
-
 /**
  * Auth Listener Hook
  * 
@@ -7,10 +6,11 @@
 
 import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import type { Session } from '@supabase/supabase-js';
 import type { ApiError } from '@/types/shared';
 
 export interface UseAuthListenerProps {
-  updateSessionAndUser: (session: any) => void;
+  updateSessionAndUser: (session: Session | null) => void;
   setError: (error: ApiError | null) => void;
   setLoading: (loading: boolean) => void;
 }

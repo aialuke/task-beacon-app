@@ -81,7 +81,7 @@ export function createValidationDetail(
   code: ValidationErrorCode | ValidationWarningCode,
   message: string,
   field?: string,
-  value?: any,
+  value?: unknown,
   severity: 'error' | 'warning' | 'info' = 'error'
 ): StandardValidationDetail {
   return {

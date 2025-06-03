@@ -26,7 +26,7 @@ import {
 export interface ValidationQueryOptions {
   table: string;
   column: string;
-  value: any;
+  value: unknown;
   context?: ValidationContext;
 }
 
@@ -36,7 +36,7 @@ export interface ValidationQueryOptions {
 export interface BatchExistenceRequest {
   table: string;
   column: string;
-  value: any;
+  value: unknown;
   identifier: string; // Unique identifier for this check
 }
 
@@ -46,7 +46,7 @@ export interface BatchExistenceRequest {
 export interface BatchExistenceResult {
   identifier: string;
   exists: boolean;
-  value: any;
+  value: unknown;
 }
 
 /**
@@ -216,7 +216,7 @@ export class DatabaseValidationOps {
       identifier: string;
       table: string;
       column: string;
-      value: any;
+      value: unknown;
       errorMessage?: string;
     }>
   ): Promise<BasicValidationResult> {
@@ -280,7 +280,7 @@ export class DatabaseValidationOps {
       identifier: string;
       table: string;
       column: string;
-      value: any;
+      value: string;
     }> = [
       ...userEmails.map((email, index) => ({
         identifier: `user_${index}`,
@@ -346,7 +346,7 @@ export async function validateMultipleExistence(
 export async function validateEntityCollection(
   table: string,
   column: string,
-  values: any[],
+  values: unknown[],
   context?: ValidationContext
 ): Promise<BasicValidationResult> {
   const requests: BatchExistenceRequest[] = values.map((value, index) => ({
