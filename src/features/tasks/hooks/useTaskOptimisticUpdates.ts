@@ -80,9 +80,9 @@ export function useTaskOptimisticUpdates() {
             ...oldData,
             pages: oldData.pages.map((page) => ({
               ...page,
-              data: page.data.map((task: Task) =>
+              data: page.data?.map((task: Task) =>
                 task.id === taskId ? { ...task, ...updates } : task
-              ),
+              ) || [],
             })),
           };
         }
@@ -93,9 +93,9 @@ export function useTaskOptimisticUpdates() {
             ...oldData,
             data: {
               ...oldData.data,
-              data: oldData.data.data.map((task: Task) =>
+              data: oldData.data.data?.map((task: Task) =>
                 task.id === taskId ? { ...task, ...updates } : task
-              ),
+              ) || [],
             },
           };
         }
@@ -121,7 +121,7 @@ export function useTaskOptimisticUpdates() {
             ...oldData,
             pages: oldData.pages.map((page) => ({
               ...page,
-              data: page.data.filter((task: Task) => task.id !== taskId),
+              data: page.data?.filter((task: Task) => task.id !== taskId) || [],
               totalCount: Math.max(0, page.totalCount - 1),
             })),
           };
@@ -132,7 +132,7 @@ export function useTaskOptimisticUpdates() {
             ...oldData,
             data: {
               ...oldData.data,
-              data: oldData.data.data.filter((task: Task) => task.id !== taskId),
+              data: oldData.data.data?.filter((task: Task) => task.id !== taskId) || [],
               totalCount: Math.max(0, oldData.data.totalCount - 1),
             },
           };
