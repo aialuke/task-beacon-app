@@ -35,6 +35,7 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
         url: taskForm.url,
         pinned: taskForm.pinned,
         assigneeId: taskForm.assigneeId,
+        priority: 'medium',
       };
 
       console.log('📋 Form data:', formData);
