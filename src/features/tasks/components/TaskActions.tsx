@@ -56,7 +56,7 @@ function TaskActions({ task }: TaskActionsProps) {
   }, [deleteTaskById, task.id]);
 
   return (
-    <div className="relative flex flex-wrap gap-2 border-t border-gray-100 pt-2">
+    <div className="flex flex-wrap gap-2 border-t border-gray-100 pt-2">
       <Button
         variant={task.status === 'complete' ? 'outline' : 'default'}
         size="sm"
@@ -68,45 +68,43 @@ function TaskActions({ task }: TaskActionsProps) {
         Follow Up
       </Button>
       
-      {/* Delete button positioned in bottom right */}
-      <div className="absolute bottom-2 right-0">
-        <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-          <DialogTrigger asChild>
+      {/* Delete button inline with other buttons */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-white hover:bg-white/10 hover:text-white"
+            disabled={isDeleting}
+          >
+            <Trash2 size={16} />
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Task</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete "{task.title}"? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
             <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 text-destructive hover:bg-destructive/10 hover:text-destructive"
+              variant="outline"
+              onClick={() => setIsDeleteDialogOpen(false)}
               disabled={isDeleting}
             >
-              <Trash2 size={16} />
+              Cancel
             </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Delete Task</DialogTitle>
-              <DialogDescription>
-                Are you sure you want to delete "{task.title}"? This action cannot be undone.
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter>
-              <Button
-                variant="outline"
-                onClick={() => setIsDeleteDialogOpen(false)}
-                disabled={isDeleting}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="destructive"
-                onClick={handleDelete}
-                disabled={isDeleting}
-              >
-                {isDeleting ? 'Deleting...' : 'Delete'}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </div>
+            <Button
+              variant="destructive"
+              onClick={handleDelete}
+              disabled={isDeleting}
+            >
+              {isDeleting ? 'Deleting...' : 'Delete'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
