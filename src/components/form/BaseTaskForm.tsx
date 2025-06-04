@@ -71,7 +71,7 @@ export function BaseTaskForm({
   return (
     <div className="w-full rounded-3xl border border-border/30 bg-card/40 p-8 text-card-foreground shadow-2xl shadow-black/5 backdrop-blur-xl">
       {/* Header - Optimized classes */}
-      <header className="mb-6 text-center">
+      <header className="mb-4 text-center">
         <div className="relative inline-block">
           <h1 className="mb-2 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-2xl font-bold text-foreground">
             {headerTitle}
