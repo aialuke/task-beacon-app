@@ -1,3 +1,4 @@
+
 /**
  * Business logic validation utilities
  * 
@@ -18,9 +19,6 @@ import {
   withErrorHandling,
   getStandardMessage 
 } from './error-handling';
-
-// Re-export for backward compatibility
-export type { BasicValidationResult as ValidationResult } from './types';
 
 /**
  * Validates user permissions for task operations
@@ -87,4 +85,4 @@ export const validateTaskOwnership = async (
   }
 
   return warnings.length > 0 ? createSuccessResult(warnings) : createSuccessResult();
-}; 
+};

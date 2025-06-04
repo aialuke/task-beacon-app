@@ -58,8 +58,3 @@ export interface BaseQueryParams {
   sortDirection?: 'asc' | 'desc';
   search?: string;
 }
-
-// Legacy compatibility exports
-export type { ApiResponse as TablesResponse };
-export type { ServiceResult as ActionResult };
-export type { ServiceResult as DatabaseOperationResult };

@@ -1,5 +1,3 @@
-
-
 /**
  * Centralized utilities index
  * 
@@ -36,11 +34,8 @@ export * from './date';
 export * from './format';
 
 // =====================================================
-// ENHANCED UTILITIES (Now Available - ✅ REFACTORED & MIGRATED)
+// ENHANCED UTILITIES (Available - Refactored & Migrated)
 // =====================================================
-
-// Enhanced image utilities with WebP support - NOW MODULAR!
-// NOTE: All direct imports migrated to specific modules for better tree-shaking
 
 // Export image types separately using 'export type'
 export type {
@@ -119,10 +114,10 @@ export {
 export type { ValidationResult as ImageValidationResult } from './image';
 
 // =====================================================
-// PHASE 4 UTILITIES (✅ NEW - Common React Patterns & Operations)
+// STANDARDIZED PATTERNS & OPERATIONS
 // =====================================================
 
-// Common React patterns and HOCs - explicit exports to avoid conflicts
+// Common React patterns and HOCs
 export {
   withErrorBoundary,
   withLoading,
@@ -152,7 +147,7 @@ export { useAsyncOperation as usePatternAsyncOperation } from './patterns';
 // Consolidated modal management
 export * from './modal-management';
 
-// Standardized async operation handling - explicit exports to avoid conflicts
+// Standardized async operation handling
 export type {
   AsyncOperationOptions,
   AsyncOperationResult,
@@ -170,10 +165,10 @@ export {
 export type { AsyncOperationState as AsyncOpState } from './async-operations';
 
 // =====================================================
-// ENHANCED UTILITIES (Available - Previous Phases)
+// ENHANCED UTILITIES (Previous Phases)
 // =====================================================
 
-// Enhanced validation utilities (Phase 2) - using actual exported functions
+// Enhanced validation utilities
 export {
   isValidEmail,
   isValidUrl,
@@ -192,10 +187,10 @@ export type {
   ValidationResult as UtilValidationResult,
 } from './validation';
 
-// Enhanced shared utilities (Phase 2)
+// Enhanced shared utilities
 export * from './shared';
 
-// Enhanced error handling (Phase 2)
+// Enhanced error handling
 export * from './error';
 
 // =====================================================
@@ -210,15 +205,11 @@ export * as uiUtils from './ui';
 export * as dataUtils from './data';
 export * as formatUtils from './format';
 
-// Enhanced utility namespaces (✅ NOW AVAILABLE - REFACTORED & MIGRATED)
+// Enhanced utility namespaces
 export * as imageUtils from './image';
-
-// Phase 4 utility namespaces (✅ NEW)
 export * as patternUtils from './patterns';
 export * as modalUtils from './modal-management';
 export * as asyncUtils from './async-operations';
-
-// Enhanced utility namespaces (Previous Phases) - using correct namespace
 export * as validationUtilities from './validation';
 export * as errorUtils from './error';
 

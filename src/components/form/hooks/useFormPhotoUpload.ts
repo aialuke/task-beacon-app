@@ -1,3 +1,4 @@
+
 import { useState, useCallback } from 'react';
 import { useOptimizedCallback, useOptimizedMemo } from '@/hooks/useOptimizedMemo';
 import { compressAndResizePhoto } from '@/lib/utils/image/convenience';
@@ -245,8 +246,3 @@ export function useTaskPhotoUpload(options?: {
     { name: 'task-photo-upload' }
   );
 }
-
-// Export aliases for backward compatibility
-export const usePhotoUpload = useFormPhotoUpload;
-export const useEnhancedPhotoUpload = useFormPhotoUpload;
-export const useEnhancedTaskPhotoUpload = useTaskPhotoUpload;

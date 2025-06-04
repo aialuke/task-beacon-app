@@ -1,3 +1,4 @@
+
 /**
  * Format validation utilities
  * 
@@ -16,9 +17,6 @@ import {
   createErrorResult,
   getStandardMessage 
 } from './error-handling';
-
-// Re-export for backward compatibility
-export type { BasicValidationResult as ValidationResult } from './types';
 
 /**
  * Validate email address format
@@ -122,4 +120,4 @@ export const validateDueDate = (
   }
 
   return warnings.length > 0 ? createSuccessResult(warnings) : createSuccessResult();
-}; 
+};

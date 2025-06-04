@@ -86,14 +86,6 @@ export type {
   UserQueryOptions,
 } from './feature-types/user.types';
 
-// === LEGACY COMPATIBILITY ===
-export type {
-  TaskWithRelations as TaskType,
-  ProfileTable as UserType,
-  TaskStatusEnum as LegacyTaskStatus,
-  UserRoleEnum as LegacyUserRole,
-} from './database';
-
 // Re-export database utilities for convenience
 export type {
   Tables,

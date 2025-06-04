@@ -1,3 +1,4 @@
+
 /**
  * Entity validation orchestrators
  * 
@@ -16,9 +17,6 @@ import {
   combineValidationResults,
   createSuccessResult 
 } from './error-handling';
-
-// Re-export for backward compatibility
-export type { BasicValidationResult as ValidationResult } from './types';
 
 /**
  * Comprehensive profile validation
@@ -46,4 +44,4 @@ export const validateProfileData = (
   }
 
   return combineValidationResults(results);
-}; 
+};
