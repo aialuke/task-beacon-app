@@ -1,4 +1,3 @@
-
 import { lazy, Suspense } from 'react';
 import { ModernAuthForm } from '@/components/ui/auth';
 import { AuthenticatedApp } from '@/components/layout/AuthenticatedApp';
@@ -29,19 +28,21 @@ const TaskDashboardSkeleton = () => (
       <Skeleton className="h-10 w-22" />
     </div>
 
-    {/* Task cards skeleton - constrained width to match actual cards */}
-    <div className="space-y-6 max-w-4xl">
-      {Array.from({ length: 6 }).map((_, i) => (
-        <div key={i} className="animate-pulse rounded-xl border-2 border-border/40 bg-muted/20 p-4 sm:p-5 max-w-2xl">
-          <div className="flex items-start gap-3">
-            <div className="h-10 w-10 rounded-full bg-muted" />
-            <div className="flex-1 space-y-2">
-              <Skeleton className="h-4 w-3/4" />
-              <Skeleton className="h-3 w-1/2" />
+    {/* Task cards skeleton - centered and constrained width to match actual cards */}
+    <div className="flex justify-center">
+      <div className="space-y-6 max-w-4xl w-full">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="animate-pulse rounded-xl border-2 border-border/40 bg-muted/20 p-4 sm:p-5 max-w-2xl mx-auto">
+            <div className="flex items-start gap-3">
+              <div className="h-10 w-10 rounded-full bg-muted" />
+              <div className="flex-1 space-y-2">
+                <Skeleton className="h-4 w-3/4" />
+                <Skeleton className="h-3 w-1/2" />
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   </div>
 );
