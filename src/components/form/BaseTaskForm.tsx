@@ -84,7 +84,7 @@ export function BaseTaskForm({
 }: BaseTaskFormProps) {
   return (
     <div className="mx-auto w-full max-w-lg">
-      <Card className="border border-border/50 bg-card/95 shadow-2xl backdrop-blur-sm rounded-2xl">
+      <Card className="border border-border/50 bg-card/95 shadow-2xl backdrop-blur-sm rounded-2xl p-8">
         <CardHeader className="pb-8 text-center relative">
           <h1 className="text-2xl font-bold text-card-foreground mb-2">{headerTitle}</h1>
           <p className="text-sm text-muted-foreground mt-3">{headerSubtitle}</p>
@@ -92,7 +92,7 @@ export function BaseTaskForm({
           <div className="absolute bottom-3 left-1/2 h-0.5 w-16 -translate-x-1/2 rounded-full bg-primary"></div>
         </CardHeader>
 
-        <CardContent className="relative space-y-6 p-8">
+        <CardContent className="relative space-y-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Title Input */}
             <FloatingInput
