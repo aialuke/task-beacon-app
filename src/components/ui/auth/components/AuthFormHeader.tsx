@@ -8,9 +8,19 @@ interface AuthFormHeaderProps {
 export const AuthFormHeader = memo(function AuthFormHeader({ mode }: AuthFormHeaderProps) {
   return (
     <div className="mb-8 text-center">
-      <h1 className="mb-2 text-3xl font-regular tracking-tight text-foreground">
-        {mode === 'signin' ? 'Sign In' : 'Create an account'}
-      </h1>
+      <div className="flex items-center justify-center gap-3 mb-4">
+        <img 
+          src="/assets/hourglass_logo.svg" 
+          alt="Task Flow Logo" 
+          className="h-8 w-8"
+        />
+        <h1 className="text-2xl font-semibold tracking-wide text-foreground">
+          Task Flow
+        </h1>
+      </div>
+      <p className="text-muted-foreground">
+        {mode === 'signin' ? 'Sign in to your account' : 'Create your account'}
+      </p>
     </div>
   );
 });
