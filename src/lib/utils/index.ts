@@ -1,4 +1,5 @@
 
+
 /**
  * Centralized utilities index
  * 
@@ -40,7 +41,77 @@ export * from './format';
 
 // Enhanced image utilities with WebP support - NOW MODULAR!
 // NOTE: All direct imports migrated to specific modules for better tree-shaking
-export * from './image';
+// Export everything except ValidationResult to avoid conflict
+export {
+  EnhancedImageProcessingOptions,
+  EnhancedImageValidationOptions,
+  ImageMetadata,
+  ProcessingResult,
+  BatchProcessingOptions,
+  WebPSupport,
+  ConversionResult,
+  ImagePreview,
+  DimensionResult,
+  DEFAULT_ENHANCED_VALIDATION,
+  DEFAULT_PROCESSING_OPTIONS,
+  WEBP_TEST_IMAGES,
+  IMAGE_MIME_TYPES,
+  FILE_SIZE,
+  DIMENSION_PRESETS,
+  QUALITY_PRESETS,
+  WebPDetector,
+  webpDetector,
+  validateImageEnhanced,
+  validateImageQuick,
+  validateImagesEnhanced,
+  areAllValidationResultsValid,
+  getValidationErrors,
+  getValidationWarnings,
+  extractImageMetadataEnhanced,
+  extractImageDimensions,
+  calculateAspectRatio,
+  calculateMegapixels,
+  supportsAlphaChannel,
+  supportsAnimation,
+  getReadableFileSize,
+  processImageEnhanced,
+  getOptimalImageFormatAdvanced,
+  calculateOptimalDimensions,
+  processImageWithCanvas,
+  resizeImageExact,
+  compressAndResizePhoto,
+  generateThumbnailEnhanced,
+  convertToWebPWithFallback,
+  resizeImage,
+  compressImage,
+  createSquareThumbnail,
+  convertImageFormat,
+  optimizeForWeb,
+  createImageSizes,
+  processImagesBatch,
+  processImagesParallel,
+  processImagesSequential,
+  createThumbnailsBatch,
+  calculateBatchStats,
+  processImagesWithRetry,
+  createImagePreviewEnhanced,
+  cleanupObjectURLs,
+  createImagePreviews,
+  cleanupImagePreviews,
+  createManagedPreview,
+  downloadImage,
+  downloadImages,
+  blobToDataURL,
+  copyImageToClipboard,
+  ImagePreviewManager,
+  IMAGE_UTILS_VERSION,
+  BACKWARD_COMPATIBLE,
+  MIGRATION_STATUS,
+  USAGE_EXAMPLES,
+} from './image';
+
+// Image ValidationResult with explicit alias to resolve conflict
+export type { ValidationResult as ImageValidationResult } from './image';
 
 // =====================================================
 // PHASE 4 UTILITIES (✅ NEW - Common React Patterns & Operations)
@@ -212,3 +283,4 @@ export * as errorUtils from './error';
 // NOTE: Enhanced Photo Upload Modal is now directly imported:
 // import EnhancedPhotoUploadModal from '@/components/form/enhanced-photo-upload/EnhancedPhotoUploadModal';
 // No backward compatibility exports needed - use direct imports for better tree-shaking.
+
