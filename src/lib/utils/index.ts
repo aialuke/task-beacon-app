@@ -42,32 +42,30 @@ export * from './format';
 export * from './image';
 
 // =====================================================
-// NEW UTILITIES (Available after migration - Phase 3)
+// PHASE 4 UTILITIES (✅ NEW - Common React Patterns & Operations)
 // =====================================================
 
-// Animation utilities - migrated to @/lib/utils/animation
-// export * from './animation';
+// Common React patterns and HOCs
+export * from './patterns';
 
-// Performance utilities - migrated to @/lib/utils/performance
-// export * from './performance';
+// Consolidated modal management
+export * from './modal-management';
 
-// Error handling utilities - migrated to @/lib/utils/error
-// export * from './error';
+// Standardized async operation handling  
+export * from './async-operations';
 
-// Notification utilities - migrated to @/lib/utils/notification
-// export * from './notification';
+// =====================================================
+// ENHANCED UTILITIES (Available - Previous Phases)
+// =====================================================
 
-// Navigation utilities - migrated to @/lib/utils/navigation
-// export * from './navigation';
+// Enhanced validation utilities (Phase 2)
+export * from './validation';
 
-// Mobile utilities - migrated to @/lib/utils/mobile
-// export * from './mobile';
+// Enhanced shared utilities (Phase 2)
+export * from './shared';
 
-// Sidebar utilities - migrated to @/lib/utils/sidebar
-// export * from './sidebar';
-
-// Logging utilities - migrated to @/lib/utils/logging
-// export * from './logging';
+// Enhanced error handling (Phase 2)
+export * from './error';
 
 // =====================================================
 // CATEGORIZED UTILITY NAMESPACES
@@ -84,78 +82,76 @@ export * as formatUtils from './format';
 // Enhanced utility namespaces (✅ NOW AVAILABLE - REFACTORED & MIGRATED)
 export * as imageUtils from './image';
 
-// New utility namespaces (will be available after Phase 3 migration)
-// export * as animationUtils from './animation';
-// export * as performanceUtils from './performance';
-// export * as errorUtils from './error';
-// export * as notificationUtils from './notification';
-// export * as navigationUtils from './navigation';
-// export * as mobileUtils from './mobile';
-// export * as sidebarUtils from './sidebar';
-// export * as loggingUtils from './logging';
+// Phase 4 utility namespaces (✅ NEW)
+export * as reactPatterns from './patterns';
+export * as modalUtils from './modal-management';
+export * as asyncOperationUtils from './async-operations';
+
+// Enhanced utility namespaces (Previous Phases)
+export * as validationUtils from './validation';
+export * as errorUtils from './error';
 
 // =====================================================
 // MIGRATION NOTES
 // =====================================================
 
 /**
- * IMAGE UTILITIES REFACTORING - ✅ COMPLETED & MIGRATED:
+ * PHASE 4 COMPLETION - ✅ STANDARDIZED PATTERNS & OPERATIONS:
  * 
- * ✅ REFACTORED: Image utilities split into modular architecture
- * ✅ MIGRATED: All imports updated to use direct modular imports
- * ✅ ENHANCED: Tree-shaking optimized with zero backward compatibility overhead
- * ✅ IMPROVED: Better maintainability with focused modules
+ * ✅ CREATED: Common React patterns utility (src/lib/utils/patterns.ts)
+ * ✅ CREATED: Consolidated modal management (src/lib/utils/modal-management.ts)  
+ * ✅ CREATED: Standardized async operations (src/lib/utils/async-operations.ts)
+ * ✅ ENHANCED: Main utilities index with new patterns
  * 
- * BEFORE (758 lines, 1 file):
- * - Single monolithic image.ts file
- * - Backward compatible imports from main index
+ * NEW UTILITIES AVAILABLE:
  * 
- * AFTER (10 focused modules, direct imports):
- * - types.ts (129 lines) - Type definitions
- * - constants.ts (99 lines) - Configuration and defaults
- * - webp-detector.ts (126 lines) - WebP feature detection
- * - validation.ts (221 lines) - Image validation logic
- * - metadata.ts (124 lines) - Metadata extraction
- * - processing.ts (282 lines) - Core image processing
- * - convenience.ts (212 lines) - High-level convenience functions
- * - batch.ts (223 lines) - Batch processing utilities
- * - resource-management.ts (221 lines) - URL and resource management
- * - index.ts (231 lines) - Main export barrel
+ * REACT PATTERNS:
+ * - withErrorBoundary, withLoading HOCs
+ * - ConditionalRender, DataRenderer components
+ * - useEventCallback, useDebouncedCallback hooks
+ * - useAsyncOperation, useMount, useUnmount lifecycle hooks
  * 
- * CURRENT USAGE (optimized direct imports):
- * import type { ProcessingResult } from '@/lib/utils/image/types';
- * import { validateImageEnhanced } from '@/lib/utils/image/validation';
- * import { processImageEnhanced } from '@/lib/utils/image/processing';
- * import { compressAndResizePhoto } from '@/lib/utils/image/convenience';
+ * MODAL MANAGEMENT:
+ * - ModalManagerProvider for centralized modal state
+ * - useModalManager, useModal hooks
+ * - modalPresets for common modal types
+ * - Modal registry for dynamic modal management
  * 
- * MODULAR IMPORTS (still available for convenience):
- * import { imageProcessing } from '@/lib/utils/image';
- * import { imageValidation } from '@/lib/utils/image';
+ * ASYNC OPERATIONS:
+ * - useAsyncOperation with retry and timeout support
+ * - useBatchAsyncOperation for parallel operations
+ * - useOptimisticAsyncOperation for UI responsiveness
+ * - createAsyncOperationFactory for reusable patterns
  * 
- * TREE-SHAKING BENEFITS:
- * - Import only the exact functions needed
- * - Smaller bundle sizes with granular imports
- * - Better development performance with focused modules
- * - Cleaner dependency graphs
+ * USAGE EXAMPLES:
+ * 
+ * React Patterns:
+ * import { reactPatterns } from '@/lib/utils';
+ * import { withErrorBoundary, useAsyncOperation } from '@/lib/utils/patterns';
+ * 
+ * Modal Management:
+ * import { modalUtils } from '@/lib/utils';
+ * import { useModal, ModalManagerProvider } from '@/lib/utils/modal-management';
+ * 
+ * Async Operations:
+ * import { asyncOperationUtils } from '@/lib/utils';
+ * import { useAsyncOperation } from '@/lib/utils/async-operations';
+ * 
+ * BENEFITS:
+ * - Reduced code duplication across components
+ * - Standardized error handling and loading states
+ * - Centralized modal state management
+ * - Consistent async operation patterns
+ * - Improved code maintainability and testing
  */
 
 /**
- * PHASE 3 MIGRATION STATUS:
+ * PREVIOUS PHASE COMPLETIONS:
  * 
- * ✅ COMPLETED: Enhanced image utilities with WebP support
- * ✅ CREATED: All new utility files have been created
- * ✅ MIGRATED: All imports updated to direct modular structure
- * 📦 READY: Files can be imported directly:
- * 
- * import { imageUtils } from '@/lib/utils';
- * import { animationUtils } from '@/lib/utils/animation';
- * import { performanceUtils } from '@/lib/utils/performance';
- * import { errorUtils } from '@/lib/utils/error';
- * import { notificationUtils } from '@/lib/utils/notification';
- * import { navigationUtils } from '@/lib/utils/navigation';
- * import { mobileUtils } from '@/lib/utils/mobile';
- * import { sidebarUtils } from '@/lib/utils/sidebar';
- * import { loggingUtils } from '@/lib/utils/logging';
+ * ✅ PHASE 1: Created comprehensive shared utilities
+ * ✅ PHASE 2: Consolidated duplicates (validation, modal state, error handling)
+ * ✅ PHASE 3: Standardized hook naming conventions
+ * ✅ PHASE 4: Expanded shared utilities with React patterns
  */
 
 // NOTE: Enhanced Photo Upload Modal is now directly imported:
