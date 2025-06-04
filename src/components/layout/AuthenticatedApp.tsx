@@ -1,5 +1,6 @@
+
 import { ReactNode } from 'react';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/hooks/auth/useAuth';
 
 interface AuthenticatedAppProps {
   /**
