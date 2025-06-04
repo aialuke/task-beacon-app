@@ -1,5 +1,4 @@
 
-
 import { memo } from 'react';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -37,6 +36,17 @@ export const ImagePreviewModal = memo(function ImagePreviewModal({
       }}
       onClick={handleBackdropClick}
     >
+      {/* Close Button - Positioned absolutely in top-right */}
+      <Button
+        variant="destructive"
+        size="icon"
+        onClick={onClose}
+        className="absolute top-4 right-4 h-10 w-10 rounded-full bg-red-500 hover:bg-red-600 text-white shadow-lg z-10"
+        style={{ zIndex: 10000 }}
+      >
+        <X className="h-5 w-5" />
+      </Button>
+
       {/* Modal Window */}
       <div 
         className="relative bg-white rounded-2xl shadow-2xl max-w-[90vw] max-h-[90vh] overflow-hidden"
@@ -45,14 +55,6 @@ export const ImagePreviewModal = memo(function ImagePreviewModal({
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b bg-gray-50">
           <h3 className="text-lg font-semibold text-gray-900">Image Preview</h3>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onClose}
-            className="h-8 w-8 rounded-full hover:bg-gray-200 text-gray-700 hover:text-gray-900"
-          >
-            <X className="h-4 w-4" />
-          </Button>
         </div>
         
         {/* Image Content */}
@@ -69,4 +71,3 @@ export const ImagePreviewModal = memo(function ImagePreviewModal({
     </div>
   );
 });
-
