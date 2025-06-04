@@ -59,7 +59,7 @@ export function UrlInputModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="pt-12 sm:max-w-md">
         <div className="space-y-4">
           <div>
             <FloatingInput
