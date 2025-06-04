@@ -12,7 +12,7 @@ function TaskDashboardHeader() {
             alt="Task Flow Logo" 
             className="h-7 w-7 sm:h-8 sm:w-8"
           />
-          <h1 className="text-lg font-semibold tracking-wide text-foreground sm:text-xl">
+          <h1 className="text-xl font-semibold tracking-wide text-foreground sm:text-2xl">
             Task Flow
           </h1>
         </div>
