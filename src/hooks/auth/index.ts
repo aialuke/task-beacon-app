@@ -1,14 +1,14 @@
 /**
- * Auth Hooks
+ * Auth Hooks - Simplified Exports
  * 
- * Barrel export file for all authentication-related hooks.
- * Provides a clean API for importing auth functionality.
+ * Now exports the simplified auth hook architecture.
  */
 
-export { useAuthState } from './useAuthState';
-export { useAuthOperations } from './useAuthOperations';
-export { useAuthListener } from './useAuthListener';
-export { useAuthInitialization } from './useAuthInitialization';
+export { useAuth } from './useAuth';
+export type { UseAuthReturn } from './useAuth';
 
-export type { UseAuthStateReturn } from './useAuthState';
-export type { UseAuthOperationsReturn } from './useAuthOperations'; 
+// Keep legacy exports for backward compatibility
+export { useAuth as useAuthState } from './useAuth';
+export { useAuth as useAuthOperations } from './useAuth';
+export type { UseAuthReturn as UseAuthStateReturn } from './useAuth';
+export type { UseAuthReturn as UseAuthOperationsReturn } from './useAuth';

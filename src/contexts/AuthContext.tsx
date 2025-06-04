@@ -1,18 +1,14 @@
+
 /**
- * Authentication Context
+ * Simplified Authentication Context
  * 
- * Simplified auth context that orchestrates the various auth hooks.
+ * Now uses the consolidated useAuth hook instead of orchestrating multiple hooks.
  * Provides authentication state and operations to the application.
  */
 
 import { createContext, useContext, ReactNode } from 'react';
 import type { AuthContextType } from '@/types/shared/auth.types';
-import { 
-  useAuthState, 
-  useAuthOperations, 
-  useAuthListener, 
-  useAuthInitialization 
-} from '@/hooks/auth';
+import { useAuth as useAuthHook } from '@/hooks/auth/useAuth';
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -21,35 +17,17 @@ interface AuthProviderProps {
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  // Use auth state management hook
-  const authState = useAuthState();
-  
-  // Use auth operations hook
-  const authOperations = useAuthOperations({
-    setLoading: authState.setLoading,
-    setError: authState.setError,
-    setUser: authState.setUser,
-    setSession: authState.setSession,
-  });
-
-  // Set up auth listener
-  useAuthListener({
-    updateSessionAndUser: authState.updateSessionAndUser,
-    setError: authState.setError,
-    setLoading: authState.setLoading,
-  });
-
-  // Initialize auth state
-  useAuthInitialization();
+  // Use the simplified auth hook
+  const authState = useAuthHook();
 
   const contextValue: AuthContextType = {
     user: authState.user,
     session: authState.session,
     loading: authState.loading,
     error: authState.error,
-    signOut: authOperations.signOut,
-    refreshSession: authOperations.refreshSession,
-    signIn: authOperations.signIn,
+    signOut: authState.signOut,
+    refreshSession: authState.refreshSession,
+    signIn: authState.signIn,
   };
 
   return (
