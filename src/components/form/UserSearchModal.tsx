@@ -28,13 +28,7 @@ export function UserSearchModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="pb-8 pt-0 sm:max-w-md h-[40vh] sm:h[50vh]">
-        <DialogHeader>
-          <VisuallyHidden asChild>
-            <DialogTitle>Assign Task</DialogTitle>
-          </VisuallyHidden>
-        </DialogHeader>
-
+      <DialogContent className="pb-8 pt-2 sm:max-w-md h-[40vh] sm:h[50vh]">
         <div className="space-y-4 pb-4">
           <EnhancedUserSearch value={value} onChange={handleUserSelect} />
         </div>
