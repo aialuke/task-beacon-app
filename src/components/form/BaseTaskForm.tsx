@@ -85,13 +85,15 @@ export function BaseTaskForm({
 }: BaseTaskFormProps) {
   return (
     <div className="mx-auto w-full max-w-lg">
-      <Card className="border border-border/50 bg-card/95 shadow-2xl backdrop-blur-sm">
-        <CardHeader className="space-y-2 pb-6 text-center">
+      <Card className="border border-border/50 bg-card/95 shadow-2xl backdrop-blur-sm rounded-2xl">
+        <CardHeader className="space-y-3 pb-8 text-center relative">
           <h1 className="text-2xl font-bold text-card-foreground">{headerTitle}</h1>
           <p className="text-sm text-muted-foreground">{headerSubtitle}</p>
+          {/* Blue underline decoration */}
+          <div className="absolute bottom-2 left-1/2 h-0.5 w-16 -translate-x-1/2 rounded-full bg-primary"></div>
         </CardHeader>
 
-        <CardContent className="relative space-y-6">
+        <CardContent className="relative space-y-6 px-8 pb-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Title Input */}
             <FloatingInput
@@ -160,7 +162,7 @@ export function BaseTaskForm({
 
           {/* Loading Overlay */}
           {loading && (
-            <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-background/80 backdrop-blur-sm">
+            <div className="absolute inset-0 flex items-center justify-center rounded-2xl bg-background/80 backdrop-blur-sm">
               <LoadingSpinner size="lg" />
             </div>
           )}

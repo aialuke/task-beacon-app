@@ -2,8 +2,10 @@
 /* src/styles/tokens/design-tokens.css - Design system tokens */
 
 :root {
-  /* Updated border radius - changed default to XL */
-  --radius: 1rem; /* Changed from 0.5rem to 1rem (XL) */
+  /* Updated border radius with proper XL definition */
+  --radius: 1rem; /* Base radius for most components */
+  --radius-xl: 1rem; /* XL radius for cards and major components */
+  --radius-2xl: 1.5rem; /* 2XL radius for special components */
   --radius-full: 9999px; /* Full border radius for pills and circular elements */
 
   /* Enhanced shadow system - single source of truth */
@@ -15,6 +17,8 @@
     0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   --shadow-xl:
     0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-2xl:
+    0 25px 50px -12px rgba(0, 0, 0, 0.25);
   --shadow-focus: 0 0 0 3px hsl(225 77% 60% / 0.2);
 
   /* Gradient backgrounds - Updated with new primary color */
@@ -39,6 +43,8 @@
     0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
   --shadow-xl:
     0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+  --shadow-2xl:
+    0 25px 50px -12px rgba(0, 0, 0, 0.4);
   --shadow-focus: 0 0 0 3px hsl(225 77% 70% / 0.4);
 
   /* Dark mode gradients - Updated with new primary color */
@@ -61,6 +67,8 @@
     0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   --shadow-xl:
     0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-2xl:
+    0 25px 50px -12px rgba(0, 0, 0, 0.25);
   --shadow-focus: 0 0 0 3px hsl(225 77% 60% / 0.2);
 
   --gradient-light: linear-gradient(to bottom right, #ffffff, #f9fafb);
