@@ -107,7 +107,7 @@ function TaskDetails({
         </div>
       </animated.div>
 
-      {shouldRenderPhoto && (
+      {shouldRenderPhoto && task.photo_url && (
         <ImagePreviewModal
           isOpen={isImageModalOpen}
           onClose={handleImageModalClose}
