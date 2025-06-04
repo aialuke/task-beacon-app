@@ -1,4 +1,5 @@
 
+
 import { memo } from 'react';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -21,6 +22,12 @@ export const ImagePreviewModal = memo(function ImagePreviewModal({
 
   if (!isOpen) return null;
 
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
   return (
     <div 
       className="fixed inset-0 bg-black/90 flex items-center justify-center p-4"
@@ -28,7 +35,7 @@ export const ImagePreviewModal = memo(function ImagePreviewModal({
         zIndex: 9999,
         backdropFilter: 'blur(8px)',
       }}
-      onClick={onClose}
+      onClick={handleBackdropClick}
     >
       {/* Modal Window */}
       <div 
@@ -42,7 +49,7 @@ export const ImagePreviewModal = memo(function ImagePreviewModal({
             variant="ghost"
             size="icon"
             onClick={onClose}
-            className="h-8 w-8 rounded-full hover:bg-gray-200"
+            className="h-8 w-8 rounded-full hover:bg-gray-200 text-gray-700 hover:text-gray-900"
           >
             <X className="h-4 w-4" />
           </Button>
@@ -62,3 +69,4 @@ export const ImagePreviewModal = memo(function ImagePreviewModal({
     </div>
   );
 });
+
