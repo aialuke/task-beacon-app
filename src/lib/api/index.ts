@@ -1,12 +1,28 @@
+
 /**
- * API Layer - Centralized exports for all API services
+ * API Layer - Updated to use streamlined type system
  * 
- * This index file provides clean imports for all API-related functionality,
- * making it easy to use the abstracted services throughout the application.
+ * This index file now uses the organized type system for better consistency.
  */
 
-// Base API utilities and types
-export * from './base';
+// Base API utilities and types from streamlined system
+export type {
+  ApiResponse,
+  ApiError,
+  ServiceResult,
+  PaginatedResponse,
+  BaseQueryParams,
+} from '@/types/api.types';
+
+export type {
+  Tables,
+  TablesInsert,
+  TablesUpdate,
+  TaskTable,
+  ProfileTable,
+  TaskWithRelations,
+  ProfileWithRelations,
+} from '@/types/database';
 
 // Service classes
 export * from './tasks/task.service';

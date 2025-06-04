@@ -1,37 +1,22 @@
-// Shared types used across multiple features
-export type TaskStatus = 'pending' | 'complete' | 'overdue';
-export type UserRole = 'admin' | 'manager';
-export type TaskFilter = TaskStatus | 'all' | 'assigned';
 
-export interface ParentTask {
-  id: string;
-  title: string;
-  description: string | null;
-  photo_url: string | null;
-  url_link: string | null;
-}
+/**
+ * Shared Types - Legacy Compatibility Layer
+ * 
+ * This file maintains backward compatibility while redirecting to the new type organization.
+ * @deprecated Use specific imports from organized type directories instead
+ */
 
-export interface Task {
-  id: string;
-  title: string;
-  description: string | null;
-  due_date: string | null;
-  photo_url: string | null;
-  url_link: string | null;
-  owner_id: string;
-  parent_task_id: string | null;
-  parent_task: ParentTask | null;
-  pinned: boolean;
-  status: TaskStatus;
-  assignee_id: string | null;
-  created_at: string;
-  updated_at: string;
-}
+// Re-export from organized type system for backward compatibility
+export type {
+  Task,
+  TaskStatus,
+  TaskFilter,
+  ParentTask,
+  User,
+  UserRole,
+} from './feature-types';
 
-export interface User {
-  id: string;
-  email: string;
-  role?: UserRole;
-  name?: string;
-  avatar_url?: string;
-}
+// Legacy exports - these should be migrated to use the organized imports
+export type { TaskStatus as LegacyTaskStatus } from './feature-types/task.types';
+export type { UserRole as LegacyUserRole } from './shared/auth.types';
+export type { TaskFilter as LegacyTaskFilter } from './feature-types/task.types';

@@ -1,53 +1,11 @@
+
 /**
- * Utility Types Barrel File
+ * Utility Types Barrel File - Updated
  * 
- * Centralized exports for all utility types including form, validation,
- * and TypeScript helper types.
+ * Now imports from the streamlined type system to eliminate duplication.
  */
 
-// Form utility types
-export type {
-  FormState,
-  UseFormStateOptions,
-  FieldState,
-  FieldProps,
-  ValidationRule,
-  ValidationSchema,
-  ValidationResult,
-  FormConfig,
-  FormHelpers,
-  FormSubmissionState,
-  FormSubmissionResult,
-  FieldArrayHelpers,
-  FieldArrayProps,
-} from './form.types';
-
-// Validation utility types
-export type {
-  ValidationResult as UtilityValidationResult,
-  ValidationDetail,
-  ValidationOptions,
-  ValidationRule as UtilityValidationRule,
-  AsyncValidationRule,
-  ConditionalValidationRule,
-  RequiredRule,
-  LengthRule,
-  PatternRule,
-  RangeRule,
-  EmailRule,
-  UrlRule,
-  DateRule,
-  CustomRule,
-  FieldValidationRule,
-  ValidationSchema as UtilityValidationSchema,
-  SchemaValidationOptions,
-  ValidationContext,
-  FieldValidationState,
-  ValidationStrategy,
-  ValidationConfig,
-} from './validation.types';
-
-// TypeScript helper types
+// Import from streamlined system
 export type {
   DeepPartial,
   DeepRequired,
@@ -56,4 +14,35 @@ export type {
   Override,
   PropsWithClassName,
   PropsWithChildren,
-} from './helpers.types'; 
+  AsyncState,
+  LoadingState,
+  FormErrors,
+  FormTouched,
+  EventHandler,
+  AsyncEventHandler,
+} from '../utility.types';
+
+// Re-export form utilities from the main form types
+export type {
+  FormState,
+  ValidationRule,
+  ValidationResult,
+  FieldValidationState,
+  FormSubmissionState,
+  FormSubmissionResult,
+  BaseFieldProps,
+  InputFieldProps,
+  TextareaFieldProps,
+  SelectFieldProps,
+  FormConfig,
+} from '../form.types';
+
+// Legacy validation types (kept for backward compatibility)
+export type {
+  ValidationResult as UtilityValidationResult,
+  ValidationDetail,
+  ValidationOptions,
+  ValidationRule as UtilityValidationRule,
+  AsyncValidationRule,
+  ConditionalValidationRule,
+} from './validation.types';

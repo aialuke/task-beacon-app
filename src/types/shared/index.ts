@@ -1,50 +1,33 @@
 /**
- * Shared Types Barrel File
+ * Shared Types Barrel File - Streamlined
  * 
- * Centralized exports for all shared types organized by category.
- * This provides clean imports for commonly used types across the application.
+ * Updated to import from the organized type system and reduce duplication.
  */
 
-// Common utility types
+// Import common types from streamlined system
 export type {
   ID,
   Timestamp,
-  OptionalExcept,
-  RequiredExcept,
   Status,
   AsyncState,
-  BaseEntity,
-  FormState,
   LoadingState,
-  AsyncOperationState,
-  FilterOptions,
-  SelectOption,
-  ModalState,
-  NotificationType,
-  Notification,
-  NotificationAction,
+  FormState,
   ValidationRule,
   ValidationResult,
-  Metadata,
-  ResponseWrapper,
-  EventHandler,
-  AsyncEventHandler,
   BaseComponentProps,
-} from './common.types';
+} from '../utility.types';
 
-// API response and error types
 export type {
   ApiResponse,
   ApiError,
-  PaginationOptions,
   PaginatedResponse,
-  TablesResponse,
+  PaginationMeta,
   BaseQueryParams,
-  ActionResult,
-  DatabaseOperationResult,
-} from './api.types';
+  ServiceResult as ActionResult,
+  ServiceResult as DatabaseOperationResult,
+} from '../api.types';
 
-// Authentication and authorization types
+// Import auth types (keeping these in shared as they're cross-cutting)
 export type {
   User,
   Session,
@@ -60,7 +43,7 @@ export type {
   AuthOperationResult,
 } from './auth.types';
 
-// Database operation types
+// Import database types (keeping these in shared as they're foundational)
 export type {
   DatabaseOperation,
   RealTimeEvent,
@@ -82,16 +65,13 @@ export type {
   BackupInfo,
 } from './database.types';
 
-// UI component and styling types
+// Import component types from streamlined system
 export type {
-  ColorScheme,
   Size,
   Variant,
+  ColorScheme,
   LayoutProps,
-  ContainerProps,
-  ComponentVariants,
   ButtonProps,
-  InputProps,
   ModalProps,
   DialogAction,
   CardProps,
@@ -99,13 +79,85 @@ export type {
   BreadcrumbItem,
   TableColumn,
   TableProps,
-  FormFieldProps,
+  LoadingProps,
   ToastProps,
   AnimationProps,
   Breakpoint,
   ResponsiveValue,
-  LoadingProps,
-  SkeletonProps,
-  DragItem,
-  DropTarget,
-} from './ui.types'; 
+} from '../component.types';
+
+// Legacy exports for backward compatibility
+export type {
+  BaseComponentProps as ContainerProps,
+  BaseComponentProps as ComponentVariants,
+  InputFieldProps as InputProps,
+  BaseComponentProps as FormFieldProps,
+  BaseComponentProps as SkeletonProps,
+} from '../component.types';
+
+// Notification types (keep here as they're app-wide)
+export type NotificationType = 'info' | 'success' | 'warning' | 'error';
+
+export interface Notification {
+  id: ID;
+  type: NotificationType;
+  title: string;
+  message: string;
+  timestamp: Timestamp;
+  read: boolean;
+  actions?: NotificationAction[];
+}
+
+export interface NotificationAction {
+  label: string;
+  action: () => void;
+  variant?: 'primary' | 'secondary' | 'destructive';
+}
+
+// Utility types
+export interface SelectOption<T = string> {
+  value: T;
+  label: string;
+  disabled?: boolean;
+}
+
+export interface FilterOptions<T = string> {
+  value: T;
+  label: string;
+  count?: number;
+}
+
+export interface ModalState {
+  isOpen: boolean;
+  data?: unknown;
+}
+
+export interface Metadata {
+  version: string;
+  lastModified: Timestamp;
+  author?: string;
+  tags?: string[];
+}
+
+export interface ResponseWrapper<T> {
+  data: T;
+  meta: {
+    total: number;
+    page: number;
+    pageSize: number;
+    hasMore: boolean;
+  };
+}
+
+// Drag and drop types
+export interface DragItem {
+  id: string;
+  type: string;
+  data: unknown;
+}
+
+export interface DropTarget {
+  id: string;
+  accepts: string[];
+  onDrop: (item: DragItem) => void;
+}

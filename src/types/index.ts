@@ -1,59 +1,57 @@
+
 /**
- * Main Types Index
+ * Main Types Index - Streamlined Type System
  * 
- * Centralized type exports for the entire application.
- * Provides convenient access to all type categories with clear organization.
+ * Centralized and organized type exports with clear categorization and improved IntelliSense.
+ * This replaces the previous complex type organization with a simpler, more maintainable system.
  */
 
-// === MOST COMMONLY USED TYPES (for convenience) ===
+// === CORE TYPES (Most commonly used) ===
 export type {
-  // Core shared patterns
-  ID,
-  Timestamp,
+  // Database types
+  TaskTable as Task,
+  ProfileTable as User,
+  TaskStatusEnum as TaskStatus,
+  UserRoleEnum as UserRole,
+  TaskWithRelations,
+  ProfileWithRelations,
+} from './database';
+
+export type {
+  // API types
   ApiResponse,
   ApiError,
+  ServiceResult,
+  PaginatedResponse,
+  PaginationMeta,
+  BaseQueryParams,
+} from './api.types';
+
+export type {
+  // Form types
   FormState,
   ValidationResult,
-  LoadingState,
-  UserRole,
-  Status,
-  AsyncState,
-  BaseEntity,
-} from './shared';
+  FormSubmissionResult,
+  InputFieldProps,
+  TextareaFieldProps,
+  SelectFieldProps,
+} from './form.types';
 
 export type {
-  // Core entities from feature types
-  Task,
-  User,
-  TaskStatus,
-  TaskPriority,
-  TaskFilter,
-  ParentTask,
-} from './feature-types';
+  // Component types
+  BaseComponentProps,
+  ButtonProps,
+  ModalProps,
+  CardProps,
+  TableProps,
+  LoadingProps,
+  Size,
+  Variant,
+  ColorScheme,
+} from './component.types';
 
-// === COMPREHENSIVE EXPORTS BY CATEGORY ===
-
-// Shared/Common Types
-export type * from './shared';
-
-// Feature-Specific Types  
-export type * from './feature-types';
-
-// Utility Types
+// === UTILITY TYPES ===
 export type {
-  // Form utilities
-  UseFormStateOptions,
-  FieldState,
-  FieldProps,
-  FormConfig,
-  FormHelpers,
-  
-  // Validation utilities (prefixed to avoid conflicts)
-  ValidationResult as UtilityValidationResult,
-  ValidationDetail,
-  ValidationOptions,
-  
-  // TypeScript helpers
   DeepPartial,
   DeepRequired,
   DeepReadonly,
@@ -61,10 +59,52 @@ export type {
   Override,
   PropsWithClassName,
   PropsWithChildren,
-} from './utility';
+  AsyncState,
+  LoadingState,
+  ID,
+  Timestamp,
+  Status,
+} from './utility.types';
 
-// === LEGACY EXPORTS (for backward compatibility) ===
+// === FEATURE-SPECIFIC TYPES ===
+export type {
+  TaskFilter,
+  TaskPriority,
+  ParentTask,
+  TaskCreateData,
+  TaskUpdateData,
+  TaskQueryOptions,
+} from './feature-types/task.types';
+
+export type {
+  UserPreferences,
+  NotificationPreferences,
+  UserCreateData,
+  UserUpdateData,
+  UserQueryOptions,
+} from './feature-types/user.types';
+
+// === LEGACY COMPATIBILITY ===
 export type {
   Task as TaskType,
   User as UserType,
-} from './feature-types'; 
+  TaskStatus as LegacyTaskStatus,
+  UserRole as LegacyUserRole,
+} from './shared.types';
+
+// Re-export database utilities for convenience
+export type {
+  Tables,
+  TablesInsert,
+  TablesUpdate,
+  Enums,
+} from './database';
+
+// Re-export commonly used patterns
+export type {
+  EventHandler,
+  AsyncEventHandler,
+  ApiState,
+  FormErrors,
+  FormTouched,
+} from './utility.types';

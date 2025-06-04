@@ -1,105 +1,48 @@
-
 /**
- * Common Types
+ * Common Types - Updated to use streamlined system
  * 
- * Shared utility types used across the application for common patterns.
- * These types provide consistency for data structures, state management,
- * and component interfaces.
+ * This file now imports from the organized type system to eliminate duplication.
  */
 
-// === Core Identifier Types ===
-export type ID = string;
-export type Timestamp = string; // ISO 8601 timestamp
+// Re-export from streamlined system
+export type {
+  ID,
+  Timestamp,
+  Status,
+  AsyncState,
+  LoadingState,
+  FormState,
+  ValidationRule,
+  ValidationResult,
+  BaseComponentProps,
+  EventHandler,
+  AsyncEventHandler,
+  DeepPartial as OptionalExcept,
+  DeepRequired as RequiredExcept,
+} from '../utility.types';
 
-// === Utility Object Types ===
-export type OptionalExcept<T, K extends keyof T> = Partial<T> & Pick<T, K>;
-export type RequiredExcept<T, K extends keyof T> = Required<T> & Partial<Pick<T, K>>;
+export type {
+  ApiResponse,
+  ApiError,
+  ServiceResult as ActionResult,
+  ServiceResult as DatabaseOperationResult,
+  BaseQueryParams,
+} from '../api.types';
 
-// === Status and State Types ===
-export type Status = 'idle' | 'loading' | 'success' | 'error';
-
-export interface AsyncState<T = unknown> {
-  data: T | null;
-  loading: boolean;
-  error: string | null;
-}
-
-export interface LoadingState {
-  isLoading: boolean;
-  isSubmitting?: boolean;
-  isValidating?: boolean;
-}
-
-export interface AsyncOperationState extends LoadingState {
-  error: string | null;
-  success: boolean;
-}
-
-// === API Response Types ===
-export interface ApiResponse<T = unknown> {
-  success: boolean;
-  data: T | null;
-  error: {
-    message: string;
-    code?: string;
-    name: string;
-  } | null;
-}
-
-export interface ApiError {
-  message: string;
-  code?: string;
-  name: string;
-}
-
-// === Base Entity Types ===
+// Keep entity types here as they're foundational
 export interface BaseEntity {
   id: ID;
   created_at: Timestamp;
   updated_at: Timestamp;
 }
 
-// === Form and Validation Types ===
-export interface FormState<T = Record<string, unknown>> {
-  values: T;
-  errors: Partial<Record<keyof T, string>>;
-  touched: Partial<Record<keyof T, boolean>>;
-  isSubmitting: boolean;
-  isValid: boolean;
+// Keep async operation state as it's commonly used
+export interface AsyncOperationState extends LoadingState {
+  error: string | null;
+  success: boolean;
 }
 
-export interface ValidationRule<T = unknown> {
-  required?: boolean;
-  minLength?: number;
-  maxLength?: number;
-  pattern?: RegExp;
-  custom?: (value: T) => string | null;
-}
-
-export interface ValidationResult {
-  isValid: boolean;
-  errors: Record<string, string>;
-}
-
-// === UI Component Types ===
-export interface FilterOptions<T = string> {
-  value: T;
-  label: string;
-  count?: number;
-}
-
-export interface SelectOption<T = string> {
-  value: T;
-  label: string;
-  disabled?: boolean;
-}
-
-export interface ModalState {
-  isOpen: boolean;
-  data?: unknown;
-}
-
-// === Notification Types ===
+// Keep notification types as they're app-wide
 export type NotificationType = 'info' | 'success' | 'warning' | 'error';
 
 export interface Notification {
@@ -118,7 +61,24 @@ export interface NotificationAction {
   variant?: 'primary' | 'secondary' | 'destructive';
 }
 
-// === Metadata and Context Types ===
+// Keep utility interfaces that are app-specific
+export interface SelectOption<T = string> {
+  value: T;
+  label: string;
+  disabled?: boolean;
+}
+
+export interface FilterOptions<T = string> {
+  value: T;
+  label: string;
+  count?: number;
+}
+
+export interface ModalState {
+  isOpen: boolean;
+  data?: unknown;
+}
+
 export interface Metadata {
   version: string;
   lastModified: Timestamp;
@@ -134,15 +94,4 @@ export interface ResponseWrapper<T> {
     pageSize: number;
     hasMore: boolean;
   };
-}
-
-// === Event Handler Types ===
-export type EventHandler<T = Event> = (event: T) => void;
-export type AsyncEventHandler<T = Event> = (event: T) => Promise<void>;
-
-// === Component Props Types ===
-export interface BaseComponentProps {
-  className?: string;
-  id?: string;
-  testId?: string;
 }
