@@ -58,6 +58,13 @@ export type PropsWithClassName<P = Record<string, never>> = P & { className?: st
 export type PropsWithChildren<P = Record<string, never>> = P & { children?: React.ReactNode };
 export type PropsWithTestId<P = Record<string, never>> = P & { testId?: string };
 
+// Base component props
+export interface BaseComponentProps {
+  className?: string;
+  children?: React.ReactNode;
+  testId?: string;
+}
+
 // State management utilities
 export type AsyncState<T, E = string> = {
   data: T | null;
@@ -80,6 +87,33 @@ export type ApiState<T> = AsyncState<T> & {
 // Form utilities
 export type FormErrors<T> = Partial<Record<keyof T, string>>;
 export type FormTouched<T> = Partial<Record<keyof T, boolean>>;
+
+// Form state interface
+export interface FormState<T = Record<string, unknown>> {
+  values: T;
+  errors: Partial<Record<keyof T, string>>;
+  touched: Partial<Record<keyof T, boolean>>;
+  isSubmitting: boolean;
+  isValid: boolean;
+  isDirty: boolean;
+}
+
+// Validation interfaces
+export interface ValidationRule<T = unknown> {
+  required?: boolean;
+  minLength?: number;
+  maxLength?: number;
+  min?: number;
+  max?: number;
+  pattern?: RegExp;
+  custom?: (value: T) => string | null;
+}
+
+export interface ValidationResult {
+  isValid: boolean;
+  errors: Record<string, string>;
+  warnings?: Record<string, string>;
+}
 
 // Event handler utilities
 export type EventHandler<T = Event> = (event: T) => void;

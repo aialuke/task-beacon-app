@@ -86,24 +86,30 @@ export type {
   ResponsiveValue,
 } from '../component.types';
 
+// Import form field types from form types
+export type {
+  InputFieldProps,
+  TextareaFieldProps,
+  SelectFieldProps,
+} from '../form.types';
+
 // Legacy exports for backward compatibility
 export type {
   BaseComponentProps as ContainerProps,
   BaseComponentProps as ComponentVariants,
-  InputFieldProps as InputProps,
   BaseComponentProps as FormFieldProps,
   BaseComponentProps as SkeletonProps,
-} from '../component.types';
+} from '../utility.types';
 
 // Notification types (keep here as they're app-wide)
 export type NotificationType = 'info' | 'success' | 'warning' | 'error';
 
 export interface Notification {
-  id: ID;
+  id: string;
   type: NotificationType;
   title: string;
   message: string;
-  timestamp: Timestamp;
+  timestamp: string;
   read: boolean;
   actions?: NotificationAction[];
 }
@@ -134,7 +140,7 @@ export interface ModalState {
 
 export interface Metadata {
   version: string;
-  lastModified: Timestamp;
+  lastModified: string;
   author?: string;
   tags?: string[];
 }
