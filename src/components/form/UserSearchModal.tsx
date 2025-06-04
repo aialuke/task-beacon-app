@@ -28,7 +28,7 @@ export function UserSearchModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="pb-8 sm:max-w-md">
+      <DialogContent className="pb-8 sm:max-w-md h-[50vh] sm:h[60vh]">
         <DialogHeader>
           <VisuallyHidden asChild>
             <DialogTitle>Assign Task</DialogTitle>
