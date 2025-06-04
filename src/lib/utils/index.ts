@@ -1,3 +1,4 @@
+
 /**
  * Centralized utilities index
  * 
@@ -61,7 +62,7 @@ export {
   useForceUpdate,
   useMount,
   useUnmount,
-  reactPatternsUtils,
+  reactPatterns,
 } from './patterns';
 
 // Pattern-specific types
@@ -86,7 +87,7 @@ export {
   useBatchAsyncOperation,
   useOptimisticAsyncOperation,
   createAsyncOperationFactory,
-  asyncOperationUtilities,
+  asyncOperationUtils,
 } from './async-operations';
 
 // Async operation state with alias to avoid conflict
@@ -110,7 +111,7 @@ export {
   validateForm,
 } from './validation';
 
-// Validation types with alias to avoid conflict with image ValidationResult
+// Validation types with explicit alias to resolve conflict
 export type {
   ValidationResult as UtilValidationResult,
 } from './validation';
