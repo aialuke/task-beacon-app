@@ -27,11 +27,19 @@ function TaskDetails({
   const { isMobile } = useTaskUIContext();
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
+  // Debug logging
+  console.log('TaskDetails - Task object:', task);
+  console.log('TaskDetails - photo_url:', task.photo_url);
+  console.log('TaskDetails - photo_url type:', typeof task.photo_url);
+  console.log('TaskDetails - photo_url truthy:', !!task.photo_url);
+
   const handleImageClick = () => {
+    console.log('Image clicked, opening modal');
     setIsImageModalOpen(true);
   };
 
   const handleImageModalClose = () => {
+    console.log('Closing image modal');
     setIsImageModalOpen(false);
   };
 
@@ -69,6 +77,8 @@ function TaskDetails({
             />
           )}
 
+          {/* Debug the photo_url rendering */}
+          {console.log('Rendering photo section, photo_url exists:', !!task.photo_url)}
           {task.photo_url && (
             <div>
               <span className="text-sm font-medium text-muted-foreground">
@@ -84,6 +94,8 @@ function TaskDetails({
                   alt="Task attachment"
                   className="h-20 w-20 rounded-xl object-cover cursor-pointer"
                   loading="lazy"
+                  onLoad={() => console.log('Image loaded successfully:', task.photo_url)}
+                  onError={(e) => console.error('Image failed to load:', task.photo_url, e)}
                 />
               </button>
             </div>
