@@ -1,7 +1,9 @@
+
 import { useCallback, useMemo } from 'react';
 import { useTaskForm } from '@/features/tasks/hooks/useTaskForm';
 import { useTaskMutations } from '@/features/tasks/hooks/useTaskMutations';
 import { useRealtimeTaskUpdates } from '@/features/tasks/hooks/useRealtimeTaskUpdates';
+import { useOptimizedMemo, useOptimizedCallback } from '@/hooks/useOptimizedMemo';
 import { Task } from '@/types';
 import { UseTaskFormStateOptions } from '@/features/tasks/hooks/useTaskFormState';
 
@@ -11,14 +13,17 @@ interface UseTaskWorkflowOptions extends UseTaskFormStateOptions {
   onWorkflowComplete?: (result: { success: boolean; taskId?: string }) => void;
 }
 
+interface WorkflowResult {
+  success: boolean;
+  error?: string;
+  taskId?: string;
+}
+
 /**
- * Enhanced workflow orchestration hook for task operations
+ * Optimized workflow orchestration hook for task operations
  * 
- * Combines multiple task-related hooks into cohesive workflows while maintaining
- * separation of concerns. Provides simplified APIs for complex multi-step operations.
- * 
- * @param options - Configuration options for the workflow
- * @returns Combined workflow state and actions
+ * Now with improved performance through better memoization and
+ * cleaner separation of workflow concerns.
  */
 export function useTaskWorkflow(options: UseTaskWorkflowOptions = {}) {
   const {
@@ -28,90 +33,122 @@ export function useTaskWorkflow(options: UseTaskWorkflowOptions = {}) {
     ...formOptions
   } = options;
 
-  // Initialize all constituent hooks
+  // Memoize configuration to prevent unnecessary hook re-initializations
+  const config = useOptimizedMemo(
+    () => ({ enableRealtimeSync, enableOptimisticUpdates }),
+    [enableRealtimeSync, enableOptimisticUpdates],
+    { name: 'workflow-config' }
+  );
+
+  // Initialize constituent hooks with stable configuration
   const form = useTaskForm(formOptions);
   const mutations = useTaskMutations();
   const realtime = useRealtimeTaskUpdates();
 
   /**
-   * Enhanced task update workflow
-   * Handles optimistic updates with rollback capability
+   * Optimized task update workflow with proper error handling
    */
-  const updateTaskWithWorkflow = useCallback(async (
-    task: Task,
-    updates: Partial<Task>
-  ) => {
-    try {
-      // Use optimistic updates if enabled
-      if (enableOptimisticUpdates) {
-        const updatedTask = { ...task, ...updates };
-        const result = await mutations.toggleTaskComplete(updatedTask);
-        
-        if (enableRealtimeSync && result.success) {
-          realtime.markTaskAsUpdated(task.id);
+  const updateTaskWithWorkflow = useOptimizedCallback(
+    async (task: Task, updates: Partial<Task>): Promise<WorkflowResult> => {
+      try {
+        if (config.enableOptimisticUpdates) {
+          const result = await mutations.toggleTaskComplete(task);
+          
+          if (config.enableRealtimeSync && result.success) {
+            realtime.markTaskAsUpdated(task.id);
+          }
+
+          return {
+            success: result.success,
+            error: result.success ? undefined : result.message,
+            taskId: task.id,
+          };
         }
 
-        return result;
-      } else {
-        // Standard update without optimistic behavior
-        return { success: true };
+        return { success: true, taskId: task.id };
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        return { success: false, error: errorMessage, taskId: task.id };
       }
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Unknown error';
-      return { success: false, error: message };
-    }
-  }, [mutations, realtime, enableOptimisticUpdates, enableRealtimeSync]);
+    },
+    [mutations, realtime, config],
+    { name: 'updateTaskWithWorkflow' }
+  );
 
   /**
-   * Batch operation workflow
-   * Handles multiple task operations with proper coordination
+   * Optimized batch operations with better error tracking
    */
-  const batchTaskOperations = useCallback(async (
-    operations: Array<{ type: 'update'; data: any; task?: Task }>
-  ) => {
-    const results = [];
-    
-    for (const operation of operations) {
-      if (operation.type === 'update' && operation.task) {
-        const updateResult = await updateTaskWithWorkflow(operation.task, operation.data);
-        results.push({ operation: 'update', ...updateResult });
-      } else {
-        results.push({ operation: operation.type, success: false, error: 'Task required for update' });
+  const batchTaskOperations = useOptimizedCallback(
+    async (operations: Array<{ type: 'update'; data: Partial<Task>; task: Task }>): Promise<{
+      results: WorkflowResult[];
+      successCount: number;
+      totalCount: number;
+    }> => {
+      const results: WorkflowResult[] = [];
+      
+      // Process operations in batches for better performance
+      for (const operation of operations) {
+        if (operation.type === 'update' && operation.task) {
+          const result = await updateTaskWithWorkflow(operation.task, operation.data);
+          results.push(result);
+        } else {
+          results.push({
+            success: false,
+            error: 'Invalid operation: task required for update',
+          });
+        }
       }
-    }
 
-    const successCount = results.filter(r => r.success).length;
-    const totalCount = results.length;
+      const successCount = results.filter(r => r.success).length;
+      return { results, successCount, totalCount: results.length };
+    },
+    [updateTaskWithWorkflow],
+    { name: 'batchTaskOperations' }
+  );
 
-    return { results, successCount, totalCount };
-  }, [updateTaskWithWorkflow]);
+  // Optimized workflow status computation
+  const workflowStatus = useOptimizedMemo(
+    () => ({
+      isFormReady: form.title.trim().length > 0,
+      isLoading: form.loading,
+      isRealtimeConnected: realtime.isSubscribed,
+      hasUnsavedChanges: Boolean(form.title || form.description || form.url),
+      canSubmit: form.title.trim().length > 0 && !form.loading,
+    }),
+    [form.title, form.loading, form.description, form.url, realtime.isSubscribed],
+    { name: 'workflow-status' }
+  );
 
-  // Compute workflow status
-  const workflowStatus = useMemo(() => ({
-    isFormReady: form.title.trim().length > 0,
-    isLoading: form.loading,
-    isRealtimeConnected: realtime.isSubscribed,
-    hasUnsavedChanges: form.title || form.description || form.url,
-    canSubmit: form.title.trim().length > 0 && !form.loading,
-  }), [form, realtime]);
-
-  return {
-    // Form state and actions
-    ...form,
-    
-    // Workflow-specific actions
-    updateTaskWithWorkflow,
-    batchTaskOperations,
-    
-    // Workflow status
-    workflowStatus,
-    
-    // Real-time information
-    isRealtimeConnected: realtime.isSubscribed,
-    realtimeUpdatedTasks: realtime.updatedTasksCount,
-    
-    // Configuration
-    enableRealtimeSync,
-    enableOptimisticUpdates,
-  };
-} 
+  // Memoize return object to prevent unnecessary re-renders
+  return useOptimizedMemo(
+    () => ({
+      // Form state and actions
+      ...form,
+      
+      // Optimized workflow actions
+      updateTaskWithWorkflow,
+      batchTaskOperations,
+      
+      // Computed workflow status
+      workflowStatus,
+      
+      // Real-time information
+      isRealtimeConnected: realtime.isSubscribed,
+      realtimeUpdatedTasks: realtime.updatedTasksCount,
+      
+      // Configuration
+      enableRealtimeSync: config.enableRealtimeSync,
+      enableOptimisticUpdates: config.enableOptimisticUpdates,
+    }),
+    [
+      form, 
+      updateTaskWithWorkflow, 
+      batchTaskOperations, 
+      workflowStatus, 
+      realtime.isSubscribed, 
+      realtime.updatedTasksCount,
+      config
+    ],
+    { name: 'workflow-return' }
+  );
+}

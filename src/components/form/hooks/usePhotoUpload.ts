@@ -1,4 +1,6 @@
+
 import { useState, useCallback } from 'react';
+import { useOptimizedCallback, useOptimizedMemo } from '@/hooks/useOptimizedMemo';
 import { compressAndResizePhoto } from '@/lib/utils/image/convenience';
 import type { 
   ProcessingResult,
@@ -7,49 +9,76 @@ import type {
 import { TaskService } from '@/lib/api/tasks/task.service';
 
 /**
- * Photo upload hook with WebP support and modal integration
- * 
- * Provides comprehensive image processing capabilities including
- * WebP conversion, validation, modal interface, and more.
+ * Core photo state management hook
  */
-export function usePhotoUpload(options?: {
-  processingOptions?: EnhancedImageProcessingOptions;
-  autoProcess?: boolean;
-}) {
+function usePhotoState() {
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [processingResult, setProcessingResult] = useState<ProcessingResult | null>(null);
 
-  // Processing options with defaults
-  const processingOptions = {
-    maxWidth: 1920,
-    maxHeight: 1080,
-    quality: 0.85,
-    format: 'auto' as const,
-    ...options?.processingOptions,
+  const resetPhoto = useOptimizedCallback(() => {
+    if (photoPreview) {
+      URL.revokeObjectURL(photoPreview);
+    }
+    setPhoto(null);
+    setPhotoPreview(null);
+    setProcessingResult(null);
+  }, [photoPreview], { name: 'resetPhoto' });
+
+  return {
+    photo,
+    setPhoto,
+    photoPreview,
+    setPhotoPreview,
+    loading,
+    setLoading,
+    processingResult,
+    setProcessingResult,
+    resetPhoto,
   };
+}
 
-  /**
-   * Enhanced photo change handler with modal support
-   * Supports both file input events and direct file processing
-   */
-  const handlePhotoChange = useCallback(
+/**
+ * Modal state management hook
+ */
+function useModalState() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = useOptimizedCallback(() => {
+    setIsModalOpen(true);
+  }, [], { name: 'openPhotoModal' });
+
+  const closeModal = useOptimizedCallback(() => {
+    setIsModalOpen(false);
+  }, [], { name: 'closePhotoModal' });
+
+  return {
+    isModalOpen,
+    openModal,
+    closeModal,
+  };
+}
+
+/**
+ * Photo processing hook
+ */
+function usePhotoProcessing(
+  processingOptions: EnhancedImageProcessingOptions,
+  photoState: ReturnType<typeof usePhotoState>
+) {
+  const { setPhoto, setPhotoPreview, setLoading, setProcessingResult } = photoState;
+
+  const handlePhotoChange = useOptimizedCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
-      setLoading(true);
       const file = e.target.files?.[0];
-      if (!file) {
-        setLoading(false);
-        return;
-      }
+      if (!file) return;
 
+      setLoading(true);
       try {
-        // Create preview immediately
         const preview = URL.createObjectURL(file);
         setPhotoPreview(preview);
 
-        // Process the image using enhanced utilities
         const processedFile = await compressAndResizePhoto(
           file,
           processingOptions.maxWidth,
@@ -58,113 +87,124 @@ export function usePhotoUpload(options?: {
         );
 
         setPhoto(processedFile);
-      } catch (error: unknown) {
+      } catch (error) {
         // Error handled silently - proper error handling should be implemented
       } finally {
         setLoading(false);
       }
     },
-    [processingOptions]
+    [processingOptions, setPhoto, setPhotoPreview, setLoading],
+    { name: 'handlePhotoChange' }
   );
 
-  /**
-   * Modal-based photo selection handler
-   */
-  const handleModalPhotoSelect = useCallback(
+  const handleModalPhotoSelect = useOptimizedCallback(
     (file: File, processedResult?: ProcessingResult) => {
-      // Create preview from the selected file
       const preview = URL.createObjectURL(file);
       setPhotoPreview(preview);
       setPhoto(file);
       
-      // Store processing result for analytics/feedback
       if (processedResult) {
         setProcessingResult(processedResult);
       }
-      
-      setIsModalOpen(false);
     },
-    []
+    [setPhoto, setPhotoPreview, setProcessingResult],
+    { name: 'handleModalPhotoSelect' }
   );
 
-  /**
-   * Open the enhanced upload modal
-   */
-  const openPhotoModal = useCallback(() => {
-    setIsModalOpen(true);
-  }, []);
-
-  /**
-   * Close the enhanced upload modal
-   */
-  const closePhotoModal = useCallback(() => {
-    setIsModalOpen(false);
-  }, []);
-
-  /**
-   * Uploads the selected photo with enhanced error handling
-   */
-  const uploadPhoto = useCallback(async (): Promise<string | null> => {
-    if (!photo) return null;
-
-    try {
-      const response = await TaskService.uploadPhoto(photo);
-      if (!response.success) {
-        throw new Error(response.error?.message || 'Photo upload failed');
-      }
-      return response.data || null;
-    } catch (error) {
-      return null;
-    }
-  }, [photo]);
-
-  /**
-   * Reset photo state and cleanup resources
-   */
-  const resetPhoto = useCallback(() => {
-    // Cleanup preview URL to prevent memory leaks
-    if (photoPreview) {
-      URL.revokeObjectURL(photoPreview);
-    }
-    
-    setPhoto(null);
-    setPhotoPreview(null);
-    setProcessingResult(null);
-  }, [photoPreview]);
-
-  /**
-   * Remove current photo and optionally trigger modal
-   */
-  const handlePhotoRemove = useCallback(() => {
-    resetPhoto();
-  }, [resetPhoto]);
-
   return {
-    // Core photo interface
-    photo,
-    photoPreview,
-    loading,
     handlePhotoChange,
-    uploadPhoto,
-    resetPhoto,
-
-    // Modal interface
-    isModalOpen,
-    openPhotoModal,
-    closePhotoModal,
     handleModalPhotoSelect,
-    handlePhotoRemove,
-
-    // Enhanced features
-    processingResult,
-    processingOptions,
   };
 }
 
 /**
- * Task-specific photo upload hook
- * 
- * Wraps the enhanced photo upload hook with task-optimized defaults
+ * Optimized photo upload hook with better composition
+ */
+export function usePhotoUpload(options?: {
+  processingOptions?: EnhancedImageProcessingOptions;
+  autoProcess?: boolean;
+}) {
+  // Memoize processing options to prevent unnecessary re-computations
+  const processingOptions = useOptimizedMemo(
+    () => ({
+      maxWidth: 1920,
+      maxHeight: 1080,
+      quality: 0.85,
+      format: 'auto' as const,
+      ...options?.processingOptions,
+    }),
+    [options?.processingOptions],
+    { name: 'processing-options' }
+  );
+
+  // Compose focused hooks
+  const photoState = usePhotoState();
+  const modalState = useModalState();
+  const photoProcessing = usePhotoProcessing(processingOptions, photoState);
+
+  // Upload functionality
+  const uploadPhoto = useOptimizedCallback(
+    async (): Promise<string | null> => {
+      if (!photoState.photo) return null;
+
+      try {
+        const response = await TaskService.uploadPhoto(photoState.photo);
+        if (!response.success) {
+          throw new Error(response.error?.message || 'Photo upload failed');
+        }
+        return response.data || null;
+      } catch (error) {
+        return null;
+      }
+    },
+    [photoState.photo],
+    { name: 'uploadPhoto' }
+  );
+
+  // Memoize return object for stable references
+  return useOptimizedMemo(
+    () => ({
+      // Core photo interface
+      photo: photoState.photo,
+      photoPreview: photoState.photoPreview,
+      loading: photoState.loading,
+      processingResult: photoState.processingResult,
+      
+      // Actions
+      handlePhotoChange: photoProcessing.handlePhotoChange,
+      uploadPhoto,
+      resetPhoto: photoState.resetPhoto,
+      handlePhotoRemove: photoState.resetPhoto,
+
+      // Modal interface
+      isModalOpen: modalState.isModalOpen,
+      openPhotoModal: modalState.openModal,
+      closePhotoModal: modalState.closeModal,
+      handleModalPhotoSelect: photoProcessing.handleModalPhotoSelect,
+
+      // Configuration
+      processingOptions,
+    }),
+    [
+      photoState.photo,
+      photoState.photoPreview,
+      photoState.loading,
+      photoState.processingResult,
+      photoState.resetPhoto,
+      photoProcessing.handlePhotoChange,
+      photoProcessing.handleModalPhotoSelect,
+      uploadPhoto,
+      modalState.isModalOpen,
+      modalState.openModal,
+      modalState.closeModal,
+      processingOptions,
+    ],
+    { name: 'photo-upload-return' }
+  );
+}
+
+/**
+ * Task-optimized photo upload hook with stable configuration
  */
 export function useTaskPhotoUpload(options?: {
   processingOptions?: EnhancedImageProcessingOptions;
@@ -172,36 +212,35 @@ export function useTaskPhotoUpload(options?: {
 }) {
   const photoUpload = usePhotoUpload(options);
 
-  const resetPhoto = useCallback(() => {
-    photoUpload.resetPhoto();
-  }, [photoUpload]);
+  // Memoize return object with task-specific interface
+  return useOptimizedMemo(
+    () => ({
+      // Standard interface
+      photo: photoUpload.photo,
+      photoPreview: photoUpload.photoPreview,
+      photoLoading: photoUpload.loading,
+      
+      // Actions
+      handlePhotoChange: photoUpload.handlePhotoChange,
+      uploadPhoto: photoUpload.uploadPhoto,
+      resetPhoto: photoUpload.resetPhoto,
+      handlePhotoRemove: photoUpload.handlePhotoRemove,
 
-  return {
-    // Photo state - standard interface
-    photo: photoUpload.photo,
-    photoPreview: photoUpload.photoPreview,
+      // Modal interface
+      isPhotoModalOpen: photoUpload.isModalOpen,
+      openPhotoModal: photoUpload.openPhotoModal,
+      closePhotoModal: photoUpload.closePhotoModal,
+      handleModalPhotoSelect: photoUpload.handleModalPhotoSelect,
 
-    // Photo actions - standard interface
-    handlePhotoChange: photoUpload.handlePhotoChange,
-    uploadPhoto: photoUpload.uploadPhoto,
-    resetPhoto,
-
-    // Loading state - standard interface
-    photoLoading: photoUpload.loading,
-
-    // Modal interface
-    isPhotoModalOpen: photoUpload.isModalOpen,
-    openPhotoModal: photoUpload.openPhotoModal,
-    closePhotoModal: photoUpload.closePhotoModal,
-    handleModalPhotoSelect: photoUpload.handleModalPhotoSelect,
-    handlePhotoRemove: photoUpload.handlePhotoRemove,
-
-    // Enhanced features
-    processingResult: photoUpload.processingResult,
-    processingOptions: photoUpload.processingOptions,
-  };
+      // Enhanced features
+      processingResult: photoUpload.processingResult,
+      processingOptions: photoUpload.processingOptions,
+    }),
+    [photoUpload],
+    { name: 'task-photo-upload' }
+  );
 }
 
 // Export with Enhanced names for backward compatibility
 export const useEnhancedPhotoUpload = usePhotoUpload;
-export const useEnhancedTaskPhotoUpload = useTaskPhotoUpload; 
+export const useEnhancedTaskPhotoUpload = useTaskPhotoUpload;

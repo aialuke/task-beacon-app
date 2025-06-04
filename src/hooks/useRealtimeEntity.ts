@@ -1,4 +1,6 @@
+
 import { useEffect, useCallback, useState } from 'react';
+import { useOptimizedMemo, useOptimizedCallback } from './useOptimizedMemo';
 import { useRealtimeSubscription } from './useRealtimeSubscription';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
 import { realtimeLogger } from '@/lib/logger';
@@ -7,88 +9,112 @@ interface EntityWithId {
   id: string;
 }
 
-/**
- * Configuration options for the useRealtimeEntity hook
- */
 interface UseRealtimeEntityOptions<T extends EntityWithId> {
-  /** The database table to subscribe to */
   table: string;
-  /** The query key used by React Query for caching */
   queryKey: string[];
-  /** 
-   * Callback fired when a new entity is inserted
-   * @param payload - The realtime payload containing the new entity data
-   */
   onEntityCreated?: (entity: T) => void;
-  /** 
-   * Callback fired when an entity is updated
-   * @param payload - The realtime payload containing old and new entity data
-   */
   onEntityUpdated?: (entity: T) => void;
-  /** 
-   * Callback fired when an entity is deleted
-   * @param payload - The realtime payload containing the deleted entity data
-   */
   onEntityDeleted?: (entity: T) => void;
-  /** The entity ID to track */
   entityId: string;
-  /** The function to fetch the entity */
   fetchFn: (id: string) => Promise<T>;
-  /** Whether the entity is enabled */
   enabled?: boolean;
-  /** The refetch interval for the entity */
   refetchInterval?: number;
 }
 
+interface RealtimeEntityState {
+  isConnected: boolean;
+  lastUpdate: Date | null;
+}
+
 /**
- * Hook for managing real-time entity updates with automatic query invalidation
+ * Entity state management hook
+ */
+function useEntityState(): [RealtimeEntityState, (updates: Partial<RealtimeEntityState>) => void] {
+  const [state, setState] = useState<RealtimeEntityState>({
+    isConnected: false,
+    lastUpdate: null,
+  });
+
+  const updateState = useOptimizedCallback(
+    (updates: Partial<RealtimeEntityState>) => {
+      setState(prev => ({ ...prev, ...updates }));
+    },
+    [],
+    { name: 'updateEntityState' }
+  );
+
+  return [state, updateState];
+}
+
+/**
+ * Entity event handlers hook
+ */
+function useEntityEventHandlers<T extends EntityWithId>(
+  entityId: string,
+  table: string,
+  callbacks: {
+    onEntityCreated?: (entity: T) => void;
+    onEntityUpdated?: (entity: T) => void;
+    onEntityDeleted?: (entity: T) => void;
+  },
+  updateState: (updates: Partial<RealtimeEntityState>) => void
+) {
+  return useOptimizedCallback(
+    (payload: any) => {
+      const { eventType, new: updatedEntity, old: deletedEntity } = payload;
+
+      switch (eventType) {
+        case 'INSERT':
+          if (updatedEntity?.id === entityId) {
+            realtimeLogger.debug(`New ${table} entity`, {
+              entityId: updatedEntity.id,
+              table
+            });
+            
+            callbacks.onEntityCreated?.(updatedEntity);
+            updateState({ lastUpdate: new Date() });
+          }
+          break;
+
+        case 'UPDATE':
+          if (updatedEntity?.id === entityId) {
+            realtimeLogger.debug(`Updated ${table} entity`, {
+              entityId: updatedEntity.id,
+              table,
+              hasChanges: JSON.stringify(updatedEntity) !== JSON.stringify(deletedEntity)
+            });
+            
+            callbacks.onEntityUpdated?.(updatedEntity);
+            updateState({ lastUpdate: new Date() });
+          }
+          break;
+
+        case 'DELETE':
+          if (deletedEntity?.id === entityId) {
+            realtimeLogger.debug(`Deleted ${table} entity`, {
+              entityId: deletedEntity.id,
+              table
+            });
+            
+            callbacks.onEntityDeleted?.(deletedEntity);
+            updateState({ lastUpdate: new Date() });
+          }
+          break;
+
+        default:
+          realtimeLogger.warn(`Unknown event type for ${table}`, { eventType, table });
+          break;
+      }
+    },
+    [entityId, table, callbacks, updateState],
+    { name: 'entityEventHandler' }
+  );
+}
+
+/**
+ * Optimized hook for managing real-time entity updates
  * 
- * This hook provides a high-level abstraction over Supabase real-time subscriptions,
- * automatically handling query cache invalidation and providing type-safe callbacks
- * for database changes.
- * 
- * @template T - The TypeScript type of the entity being tracked
- * @param options - Configuration options for the real-time subscription
- * @returns Object containing subscription status and manual invalidation function
- * 
- * @example
- * ```typescript
- * // Track task updates with custom handlers
- * const { isSubscribed } = useRealtimeEntity<Task>({
- *   table: 'tasks',
- *   queryKey: ['tasks', taskId],
- *   onEntityUpdated: ({ old, new: updated }) => {
- *     if (old.status !== updated.status) {
- *       toast.success('Task status updated!');
- *     }
- *   },
- *   onEntityDeleted: ({ old }) => {
- *     toast.info(`Task "${old.title}" was deleted`);
- *   },
- *   entityId: taskId,
- *   fetchFn: getTask,
- *   enabled: true,
- *   refetchInterval: 5000
- * });
- * ```
- * 
- * @example
- * ```typescript
- * // Simple subscription without custom handlers
- * const { isSubscribed, invalidateQueries } = useRealtimeEntity<User>({
- *   table: 'profiles',
- *   queryKey: ['users'],
- *   entityId: user.id,
- *   fetchFn: getUser,
- *   enabled: true,
- *   refetchInterval: 5000
- * });
- * 
- * // Manually refresh cache when needed
- * const handleRefresh = () => {
- *   invalidateQueries();
- * };
- * ```
+ * Now with better performance through hook composition and memoization.
  */
 export function useRealtimeEntity<T extends EntityWithId>({
   table,
@@ -102,84 +128,52 @@ export function useRealtimeEntity<T extends EntityWithId>({
   refetchInterval,
 }: UseRealtimeEntityOptions<T>) {
   const queryClient = useQueryClient();
-  const [isConnected, setIsConnected] = useState(false);
-  const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
+  const [entityState, updateEntityState] = useEntityState();
 
-  /**
-   * Invalidates React Query cache for the specified query key
-   * This triggers a refetch of the data from the server
-   */
-  const invalidateQueries = useCallback(() => {
-    queryClient.invalidateQueries({ queryKey: queryKey });
-  }, [queryClient, queryKey]);
+  // Memoize callbacks to prevent unnecessary re-renders
+  const callbacks = useOptimizedMemo(
+    () => ({ onEntityCreated, onEntityUpdated, onEntityDeleted }),
+    [onEntityCreated, onEntityUpdated, onEntityDeleted],
+    { name: 'entity-callbacks' }
+  );
 
-  // Fetch entity data with React Query
+  // Memoize query configuration
+  const queryConfig = useOptimizedMemo(
+    () => ({
+      queryKey: [...queryKey, entityId],
+      queryFn: () => fetchFn(entityId),
+      enabled: enabled && !!entityId,
+      refetchInterval,
+      retry: 3,
+      retryDelay: (attemptIndex: number) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    }),
+    [queryKey, entityId, fetchFn, enabled, refetchInterval],
+    { name: 'query-config' }
+  );
+
+  // Entity data query
   const {
     data: entity,
     isLoading,
     error,
     refetch,
     isRefetching,
-  } = useQuery({
-    queryKey: [...queryKey, entityId],
-    queryFn: () => fetchFn(entityId),
-    enabled: enabled && !!entityId,
-    refetchInterval,
-    retry: 3,
-    retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
-  });
+  } = useQuery(queryConfig);
 
-  // Handle real-time updates
-  const handleRealtimeUpdate = useCallback((payload: any) => {
-    const eventType = payload.eventType;
-    const updatedEntity = payload.new;
-    const deletedEntity = payload.old;
+  // Optimized query invalidation
+  const invalidateQueries = useOptimizedCallback(() => {
+    queryClient.invalidateQueries({ queryKey });
+  }, [queryClient, queryKey], { name: 'invalidateQueries' });
 
-    switch (eventType) {
-      case 'INSERT':
-        if (updatedEntity && updatedEntity.id === entityId) {
-          realtimeLogger.debug(`New ${table} entity`, {
-            entityId: updatedEntity.id,
-            table
-          });
-          
-          onEntityCreated?.(updatedEntity);
-          setLastUpdate(new Date());
-        }
-        break;
+  // Event handler
+  const handleRealtimeUpdate = useEntityEventHandlers(
+    entityId,
+    table,
+    callbacks,
+    updateEntityState
+  );
 
-      case 'UPDATE':
-        if (updatedEntity && updatedEntity.id === entityId) {
-          realtimeLogger.debug(`Updated ${table} entity`, {
-            entityId: updatedEntity.id,
-            table,
-            hasChanges: JSON.stringify(updatedEntity) !== JSON.stringify(deletedEntity)
-          });
-          
-          onEntityUpdated?.(updatedEntity);
-          setLastUpdate(new Date());
-        }
-        break;
-
-      case 'DELETE':
-        if (deletedEntity && deletedEntity.id === entityId) {
-          realtimeLogger.debug(`Deleted ${table} entity`, {
-            entityId: deletedEntity.id,
-            table
-          });
-          
-          onEntityDeleted?.(deletedEntity);
-          setLastUpdate(new Date());
-        }
-        break;
-
-      default:
-        realtimeLogger.warn(`Unknown event type for ${table}`, { eventType, table });
-        break;
-    }
-  }, [entityId, table, onEntityCreated, onEntityUpdated, onEntityDeleted]);
-
-  // Set up real-time subscription
+  // Real-time subscription
   const { isSubscribed } = useRealtimeSubscription({
     table,
     event: '*',
@@ -191,18 +185,33 @@ export function useRealtimeEntity<T extends EntityWithId>({
 
   // Update connection status
   useEffect(() => {
-    setIsConnected(isSubscribed);
-  }, [isSubscribed]);
+    updateEntityState({ isConnected: isSubscribed });
+  }, [isSubscribed, updateEntityState]);
 
-  return {
-    entity,
-    isLoading,
-    error,
-    refetch,
-    isRefetching,
-    isConnected,
-    isSubscribed,
-    lastUpdate,
-    invalidateQueries,
-  };
+  // Memoize return object for stable references
+  return useOptimizedMemo(
+    () => ({
+      entity,
+      isLoading,
+      error,
+      refetch,
+      isRefetching,
+      isConnected: entityState.isConnected,
+      isSubscribed,
+      lastUpdate: entityState.lastUpdate,
+      invalidateQueries,
+    }),
+    [
+      entity,
+      isLoading,
+      error,
+      refetch,
+      isRefetching,
+      entityState.isConnected,
+      isSubscribed,
+      entityState.lastUpdate,
+      invalidateQueries,
+    ],
+    { name: 'realtime-entity-return' }
+  );
 }
