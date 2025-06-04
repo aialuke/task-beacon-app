@@ -35,10 +35,6 @@ export function SimplePhotoUploadModal({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-sm">
-        <DialogHeader>
-          
-        </DialogHeader>
-
         <div className="py-4">
           <SimplePhotoUpload
             photoPreview={photoPreview}
