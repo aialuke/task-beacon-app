@@ -31,7 +31,13 @@ export const ActionButton = memo(function ActionButton({
   );
 
   return (
-    <Button variant="ghost" onClick={onClick} disabled={disabled} className={buttonClasses}>
+    <Button 
+      type="button"
+      variant="ghost" 
+      onClick={onClick} 
+      disabled={disabled} 
+      className={buttonClasses}
+    >
       <Icon
         className={cn(
           'h-5 w-5 flex-shrink-0 transition-all duration-200 sm:h-4 sm:w-4',
