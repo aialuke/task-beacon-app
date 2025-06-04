@@ -9,9 +9,9 @@ function TaskDashboardHeader() {
           <img 
             src="/assets/hourglass_logo.svg" 
             alt="Task Flow Logo" 
-            className="h-8 w-8 sm:h-10 sm:w-10"
+            className="h-7 w-7 sm:h-8 sm:w-8"
           />
-          <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+          <h1 className="text-xl font-normal tracking-tight text-foreground sm:text-2xl">
             Task Flow
           </h1>
         </div>
