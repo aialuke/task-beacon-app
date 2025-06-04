@@ -28,7 +28,7 @@ export function UserSearchModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="pb-8 pt-10 sm:max-w-md h-[40vh] sm:h[50vh]">
+      <DialogContent className="pb-8 pt-12 sm:max-w-md h-[40vh] sm:h[50vh]">
         <div className="space-y-4 pb-4">
           <EnhancedUserSearch value={value} onChange={handleUserSelect} />
         </div>
