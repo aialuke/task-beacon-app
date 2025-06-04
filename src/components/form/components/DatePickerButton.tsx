@@ -81,7 +81,7 @@ export const DatePickerButton = memo(function DatePickerButton({
           onSelect={handleDateSelect}
           disabled={(date: Date) => date < new Date()}
           initialFocus
-          className="pointer-events-auto p-4"
+          className="pointer-events-auto p-4 rounded-lg"
         />
       </PopoverContent>
     </Popover>
