@@ -45,8 +45,8 @@ export class TaskQueryService {
         .select(`
           *,
           parent_task:parent_task_id(id, title, description, photo_url, url_link),
-          owner:owner_id(id, name, email),
-          assignee:assignee_id(id, name, email)
+          owner:profiles!tasks_owner_id_fkey(id, name, email, avatar_url),
+          assignee:profiles!tasks_assignee_id_fkey(id, name, email, avatar_url)
         `);
 
       // Apply filters
@@ -104,8 +104,8 @@ export class TaskQueryService {
         .select(`
           *,
           parent_task:parent_task_id(id, title, description, photo_url, url_link),
-          owner:owner_id(id, name, email),
-          assignee:assignee_id(id, name, email)
+          owner:profiles!tasks_owner_id_fkey(id, name, email, avatar_url),
+          assignee:profiles!tasks_assignee_id_fkey(id, name, email, avatar_url)
         `)
         .eq('id', taskId)
         .single();
@@ -131,8 +131,8 @@ export class TaskQueryService {
         .select(`
           *,
           parent_task:parent_task_id(id, title, description, photo_url, url_link),
-          owner:owner_id(id, name, email),
-          assignee:assignee_id(id, name, email)
+          owner:profiles!tasks_owner_id_fkey(id, name, email, avatar_url),
+          assignee:profiles!tasks_assignee_id_fkey(id, name, email, avatar_url)
         `)
         .or(`title.ilike.%${query}%,description.ilike.%${query}%`)
         .order(options.sortBy || 'created_at', { 
@@ -155,8 +155,8 @@ export class TaskQueryService {
         .select(`
           *,
           parent_task:parent_task_id(id, title, description, photo_url, url_link),
-          owner:owner_id(id, name, email),
-          assignee:assignee_id(id, name, email)
+          owner:profiles!tasks_owner_id_fkey(id, name, email, avatar_url),
+          assignee:profiles!tasks_assignee_id_fkey(id, name, email, avatar_url)
         `)
         .eq('status', status)
         .order('created_at', { ascending: false });
@@ -177,8 +177,8 @@ export class TaskQueryService {
         .select(`
           *,
           parent_task:parent_task_id(id, title, description, photo_url, url_link),
-          owner:owner_id(id, name, email),
-          assignee:assignee_id(id, name, email)
+          owner:profiles!tasks_owner_id_fkey(id, name, email, avatar_url),
+          assignee:profiles!tasks_assignee_id_fkey(id, name, email, avatar_url)
         `)
         .eq('pinned', true)
         .order('created_at', { ascending: false });
