@@ -41,7 +41,6 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
   // Photo upload state
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [selectedPhoto, setSelectedPhoto] = useState<File | null>(null);
-  const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
 
   // Photo upload handlers
   const handlePhotoChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,21 +51,6 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
       setPhotoPreview(url);
     }
   }, []);
-
-  const openPhotoModal = useCallback(() => {
-    setIsPhotoModalOpen(true);
-  }, []);
-
-  const closePhotoModal = useCallback(() => {
-    setIsPhotoModalOpen(false);
-  }, []);
-
-  const handleModalPhotoSelect = useCallback((file: File, processedResult?: ProcessingResult) => {
-    setSelectedPhoto(file);
-    const url = URL.createObjectURL(file);
-    setPhotoPreview(url);
-    closePhotoModal();
-  }, [closePhotoModal]);
 
   const handlePhotoRemove = useCallback(() => {
     setSelectedPhoto(null);
@@ -150,13 +134,9 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
     handleSubmit,
     error,
     isLoading,
-    // Photo upload functionality
+    // Simplified photo upload functionality
     photoPreview,
     handlePhotoChange,
-    isPhotoModalOpen,
-    openPhotoModal,
-    closePhotoModal,
-    handleModalPhotoSelect,
     handlePhotoRemove,
   };
 }

@@ -1,3 +1,4 @@
+
 import type { Task } from '@/types';
 import { useFollowUpTask } from '@/features/tasks/hooks/useFollowUpTask';
 import { BaseTaskForm } from '@/components/form/BaseTaskForm';
@@ -27,10 +28,6 @@ export default function FollowUpTaskForm({
     loading,
     handlePhotoChange,
     handleSubmit,
-    isPhotoModalOpen,
-    openPhotoModal,
-    closePhotoModal,
-    handleModalPhotoSelect,
     handlePhotoRemove,
   } = useFollowUpTask({ parentTask, onClose });
 
@@ -56,10 +53,6 @@ export default function FollowUpTaskForm({
       titlePlaceholder="Enter follow-up task title"
       titleLabel="Follow-up Title"
       descriptionPlaceholder="Describe your follow-up task..."
-      isPhotoModalOpen={isPhotoModalOpen}
-      onPhotoModalOpen={openPhotoModal}
-      onPhotoModalClose={closePhotoModal}
-      onModalPhotoSelect={handleModalPhotoSelect}
       onPhotoRemove={handlePhotoRemove}
     >
       {/* Parent Task Reference moved to bottom */}

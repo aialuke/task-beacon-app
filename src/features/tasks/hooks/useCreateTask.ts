@@ -1,3 +1,4 @@
+
 import { useCallback } from 'react';
 import { useOptimizedMemo, useOptimizedCallback } from '@/hooks/useOptimizedMemo';
 import { useTaskForm } from './useTaskForm';
@@ -148,15 +149,12 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
       ...taskForm,
       loading, // Combined loading state
       
-      // Photo upload
-      photo: photoUpload.photo,
+      // Photo upload - simplified interface
       photoPreview: photoUpload.photoPreview,
       handlePhotoChange: photoUpload.handlePhotoChange,
-      isPhotoModalOpen: photoUpload.isPhotoModalOpen,
-      openPhotoModal: photoUpload.openPhotoModal,
-      closePhotoModal: photoUpload.closePhotoModal,
-      handleModalPhotoSelect: photoUpload.handleModalPhotoSelect,
       handlePhotoRemove: photoUpload.handlePhotoRemove,
+      photoLoading: photoUpload.photoLoading,
+      processingResult: photoUpload.processingResult,
       
       // Submit handler
       handleSubmit,
@@ -164,14 +162,11 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
     [
       taskForm,
       loading,
-      photoUpload.photo,
       photoUpload.photoPreview,
       photoUpload.handlePhotoChange,
-      photoUpload.isPhotoModalOpen,
-      photoUpload.openPhotoModal,
-      photoUpload.closePhotoModal,
-      photoUpload.handleModalPhotoSelect,
       photoUpload.handlePhotoRemove,
+      photoUpload.photoLoading,
+      photoUpload.processingResult,
       handleSubmit,
     ],
     { name: 'create-task-return' }
