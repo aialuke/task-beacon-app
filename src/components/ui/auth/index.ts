@@ -1,4 +1,16 @@
-// Auth UI Component Exports
+
+// Main auth form
 export { default as ModernAuthForm } from './ModernAuthForm';
-export * from './FloatingInput';
-export * from './PasswordStrengthIndicator'; 
+
+// Auth form components
+export { AuthFormHeader } from './components/AuthFormHeader';
+export { AuthFormFields } from './components/AuthFormFields';
+export { AuthSubmitButton } from './components/AuthSubmitButton';
+export { AuthModeToggle } from './components/AuthModeToggle';
+
+// Auth form hooks
+export { useAuthForm } from './hooks/useAuthForm';
+
+// Individual input components
+export { FloatingInput } from './FloatingInput';
+export { PasswordStrengthIndicator } from './PasswordStrengthIndicator';
