@@ -1,3 +1,4 @@
+
 import { Textarea } from '@/components/ui/textarea';
 import { useState, useRef, useEffect, ReactNode } from 'react';
 import { cn } from '@/lib/utils';
@@ -9,6 +10,8 @@ interface FloatingTextareaProps {
   placeholder: string;
   label: string;
   icon?: ReactNode;
+  disabled?: boolean;
+  rows?: number;
   className?: string;
 }
 
@@ -19,6 +22,8 @@ export function FloatingTextarea({
   placeholder,
   label,
   icon,
+  disabled = false,
+  rows = 1,
   className,
 }: FloatingTextareaProps) {
   const [isFocused, setIsFocused] = useState(false);
@@ -56,11 +61,13 @@ export function FloatingTextarea({
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           placeholder=""
-          rows={1}
+          rows={rows}
+          disabled={disabled}
           className={cn(
             'peer min-h-28 resize-none overflow-hidden rounded-2xl border-border/40 bg-background/60 pb-2 pt-6 backdrop-blur-sm transition-all duration-300 hover:border-border/60 hover:bg-background/70 focus:border-primary/60 focus:bg-background/80 focus:shadow-lg focus:shadow-primary/10', // Changed min-h-14 to min-h-28 (doubled)
             icon ? 'pl-11' : 'pl-4',
-            'pr-4'
+            'pr-4',
+            disabled && 'opacity-50 cursor-not-allowed'
           )}
         />
 

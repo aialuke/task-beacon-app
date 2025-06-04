@@ -4,7 +4,7 @@ import { FloatingInput } from '@/components/ui/form/FloatingInput';
 import { FloatingTextarea } from '@/components/ui/form/FloatingTextarea';
 import { QuickActionBar } from './QuickActionBar';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { LoadingSpinner } from '@/components/ui/layout/LoadingSpinner';
+import LoadingSpinner from '@/components/ui/layout/LoadingSpinner';
 import { Progress } from '@/components/ui/progress';
 import { AlertCircle } from 'lucide-react';
 import type { ProcessingResult } from '@/lib/utils/image/types';
@@ -43,6 +43,9 @@ interface BaseTaskFormProps {
   headerTitle: string;
   headerSubtitle: string;
   submitLabel: string;
+  
+  // Children support
+  children?: React.ReactNode;
 }
 
 export function BaseTaskForm({
@@ -70,6 +73,7 @@ export function BaseTaskForm({
   headerTitle,
   headerSubtitle,
   submitLabel,
+  children,
 }: BaseTaskFormProps) {
   return (
     <div className="mx-auto w-full max-w-lg">
@@ -95,6 +99,7 @@ export function BaseTaskForm({
             <FloatingTextarea
               id="description"
               label="Description (optional)"
+              placeholder="Description (optional)"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               disabled={loading}
@@ -141,6 +146,9 @@ export function BaseTaskForm({
               disabled={loading}
             />
           </form>
+
+          {/* Children content */}
+          {children}
 
           {/* Loading Overlay */}
           {loading && (

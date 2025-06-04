@@ -174,17 +174,17 @@ function usePhotoProcessing(
         // Use the processed file for upload
         setPhoto(processedFile);
         
-        // Store processing result for reference
+        // Store processing result for reference - fix the type issue
         if (processedFile !== file) {
-          setProcessingResult({
+          const result: ProcessingResult = {
             blob: processedFile,
-            originalSize: file.size,
             compressedSize: processedFile.size,
             compressionRatio: file.size / processedFile.size,
             format: processedFile.type,
             quality: processingOptions.quality,
             dimensions: dimensions
-          });
+          };
+          setProcessingResult(result);
         }
 
       } catch (error) {
