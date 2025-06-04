@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import { FloatingInput } from '@/components/ui/form/FloatingInput';
 import { FloatingTextarea } from '@/components/ui/form/FloatingTextarea';
@@ -86,7 +84,7 @@ export function BaseTaskForm({
 }: BaseTaskFormProps) {
   return (
     <div className="mx-auto w-full max-w-lg p-8 border border-border/50 bg-card/95 shadow-2xl backdrop-blur-sm rounded-2xl">
-      <Card className="">
+      <Card className="border-0 bg-transparent shadow-none">
         <CardHeader className="pb-8 text-center relative">
           <h1 className="text-2xl font-bold text-card-foreground mb-2">{headerTitle}</h1>
           {/* Blue underline decoration */}
@@ -172,4 +170,3 @@ export function BaseTaskForm({
     </div>
   );
 }
-
