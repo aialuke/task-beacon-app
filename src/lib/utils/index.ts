@@ -43,7 +43,6 @@ export type {
   EnhancedImageValidationOptions,
   ImageMetadata,
   ProcessingResult,
-  BatchProcessingOptions,
   WebPSupport,
   ConversionResult,
   ImagePreview,
@@ -88,12 +87,6 @@ export {
   convertImageFormat,
   optimizeForWeb,
   createImageSizes,
-  processImagesBatch,
-  processImagesParallel,
-  processImagesSequential,
-  createThumbnailsBatch,
-  calculateBatchStats,
-  processImagesWithRetry,
   createImagePreviewEnhanced,
   cleanupObjectURLs,
   createImagePreviews,
@@ -274,8 +267,9 @@ export * as errorUtils from './error';
  * ✅ PHASE 2: Consolidated duplicates (validation, modal state, error handling)
  * ✅ PHASE 3: Standardized hook naming conventions
  * ✅ PHASE 4: Expanded shared utilities with React patterns
+ * ✅ CLEANUP: Removed unused batch processing and enhanced photo upload
  */
 
-// NOTE: Enhanced Photo Upload Modal is now directly imported:
-// import EnhancedPhotoUploadModal from '@/components/form/enhanced-photo-upload/EnhancedPhotoUploadModal';
-// No backward compatibility exports needed - use direct imports for better tree-shaking.
+// NOTE: Simple Photo Upload components are now directly imported:
+// import { SimplePhotoUpload, SimplePhotoUploadModal } from '@/components/form';
+// Background processing functionality preserved via useFormPhotoUpload hook.
