@@ -85,13 +85,13 @@ export function BaseTaskForm({
 }: BaseTaskFormProps) {
   return (
     <div className="mx-auto w-full max-w-lg">
-      <Card className="border-0 bg-white/80 shadow-xl backdrop-blur-sm">
+      <Card className="border border-border/50 bg-card/95 shadow-2xl backdrop-blur-sm">
         <CardHeader className="space-y-2 pb-6 text-center">
-          <h1 className="text-2xl font-bold text-gray-900">{headerTitle}</h1>
-          <p className="text-sm text-gray-600">{headerSubtitle}</p>
+          <h1 className="text-2xl font-bold text-card-foreground">{headerTitle}</h1>
+          <p className="text-sm text-muted-foreground">{headerSubtitle}</p>
         </CardHeader>
 
-        <CardContent className="space-y-6">
+        <CardContent className="relative space-y-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Title Input */}
             <FloatingInput
@@ -118,8 +118,8 @@ export function BaseTaskForm({
             {uploadProgress > 0 && uploadProgress < 100 && (
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600">Uploading photo...</span>
-                  <span className="text-gray-600">{uploadProgress}%</span>
+                  <span className="text-muted-foreground">Uploading photo...</span>
+                  <span className="text-muted-foreground">{uploadProgress}%</span>
                 </div>
                 <Progress value={uploadProgress} className="h-2" />
               </div>
@@ -127,7 +127,7 @@ export function BaseTaskForm({
 
             {/* Photo Error Display */}
             {photoError && (
-              <div className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-red-700">
+              <div className="flex items-center gap-2 rounded-lg border border-destructive/50 bg-destructive/10 p-3 text-destructive">
                 <AlertCircle className="h-4 w-4 shrink-0" />
                 <span className="text-sm">{photoError}</span>
               </div>
@@ -160,7 +160,7 @@ export function BaseTaskForm({
 
           {/* Loading Overlay */}
           {loading && (
-            <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-white/80 backdrop-blur-sm">
+            <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-background/80 backdrop-blur-sm">
               <LoadingSpinner size="lg" />
             </div>
           )}
