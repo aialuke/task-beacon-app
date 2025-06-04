@@ -1,3 +1,4 @@
+
 # Development Guidelines
 
 This document outlines the development standards, best practices, and workflows for the Task Management Application.
@@ -8,6 +9,7 @@ This document outlines the development standards, best practices, and workflows 
 - [Code Standards](#code-standards)
 - [Component Development](#component-development)
 - [TypeScript Guidelines](#typescript-guidelines)
+- [State Management](#state-management)
 - [Testing Guidelines](#testing-guidelines)
 - [Git Workflow](#git-workflow)
 - [Performance Guidelines](#performance-guidelines)
@@ -304,6 +306,27 @@ type RequiredEmail = Required<Pick<User, 'email'>>;
 - Use type assertions sparingly and with type guards
 - Prefer type narrowing over type assertions
 
+## State Management
+
+**📋 See [State Management Guidelines](./STATE_MANAGEMENT_GUIDELINES.md) for comprehensive patterns and best practices.**
+
+### Quick Reference
+
+- **Server State**: Use TanStack Query (React Query)
+- **Global Client State**: Use React Context with standardized patterns
+- **Feature-Specific State**: Use feature-scoped Context providers
+- **Component State**: Use useState/useReducer for local state
+
+### Decision Matrix
+
+| State Type | Tool | Example |
+|------------|------|---------|
+| Server Data | React Query | Tasks, Users, API responses |
+| Auth State | React Context + React Query | User session |
+| UI Preferences | React Context | Theme, Language |
+| Feature UI State | React Context | Task filters, expanded states |
+| Component State | useState/useReducer | Form inputs, modal state |
+
 ## Testing Guidelines
 
 ### Test Structure
@@ -471,6 +494,12 @@ const apiKey = 'sk-1234567890abcdef'; // BAD
 - [ ] Is the code properly typed with TypeScript?
 - [ ] Are there any code smells or anti-patterns?
 
+### State Management
+- [ ] Is the appropriate state management tool used?
+- [ ] Are server state and client state properly separated?
+- [ ] Is the context hierarchy logical and efficient?
+- [ ] Are queries and mutations properly structured?
+
 ### Performance
 - [ ] Are there any obvious performance issues?
 - [ ] Is memoization used appropriately?
@@ -492,4 +521,5 @@ const apiKey = 'sk-1234567890abcdef'; // BAD
 - [TypeScript Handbook](https://www.typescriptlang.org/docs/)
 - [Testing Library Documentation](https://testing-library.com/)
 - [TanStack Query Guide](https://tanstack.com/query/latest)
-- [Tailwind CSS Documentation](https://tailwindcss.com/docs) 
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+- [State Management Guidelines](./STATE_MANAGEMENT_GUIDELINES.md)
