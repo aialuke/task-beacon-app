@@ -3,8 +3,8 @@ import { useCallback } from 'react';
 import { useOptimizedMemo, useOptimizedCallback } from '@/hooks/useOptimizedMemo';
 import { useTaskForm } from './useTaskForm';
 import { useTaskSubmission } from './useTaskSubmission';
-import { useTaskNavigation } from './useTaskNavigation';
-import { useEnhancedTaskPhotoUpload } from '@/components/form/hooks/usePhotoUpload';
+import { useTasksNavigate } from './useTasksNavigate';
+import { useEnhancedTaskPhotoUpload } from '@/components/form/hooks/useFormPhotoUpload';
 
 interface UseCreateTaskProps {
   onClose?: () => void;
@@ -27,7 +27,7 @@ interface TaskFormData {
  * Now uses performance-optimized hooks and better separation of concerns.
  */
 export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
-  const { navigateToDashboard } = useTaskNavigation();
+  const { navigateToDashboard } = useTasksNavigate();
   const { submitTask } = useTaskSubmission();
   
   // Memoize close callback to prevent unnecessary re-renders

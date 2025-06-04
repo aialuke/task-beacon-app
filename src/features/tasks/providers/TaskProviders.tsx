@@ -1,8 +1,9 @@
+
 import React from 'react';
 import { TaskDataContextProvider } from '../context/TaskDataContext';
 import { TaskUIContextProvider, useTaskUIContext } from '../context/TaskUIContext';
 import { useTaskDataContext } from '../context/TaskDataContext';
-import { useFilteredTasks } from '../hooks/useFilteredTasks';
+import { useTasksFilter } from '../hooks/useTasksFilter';
 
 interface TaskProvidersProps {
   children: React.ReactNode;
@@ -38,7 +39,7 @@ export function TaskProviders({ children }: TaskProvidersProps) {
 export function useTaskFiltering() {
   const { tasks } = useTaskDataContext();
   const { filter, setFilter } = useTaskUIContext();
-  const filteredTasks = useFilteredTasks(tasks, filter);
+  const filteredTasks = useTasksFilter(tasks, filter);
   
   return { 
     tasks: filteredTasks, 

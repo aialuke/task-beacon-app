@@ -1,3 +1,4 @@
+
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Calendar1, ExternalLink } from 'lucide-react';
@@ -6,12 +7,12 @@ import CountdownTimer from '@/features/tasks/components/CountdownTimer';
 import { getTaskStatus } from '@/features/tasks/utils/taskUiUtils';
 import TaskActions from '@/features/tasks/components/TaskActions';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useTaskDetails } from '@/features/tasks/hooks/useTaskDetails';
+import { useTaskQuery } from '@/features/tasks/hooks/useTaskQuery';
 
 const TaskDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { task, loading, error, isPinned, setIsPinned } = useTaskDetails(id);
+  const { task, loading, error, isPinned, setIsPinned } = useTaskQuery(id);
 
   if (loading) {
     return (

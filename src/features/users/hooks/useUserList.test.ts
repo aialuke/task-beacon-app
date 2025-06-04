@@ -3,7 +3,7 @@ import { createElement } from 'react';
 import { renderHook, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useUserList } from './useUserList';
+import { useUsersQuery } from './useUsersQuery';
 import { UserService } from '@/lib/api';
 import type { User } from '@/types';
 
@@ -21,7 +21,7 @@ const createTestQueryClient = () => new QueryClient({
   },
 });
 
-describe('useUserList', () => {
+describe('useUsersQuery', () => {
   it('fetches users successfully', async () => {
     const users: User[] = [{
       id: '1',
@@ -44,7 +44,7 @@ describe('useUserList', () => {
       createElement(QueryClientProvider, { client: queryClient }, children)
     );
     
-    const { result } = renderHook(() => useUserList(), { wrapper });
+    const { result } = renderHook(() => useUsersQuery(), { wrapper });
     
     await waitFor(() => {
       expect(result.current.users).toEqual(users);
@@ -65,7 +65,7 @@ describe('useUserList', () => {
       createElement(QueryClientProvider, { client: queryClient }, children)
     );
     
-    const { result } = renderHook(() => useUserList(), { wrapper });
+    const { result } = renderHook(() => useUsersQuery(), { wrapper });
     
     await waitFor(() => {
       expect(result.current.users).toEqual([]);

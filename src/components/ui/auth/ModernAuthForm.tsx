@@ -5,7 +5,7 @@ import { AuthFormHeader } from './components/AuthFormHeader';
 import { AuthFormFields } from './components/AuthFormFields';
 import { AuthSubmitButton } from './components/AuthSubmitButton';
 import { AuthModeToggle } from './components/AuthModeToggle';
-import { useAuthForm } from './hooks/useAuthForm';
+import { useAuthFormState } from './hooks/useAuthFormState';
 
 const ModernAuthForm: React.FC = () => {
   const {
@@ -24,7 +24,7 @@ const ModernAuthForm: React.FC = () => {
     handleEmailChange,
     handlePasswordChange,
     handleNameChange,
-  } = useAuthForm();
+  } = useAuthFormState();
 
   useEffect(() => {
     const focusFirstInput = () => {

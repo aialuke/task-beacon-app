@@ -1,10 +1,10 @@
 
 import { renderHook } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
-import { useUserFilter } from './useUserFilter';
+import { useUsersFilter } from './useUsersFilter';
 import type { User } from '@/types';
 
-describe('useUserFilter', () => {
+describe('useUsersFilter', () => {
   const mockUsers: User[] = [
     {
       id: '1',
@@ -27,24 +27,24 @@ describe('useUserFilter', () => {
   ];
 
   it('filters users by search term', () => {
-    const { result } = renderHook(() => useUserFilter(mockUsers, 'John'));
+    const { result } = renderHook(() => useUsersFilter(mockUsers, 'John'));
     expect(result.current).toHaveLength(1);
     expect(result.current[0].name).toBe('John Doe');
   });
 
   it('returns all users when search term is empty', () => {
-    const { result } = renderHook(() => useUserFilter(mockUsers, ''));
+    const { result } = renderHook(() => useUsersFilter(mockUsers, ''));
     expect(result.current).toHaveLength(2);
   });
 
   it('filters by email', () => {
-    const { result } = renderHook(() => useUserFilter(mockUsers, 'jane@'));
+    const { result } = renderHook(() => useUsersFilter(mockUsers, 'jane@'));
     expect(result.current).toHaveLength(1);
     expect(result.current[0].email).toBe('jane@example.com');
   });
 
   it('respects limit parameter', () => {
-    const { result } = renderHook(() => useUserFilter(mockUsers, '', 1));
+    const { result } = renderHook(() => useUsersFilter(mockUsers, '', 1));
     expect(result.current).toHaveLength(1);
   });
 });

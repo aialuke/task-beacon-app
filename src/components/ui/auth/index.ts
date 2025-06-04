@@ -9,7 +9,7 @@ export { AuthSubmitButton } from './components/AuthSubmitButton';
 export { AuthModeToggle } from './components/AuthModeToggle';
 
 // Auth form hooks
-export { useAuthForm } from './hooks/useAuthForm';
+export { useAuthFormState } from './hooks/useAuthFormState';
 
 // Individual input components
 export { FloatingInput } from './FloatingInput';

@@ -1,9 +1,10 @@
+
 import { ReactNode } from 'react';
 import { createStandardContext } from '@/lib/utils/createContext';
 
 // Clean imports from organized type system  
 import type { Task } from '@/types';
-import { useTaskQueries } from '@/features/tasks/hooks/useTaskQueries';
+import { useTasksQuery } from '@/features/tasks/hooks/useTasksQuery';
 
 interface TaskDataContextValue {
   tasks: Task[];
@@ -38,7 +39,7 @@ interface TaskDataContextProviderProps {
 export function TaskDataContextProvider({
   children,
 }: TaskDataContextProviderProps) {
-  const taskQueries = useTaskQueries();
+  const taskQueries = useTasksQuery();
 
   return (
     <TaskDataProvider value={taskQueries}>
