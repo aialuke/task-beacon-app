@@ -33,9 +33,6 @@ export * from './date';
 // Format utilities (currency, numbers, etc.)
 export * from './format';
 
-// Validation utilities
-export * from './validation';
-
 // =====================================================
 // ENHANCED UTILITIES (Now Available - ✅ REFACTORED & MIGRATED)
 // =====================================================
@@ -83,7 +80,6 @@ export * as dateUtils from './date';
 export * as uiUtils from './ui';
 export * as dataUtils from './data';
 export * as formatUtils from './format';
-export * as validationUtils from './validation';
 
 // Enhanced utility namespaces (✅ NOW AVAILABLE - REFACTORED & MIGRATED)
 export * as imageUtils from './image';
