@@ -61,6 +61,32 @@ function useModalState() {
 }
 
 /**
+ * Create a File object from processed blob with proper naming
+ */
+function createProcessedFile(originalFile: File, processedBlob: Blob): File {
+  // Determine the correct file extension based on the processed blob type
+  let extension = '.jpg'; // Default fallback
+  let baseName = originalFile.name.replace(/\.[^/.]+$/, ''); // Remove original extension
+
+  if (processedBlob.type === 'image/webp') {
+    extension = '.webp';
+  } else if (processedBlob.type === 'image/png') {
+    extension = '.png';
+  } else if (processedBlob.type === 'image/jpeg') {
+    extension = '.jpg';
+  }
+
+  const processedFileName = `${baseName}_processed${extension}`;
+  
+  console.log('createProcessedFile - Original:', originalFile.name, 'Processed:', processedFileName, 'Type:', processedBlob.type);
+
+  return new File([processedBlob], processedFileName, {
+    type: processedBlob.type,
+    lastModified: Date.now(),
+  });
+}
+
+/**
  * Photo processing hook
  */
 function usePhotoProcessing(
@@ -99,12 +125,22 @@ function usePhotoProcessing(
 
   const handleModalPhotoSelect = useOptimizedCallback(
     (file: File, processedResult?: ProcessingResult) => {
+      console.log('handleModalPhotoSelect - Original file:', file.name, 'Type:', file.type);
+      console.log('handleModalPhotoSelect - ProcessedResult available:', !!processedResult);
+
       const preview = URL.createObjectURL(file);
       setPhotoPreview(preview);
-      setPhoto(file);
       
-      if (processedResult) {
+      // Use processed blob if available, otherwise use original file
+      if (processedResult?.blob) {
+        console.log('handleModalPhotoSelect - Using processed blob, type:', processedResult.blob.type);
+        const processedFile = createProcessedFile(file, processedResult.blob);
+        setPhoto(processedFile);
         setProcessingResult(processedResult);
+      } else {
+        console.log('handleModalPhotoSelect - Using original file');
+        setPhoto(file);
+        setProcessingResult(null);
       }
     },
     [setPhoto, setPhotoPreview, setProcessingResult],
@@ -148,15 +184,24 @@ export function useFormPhotoUpload(options?: {
   // Upload functionality
   const uploadPhoto = useOptimizedCallback(
     async (): Promise<string | null> => {
-      if (!photoState.photo) return null;
+      if (!photoState.photo) {
+        console.log('uploadPhoto - No photo to upload');
+        return null;
+      }
+
+      console.log('uploadPhoto - Uploading file:', photoState.photo.name, 'Type:', photoState.photo.type, 'Size:', photoState.photo.size);
 
       try {
         const response = await TaskService.uploadPhoto(photoState.photo);
         if (!response.success) {
+          console.error('uploadPhoto - Upload failed:', response.error);
           throw new Error(response.error?.message || 'Photo upload failed');
         }
+        
+        console.log('uploadPhoto - Upload successful:', response.data);
         return response.data || null;
       } catch (error) {
+        console.error('uploadPhoto - Upload error:', error);
         return null;
       }
     },

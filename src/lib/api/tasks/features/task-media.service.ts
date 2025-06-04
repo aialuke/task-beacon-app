@@ -12,15 +12,36 @@ export class TaskMediaService {
    * Upload a photo for a task
    */
   static async uploadPhoto(file: File): Promise<ApiResponse<string>> {
-    const fileExt = file.name.split('.').pop();
+    console.log('TaskMediaService.uploadPhoto - Starting upload');
+    console.log('TaskMediaService.uploadPhoto - File details:', {
+      name: file.name,
+      type: file.type,
+      size: file.size,
+      lastModified: new Date(file.lastModified).toISOString()
+    });
+
+    // Extract the correct extension from the file type
+    let fileExt = 'jpg'; // Default fallback
+    if (file.type === 'image/webp') {
+      fileExt = 'webp';
+    } else if (file.type === 'image/png') {
+      fileExt = 'png';
+    } else if (file.type === 'image/jpeg') {
+      fileExt = 'jpg';
+    } else {
+      // Try to get extension from filename as fallback
+      const nameExt = file.name.split('.').pop()?.toLowerCase();
+      if (nameExt && ['jpg', 'jpeg', 'png', 'webp'].includes(nameExt)) {
+        fileExt = nameExt === 'jpeg' ? 'jpg' : nameExt;
+      }
+    }
+
     const fileName = `${Date.now()}-${Math.random()}.${fileExt}`;
-    // Fix: Remove the duplicate 'task-photos/' prefix
-    const filePath = fileName; // Just use the filename, the bucket is specified separately
+    
+    console.log('TaskMediaService.uploadPhoto - Generated filename:', fileName);
+    console.log('TaskMediaService.uploadPhoto - Determined extension:', fileExt, 'from type:', file.type);
 
-    console.log('TaskMediaService.uploadPhoto - File:', file.name, 'Size:', file.size);
-    console.log('TaskMediaService.uploadPhoto - Generated path:', filePath);
-
-    return StorageService.uploadFile('task-photos', filePath, file);
+    return StorageService.uploadFile('task-photos', fileName, file);
   }
 
   /**
@@ -40,4 +61,4 @@ export class TaskMediaService {
       }
     });
   }
-} 
+}
