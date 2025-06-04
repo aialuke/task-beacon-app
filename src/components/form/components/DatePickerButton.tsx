@@ -29,8 +29,11 @@ export const DatePickerButton = memo(function DatePickerButton({
 
   const handleDateSelect = (date: Date | undefined): void => {
     if (date) {
-      const isoString = date.toISOString();
-      const localDateTime = isoString.slice(0, 16);
+      // Fix timezone issue by creating a local datetime string
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const localDateTime = `${year}-${month}-${day}T12:00`;
 
       const syntheticEvent = {
         target: { value: localDateTime },
@@ -55,7 +58,7 @@ export const DatePickerButton = memo(function DatePickerButton({
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <Button variant="ghost" disabled={disabled} className={buttonClasses}>
+        <Button type="button" variant="ghost" disabled={disabled} className={buttonClasses}>
           <Calendar
             className={cn(
               'h-5 w-5 flex-shrink-0 transition-all duration-200 sm:h-4 sm:w-4',

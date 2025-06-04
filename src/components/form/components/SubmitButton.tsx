@@ -35,6 +35,7 @@ export const SubmitButton = memo(function SubmitButton({
 
   return (
     <Button
+      type="submit"
       onClick={handleSubmit}
       disabled={disabled || isSubmitting}
       size="icon"
