@@ -12,9 +12,13 @@ export { SubmitButton } from './components/SubmitButton';
 export { UrlInputModal } from './UrlInputModal';
 export { UserSearchModal } from './UserSearchModal';
 
+// Simple photo upload components
+export { SimplePhotoUpload } from './SimplePhotoUpload';
+export { SimplePhotoUploadModal } from './SimplePhotoUploadModal';
+
 // Reference components
 export { ParentTaskReference } from './ParentTaskReference';
 export { ReferenceCard } from './ReferenceCard';
 
-// Enhanced photo upload
+// Enhanced photo upload (legacy - may be removed)
 export { default as EnhancedPhotoUploadModal } from './enhanced-photo-upload/EnhancedPhotoUploadModal';

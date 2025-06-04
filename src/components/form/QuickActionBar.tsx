@@ -6,7 +6,7 @@ import { ActionButton } from './components/ActionButton';
 import { SubmitButton } from './components/SubmitButton';
 import { UrlInputModal } from './UrlInputModal';
 import { UserSearchModal } from './UserSearchModal';
-import EnhancedPhotoUploadModal from './enhanced-photo-upload/EnhancedPhotoUploadModal';
+import { SimplePhotoUploadModal } from './SimplePhotoUploadModal';
 import type { ProcessingResult } from '@/lib/utils/image/types';
 
 interface QuickActionBarProps {
@@ -18,16 +18,12 @@ interface QuickActionBarProps {
   assigneeId: string;
   onAssigneeChange: (value: string) => void;
 
-  // Photo upload props - legacy support for backward compatibility
+  // Photo upload props - unified interface
   onPhotoChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   photoPreview: string | null;
-
-  // Enhanced photo upload props
-  isPhotoModalOpen?: boolean;
-  onPhotoModalOpen?: () => void;
-  onPhotoModalClose?: () => void;
-  onModalPhotoSelect?: (file: File, processedResult?: ProcessingResult) => void;
   onPhotoRemove?: () => void;
+  photoLoading?: boolean;
+  processingResult?: ProcessingResult | null;
 
   // URL props
   url: string;
@@ -48,11 +44,9 @@ export function QuickActionBar({
   onAssigneeChange,
   onPhotoChange,
   photoPreview,
-  isPhotoModalOpen = false,
-  onPhotoModalOpen,
-  onPhotoModalClose,
-  onModalPhotoSelect,
   onPhotoRemove,
+  photoLoading = false,
+  processingResult,
   url,
   onUrlChange,
   onSubmit,
@@ -62,24 +56,15 @@ export function QuickActionBar({
 }: QuickActionBarProps) {
   const [isUrlModalOpen, setIsUrlModalOpen] = useState(false);
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
 
   const hasUrl = !!url;
   const hasPhoto = !!photoPreview;
   const hasAssignee = !!assigneeId;
 
   const handlePhotoClick = () => {
-    if (onPhotoModalOpen && onPhotoModalClose && onModalPhotoSelect) {
-      // Use enhanced modal upload (preferred)
-      onPhotoModalOpen();
-    } else {
-      // Fallback to legacy file input for backward compatibility
-      fileInputRef.current?.click();
-    }
+    setIsPhotoModalOpen(true);
   };
-
-  // Determine if we should use enhanced upload or legacy
-  const useEnhancedUpload = !!(onPhotoModalOpen && onPhotoModalClose && onModalPhotoSelect);
 
   return (
     <div className="flex items-center justify-center gap-4 rounded-xl bg-background/30 px-4 py-1.5 backdrop-blur-sm">
@@ -106,7 +91,7 @@ export function QuickActionBar({
           icon={ImageUp}
           label={hasPhoto ? 'Photo Added' : 'Attach'}
           active={hasPhoto}
-          disabled={disabled}
+          disabled={disabled || photoLoading}
           onClick={handlePhotoClick}
         />
 
@@ -128,18 +113,6 @@ export function QuickActionBar({
         disabled={disabled}
       />
 
-      {/* Hidden file input - for legacy compatibility when modal props not provided */}
-      {!useEnhancedUpload && (
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          onChange={onPhotoChange}
-          className="sr-only"
-          aria-label="Upload Image"
-        />
-      )}
-
       {/* Modals */}
       <UrlInputModal
         isOpen={isUrlModalOpen}
@@ -155,18 +128,17 @@ export function QuickActionBar({
         onChange={onAssigneeChange}
       />
 
-      {/* Enhanced Photo Upload Modal - rendered when modal props are provided */}
-      {useEnhancedUpload && (
-        <EnhancedPhotoUploadModal
-          isOpen={isPhotoModalOpen}
-          onClose={onPhotoModalClose!}
-          onImageSelect={onModalPhotoSelect!}
-          onImageRemove={onPhotoRemove}
-          currentImage={null} // Could be enhanced to track current image
-          title="Upload Task Image"
-          description="Attach an image."
-        />
-      )}
+      {/* Simple Photo Upload Modal */}
+      <SimplePhotoUploadModal
+        isOpen={isPhotoModalOpen}
+        onClose={() => setIsPhotoModalOpen(false)}
+        photoPreview={photoPreview}
+        onPhotoChange={onPhotoChange}
+        onPhotoRemove={onPhotoRemove}
+        processingResult={processingResult}
+        loading={photoLoading}
+        title="Upload Task Image"
+      />
     </div>
   );
 }

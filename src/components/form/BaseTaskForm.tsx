@@ -29,12 +29,10 @@ interface BaseTaskFormProps {
   descriptionLabel?: string;
   children?: React.ReactNode;
 
-  // Enhanced photo upload props - optional
-  isPhotoModalOpen?: boolean;
-  onPhotoModalOpen?: () => void;
-  onPhotoModalClose?: () => void;
-  onModalPhotoSelect?: (file: File, processedResult?: ProcessingResult) => void;
+  // Simplified photo upload props
   onPhotoRemove?: () => void;
+  photoLoading?: boolean;
+  processingResult?: ProcessingResult | null;
 }
 
 export function BaseTaskForm({
@@ -59,12 +57,9 @@ export function BaseTaskForm({
   descriptionLabel = 'Description',
   descriptionPlaceholder = 'Describe your task...',
   children,
-  // Enhanced photo upload props with defaults
-  isPhotoModalOpen = false,
-  onPhotoModalOpen,
-  onPhotoModalClose,
-  onModalPhotoSelect,
   onPhotoRemove,
+  photoLoading = false,
+  processingResult,
 }: BaseTaskFormProps) {
   const handleUrlChange = (newUrl: string) => {
     setUrl(newUrl);
@@ -112,26 +107,25 @@ export function BaseTaskForm({
         />
 
         {/* Quick Action Bar */}
-        <QuickActionBar
-          dueDate={dueDate}
-          onDueDateChange={handleDueDateChange}
-          assigneeId={assigneeId}
-          onAssigneeChange={setAssigneeId}
-          onPhotoChange={handlePhotoChange}
-          photoPreview={photoPreview}
-          url={url}
-          onUrlChange={handleUrlChange}
-          onSubmit={handleSubmit}
-          isSubmitting={loading}
-          submitLabel={submitLabel}
-          disabled={loading}
-          // Enhanced photo upload props
-          isPhotoModalOpen={isPhotoModalOpen}
-          onPhotoModalOpen={onPhotoModalOpen}
-          onPhotoModalClose={onPhotoModalClose}
-          onModalPhotoSelect={onModalPhotoSelect}
-          onPhotoRemove={onPhotoRemove}
-        />
+        <div className="w-full">
+          <QuickActionBar
+            dueDate={dueDate}
+            onDueDateChange={handleDueDateChange}
+            assigneeId={assigneeId}
+            onAssigneeChange={setAssigneeId}
+            onPhotoChange={handlePhotoChange}
+            photoPreview={photoPreview}
+            onPhotoRemove={onPhotoRemove}
+            photoLoading={photoLoading}
+            processingResult={processingResult}
+            url={url}
+            onUrlChange={handleUrlChange}
+            onSubmit={handleSubmit}
+            isSubmitting={loading}
+            submitLabel={submitLabel}
+            disabled={loading}
+          />
+        </div>
 
         {/* Additional content */}
         {children}
