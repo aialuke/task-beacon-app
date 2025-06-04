@@ -1,5 +1,5 @@
 
-import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { SimplePhotoUpload } from './SimplePhotoUpload';
 import type { ProcessingResult } from '@/lib/utils/image/types';
 

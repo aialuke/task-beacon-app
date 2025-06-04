@@ -1,11 +1,8 @@
-
 import { useState } from 'react';
 import { Link } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
 } from '@/components/ui/dialog';
 import { FloatingInput } from '@/components/ui/form/FloatingInput';
 import { Button } from '@/components/ui/button';
