@@ -34,8 +34,8 @@ export function SimplePhotoUploadModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-sm">
-        <div className="py-4">
+      <DialogContent className="max-w-xs pt-2 pb-4">
+        <div className="py-2">
           <SimplePhotoUpload
             photoPreview={photoPreview}
             onPhotoChange={onPhotoChange}
