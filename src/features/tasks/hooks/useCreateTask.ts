@@ -1,10 +1,9 @@
-
 import { useCallback } from 'react';
 import { useOptimizedMemo, useOptimizedCallback } from '@/hooks/useOptimizedMemo';
 import { useTaskForm } from './useTaskForm';
 import { useTaskSubmission } from './useTaskSubmission';
 import { useTasksNavigate } from './useTasksNavigate';
-import { useEnhancedTaskPhotoUpload } from '@/components/form/hooks/useFormPhotoUpload';
+import { useTaskPhotoUpload } from '@/components/form/hooks/useFormPhotoUpload';
 
 interface UseCreateTaskProps {
   onClose?: () => void;
@@ -54,7 +53,7 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
     { name: 'photo-upload-config' }
   );
 
-  const photoUpload = useEnhancedTaskPhotoUpload(photoUploadConfig);
+  const photoUpload = useTaskPhotoUpload(photoUploadConfig);
 
   // Optimized form validation
   const validateForm = useOptimizedCallback(() => {
