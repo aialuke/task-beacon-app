@@ -62,25 +62,36 @@ export {
   useForceUpdate,
   useMount,
   useUnmount,
-  AsyncOperationState as PatternAsyncOperationState,
-  useAsyncOperation as usePatternAsyncOperation,
   reactPatterns,
 } from './patterns';
+
+// Pattern-specific types
+export type {
+  AsyncOperationState as PatternAsyncOperationState,
+} from './patterns';
+
+// Pattern async operation with alias to avoid conflict
+export { useAsyncOperation as usePatternAsyncOperation } from './patterns';
 
 // Consolidated modal management
 export * from './modal-management';
 
 // Standardized async operation handling - explicit exports to avoid conflicts
-export {
-  AsyncOperationState as AsyncOpState,
+export type {
   AsyncOperationOptions,
   AsyncOperationResult,
+} from './async-operations';
+
+export {
   useAsyncOperation as useAsyncOp,
   useBatchAsyncOperation,
   useOptimisticAsyncOperation,
   createAsyncOperationFactory,
   asyncOperationUtils,
 } from './async-operations';
+
+// Async operation state with alias to avoid conflict
+export type { AsyncOperationState as AsyncOpState } from './async-operations';
 
 // =====================================================
 // ENHANCED UTILITIES (Available - Previous Phases)
@@ -111,9 +122,9 @@ export * as formatUtils from './format';
 export * as imageUtils from './image';
 
 // Phase 4 utility namespaces (✅ NEW)
-export * as reactPatterns from './patterns';
+export * as patternUtils from './patterns';
 export * as modalUtils from './modal-management';
-export * as asyncOperationUtils from './async-operations';
+export * as asyncUtils from './async-operations';
 
 // Enhanced utility namespaces (Previous Phases)
 export * as validationUtils from './validation';
@@ -137,7 +148,7 @@ export * as errorUtils from './error';
  * - withErrorBoundary, withLoading HOCs
  * - ConditionalRender, DataRenderer components
  * - useEventCallback, useDebouncedCallback hooks
- * - useAsyncOperation, useMount, useUnmount lifecycle hooks
+ * - usePatternAsyncOperation, useMount, useUnmount lifecycle hooks
  * 
  * MODAL MANAGEMENT:
  * - ModalManagerProvider for centralized modal state
@@ -146,7 +157,7 @@ export * as errorUtils from './error';
  * - Modal registry for dynamic modal management
  * 
  * ASYNC OPERATIONS:
- * - useAsyncOperation with retry and timeout support
+ * - useAsyncOp with retry and timeout support
  * - useBatchAsyncOperation for parallel operations
  * - useOptimisticAsyncOperation for UI responsiveness
  * - createAsyncOperationFactory for reusable patterns
@@ -154,7 +165,7 @@ export * as errorUtils from './error';
  * USAGE EXAMPLES:
  * 
  * React Patterns:
- * import { reactPatterns } from '@/lib/utils';
+ * import { patternUtils } from '@/lib/utils';
  * import { withErrorBoundary, usePatternAsyncOperation } from '@/lib/utils';
  * 
  * Modal Management:
@@ -162,7 +173,7 @@ export * as errorUtils from './error';
  * import { useModal, ModalManagerProvider } from '@/lib/utils';
  * 
  * Async Operations:
- * import { asyncOperationUtils } from '@/lib/utils';
+ * import { asyncUtils } from '@/lib/utils';
  * import { useAsyncOp } from '@/lib/utils';
  * 
  * BENEFITS:
