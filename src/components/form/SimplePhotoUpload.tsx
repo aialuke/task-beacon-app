@@ -31,7 +31,7 @@ export function SimplePhotoUpload({
 
   return (
     <div className="flex flex-col items-center gap-2">
-      <div className="inline-flex items-center gap-8 align-top">
+      <div className="inline-flex items-center gap-6 align-top">
         {/* Preview box */}
         <div
           className="border-input relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-full border"
@@ -65,8 +65,8 @@ export function SimplePhotoUpload({
             onClick={handleButtonClick} 
             aria-haspopup="dialog"
             disabled={disabled || loading}
-            size="sm"
-            variant="outline"
+            size="default"
+            variant="default"
           >
             {photoPreview ? "Change image" : "Upload image"}
           </Button>
