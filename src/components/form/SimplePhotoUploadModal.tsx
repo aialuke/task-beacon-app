@@ -1,4 +1,3 @@
-
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { SimplePhotoUpload } from './SimplePhotoUpload';
 import type { ProcessingResult } from '@/lib/utils/image/types';
@@ -34,7 +33,7 @@ export function SimplePhotoUploadModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-xs pt-2 pb-4">
+      <DialogContent className="max-w-xs pt-4 pb-4">
         <div className="py-2">
           <SimplePhotoUpload
             photoPreview={photoPreview}
