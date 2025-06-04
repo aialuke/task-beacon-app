@@ -1,3 +1,4 @@
+
 import { memo } from 'react';
 import { Task } from '@/types';
 import { useTaskCard } from '../hooks/useTaskCard';
@@ -30,10 +31,6 @@ const arePropsEqual = (prevProps: TaskCardProps, nextProps: TaskCardProps): bool
 };
 
 function TaskCard({ task }: TaskCardProps) {
-  // Debug logging for TaskCard
-  console.log('TaskCard - Task received:', task);
-  console.log('TaskCard - photo_url:', task.photo_url);
-
   const {
     contentRef,
     cardRef,

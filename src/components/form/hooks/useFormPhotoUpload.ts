@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useOptimizedCallback, useOptimizedMemo } from '@/hooks/useOptimizedMemo';
 import { compressAndResizePhoto } from '@/lib/utils/image/convenience';
@@ -76,8 +77,6 @@ function createProcessedFile(originalFile: File, processedBlob: Blob): File {
   }
 
   const processedFileName = `${baseName}_processed${extension}`;
-  
-  console.log('createProcessedFile - Original:', originalFile.name, 'Processed:', processedFileName, 'Type:', processedBlob.type);
 
   return new File([processedBlob], processedFileName, {
     type: processedBlob.type,
@@ -124,20 +123,15 @@ function usePhotoProcessing(
 
   const handleModalPhotoSelect = useOptimizedCallback(
     (file: File, processedResult?: ProcessingResult) => {
-      console.log('handleModalPhotoSelect - Original file:', file.name, 'Type:', file.type);
-      console.log('handleModalPhotoSelect - ProcessedResult available:', !!processedResult);
-
       const preview = URL.createObjectURL(file);
       setPhotoPreview(preview);
       
       // Use processed blob if available, otherwise use original file
       if (processedResult?.blob) {
-        console.log('handleModalPhotoSelect - Using processed blob, type:', processedResult.blob.type);
         const processedFile = createProcessedFile(file, processedResult.blob);
         setPhoto(processedFile);
         setProcessingResult(processedResult);
       } else {
-        console.log('handleModalPhotoSelect - Using original file');
         setPhoto(file);
         setProcessingResult(null);
       }
@@ -184,23 +178,19 @@ export function useFormPhotoUpload(options?: {
   const uploadPhoto = useOptimizedCallback(
     async (): Promise<string | null> => {
       if (!photoState.photo) {
-        console.log('uploadPhoto - No photo to upload');
         return null;
       }
-
-      console.log('uploadPhoto - Uploading file:', photoState.photo.name, 'Type:', photoState.photo.type, 'Size:', photoState.photo.size);
 
       try {
         const response = await TaskService.uploadPhoto(photoState.photo);
         if (!response.success) {
-          console.error('uploadPhoto - Upload failed:', response.error);
+          console.error('Photo upload failed:', response.error);
           throw new Error(response.error?.message || 'Photo upload failed');
         }
         
-        console.log('uploadPhoto - Upload successful:', response.data);
         return response.data || null;
       } catch (error) {
-        console.error('uploadPhoto - Upload error:', error);
+        console.error('Photo upload error:', error);
         return null;
       }
     },

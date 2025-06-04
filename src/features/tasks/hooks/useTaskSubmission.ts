@@ -1,3 +1,4 @@
+
 import { useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -39,8 +40,6 @@ export function useTaskSubmission() {
     taskData: SubmitTaskData
   ): Promise<SubmissionResult> => {
     try {
-      console.log('useTaskSubmission.submitTask - Starting submission with data:', taskData);
-
       // Validate task data
       const validationResult = validateCreateTask({
         title: taskData.title,
@@ -53,7 +52,6 @@ export function useTaskSubmission() {
       });
 
       if (!validationResult.isValid) {
-        console.log('useTaskSubmission.submitTask - Validation failed:', validationResult.errors);
         showValidationErrors(validationResult.errors);
         return { success: false, error: 'Validation failed' };
       }
@@ -79,17 +77,13 @@ export function useTaskSubmission() {
         pinned: taskData.pinned,
       };
 
-      console.log('useTaskSubmission.submitTask - Service data prepared:', serviceData);
-
       // Submit to API
       const response = await TaskService.create(serviceData);
 
       if (!response.success) {
-        console.error('useTaskSubmission.submitTask - API error:', response.error);
+        console.error('Task creation failed:', response.error);
         throw new Error(response.error?.message || 'Failed to create task');
       }
-
-      console.log('useTaskSubmission.submitTask - Task created successfully:', response.data);
 
       // Invalidate queries to refresh task lists
       await queryClient.invalidateQueries({ queryKey: ['tasks'] });
@@ -103,7 +97,7 @@ export function useTaskSubmission() {
       };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to create task';
-      console.error('useTaskSubmission.submitTask - Error:', error);
+      console.error('Task submission error:', error);
       toast.error(errorMessage);
       return { success: false, error: errorMessage };
     }

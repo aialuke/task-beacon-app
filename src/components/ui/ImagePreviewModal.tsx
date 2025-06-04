@@ -1,3 +1,4 @@
+
 import { memo } from 'react';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -15,9 +16,6 @@ export const ImagePreviewModal = memo(function ImagePreviewModal({
   imageUrl,
   alt = 'Task attachment',
 }: ImagePreviewModalProps) {
-  console.log('ImagePreviewModal - isOpen:', isOpen);
-  console.log('ImagePreviewModal - imageUrl:', imageUrl);
-
   if (!isOpen) return null;
 
   const handleBackdropClick = (e: React.MouseEvent) => {
@@ -62,8 +60,7 @@ export const ImagePreviewModal = memo(function ImagePreviewModal({
             src={imageUrl}
             alt={alt}
             className="max-w-full max-h-[70vh] object-contain rounded-lg shadow-lg"
-            onLoad={() => console.log('ImagePreviewModal - Image loaded successfully')}
-            onError={(e) => console.error('ImagePreviewModal - Image failed to load:', e)}
+            onError={(e) => console.error('Image failed to load:', e)}
           />
         </div>
       </div>
