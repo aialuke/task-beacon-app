@@ -1,12 +1,8 @@
-
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
 } from '@/components/ui/dialog';
 import { EnhancedUserSearch } from '@/components/form/EnhancedUserSearch';
-import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 
 interface UserSearchModalProps {
   isOpen: boolean;
