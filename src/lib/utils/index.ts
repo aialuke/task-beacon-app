@@ -1,4 +1,3 @@
-
 /**
  * Centralized utilities index
  * 
@@ -62,7 +61,7 @@ export {
   useForceUpdate,
   useMount,
   useUnmount,
-  reactPatterns,
+  reactPatternsUtils,
 } from './patterns';
 
 // Pattern-specific types
@@ -87,7 +86,7 @@ export {
   useBatchAsyncOperation,
   useOptimisticAsyncOperation,
   createAsyncOperationFactory,
-  asyncOperationUtils,
+  asyncOperationUtilities,
 } from './async-operations';
 
 // Async operation state with alias to avoid conflict
@@ -97,30 +96,23 @@ export type { AsyncOperationState as AsyncOpState } from './async-operations';
 // ENHANCED UTILITIES (Available - Previous Phases)
 // =====================================================
 
-// Enhanced validation utilities (Phase 2) - explicit exports to resolve conflicts
+// Enhanced validation utilities (Phase 2) - using actual exported functions
 export {
-  validateObject,
-  validateWithError,
-  validateEmail,
-  validateUrl,
-  validateRequired,
-  validateMinLength,
-  validateMaxLength,
-  validateNumeric,
-  validateDate,
-  validateArray,
-  createValidator,
-  combineValidators,
-  validationUtils,
+  isValidEmail,
+  isValidUrl,
+  isValidPassword,
+  isDateInFuture,
+  isValidUserName,
+  isValidTaskTitle,
+  isValidTaskDescription,
+  isValidText,
+  validateField,
+  validateForm,
 } from './validation';
 
 // Validation types with alias to avoid conflict with image ValidationResult
 export type {
-  ValidationResult as ValidationResultType,
-  ValidationOptions,
-  ValidatorFunction,
-  ValidationError,
-  ValidationSchema,
+  ValidationResult as UtilValidationResult,
 } from './validation';
 
 // Enhanced shared utilities (Phase 2)
@@ -149,8 +141,8 @@ export * as patternUtils from './patterns';
 export * as modalUtils from './modal-management';
 export * as asyncUtils from './async-operations';
 
-// Enhanced utility namespaces (Previous Phases)
-export * as validationUtils from './validation';
+// Enhanced utility namespaces (Previous Phases) - using correct namespace
+export * as validationUtilities from './validation';
 export * as errorUtils from './error';
 
 // =====================================================
