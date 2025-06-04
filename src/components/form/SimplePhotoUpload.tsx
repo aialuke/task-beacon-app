@@ -7,6 +7,7 @@ import type { ProcessingResult } from '@/lib/utils/image/types';
 interface SimplePhotoUploadProps {
   photoPreview: string | null;
   onPhotoChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onPhotoSubmit?: () => void;
   onPhotoRemove?: () => void;
   disabled?: boolean;
   processingResult?: ProcessingResult | null;
@@ -16,6 +17,7 @@ interface SimplePhotoUploadProps {
 export function SimplePhotoUpload({
   photoPreview,
   onPhotoChange,
+  onPhotoSubmit,
   onPhotoRemove,
   disabled = false,
   processingResult,
@@ -24,7 +26,13 @@ export function SimplePhotoUpload({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleButtonClick = () => {
-    fileInputRef.current?.click();
+    if (photoPreview) {
+      // If we have a photo, call submit handler
+      onPhotoSubmit?.();
+    } else {
+      // If no photo, open file dialog
+      fileInputRef.current?.click();
+    }
   };
 
   const fileName = processingResult?.metadata?.name || 'Uploaded image';
@@ -68,7 +76,7 @@ export function SimplePhotoUpload({
             size="default"
             variant="default"
           >
-            {photoPreview ? "Change image" : "Upload image"}
+            {photoPreview ? "Submit" : "Upload image"}
           </Button>
           <input
             ref={fileInputRef}
