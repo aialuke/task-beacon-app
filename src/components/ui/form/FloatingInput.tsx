@@ -1,4 +1,3 @@
-
 import { Input } from '@/components/ui/input';
 import { useState, ReactNode } from 'react';
 import { cn } from '@/lib/utils';
@@ -14,7 +13,6 @@ interface FloatingInputProps {
   maxLength?: number;
   required?: boolean;
   autoFocus?: boolean;
-  disabled?: boolean;
   className?: string;
 }
 
@@ -28,7 +26,6 @@ export function FloatingInput({
   maxLength,
   required = false,
   autoFocus = false,
-  disabled = false,
   className,
 }: FloatingInputProps) {
   const [isFocused, setIsFocused] = useState(false);
@@ -61,12 +58,10 @@ export function FloatingInput({
           maxLength={maxLength}
           required={required}
           autoFocus={autoFocus}
-          disabled={disabled}
           className={cn(
             'peer h-14 rounded-2xl border-border/40 bg-background/60 pb-2 pt-6 backdrop-blur-sm transition-all duration-300 hover:border-border/60 hover:bg-background/70 focus:border-primary/60 focus:bg-background/80 focus:shadow-lg focus:shadow-primary/10',
             icon ? 'pl-11' : 'pl-4',
-            maxLength ? 'pr-16' : 'pr-4',
-            disabled && 'opacity-50 cursor-not-allowed'
+            maxLength ? 'pr-16' : 'pr-4'
           )}
         />
 

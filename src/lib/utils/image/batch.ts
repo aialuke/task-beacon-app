@@ -158,13 +158,16 @@ export function calculateBatchStats(results: ProcessingResult[]): {
   totalCompressedSize: number;
   totalSizeSaved: number;
   averageCompressionRatio: number;
+  averageProcessingTime: number;
+  totalProcessingTime: number;
 } {
   const totalFiles = results.length;
-  // Calculate original size estimates from compressed size and ratio
-  const totalCompressedSize = results.reduce((sum, r) => sum + r.compressedSize, 0);
-  const totalOriginalSize = results.reduce((sum, r) => sum + (r.compressedSize / r.compressionRatio), 0);
+  const totalOriginalSize = results.reduce((sum, r) => sum + r.compressionStats.originalSize, 0);
+  const totalCompressedSize = results.reduce((sum, r) => sum + r.compressionStats.compressedSize, 0);
   const totalSizeSaved = totalOriginalSize - totalCompressedSize;
-  const averageCompressionRatio = results.reduce((sum, r) => sum + r.compressionRatio, 0) / totalFiles;
+  const averageCompressionRatio = results.reduce((sum, r) => sum + r.compressionStats.compressionRatio, 0) / totalFiles;
+  const totalProcessingTime = results.reduce((sum, r) => sum + r.processingTime, 0);
+  const averageProcessingTime = totalProcessingTime / totalFiles;
 
   return {
     totalFiles,
@@ -172,6 +175,8 @@ export function calculateBatchStats(results: ProcessingResult[]): {
     totalCompressedSize,
     totalSizeSaved,
     averageCompressionRatio,
+    averageProcessingTime,
+    totalProcessingTime,
   };
 }
 
@@ -215,4 +220,4 @@ export async function processImagesWithRetry(
   }
 
   return results;
-}
+} 

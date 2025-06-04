@@ -175,16 +175,11 @@ export async function optimizeForWeb(
     format: 'auto',
   });
 
-  // Calculate size saved percentage
-  const originalSize = file.size;
-  const compressedSize = optimizedResult.compressedSize;
-  const sizeSavedPercent = ((originalSize - compressedSize) / originalSize) * 100;
-
   return {
     optimized: optimizedResult.blob,
     thumbnail: thumbnailResult.blob,
-    compressionRatio: optimizedResult.compressionRatio,
-    sizeSavedPercent,
+    compressionRatio: optimizedResult.compressionStats.compressionRatio,
+    sizeSavedPercent: optimizedResult.compressionStats.sizeSavedPercent,
   };
 }
 
@@ -214,4 +209,4 @@ export async function createImageSizes(
   );
 
   return results;
-}
+} 

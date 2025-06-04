@@ -168,25 +168,35 @@ export async function processImageEnhanced(
     const processingTime = performance.now() - startTime;
 
     // Calculate compression stats
-    const compressionRatio = blob.size / file.size;
+    const compressionStats = {
+      originalSize: file.size,
+      compressedSize: blob.size,
+      compressionRatio: blob.size / file.size,
+      sizeSavedBytes: file.size - blob.size,
+      sizeSavedPercent: ((file.size - blob.size) / file.size) * 100,
+    };
+
+    // Update metadata for processed image
+    const updatedMetadata: ImageMetadata = {
+      ...metadata,
+      width: newWidth,
+      height: newHeight,
+      size: blob.size,
+      type: `image/${targetFormat}`,
+    };
 
     logger.debug('Image processed successfully', {
       format: targetFormat,
       dimensions: `${newWidth}×${newHeight}`,
-      compression: `${((1 - compressionRatio) * 100).toFixed(1)}%`,
+      compression: `${compressionStats.sizeSavedPercent.toFixed(1)}%`,
       processingTime: `${processingTime.toFixed(2)}ms`,
     });
 
     return {
       blob,
-      compressedSize: blob.size,
-      compressionRatio,
-      format: targetFormat,
-      quality: opts.quality || 0.85,
-      dimensions: {
-        width: newWidth,
-        height: newHeight,
-      },
+      metadata: updatedMetadata,
+      compressionStats,
+      processingTime,
     };
 
   } catch (error) {
@@ -271,4 +281,4 @@ export async function resizeImageExact(
     format,
     quality
   );
-}
+} 

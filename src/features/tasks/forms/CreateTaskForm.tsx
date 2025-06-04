@@ -1,4 +1,3 @@
-
 import { useCreateTask } from '@/features/tasks/hooks/useCreateTask';
 import { BaseTaskForm } from '@/components/form/BaseTaskForm';
 
@@ -23,8 +22,6 @@ export default function CreateTaskForm({ onClose }: { onClose?: () => void }) {
     closePhotoModal,
     handleModalPhotoSelect,
     handlePhotoRemove,
-    uploadProgress,
-    error: photoError,
   } = useCreateTask({ onClose });
 
   return (
@@ -51,9 +48,6 @@ export default function CreateTaskForm({ onClose }: { onClose?: () => void }) {
       onPhotoModalClose={closePhotoModal}
       onModalPhotoSelect={handleModalPhotoSelect}
       onPhotoRemove={handlePhotoRemove}
-      // Enhanced properties
-      uploadProgress={uploadProgress}
-      photoError={photoError}
     />
   );
 }
