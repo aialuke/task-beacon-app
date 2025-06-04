@@ -43,8 +43,8 @@ function TaskDetails({
     setIsImageModalOpen(false);
   };
 
-  // Check if photo should be rendered
-  const shouldRenderPhoto = !!task.photo_url;
+  // Check if photo should be rendered - handle both null and string values properly
+  const shouldRenderPhoto = task.photo_url && typeof task.photo_url === 'string' && task.photo_url.trim() !== '';
   console.log('TaskDetails - shouldRenderPhoto:', shouldRenderPhoto);
 
   return (
@@ -107,7 +107,7 @@ function TaskDetails({
         </div>
       </animated.div>
 
-      {task.photo_url && (
+      {shouldRenderPhoto && (
         <ImagePreviewModal
           isOpen={isImageModalOpen}
           onClose={handleImageModalClose}

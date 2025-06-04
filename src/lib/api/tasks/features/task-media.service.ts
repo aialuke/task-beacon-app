@@ -1,3 +1,4 @@
+
 /**
  * Task Media Service - Handles photo upload and deletion operations
  */
@@ -13,7 +14,11 @@ export class TaskMediaService {
   static async uploadPhoto(file: File): Promise<ApiResponse<string>> {
     const fileExt = file.name.split('.').pop();
     const fileName = `${Date.now()}-${Math.random()}.${fileExt}`;
-    const filePath = `task-photos/${fileName}`;
+    // Fix: Remove the duplicate 'task-photos/' prefix
+    const filePath = fileName; // Just use the filename, the bucket is specified separately
+
+    console.log('TaskMediaService.uploadPhoto - File:', file.name, 'Size:', file.size);
+    console.log('TaskMediaService.uploadPhoto - Generated path:', filePath);
 
     return StorageService.uploadFile('task-photos', filePath, file);
   }
@@ -25,11 +30,11 @@ export class TaskMediaService {
     return apiRequest('tasks.deletePhoto', async () => {
       // Extract path from URL
       const urlParts = photoUrl.split('/');
-      const bucket = urlParts[urlParts.length - 2];
       const fileName = urlParts[urlParts.length - 1];
-      const filePath = `task-photos/${fileName}`;
+      
+      console.log('TaskMediaService.deletePhoto - Deleting file:', fileName);
 
-      const response = await StorageService.deleteFile(bucket, filePath);
+      const response = await StorageService.deleteFile('task-photos', fileName);
       if (!response.success) {
         throw new Error(response.error?.message || 'Failed to delete photo');
       }
