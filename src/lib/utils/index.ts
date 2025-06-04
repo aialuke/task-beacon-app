@@ -97,8 +97,31 @@ export type { AsyncOperationState as AsyncOpState } from './async-operations';
 // ENHANCED UTILITIES (Available - Previous Phases)
 // =====================================================
 
-// Enhanced validation utilities (Phase 2)
-export * from './validation';
+// Enhanced validation utilities (Phase 2) - explicit exports to resolve conflicts
+export {
+  validateObject,
+  validateWithError,
+  validateEmail,
+  validateUrl,
+  validateRequired,
+  validateMinLength,
+  validateMaxLength,
+  validateNumeric,
+  validateDate,
+  validateArray,
+  createValidator,
+  combineValidators,
+  validationUtils,
+} from './validation';
+
+// Validation types with alias to avoid conflict with image ValidationResult
+export type {
+  ValidationResult as ValidationResultType,
+  ValidationOptions,
+  ValidatorFunction,
+  ValidationError,
+  ValidationSchema,
+} from './validation';
 
 // Enhanced shared utilities (Phase 2)
 export * from './shared';
