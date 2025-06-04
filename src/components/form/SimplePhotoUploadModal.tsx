@@ -1,13 +1,6 @@
-
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { SimplePhotoUpload } from './SimplePhotoUpload';
 import type { ProcessingResult } from '@/lib/utils/image/types';
-
 interface SimplePhotoUploadModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -18,7 +11,6 @@ interface SimplePhotoUploadModalProps {
   loading?: boolean;
   title?: string;
 }
-
 export function SimplePhotoUploadModal({
   isOpen,
   onClose,
@@ -27,25 +19,17 @@ export function SimplePhotoUploadModal({
   onPhotoRemove,
   processingResult,
   loading = false,
-  title = "Upload Image",
+  title = "Upload Image"
 }: SimplePhotoUploadModalProps) {
-  return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+  return <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-sm">
         <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
+          
         </DialogHeader>
 
         <div className="py-4">
-          <SimplePhotoUpload
-            photoPreview={photoPreview}
-            onPhotoChange={onPhotoChange}
-            onPhotoRemove={onPhotoRemove}
-            processingResult={processingResult}
-            loading={loading}
-          />
+          <SimplePhotoUpload photoPreview={photoPreview} onPhotoChange={onPhotoChange} onPhotoRemove={onPhotoRemove} processingResult={processingResult} loading={loading} />
         </div>
       </DialogContent>
-    </Dialog>
-  );
+    </Dialog>;
 }
