@@ -1,4 +1,3 @@
-
 /**
  * Common React Patterns Utilities
  * 
@@ -6,7 +5,7 @@
  * Consolidates common patterns to reduce code duplication.
  */
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 /**
  * Higher-order component pattern for error boundaries

@@ -1,4 +1,3 @@
-
 /**
  * Consolidated Modal Management Utilities
  * 
@@ -6,7 +5,7 @@
  * multiple modals, stacking, and global controls.
  */
 
-import { useCallback, useContext, createContext, useState, useRef, useEffect } from 'react';
+import React, { useCallback, useContext, createContext, useState, useRef, useEffect } from 'react';
 
 /**
  * Modal configuration interface

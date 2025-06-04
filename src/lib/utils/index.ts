@@ -1,3 +1,4 @@
+
 /**
  * Centralized utilities index
  * 
@@ -45,14 +46,41 @@ export * from './image';
 // PHASE 4 UTILITIES (✅ NEW - Common React Patterns & Operations)
 // =====================================================
 
-// Common React patterns and HOCs
-export * from './patterns';
+// Common React patterns and HOCs - explicit exports to avoid conflicts
+export {
+  withErrorBoundary,
+  withLoading,
+  ConditionalRender,
+  DataRenderer,
+  createPortalRenderer,
+  createCompoundComponent,
+  memo,
+  createStateManager,
+  useEventCallback,
+  useDebouncedCallback,
+  usePrevious,
+  useForceUpdate,
+  useMount,
+  useUnmount,
+  AsyncOperationState as PatternAsyncOperationState,
+  useAsyncOperation as usePatternAsyncOperation,
+  reactPatterns,
+} from './patterns';
 
 // Consolidated modal management
 export * from './modal-management';
 
-// Standardized async operation handling  
-export * from './async-operations';
+// Standardized async operation handling - explicit exports to avoid conflicts
+export {
+  AsyncOperationState as AsyncOpState,
+  AsyncOperationOptions,
+  AsyncOperationResult,
+  useAsyncOperation as useAsyncOp,
+  useBatchAsyncOperation,
+  useOptimisticAsyncOperation,
+  createAsyncOperationFactory,
+  asyncOperationUtils,
+} from './async-operations';
 
 // =====================================================
 // ENHANCED UTILITIES (Available - Previous Phases)
@@ -127,15 +155,15 @@ export * as errorUtils from './error';
  * 
  * React Patterns:
  * import { reactPatterns } from '@/lib/utils';
- * import { withErrorBoundary, useAsyncOperation } from '@/lib/utils/patterns';
+ * import { withErrorBoundary, usePatternAsyncOperation } from '@/lib/utils';
  * 
  * Modal Management:
  * import { modalUtils } from '@/lib/utils';
- * import { useModal, ModalManagerProvider } from '@/lib/utils/modal-management';
+ * import { useModal, ModalManagerProvider } from '@/lib/utils';
  * 
  * Async Operations:
  * import { asyncOperationUtils } from '@/lib/utils';
- * import { useAsyncOperation } from '@/lib/utils/async-operations';
+ * import { useAsyncOp } from '@/lib/utils';
  * 
  * BENEFITS:
  * - Reduced code duplication across components
