@@ -1,11 +1,3 @@
-
-/**
- * Simplified Authentication Context
- * 
- * Now uses the consolidated useAuth hook instead of orchestrating multiple hooks.
- * Provides authentication state and operations to the application.
- */
-
 import { createContext, useContext, ReactNode } from 'react';
 import type { AuthContextType } from '@/types/shared/auth.types';
 import { useAuth as useAuthHook } from '@/hooks/auth/useAuth';

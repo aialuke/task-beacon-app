@@ -1,5 +1,3 @@
-
-import { useCallback } from 'react';
 import { useOptimizedMemo, useOptimizedCallback } from '@/hooks/useOptimizedMemo';
 import { useTaskForm } from './useTaskForm';
 import { useTaskSubmission } from './useTaskSubmission';
@@ -22,8 +20,6 @@ interface TaskFormData {
 }
 
 /**
- * Optimized hook for creating new tasks with better composition
- * 
  * Now uses performance-optimized hooks and better separation of concerns.
  */
 export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {

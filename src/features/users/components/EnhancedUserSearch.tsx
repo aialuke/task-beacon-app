@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { User as UserIcon, Search, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';

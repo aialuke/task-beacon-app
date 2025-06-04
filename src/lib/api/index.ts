@@ -1,4 +1,3 @@
-
 /**
  * API Layer - Updated to use streamlined type system
  * 

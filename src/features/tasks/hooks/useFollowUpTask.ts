@@ -1,4 +1,3 @@
-
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
@@ -7,7 +6,6 @@ import { AuthService } from '@/lib/api/auth.service';
 
 // Clean imports from organized type system
 import type { Task } from '@/types';
-import type { ProcessingResult } from '@/lib/utils/image/types';
 import {
   showBrowserNotification,
   triggerHapticFeedback,

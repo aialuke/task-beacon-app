@@ -1,4 +1,3 @@
-
 import { useCallback } from 'react';
 import { z } from 'zod';
 import { toast } from 'sonner';
@@ -8,7 +7,6 @@ import {
   updateTaskSchema,
   taskTitleSchema,
   taskDescriptionSchema,
-  VALIDATION_MESSAGES,
 } from '@/features/tasks/schemas/taskSchema';
 
 /**

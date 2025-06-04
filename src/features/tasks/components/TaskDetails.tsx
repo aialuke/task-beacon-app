@@ -1,4 +1,3 @@
-
 import { memo, useState } from 'react';
 import { Task } from '@/types';
 import { animated, SpringValue } from '@react-spring/web';

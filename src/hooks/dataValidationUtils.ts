@@ -1,4 +1,3 @@
-
 import { ValidationResult } from '@/lib/utils/validation';
 
 export function showValidationErrors(result: ValidationResult) {

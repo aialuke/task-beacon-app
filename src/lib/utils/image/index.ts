@@ -1,4 +1,3 @@
-
 /**
  * Image Utilities - Main Entry Point
  * 

@@ -32,7 +32,6 @@ export function SimpleNavbar({
     containerRef,
     setButtonRef,
     computedColors,
-    isInitialized,
     handleKeyDown,
     indicatorLineSpring,
     buttonBackgroundSpring,

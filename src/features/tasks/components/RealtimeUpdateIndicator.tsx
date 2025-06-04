@@ -9,9 +9,6 @@ interface RealtimeUpdateIndicatorProps {
   duration?: number;
 }
 
-/**
- * Simplified visual indicator for real-time updates
- */
 function RealtimeUpdateIndicator({ 
   show, 
   type = 'updated', 

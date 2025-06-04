@@ -1,4 +1,3 @@
-
 import { useQuery } from '@tanstack/react-query';
 import { useOptimizedMemo } from '@/hooks/useOptimizedMemo';
 import { UserService } from '@/lib/api/users.service';

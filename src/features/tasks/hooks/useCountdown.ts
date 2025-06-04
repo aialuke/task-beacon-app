@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { getUpdateInterval, formatTimeDisplay, getDaysRemaining } from '@/lib/utils/date';
 import { calculateTimerOffset } from '@/lib/utils/animation';
-
-// Clean imports from organized type system
 import type { TaskStatus } from '@/types';
 
 interface CountdownResult {

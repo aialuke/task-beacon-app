@@ -1,11 +1,9 @@
-
 import { useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { TaskService } from '@/lib/api/tasks/task.service';
 import { AuthService } from '@/lib/api/base';
 import { useTaskFormValidation } from './useTaskFormValidation';
-import type { CreateTaskInput } from '@/features/tasks/schemas/taskSchema';
 
 interface SubmitTaskData {
   title: string;
