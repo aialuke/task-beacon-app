@@ -85,10 +85,12 @@ export class TaskQueryService {
       return {
         data: data || [],
         pagination: {
-          page,
+          currentPage: page,
           pageSize,
-          total: count || 0,
+          totalCount: count || 0,
           totalPages: Math.ceil((count || 0) / pageSize),
+          hasNextPage: page < Math.ceil((count || 0) / pageSize),
+          hasPreviousPage: page > 1,
         },
       };
     });
