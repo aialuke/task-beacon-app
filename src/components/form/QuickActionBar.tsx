@@ -164,7 +164,7 @@ export function QuickActionBar({
           onImageRemove={onPhotoRemove}
           currentImage={null} // Could be enhanced to track current image
           title="Upload Task Image"
-          description="Add an image to your task for better visualization"
+          description="Attach an image."
         />
       )}
     </div>
