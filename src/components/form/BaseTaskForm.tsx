@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { FloatingInput } from '@/components/ui/form/FloatingInput';
 import { FloatingTextarea } from '@/components/ui/form/FloatingTextarea';
@@ -134,26 +135,28 @@ export function BaseTaskForm({
               </div>
             )}
 
-            {/* Quick Action Bar */}
-            <QuickActionBar
-              dueDate={dueDate}
-              onDueDateChange={(e) => setDueDate(e.target.value)}
-              assigneeId={assigneeId}
-              onAssigneeChange={setAssigneeId}
-              onPhotoChange={handlePhotoChange}
-              photoPreview={photoPreview}
-              isPhotoModalOpen={isPhotoModalOpen}
-              onPhotoModalOpen={onPhotoModalOpen}
-              onPhotoModalClose={onPhotoModalClose}
-              onModalPhotoSelect={onModalPhotoSelect}
-              onPhotoRemove={onPhotoRemove}
-              url={url}
-              onUrlChange={setUrl}
-              onSubmit={handleSubmit}
-              isSubmitting={loading}
-              submitLabel={submitLabel}
-              disabled={loading}
-            />
+            {/* Quick Action Bar - contained within form */}
+            <div className="w-full">
+              <QuickActionBar
+                dueDate={dueDate}
+                onDueDateChange={(e) => setDueDate(e.target.value)}
+                assigneeId={assigneeId}
+                onAssigneeChange={setAssigneeId}
+                onPhotoChange={handlePhotoChange}
+                photoPreview={photoPreview}
+                isPhotoModalOpen={isPhotoModalOpen}
+                onPhotoModalOpen={onPhotoModalOpen}
+                onPhotoModalClose={onPhotoModalClose}
+                onModalPhotoSelect={onModalPhotoSelect}
+                onPhotoRemove={onPhotoRemove}
+                url={url}
+                onUrlChange={setUrl}
+                onSubmit={handleSubmit}
+                isSubmitting={loading}
+                submitLabel={submitLabel}
+                disabled={loading}
+              />
+            </div>
           </form>
 
           {/* Children content */}
