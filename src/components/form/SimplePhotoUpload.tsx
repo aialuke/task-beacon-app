@@ -7,7 +7,6 @@ import type { ProcessingResult } from '@/lib/utils/image/types';
 interface SimplePhotoUploadProps {
   photoPreview: string | null;
   onPhotoChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onPhotoSubmit?: () => void;
   onPhotoRemove?: () => void;
   disabled?: boolean;
   processingResult?: ProcessingResult | null;
@@ -17,7 +16,6 @@ interface SimplePhotoUploadProps {
 export function SimplePhotoUpload({
   photoPreview,
   onPhotoChange,
-  onPhotoSubmit,
   onPhotoRemove,
   disabled = false,
   processingResult,
@@ -26,13 +24,7 @@ export function SimplePhotoUpload({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleButtonClick = () => {
-    if (photoPreview) {
-      // If we have a photo, call submit handler
-      onPhotoSubmit?.();
-    } else {
-      // If no photo, open file dialog
-      fileInputRef.current?.click();
-    }
+    fileInputRef.current?.click();
   };
 
   const fileName = processingResult?.metadata?.name || 'Uploaded image';
@@ -42,7 +34,7 @@ export function SimplePhotoUpload({
       <div className="inline-flex items-center gap-6 align-top">
         {/* Preview box */}
         <div
-          className="border-input relative flex size-18 shrink-0 items-center justify-center overflow-hidden rounded-full border"
+          className="border-input relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-full border"
           aria-label={
             photoPreview ? "Preview of uploaded image" : "Default image placeholder"
           }
@@ -76,7 +68,7 @@ export function SimplePhotoUpload({
             size="default"
             variant="default"
           >
-            {photoPreview ? "Submit" : "Upload image"}
+            {photoPreview ? "Change image" : "Upload image"}
           </Button>
           <input
             ref={fileInputRef}
