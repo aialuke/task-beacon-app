@@ -26,9 +26,9 @@ export const ImagePreviewModal = memo(function ImagePreviewModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogOverlay className="bg-black/80 z-[9998]" />
+      <DialogOverlay className="bg-black/80 z-[99998]" />
       <DialogContent 
-        className="max-w-[95vw] w-auto h-auto max-h-[95vh] p-0 border-none bg-transparent shadow-none overflow-hidden z-[9999]"
+        className="max-w-[95vw] w-auto h-auto max-h-[95vh] p-0 border-none bg-transparent shadow-none overflow-hidden z-[99999]"
         style={{ 
           backgroundColor: 'transparent',
           transform: 'translate(-50%, -50%)',
