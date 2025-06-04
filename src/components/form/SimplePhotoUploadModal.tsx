@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
 import { SimplePhotoUpload } from './SimplePhotoUpload';
 import type { ProcessingResult } from '@/lib/utils/image/types';
 interface SimplePhotoUploadModalProps {
@@ -19,7 +19,6 @@ export function SimplePhotoUploadModal({
   onPhotoRemove,
   processingResult,
   loading = false,
-  title = "Upload Image"
 }: SimplePhotoUploadModalProps) {
   return <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-sm">
