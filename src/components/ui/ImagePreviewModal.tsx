@@ -1,10 +1,5 @@
 
 import { memo } from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogOverlay,
-} from '@/components/ui/dialog';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -24,47 +19,46 @@ export const ImagePreviewModal = memo(function ImagePreviewModal({
   console.log('ImagePreviewModal - isOpen:', isOpen);
   console.log('ImagePreviewModal - imageUrl:', imageUrl);
 
+  if (!isOpen) return null;
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogOverlay 
-        className="bg-black/80" 
-        style={{ 
-          zIndex: 999999,
-          position: 'fixed',
-          inset: 0,
-        }} 
-      />
-      <DialogContent 
-        className="max-w-[95vw] w-auto h-auto max-h-[95vh] p-0 border-none bg-transparent shadow-none overflow-hidden"
-        style={{ 
-          backgroundColor: 'transparent',
-          transform: 'translate(-50%, -50%)',
-          top: '50%',
-          left: '50%',
-          zIndex: 1000000,
-          position: 'fixed',
-        }}
+    <div 
+      className="fixed inset-0 bg-black/90 flex items-center justify-center p-4"
+      style={{ 
+        zIndex: 9999,
+        backdropFilter: 'blur(8px)',
+      }}
+      onClick={onClose}
+    >
+      {/* Modal Window */}
+      <div 
+        className="relative bg-white rounded-2xl shadow-2xl max-w-[90vw] max-h-[90vh] overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
       >
-        <div className="relative flex items-center justify-center min-h-[200px]">
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b bg-gray-50">
+          <h3 className="text-lg font-semibold text-gray-900">Image Preview</h3>
           <Button
             variant="ghost"
             size="icon"
             onClick={onClose}
-            className="absolute top-4 right-4 z-10 h-10 w-10 rounded-full bg-black/50 text-white hover:bg-black/70 border-none"
-            style={{ zIndex: 1000001 }}
+            className="h-8 w-8 rounded-full hover:bg-gray-200"
           >
-            <X className="h-5 w-5" />
+            <X className="h-4 w-4" />
           </Button>
-          
+        </div>
+        
+        {/* Image Content */}
+        <div className="p-6 flex items-center justify-center bg-gray-100">
           <img
             src={imageUrl}
             alt={alt}
-            className="max-w-full max-h-[90vh] object-contain rounded-lg"
+            className="max-w-full max-h-[70vh] object-contain rounded-lg shadow-lg"
             onLoad={() => console.log('ImagePreviewModal - Image loaded successfully')}
             onError={(e) => console.error('ImagePreviewModal - Image failed to load:', e)}
           />
         </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   );
 });
