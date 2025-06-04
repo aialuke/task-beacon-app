@@ -60,13 +60,6 @@ export function UrlInputModal({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Link className="h-5 w-5" />
-            Add Reference URL
-          </DialogTitle>
-        </DialogHeader>
-
         <div className="space-y-4">
           <div>
             <FloatingInput
