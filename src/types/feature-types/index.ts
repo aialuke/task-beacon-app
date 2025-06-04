@@ -1,3 +1,4 @@
+
 /**
  * Feature Types Barrel File
  * 
@@ -44,6 +45,7 @@ export type {
 export type {
   // Core user entities
   User,
+  UserRole,
   UserPreferences,
   NotificationPreferences,
   

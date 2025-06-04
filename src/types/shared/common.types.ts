@@ -4,12 +4,33 @@
  * This file now imports from the organized type system to eliminate duplication.
  */
 
-// Re-export from streamlined system
-export type {
+// Import basic utility types
+import type { 
+  ID, 
+  Timestamp, 
+  LoadingState, 
+  FormState, 
+  ValidationRule, 
+  ValidationResult, 
+  BaseComponentProps, 
+  EventHandler, 
+  AsyncEventHandler, 
+  DeepPartial, 
+  DeepRequired 
+} from '../utility.types';
+
+import type {
+  ApiResponse,
+  ApiError,
+  ServiceResult,
+  BaseQueryParams,
+} from '../api.types';
+
+// Legacy compatibility exports
+export type { 
   ID,
   Timestamp,
-  Status,
-  AsyncState,
+  LoadingState as AsyncState,
   LoadingState,
   FormState,
   ValidationRule,
@@ -19,15 +40,12 @@ export type {
   AsyncEventHandler,
   DeepPartial as OptionalExcept,
   DeepRequired as RequiredExcept,
-} from '../utility.types';
-
-export type {
   ApiResponse,
   ApiError,
   ServiceResult as ActionResult,
   ServiceResult as DatabaseOperationResult,
   BaseQueryParams,
-} from '../api.types';
+};
 
 // Keep entity types here as they're foundational
 export interface BaseEntity {

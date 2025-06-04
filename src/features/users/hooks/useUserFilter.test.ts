@@ -1,3 +1,4 @@
+
 import { renderHook } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { useUserFilter } from './useUserFilter';
@@ -10,6 +11,7 @@ describe('useUserFilter', () => {
       email: 'john@example.com',
       name: 'John Doe',
       role: 'user',
+      avatar_url: 'https://example.com/avatar1.jpg',
       created_at: '2024-01-01T00:00:00Z',
       updated_at: '2024-01-01T00:00:00Z',
     },
@@ -18,6 +20,7 @@ describe('useUserFilter', () => {
       email: 'jane@example.com',
       name: 'Jane Smith',
       role: 'user',
+      avatar_url: 'https://example.com/avatar2.jpg',
       created_at: '2024-01-01T00:00:00Z',
       updated_at: '2024-01-01T00:00:00Z',
     },

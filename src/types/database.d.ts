@@ -35,11 +35,12 @@ export type ProfileUpdate = TablesUpdate<'profiles'>;
 export type TaskStatusEnum = Enums<'task_status'>;
 export type UserRoleEnum = Enums<'user_role'>;
 
-// Enhanced types with relationships
+// Enhanced types with relationships and missing fields
 export interface TaskWithRelations extends TaskTable {
   parent_task?: Pick<TaskTable, 'id' | 'title' | 'description' | 'photo_url' | 'url_link'> | null;
   assignee?: Pick<ProfileTable, 'id' | 'name' | 'email' | 'avatar_url'> | null;
   owner?: Pick<ProfileTable, 'id' | 'name' | 'email' | 'avatar_url'> | null;
+  priority?: 'low' | 'medium' | 'high' | 'urgent';
 }
 
 export interface ProfileWithRelations extends ProfileTable {

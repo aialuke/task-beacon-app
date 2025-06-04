@@ -22,6 +22,7 @@ export interface ApiError {
   details?: unknown;
   hint?: string;
   timestamp?: string;
+  originalError?: unknown;
 }
 
 // Service operation result pattern

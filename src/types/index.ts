@@ -9,10 +9,12 @@
 // === CORE TYPES (Most commonly used) ===
 export type {
   // Database types
-  TaskTable as Task,
+  TaskWithRelations as Task,
   ProfileTable as User,
   TaskStatusEnum as TaskStatus,
   UserRoleEnum as UserRole,
+  TaskTable,
+  ProfileTable,
   TaskWithRelations,
   ProfileWithRelations,
 } from './database';
@@ -86,11 +88,11 @@ export type {
 
 // === LEGACY COMPATIBILITY ===
 export type {
-  Task as TaskType,
-  User as UserType,
-  TaskStatus as LegacyTaskStatus,
-  UserRole as LegacyUserRole,
-} from './shared.types';
+  TaskWithRelations as TaskType,
+  ProfileTable as UserType,
+  TaskStatusEnum as LegacyTaskStatus,
+  UserRoleEnum as LegacyUserRole,
+} from './database';
 
 // Re-export database utilities for convenience
 export type {

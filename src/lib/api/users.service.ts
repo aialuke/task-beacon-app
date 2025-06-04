@@ -25,6 +25,7 @@ const profileRowToUser = (profile: ProfileRow): User => {
     email: profile.email,
     name: profile.name,
     role: profile.role as UserRole,
+    avatar_url: profile.avatar_url || undefined,
     created_at: profile.created_at,
     updated_at: profile.updated_at,
   };

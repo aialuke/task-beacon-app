@@ -1,8 +1,8 @@
 
 /**
- * Component Types - UI Component System
+ * Component Types - UI Component Interfaces
  * 
- * Standardized props and interfaces for UI components.
+ * Standardized component prop interfaces and UI-related types.
  */
 
 import type { ReactNode } from 'react';
@@ -10,39 +10,31 @@ import type { ReactNode } from 'react';
 // Base component props
 export interface BaseComponentProps {
   className?: string;
-  id?: string;
-  testId?: string;
   children?: ReactNode;
-}
-
-// Layout component props
-export interface LayoutProps extends BaseComponentProps {
-  width?: string | number;
-  height?: string | number;
-  padding?: string | number;
-  margin?: string | number;
-}
-
-// Interactive component props
-export interface InteractiveProps {
-  disabled?: boolean;
-  loading?: boolean;
-  onClick?: () => void;
-  onFocus?: () => void;
-  onBlur?: () => void;
+  testId?: string;
 }
 
 // Size and variant types
 export type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-export type Variant = 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
+export type Variant = 'default' | 'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive';
 export type ColorScheme = 'light' | 'dark' | 'auto';
 
+// Layout props
+export interface LayoutProps extends BaseComponentProps {
+  padding?: Size;
+  margin?: Size;
+  fullWidth?: boolean;
+  centered?: boolean;
+}
+
 // Button component props
-export interface ButtonProps extends BaseComponentProps, InteractiveProps {
+export interface ButtonProps extends BaseComponentProps {
   variant?: Variant;
   size?: Size;
+  disabled?: boolean;
+  loading?: boolean;
+  onClick?: () => void;
   type?: 'button' | 'submit' | 'reset';
-  asChild?: boolean;
 }
 
 // Modal and dialog props
@@ -51,9 +43,7 @@ export interface ModalProps extends BaseComponentProps {
   onClose: () => void;
   title?: string;
   description?: string;
-  showCloseButton?: boolean;
-  closeOnOverlayClick?: boolean;
-  closeOnEscape?: boolean;
+  size?: Size;
 }
 
 export interface DialogAction {
@@ -68,53 +58,50 @@ export interface CardProps extends BaseComponentProps {
   title?: string;
   description?: string;
   footer?: ReactNode;
-  variant?: 'default' | 'outlined' | 'elevated';
+  padding?: Size;
+  border?: boolean;
+  shadow?: boolean;
 }
 
-// Navigation props
+// Navigation types
 export interface NavItem {
-  id: string;
   label: string;
-  href?: string;
-  onClick?: () => void;
+  href: string;
   icon?: ReactNode;
   active?: boolean;
   disabled?: boolean;
-  children?: NavItem[];
 }
 
 export interface BreadcrumbItem {
   label: string;
   href?: string;
-  onClick?: () => void;
-  isCurrentPage?: boolean;
+  current?: boolean;
 }
 
-// Table component props
+// Table component types
 export interface TableColumn<T = unknown> {
   key: string;
-  label: string;
+  title: string;
+  render?: (value: unknown, record: T) => ReactNode;
   sortable?: boolean;
-  width?: string | number;
-  render?: (value: unknown, item: T) => ReactNode;
+  width?: number | string;
   align?: 'left' | 'center' | 'right';
 }
 
 export interface TableProps<T = unknown> extends BaseComponentProps {
-  data: T[];
   columns: TableColumn<T>[];
+  data: T[];
   loading?: boolean;
-  emptyMessage?: string;
-  onRowClick?: (item: T) => void;
-  selectable?: boolean;
-  selectedItems?: T[];
-  onSelectionChange?: (items: T[]) => void;
+  pagination?: boolean;
+  sortBy?: string;
+  sortDirection?: 'asc' | 'desc';
+  onSort?: (key: string) => void;
 }
 
 // Loading and feedback props
 export interface LoadingProps extends BaseComponentProps {
   size?: Size;
-  message?: string;
+  text?: string;
   overlay?: boolean;
 }
 
@@ -125,10 +112,9 @@ export interface ToastProps {
   message?: string;
   duration?: number;
   action?: DialogAction;
-  onDismiss: () => void;
 }
 
-// Animation and motion props
+// Animation and interaction props
 export interface AnimationProps {
   duration?: number;
   delay?: number;
@@ -138,4 +124,56 @@ export interface AnimationProps {
 
 // Responsive design types
 export type Breakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-export type ResponsiveValue<T> = T | Partial<Record<Breakpoint, T>>;
+
+export interface ResponsiveValue<T> {
+  base?: T;
+  xs?: T;
+  sm?: T;
+  md?: T;
+  lg?: T;
+  xl?: T;
+  '2xl'?: T;
+}
+
+// Form field component props
+export interface InputFieldProps extends BaseComponentProps {
+  name: string;
+  label?: string;
+  placeholder?: string;
+  type?: 'text' | 'email' | 'password' | 'url' | 'tel' | 'number';
+  value: string;
+  onChange: (value: string) => void;
+  onBlur?: () => void;
+  required?: boolean;
+  disabled?: boolean;
+  error?: string;
+  touched?: boolean;
+}
+
+export interface TextareaFieldProps extends BaseComponentProps {
+  name: string;
+  label?: string;
+  placeholder?: string;
+  value: string;
+  onChange: (value: string) => void;
+  onBlur?: () => void;
+  rows?: number;
+  maxLength?: number;
+  required?: boolean;
+  disabled?: boolean;
+  error?: string;
+  touched?: boolean;
+}
+
+export interface SelectFieldProps extends BaseComponentProps {
+  name: string;
+  label?: string;
+  value: string;
+  onChange: (value: string) => void;
+  options: Array<{ value: string; label: string; disabled?: boolean }>;
+  placeholder?: string;
+  required?: boolean;
+  disabled?: boolean;
+  error?: string;
+  touched?: boolean;
+}

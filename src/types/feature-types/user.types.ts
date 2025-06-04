@@ -6,7 +6,9 @@
  */
 
 import type { BaseEntity, ID, Timestamp } from '../shared/common.types';
-import type { UserRole } from '../shared/auth.types';
+
+// User role enum
+export type UserRole = 'user' | 'admin' | 'manager';
 
 // Core user entity - simplified to essential fields
 export interface User extends BaseEntity {
@@ -14,6 +16,7 @@ export interface User extends BaseEntity {
   name?: string;
   full_name?: string;
   role?: UserRole;
+  avatar_url?: string;
   email_confirmed_at?: Timestamp | null;
   last_sign_in_at?: Timestamp | null;
   timezone?: string;
@@ -158,4 +161,4 @@ export interface UserImportResult {
     email: string;
     error: string;
   }[];
-} 
+}

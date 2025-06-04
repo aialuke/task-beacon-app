@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { renderHook, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
@@ -25,7 +26,9 @@ describe('useUserList', () => {
     const users: User[] = [{
       id: '1',
       email: 'a@test.com',
+      name: 'Test User',
       role: 'user',
+      avatar_url: 'https://example.com/avatar.jpg',
       created_at: '2024-01-01T00:00:00Z',
       updated_at: '2024-01-01T00:00:00Z',
     }];
