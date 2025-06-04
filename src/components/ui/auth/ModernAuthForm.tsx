@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { AuthFormHeader } from './components/AuthFormHeader';
@@ -44,7 +43,7 @@ const ModernAuthForm: React.FC = () => {
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background via-background to-muted/20 p-4">
       <Card className="w-full max-w-md border shadow-2xl backdrop-blur-sm rounded-xl">
         <CardContent className="p-8">
-          <AuthFormHeader mode={mode} />
+          <AuthFormHeader />
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <AuthFormFields

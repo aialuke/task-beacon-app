@@ -1,5 +1,4 @@
-
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { useOptimizedCallback, useOptimizedMemo } from '@/hooks/useOptimizedMemo';
 import { compressAndResizePhoto } from '@/lib/utils/image/convenience';
 import type { 

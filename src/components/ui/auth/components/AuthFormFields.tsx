@@ -1,5 +1,5 @@
 
-import { memo, forwardRef } from 'react';
+import { memo } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { FloatingInput } from '../FloatingInput';
 import { PasswordStrengthIndicator } from '../PasswordStrengthIndicator';

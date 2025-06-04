@@ -1,11 +1,6 @@
-
 import { memo } from 'react';
-interface AuthFormHeaderProps {
-  mode: 'signin' | 'signup';
-}
-export const AuthFormHeader = memo(function AuthFormHeader({
-  mode
-}: AuthFormHeaderProps) {
+
+export const AuthFormHeader = memo(function AuthFormHeader() {
   return <div className="mb-8 text-center">
       <div className="flex items-center justify-center gap-3 mb-4">
         <img src="/assets/hourglass_logo.svg" alt="Task Flow Logo" className="h-8 w-8" />
