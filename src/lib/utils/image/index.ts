@@ -1,3 +1,4 @@
+
 /**
  * Image Utilities - Main Entry Point
  * 
@@ -24,7 +25,6 @@ export type {
   ValidationResult,
   ImageMetadata,
   ProcessingResult,
-  BatchProcessingOptions,
   WebPSupport,
   ConversionResult,
   ImagePreview,
@@ -101,18 +101,6 @@ export {
 } from './convenience';
 
 // ============================================================================
-// BATCH PROCESSING
-// ============================================================================
-export {
-  processImagesBatch,
-  processImagesParallel,
-  processImagesSequential,
-  createThumbnailsBatch,
-  calculateBatchStats,
-  processImagesWithRetry,
-} from './batch';
-
-// ============================================================================
 // RESOURCE MANAGEMENT
 // ============================================================================
 export {
@@ -157,9 +145,6 @@ export * as imageProcessing from './processing';
 // High-level convenience functions
 export * as imageConvenience from './convenience';
 
-// Batch processing utilities
-export * as imageBatch from './batch';
-
 // Resource management utilities
 export * as imageResources from './resource-management';
 
@@ -185,9 +170,6 @@ export * as imageResources from './resource-management';
 // compressAndResizePhoto() - ✅ Available
 // generateThumbnailEnhanced() - ✅ Available
 // convertToWebPWithFallback() - ✅ Available
-
-// Legacy batch processing (already exported above)
-// processImagesBatch() - ✅ Available
 
 // Legacy resource management (already exported above)
 // createImagePreviewEnhanced() - ✅ Available
@@ -228,4 +210,4 @@ const processed = await imageProcessing.processImageEnhanced(file);
 import * as imageUtils from '@/lib/utils/image';
 const validation = await imageUtils.imageValidation.validateImageEnhanced(file);
   `,
-} as const; 
+} as const;

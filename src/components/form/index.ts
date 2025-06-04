@@ -19,6 +19,3 @@ export { SimplePhotoUploadModal } from './SimplePhotoUploadModal';
 // Reference components
 export { ParentTaskReference } from './ParentTaskReference';
 export { ReferenceCard } from './ReferenceCard';
-
-// Enhanced photo upload (legacy - may be removed)
-export { default as EnhancedPhotoUploadModal } from './enhanced-photo-upload/EnhancedPhotoUploadModal';
