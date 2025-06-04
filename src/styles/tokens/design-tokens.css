@@ -1,8 +1,9 @@
+
 /* src/styles/tokens/design-tokens.css - Design system tokens */
 
 :root {
-  /* Standardized border radius using Tailwind values */
-  --radius: 0.5rem; /* 8px - Tailwind's default lg */
+  /* Updated border radius - changed default to XL */
+  --radius: 1rem; /* Changed from 0.5rem to 1rem (XL) */
   --radius-full: 9999px; /* Full border radius for pills and circular elements */
 
   /* Enhanced shadow system - single source of truth */
