@@ -26,25 +26,27 @@ export function withErrorBoundary<T extends object>(
 
     if (error && fallback) {
       const FallbackComponent = fallback;
-      return <FallbackComponent error={error} retry={retry} />;
+      return React.createElement(FallbackComponent, { error, retry });
     }
 
     if (error) {
-      return (
-        <div className="p-4 text-center">
-          <p className="text-destructive mb-2">Something went wrong</p>
-          <button 
-            onClick={retry}
-            className="px-4 py-2 bg-primary text-primary-foreground rounded"
-          >
-            Try Again
-          </button>
-        </div>
+      return React.createElement(
+        'div',
+        { className: 'p-4 text-center' },
+        React.createElement('p', { className: 'text-destructive mb-2' }, 'Something went wrong'),
+        React.createElement(
+          'button',
+          {
+            onClick: retry,
+            className: 'px-4 py-2 bg-primary text-primary-foreground rounded'
+          },
+          'Try Again'
+        )
       );
     }
 
     try {
-      return <Component {...props} key={retryCount} />;
+      return React.createElement(Component, { ...props, key: retryCount });
     } catch (caughtError) {
       setError(caughtError as Error);
       return null;
@@ -66,16 +68,18 @@ export function withLoading<T extends object>(
     const { loading, ...restProps } = props;
 
     if (loading) {
-      return LoadingComponent ? (
-        <LoadingComponent />
-      ) : (
-        <div className="flex items-center justify-center p-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-        </div>
-      );
+      return LoadingComponent ? 
+        React.createElement(LoadingComponent) : 
+        React.createElement(
+          'div',
+          { className: 'flex items-center justify-center p-8' },
+          React.createElement('div', { 
+            className: 'animate-spin rounded-full h-8 w-8 border-b-2 border-primary' 
+          })
+        );
     }
 
-    return <Component {...(restProps as T)} />;
+    return React.createElement(Component, restProps as T);
   };
 }
 
@@ -91,7 +95,7 @@ export function ConditionalRender({
   children: React.ReactNode;
   fallback?: React.ReactNode;
 }) {
-  return condition ? <>{children}</> : <>{fallback}</>;
+  return condition ? children : fallback || null;
 }
 
 /**
@@ -110,7 +114,7 @@ export function DataRenderer<T>({
 }: RenderDataProps<T> & {
   children: (props: RenderDataProps<T>) => React.ReactNode;
 }) {
-  return <>{children(dataProps)}</>;
+  return children(dataProps);
 }
 
 /**
@@ -140,7 +144,7 @@ export function createPortalRenderer(containerId: string) {
 
     // Note: In a real implementation, you'd use ReactDOM.createPortal
     // For this utility, we'll just render normally
-    return <>{children}</>;
+    return children;
   };
 }
 
@@ -152,7 +156,7 @@ export function createCompoundComponent<T extends Record<string, React.Component
 ) {
   return Object.assign(
     function CompoundComponent({ children }: { children: React.ReactNode }) {
-      return <>{children}</>;
+      return children;
     },
     components
   );

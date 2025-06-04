@@ -150,29 +150,30 @@ export function ModalManagerProvider({ children }: { children: React.ReactNode }
     getActiveModalCount,
   };
 
-  return (
-    <ModalManagerContext.Provider value={value}>
-      {children}
-      {/* Render active modals */}
-      {modals.map(modal => {
-        if (!modal.isOpen) return null;
-        
-        const ModalComponent = modal.component;
-        return (
-          <div
-            key={modal.id}
-            style={{ zIndex: modal.zIndex }}
-            className="fixed inset-0"
-          >
-            <ModalComponent
-              {...modal.props}
-              isOpen={modal.isOpen}
-              onClose={() => closeModal(modal.id)}
-            />
-          </div>
-        );
-      })}
-    </ModalManagerContext.Provider>
+  const modalElements = modals.map(modal => {
+    if (!modal.isOpen) return null;
+    
+    const ModalComponent = modal.component;
+    return React.createElement(
+      'div',
+      {
+        key: modal.id,
+        style: { zIndex: modal.zIndex },
+        className: 'fixed inset-0'
+      },
+      React.createElement(ModalComponent, {
+        ...modal.props,
+        isOpen: modal.isOpen,
+        onClose: () => closeModal(modal.id)
+      })
+    );
+  }).filter(Boolean);
+
+  return React.createElement(
+    ModalManagerContext.Provider,
+    { value },
+    children,
+    ...modalElements
   );
 }
 
@@ -266,7 +267,7 @@ export function withModal<T extends object>(
   return function ModalEnabledComponent(props: T) {
     const modal = useModal(modalId);
     
-    return <Component {...props} modal={modal} />;
+    return React.createElement(Component, { ...props, modal });
   };
 }
 
