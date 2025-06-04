@@ -1,3 +1,4 @@
+
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
@@ -6,12 +7,14 @@ import { AuthService } from '@/lib/api/auth.service';
 
 // Clean imports from organized type system
 import type { Task } from '@/types';
+import type { ProcessingResult } from '@/lib/utils/image/types';
 import {
   showBrowserNotification,
   triggerHapticFeedback,
 } from '@/lib/utils/notification';
 import { useTaskForm } from './useTaskForm';
 import { useTaskFormValidation } from './useTaskFormValidation';
+import { useCreateTaskPhotoUpload } from './useCreateTaskPhotoUpload';
 
 interface UseFollowUpTaskProps {
   parentTask: Task;
@@ -19,12 +22,13 @@ interface UseFollowUpTaskProps {
 }
 
 /**
- * Hook for creating follow-up tasks with standardized validation
+ * Hook for creating follow-up tasks with standardized validation and photo upload
  */
 export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { validateTitle } = useTaskFormValidation();
+  const { uploadPhotoIfPresent } = useCreateTaskPhotoUpload();
 
   const taskForm = useTaskForm({
     onClose: onClose || (() => navigate('/')),
@@ -33,6 +37,44 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
   const [assigneeId, setAssigneeId] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  // Photo upload state
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [selectedPhoto, setSelectedPhoto] = useState<File | null>(null);
+  const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
+
+  // Photo upload handlers
+  const handlePhotoChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedPhoto(file);
+      const url = URL.createObjectURL(file);
+      setPhotoPreview(url);
+    }
+  }, []);
+
+  const openPhotoModal = useCallback(() => {
+    setIsPhotoModalOpen(true);
+  }, []);
+
+  const closePhotoModal = useCallback(() => {
+    setIsPhotoModalOpen(false);
+  }, []);
+
+  const handleModalPhotoSelect = useCallback((file: File, processedResult?: ProcessingResult) => {
+    setSelectedPhoto(file);
+    const url = URL.createObjectURL(file);
+    setPhotoPreview(url);
+    closePhotoModal();
+  }, [closePhotoModal]);
+
+  const handlePhotoRemove = useCallback(() => {
+    setSelectedPhoto(null);
+    if (photoPreview) {
+      URL.revokeObjectURL(photoPreview);
+      setPhotoPreview(null);
+    }
+  }, [photoPreview]);
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -51,6 +93,9 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
         }
         const currentUserId = userResponse.data;
 
+        // Upload photo if present
+        const photoUrl = await uploadPhotoIfPresent(selectedPhoto);
+
         // Create follow-up task data
         const followUpTaskData = {
           title: `${parentTask.title} (Follow-up)`,
@@ -59,7 +104,7 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
           pinned: false,
           url: parentTask.url_link || '',
           dueDate: '',
-          photoUrl: undefined,
+          photoUrl,
         };
 
         // Create the follow-up task
@@ -79,7 +124,7 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
             `Follow-up task "${taskForm.title}" has been assigned`
           );
         }
-        taskForm.resetForm();
+        taskForm.resetFormState();
         
         // Navigate back to dashboard after successful task creation
         const closeCallback = onClose || (() => navigate('/'));
@@ -95,7 +140,7 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
         setIsLoading(false);
       }
     },
-    [taskForm, parentTask, validateTitle, onClose, navigate, queryClient]
+    [taskForm, parentTask, validateTitle, onClose, navigate, queryClient, selectedPhoto, uploadPhotoIfPresent]
   );
 
   return {
@@ -105,5 +150,13 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
     handleSubmit,
     error,
     isLoading,
+    // Photo upload functionality
+    photoPreview,
+    handlePhotoChange,
+    isPhotoModalOpen,
+    openPhotoModal,
+    closePhotoModal,
+    handleModalPhotoSelect,
+    handlePhotoRemove,
   };
 }

@@ -47,5 +47,8 @@ export function useTaskForm(options: UseTaskFormStateOptions = {}) {
     
     // Validation utilities
     showValidationErrors: validation.showValidationErrors,
+    
+    // Correct method name for resetting form
+    resetForm: formState.resetFormState,
   };
 }

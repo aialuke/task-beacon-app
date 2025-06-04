@@ -1,3 +1,4 @@
+
 /**
  * Shared Utility Module
  * 
@@ -25,14 +26,6 @@ export {
   getUpdateInterval,
 } from './date';
 
-// Re-export validation utilities
-export {
-  isValidEmail,
-  isValidUrl,
-  isValidPassword,
-  isDateInFuture,
-} from './validation';
-
 // Re-export core utilities
 export {
   generateUUID,
@@ -56,4 +49,4 @@ export {
   cn,
   isElementInViewport,
   isDarkMode,
-} from './ui'; 
+} from './ui';
