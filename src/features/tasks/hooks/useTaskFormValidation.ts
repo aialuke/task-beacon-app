@@ -1,3 +1,4 @@
+
 import { useCallback } from 'react';
 import { z } from 'zod';
 import { toast } from 'sonner';
@@ -7,10 +8,7 @@ import {
   updateTaskSchema,
   taskTitleSchema,
   taskDescriptionSchema,
-  getFieldError,
-  type TaskFormInput,
-  type CreateTaskInput,
-  type UpdateTaskInput,
+  VALIDATION_MESSAGES,
 } from '@/features/tasks/schemas/taskSchema';
 
 /**
@@ -24,7 +22,7 @@ export function useTaskFormValidation() {
    * Validate complete task form data
    */
   const validateTaskForm = useCallback(
-    (data: unknown): { isValid: boolean; errors: Record<string, string>; data?: TaskFormInput } => {
+    (data: unknown): { isValid: boolean; errors: Record<string, string>; data?: any } => {
       const result = taskFormSchema.safeParse(data);
       
       if (result.success) {
@@ -46,7 +44,7 @@ export function useTaskFormValidation() {
    * Validate data for creating a task
    */
   const validateCreateTask = useCallback(
-    (data: unknown): { isValid: boolean; errors: Record<string, string>; data?: CreateTaskInput } => {
+    (data: unknown): { isValid: boolean; errors: Record<string, string>; data?: any } => {
       const result = createTaskSchema.safeParse(data);
       
       if (result.success) {
@@ -68,7 +66,7 @@ export function useTaskFormValidation() {
    * Validate data for updating a task
    */
   const validateUpdateTask = useCallback(
-    (data: unknown): { isValid: boolean; errors: Record<string, string>; data?: UpdateTaskInput } => {
+    (data: unknown): { isValid: boolean; errors: Record<string, string>; data?: any } => {
       const result = updateTaskSchema.safeParse(data);
       
       if (result.success) {
@@ -156,7 +154,7 @@ export function useTaskFormValidation() {
   /**
    * Validate and transform form data for API submission
    */
-  const prepareTaskData = useCallback((formData: unknown): CreateTaskInput | null => {
+  const prepareTaskData = useCallback((formData: unknown): any => {
     const validation = validateCreateTask(formData);
     
     if (!validation.isValid) {
@@ -164,7 +162,7 @@ export function useTaskFormValidation() {
       return null;
     }
     
-    return validation.data!;
+    return validation.data;
   }, [validateCreateTask, showValidationErrors]);
 
   return {
