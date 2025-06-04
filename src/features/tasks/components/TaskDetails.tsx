@@ -43,6 +43,10 @@ function TaskDetails({
     setIsImageModalOpen(false);
   };
 
+  // Check if photo should be rendered
+  const shouldRenderPhoto = !!task.photo_url;
+  console.log('TaskDetails - shouldRenderPhoto:', shouldRenderPhoto);
+
   return (
     <>
       <animated.div
@@ -77,9 +81,7 @@ function TaskDetails({
             />
           )}
 
-          {/* Debug the photo_url rendering */}
-          {console.log('Rendering photo section, photo_url exists:', !!task.photo_url)}
-          {task.photo_url && (
+          {shouldRenderPhoto && (
             <div>
               <span className="text-sm font-medium text-muted-foreground">
                 Photo:

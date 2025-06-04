@@ -44,7 +44,7 @@ export class TaskQueryService {
         .from('tasks')
         .select(`
           *,
-          parent_task:parent_task_id(id, title, status),
+          parent_task:parent_task_id(id, title, description, photo_url, url_link),
           owner:owner_id(id, name, email),
           assignee:assignee_id(id, name, email)
         `);
@@ -103,7 +103,7 @@ export class TaskQueryService {
         .from('tasks')
         .select(`
           *,
-          parent_task:parent_task_id(id, title, status),
+          parent_task:parent_task_id(id, title, description, photo_url, url_link),
           owner:owner_id(id, name, email),
           assignee:assignee_id(id, name, email)
         `)
@@ -130,7 +130,7 @@ export class TaskQueryService {
         .from('tasks')
         .select(`
           *,
-          parent_task:parent_task_id(id, title, status),
+          parent_task:parent_task_id(id, title, description, photo_url, url_link),
           owner:owner_id(id, name, email),
           assignee:assignee_id(id, name, email)
         `)
@@ -154,7 +154,7 @@ export class TaskQueryService {
         .from('tasks')
         .select(`
           *,
-          parent_task:parent_task_id(id, title, status),
+          parent_task:parent_task_id(id, title, description, photo_url, url_link),
           owner:owner_id(id, name, email),
           assignee:assignee_id(id, name, email)
         `)
@@ -176,7 +176,7 @@ export class TaskQueryService {
         .from('tasks')
         .select(`
           *,
-          parent_task:parent_task_id(id, title, status),
+          parent_task:parent_task_id(id, title, description, photo_url, url_link),
           owner:owner_id(id, name, email),
           assignee:assignee_id(id, name, email)
         `)
