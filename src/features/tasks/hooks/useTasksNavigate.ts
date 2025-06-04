@@ -1,12 +1,14 @@
+
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 /**
- * Focused hook for task-related navigation
+ * Standardized hook for task-related navigation
  * 
- * Centralizes navigation logic to keep it separate from business logic
+ * Follows naming pattern: use[Feature][Entity][Action]
+ * Feature: Tasks, Entity: -, Action: Navigate
  */
-export function useTaskNavigation() {
+export function useTasksNavigate() {
   const navigate = useNavigate();
 
   const navigateToDashboard = useCallback(() => {
@@ -36,4 +38,4 @@ export function useTaskNavigation() {
     navigateToCreateTask,
     navigateBack,
   };
-} 
+}

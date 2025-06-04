@@ -4,7 +4,7 @@ import { useOptimizedMemo } from '@/hooks/useOptimizedMemo';
 import { UserService } from '@/lib/api/users.service';
 import type { User } from '@/types';
 
-interface UseUserListReturn {
+interface UseUsersQueryReturn {
   users: User[];
   isLoading: boolean;
   error: string | null;
@@ -12,9 +12,12 @@ interface UseUserListReturn {
 }
 
 /**
- * Optimized user list hook with better error handling and memoization
+ * Standardized user list query hook
+ * 
+ * Follows naming pattern: use[Feature][Entity][Action]
+ * Feature: Users, Entity: -, Action: Query
  */
-export function useUserList(enabled = true): UseUserListReturn {
+export function useUsersQuery(enabled = true): UseUsersQueryReturn {
   // Memoize query configuration
   const queryConfig = useOptimizedMemo(
     () => ({
@@ -32,7 +35,7 @@ export function useUserList(enabled = true): UseUserListReturn {
       retryDelay: (attemptIndex: number) => Math.min(1000 * 2 ** attemptIndex, 5000),
     }),
     [enabled],
-    { name: 'user-list-query-config' }
+    { name: 'users-query-config' }
   );
 
   const {
@@ -51,6 +54,6 @@ export function useUserList(enabled = true): UseUserListReturn {
       refetch,
     }),
     [response, isLoading, error, refetch],
-    { name: 'user-list-return' }
+    { name: 'users-query-return' }
   );
 }

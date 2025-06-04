@@ -1,10 +1,11 @@
+
 import { useState, useEffect } from 'react';
 import type { Task } from '@/types';
 import { TaskService } from '@/lib/api/tasks/task.service';
 import { useAuth } from '@/hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
 
-interface UseTaskDetailsReturn {
+interface UseTaskQueryReturn {
   task: Task | null;
   loading: boolean;
   error: string | null;
@@ -13,14 +14,14 @@ interface UseTaskDetailsReturn {
 }
 
 /**
- * Custom hook for fetching and managing task details
- *
- * @param taskId - The ID of the task to fetch
- * @returns Object containing task data, loading state, and pin management
+ * Standardized hook for fetching single task details
+ * 
+ * Follows naming pattern: use[Feature][Entity][Action]
+ * Feature: Task, Entity: -, Action: Query
  */
-export function useTaskDetails(
+export function useTaskQuery(
   taskId: string | undefined
-): UseTaskDetailsReturn {
+): UseTaskQueryReturn {
   const { user, session } = useAuth();
 
   const {
@@ -38,19 +39,20 @@ export function useTaskDetails(
       return response.data;
     },
     enabled: !!taskId && !!user && !!session,
-    retry: 2,
     staleTime: 5 * 60 * 1000,
+    retry: 2,
   });
 
   const [isPinned, setIsPinned] = useState(false);
+
   useEffect(() => {
-    if (taskResponse && typeof taskResponse === 'object' && 'pinned' in taskResponse) {
-      setIsPinned((taskResponse as Task).pinned);
+    if (taskResponse) {
+      setIsPinned(taskResponse.pinned || false);
     }
   }, [taskResponse]);
 
   return {
-    task: taskResponse ?? null,
+    task: taskResponse || null,
     loading,
     error: error ? (error as Error).message : null,
     isPinned,

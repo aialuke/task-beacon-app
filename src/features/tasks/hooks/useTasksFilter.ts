@@ -1,17 +1,15 @@
+
 import { useMemo } from 'react';
 import type { Task, TaskFilter } from '@/types';
 
 /**
- * Hook for filtering tasks based on the selected filter
- *
- * @param tasks - Array of tasks to filter
- * @param filter - Current filter selection
- * @returns Filtered array of tasks
+ * Standardized hook for filtering tasks
+ * 
+ * Follows naming pattern: use[Feature][Entity][Action]
+ * Feature: Tasks, Entity: -, Action: Filter
  */
-export function useFilteredTasks(tasks: Task[], filter: TaskFilter) {
-  // Optimized: Create filter functions only once and memoize the result
+export function useTasksFilter(tasks: Task[], filter: TaskFilter) {
   return useMemo(() => {
-    // Defensive check: ensure tasks is an array
     if (!Array.isArray(tasks)) {
       return [];
     }

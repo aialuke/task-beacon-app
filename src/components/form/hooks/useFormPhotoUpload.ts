@@ -1,4 +1,3 @@
-
 import { useState, useCallback } from 'react';
 import { useOptimizedCallback, useOptimizedMemo } from '@/hooks/useOptimizedMemo';
 import { compressAndResizePhoto } from '@/lib/utils/image/convenience';
@@ -118,9 +117,12 @@ function usePhotoProcessing(
 }
 
 /**
- * Optimized photo upload hook with better composition
+ * Standardized photo upload hook for forms
+ * 
+ * Follows naming pattern: use[Feature][Entity][Action]
+ * Feature: Form, Entity: Photo, Action: Upload
  */
-export function usePhotoUpload(options?: {
+export function useFormPhotoUpload(options?: {
   processingOptions?: EnhancedImageProcessingOptions;
   autoProcess?: boolean;
 }) {
@@ -199,18 +201,21 @@ export function usePhotoUpload(options?: {
       modalState.closeModal,
       processingOptions,
     ],
-    { name: 'photo-upload-return' }
+    { name: 'form-photo-upload-return' }
   );
 }
 
 /**
- * Task-optimized photo upload hook with stable configuration
+ * Task-specific photo upload hook
+ * 
+ * Follows naming pattern: use[Feature][Entity][Action]
+ * Feature: Task, Entity: Photo, Action: Upload
  */
 export function useTaskPhotoUpload(options?: {
   processingOptions?: EnhancedImageProcessingOptions;
   autoProcess?: boolean;
 }) {
-  const photoUpload = usePhotoUpload(options);
+  const photoUpload = useFormPhotoUpload(options);
 
   // Memoize return object with task-specific interface
   return useOptimizedMemo(
@@ -241,6 +246,7 @@ export function useTaskPhotoUpload(options?: {
   );
 }
 
-// Export with Enhanced names for backward compatibility
-export const useEnhancedPhotoUpload = usePhotoUpload;
+// Export aliases for backward compatibility
+export const usePhotoUpload = useFormPhotoUpload;
+export const useEnhancedPhotoUpload = useFormPhotoUpload;
 export const useEnhancedTaskPhotoUpload = useTaskPhotoUpload;

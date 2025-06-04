@@ -1,12 +1,11 @@
+
 import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { TaskService } from '@/lib/api/tasks/task.service';
 import { useAuth } from '@/hooks/useAuth';
-
-// Clean imports from organized type system
 import type { Task } from '@/types';
 
-interface UseTaskQueriesReturn {
+interface UseTasksQueryReturn {
   tasks: Task[];
   totalCount: number;
   currentPage: number;
@@ -21,17 +20,17 @@ interface UseTaskQueriesReturn {
 }
 
 /**
- * Custom hook for paginated task queries with real database integration
- *
- * @param pageSize Number of tasks to fetch per page
- * @returns Object containing tasks array, loading state, pagination controls and error
+ * Standardized hook for paginated task queries
+ * 
+ * Follows naming pattern: use[Feature][Entity][Action]
+ * Feature: Tasks, Entity: -, Action: Query
  */
-export function useTaskQueries(pageSize = 10): UseTaskQueriesReturn {
+export function useTasksQuery(pageSize = 10): UseTasksQueryReturn {
   const [currentPage, setCurrentPage] = useState(1);
   const queryClient = useQueryClient();
   const { user, session } = useAuth();
 
-  // Fetch tasks with database-level pagination - only if user is authenticated
+  // Fetch tasks with database-level pagination
   const {
     data: response,
     isLoading,
@@ -43,7 +42,7 @@ export function useTaskQueries(pageSize = 10): UseTaskQueriesReturn {
       const response = await TaskService.getMany({
         page: currentPage,
         pageSize: pageSize,
-        assignedToMe: false, // Get all tasks, not just assigned to current user
+        assignedToMe: false,
       });
       if (!response.success) {
         throw new Error(response.error?.message || 'Failed to load tasks');
@@ -54,16 +53,16 @@ export function useTaskQueries(pageSize = 10): UseTaskQueriesReturn {
         hasNextPage: response.data.pagination.hasNextPage,
       };
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    enabled: !!user && !!session, // Only run query if user is authenticated
-    retry: 2, // Retry failed requests twice
-    refetchOnWindowFocus: false, // Don't refetch on window focus
+    staleTime: 5 * 60 * 1000,
+    enabled: !!user && !!session,
+    retry: 2,
+    refetchOnWindowFocus: false,
   });
 
   // Determine if we have a next page
   const hasNextPage = response?.hasNextPage || false;
 
-  // Prefetch next page if available and user is authenticated
+  // Prefetch next page if available
   if (hasNextPage && user && session && !isLoading) {
     queryClient.prefetchQuery({
       queryKey: ['tasks', currentPage + 1, pageSize, user.id],

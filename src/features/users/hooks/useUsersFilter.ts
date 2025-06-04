@@ -3,9 +3,12 @@ import { useOptimizedMemo } from '@/hooks/useOptimizedMemo';
 import type { User } from '@/types';
 
 /**
- * Optimized user filtering hook with performance improvements
+ * Standardized user filtering hook
+ * 
+ * Follows naming pattern: use[Feature][Entity][Action]
+ * Feature: Users, Entity: -, Action: Filter
  */
-export function useUserFilter(users: User[], searchTerm: string, limitResults = 10) {
+export function useUsersFilter(users: User[], searchTerm: string, limitResults = 10) {
   return useOptimizedMemo(() => {
     // Early return for empty search
     if (!searchTerm.trim()) {
@@ -29,8 +32,8 @@ export function useUserFilter(users: User[], searchTerm: string, limitResults = 
     
     return filtered;
   }, [users, searchTerm, limitResults], {
-    name: 'user-filter',
+    name: 'users-filter',
     warnOnSlowComputation: true,
-    slowComputationThreshold: 5, // Lower threshold for filtering operations
+    slowComputationThreshold: 5,
   });
 }

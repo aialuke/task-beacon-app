@@ -1,4 +1,3 @@
-
 import { useState, useRef, useCallback } from 'react';
 import { AuthService } from '@/lib/api';
 import { isValidEmail, isValidPassword, isValidUserName } from '@/lib/utils/validation';
@@ -6,7 +5,7 @@ import { useErrorHandler } from '@/hooks/useErrorHandler';
 
 type AuthMode = 'signin' | 'signup';
 
-interface UseAuthFormReturn {
+interface UseAuthFormStateReturn {
   // Form state
   mode: AuthMode;
   email: string;
@@ -36,7 +35,13 @@ interface UseAuthFormReturn {
   handleNameChange: (value: string) => void;
 }
 
-export function useAuthForm(): UseAuthFormReturn {
+/**
+ * Standardized auth form state hook
+ * 
+ * Follows naming pattern: use[Feature][Entity][Action]
+ * Feature: Auth, Entity: Form, Action: State
+ */
+export function useAuthFormState(): UseAuthFormStateReturn {
   const [mode, setMode] = useState<AuthMode>('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -226,3 +231,6 @@ export function useAuthForm(): UseAuthFormReturn {
     handleNameChange,
   };
 }
+
+// Export alias for backward compatibility
+export const useAuthForm = useAuthFormState;

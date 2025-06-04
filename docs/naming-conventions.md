@@ -1,3 +1,4 @@
+
 # Naming Conventions
 
 ## 📋 Overview
@@ -9,9 +10,67 @@ Consistent naming conventions improve code readability, maintainability, and dev
 - **Files**: PascalCase for components, camelCase for utilities
 - **Variables**: camelCase with descriptive auxiliary verbs
 - **Constants**: SCREAMING_SNAKE_CASE
-- **Hooks**: camelCase with `use` prefix (e.g., `useTaskDataContext`, `useTaskMutations`)
+- **Hooks**: Follow standardized pattern `use[Feature][Entity][Action]`
 - **Types**: PascalCase (interfaces and types)
 - **Contexts**: PascalCase ending with "Context"
+
+## 🪝 Hook Naming Standards
+
+### Pattern: `use[Feature][Entity][Action]`
+
+- **Feature**: The domain/feature area (Task, User, Auth, Form, etc.)
+- **Entity**: The specific entity being acted upon (optional if implied)
+- **Action**: What the hook does (Query, Mutation, Filter, Navigate, etc.)
+
+### Examples
+
+#### Data Hooks
+```typescript
+useTasksQuery()        // Query tasks data
+useTaskQuery(id)       // Query single task
+useUsersQuery()        // Query users data
+useTasksMutate()       // Mutate tasks
+```
+
+#### UI State Hooks
+```typescript
+useModalState()        // Generic modal state
+useFormState()         // Generic form state
+useAuthFormState()     // Auth-specific form state
+useTaskFormState()     // Task-specific form state
+```
+
+#### Navigation Hooks
+```typescript
+useTasksNavigate()     // Task navigation
+useUsersNavigate()     // User navigation
+```
+
+#### Processing Hooks
+```typescript
+useTasksFilter()       // Filter tasks
+useUsersFilter()       // Filter users
+useFormPhotoUpload()   // Form photo upload
+useTaskPhotoUpload()   // Task photo upload
+```
+
+### Migration Examples
+
+**Before:**
+```typescript
+useTaskNavigation()    // Inconsistent
+useUserFilter()        // Missing feature context
+useTaskDetails()       // Vague action
+usePhotoUpload()       // Missing feature context
+```
+
+**After:**
+```typescript
+useTasksNavigate()     // Clear feature + action
+useUsersFilter()       // Clear feature + action
+useTaskQuery()         // Clear feature + action
+useFormPhotoUpload()   // Clear feature + action
+```
 
 ## 📁 File Naming
 
@@ -22,12 +81,19 @@ TaskDashboard.tsx     // Main feature components
 CreateTaskPage.tsx    // Page components
 ```
 
-### Utilities and Hooks
+### Hooks (Following new standard)
+```
+useTasksQuery.ts      // use[Feature][Entity][Action]
+useUsersFilter.ts     // use[Feature][Entity][Action]
+useAuthFormState.ts   // use[Feature][Entity][Action]
+useFormPhotoUpload.ts // use[Feature][Entity][Action]
+```
+
+### Utilities and Services
 ```
 dateUtils.ts          // Utility functions
 imageUtils.ts         // Utility functions
-useTaskCard.ts        // Custom hooks
-useTaskMutations.ts   // Custom hooks
+TaskService.ts        // Service classes
 ```
 
 ### Context and Providers
@@ -81,7 +147,7 @@ const useAuth = () => { ... };
 ### Test Files
 ```
 TaskCard.test.tsx           // Component tests
-useTaskMutations.test.ts    // Hook tests
+useTasksQuery.test.ts       // Hook tests (updated naming)
 taskUtils.test.ts           // Utility tests
 ```
 
@@ -108,6 +174,10 @@ export default function TaskDashboard() { ... }
 // Utility files - descriptive function names
 export { formatDate, parseDate } from './dateUtils';
 export { compressImage, resizeImage } from './imageUtils';
+
+// Hook files - standardized naming
+export { useTasksQuery } from './useTasksQuery';
+export { useUsersFilter } from './useUsersFilter';
 
 // Context files - context and hook exports
 export { TaskDataContext, useTaskDataContext };
@@ -180,6 +250,30 @@ type TaskPriority = 'low' | 'medium' | 'high';
 type ViewMode = 'list' | 'grid' | 'calendar';
 ```
 
+## 🔄 Migration Guide
+
+When renaming hooks to follow the new standard:
+
+1. **Identify the pattern**: `use[Feature][Entity][Action]`
+2. **Update the hook file name**
+3. **Update the hook function name**
+4. **Update all import statements**
+5. **Update all usage references**
+6. **Add backward compatibility exports if needed**
+
+### Example Migration
+
+```typescript
+// Before
+import { useTaskNavigation } from './useTaskNavigation';
+
+// After
+import { useTasksNavigate } from './useTasksNavigate';
+
+// With backward compatibility
+export { useTasksNavigate as useTaskNavigation } from './useTasksNavigate';
+```
+
 ---
 
-These conventions ensure consistency and clarity across the Task Beacon codebase, making it easier for developers to understand and maintain the application.
+These updated conventions ensure consistency and clarity across the Task Beacon codebase, making it easier for developers to understand, find, and maintain hooks and other code elements.
