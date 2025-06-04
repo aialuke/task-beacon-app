@@ -48,4 +48,3 @@ describe('useUserFilter', () => {
     expect(result.current).toHaveLength(1);
   });
 });
-

@@ -1,3 +1,4 @@
+
 import { lazy, Suspense } from 'react';
 import { ModernAuthForm } from '@/components/ui/auth';
 import { AuthenticatedApp } from '@/components/layout/AuthenticatedApp';
@@ -30,7 +31,7 @@ const TaskDashboardSkeleton = () => (
   </div>
 );
 
-const AuthPage: React.FC = () => {
+const AuthPage = () => {
   return (
     <ErrorBoundary>
       <Suspense fallback={<TaskDashboardSkeleton />}>

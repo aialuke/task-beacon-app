@@ -1,4 +1,4 @@
-// src/components/ErrorBoundary.tsx
+
 import { Component, ReactNode } from 'react';
 
 interface ErrorBoundaryState {

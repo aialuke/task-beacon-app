@@ -1,3 +1,4 @@
+
 import { EnhancedUserSearch as BaseEnhancedUserSearch } from '@/features/users/components/EnhancedUserSearch';
 
 interface EnhancedUserSearchProps {

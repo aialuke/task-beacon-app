@@ -1,5 +1,5 @@
 
-import React from 'react';
+import { createElement } from 'react';
 import { renderHook, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -41,7 +41,7 @@ describe('useUserList', () => {
     
     const queryClient = createTestQueryClient();
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      React.createElement(QueryClientProvider, { client: queryClient }, children)
+      createElement(QueryClientProvider, { client: queryClient }, children)
     );
     
     const { result } = renderHook(() => useUserList(), { wrapper });
@@ -62,7 +62,7 @@ describe('useUserList', () => {
     
     const queryClient = createTestQueryClient();
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      React.createElement(QueryClientProvider, { client: queryClient }, children)
+      createElement(QueryClientProvider, { client: queryClient }, children)
     );
     
     const { result } = renderHook(() => useUserList(), { wrapper });
