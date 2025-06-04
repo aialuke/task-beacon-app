@@ -41,10 +41,10 @@ export const ImagePreviewModal = memo(function ImagePreviewModal({
         variant="default"
         size="icon"
         onClick={onClose}
-        className="absolute top-4 right-4 h-11 w-11 rounded-full bg-primary hover:bg-primary/90 text-white shadow-lg z-10"
+        className="absolute top-4 right-4 h-10 w-10 rounded-full bg-primary hover:bg-primary/90 text-white shadow-lg z-10"
         style={{ zIndex: 10000 }}
       >
-        <X className="h-5 w-5" />
+        <X className="h-4 w-4" />
       </Button>
 
       {/* Modal Window */}
