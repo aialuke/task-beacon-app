@@ -34,7 +34,7 @@ export function SimplePhotoUpload({
       <div className="inline-flex items-center gap-6 align-top">
         {/* Preview box */}
         <div
-          className="border-input relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-full border"
+          className="border-input relative flex size-18 shrink-0 items-center justify-center overflow-hidden rounded-full border"
           aria-label={
             photoPreview ? "Preview of uploaded image" : "Default image placeholder"
           }
