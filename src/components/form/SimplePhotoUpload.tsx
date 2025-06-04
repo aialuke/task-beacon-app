@@ -49,7 +49,7 @@ export function SimplePhotoUpload({
             />
           ) : (
             <div aria-hidden="true">
-              <ImageUp className="opacity-60" size={16} />
+              <ImageUp className="opacity-60" size={24} />
             </div>
           )}
           {loading && (
