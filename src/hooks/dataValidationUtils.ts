@@ -1,4 +1,5 @@
-import { ValidationResult } from '@/lib/validation';
+
+import { ValidationResult } from '@/lib/utils/validation';
 
 export function showValidationErrors(result: ValidationResult) {
   return {
@@ -6,4 +7,4 @@ export function showValidationErrors(result: ValidationResult) {
     warnings: result.warnings || [],
     isValid: result.isValid,
   };
-} 
+}

@@ -1,4 +1,6 @@
+
 import { z } from 'zod';
+import { isValidUrl } from '@/lib/utils/validation';
 
 export const VALIDATION_MESSAGES = {
   TITLE_REQUIRED: 'Task title is required',
@@ -13,17 +15,6 @@ export const VALIDATION_MESSAGES = {
   URL_INVALID: 'Please enter a valid URL',
   USER_ID_REQUIRED: 'User ID is required',
 } as const;
-
-// Validation helper for URLs (allow empty or valid URL)
-const isValidUrl = (url: string): boolean => {
-  if (!url || url.length === 0) return true;
-  try {
-    new URL(url);
-    return true;
-  } catch {
-    return false;
-  }
-};
 
 // Title schema with proper character limits (matching database constraints)
 export const taskTitleSchema = z

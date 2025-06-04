@@ -1,7 +1,8 @@
 
 import { useState, useRef, useCallback } from 'react';
 import { AuthService } from '@/lib/api';
-import { isValidEmail } from '@/lib/utils/shared';
+import { isValidEmail, isValidPassword, isValidUserName } from '@/lib/utils/validation';
+import { useErrorHandler } from '@/hooks/useErrorHandler';
 
 type AuthMode = 'signin' | 'signup';
 
@@ -50,8 +51,9 @@ export function useAuthForm(): UseAuthFormReturn {
   
   const nameInputRef = useRef<HTMLInputElement>(null);
   const emailInputRef = useRef<HTMLInputElement>(null);
+  const { handleError } = useErrorHandler({ showToast: false });
 
-  // Validation functions
+  // Validation functions using consolidated utilities
   const validateEmail = (value: string) => {
     if (!value) return 'Email is required';
     if (!isValidEmail(value)) return 'Please enter a valid email address';
@@ -60,13 +62,13 @@ export function useAuthForm(): UseAuthFormReturn {
 
   const validatePassword = (value: string) => {
     if (!value) return 'Password is required';
-    if (value.length < 8) return 'Password must be at least 8 characters';
+    if (!isValidPassword(value)) return 'Password must be at least 8 characters with uppercase, lowercase, number, and special character';
     return '';
   };
 
   const validateName = (value: string) => {
     if (!value) return 'Name is required';
-    if (value.length < 2) return 'Name must be at least 2 characters';
+    if (!isValidUserName(value)) return 'Name must be between 2 and 50 characters';
     return '';
   };
 
@@ -167,6 +169,8 @@ export function useAuthForm(): UseAuthFormReturn {
         }
       }
     } catch (error: unknown) {
+      handleError(error, 'Authentication');
+      
       if (error instanceof Error) {
         const errorMessage = error.message;
         if (errorMessage.includes('Invalid login credentials') || errorMessage.includes('invalid_credentials')) {
@@ -190,7 +194,7 @@ export function useAuthForm(): UseAuthFormReturn {
     } finally {
       setLoading(false);
     }
-  }, [mode, email, password, name]);
+  }, [mode, email, password, name, handleError]);
 
   const toggleMode = useCallback(() => {
     setMode(prevMode => prevMode === 'signin' ? 'signup' : 'signin');

@@ -1,5 +1,6 @@
+
 import { useCallback } from 'react';
-import { validateProfileData } from '@/lib/validation';
+import { validateForm } from '@/lib/utils/validation';
 import { showValidationErrors } from './dataValidationUtils';
 
 export function useProfileValidation() {
@@ -7,9 +8,16 @@ export function useProfileValidation() {
     email: string;
     name?: string | null;
   }) => {
-    const result = validateProfileData(profileData);
-    return showValidationErrors(result);
+    const result = validateForm(profileData, {
+      email: { required: true, email: true },
+      name: { minLength: 2, maxLength: 50 },
+    });
+    
+    return showValidationErrors({
+      isValid: result.isValid,
+      errors: Object.values(result.errors).flat(),
+    });
   }, []);
 
   return { validateProfile };
-} 
+}
