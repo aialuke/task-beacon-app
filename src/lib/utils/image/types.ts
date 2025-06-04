@@ -1,3 +1,4 @@
+
 /**
  * Image Utilities Type Definitions
  * 
@@ -66,19 +67,18 @@ export interface ImageMetadata {
 }
 
 /**
- * Image processing result
+ * Image processing result - simplified for form upload use
  */
 export interface ProcessingResult {
   blob: Blob;
-  metadata: ImageMetadata;
-  compressionStats: {
-    originalSize: number;
-    compressedSize: number;
-    compressionRatio: number;
-    sizeSavedBytes: number;
-    sizeSavedPercent: number;
+  compressedSize: number;
+  compressionRatio: number;
+  format: string;
+  quality: number;
+  dimensions: {
+    width: number;
+    height: number;
   };
-  processingTime: number;
 }
 
 /**
@@ -127,4 +127,4 @@ export interface DimensionResult {
   height: number;
   scale: number;
   aspectRatio: number;
-} 
+}

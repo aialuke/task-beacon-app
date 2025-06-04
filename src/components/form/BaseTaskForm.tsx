@@ -44,6 +44,11 @@ interface BaseTaskFormProps {
   headerSubtitle: string;
   submitLabel: string;
   
+  // Optional placeholders and labels
+  titlePlaceholder?: string;
+  titleLabel?: string;
+  descriptionPlaceholder?: string;
+  
   // Children support
   children?: React.ReactNode;
 }
@@ -73,6 +78,9 @@ export function BaseTaskForm({
   headerTitle,
   headerSubtitle,
   submitLabel,
+  titlePlaceholder,
+  titleLabel = "Task Title",
+  descriptionPlaceholder,
   children,
 }: BaseTaskFormProps) {
   return (
@@ -88,7 +96,7 @@ export function BaseTaskForm({
             {/* Title Input */}
             <FloatingInput
               id="title"
-              label="Task Title"
+              label={titleLabel}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
@@ -99,7 +107,7 @@ export function BaseTaskForm({
             <FloatingTextarea
               id="description"
               label="Description (optional)"
-              placeholder="Description (optional)"
+              placeholder={descriptionPlaceholder || "Description (optional)"}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               disabled={loading}
