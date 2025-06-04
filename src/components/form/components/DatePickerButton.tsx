@@ -71,7 +71,7 @@ export const DatePickerButton = memo(function DatePickerButton({
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className="w-auto border-border bg-popover p-0 text-popover-foreground shadow-lg"
+        className="w-auto border-border bg-popover p-0 text-popover-foreground shadow-lg rounded-lg"
         align="start"
         sideOffset={8}
       >
