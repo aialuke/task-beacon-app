@@ -41,8 +41,9 @@ export * from './format';
 
 // Enhanced image utilities with WebP support - NOW MODULAR!
 // NOTE: All direct imports migrated to specific modules for better tree-shaking
-// Export everything except ValidationResult to avoid conflict
-export {
+
+// Export image types separately using 'export type'
+export type {
   EnhancedImageProcessingOptions,
   EnhancedImageValidationOptions,
   ImageMetadata,
@@ -52,6 +53,10 @@ export {
   ConversionResult,
   ImagePreview,
   DimensionResult,
+} from './image';
+
+// Export image runtime values
+export {
   DEFAULT_ENHANCED_VALIDATION,
   DEFAULT_PROCESSING_OPTIONS,
   WEBP_TEST_IMAGES,
@@ -283,4 +288,3 @@ export * as errorUtils from './error';
 // NOTE: Enhanced Photo Upload Modal is now directly imported:
 // import EnhancedPhotoUploadModal from '@/components/form/enhanced-photo-upload/EnhancedPhotoUploadModal';
 // No backward compatibility exports needed - use direct imports for better tree-shaking.
-
