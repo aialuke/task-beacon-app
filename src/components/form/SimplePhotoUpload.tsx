@@ -8,6 +8,7 @@ interface SimplePhotoUploadProps {
   photoPreview: string | null;
   onPhotoChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onPhotoRemove?: () => void;
+  onSubmit?: () => void;
   disabled?: boolean;
   processingResult?: ProcessingResult | null;
   loading?: boolean;
@@ -17,6 +18,7 @@ export function SimplePhotoUpload({
   photoPreview,
   onPhotoChange,
   onPhotoRemove,
+  onSubmit,
   disabled = false,
   processingResult,
   loading = false,
@@ -24,7 +26,11 @@ export function SimplePhotoUpload({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleButtonClick = () => {
-    fileInputRef.current?.click();
+    if (photoPreview && onSubmit) {
+      onSubmit();
+    } else {
+      fileInputRef.current?.click();
+    }
   };
 
   const fileName = processingResult?.metadata?.name || 'Uploaded image';
@@ -59,16 +65,16 @@ export function SimplePhotoUpload({
           )}
         </div>
 
-        {/* Upload button */}
+        {/* Upload/Submit button */}
         <div className="relative inline-block">
           <Button 
             onClick={handleButtonClick} 
-            aria-haspopup="dialog"
+            aria-haspopup={!photoPreview ? "dialog" : undefined}
             disabled={disabled || loading}
             size="default"
             variant="default"
           >
-            {photoPreview ? "Change image" : "Upload image"}
+            {photoPreview ? "Submit" : "Upload image"}
           </Button>
           <input
             ref={fileInputRef}

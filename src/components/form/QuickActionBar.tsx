@@ -66,6 +66,12 @@ export function QuickActionBar({
     setIsPhotoModalOpen(true);
   };
 
+  const handlePhotoSubmit = () => {
+    // Photo is already processed and set via onPhotoChange
+    // This just confirms the attachment by closing the modal
+    setIsPhotoModalOpen(false);
+  };
+
   return (
     <div className="flex items-center justify-center gap-4 rounded-xl bg-background/30 px-4 py-1.5 backdrop-blur-sm">
       {/* Action buttons container */}
@@ -135,6 +141,7 @@ export function QuickActionBar({
         photoPreview={photoPreview}
         onPhotoChange={onPhotoChange}
         onPhotoRemove={onPhotoRemove}
+        onSubmit={handlePhotoSubmit}
         processingResult={processingResult}
         loading={photoLoading}
         title="Upload Task Image"
