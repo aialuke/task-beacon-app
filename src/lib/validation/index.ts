@@ -22,9 +22,12 @@ export {
   createErrorResult,
   createStandardResult,
   createValidationDetail,
-  getStandardMessage,
   combineValidationResults,
 } from './result-creators';
+
+export {
+  getStandardMessage,
+} from './message-constants';
 
 export {
   withErrorHandling,
