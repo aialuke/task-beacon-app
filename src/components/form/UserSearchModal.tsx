@@ -24,7 +24,7 @@ export function UserSearchModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="fixed -translate-x-1/2 -translate-y-1/2 pt-12 sm:max-w-md max-h-[30vh]">
+      <DialogContent className="fixed -translate-x-1/2 -translate-y-1/2 pt-10 sm:max-w-md max-h-[40vh]">
         <div className="relative">
           <EnhancedUserSearch 
             value={value} 
