@@ -24,11 +24,12 @@ export function UserSearchModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="fixed -translate-x-1/2 -translate-y-1/2 pt-10 sm:max-w-md max-h-[40vh]">
+      <DialogContent className="fixed -translate-x-1/2 -translate-y-1/2 pt-12 sm:max-w-md">
         <div className="relative">
           <EnhancedUserSearch 
             value={value} 
             onChange={handleUserSelect}
+            className="fixed-position"
           />
        </div>
       </DialogContent>
