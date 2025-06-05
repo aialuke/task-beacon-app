@@ -73,7 +73,7 @@ export function BaseTaskForm({
       {/* Header - Optimized classes */}
       <header className="mb-4 text-center">
         <div className="relative inline-block">
-          <h1 className="mb-2 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text sm:text-2xl font-bold text-foreground">
+          <h1 className="mb-2 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-2xl font-bold text-foreground">
             {headerTitle}
           </h1>
           <div className="absolute -bottom-1 left-1/2 h-0.5 w-16 -translate-x-1/2 rounded-full bg-gradient-to-r from-primary/50 to-primary" />
