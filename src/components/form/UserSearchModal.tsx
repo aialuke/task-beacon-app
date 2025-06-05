@@ -1,8 +1,11 @@
+
 import {
   Dialog,
   DialogContent,
+  DialogHeader,
+  DialogTitle,
 } from '@/components/ui/dialog';
-import { EnhancedUserSearch } from '@/features/users/components/EnhancedUserSearch';
+import { AutocompleteUserInput } from './AutocompleteUserInput';
 
 interface UserSearchModalProps {
   isOpen: boolean;
@@ -24,11 +27,15 @@ export function UserSearchModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="fixed top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 sm:max-w-md min-h-[28vh] overflow-visible">
-        <div className="h-full">
-          <EnhancedUserSearch 
+      <DialogContent className="fixed top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Assign Task</DialogTitle>
+        </DialogHeader>
+        <div className="py-4">
+          <AutocompleteUserInput 
             value={value} 
             onChange={handleUserSelect}
+            placeholder="Search for a user to assign..."
           />
         </div>
       </DialogContent>

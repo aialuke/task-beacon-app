@@ -12,6 +12,9 @@ export { SubmitButton } from './components/SubmitButton';
 export { UrlInputModal } from './UrlInputModal';
 export { UserSearchModal } from './UserSearchModal';
 
+// User input components
+export { AutocompleteUserInput } from './AutocompleteUserInput';
+
 // Simple photo upload components
 export { SimplePhotoUpload } from './SimplePhotoUpload';
 export { SimplePhotoUploadModal } from './SimplePhotoUploadModal';
