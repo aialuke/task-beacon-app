@@ -159,7 +159,7 @@ export function EnhancedUserSearch({
       {isOpen && !selectedUser && (
         <div
           ref={dropdownRef}
-          className="absolute z-[9999] mt-2 w-full overflow-hidden rounded-xl border border-border bg-popover shadow-lg"
+          className="absolute z-[9999] mt-2 w-full overflow-hidden rounded-2xl border border-border bg-popover shadow-lg"
         >
           <div className="flex h-12 items-center justify-center p-2">
             {isLoading ? (
