@@ -1,8 +1,8 @@
 
 /**
- * API Layer - Optimized Clean Interface
+ * API Layer - Unified Type System Integration
  * 
- * Focused exports without legacy dependencies.
+ * Updated to use unified type system imports.
  */
 
 // === CORE API UTILITIES ===
@@ -14,13 +14,15 @@ export {
   createErrorResponse 
 } from './standardized-api';
 
-// === TYPES ===
+// === TYPES (from unified system) ===
 export type {
   ApiResponse,
   ApiError,
   ServiceResult,
   PaginatedResponse,
   BaseQueryParams,
+  ActionResult,
+  DatabaseOperationResult,
 } from '@/types/api.types';
 
 export type {

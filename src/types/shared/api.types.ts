@@ -1,77 +1,26 @@
+
 /**
- * Shared API Types
+ * Shared API Types - Import from Single Source
  * 
- * Consolidated API response patterns, error handling, and pagination types.
- * These types are used across all API services and features.
+ * This file now imports from the unified API types to eliminate duplication.
+ * @deprecated - Use imports from @/types/api.types directly
  */
 
-// Core API response interface (single source of truth)
-export interface ApiResponse<T> {
-  data: T | null;
-  error: ApiError | null;
-  success: boolean;
-}
+// Re-export from the single source of truth
+export type {
+  ApiResponse,
+  ApiError,
+  ServiceResult,
+  PaginatedResponse,
+  PaginationMeta,
+  BaseQueryParams,
+  ActionResult,
+  DatabaseOperationResult,
+  TablesResponse,
+} from '../api.types';
 
-// Comprehensive API error interface
-export interface ApiError {
-  message: string;
-  name: string;
-  code?: string;
-  details?: unknown;
-  statusCode?: number;
-  hint?: string;
-  originalError?: unknown;
-}
-
-// Pagination interfaces
-export interface PaginationOptions {
-  page?: number;
-  pageSize?: number;
-  sortBy?: string;
-  sortDirection?: 'asc' | 'desc';
-}
-
-export interface PaginatedResponse<T> {
-  data: T[];
-  pagination: {
-    currentPage: number;
-    pageSize: number;
-    totalCount: number;
-    totalPages: number;
-    hasNextPage: boolean;
-    hasPreviousPage: boolean;
-  };
-}
-
-// Legacy API response types (for backward compatibility)
-export interface TablesResponse<T> {
-  data: T | null;
-  error: ApiError | null;
-}
-
-// Query parameter base types
-export interface BaseQueryParams {
-  page?: number;
-  pageSize?: number;
-  sortBy?: string;
-  sortDirection?: 'asc' | 'desc';
-  search?: string;
-}
-
-// Action result pattern for mutations
-export interface ActionResult<T = void> {
-  data: T | null;
-  error: ApiError | null;
-  isSuccess: boolean;
-}
-
-// Database operation result types
-export interface DatabaseOperationResult<T = void> {
-  data: T | null;
-  error: {
-    message: string;
-    code: string;
-    details?: unknown;
-  } | null;
-  success: boolean;
-} 
+// Legacy exports for backward compatibility (will be removed in future)
+export type { 
+  ApiResponse as TablesResponse,
+  ServiceResult as DatabaseOperationResult,
+} from '../api.types';

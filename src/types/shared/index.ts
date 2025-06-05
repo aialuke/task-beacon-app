@@ -1,10 +1,11 @@
+
 /**
- * Shared Types Barrel File - Streamlined
+ * Shared Types Barrel File - Unified Imports
  * 
- * Updated to import from the organized type system and reduce duplication.
+ * Updated to import from the unified type system and reduce duplication.
  */
 
-// Import common types from streamlined system
+// Import common types from unified system
 export type {
   ID,
   Timestamp,
@@ -17,14 +18,16 @@ export type {
   BaseComponentProps,
 } from '../utility.types';
 
+// Import API types from single source of truth
 export type {
   ApiResponse,
   ApiError,
   PaginatedResponse,
   PaginationMeta,
   BaseQueryParams,
-  ServiceResult as ActionResult,
-  ServiceResult as DatabaseOperationResult,
+  ServiceResult,
+  ActionResult,
+  DatabaseOperationResult,
 } from '../api.types';
 
 // Import auth types (keeping these in shared as they're cross-cutting)
@@ -62,7 +65,7 @@ export type {
   BackupInfo,
 } from './database.types';
 
-// Import component types from streamlined system
+// Import component types from unified system
 export type {
   Size,
   Variant,
@@ -83,14 +86,14 @@ export type {
   ResponsiveValue,
 } from '../component.types';
 
-// Import form field types from form types
+// Import form field types from unified form types
 export type {
   InputFieldProps,
   TextareaFieldProps,
   SelectFieldProps,
 } from '../form.types';
 
-// Legacy exports for backward compatibility
+// Legacy exports for backward compatibility (will be removed)
 export type {
   BaseComponentProps as ContainerProps,
   BaseComponentProps as ComponentVariants,

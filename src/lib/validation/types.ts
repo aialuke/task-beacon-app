@@ -1,16 +1,21 @@
+
 /**
- * Shared validation types and utilities
+ * Validation Types - Unified System Integration
  * 
- * This file provides the standardized interfaces and utilities used across
- * all validation modules to ensure consistency and type safety.
+ * Updated to use the unified type system and remove duplication.
  */
 
-// Import the comprehensive ValidationResult from utility types
+// Import the comprehensive ValidationResult from unified utility types
 export type { 
   ValidationResult, 
   ValidationDetail,
   ValidationOptions 
 } from '@/types/utility/validation.types';
+
+// Import standardized API error types from unified system
+export type {
+  ApiError,
+} from '@/types/api.types';
 
 /**
  * Simplified ValidationResult for basic validation cases
@@ -146,4 +151,4 @@ export type AsyncValidationResult = Promise<StandardValidationResult>;
  * Validator function signatures
  */
 export type SyncValidator<T = any> = (value: T, context?: ValidationContext) => BasicValidationResult;
-export type AsyncValidator<T = any> = (value: T, context?: ValidationContext, config?: AsyncValidationConfig) => AsyncValidationResult; 
+export type AsyncValidator<T = any> = (value: T, context?: ValidationContext, config?: AsyncValidationConfig) => AsyncValidationResult;

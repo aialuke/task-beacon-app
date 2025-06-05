@@ -1,11 +1,11 @@
 
 /**
- * Task Feature Types - Updated to use streamlined type system
+ * Task Feature Types - Unified Import System
  * 
- * This file now imports from the organized type system instead of duplicating definitions.
+ * This file now imports from the unified type system instead of duplicating definitions.
  */
 
-// Import from organized type system
+// Import from unified type system (single source of truth)
 export type {
   Task,
   TaskStatus,
@@ -34,7 +34,7 @@ export type {
   TaskFormOptions,
 } from './types/task-form.types';
 
-// Legacy compatibility
+// Legacy compatibility exports (will be phased out)
 export type {
   Task as TaskType,
   TaskStatus as TaskStatusType,

@@ -1,11 +1,11 @@
 
 /**
- * Main Types Index - Streamlined and Organized
+ * Main Types Index - Unified and Streamlined
  * 
- * Clean, focused type exports without duplication.
+ * Clean, focused type exports from unified sources.
  */
 
-// === CORE ENTITIES ===
+// === CORE ENTITIES (from database types) ===
 export type {
   TaskWithRelations as Task,
   ProfileTable as User,
@@ -21,7 +21,7 @@ export type {
   Enums,
 } from './database';
 
-// === API LAYER ===
+// === API LAYER (single source of truth) ===
 export type {
   ApiResponse,
   ApiError,
@@ -29,6 +29,8 @@ export type {
   PaginatedResponse,
   PaginationMeta,
   BaseQueryParams,
+  ActionResult,
+  DatabaseOperationResult,
 } from './api.types';
 
 // === FORMS & VALIDATION ===
@@ -80,7 +82,7 @@ export type {
   AsyncEventHandler,
 } from './utility.types';
 
-// Convenience type aliases - define directly to avoid import issues
+// Convenience type aliases - unified definitions
 export type ApiState<T = unknown, E = string> = {
   data: T | null;
   loading: boolean;
