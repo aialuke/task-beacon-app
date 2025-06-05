@@ -43,19 +43,18 @@ export function useTaskFormOrchestration(options: UseTaskFormOrchestrationOption
         if (!validationResult.isValid) {
           return {
             success: false,
-            error: validationResult.errors.join(', '),
+            error: validationResult.errors?.join(', ') || 'Validation failed',
           };
         }
 
-        // Prepare task data
-        const taskData: Partial<Task> = {
+        // Prepare task data - only include fields that exist in TaskCreateData
+        const taskData = {
           title: form.title,
-          description: form.description,
+          description: form.description || undefined,
           due_date: form.dueDate || null,
           url_link: form.url || null,
-          pinned: form.pinned,
           assignee_id: form.assigneeId || null,
-          priority: 'medium', // Default priority
+          priority: 'medium' as const,
         };
 
         // Submit the task

@@ -45,8 +45,6 @@ export type {
   InputFieldProps,
   TextareaFieldProps,
   SelectFieldProps,
-  FormErrors,
-  FormTouched,
 } from './form.types';
 
 // === UI COMPONENT TYPES ===
@@ -101,3 +99,12 @@ export type {
 export type {
   ApiState,
 } from './utility.types';
+
+// Add missing exports for backward compatibility
+export interface FormErrors {
+  [key: string]: string[];
+}
+
+export interface FormTouched {
+  [key: string]: boolean;
+}

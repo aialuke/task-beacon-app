@@ -65,9 +65,7 @@ describe('Task Workflow Integration Tests', () => {
       // Mock successful update
       mockDatabaseQuery('tasks', { data: updatedTask, error: null });
 
-      const { result } = renderHook(() => useTaskWorkflow({
-        enableOptimisticUpdates: true,
-      }), { wrapper });
+      const { result } = renderHook(() => useTaskWorkflow(), { wrapper });
 
       // Act: Update task status
       let updateResult: any; // Use any to handle the complex return type from mutations
@@ -89,7 +87,7 @@ describe('Task Workflow Integration Tests', () => {
 
       // Initial state
       expect(result.current.workflowStatus.canSubmit).toBe(false);
-      expect(result.current.workflowStatus.isLoading).toBe(false);
+      expect(result.current.workflowStatus.isBusy).toBe(false);
 
       // Update title to enable submission
       act(() => {
@@ -98,7 +96,7 @@ describe('Task Workflow Integration Tests', () => {
 
       await waitFor(() => {
         expect(result.current.workflowStatus.canSubmit).toBe(true);
-        expect(result.current.workflowStatus.isFormReady).toBe(true);
+        expect(result.current.workflowStatus.isReady).toBe(true);
       });
     });
   });

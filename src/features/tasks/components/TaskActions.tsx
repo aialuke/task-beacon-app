@@ -21,7 +21,7 @@ interface TaskActionsProps {
 
 function TaskActions({ task }: TaskActionsProps) {
   const navigate = useNavigate();
-  const { toggleTaskComplete, deleteTaskById } = useTaskMutations();
+  const { toggleTaskCompleteCallback, deleteTaskCallback } = useTaskMutations();
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
@@ -30,18 +30,18 @@ function TaskActions({ task }: TaskActionsProps) {
   }, [navigate, task.id]);
 
   const handleToggleComplete = useCallback(async () => {
-    const result = await toggleTaskComplete(task);
+    const result = await toggleTaskCompleteCallback(task);
     if (result.success) {
       // toast.success(result.message);
     } else if (result.error) {
       // toast.error(result.message);
     }
-  }, [toggleTaskComplete, task]);
+  }, [toggleTaskCompleteCallback, task]);
 
   const handleDelete = useCallback(async () => {
     setIsDeleting(true);
     try {
-      const result = await deleteTaskById(task.id);
+      const result = await deleteTaskCallback(task.id);
       if (result.success) {
         // toast.success(result.message);
         setIsDeleteDialogOpen(false);
@@ -53,7 +53,7 @@ function TaskActions({ task }: TaskActionsProps) {
     } finally {
       setIsDeleting(false);
     }
-  }, [deleteTaskById, task.id]);
+  }, [deleteTaskCallback, task.id]);
 
   return (
     <div className="flex flex-wrap gap-2 border-t border-gray-100 pt-2">
