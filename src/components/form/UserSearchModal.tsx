@@ -30,7 +30,7 @@ export function UserSearchModal({
             value={value} 
             onChange={handleUserSelect}
             className="flex-grow"
-            dropdownClassName="absolute z-[9999] mt-2 h-12 w-full overflow-visible rounded-xl border border-border bg-popover shadow-lg max-h-[200px] overflow-y-auto"
+            dropdownClassName="absolute z-[9999] mt-2 h-12 w-full overflow-visible rounded-xl border border-border bg-popover shadow-lg"
           />
         </div>
       </DialogContent>
