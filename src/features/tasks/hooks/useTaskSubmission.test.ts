@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useTaskSubmission } from './useTaskSubmission';
 import { TaskService } from '@/lib/api';
+import type { TaskWithRelations } from '@/types';
 
 // Mock the TaskService
 vi.mock('@/lib/api', () => ({
@@ -71,14 +72,19 @@ describe('useTaskSubmission', () => {
   });
 
   it('should successfully submit a task', async () => {
-    const mockCreatedTask = {
+    const mockCreatedTask: TaskWithRelations = {
       id: 'task-123',
       title: mockTaskData.title,
       description: mockTaskData.description,
       owner_id: 'owner-123',
+      assignee_id: 'user-123',
       status: 'pending' as const,
       created_at: '2024-01-01T00:00:00Z',
       updated_at: '2024-01-01T00:00:00Z',
+      due_date: null,
+      parent_task_id: null,
+      photo_url: null,
+      url_link: null,
     };
 
     vi.mocked(TaskService.create).mockResolvedValue({
@@ -143,9 +149,24 @@ describe('useTaskSubmission', () => {
     const taskId = 'task-123';
     const updates = { title: 'Updated Task' };
 
+    const mockUpdatedTask: TaskWithRelations = {
+      id: taskId,
+      title: 'Updated Task',
+      description: 'Test Description',
+      owner_id: 'owner-123',
+      assignee_id: 'user-123',
+      status: 'pending' as const,
+      created_at: '2024-01-01T00:00:00Z',
+      updated_at: '2024-01-01T00:00:00Z',
+      due_date: null,
+      parent_task_id: null,
+      photo_url: null,
+      url_link: null,
+    };
+
     vi.mocked(TaskService.update).mockResolvedValue({
       success: true,
-      data: { id: taskId, ...updates },
+      data: mockUpdatedTask,
       error: null,
     });
 
