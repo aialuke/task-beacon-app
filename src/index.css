@@ -1,38 +1,32 @@
 
-/* Optimized CSS with minimal imports - Phase 5 */
+/* Optimized CSS with minimal imports - Phase 3 Enhanced */
 
 /* Import Tailwind CSS directives first */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Import optimized CSS architecture */
+/* Import only essential CSS modules */
 @import './styles/architecture/css-variables.css';
-@import './styles/architecture/performance-optimizations.css';
-
-/* Import optimized base styles */
 @import './styles/base.css';
 @import './styles/components.css';
 @import './styles/utilities.css';
 
-/* Reset and base styles */
-* {
+/* Optimized reset - only essential rules */
+*,
+::before,
+::after {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
-*::before,
-*::after {
-  box-sizing: inherit;
+/* Set dark mode as default with better performance */
+:root {
+  color-scheme: dark;
 }
 
-/* Set dark mode as default */
-html {
-  @apply dark;
-}
-
-/* Optimized CSS variables initialization */
+/* Optimized CSS variables initialization - only essential ones */
 *,
 ::before,
 ::after {
@@ -43,71 +37,96 @@ html {
   --tw-scale-x: 1;
   --tw-scale-y: 1;
 
-  /* Essential ring/shadow variables */
+  /* Essential shadow variables */
   --tw-ring-offset-shadow: 0 0 #0000;
   --tw-ring-shadow: 0 0 #0000;
   --tw-shadow: 0 0 #0000;
   --tw-shadow-colored: 0 0 #0000;
-
-  /* Essential backdrop-filter variables */
-  --tw-backdrop-blur: initial;
-  --tw-backdrop-brightness: initial;
-  --tw-backdrop-contrast: initial;
-  --tw-backdrop-grayscale: initial;
-  --tw-backdrop-hue-rotate: initial;
-  --tw-backdrop-invert: initial;
-  --tw-backdrop-opacity: initial;
-  --tw-backdrop-saturate: initial;
-  --tw-backdrop-sepia: initial;
 }
 
 @layer base {
-  button {
-    cursor: pointer;
-  }
-
-  button:disabled {
-    cursor: not-allowed;
-  }
-
   /* Enhanced base styles for performance */
   html {
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-variant-ligatures: common-ligatures;
+    /* Critical font loading */
+    font-display: swap;
   }
 
   body {
-    line-height: var(--line-height-normal);
-    font-family: system-ui, -apple-system, sans-serif;
+    line-height: 1.5;
+    font-family: system-ui, -apple-system, 'Inter', sans-serif;
+    /* Optimize compositing */
+    will-change: auto;
   }
 
   /* Optimize focus indicators */
   :focus-visible {
-    outline: 2px solid hsl(var(--ring));
+    outline: 2px solid hsl(var(--ring, 222.2 84% 4.9%));
     outline-offset: 2px;
+  }
+
+  /* Performance optimizations */
+  button {
+    cursor: pointer;
+    /* Optimize button interactions */
+    touch-action: manipulation;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
   }
 }
 
 /* Optimized icon handling */
 svg {
   fill: none;
-  transition: stroke var(--duration-normal) var(--ease-out), 
-              fill var(--duration-normal) var(--ease-out);
+  /* Simplified transitions for better performance */
+  transition: stroke 0.2s ease, fill 0.2s ease;
 }
 
-/* Theme handling */
-.dark {
-  color-scheme: dark;
-}
-
-.light {
-  color-scheme: light;
-}
-
-/* Optimized backdrop-blur */
+/* Optimize backdrop-blur for better performance */
 .backdrop-blur-fix {
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  /* Optimize compositing */
+  transform: translateZ(0);
+}
+
+/* Performance utilities */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.optimize-animations {
+  animation-fill-mode: both;
+  animation-timing-function: ease-out;
+}
+
+/* Critical CSS for immediate rendering */
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

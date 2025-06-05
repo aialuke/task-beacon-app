@@ -6,6 +6,8 @@ import { BrowserRouter } from 'react-router-dom';
 
 // Internal utilities
 import { queryClient } from '@/lib/query-client';
+import { useBundleOptimization } from '@/hooks/useBundleOptimization';
+import { isFeatureEnabled } from '@/lib/config/app';
 
 // Components
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -67,6 +69,18 @@ class AppErrorBoundary extends React.Component<
   }
 }
 
+/**
+ * Performance optimization wrapper
+ */
+function PerformanceOptimizations({ children }: { children: React.ReactNode }) {
+  // Apply bundle optimizations if enabled
+  if (isFeatureEnabled('enableBundleOptimization')) {
+    useBundleOptimization();
+  }
+  
+  return <>{children}</>;
+}
+
 interface AppProvidersProps {
   children: React.ReactNode;
 }
@@ -76,28 +90,31 @@ interface AppProvidersProps {
  * 
  * Hierarchy (outer to inner):
  * 1. Error handling
- * 2. Theme/styling
- * 3. Data/caching
- * 4. Authentication
- * 5. UI infrastructure
- * 6. Routing
+ * 2. Performance optimizations
+ * 3. Theme/styling
+ * 4. Data/caching
+ * 5. Authentication
+ * 6. UI infrastructure
+ * 7. Routing
  */
 export function AppProviders({ children }: AppProvidersProps) {
   return (
     <AppErrorBoundary>
-      <ThemeProvider>
-        <QueryClientProvider client={queryClient}>
-          <AuthProvider>
-            <TooltipProvider>
-              <BrowserRouter>
-                <React.Suspense fallback={<LoadingSpinner />}>
-                  {children}
-                </React.Suspense>
-              </BrowserRouter>
-            </TooltipProvider>
-          </AuthProvider>
-        </QueryClientProvider>
-      </ThemeProvider>
+      <PerformanceOptimizations>
+        <ThemeProvider>
+          <QueryClientProvider client={queryClient}>
+            <AuthProvider>
+              <TooltipProvider>
+                <BrowserRouter>
+                  <React.Suspense fallback={<LoadingSpinner />}>
+                    {children}
+                  </React.Suspense>
+                </BrowserRouter>
+              </TooltipProvider>
+            </AuthProvider>
+          </QueryClientProvider>
+        </ThemeProvider>
+      </PerformanceOptimizations>
     </AppErrorBoundary>
   );
 }

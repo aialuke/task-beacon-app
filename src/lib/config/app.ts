@@ -1,3 +1,4 @@
+
 /**
  * Application Configuration
  * 
@@ -21,6 +22,8 @@ interface AppConfig {
     enableRealtimeUpdates: boolean;
     enableHapticFeedback: boolean;
     enableBrowserNotifications: boolean;
+    enableBundleOptimization: boolean;
+    enableImageOptimization: boolean;
   };
   ui: {
     defaultPageSize: number;
@@ -31,6 +34,12 @@ interface AppConfig {
   cache: {
     staleTime: number;
     refetchInterval: number;
+  };
+  performance: {
+    enableLazyLoading: boolean;
+    preloadCriticalRoutes: boolean;
+    optimizeImages: boolean;
+    enableCSSOptimization: boolean;
   };
 }
 
@@ -67,6 +76,8 @@ export const appConfig: AppConfig = {
     enableRealtimeUpdates: true,
     enableHapticFeedback: true,
     enableBrowserNotifications: true,
+    enableBundleOptimization: getEnvironment() === 'production',
+    enableImageOptimization: true,
   },
   ui: {
     defaultPageSize: 20,
@@ -77,6 +88,12 @@ export const appConfig: AppConfig = {
   cache: {
     staleTime: 1000 * 60, // 1 minute
     refetchInterval: 30000, // 30 seconds
+  },
+  performance: {
+    enableLazyLoading: true,
+    preloadCriticalRoutes: getEnvironment() === 'production',
+    optimizeImages: true,
+    enableCSSOptimization: getEnvironment() === 'production',
   },
 };
 
@@ -95,6 +112,13 @@ export const isFeatureEnabled = (feature: keyof AppConfig['features']): boolean 
 };
 
 /**
+ * Performance flag helpers
+ */
+export const isPerformanceEnabled = (feature: keyof AppConfig['performance']): boolean => {
+  return appConfig.performance[feature];
+};
+
+/**
  * Get API configuration
  */
 export const getApiConfig = () => appConfig.api;
@@ -108,3 +132,8 @@ export const getUIConfig = () => appConfig.ui;
  * Get cache configuration
  */
 export const getCacheConfig = () => appConfig.cache;
+
+/**
+ * Get performance configuration
+ */
+export const getPerformanceConfig = () => appConfig.performance;
