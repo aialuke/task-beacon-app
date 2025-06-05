@@ -18,6 +18,7 @@ interface UseTasksQueryReturn {
   isLoading: boolean;
   isFetching: boolean;
   error: string | null;
+  refetch: () => void;
 }
 
 /**
@@ -40,6 +41,7 @@ export function useTasksQuery(pageSize = 10): UseTasksQueryReturn {
     isLoading,
     error,
     isFetching,
+    refetch,
   } = useQuery({
     queryKey,
     queryFn: async () => {
@@ -110,5 +112,6 @@ export function useTasksQuery(pageSize = 10): UseTasksQueryReturn {
     isLoading: loadingState.isLoading,
     isFetching: loadingState.isFetching,
     error: loadingState.error,
+    refetch: () => refetch(),
   };
 }
