@@ -23,8 +23,16 @@ vi.mock('@/lib/api/tasks/task.service', () => ({
 }));
 
 describe('useTaskStatusMutations', () => {
+  let queryClient: QueryClient;
+
   beforeEach(() => {
     vi.clearAllMocks();
+    queryClient = new QueryClient({
+      defaultOptions: {
+        queries: { retry: false, gcTime: 0 },
+        mutations: { retry: false },
+      },
+    });
   });
 
   const mockTask: Task = {
@@ -43,26 +51,17 @@ describe('useTaskStatusMutations', () => {
     updated_at: '2024-01-01T00:00:00Z',
   };
 
-  function createTestWrapper() {
-    const queryClient = new QueryClient({
-      defaultOptions: {
-        queries: { retry: false, gcTime: 0 },
-        mutations: { retry: false },
-      },
-    });
-
-    return function TestWrapper({ children }: { children: ReactNode }) {
-      return (
-        <QueryClientProvider client={queryClient}>
-          {children}
-        </QueryClientProvider>
-      );
-    };
+  function TestWrapper({ children }: { children: ReactNode }) {
+    return (
+      <QueryClientProvider client={queryClient}>
+        {children}
+      </QueryClientProvider>
+    );
   }
 
   it('should provide status mutation functions', () => {
     const { result } = renderHook(() => useTaskStatusMutations(), {
-      wrapper: createTestWrapper(),
+      wrapper: TestWrapper,
     });
 
     expect(result.current.markAsComplete).toBeDefined();
@@ -75,7 +74,7 @@ describe('useTaskStatusMutations', () => {
 
   it('should handle loading states correctly', () => {
     const { result } = renderHook(() => useTaskStatusMutations(), {
-      wrapper: createTestWrapper(),
+      wrapper: TestWrapper,
     });
 
     expect(result.current.isLoading).toBe(false);

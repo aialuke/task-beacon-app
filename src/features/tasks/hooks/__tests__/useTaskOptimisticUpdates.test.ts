@@ -7,8 +7,16 @@ import { ReactNode } from 'react';
 import type { Task } from '@/types';
 
 describe('useTaskOptimisticUpdates', () => {
+  let queryClient: QueryClient;
+
   beforeEach(() => {
     vi.clearAllMocks();
+    queryClient = new QueryClient({
+      defaultOptions: {
+        queries: { retry: false, gcTime: 0 },
+        mutations: { retry: false },
+      },
+    });
   });
 
   const mockTask: Task = {
@@ -27,26 +35,17 @@ describe('useTaskOptimisticUpdates', () => {
     updated_at: '2024-01-01T00:00:00Z',
   };
 
-  function createTestWrapper() {
-    const queryClient = new QueryClient({
-      defaultOptions: {
-        queries: { retry: false, gcTime: 0 },
-        mutations: { retry: false },
-      },
-    });
-
-    return function TestWrapper({ children }: { children: ReactNode }) {
-      return (
-        <QueryClientProvider client={queryClient}>
-          {children}
-        </QueryClientProvider>
-      );
-    };
+  function TestWrapper({ children }: { children: ReactNode }) {
+    return (
+      <QueryClientProvider client={queryClient}>
+        {children}
+      </QueryClientProvider>
+    );
   }
 
   it('should provide optimistic update functions', () => {
     const { result } = renderHook(() => useTaskOptimisticUpdates(), {
-      wrapper: createTestWrapper(),
+      wrapper: TestWrapper,
     });
 
     expect(result.current.updateTaskOptimistically).toBeDefined();
@@ -61,7 +60,7 @@ describe('useTaskOptimisticUpdates', () => {
 
   it('should handle optimistic updates correctly', () => {
     const { result } = renderHook(() => useTaskOptimisticUpdates(), {
-      wrapper: createTestWrapper(),
+      wrapper: TestWrapper,
     });
 
     // Test that functions can be called without throwing
