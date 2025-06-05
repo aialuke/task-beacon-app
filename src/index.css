@@ -6,11 +6,27 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Import only essential CSS modules */
+/* Import essential CSS modules in correct order */
 @import './styles/architecture/css-variables.css';
+@import './styles/tokens/colors.css';
+@import './styles/tokens/design-tokens.css';
 @import './styles/base.css';
-@import './styles/components.css';
-@import './styles/utilities.css';
+
+/* Import component styles */
+@import './styles/components/unified-components.css';
+@import './styles/components/task-cards.css';
+@import './styles/components/forms.css';
+@import './styles/components/buttons.css';
+@import './styles/components/dialogs.css';
+@import './styles/components/avatars.css';
+@import './styles/components/timer.css';
+
+/* Import utility styles */
+@import './styles/utilities/unified-utilities.css';
+@import './styles/utilities/layout.css';
+@import './styles/utilities/animations/unified-animations.css';
+@import './styles/utilities/accessibility.css';
+@import './styles/utilities/responsive.css';
 
 /* Optimized reset - only essential rules */
 *,
