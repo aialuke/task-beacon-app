@@ -92,7 +92,7 @@ export function EnhancedUserSearch({
       <div className="group relative">
         <div
           className={cn(
-            'flex h-14 items-center rounded-2xl border border-border/40 bg-background/60 p-2 backdrop-blur-sm transition-all duration-300',
+            'flex h-12 items-center rounded-2xl border border-border/40 bg-background/60 p-2 backdrop-blur-sm transition-all duration-300',
             'hover:border-border/60 hover:bg-background/70',
             isFocused &&
               'border-primary/60 bg-background/80 shadow-lg shadow-primary/10',
