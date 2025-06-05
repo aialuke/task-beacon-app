@@ -56,7 +56,7 @@ export function UrlInputModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="fixed -translate-x-1/2 -translate-y-1/2 pt-12 sm:max-w-md">
+      <DialogContent className="fixed -translate-x-1/2 -translate-y-[60%] pt-12 sm:max-w-md">
         <div className="space-y-4">
           <div>
             <FloatingInput
