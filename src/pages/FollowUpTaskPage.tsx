@@ -1,10 +1,14 @@
+
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import FollowUpTaskForm from '@/features/tasks/forms/FollowUpTaskForm';
+import { lazy, Suspense } from 'react';
 import { TaskService } from '@/lib/api/tasks/task.service';
-import { Skeleton } from '@/components/ui/skeleton';
+import { PageLoader } from '@/components/ui/layout/PageLoader';
+
+// Lazy load the form component for additional code splitting
+const FollowUpTaskForm = lazy(() => import('@/features/tasks/forms/FollowUpTaskForm'));
 
 export default function FollowUpTaskPage() {
   const navigate = useNavigate();
@@ -31,28 +35,7 @@ export default function FollowUpTaskPage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-        <div className="container mx-auto max-w-2xl px-4 py-8">
-          <div className="mb-8 flex items-center">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate('/')}
-              className="rounded-full p-3 shadow-sm transition-all duration-200 hover:scale-105 hover:bg-accent/80 hover:shadow-md"
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-          </div>
-          <div className="space-y-6 rounded-2xl border border-border/50 bg-card/50 p-8 shadow-lg backdrop-blur-sm">
-            <Skeleton className="h-16 w-full rounded-xl" />
-            <Skeleton className="h-12 w-full rounded-xl" />
-            <Skeleton className="h-24 w-full rounded-xl" />
-            <Skeleton className="h-12 w-full rounded-xl" />
-          </div>
-        </div>
-      </div>
-    );
+    return <PageLoader message="Loading parent task data..." />;
   }
 
   if (error || !parentTask) {
@@ -102,7 +85,9 @@ export default function FollowUpTaskPage() {
         </div>
 
         <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
-          <FollowUpTaskForm parentTask={parentTask} onClose={handleClose} />
+          <Suspense fallback={<PageLoader variant="minimal" message="Loading follow-up form..." />}>
+            <FollowUpTaskForm parentTask={parentTask} onClose={handleClose} />
+          </Suspense>
         </div>
       </div>
     </div>

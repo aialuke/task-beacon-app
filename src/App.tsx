@@ -1,10 +1,11 @@
 
 import { Routes, Route } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
-import AuthPage from './pages/AuthPage';
 import { AppProviders } from './components/providers/AppProviders';
+import { PageLoader } from './components/ui/layout/PageLoader';
 
-// Lazy load pages for better performance
+// Lazy load all major pages for optimal code splitting
+const AuthPage = lazy(() => import('./pages/AuthPage'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const TaskDetailsPage = lazy(() => import('./pages/TaskDetailsPage'));
 const CreateTaskPage = lazy(() => import('./pages/CreateTaskPage'));
@@ -12,16 +13,48 @@ const FollowUpTaskPage = lazy(() => import('./pages/FollowUpTaskPage'));
 
 const App = () => (
   <AppProviders>
-    <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
+    <Suspense fallback={<PageLoader message="Loading application..." />}>
       <Routes>
-        <Route path="/" element={<AuthPage />} />
-        <Route path="/create-task" element={<CreateTaskPage />} />
+        <Route 
+          path="/" 
+          element={
+            <Suspense fallback={<PageLoader variant="dashboard" message="Loading dashboard..." />}>
+              <AuthPage />
+            </Suspense>
+          } 
+        />
+        <Route 
+          path="/create-task" 
+          element={
+            <Suspense fallback={<PageLoader message="Loading task creation..." />}>
+              <CreateTaskPage />
+            </Suspense>
+          } 
+        />
         <Route
           path="/follow-up-task/:parentTaskId"
-          element={<FollowUpTaskPage />}
+          element={
+            <Suspense fallback={<PageLoader message="Loading follow-up task..." />}>
+              <FollowUpTaskPage />
+            </Suspense>
+          }
         />
-        <Route path="/tasks/:id" element={<TaskDetailsPage />} />
-        <Route path="*" element={<NotFound />} />
+        <Route 
+          path="/tasks/:id" 
+          element={
+            <Suspense fallback={<PageLoader message="Loading task details..." />}>
+              <TaskDetailsPage />
+            </Suspense>
+          } 
+        />
+        <Route 
+          path="*" 
+          element={
+            <Suspense fallback={<PageLoader variant="minimal" message="Loading page..." />}>
+              <NotFound />
+            </Suspense>
+          } 
+        />
       </Routes>
     </Suspense>
   </AppProviders>

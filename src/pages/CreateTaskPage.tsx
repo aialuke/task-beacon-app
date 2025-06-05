@@ -1,7 +1,12 @@
+
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import CreateTaskForm from '@/features/tasks/forms/CreateTaskForm';
+import { lazy, Suspense } from 'react';
+import { PageLoader } from '@/components/ui/layout/PageLoader';
+
+// Lazy load the form component for additional code splitting
+const CreateTaskForm = lazy(() => import('@/features/tasks/forms/CreateTaskForm'));
 
 export default function CreateTaskPage() {
   const navigate = useNavigate();
@@ -25,7 +30,9 @@ export default function CreateTaskPage() {
         </div>
 
         <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
-          <CreateTaskForm onClose={handleClose} />
+          <Suspense fallback={<PageLoader variant="minimal" message="Loading form..." />}>
+            <CreateTaskForm onClose={handleClose} />
+          </Suspense>
         </div>
       </div>
     </div>

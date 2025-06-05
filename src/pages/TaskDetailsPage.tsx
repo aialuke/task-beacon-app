@@ -3,11 +3,14 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Calendar1, ExternalLink } from 'lucide-react';
 import { formatDate } from '@/lib/utils/shared';
-import CountdownTimer from '@/features/tasks/components/CountdownTimer';
+import { lazy, Suspense } from 'react';
 import { getTaskStatus } from '@/features/tasks/utils/taskUiUtils';
-import TaskActions from '@/features/tasks/components/TaskActions';
-import { Skeleton } from '@/components/ui/skeleton';
+import { PageLoader } from '@/components/ui/layout/PageLoader';
 import { useTaskQuery } from '@/features/tasks/hooks/useTaskQuery';
+
+// Lazy load heavy components for better performance
+const CountdownTimer = lazy(() => import('@/features/tasks/components/CountdownTimer'));
+const TaskActions = lazy(() => import('@/features/tasks/components/TaskActions'));
 
 const TaskDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -15,23 +18,7 @@ const TaskDetailsPage = () => {
   const { task, loading, error } = useTaskQuery(id);
 
   if (loading) {
-    return (
-      <div className="container space-y-6 py-8">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => navigate(-1)}
-          className="mb-4"
-        >
-          <ArrowLeft size={16} className="mr-2" /> Back
-        </Button>
-        <div className="animate-pulse space-y-4">
-          <Skeleton className="h-10 w-3/4" />
-          <Skeleton className="h-6 w-1/2" />
-          <Skeleton className="h-24 w-full" />
-        </div>
-      </div>
-    );
+    return <PageLoader message="Loading task details..." />;
   }
 
   if (error || !task) {
@@ -68,7 +55,9 @@ const TaskDetailsPage = () => {
       <div className="space-y-6 rounded-xl bg-white p-6 shadow-sm">
         <div className="flex items-start gap-4">
           <div className="shrink-0">
-            <CountdownTimer dueDate={task.due_date} status={status} />
+            <Suspense fallback={<div className="h-12 w-12 animate-pulse rounded-full bg-muted" />}>
+              <CountdownTimer dueDate={task.due_date} status={status} />
+            </Suspense>
           </div>
           <div>
             <h1 className="mb-2 text-2xl font-bold">{task.title}</h1>
@@ -136,7 +125,9 @@ const TaskDetailsPage = () => {
         )}
 
         <div className="border-t pt-4">
-          <TaskActions task={task} />
+          <Suspense fallback={<div className="h-10 animate-pulse rounded bg-muted" />}>
+            <TaskActions task={task} />
+          </Suspense>
         </div>
       </div>
     </div>
