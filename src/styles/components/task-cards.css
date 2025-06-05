@@ -3,14 +3,19 @@
 @layer components {
   /* Main task card class - single source of truth for all styling */
   .task-card {
-    @apply bg-card text-card-foreground border border-border p-6 rounded-xl shadow-sm;
+    /* Use Tailwind utilities that will override any conflicting resets */
+    @apply bg-card text-card-foreground border border-border rounded-xl shadow-sm;
     @apply transition-all duration-200 hover:shadow-md cursor-pointer;
-    @apply mb-4; /* Default spacing between cards */
+    @apply mb-4 p-6; /* Default spacing and padding */
     
-    /* Critical width constraints */
-    max-width: 100%;
-    width: 100%;
-    box-sizing: border-box;
+    /* Critical width constraints - using CSS properties to ensure they take precedence */
+    max-width: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    
+    /* Ensure border is visible */
+    border-width: 1px !important;
+    border-style: solid !important;
   }
 
   /* Task-specific animations using unified system */

@@ -1,4 +1,5 @@
-/* Optimized CSS with minimal imports - Restored Working Version */
+
+/* Optimized CSS with minimal imports - Fixed Reset Conflicts */
 
 /* Import Tailwind CSS directives first */
 @tailwind base;
@@ -24,36 +25,9 @@
 /* Import utility styles */
 @import './styles/utilities.css';
 
-/* Optimized reset - only essential rules */
-*,
-::before,
-::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
 /* Set dark mode as default with better performance */
 :root {
   color-scheme: dark;
-}
-
-/* Optimized CSS variables initialization - only essential ones */
-*,
-::before,
-::after {
-  /* Essential transform variables */
-  --tw-translate-x: 0;
-  --tw-translate-y: 0;
-  --tw-rotate: 0;
-  --tw-scale-x: 1;
-  --tw-scale-y: 1;
-
-  /* Essential shadow variables */
-  --tw-ring-offset-shadow: 0 0 #0000;
-  --tw-ring-shadow: 0 0 #0000;
-  --tw-shadow: 0 0 #0000;
-  --tw-shadow-colored: 0 0 #0000;
 }
 
 @layer base {
