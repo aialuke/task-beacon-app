@@ -80,5 +80,5 @@ export type {
   AsyncEventHandler,
 } from './utility.types';
 
-// Convenience type aliases
+// Convenience type aliases - fix the AsyncState reference
 export type ApiState = AsyncState;

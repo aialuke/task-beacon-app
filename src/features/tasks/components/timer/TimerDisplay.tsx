@@ -14,7 +14,7 @@ import { TaskStatus } from '@/types';
  * @param status - The current status of the task
  * @param timeDisplay - The formatted time string to display
  */
-interface TimerDisplayProps {
+export interface TimerDisplayProps {
   size: number;
   status: TaskStatus;
   timeDisplay: string;
@@ -110,4 +110,4 @@ const TimerDisplay = ({ size, status, timeDisplay }: TimerDisplayProps) => {
   );
 };
 
-export default memo(TimerDisplay, arePropsEqual); 
+export default memo(TimerDisplay, arePropsEqual);

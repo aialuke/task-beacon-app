@@ -15,7 +15,7 @@ import { TaskStatus } from '@/types';
  * @param status - The current status of the task
  * @param daysRemaining - The number of days remaining for the task
  */
-interface TimerRingProps {
+export interface TimerRingProps {
   size: number;
   radius: number;
   circumference: number;
@@ -155,4 +155,4 @@ export default memo(TimerRing, (prevProps, nextProps) => {
         typeof nextProps.strokeDashoffset === 'number' &&
         prevProps.strokeDashoffset === nextProps.strokeDashoffset))
   );
-}); 
+});
