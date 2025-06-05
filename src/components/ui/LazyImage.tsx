@@ -45,32 +45,38 @@ export const LazyImage = memo(function LazyImage({
     onError?.(e);
   };
 
-  // Create a proper placeholder as ReactNode
-  const defaultPlaceholder = (
-    <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
-      <div className="h-4 w-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-    </div>
-  );
+  // Create a default loading placeholder as a simple string for OptimizedImage
+  const defaultPlaceholderText = 'Loading...';
 
   // Use OptimizedImage for better performance
   return (
-    <OptimizedImage
-      src={src}
-      alt={alt}
-      width={width}
-      height={height}
-      sizes={sizes}
-      className={className}
-      priority={priority}
-      onLoad={handleImageLoad}
-      onError={handleImageError}
-      placeholder={!imageLoaded && !imageError ? (
-        placeholder ? (
-          <div className="absolute inset-0">{placeholder}</div>
-        ) : (
-          defaultPlaceholder
-        )
-      ) : undefined}
-    />
+    <div className={cn('relative', className)}>
+      {!imageLoaded && !imageError && (
+        <div className="absolute inset-0">
+          {placeholder || (
+            <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
+              <div className="h-4 w-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+            </div>
+          )}
+        </div>
+      )}
+      
+      {imageError && errorFallback && (
+        <div className="absolute inset-0">{errorFallback}</div>
+      )}
+
+      <OptimizedImage
+        src={src}
+        alt={alt}
+        width={width}
+        height={height}
+        sizes={sizes}
+        className="w-full h-full object-cover"
+        priority={priority}
+        onLoad={handleImageLoad}
+        onError={handleImageError}
+        placeholder={defaultPlaceholderText}
+      />
+    </div>
   );
 });
