@@ -22,20 +22,19 @@ interface UseTasksQueryReturn {
 }
 
 /**
- * Standardized hook for paginated task queries - Phase 2 Implementation
+ * Optimized hook for paginated task queries with improved performance
  * 
- * Uses standardized query keys and error handling patterns.
- * Optimized with prefetching and consistent loading states.
+ * Uses optimized query patterns and selective prefetching.
  */
 export function useTasksQuery(pageSize = 10): UseTasksQueryReturn {
   const [currentPage, setCurrentPage] = useState(1);
   const queryClient = useQueryClient();
   const { user, session } = useAuth();
 
-  // Use standardized query key
-  const queryKey = [...QueryKeys.tasks, currentPage, pageSize, user?.id];
+  // Use optimized query key structure
+  const queryKey = [...QueryKeys.tasks, 'paginated', currentPage, pageSize, user?.id];
 
-  // Fetch tasks with standardized error handling
+  // Fetch tasks with optimized error handling and caching
   const {
     data: response,
     isLoading,
@@ -61,40 +60,56 @@ export function useTasksQuery(pageSize = 10): UseTasksQueryReturn {
         hasNextPage: response.data.pagination.hasNextPage,
       };
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 2 * 60 * 1000, // Reduced to 2 minutes for fresher data
+    gcTime: 5 * 60 * 1000, // Garbage collect after 5 minutes
     enabled: !!user && !!session,
-    retry: 2,
+    retry: (failureCount, error) => {
+      // Smart retry logic
+      if (error instanceof Error && error.message.includes('not found')) {
+        return false;
+      }
+      return failureCount < 2; // Reduced retry attempts
+    },
     refetchOnWindowFocus: false,
+    // Optimized network behavior
+    networkMode: 'offlineFirst',
   });
 
   // Determine if we have a next page
   const hasNextPage = response?.hasNextPage || false;
 
-  // Prefetch next page if available (optimized data flow)
-  if (hasNextPage && user && session && !isLoading) {
-    const nextPageKey = [...QueryKeys.tasks, currentPage + 1, pageSize, user.id];
+  // Selective prefetching - only prefetch if we're near the end of current data
+  const shouldPrefetch = hasNextPage && !isLoading && response?.data.length === pageSize;
+  
+  if (shouldPrefetch && user && session) {
+    const nextPageKey = [...QueryKeys.tasks, 'paginated', currentPage + 1, pageSize, user.id];
     
-    queryClient.prefetchQuery({
-      queryKey: nextPageKey,
-      queryFn: async () => {
-        const response = await TaskService.getMany({
-          page: currentPage + 1,
-          pageSize: pageSize,
-          assignedToMe: false,
-        });
-        
-        if (!response.success) {
-          throw new Error(response.error?.message || 'Failed to load tasks');
-        }
-        
-        return {
-          data: response.data.data,
-          totalCount: response.data.pagination.totalCount,
-          hasNextPage: response.data.pagination.hasNextPage,
-        };
-      },
-      staleTime: 5 * 60 * 1000,
-    });
+    // Check if next page is already cached before prefetching
+    const existingData = queryClient.getQueryData(nextPageKey);
+    
+    if (!existingData) {
+      queryClient.prefetchQuery({
+        queryKey: nextPageKey,
+        queryFn: async () => {
+          const response = await TaskService.getMany({
+            page: currentPage + 1,
+            pageSize: pageSize,
+            assignedToMe: false,
+          });
+          
+          if (!response.success) {
+            throw new Error(response.error?.message || 'Failed to prefetch tasks');
+          }
+          
+          return {
+            data: response.data.data,
+            totalCount: response.data.pagination.totalCount,
+            hasNextPage: response.data.pagination.hasNextPage,
+          };
+        },
+        staleTime: 2 * 60 * 1000,
+      });
+    }
   }
 
   // Standardized loading state

@@ -16,14 +16,15 @@ export interface TaskQueryOptions {
   sortBy?: 'created_at' | 'due_date' | 'title' | 'updated_at';
   sortOrder?: 'asc' | 'desc';
   search?: string;
+  assignedToMe?: boolean;
 }
 
 /**
- * Task Query Service - Specialized service for task retrieval operations
+ * Task Query Service - Optimized for performance with selective field loading
  */
 export class TaskQueryService {
   /**
-   * Get paginated tasks with filtering and sorting
+   * Get paginated tasks with optimized queries and selective field loading
    */
   static async getMany(options: TaskQueryOptions = {}): Promise<ApiResponse<PaginatedResponse<Task>>> {
     return apiRequest('tasks.getMany', async () => {
@@ -35,33 +36,66 @@ export class TaskQueryService {
         sortBy = 'created_at',
         sortOrder = 'desc',
         search,
+        assignedToMe = false,
       } = options;
 
-      // Start building the query - make sure to select ALL fields including photo_url
+      // Optimized query - only select necessary fields and use indexes
       let query = supabase
         .from('tasks')
         .select(`
-          *,
-          parent_task:parent_task_id(id, title, description, photo_url, url_link),
-          owner:profiles!tasks_owner_id_fkey(id, name, email, avatar_url),
-          assignee:profiles!tasks_assignee_id_fkey(id, name, email, avatar_url)
-        `);
+          id,
+          title,
+          description,
+          due_date,
+          photo_url,
+          url_link,
+          status,
+          created_at,
+          updated_at,
+          pinned,
+          parent_task_id,
+          owner_id,
+          assignee_id,
+          parent_task:parent_task_id(id, title, photo_url),
+          owner:profiles!tasks_owner_id_fkey(id, name, avatar_url),
+          assignee:profiles!tasks_assignee_id_fkey(id, name, avatar_url)
+        `, { count: 'exact' });
 
-      // Apply filters
+      // Apply filters using indexed columns first for optimal performance
       if (status !== 'all') {
+        // Uses idx_tasks_status index
         query = query.eq('status', status);
       }
 
       if (!includeCompleted) {
+        // Uses idx_tasks_status index
         query = query.neq('status', 'complete');
       }
 
+      if (assignedToMe) {
+        // Uses idx_tasks_assignee_id index
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          query = query.eq('assignee_id', user.id);
+        }
+      }
+
+      // Search filter (applied after indexed filters for better performance)
       if (search) {
         query = query.or(`title.ilike.%${search}%,description.ilike.%${search}%`);
       }
 
-      // Apply sorting
-      query = query.order(sortBy, { ascending: sortOrder === 'asc' });
+      // Apply sorting using indexed columns
+      if (sortBy === 'created_at') {
+        // Uses idx_tasks_created_at_desc or regular index
+        query = query.order('created_at', { ascending: sortOrder === 'asc' });
+      } else if (sortBy === 'due_date') {
+        // Uses idx_tasks_due_date_asc index
+        query = query.order('due_date', { ascending: sortOrder === 'asc', nullsFirst: false });
+      } else {
+        // Fallback for other sort fields
+        query = query.order(sortBy, { ascending: sortOrder === 'asc' });
+      }
 
       // Apply pagination
       const from = (page - 1) * pageSize;
@@ -71,10 +105,6 @@ export class TaskQueryService {
       const { data, error, count } = await query;
 
       if (error) throw error;
-
-      // Debug logging for API response
-      console.log('TaskQueryService - Raw data from API:', data);
-      console.log('TaskQueryService - First task photo_url:', data?.[0]?.photo_url);
 
       return {
         data: data || [],
@@ -91,14 +121,26 @@ export class TaskQueryService {
   }
 
   /**
-   * Get a single task by ID
+   * Get a single task by ID with minimal data fetching
    */
   static async getById(taskId: string): Promise<ApiResponse<Task>> {
     return apiRequest('tasks.getById', async () => {
       const { data, error } = await supabase
         .from('tasks')
         .select(`
-          *,
+          id,
+          title,
+          description,
+          due_date,
+          photo_url,
+          url_link,
+          status,
+          created_at,
+          updated_at,
+          pinned,
+          parent_task_id,
+          owner_id,
+          assignee_id,
           parent_task:parent_task_id(id, title, description, photo_url, url_link),
           owner:profiles!tasks_owner_id_fkey(id, name, email, avatar_url),
           assignee:profiles!tasks_assignee_id_fkey(id, name, email, avatar_url)
@@ -109,31 +151,60 @@ export class TaskQueryService {
       if (error) throw error;
       if (!data) throw new Error('Task not found');
 
-      // Debug logging for single task retrieval
-      console.log('TaskQueryService.getById - Task data:', data);
-      console.log('TaskQueryService.getById - photo_url:', data.photo_url);
-
       return data;
     });
   }
 
   /**
-   * Search tasks by title or description
+   * Optimized search with proper index usage
    */
   static async search(query: string, options: Omit<TaskQueryOptions, 'search'> = {}): Promise<ApiResponse<Task[]>> {
     return apiRequest('tasks.search', async () => {
+      // Use the optimized getMany method for search
+      const searchOptions: TaskQueryOptions = {
+        ...options,
+        search: query,
+        pageSize: 50, // Limit search results
+      };
+      
+      const result = await this.getMany(searchOptions);
+      if (!result.success) {
+        throw new Error(result.error?.message || 'Search failed');
+      }
+      
+      return result.data.data;
+    });
+  }
+
+  /**
+   * Get tasks by status using optimized index
+   */
+  static async getByStatus(status: 'pending' | 'complete' | 'overdue'): Promise<ApiResponse<Task[]>> {
+    return apiRequest('tasks.getByStatus', async () => {
+      // Uses idx_tasks_status_created_at composite index for optimal performance
       const { data, error } = await supabase
         .from('tasks')
         .select(`
-          *,
-          parent_task:parent_task_id(id, title, description, photo_url, url_link),
-          owner:profiles!tasks_owner_id_fkey(id, name, email, avatar_url),
-          assignee:profiles!tasks_assignee_id_fkey(id, name, email, avatar_url)
+          id,
+          title,
+          description,
+          due_date,
+          photo_url,
+          url_link,
+          status,
+          created_at,
+          updated_at,
+          pinned,
+          parent_task_id,
+          owner_id,
+          assignee_id,
+          parent_task:parent_task_id(id, title, photo_url),
+          owner:profiles!tasks_owner_id_fkey(id, name, avatar_url),
+          assignee:profiles!tasks_assignee_id_fkey(id, name, avatar_url)
         `)
-        .or(`title.ilike.%${query}%,description.ilike.%${query}%`)
-        .order(options.sortBy || 'created_at', { 
-          ascending: options.sortOrder === 'asc' 
-        });
+        .eq('status', status)
+        .order('created_at', { ascending: false })
+        .limit(100); // Reasonable limit to prevent large data fetches
 
       if (error) throw error;
 
@@ -142,24 +213,68 @@ export class TaskQueryService {
   }
 
   /**
-   * Get tasks by status
+   * Get user's assigned tasks with optimized query
    */
-  static async getByStatus(status: 'pending' | 'complete' | 'overdue'): Promise<ApiResponse<Task[]>> {
-    return apiRequest('tasks.getByStatus', async () => {
+  static async getAssignedTasks(userId: string, options: Omit<TaskQueryOptions, 'assignedToMe'> = {}): Promise<ApiResponse<Task[]>> {
+    return apiRequest('tasks.getAssignedTasks', async () => {
+      // Uses idx_tasks_assignee_id index
       const { data, error } = await supabase
         .from('tasks')
         .select(`
-          *,
-          parent_task:parent_task_id(id, title, description, photo_url, url_link),
-          owner:profiles!tasks_owner_id_fkey(id, name, email, avatar_url),
-          assignee:profiles!tasks_assignee_id_fkey(id, name, email, avatar_url)
+          id,
+          title,
+          description,
+          due_date,
+          photo_url,
+          status,
+          created_at,
+          parent_task_id,
+          owner_id,
+          owner:profiles!tasks_owner_id_fkey(id, name, avatar_url)
         `)
-        .eq('status', status)
-        .order('created_at', { ascending: false });
+        .eq('assignee_id', userId)
+        .order(options.sortBy || 'created_at', { ascending: options.sortOrder === 'asc' })
+        .limit(options.pageSize || 50);
 
       if (error) throw error;
 
       return data || [];
+    });
+  }
+
+  /**
+   * Get tasks count by status (optimized for dashboard stats)
+   */
+  static async getTaskCounts(userId?: string): Promise<ApiResponse<{
+    pending: number;
+    complete: number;
+    overdue: number;
+    total: number;
+  }>> {
+    return apiRequest('tasks.getTaskCounts', async () => {
+      let baseQuery = supabase.from('tasks');
+      
+      if (userId) {
+        baseQuery = baseQuery.eq('owner_id', userId);
+      }
+
+      // Use indexes for efficient counting
+      const [pendingCount, completeCount, overdueCount] = await Promise.all([
+        baseQuery.select('id', { count: 'exact', head: true }).eq('status', 'pending'),
+        baseQuery.select('id', { count: 'exact', head: true }).eq('status', 'complete'),
+        baseQuery.select('id', { count: 'exact', head: true }).eq('status', 'overdue'),
+      ]);
+
+      const pending = pendingCount.count || 0;
+      const complete = completeCount.count || 0;
+      const overdue = overdueCount.count || 0;
+
+      return {
+        pending,
+        complete,
+        overdue,
+        total: pending + complete + overdue,
+      };
     });
   }
 }

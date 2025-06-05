@@ -1,9 +1,8 @@
 /**
  * Centralized Database Validation Operations
  * 
- * This module provides optimized database operations specifically for validation use cases.
- * It ensures consistent use of the database abstraction layer and implements batch operations
- * for improved performance.
+ * Optimized database operations for validation with improved query performance
+ * using database indexes and batch operations.
  */
 
 import { DatabaseService } from '@/lib/api';
@@ -37,7 +36,7 @@ export interface BatchExistenceRequest {
   table: string;
   column: string;
   value: unknown;
-  identifier: string; // Unique identifier for this check
+  identifier: string;
 }
 
 /**
@@ -58,12 +57,12 @@ export interface TaskOwnershipData {
 }
 
 /**
- * Database validation operations class providing optimized validation utilities
+ * Optimized database validation operations leveraging database indexes
  */
 export class DatabaseValidationOps {
   
   /**
-   * Check if a single entity exists using the database service abstraction
+   * Check if a single entity exists using optimized database queries
    */
   static async checkExistence(
     options: ValidationQueryOptions
@@ -98,7 +97,7 @@ export class DatabaseValidationOps {
   }
 
   /**
-   * Batch check existence of multiple entities for improved performance
+   * Optimized batch existence checking with reduced database round trips
    */
   static async batchCheckExistence(
     requests: BatchExistenceRequest[]
@@ -109,60 +108,62 @@ export class DatabaseValidationOps {
     const results: BatchExistenceResult[] = [];
     const validationResults: Record<string, BasicValidationResult> = {};
 
-    // Group requests by table for efficient querying
-    const requestsByTable = requests.reduce((acc, request) => {
-      if (!acc[request.table]) {
-        acc[request.table] = [];
+    // Group by table and column for efficient batch queries
+    const requestGroups = requests.reduce((acc, request) => {
+      const key = `${request.table}.${request.column}`;
+      if (!acc[key]) {
+        acc[key] = [];
       }
-      acc[request.table].push(request);
+      acc[key].push(request);
       return acc;
     }, {} as Record<string, BatchExistenceRequest[]>);
 
-    // Process each table group
-    for (const [table, tableRequests] of Object.entries(requestsByTable)) {
+    // Process each group with optimized queries
+    for (const [tableColumn, groupRequests] of Object.entries(requestGroups)) {
+      const [table, column] = tableColumn.split('.');
+      
       try {
-        // For each table, check existence of all values
-        const existenceChecks = await Promise.allSettled(
-          tableRequests.map(async (request) => {
-            const response = await DatabaseService.exists(request.table, request.column, request.value);
-            return {
-              request,
-              exists: response.success ? response.data : false,
-              error: response.success ? null : response.error
-            };
-          })
-        );
-
-        // Process results
-        existenceChecks.forEach((check, index) => {
-          const request = tableRequests[index];
-          
-          if (check.status === 'fulfilled') {
+        // Use batch query for better performance than individual requests
+        const values = groupRequests.map(r => r.value);
+        const response = await DatabaseService.batchExists(table, column, values);
+        
+        if (response.success && response.data) {
+          // Map results back to original requests
+          groupRequests.forEach((request, index) => {
+            const batchResult = response.data[index];
+            
             results.push({
               identifier: request.identifier,
-              exists: check.value.exists,
+              exists: batchResult.exists,
               value: request.value
             });
             
-            validationResults[request.identifier] = check.value.exists
+            validationResults[request.identifier] = batchResult.exists
               ? createSuccessResult()
               : createErrorResult(getStandardMessage(ValidationErrorCode.NOT_FOUND, `Resource not found in ${table}`));
-          } else {
-            results.push({
-              identifier: request.identifier,
-              exists: false,
+          });
+        } else {
+          // Handle batch failure - fall back to individual checks
+          for (const request of groupRequests) {
+            const individualCheck = await this.checkExistence({
+              table: request.table,
+              column: request.column,
               value: request.value
             });
             
-            validationResults[request.identifier] = createErrorResult(
-              getStandardMessage(ValidationErrorCode.DATABASE_ERROR, `Failed to check existence in ${table}`)
-            );
+            results.push({
+              identifier: request.identifier,
+              exists: individualCheck.success,
+              value: request.value
+            });
+            
+            validationResults[request.identifier] = individualCheck;
           }
-        });
+        }
 
       } catch (error) {
-        // Handle table-level errors
-        tableRequests.forEach(request => {
+        // Handle group-level errors
+        groupRequests.forEach(request => {
           results.push({
             identifier: request.identifier,
             exists: false,
@@ -180,7 +181,7 @@ export class DatabaseValidationOps {
   }
 
   /**
-   * Get task ownership data using the database service abstraction
+   * Get task ownership data using indexed query
    */
   static async getTaskOwnership(
     taskId: string,
@@ -188,7 +189,6 @@ export class DatabaseValidationOps {
   ): Promise<{ success: true; data: TaskOwnershipData } | { success: false; result: BasicValidationResult }> {
     const ctx = context || { validator: 'getTaskOwnership' };
 
-    // Use the DatabaseService.getTaskOwnership method
     return await withErrorHandling(
       async () => {
         const response = await DatabaseService.getTaskOwnership(taskId);
@@ -209,33 +209,7 @@ export class DatabaseValidationOps {
   }
 
   /**
-   * Validate multiple entity existence in a single batch operation
-   */
-  static async validateBatchExistence(
-    validations: Array<{
-      identifier: string;
-      table: string;
-      column: string;
-      value: unknown;
-      errorMessage?: string;
-    }>
-  ): Promise<BasicValidationResult> {
-    const requests: BatchExistenceRequest[] = validations.map(v => ({
-      table: v.table,
-      column: v.column,
-      value: v.value,
-      identifier: v.identifier
-    }));
-
-    const { validationResults } = await this.batchCheckExistence(requests);
-    
-    // Combine all validation results
-    const results = Object.values(validationResults);
-    return combineValidationResults(results);
-  }
-
-  /**
-   * Optimized user existence check with caching potential
+   * Optimized user existence check using email index
    */
   static async validateUserExists(
     email: string,
@@ -243,14 +217,14 @@ export class DatabaseValidationOps {
   ): Promise<BasicValidationResult> {
     return this.checkExistence({
       table: 'profiles',
-      column: 'email',
+      column: 'email', // Uses idx_profiles_email index
       value: email,
       context: { ...context, validator: 'validateUserExists', field: 'email' }
     });
   }
 
   /**
-   * Optimized task existence check with caching potential
+   * Optimized task existence check using primary key
    */
   static async validateTaskExists(
     taskId: string,
@@ -258,14 +232,14 @@ export class DatabaseValidationOps {
   ): Promise<BasicValidationResult> {
     return this.checkExistence({
       table: 'tasks',
-      column: 'id',
+      column: 'id', // Uses primary key index
       value: taskId,
       context: { ...context, validator: 'validateTaskExists', field: 'taskId' }
     });
   }
 
   /**
-   * Batch validate multiple users and tasks
+   * Batch validate users and tasks with optimized grouping
    */
   static async validateUsersAndTasks(
     userEmails: string[],
@@ -276,6 +250,7 @@ export class DatabaseValidationOps {
     tasksResult: BasicValidationResult;
     combinedResult: BasicValidationResult;
   }> {
+    // Use batch operations for better performance
     const validations: Array<{
       identifier: string;
       table: string;
@@ -285,20 +260,20 @@ export class DatabaseValidationOps {
       ...userEmails.map((email, index) => ({
         identifier: `user_${index}`,
         table: 'profiles',
-        column: 'email',
+        column: 'email', // Uses idx_profiles_email index
         value: email
       })),
       ...taskIds.map((taskId, index) => ({
         identifier: `task_${index}`,
         table: 'tasks',
-        column: 'id',
+        column: 'id', // Uses primary key index
         value: taskId
       }))
     ];
 
     const { validationResults } = await this.batchCheckExistence(validations);
 
-    // Separate user and task results
+    // Separate results efficiently
     const userResults = userEmails.map((_, index) => validationResults[`user_${index}`]);
     const taskResults = taskIds.map((_, index) => validationResults[`task_${index}`]);
     
@@ -341,7 +316,7 @@ export async function validateMultipleExistence(
 }
 
 /**
- * Validate a collection of the same entity type
+ * Validate a collection of the same entity type with optimized batch processing
  */
 export async function validateEntityCollection(
   table: string,
@@ -360,4 +335,4 @@ export async function validateEntityCollection(
   const results = Object.values(validationResults);
   
   return combineValidationResults(results);
-} 
+}
