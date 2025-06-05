@@ -1,9 +1,25 @@
-import TaskList from './TaskList';
+
+import { Suspense, memo } from 'react';
 import TaskDashboardHeader from './TaskDashboardHeader';
 import { TaskProviders } from '@/features/tasks/providers/TaskProviders';
 import { TaskErrorBoundary } from './TaskErrorBoundary';
+import { TaskPageLoader } from './TaskLoadingStates';
 
-export default function TaskDashboard() {
+// Lazy load the enhanced task list for better initial load performance
+const EnhancedTaskList = memo(() => 
+  import('./EnhancedTaskList').then(module => ({ default: module.default }))
+);
+
+/**
+ * Task Dashboard - Phase 4 Enhanced
+ * 
+ * Features:
+ * - Lazy loading for better performance
+ * - Enhanced error boundaries
+ * - Optimized provider structure
+ * - Better accessibility
+ */
+function TaskDashboard() {
   return (
     <TaskProviders>
       <TaskErrorBoundary>
@@ -11,9 +27,13 @@ export default function TaskDashboard() {
           <div className="mx-auto max-w-3xl px-2 py-6 sm:px-4">
             <TaskDashboardHeader />
 
-            {/* Main Content Section */}
-            <main className="task-dashboard-main">
-              <TaskList />
+            {/* Main Content Section with Suspense */}
+            <main className="task-dashboard-main" role="main">
+              <Suspense fallback={
+                <TaskPageLoader message="Loading enhanced task interface..." />
+              }>
+                <EnhancedTaskList />
+              </Suspense>
             </main>
           </div>
         </div>
@@ -21,3 +41,6 @@ export default function TaskDashboard() {
     </TaskProviders>
   );
 }
+
+TaskDashboard.displayName = 'TaskDashboard';
+export default memo(TaskDashboard);
