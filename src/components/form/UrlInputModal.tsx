@@ -76,13 +76,17 @@ export function UrlInputModal({
   };
 
   const getBorderColor = () => {
-    if (isValid) return 'border-blue-500';
+    if (isValid) return 'border-green-500';
     if (!tempValue.trim()) return 'border-border/40';
     return 'border-border/60';
   };
 
   const getTextColor = () => {
-    return isValid ? 'text-blue-500' : 'text-foreground';
+    return isValid ? 'text-green-500' : 'text-foreground';
+  };
+
+  const getIconColor = () => {
+    return isValid ? 'text-green-500' : 'text-muted-foreground';
   };
 
   return (
@@ -97,7 +101,7 @@ export function UrlInputModal({
                 getBorderColor()
               )}
             >
-              <Link className="h-4 w-4 text-muted-foreground ml-1" />
+              <Link className={cn('h-4 w-4 ml-1', getIconColor())} />
 
               <div className="flex-1 min-w-0 ml-3 flex items-center">
                 <Input
@@ -126,7 +130,7 @@ export function UrlInputModal({
                 <ArrowRight 
                   className={cn(
                     "h-4 w-4 transition-colors",
-                    isValid ? "text-blue-500" : "text-muted-foreground"
+                    isValid ? "text-green-500" : "text-muted-foreground"
                   )} 
                 />
               </Button>
