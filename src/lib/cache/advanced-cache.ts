@@ -1,4 +1,6 @@
 
+import { useState, useEffect } from 'react';
+
 /**
  * Advanced Caching System - Phase 4 Implementation
  * 
@@ -187,13 +189,14 @@ export function useCachedData<T>(
   fetchFn: () => Promise<T>, 
   ttl?: number
 ) {
-  const [data, setData] = React.useState<T | undefined>(globalCache.get(key));
-  const [loading, setLoading] = React.useState(!data);
-  const [error, setError] = React.useState<Error | null>(null);
+  const [data, setData] = useState<T | undefined>(globalCache.get(key));
+  const [loading, setLoading] = useState(!data);
+  const [error, setError] = useState<Error | null>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (globalCache.has(key)) {
-      setData(globalCache.get(key));
+      const cachedData = globalCache.get(key);
+      setData(cachedData);
       setLoading(false);
       return;
     }

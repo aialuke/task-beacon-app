@@ -36,42 +36,44 @@ export function useMemoryManagement(options: MemoryManagementOptions = {}) {
   }, []);
 
   // Memory-efficient cache management
-  const managedCache = useCallback({
-    set: (key: any, value: any) => {
-      if (enableWeakMapCache && cacheRef.current instanceof WeakMap) {
-        cacheRef.current.set(key, value);
-      } else if (cacheRef.current instanceof Map) {
-        // Cleanup old entries if cache is too large
-        if (cacheRef.current.size >= maxCacheSize) {
-          const entries = Array.from(cacheRef.current.entries());
-          cacheRef.current.clear();
-          // Keep most recent half
-          entries.slice(-Math.floor(maxCacheSize / 2)).forEach(([k, v]) => {
-            (cacheRef.current as Map<any, any>).set(k, v);
-          });
+  const managedCache = useCallback(() => {
+    return {
+      set: (key: any, value: any) => {
+        if (enableWeakMapCache && cacheRef.current instanceof WeakMap) {
+          cacheRef.current.set(key, value);
+        } else if (cacheRef.current instanceof Map) {
+          // Cleanup old entries if cache is too large
+          if (cacheRef.current.size >= maxCacheSize) {
+            const entries = Array.from(cacheRef.current.entries());
+            cacheRef.current.clear();
+            // Keep most recent half
+            entries.slice(-Math.floor(maxCacheSize / 2)).forEach(([k, v]) => {
+              (cacheRef.current as Map<any, any>).set(k, v);
+            });
+          }
+          cacheRef.current.set(key, value);
         }
-        cacheRef.current.set(key, value);
-      }
-    },
-    
-    get: (key: any) => {
-      return cacheRef.current.get(key);
-    },
-    
-    has: (key: any) => {
-      return cacheRef.current.has(key);
-    },
-    
-    delete: (key: any) => {
-      return cacheRef.current.delete(key);
-    },
-    
-    clear: () => {
-      if (cacheRef.current instanceof Map) {
-        cacheRef.current.clear();
-      }
-      // WeakMap doesn't have clear method
-    },
+      },
+      
+      get: (key: any) => {
+        return cacheRef.current.get(key);
+      },
+      
+      has: (key: any) => {
+        return cacheRef.current.has(key);
+      },
+      
+      delete: (key: any) => {
+        return cacheRef.current.delete(key);
+      },
+      
+      clear: () => {
+        if (cacheRef.current instanceof Map) {
+          cacheRef.current.clear();
+        }
+        // WeakMap doesn't have clear method
+      },
+    };
   }, [enableWeakMapCache, maxCacheSize]);
 
   // Periodic cleanup
@@ -90,7 +92,7 @@ export function useMemoryManagement(options: MemoryManagementOptions = {}) {
       if (!enableWeakMapCache && cacheRef.current instanceof Map) {
         const cacheSize = cacheRef.current.size;
         if (cacheSize > maxCacheSize * 0.8) {
-          managedCache.clear();
+          managedCache().clear();
         }
       }
     }, cleanupInterval);
@@ -128,6 +130,6 @@ export function useMemoryManagement(options: MemoryManagementOptions = {}) {
 
   return {
     registerCleanup,
-    cache: managedCache,
+    cache: managedCache(),
   };
 }
