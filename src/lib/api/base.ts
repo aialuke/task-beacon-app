@@ -1,9 +1,12 @@
 
 /**
- * Base API Configuration - Cleaned Up
+ * Base API Configuration - Optimized Clean Interface
  * 
  * Focused API utilities without legacy dependencies.
  */
+
+// === SUPABASE CLIENT ===
+export { supabase } from '@/integrations/supabase/client';
 
 // === CORE SERVICES ===
 export { AuthService } from './auth.service';
@@ -14,6 +17,3 @@ export * from './users.service';
 
 // === ERROR HANDLING UTILITIES ===
 export { formatApiError, apiRequest } from './error-handling';
-
-// === SUPABASE CLIENT ===
-export { supabase } from '@/integrations/supabase/client';

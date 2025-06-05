@@ -1,11 +1,19 @@
+
+// External libraries
 import React from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
+
+// Internal utilities
+import { queryClient } from '@/lib/query-client';
+
+// Components
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { LoadingSpinner } from '@/components/ui/layout';
+
+// Contexts
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
-import { queryClient } from '@/lib/query-client';
 
 interface ErrorBoundaryState {
   hasError: boolean;
@@ -92,4 +100,4 @@ export function AppProviders({ children }: AppProvidersProps) {
       </ThemeProvider>
     </AppErrorBoundary>
   );
-} 
+}

@@ -1,8 +1,15 @@
 
+// External libraries
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { TaskService } from '@/lib/api/tasks/task.service';
-import { useTaskOptimisticUpdates } from './useTaskOptimisticUpdates';
+
+// Internal utilities
 import { showSuccessMessage, showErrorMessage } from '@/lib/utils/notification';
+
+// API Services
+import { TaskService } from '@/lib/api/tasks/task.service';
+
+// Hooks
+import { useTaskOptimisticUpdates } from './useTaskOptimisticUpdates';
 
 /**
  * Custom hook for task deletion mutations

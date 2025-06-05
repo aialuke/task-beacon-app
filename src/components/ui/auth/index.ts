@@ -1,3 +1,4 @@
+
 // Main auth form
 export { default as ModernAuthForm } from './ModernAuthForm';
 

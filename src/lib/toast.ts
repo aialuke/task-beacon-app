@@ -1,2 +1,3 @@
-// src/lib/toast.ts
+
+// Re-export Sonner toast
 export { toast } from 'sonner';

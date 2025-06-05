@@ -1,6 +1,6 @@
 
 /**
- * Shared Utility Module - Updated
+ * Shared Utility Module - Optimized Imports
  * 
  * This module consolidates commonly used utility functions from across the codebase
  * to eliminate duplication and provide a single source of truth for shared logic.
@@ -51,7 +51,7 @@ export {
   isDarkMode,
 } from './ui';
 
-// Re-export consolidated validation functions (excluding conflicting URL validation)
+// Re-export validation functions
 export {
   isValidEmail,
   isValidPassword,

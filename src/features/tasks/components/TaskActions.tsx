@@ -1,10 +1,11 @@
 
+// External libraries
 import { useCallback, memo, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import type { Task } from '@/types';
 import { useNavigate } from 'react-router-dom';
-import { useTaskMutations } from '@/features/tasks/hooks/useTaskMutations';
 import { Trash2 } from 'lucide-react';
+
+// Components
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -14,6 +15,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+
+// Hooks
+import { useTaskMutations } from '@/features/tasks/hooks/useTaskMutations';
+
+// Types
+import type { Task } from '@/types';
 
 interface TaskActionsProps {
   task: Task;

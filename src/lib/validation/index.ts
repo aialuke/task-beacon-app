@@ -1,6 +1,6 @@
 
 /**
- * Centralized validation module
+ * Centralized validation module - Optimized Exports
  * 
  * Provides comprehensive validation utilities for the application.
  * Includes synchronous format validators, async database validators,
@@ -46,7 +46,7 @@ export {
   validateProfileData,
 } from './entity-validators';
 
-// === RE-EXPORT COMMONLY USED COMBINATIONS ===
+// === RE-EXPORT COMMONLY USED TYPES ===
 export type {
   BasicValidationResult as ValidationResult,
   StandardValidationResult as DetailedValidationResult,

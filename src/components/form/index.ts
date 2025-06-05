@@ -15,7 +15,7 @@ export { UserSearchModal } from './UserSearchModal';
 // User input components
 export { AutocompleteUserInput } from './AutocompleteUserInput';
 
-// Simple photo upload components
+// Photo upload components
 export { SimplePhotoUpload } from './SimplePhotoUpload';
 export { SimplePhotoUploadModal } from './SimplePhotoUploadModal';
 

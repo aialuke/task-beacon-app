@@ -1,12 +1,18 @@
 
 /**
- * API Layer - Clean, Standardized Interface
+ * API Layer - Optimized Clean Interface
  * 
  * Focused exports without legacy dependencies.
  */
 
 // === CORE API UTILITIES ===
-export { QueryKeys, apiCall, transformApiError, createSuccessResponse, createErrorResponse } from './standardized-api';
+export { 
+  QueryKeys, 
+  apiCall, 
+  transformApiError, 
+  createSuccessResponse, 
+  createErrorResponse 
+} from './standardized-api';
 
 // === TYPES ===
 export type {
