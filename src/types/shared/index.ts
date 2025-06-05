@@ -46,12 +46,9 @@ export type {
 // Import database types (keeping these in shared as they're foundational)
 export type {
   DatabaseOperation,
-  RealTimeEvent,
   TableRow,
   QueryFilter,
   QueryOptions,
-  RealtimeSubscription,
-  RealtimePayload,
   TransactionOptions,
   DatabaseConfig,
   ColumnDefinition,
