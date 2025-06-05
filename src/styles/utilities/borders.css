@@ -11,4 +11,17 @@
       )
       1;
   }
+
+  /* Force border color override when needed - useful for dynamic states */
+  .border-force-destructive {
+    border-color: hsl(var(--destructive)) !important;
+  }
+
+  .border-force-success {
+    border-color: hsl(var(--success)) !important;
+  }
+
+  .border-force-primary {
+    border-color: hsl(var(--primary)) !important;
+  }
 }

@@ -32,11 +32,12 @@ export function getTaskCardClasses(task: Task, isExpanded: boolean): string {
     'task-card', // Main consolidated class with all base styling
   ];
 
-  // Status-based classes (only add if different from default)
+  // Status-based classes - fix border conflicts by using consistent approach
   if (task.status === 'complete') {
     baseClasses.push('bg-muted');
   } else if (task.status === 'overdue') {
-    baseClasses.push('border-destructive', 'border-2');
+    // Remove conflicting border-2 class and use border-destructive instead
+    baseClasses.push('!border-destructive');
   }
 
   if (isExpanded) {
