@@ -1,27 +1,9 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { renderHook } from '@testing-library/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactNode } from 'react';
 import { useTaskOptimisticUpdates } from '../useTaskOptimisticUpdates';
+import { renderWithProviders } from '@/lib/testing/context-helpers';
 import type { Task } from '@/types';
-
-const createWrapper = () => {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: { retry: false, gcTime: 0 },
-      mutations: { retry: false },
-    },
-  });
-
-  return function TestWrapper({ children }: { children: ReactNode }) {
-    return (
-      <QueryClientProvider client={queryClient}>
-        {children}
-      </QueryClientProvider>
-    );
-  };
-};
 
 describe('useTaskOptimisticUpdates', () => {
   beforeEach(() => {
@@ -47,7 +29,7 @@ describe('useTaskOptimisticUpdates', () => {
 
   it('should provide optimistic update functions', () => {
     const { result } = renderHook(() => useTaskOptimisticUpdates(), {
-      wrapper: createWrapper(),
+      wrapper: ({ children }) => renderWithProviders(children, {}).container.firstChild as any,
     });
 
     expect(result.current.updateTaskOptimistically).toBeDefined();
@@ -62,7 +44,7 @@ describe('useTaskOptimisticUpdates', () => {
 
   it('should handle optimistic updates correctly', () => {
     const { result } = renderHook(() => useTaskOptimisticUpdates(), {
-      wrapper: createWrapper(),
+      wrapper: ({ children }) => renderWithProviders(children, {}).container.firstChild as any,
     });
 
     // Test that functions can be called without throwing

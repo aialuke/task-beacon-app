@@ -1,9 +1,8 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { renderHook } from '@testing-library/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactNode } from 'react';
 import { useTaskStatusMutations } from '../useTaskStatusMutations';
+import { renderWithProviders } from '@/lib/testing/context-helpers';
 import type { Task } from '@/types';
 
 // Mock the task service
@@ -21,23 +20,6 @@ vi.mock('@/lib/api/tasks/task.service', () => ({
     }),
   },
 }));
-
-const createWrapper = () => {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: { retry: false, gcTime: 0 },
-      mutations: { retry: false },
-    },
-  });
-
-  return function TestWrapper({ children }: { children: ReactNode }) {
-    return (
-      <QueryClientProvider client={queryClient}>
-        {children}
-      </QueryClientProvider>
-    );
-  };
-};
 
 describe('useTaskStatusMutations', () => {
   beforeEach(() => {
@@ -63,7 +45,7 @@ describe('useTaskStatusMutations', () => {
 
   it('should provide status mutation functions', () => {
     const { result } = renderHook(() => useTaskStatusMutations(), {
-      wrapper: createWrapper(),
+      wrapper: ({ children }) => renderWithProviders(children, {}).container.firstChild as any,
     });
 
     expect(result.current.markAsComplete).toBeDefined();
@@ -76,7 +58,7 @@ describe('useTaskStatusMutations', () => {
 
   it('should handle loading states correctly', () => {
     const { result } = renderHook(() => useTaskStatusMutations(), {
-      wrapper: createWrapper(),
+      wrapper: ({ children }) => renderWithProviders(children, {}).container.firstChild as any,
     });
 
     expect(result.current.isLoading).toBe(false);
