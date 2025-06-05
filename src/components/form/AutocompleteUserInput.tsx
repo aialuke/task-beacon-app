@@ -100,12 +100,14 @@ export function AutocompleteUserInput({
   const handleKeyDown = (e: React.KeyboardEvent) => {
     switch (e.key) {
       case 'Enter':
-        // Only accept suggestion if there's a valid ghostSuggestion AND ghost text
-        if (ghostSuggestion && ghostText) {
+        // First check: if there's a ghost suggestion and no user selected, select the user
+        if (ghostSuggestion && ghostText && !selectedUser) {
           e.preventDefault();
           e.stopPropagation(); // Prevent form submission
           handleAcceptSuggestion();
         }
+        // Second case: if user is already selected, allow form submission (don't prevent default)
+        // This allows the form to submit normally when user presses Enter after selection
         break;
       case 'Escape':
         setInputValue('');
@@ -141,7 +143,8 @@ export function AutocompleteUserInput({
     }
   };
 
-  const isFloating = isFocused || selectedUser || inputValue;
+  // Show placeholder only when field is empty and not focused
+  const showPlaceholder = !inputValue && !isFocused;
 
   // Facebook-style selected state - show user inline with subtle highlight
   if (selectedUser) {
@@ -234,7 +237,7 @@ export function AutocompleteUserInput({
             />
           </div>
 
-          {/* Arrow icon for confirmation - only blue when there's both a ghost suggestion AND ghost text */}
+          {/* Arrow icon for confirmation - only blue when user is selected */}
           <Button
             type="button"
             variant="ghost"
@@ -246,23 +249,20 @@ export function AutocompleteUserInput({
             <ArrowRight 
               className={cn(
                 "h-4 w-4 transition-colors",
-                (ghostSuggestion && ghostText) ? "text-primary" : "text-muted-foreground"
+                selectedUser ? "text-primary" : "text-muted-foreground"
               )} 
             />
           </Button>
         </div>
 
-        {/* Floating label */}
-        <label
-          className={cn(
-            'pointer-events-none absolute left-11 select-none font-medium transition-all duration-300',
-            isFloating
-              ? 'top-2 text-xs text-primary'
-              : 'top-1/2 -translate-y-1/2 text-sm text-muted-foreground'
-          )}
-        >
-          {placeholder}
-        </label>
+        {/* Simple placeholder - show/hide without animation */}
+        {showPlaceholder && (
+          <label
+            className="pointer-events-none absolute left-11 top-1/2 -translate-y-1/2 select-none text-sm text-muted-foreground"
+          >
+            {placeholder}
+          </label>
+        )}
 
         {/* Enhanced focus ring */}
         <div
