@@ -24,8 +24,8 @@ export function UserSearchModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="fixed top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 sm:max-w-md">
-        <div className="max-h-[60vh] overflow-visible">
+      <DialogContent className="fixed top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 sm:max-w-md max-h-[60vh] overflow-visible">
+        <div className="h-full">
           <EnhancedUserSearch 
             value={value} 
             onChange={handleUserSelect}
