@@ -1,85 +1,96 @@
 
-import { memo } from 'react';
-import { useTaskDataContext } from '@/features/tasks/context/TaskDataContext';
-import { useTaskFiltering } from '@/features/tasks/providers/TaskProviders';
-import TaskListCore from './optimized/TaskListCore';
+// === EXTERNAL LIBRARIES ===
+import { memo, useMemo } from 'react';
+
+// === INTERNAL UTILITIES ===
+import UnifiedLoadingStates from '@/components/ui/loading/UnifiedLoadingStates';
+
+// === COMPONENTS ===
+import TaskCard from './TaskCard';
 import TaskListFilters from './optimized/TaskListFilters';
 import TaskListPagination from './optimized/TaskListPagination';
-import { FabButton } from './FabButton';
-import { useTaskRenderCallbacks } from './optimized/TaskRenderCallbacks';
 
-/**
- * Task List Component - Phase 2 Optimized
- * 
- * Refactored to use smaller, focused components with React.memo optimization.
- * Reduces unnecessary re-renders and improves performance.
- */
-function TaskList() {
-  // Get data context for pagination functionality
-  const {
-    isLoading,
-    isFetching,
-    error,
-    hasNextPage,
-    hasPreviousPage,
-    goToNextPage,
-    goToPreviousPage,
-    currentPage,
-    totalCount,
-    pageSize,
+// === HOOKS ===
+import { useTaskDataContext } from '@/features/tasks/context/TaskDataContext';
+import { useTaskUIContext } from '@/features/tasks/context/TaskUIContext';
+import { useTasksFilter } from '@/features/tasks/hooks/useTasksFilter';
+
+// === TYPES ===
+import type { Task } from '@/types';
+
+function TaskListComponent() {
+  const { 
+    tasks, 
+    isLoading, 
+    error, 
+    currentPage, 
+    totalCount, 
+    pageSize, 
+    hasNextPage, 
+    hasPreviousPage, 
+    goToNextPage, 
+    goToPreviousPage, 
+    isFetching 
   } = useTaskDataContext();
+  
+  const { filter, isMobile } = useTaskUIContext();
+  
+  // Filter tasks based on current filter
+  const filteredTasks = useTasksFilter(tasks, filter);
+  
+  // Show pagination if there are multiple pages
+  const shouldShowPagination = useMemo(() => 
+    totalCount > pageSize, 
+    [totalCount, pageSize]
+  );
 
-  // Use the filtering hook for operations
-  const { tasks: filteredTasks, filter, setFilter } = useTaskFiltering();
+  if (isLoading) {
+    return <UnifiedLoadingStates variant="list" message="Loading tasks..." />;
+  }
 
-  // Get optimized render callbacks
-  const { renderTask, renderLoading, renderEmpty, renderError } = useTaskRenderCallbacks();
-
-  // Determine if pagination should be shown
-  const shouldShowPagination = filteredTasks.length > 0 || isLoading;
-
-  // Retry function for error state
-  const handleRetry = () => window.location.reload();
+  if (error) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <div className="text-center">
+          <p className="text-muted-foreground">Failed to load tasks</p>
+          <p className="text-sm text-muted-foreground">{error}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <main className="flex-1 space-y-8" role="main" aria-label="Task management interface">
-      {/* Filter Section */}
-      <TaskListFilters filter={filter} onFilterChange={setFilter} />
+    <div className="flex h-full flex-col">
+      <TaskListFilters filter={filter} onFilterChange={() => {}} />
+      
+      <div className="flex-1 overflow-y-auto">
+        {filteredTasks.length === 0 ? (
+          <div className="flex h-full items-center justify-center">
+            <p className="text-muted-foreground">No tasks found</p>
+          </div>
+        ) : (
+          <div className={`space-y-2 p-4 ${isMobile ? 'pb-20' : ''}`}>
+            {filteredTasks.map((task: Task) => (
+              <TaskCard key={task.id} task={task} />
+            ))}
+          </div>
+        )}
+      </div>
 
-      {/* Task List Section */}
-      <section className="w-full px-4 sm:px-6" aria-label="Tasks">
-        <TaskListCore
-          tasks={filteredTasks}
-          loading={isLoading}
-          error={error}
-          onRetry={handleRetry}
-          renderTask={renderTask}
-          renderLoading={renderLoading}
-          renderEmpty={renderEmpty}
-          renderError={renderError}
-          pageSize={pageSize}
-        />
-
-        {/* Pagination Controls */}
-        <TaskListPagination
-          currentPage={currentPage}
-          totalCount={totalCount}
-          pageSize={pageSize}
-          hasNextPage={hasNextPage}
-          hasPreviousPage={hasPreviousPage}
-          goToNextPage={goToNextPage}
-          goToPreviousPage={goToPreviousPage}
-          isFetching={isFetching}
-          isLoading={isLoading}
-          shouldShow={shouldShowPagination}
-        />
-      </section>
-
-      {/* Create Task FAB */}
-      <FabButton />
-    </main>
+      <TaskListPagination
+        currentPage={currentPage}
+        totalCount={totalCount}
+        pageSize={pageSize}
+        hasNextPage={hasNextPage}
+        hasPreviousPage={hasPreviousPage}
+        goToNextPage={goToNextPage}
+        goToPreviousPage={goToPreviousPage}
+        isFetching={isFetching}
+        isLoading={isLoading}
+        shouldShow={shouldShowPagination}
+      />
+    </div>
   );
 }
 
-TaskList.displayName = 'TaskList';
-export default memo(TaskList);
+export default memo(TaskListComponent);

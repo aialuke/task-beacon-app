@@ -1,47 +1,35 @@
 
 // === EXTERNAL LIBRARIES ===
-import { Suspense, memo, lazy } from 'react';
+import { Suspense } from 'react';
 
-// === INTERNAL COMPONENTS ===
-import TaskDashboardHeader from './TaskDashboardHeader';
-import { TaskProviders } from '@/features/tasks/providers/TaskProviders';
-import { TaskErrorBoundary } from './TaskErrorBoundary';
+// === INTERNAL UTILITIES ===
 import UnifiedLoadingStates from '@/components/ui/loading/UnifiedLoadingStates';
 
-// Correctly lazy load the enhanced task list
-const EnhancedTaskList = lazy(() => import('./EnhancedTaskList'));
+// === COMPONENTS ===
+import TaskDashboardHeader from './TaskDashboardHeader';
+import TaskList from './TaskList';
+import FabButton from './FabButton';
 
-/**
- * Task Dashboard - Phase 4 Enhanced
- * 
- * Features:
- * - Lazy loading for better performance
- * - Enhanced error boundaries
- * - Optimized provider structure
- * - Better accessibility
- */
-function TaskDashboard() {
+// === HOOKS ===
+import { useTaskUIContext } from '@/features/tasks/context/TaskUIContext';
+
+// === TYPES ===
+import type { Task } from '@/types';
+
+export default function TaskDashboard() {
+  const { isMobile } = useTaskUIContext();
+
   return (
-    <TaskProviders>
-      <TaskErrorBoundary>
-        <div className="min-h-screen bg-background">
-          <div className="mx-auto max-w-3xl px-2 py-6 sm:px-4">
-            <TaskDashboardHeader />
+    <div className="flex h-screen flex-col overflow-hidden bg-background">
+      <TaskDashboardHeader />
+      
+      <main className="flex-1 overflow-hidden">
+        <Suspense fallback={<UnifiedLoadingStates variant="list" message="Loading tasks..." />}>
+          <TaskList />
+        </Suspense>
+      </main>
 
-            {/* Main Content Section with Suspense */}
-            <main className="task-dashboard-main" role="main">
-              <Suspense fallback={
-                <UnifiedLoadingStates variant="page" message="Loading enhanced task interface..." />
-              }>
-                <EnhancedTaskList />
-              </Suspense>
-            </main>
-          </div>
-        </div>
-      </TaskErrorBoundary>
-    </TaskProviders>
+      {isMobile && <FabButton />}
+    </div>
   );
 }
-
-TaskDashboard.displayName = 'TaskDashboard';
-export default memo(TaskDashboard);

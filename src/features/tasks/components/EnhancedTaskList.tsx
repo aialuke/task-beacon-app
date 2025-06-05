@@ -1,110 +1,116 @@
 
-import { memo } from 'react';
+// === EXTERNAL LIBRARIES ===
+import { memo, useMemo, useCallback } from 'react';
+
+// === INTERNAL UTILITIES ===
+import UnifiedLoadingStates from '@/components/ui/loading/UnifiedLoadingStates';
+
+// === COMPONENTS ===
+import VirtualizedTaskCard from './VirtualizedTaskCard';
+
+// === HOOKS ===
 import { useTaskDataContext } from '@/features/tasks/context/TaskDataContext';
-import { useTaskFiltering } from '@/features/tasks/providers/TaskProviders';
-import { useTaskListVirtualization } from '../hooks/useTaskListVirtualization';
-import TaskListCore from './optimized/TaskListCore';
-import TaskListFilters from './optimized/TaskListFilters';
-import TaskListPagination from './optimized/TaskListPagination';
-import { FabButton } from './FabButton';
-import { useEnhancedTaskRenderCallbacks } from './optimized/EnhancedTaskRenderCallbacks';
+import { useTaskUIContext } from '@/features/tasks/context/TaskUIContext';
+import { useTasksFilter } from '@/features/tasks/hooks/useTasksFilter';
+import { useTaskListVirtualization } from '@/features/tasks/hooks/useTaskListVirtualization';
 
-/**
- * Enhanced Task List Component - Phase 2 Optimized
- * 
- * Refactored version with virtual scrolling and optimized component structure.
- * Reduces re-renders and improves performance for large lists.
- */
-function EnhancedTaskList() {
-  const {
-    isLoading,
-    isFetching,
-    error,
-    hasNextPage,
-    hasPreviousPage,
-    goToNextPage,
-    goToPreviousPage,
-    currentPage,
-    totalCount,
-    pageSize,
-    retry,
-  } = useTaskDataContext();
+// === TYPES ===
+import type { Task } from '@/types';
 
-  const { tasks: filteredTasks, filter, setFilter } = useTaskFiltering();
+interface EnhancedTaskListProps {
+  enableVirtualization?: boolean;
+  itemHeight?: number;
+  overscan?: number;
+}
 
-  // Virtual scrolling for performance
-  const {
-    containerRef,
-    visibleItems,
-    totalHeight,
-    shouldVirtualize,
-    containerStyles,
-    spacerStyles,
-    handleScroll,
-  } = useTaskListVirtualization(filteredTasks, {
-    itemHeight: 120,
+function EnhancedTaskListComponent({
+  enableVirtualization = true,
+  itemHeight = 120,
+  overscan = 5,
+}: EnhancedTaskListProps) {
+  const { tasks, isLoading, error } = useTaskDataContext();
+  const { filter, expandedTaskId, isMobile } = useTaskUIContext();
+  
+  // Filter tasks based on current filter
+  const filteredTasks = useTasksFilter(tasks, filter);
+  
+  // Virtualization configuration
+  const virtualizationConfig = useMemo(() => ({
+    enabled: enableVirtualization && filteredTasks.length > 50,
+    itemHeight,
+    overscan,
     containerHeight: 600,
-    overscan: 3,
-    threshold: 20,
-  });
+  }), [enableVirtualization, filteredTasks.length, itemHeight, overscan]);
+  
+  const { virtualItems, totalSize, scrollElementRef } = useTaskListVirtualization(
+    filteredTasks,
+    virtualizationConfig
+  );
 
-  // Get enhanced render callbacks with virtualization support
-  const { 
-    renderTask, 
-    renderLoading, 
-    renderEmpty, 
-    renderError 
-  } = useEnhancedTaskRenderCallbacks({
-    shouldVirtualize,
-    visibleItems,
-    totalHeight,
-    containerStyles,
-    spacerStyles,
-    handleScroll,
-    containerRef,
-  });
+  // Render item callback for virtualization
+  const renderTaskItem = useCallback((task: Task, index: number, style?: React.CSSProperties) => (
+    <div key={task.id} style={style}>
+      <VirtualizedTaskCard
+        task={task}
+        index={index}
+        isExpanded={expandedTaskId === task.id}
+      />
+    </div>
+  ), [expandedTaskId]);
 
-  const shouldShowPagination = filteredTasks.length > 0 || isLoading;
+  if (isLoading) {
+    return <UnifiedLoadingStates variant="list" message="Loading enhanced task list..." />;
+  }
 
+  if (error) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <div className="text-center">
+          <p className="text-muted-foreground">Failed to load tasks</p>
+          <p className="text-sm text-muted-foreground">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (filteredTasks.length === 0) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <p className="text-muted-foreground">No tasks found</p>
+      </div>
+    );
+  }
+
+  // Render virtualized list if enabled and beneficial
+  if (virtualizationConfig.enabled) {
+    return (
+      <div
+        ref={scrollElementRef}
+        className={`h-full overflow-auto ${isMobile ? 'pb-20' : ''}`}
+        style={{ height: virtualizationConfig.containerHeight }}
+      >
+        <div style={{ height: totalSize, position: 'relative' }}>
+          {virtualItems.map((virtualItem) => {
+            const task = filteredTasks[virtualItem.index];
+            return renderTaskItem(task, virtualItem.index, {
+              position: 'absolute',
+              top: virtualItem.start,
+              left: 0,
+              right: 0,
+              height: virtualItem.size,
+            });
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  // Render standard list for smaller datasets
   return (
-    <main className="flex-1 space-y-8" role="main" aria-label="Enhanced task management interface">
-      {/* Filter Section */}
-      <TaskListFilters filter={filter} onFilterChange={setFilter} />
-
-      {/* Task List Section */}
-      <section className="w-full px-4 sm:px-6" aria-label="Tasks">
-        <TaskListCore
-          tasks={filteredTasks}
-          loading={isLoading}
-          error={error}
-          onRetry={retry}
-          renderTask={renderTask}
-          renderLoading={renderLoading}
-          renderEmpty={renderEmpty}
-          renderError={renderError}
-          pageSize={pageSize}
-        />
-
-        {/* Pagination Controls */}
-        <TaskListPagination
-          currentPage={currentPage}
-          totalCount={totalCount}
-          pageSize={pageSize}
-          hasNextPage={hasNextPage}
-          hasPreviousPage={hasPreviousPage}
-          goToNextPage={goToNextPage}
-          goToPreviousPage={goToPreviousPage}
-          isFetching={isFetching}
-          isLoading={isLoading}
-          shouldShow={shouldShowPagination}
-        />
-      </section>
-
-      {/* Create Task FAB */}
-      <FabButton />
-    </main>
+    <div className={`h-full overflow-y-auto space-y-2 p-4 ${isMobile ? 'pb-20' : ''}`}>
+      {filteredTasks.map((task, index) => renderTaskItem(task, index))}
+    </div>
   );
 }
 
-EnhancedTaskList.displayName = 'EnhancedTaskList';
-export default memo(EnhancedTaskList);
+export default memo(EnhancedTaskListComponent);

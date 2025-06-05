@@ -1,115 +1,230 @@
-/**
- * Authentication Service
- * 
- * Provides authentication operations abstracted from Supabase.
- */
 
-import { User } from '@supabase/supabase-js';
-import { apiRequest } from './error-handling';
+// === EXTERNAL LIBRARIES ===
+import type { User, Session } from '@supabase/supabase-js';
+
+// === INTERNAL UTILITIES ===
 import { supabase } from '@/integrations/supabase/client';
-import type { ApiResponse, AuthResponse, SignUpOptions } from '@/types/shared';
 
-/**
- * Authentication utilities abstracted from Supabase
- */
+// === TYPES (direct imports from unified system) ===
+import type { ApiResponse, ServiceResult, ActionResult } from '@/types/api.types';
+import type { SignInCredentials, SignUpCredentials } from '@/types/shared/auth.types';
+
+// === AUTH SERVICE ===
 export class AuthService {
   /**
-   * Sign in with email and password
+   * Get current session
    */
-  static async signIn(email: string, password: string): Promise<ApiResponse<AuthResponse>> {
-    return apiRequest('auth.signIn', async () => {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) throw error;
-      if (!data.user) throw new Error('Sign in failed - no user returned');
+  static async getCurrentSession(): Promise<ServiceResult<Session>> {
+    try {
+      const { data: { session }, error } = await supabase.auth.getSession();
+      
+      if (error) {
+        return {
+          success: false,
+          error: {
+            message: error.message,
+            name: 'AuthError',
+            code: error.name,
+          },
+          data: null,
+        };
+      }
 
       return {
-        user: data.user,
-        session: data.session,
-        emailConfirmed: !!data.user.email_confirmed_at,
+        success: true,
+        error: null,
+        data: session,
       };
-    });
+    } catch (error) {
+      return {
+        success: false,
+        error: {
+          message: error instanceof Error ? error.message : 'Unknown error',
+          name: 'AuthError',
+        },
+        data: null,
+      };
+    }
   }
 
   /**
-   * Sign up with email and password
+   * Get current user
    */
-  static async signUp(
-    email: string, 
-    password: string, 
-    options?: SignUpOptions
-  ): Promise<ApiResponse<AuthResponse>> {
-    return apiRequest('auth.signUp', async () => {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options,
-      });
-
-      if (error) throw error;
-      if (!data.user) throw new Error('Sign up failed - no user returned');
-
-      return {
-        user: data.user,
-        session: data.session,
-        emailConfirmed: !!data.user.email_confirmed_at,
-      };
-    });
-  }
-
-  /**
-   * Get current authenticated user
-   */
-  static async getCurrentUser(): Promise<ApiResponse<User>> {
-    return apiRequest('auth.getCurrentUser', async () => {
+  static async getCurrentUser(): Promise<ServiceResult<User>> {
+    try {
       const { data: { user }, error } = await supabase.auth.getUser();
-      if (error) throw error;
-      if (!user) throw new Error('No authenticated user');
-      return user;
-    });
+      
+      if (error) {
+        return {
+          success: false,
+          error: {
+            message: error.message,
+            name: 'AuthError',
+            code: error.name,
+          },
+          data: null,
+        };
+      }
+
+      return {
+        success: true,
+        error: null,
+        data: user,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: {
+          message: error instanceof Error ? error.message : 'Unknown error',
+          name: 'AuthError',
+        },
+        data: null,
+      };
+    }
   }
 
   /**
    * Get current user ID
    */
-  static async getCurrentUserId(): Promise<ApiResponse<string>> {
-    return apiRequest('auth.getCurrentUserId', async () => {
-      const { data: { user }, error } = await supabase.auth.getUser();
-      if (error) throw error;
-      if (!user) throw new Error('No authenticated user');
-      return user.id;
-    });
+  static async getCurrentUserId(): Promise<ServiceResult<string>> {
+    try {
+      const userResult = await this.getCurrentUser();
+      
+      if (!userResult.success || !userResult.data) {
+        return {
+          success: false,
+          error: userResult.error || {
+            message: 'No user found',
+            name: 'AuthError',
+          },
+          data: null,
+        };
+      }
+
+      return {
+        success: true,
+        error: null,
+        data: userResult.data.id,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: {
+          message: error instanceof Error ? error.message : 'Unknown error',
+          name: 'AuthError',
+        },
+        data: null,
+      };
+    }
   }
 
   /**
-   * Check if user is authenticated
+   * Sign in user
    */
-  static async isAuthenticated(): Promise<boolean> {
-    const { data: { user } } = await supabase.auth.getUser();
-    return !!user;
+  static async signIn(credentials: SignInCredentials): Promise<ActionResult> {
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: credentials.email,
+        password: credentials.password,
+      });
+
+      if (error) {
+        return {
+          success: false,
+          error: {
+            message: error.message,
+            name: 'AuthError',
+            code: error.name,
+          },
+        };
+      }
+
+      return {
+        success: true,
+        error: null,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: {
+          message: error instanceof Error ? error.message : 'Unknown error',
+          name: 'AuthError',
+        },
+      };
+    }
   }
 
   /**
-   * Sign out current user
+   * Sign up user
    */
-  static async signOut(): Promise<ApiResponse<void>> {
-    return apiRequest('auth.signOut', async () => {
+  static async signUp(credentials: SignUpCredentials): Promise<ActionResult> {
+    try {
+      const { error } = await supabase.auth.signUp({
+        email: credentials.email,
+        password: credentials.password,
+        options: {
+          data: {
+            name: credentials.name,
+          },
+        },
+      });
+
+      if (error) {
+        return {
+          success: false,
+          error: {
+            message: error.message,
+            name: 'AuthError',
+            code: error.name,
+          },
+        };
+      }
+
+      return {
+        success: true,
+        error: null,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: {
+          message: error instanceof Error ? error.message : 'Unknown error',
+          name: 'AuthError',
+        },
+      };
+    }
+  }
+
+  /**
+   * Sign out user
+   */
+  static async signOut(): Promise<ActionResult> {
+    try {
       const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-    });
-  }
 
-  /**
-   * Refresh the current session
-   */
-  static async refreshSession(): Promise<ApiResponse<{ user: User | null; session: any }>> {
-    return apiRequest('auth.refreshSession', async () => {
-      const { data, error } = await supabase.auth.refreshSession();
-      if (error) throw error;
-      return { user: data.user, session: data.session };
-    });
+      if (error) {
+        return {
+          success: false,
+          error: {
+            message: error.message,
+            name: 'AuthError',
+            code: error.name,
+          },
+        };
+      }
+
+      return {
+        success: true,
+        error: null,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: {
+          message: error instanceof Error ? error.message : 'Unknown error',
+          name: 'AuthError',
+        },
+      };
+    }
   }
 }
