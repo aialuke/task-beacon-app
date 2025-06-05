@@ -13,7 +13,7 @@ export default function CreateTaskPage() {
   return (
     <div className="fixed h-screen max-h-screen overflow-hidden overscroll-none touch-pan-y animate-fade-in bg-gradient-to-br from-background via-background to-muted/20">
       <div className="container mx-auto max-w-2xl px-4 py-8">
-        <div className="mt-safe mb-8 flex items-center">
+        <div className="mb-8 flex items-center">
           <Button
             variant="ghost"
             size="sm"
