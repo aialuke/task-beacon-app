@@ -51,12 +51,21 @@
     font: inherit;
   }
 
-  /* Remove button styling that might conflict with Tailwind */
-  button {
+  /* More targeted button reset - only for unstyled buttons */
+  button:not([class]) {
     background: none;
     border: none;
     padding: 0;
     cursor: pointer;
+  }
+
+  /* Reset only default browser button styles, not styled buttons */
+  button[type="button"]:not([class]),
+  button[type="reset"]:not([class]),
+  button[type="submit"]:not([class]) {
+    background: none;
+    border: none;
+    padding: 0;
   }
 
   /* Ensure text elements don't break out of containers */

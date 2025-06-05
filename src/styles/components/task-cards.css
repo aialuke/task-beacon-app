@@ -13,9 +13,12 @@
     width: 100% !important;
     box-sizing: border-box !important;
     
-    /* Ensure border is visible */
+    /* Ensure border is visible and overrides any resets */
     border-width: 1px !important;
     border-style: solid !important;
+    
+    /* Ensure padding is applied and overrides any resets */
+    padding: 1.5rem !important; /* 24px = p-6 */
   }
 
   /* Task-specific animations using unified system */
