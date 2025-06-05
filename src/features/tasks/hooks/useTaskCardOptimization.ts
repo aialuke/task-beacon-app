@@ -57,7 +57,7 @@ export function useTaskCardOptimization(
     }
   );
 
-  // Enhanced accessibility attributes
+  // Enhanced accessibility attributes with proper typing
   const accessibilityProps = useOptimizedMemo(
     () => {
       if (!enableAccessibility) return {};
@@ -69,10 +69,10 @@ export function useTaskCardOptimization(
         : 'pending';
 
       return {
-        role: 'article',
+        role: 'article' as const,
         'aria-label': `Task: ${task.title}, Status: ${statusText}`,
         'aria-describedby': `task-${task.id}-description`,
-        'aria-live': taskMetadata.isOverdue ? 'assertive' : 'polite',
+        'aria-live': (taskMetadata.isOverdue ? 'assertive' : 'polite') as 'assertive' | 'polite' | 'off',
         tabIndex: 0,
       };
     },

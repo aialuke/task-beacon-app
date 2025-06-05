@@ -1,14 +1,12 @@
 
-import { Suspense, memo } from 'react';
+import { Suspense, memo, lazy } from 'react';
 import TaskDashboardHeader from './TaskDashboardHeader';
 import { TaskProviders } from '@/features/tasks/providers/TaskProviders';
 import { TaskErrorBoundary } from './TaskErrorBoundary';
 import { TaskPageLoader } from './TaskLoadingStates';
 
-// Lazy load the enhanced task list for better initial load performance
-const EnhancedTaskList = memo(() => 
-  import('./EnhancedTaskList').then(module => ({ default: module.default }))
-);
+// Correctly lazy load the enhanced task list
+const EnhancedTaskList = lazy(() => import('./EnhancedTaskList'));
 
 /**
  * Task Dashboard - Phase 4 Enhanced

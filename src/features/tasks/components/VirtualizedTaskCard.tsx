@@ -56,6 +56,15 @@ const VirtualizedTaskCard = memo(forwardRef<HTMLDivElement, VirtualizedTaskCardP
       transform: style?.transform || 'none',
     };
 
+    // Combine all props safely for the article element
+    const combinedProps = {
+      ...optimizedHandlers,
+      ...keyboardHandlers,
+      ...accessibilityProps,
+      'data-index': index,
+      'data-task-id': task.id,
+    };
+
     return (
       <TaskErrorBoundary
         fallback={
@@ -71,11 +80,7 @@ const VirtualizedTaskCard = memo(forwardRef<HTMLDivElement, VirtualizedTaskCardP
           ref={ref || cardRef}
           className={cardClasses} 
           style={combinedStyles}
-          data-index={index}
-          data-task-id={task.id}
-          {...accessibilityProps}
-          {...optimizedHandlers}
-          {...keyboardHandlers}
+          {...combinedProps}
         >
           <TaskCardHeader
             task={task}
