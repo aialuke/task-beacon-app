@@ -17,16 +17,18 @@ export default function TaskDashboard() {
   const { isMobile } = useTaskUIContext();
 
   return (
-    <div className="flex h-screen flex-col overflow-hidden bg-background">
-      <TaskDashboardHeader />
-      
-      <main className="task-dashboard-main flex-1 overflow-hidden">
-        <Suspense fallback={<UnifiedLoadingStates variant="skeleton" message="Loading tasks..." />}>
-          <TaskList />
-        </Suspense>
-      </main>
+    <div className="min-h-screen bg-background">
+      <div className="mx-auto max-w-4xl px-4 py-6 sm:px-6 lg:px-8">
+        <TaskDashboardHeader />
+        
+        <main className="relative">
+          <Suspense fallback={<UnifiedLoadingStates variant="skeleton" message="Loading tasks..." />}>
+            <TaskList />
+          </Suspense>
+        </main>
 
-      {isMobile && <FabButton />}
+        {isMobile && <FabButton />}
+      </div>
     </div>
   );
 }

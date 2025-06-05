@@ -1,12 +1,10 @@
 
-/* src/styles/utilities.css - Phase 5 Unified Utilities */
+/* src/styles/utilities.css - Clean unified utilities */
 @layer utilities {
   /* Import unified utility modules */
   @import './utilities/unified-utilities.css';
   @import './utilities/animations/unified-animations.css';
   @import './utilities/layout.css';
-  
-  /* Import remaining specific utilities that don't have overlap */
   @import './utilities/accessibility.css';
   @import './utilities/responsive.css';
 }

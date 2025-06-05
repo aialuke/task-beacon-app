@@ -50,7 +50,7 @@ function TaskListComponent() {
 
   if (error) {
     return (
-      <div className="flex h-full items-center justify-center">
+      <div className="flex h-64 items-center justify-center">
         <div className="text-center">
           <p className="text-muted-foreground">Failed to load tasks</p>
           <p className="text-sm text-muted-foreground">{error}</p>
@@ -60,20 +60,20 @@ function TaskListComponent() {
   }
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="space-y-6">
       {/* Navigation Bar Section */}
-      <div className="navbar-section">
+      <div className="w-full">
         <TaskFilterNavbar filter={filter} onFilterChange={setFilter} />
       </div>
       
       {/* Task List Section */}
-      <div className="task-list-section flex-1 overflow-y-auto">
+      <div className="space-y-4">
         {filteredTasks.length === 0 ? (
-          <div className="flex h-full items-center justify-center">
+          <div className="flex h-64 items-center justify-center">
             <p className="text-muted-foreground">No tasks found</p>
           </div>
         ) : (
-          <div className={`task-list ${isMobile ? 'pb-20' : 'pb-6'}`}>
+          <div className={`space-y-4 ${isMobile ? 'pb-20' : 'pb-6'}`}>
             {filteredTasks.map((task: Task) => (
               <TaskCard key={task.id} task={task} />
             ))}
@@ -83,7 +83,7 @@ function TaskListComponent() {
 
       {/* Pagination Section */}
       {shouldShowPagination && (
-        <div className="mt-6 pt-4 border-t border-border">
+        <div className="border-t border-border pt-6">
           <TaskListPagination
             currentPage={currentPage}
             totalCount={totalCount}

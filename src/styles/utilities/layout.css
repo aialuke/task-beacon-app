@@ -1,87 +1,51 @@
 
-/* src/styles/utilities/layout.css - Layout utility classes with proper specificity */
+/* src/styles/utilities/layout.css - Restored working layout utilities */
 @layer utilities {
   /* ===== LAYOUT UTILITIES ===== */
   .task-list {
-    @apply flex flex-col;
-    transition: all 0.3s ease-out;
-    padding: 0;
-    gap: 1.5rem;
-    overflow-y: hidden;
-    width: 100%;
-    box-sizing: border-box;
+    @apply space-y-4;
   }
 
-  /* ===== NAVBAR SECTION ===== */
-  .navbar-section {
-    @apply w-full;
-    padding: 1rem 1rem 2rem 1rem;
-    margin: 0;
-  }
-
-  /* ===== TASK LIST SECTION ===== */
-  .task-list-section {
-    @apply w-full;
-    padding: 0 1rem;
+  /* ===== DASHBOARD CONTAINER ===== */
+  .dashboard-container {
+    @apply mx-auto max-w-4xl px-4 py-6 sm:px-6 lg:px-8;
   }
 
   /* ===== SPACING & CONTAINER UTILITIES ===== */
   .mobile-safe-area {
-    @apply px-4;
+    @apply px-4 pb-20 sm:pb-6;
   }
 
-  .mobile-description-container {
-    margin-top: 4px;
-    padding-top: 1px;
-    min-height: 20px;
+  .content-container {
+    @apply space-y-6;
   }
 
-  /* ===== DASHBOARD MAIN CONTENT ===== */
-  .task-dashboard-main {
-    @apply w-full;
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 0;
+  /* ===== NAVBAR SECTION ===== */
+  .navbar-section {
+    @apply w-full mb-6;
+  }
+
+  /* ===== TASK LIST SECTION ===== */
+  .task-list-section {
+    @apply space-y-4;
   }
 
   /* ===== RESPONSIVE SPACING ===== */
   @media (min-width: 640px) {
     .task-list {
-      gap: 1.75rem;
-    }
-
-    .task-list-section {
-      padding: 0 1.5rem;
-    }
-
-    .navbar-section {
-      padding: 1rem 1.5rem 2rem 1.5rem;
+      @apply space-y-6;
     }
   }
 
   @media (min-width: 768px) {
-    .task-list {
-      gap: 2rem;
-    }
-
-    .task-list-section {
-      padding: 0 2rem;
-    }
-
-    .navbar-section {
-      padding: 1rem 2rem 2rem 2rem;
-    }
-
-    .task-dashboard-main {
-      max-width: 1200px;
-      padding: 0 1rem;
+    .dashboard-container {
+      @apply max-w-5xl;
     }
   }
 
   @media (min-width: 1024px) {
-    .task-dashboard-main {
-      max-width: 1400px;
-      padding: 0 2rem;
+    .dashboard-container {
+      @apply max-w-6xl;
     }
   }
 }
