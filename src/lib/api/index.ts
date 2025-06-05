@@ -1,15 +1,14 @@
 
 /**
- * API Layer - Updated to use standardized patterns
+ * API Layer - Clean, Standardized Interface
  * 
- * This index file provides a clean, standardized interface for all API operations.
- * Phase 2: Complete migration to service layer with standardized patterns.
+ * Focused exports without legacy dependencies.
  */
 
-// Standardized API utilities
-export * from './standardized-api';
+// === CORE API UTILITIES ===
+export { QueryKeys, apiCall, transformApiError, createSuccessResponse, createErrorResponse } from './standardized-api';
 
-// Base API utilities and types
+// === TYPES ===
 export type {
   ApiResponse,
   ApiError,
@@ -28,20 +27,17 @@ export type {
   ProfileWithRelations,
 } from '@/types/database';
 
-// Main service classes (primary interface)
+// === MAIN SERVICES ===
 export { TaskService } from './tasks/task.service';
-export * from './users.service';
-
-// Specialized services for direct access
 export { AuthService } from './auth.service';
 export { StorageService } from './storage.service';
 export { DatabaseService } from './database.service';
 
-// Error handling utilities
+// === SPECIALIZED SERVICES ===
+export * from './users.service';
+
+// === ERROR HANDLING ===
 export { formatApiError, apiRequest } from './error-handling';
 
-// Supabase client (consolidated)
+// === SUPABASE CLIENT ===
 export { supabase } from '@/integrations/supabase/client';
-
-// Query utilities
-export { QueryKeys, apiCall, transformApiError, createSuccessResponse, createErrorResponse } from './standardized-api';

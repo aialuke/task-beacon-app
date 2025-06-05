@@ -1,7 +1,9 @@
 
 import { useTaskFormOrchestration } from './useTaskFormOrchestration';
 import { useTaskMutations } from './useTaskMutations';
-import { useOptimizedMemo, useOptimizedCallback } from '@/hooks/useOptimizedMemo';
+import { useTaskBatchOperations } from './useTaskBatchOperations';
+import { useTaskWorkflowStatus } from './useTaskWorkflowStatus';
+import { useOptimizedCallback } from '@/hooks/useOptimizedMemo';
 import { Task } from '@/types';
 import { UseTaskFormStateOptions } from './useTaskFormState';
 
@@ -17,14 +19,12 @@ interface WorkflowResult {
 
 /**
  * Simplified workflow orchestration hook
- * 
- * Now focuses on high-level workflow coordination without duplicating
- * form and mutation logic. Uses composition instead of reimplementation.
+ * Now composed of smaller, focused hooks for better maintainability
  */
 export function useTaskWorkflow(options: UseTaskWorkflowOptions = {}) {
   const { onWorkflowComplete, ...formOptions } = options;
 
-  // Use the simplified form orchestration
+  // Use specialized hooks
   const formOrchestration = useTaskFormOrchestration({
     ...formOptions,
     onSubmitSuccess: (task) => {
@@ -35,8 +35,13 @@ export function useTaskWorkflow(options: UseTaskWorkflowOptions = {}) {
     },
   });
 
-  // Get mutations for direct task operations
   const mutations = useTaskMutations();
+  const { executeBatchOperations } = useTaskBatchOperations();
+  const { workflowStatus } = useTaskWorkflowStatus({
+    canSubmit: formOrchestration.formStatus.canSubmit,
+    isSubmitting: formOrchestration.isSubmitting,
+    isLoading: mutations.isLoading,
+  });
 
   /**
    * Simplified task update workflow
@@ -63,56 +68,15 @@ export function useTaskWorkflow(options: UseTaskWorkflowOptions = {}) {
     { name: 'updateTaskWithWorkflow' }
   );
 
-  /**
-   * Batch task operations
-   */
-  const batchTaskOperations = useOptimizedCallback(
-    async (operations: Array<{ type: 'update'; data: Partial<Task>; task: Task }>): Promise<{
-      results: WorkflowResult[];
-      successCount: number;
-      totalCount: number;
-    }> => {
-      const results: WorkflowResult[] = [];
-      
-      for (const operation of operations) {
-        if (operation.type === 'update' && operation.task) {
-          const result = await updateTaskWithWorkflow(operation.task, operation.data);
-          results.push(result);
-        } else {
-          results.push({
-            success: false,
-            error: 'Invalid operation: task required for update',
-          });
-        }
-      }
-
-      const successCount = results.filter(r => r.success).length;
-      return { results, successCount, totalCount: results.length };
-    },
-    [updateTaskWithWorkflow],
-    { name: 'batchTaskOperations' }
-  );
-
-  // Simplified workflow status that doesn't duplicate form status
-  const workflowStatus = useOptimizedMemo(
-    () => ({
-      isReady: formOrchestration.formStatus.canSubmit,
-      isBusy: formOrchestration.isSubmitting || mutations.isLoading,
-      canSubmit: formOrchestration.formStatus.canSubmit,
-    }),
-    [formOrchestration.formStatus, formOrchestration.isSubmitting, mutations.isLoading],
-    { name: 'workflow-status' }
-  );
-
   return {
     // Delegate form functionality to form orchestration
     ...formOrchestration,
     
     // Workflow-specific actions
     updateTaskWithWorkflow,
-    batchTaskOperations,
+    batchTaskOperations: executeBatchOperations,
     
-    // Workflow status (simplified, non-overlapping with form status)
+    // Workflow status
     workflowStatus,
   };
 }

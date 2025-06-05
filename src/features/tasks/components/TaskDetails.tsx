@@ -1,8 +1,9 @@
+
 import { memo, useState } from 'react';
 import { Task } from '@/types';
 import { animated, SpringValue } from '@react-spring/web';
 import { useTaskUIContext } from '@/features/tasks/context/TaskUIContext';
-import { ImagePreviewModal } from '@/components/ui/ImagePreviewModal';
+import { ImagePreviewModal } from './ImagePreviewModal';
 import TaskActions from './TaskActions';
 import TaskMetadata from './TaskMetadata';
 import ParentTaskInfo from './ParentTaskInfo';
