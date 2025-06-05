@@ -1,7 +1,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { TaskDetailsContent } from '../TaskDetailsContent';
+import TaskDetailsContent from '../TaskDetailsContent';
 import type { Task } from '@/types';
 
 describe('TaskDetailsContent', () => {
@@ -17,7 +17,6 @@ describe('TaskDetailsContent', () => {
     assignee_id: null,
     parent_task_id: null,
     parent_task: null,
-    pinned: false,
     created_at: '2024-01-01T00:00:00Z',
     updated_at: '2024-01-01T00:00:00Z',
   };

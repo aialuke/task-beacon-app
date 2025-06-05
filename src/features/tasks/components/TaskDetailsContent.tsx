@@ -5,7 +5,7 @@ import { useTaskUIContext } from '@/features/tasks/context/TaskUIContext';
 import TaskActions from './TaskActions';
 import TaskMetadata from './TaskMetadata';
 import ParentTaskInfo from './ParentTaskInfo';
-import TaskImageGallery from './TaskImageGallery';
+import { TaskImageGallery } from './TaskImageGallery';
 
 interface TaskDetailsContentProps {
   task: Task;
@@ -38,10 +38,7 @@ function TaskDetailsContent({ task }: TaskDetailsContentProps) {
       )}
 
       {shouldRenderPhoto && (
-        <TaskImageGallery 
-          photoUrl={task.photo_url} 
-          alt="Task attachment" 
-        />
+        <TaskImageGallery task={task} />
       )}
 
       <TaskActions task={task} />

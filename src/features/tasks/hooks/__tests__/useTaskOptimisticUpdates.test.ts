@@ -22,14 +22,13 @@ describe('useTaskOptimisticUpdates', () => {
     assignee_id: null,
     parent_task_id: null,
     parent_task: null,
-    pinned: false,
     created_at: '2024-01-01T00:00:00Z',
     updated_at: '2024-01-01T00:00:00Z',
   };
 
   it('should provide optimistic update functions', () => {
     const { result } = renderHook(() => useTaskOptimisticUpdates(), {
-      wrapper: ({ children }) => renderWithProviders(children, {}).container.firstChild as any,
+      wrapper: ({ children }) => renderWithProviders(<>{children}</>, {}).container.firstChild as any,
     });
 
     expect(result.current.updateTaskOptimistically).toBeDefined();
@@ -44,7 +43,7 @@ describe('useTaskOptimisticUpdates', () => {
 
   it('should handle optimistic updates correctly', () => {
     const { result } = renderHook(() => useTaskOptimisticUpdates(), {
-      wrapper: ({ children }) => renderWithProviders(children, {}).container.firstChild as any,
+      wrapper: ({ children }) => renderWithProviders(<>{children}</>, {}).container.firstChild as any,
     });
 
     // Test that functions can be called without throwing

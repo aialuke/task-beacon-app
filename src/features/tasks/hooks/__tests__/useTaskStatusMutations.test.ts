@@ -15,7 +15,7 @@ vi.mock('@/lib/api/tasks/task.service', () => ({
     }),
     update: vi.fn().mockResolvedValue({
       success: true,
-      data: { pinned: true },
+      data: { status: 'complete' },
       error: null,
     }),
   },
@@ -38,14 +38,13 @@ describe('useTaskStatusMutations', () => {
     assignee_id: null,
     parent_task_id: null,
     parent_task: null,
-    pinned: false,
     created_at: '2024-01-01T00:00:00Z',
     updated_at: '2024-01-01T00:00:00Z',
   };
 
   it('should provide status mutation functions', () => {
     const { result } = renderHook(() => useTaskStatusMutations(), {
-      wrapper: ({ children }) => renderWithProviders(children, {}).container.firstChild as any,
+      wrapper: ({ children }) => renderWithProviders(<>{children}</>, {}).container.firstChild as any,
     });
 
     expect(result.current.markAsComplete).toBeDefined();
@@ -58,7 +57,7 @@ describe('useTaskStatusMutations', () => {
 
   it('should handle loading states correctly', () => {
     const { result } = renderHook(() => useTaskStatusMutations(), {
-      wrapper: ({ children }) => renderWithProviders(children, {}).container.firstChild as any,
+      wrapper: ({ children }) => renderWithProviders(<>{children}</>, {}).container.firstChild as any,
     });
 
     expect(result.current.isLoading).toBe(false);
