@@ -1,27 +1,27 @@
 
-/* src/styles/utilities/borders.css - Simplified border utilities */
+/* src/styles/utilities/borders.css - Enhanced border utilities beyond Tailwind defaults */
 @layer utilities {
   /* Enhanced border with gradient - not available in Tailwind */
   .border-gradient {
-    border: 2px solid;
+    border: 1px solid;
     border-image: linear-gradient(
         45deg,
-        #3b82f6,
-        #93c5fd
+        hsl(var(--primary)),
+        hsl(var(--primary) / 0.5)
       )
       1;
   }
 
-  /* Visible test borders for debugging */
-  .border-test-red {
-    @apply border-2 border-red-500 !important;
+  /* Force border color override when needed - useful for dynamic states */
+  .border-force-destructive {
+    border-color: hsl(var(--destructive)) !important;
   }
 
-  .border-test-blue {
-    @apply border-2 border-blue-500 !important;
+  .border-force-success {
+    border-color: hsl(var(--success)) !important;
   }
 
-  .border-test-green {
-    @apply border-2 border-green-500 !important;
+  .border-force-primary {
+    border-color: hsl(var(--primary)) !important;
   }
 }
