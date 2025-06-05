@@ -189,16 +189,21 @@ export function useCachedData<T>(
   fetchFn: () => Promise<T>, 
   ttl?: number
 ) {
-  const [data, setData] = useState<T | undefined>(globalCache.get(key));
+  const [data, setData] = useState<T | undefined>(() => {
+    const cachedData = globalCache.get(key) as T | undefined;
+    return cachedData;
+  });
   const [loading, setLoading] = useState(!data);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     if (globalCache.has(key)) {
-      const cachedData = globalCache.get(key);
-      setData(cachedData);
-      setLoading(false);
-      return;
+      const cachedData = globalCache.get(key) as T | undefined;
+      if (cachedData !== undefined) {
+        setData(cachedData);
+        setLoading(false);
+        return;
+      }
     }
 
     setLoading(true);
