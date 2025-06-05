@@ -1,169 +1,113 @@
 
 import React, { Component, ReactNode } from 'react';
-import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
-import { logger } from '@/lib/logger';
+import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
-interface TaskErrorBoundaryState {
-  hasError: boolean;
-  error?: Error;
-  errorInfo?: string;
-}
-
-interface TaskErrorBoundaryProps {
+interface Props {
   children: ReactNode;
   fallback?: ReactNode;
-  onError?: (error: Error, errorInfo: string) => void;
-  onNavigateHome?: () => void;
+  onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
+}
+
+interface State {
+  hasError: boolean;
+  error: Error | null;
+  errorInfo: React.ErrorInfo | null;
 }
 
 /**
- * Feature-specific error boundary for task-related components
+ * Task Error Boundary - Phase 3 Implementation
  * 
- * Provides task-specific error handling with contextual recovery options:
- * - Retry the failed operation
- * - Navigate back to task list
- * - Clear local task data
+ * Provides standardized error handling for task-related components
+ * with recovery actions and proper error reporting.
  */
-export class TaskErrorBoundary extends Component<
-  TaskErrorBoundaryProps,
-  TaskErrorBoundaryState
-> {
-  state: TaskErrorBoundaryState = { hasError: false };
+export class TaskErrorBoundary extends Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = { hasError: false, error: null, errorInfo: null };
+  }
 
-  static getDerivedStateFromError(error: Error): TaskErrorBoundaryState {
-    return { 
-      hasError: true, 
-      error 
+  static getDerivedStateFromError(error: Error): State {
+    return {
+      hasError: true,
+      error,
+      errorInfo: null,
     };
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    const errorDetails = `${error.message}\n${error.stack}\n${errorInfo.componentStack}`;
-    
-    // Use centralized logger
-    logger.error('Task Feature Error', error, {
-      feature: 'tasks',
-      errorInfo: errorDetails,
-      timestamp: new Date().toISOString(),
-    });
-
     this.setState({
       error,
-      errorInfo: errorDetails,
+      errorInfo,
     });
 
-    if (this.props.onError) {
-      this.props.onError(error, errorDetails);
-    }
+    // Call optional error handler
+    this.props.onError?.(error, errorInfo);
+
+    // Log error for debugging
+    console.error('TaskErrorBoundary caught an error:', error, errorInfo);
   }
 
-  private handleRetry = () => {
-    this.setState({ hasError: false, error: undefined, errorInfo: undefined });
-  };
-
-  private handleNavigateHome = () => {
-    if (this.props.onNavigateHome) {
-      this.props.onNavigateHome();
-    } else {
-      window.location.href = '/';
-    }
-  };
-
-  private handleClearTaskData = () => {
-    // Clear React Query cache for tasks
-    try {
-      const queryClient = (window as Window & { __REACT_QUERY_CLIENT__?: unknown }).__REACT_QUERY_CLIENT__;
-      if (queryClient && typeof queryClient === 'object' && queryClient !== null) {
-        const client = queryClient as { 
-          removeQueries: (options: { queryKey: string[] }) => void 
-        };
-        client.removeQueries({ queryKey: ['tasks'] });
-        client.removeQueries({ queryKey: ['task'] });
-      }
-    } catch (e) {
-      logger.warn('Failed to clear query cache', { error: (e as Error).message });
-    }
-
-    // Clear local storage
-    try {
-      localStorage.removeItem('task-filter');
-      localStorage.removeItem('task-ui-state');
-    } catch (e) {
-      logger.warn('Failed to clear local storage', { error: (e as Error).message });
-    }
-
-    this.handleRetry();
+  handleRetry = () => {
+    this.setState({ hasError: false, error: null, errorInfo: null });
   };
 
   render() {
     if (this.state.hasError) {
+      // Custom fallback UI
       if (this.props.fallback) {
         return this.props.fallback;
       }
 
+      // Default error UI
       return (
-        <div className="flex min-h-[400px] items-center justify-center p-6">
-          <div className="max-w-md text-center space-y-6">
-            <div className="flex justify-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/20">
-                <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-400" />
-              </div>
+        <div className="flex items-center justify-center min-h-[400px] p-8">
+          <div className="text-center space-y-6 max-w-md">
+            <div className="w-16 h-16 mx-auto rounded-full bg-destructive/10 flex items-center justify-center">
+              <AlertTriangle className="w-8 h-8 text-destructive" />
             </div>
             
             <div className="space-y-2">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
-                Task Loading Error
+              <h2 className="text-lg font-semibold text-foreground">
+                Something went wrong
               </h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                There was a problem loading your tasks. This might be due to a 
-                network issue or temporary server problem.
+              <p className="text-sm text-muted-foreground">
+                An error occurred while loading this section. Please try again.
               </p>
             </div>
-            
-            <div className="space-y-3">
-              <button
-                onClick={this.handleRetry}
-                className="flex w-full items-center justify-center gap-2 bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
-              >
-                <RefreshCw className="h-4 w-4" />
-                Try Again
-              </button>
-              
-              <div className="flex gap-2">
-                <button
-                  onClick={this.handleNavigateHome}
-                  className="flex flex-1 items-center justify-center gap-2 border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors"
-                >
-                  <Home className="h-4 w-4" />
-                  Home
-                </button>
-                
-                <button
-                  onClick={this.handleClearTaskData}
-                  className="flex flex-1 items-center justify-center border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors"
-                >
-                  Reset Data
-                </button>
-              </div>
-            </div>
 
-            {/* Development error details */}
+            {/* Error details for development */}
             {process.env.NODE_ENV === 'development' && this.state.error && (
-              <details className="mt-4 text-left">
-                <summary className="cursor-pointer text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100">
-                  Error Details (Dev)
+              <details className="text-left">
+                <summary className="cursor-pointer text-sm text-muted-foreground hover:text-foreground">
+                  Error Details
                 </summary>
-                <div className="mt-2 p-3 bg-gray-100 dark:bg-gray-800 text-xs font-mono text-gray-600 dark:text-gray-400 whitespace-pre-wrap break-all max-h-32 overflow-y-auto">
-                  {this.state.error.message}
-                  {this.state.errorInfo && (
-                    <>
-                      {'\n\nStack:'}
-                      {this.state.errorInfo}
-                    </>
-                  )}
-                </div>
+                <pre className="mt-2 p-4 bg-muted rounded-md text-xs overflow-auto max-h-40">
+                  {this.state.error.toString()}
+                  {this.state.errorInfo?.componentStack}
+                </pre>
               </details>
             )}
+
+            <div className="flex gap-3 justify-center">
+              <Button
+                onClick={this.handleRetry}
+                variant="default"
+                size="sm"
+                className="flex items-center gap-2"
+              >
+                <RefreshCw className="w-4 h-4" />
+                Try Again
+              </Button>
+              
+              <Button
+                onClick={() => window.location.reload()}
+                variant="outline"
+                size="sm"
+              >
+                Reload Page
+              </Button>
+            </div>
           </div>
         </div>
       );
@@ -171,4 +115,25 @@ export class TaskErrorBoundary extends Component<
 
     return this.props.children;
   }
-} 
+}
+
+/**
+ * Higher-order component for wrapping components with TaskErrorBoundary
+ */
+export function withTaskErrorBoundary<T extends object>(
+  Component: React.ComponentType<T>,
+  options?: {
+    fallback?: ReactNode;
+    onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
+  }
+) {
+  const WrappedComponent = (props: T) => (
+    <TaskErrorBoundary fallback={options?.fallback} onError={options?.onError}>
+      <Component {...props} />
+    </TaskErrorBoundary>
+  );
+
+  WrappedComponent.displayName = `withTaskErrorBoundary(${Component.displayName || Component.name})`;
+  
+  return WrappedComponent;
+}

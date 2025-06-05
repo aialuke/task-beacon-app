@@ -1,6 +1,7 @@
 
 import { ReactNode } from 'react';
 import { createStandardContext } from '@/lib/utils/createContext';
+import { TaskErrorBoundary } from '../components/TaskErrorBoundary';
 import type { Task } from '@/types';
 import { useTasksQuery } from '@/features/tasks/hooks/useTasksQuery';
 
@@ -19,6 +20,9 @@ interface TaskDataContextValue {
   hasPreviousPage: boolean;
   goToNextPage: () => void;
   goToPreviousPage: () => void;
+  
+  // Error recovery
+  retry: () => void;
 }
 
 // Create standardized context
@@ -32,12 +36,10 @@ interface TaskDataContextProviderProps {
 }
 
 /**
- * Task Data Context Provider - Phase 2 Optimized
+ * Task Data Context Provider - Phase 3 Enhanced
  * 
- * Provides only server-side data state with standardized patterns.
- * Uses optimized query hooks with prefetching and consistent error handling.
- * 
- * Follows the principle: React Query for server state, Context for UI state only.
+ * Provides server-side data state with enhanced error handling,
+ * loading state management, and recovery mechanisms.
  */
 export function TaskDataContextProvider({
   children,
@@ -45,7 +47,7 @@ export function TaskDataContextProvider({
   // Use standardized task queries with optimized data flow
   const taskQueries = useTasksQuery();
 
-  // Provide only data-related state with standardized interface
+  // Enhanced context value with error recovery
   const contextValue: TaskDataContextValue = {
     tasks: taskQueries.tasks,
     isLoading: taskQueries.isLoading,
@@ -58,12 +60,20 @@ export function TaskDataContextProvider({
     hasPreviousPage: taskQueries.hasPreviousPage,
     goToNextPage: taskQueries.goToNextPage,
     goToPreviousPage: taskQueries.goToPreviousPage,
+    retry: taskQueries.refetch || (() => {}),
   };
 
   return (
-    <TaskDataProvider value={contextValue}>
-      {children}
-    </TaskDataProvider>
+    <TaskErrorBoundary
+      onError={(error, errorInfo) => {
+        console.error('TaskDataContext Error:', error, errorInfo);
+        // Could integrate with error reporting service here
+      }}
+    >
+      <TaskDataProvider value={contextValue}>
+        {children}
+      </TaskDataProvider>
+    </TaskErrorBoundary>
   );
 }
 

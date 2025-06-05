@@ -3,6 +3,7 @@ import { memo } from 'react';
 import { Task } from '@/types';
 import { useTaskCard } from '../hooks/useTaskCard';
 import { getTaskCardStyles, getTaskCardClasses } from '../utils/taskCardStyles';
+import { TaskErrorBoundary } from './TaskErrorBoundary';
 import TaskCardHeader from './TaskCardHeader';
 import TaskCardContent from './TaskCardContent';
 
@@ -40,21 +41,36 @@ function TaskCard({ task }: TaskCardProps) {
   const cardClasses = getTaskCardClasses(task, isExpanded);
 
   return (
-    <div ref={cardRef} className={cardClasses} style={cardStyles}>
-      <TaskCardHeader
-        task={task}
-        isExpanded={isExpanded}
-        toggleExpand={toggleExpand}
-      />
+    <TaskErrorBoundary
+      fallback={
+        <div className="p-4 rounded-xl border border-destructive/20 bg-destructive/5">
+          <p className="text-sm text-destructive">Failed to load task: {task.title}</p>
+        </div>
+      }
+    >
+      <article 
+        ref={cardRef} 
+        className={cardClasses} 
+        style={cardStyles}
+        role="article"
+        aria-label={`Task: ${task.title}`}
+      >
+        <TaskCardHeader
+          task={task}
+          isExpanded={isExpanded}
+          toggleExpand={toggleExpand}
+        />
 
-      <TaskCardContent
-        task={task}
-        isExpanded={isExpanded}
-        animationState={animationState}
-        contentRef={contentRef}
-      />
-    </div>
+        <TaskCardContent
+          task={task}
+          isExpanded={isExpanded}
+          animationState={animationState}
+          contentRef={contentRef}
+        />
+      </article>
+    </TaskErrorBoundary>
   );
 }
 
+TaskCard.displayName = 'TaskCard';
 export default memo(TaskCard, arePropsEqual);
