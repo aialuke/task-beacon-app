@@ -45,6 +45,13 @@ export const LazyImage = memo(function LazyImage({
     onError?.(e);
   };
 
+  // Create a proper placeholder as ReactNode
+  const defaultPlaceholder = (
+    <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
+      <div className="h-4 w-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
+
   // Use OptimizedImage for better performance
   return (
     <OptimizedImage
@@ -61,9 +68,7 @@ export const LazyImage = memo(function LazyImage({
         placeholder ? (
           <div className="absolute inset-0">{placeholder}</div>
         ) : (
-          <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
-            <div className="h-4 w-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-          </div>
+          defaultPlaceholder
         )
       ) : undefined}
     />

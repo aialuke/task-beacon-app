@@ -1,6 +1,6 @@
 
 import { lazy, Suspense, ComponentType } from 'react';
-import { LoadingSpinner } from './layout/LoadingSpinner';
+import LoadingSpinner from './layout/LoadingSpinner';
 
 interface LazyComponentProps {
   fallback?: React.ReactNode;
@@ -10,7 +10,7 @@ interface LazyComponentProps {
 /**
  * Higher-order component for lazy loading with error boundary
  */
-export function withLazyLoading<T extends Record<string, any>>(
+export function withLazyLoading<T extends {}>(
   importFn: () => Promise<{ default: ComponentType<T> }>,
   options: LazyComponentProps = {}
 ) {
