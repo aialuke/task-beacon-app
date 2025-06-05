@@ -260,9 +260,9 @@ export class TaskQueryService {
 
       // Use indexes for efficient counting
       const [pendingCount, completeCount, overdueCount] = await Promise.all([
-        baseQuery.select('id', { count: 'exact', head: true }).eq('status', 'pending'),
-        baseQuery.select('id', { count: 'exact', head: true }).eq('status', 'complete'),
-        baseQuery.select('id', { count: 'exact', head: true }).eq('status', 'overdue'),
+        supabase.from('tasks').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
+        supabase.from('tasks').select('id', { count: 'exact', head: true }).eq('status', 'complete'),
+        supabase.from('tasks').select('id', { count: 'exact', head: true }).eq('status', 'overdue'),
       ]);
 
       const pending = pendingCount.count || 0;
