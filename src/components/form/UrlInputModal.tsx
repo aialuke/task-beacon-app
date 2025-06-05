@@ -25,19 +25,37 @@ export function UrlInputModal({
   const [tempValue, setTempValue] = useState(value);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Simple URL validation with TLD check
+  // Enhanced URL validation that accepts domains without protocol
   const isValidUrl = (url: string): boolean => {
     if (!url.trim()) return false;
-    // Simple regex to check for basic URL structure with TLD
-    const urlPattern = /^https?:\/\/[^\s/$.?#].[^\s]*\.[a-z]{2,}/i;
-    return urlPattern.test(url);
+    
+    // Check if it already has a protocol
+    if (/^https?:\/\//.test(url)) {
+      try {
+        new URL(url);
+        return true;
+      } catch {
+        return false;
+      }
+    }
+    
+    // Check for domain pattern without protocol (e.g., google.com, www.google.com)
+    const domainPattern = /^(www\.)?[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
+    return domainPattern.test(url);
   };
 
   const isValid = isValidUrl(tempValue);
 
   const handleSubmit = () => {
     if (isValid) {
-      onChange(tempValue);
+      let finalUrl = tempValue;
+      
+      // Add https:// prefix if URL doesn't have a protocol
+      if (!/^https?:\/\//.test(finalUrl)) {
+        finalUrl = `https://${finalUrl}`;
+      }
+      
+      onChange(finalUrl);
       onClose();
     }
   };
