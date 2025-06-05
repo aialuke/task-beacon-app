@@ -161,7 +161,7 @@ export function EnhancedUserSearch({
           ref={dropdownRef}
           className="absolute z-[9999] mt-2 w-full overflow-hidden rounded-xl border border-border bg-popover shadow-lg"
         >
-          <div className="max-h-60 overflow-y-auto p-2">
+          <div className="max-h-12 overflow-y-auto p-2">
             {isLoading ? (
               <div className="py-3 text-center text-sm text-muted-foreground">
                 Loading users...
