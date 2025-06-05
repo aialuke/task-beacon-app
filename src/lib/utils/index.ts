@@ -161,10 +161,9 @@ export type { AsyncOperationState as AsyncOpState } from './async-operations';
 // ENHANCED UTILITIES (Previous Phases)
 // =====================================================
 
-// Enhanced validation utilities
+// Enhanced validation utilities (URL validation removed)
 export {
   isValidEmail,
-  isValidUrl,
   isValidPassword,
   isDateInFuture,
   isValidUserName,

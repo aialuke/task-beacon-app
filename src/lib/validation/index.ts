@@ -1,3 +1,4 @@
+
 /**
  * Centralized validation module
  * 
@@ -33,10 +34,9 @@ export {
   validateTaskOwnership,
 } from './business-validators';
 
-// Format validators (pure functions)
+// Format validators (pure functions) - URL validation removed
 export {
   validateEmail,
-  validateUrl,
   validateUserName,
   validateDueDate,
 } from './format-validators';
