@@ -26,11 +26,11 @@ function TaskFilterNavbarComponent({
     { name: 'Complete', value: 'complete', icon: CircleCheckBig },
   ];
 
-  // Convert to SimpleNavbar format
+  // Convert to SimpleNavbar format with proper typing
   const navItems = filters.map(f => ({
     name: f.name,
     value: f.value as string,
-    icon: f.icon,
+    icon: f.icon as any, // Type assertion to match LucideIcon requirement
   }));
 
   const handleItemChange = (value: string) => {

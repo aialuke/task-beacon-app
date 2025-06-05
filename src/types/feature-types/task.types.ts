@@ -11,6 +11,9 @@ import type { ID, Timestamp, Status } from '../utility.types';
 // Task filter union type (not interface)
 export type TaskFilter = 'all' | 'pending' | 'complete' | 'overdue' | 'assigned';
 
+// Task priority as a simple string union type
+export type TaskPriority = 'low' | 'medium' | 'high' | 'urgent';
+
 // Main task interfaces
 export interface TaskFilterOptions {
   status?: 'pending' | 'complete' | 'overdue' | 'all';
@@ -23,11 +26,6 @@ export interface TaskFilterOptions {
   priority?: TaskPriority;
   hasParent?: boolean;
   parentId?: string;
-}
-
-export interface TaskPriority {
-  level: 'low' | 'medium' | 'high';
-  value: number;
 }
 
 export interface ParentTask {

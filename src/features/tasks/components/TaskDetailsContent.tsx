@@ -32,7 +32,10 @@ function TaskDetailsContent({ task }: TaskDetailsContentProps) {
 
       {task.parent_task && task.parent_task_id && (
         <ParentTaskInfo
-          parentTask={task.parent_task}
+          parentTask={{
+            ...task.parent_task,
+            status: task.parent_task.status || 'pending' // Ensure status is always present
+          }}
           parentTaskId={task.parent_task_id}
         />
       )}
