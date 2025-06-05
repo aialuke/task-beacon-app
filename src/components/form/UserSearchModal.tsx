@@ -24,13 +24,13 @@ export function UserSearchModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="fixed top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 sm:max-w-md h-auto max-h-[40vh]">
-        <div className="flex flex-col space-y-2">
+      <DialogContent className="fixed top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 sm:max-w-md">
+        <div className="max-h-[60vh] flex flex-col">
           <EnhancedUserSearch 
             value={value} 
             onChange={handleUserSelect}
             className="flex-grow"
-            dropdownClassName="absolute z-[9999] mt-2 w-full overflow-visible rounded-xl border border-border bg-popover shadow-lg"
+            dropdownClassName="absolute z-[9999] mt-2 h-12 w-full overflow-visible rounded-xl border border-border bg-popover shadow-lg max-h-[200px] overflow-y-auto"
           />
         </div>
       </DialogContent>
