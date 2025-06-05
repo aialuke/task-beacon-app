@@ -29,11 +29,10 @@ export function getTaskCardStyles(task: Task, isExpanded: boolean): React.CSSPro
  */
 export function getTaskCardClasses(task: Task, isExpanded: boolean): string {
   const baseClasses = [
-    'task-card-interactive', // Use the essential class with width constraints
-    'mb-4',
+    'task-card', // Main consolidated class with all base styling
   ];
 
-  // Status-based classes
+  // Status-based classes (only add if different from default)
   if (task.status === 'complete') {
     baseClasses.push('bg-muted');
   } else if (task.status === 'overdue') {

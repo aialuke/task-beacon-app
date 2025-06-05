@@ -1,10 +1,12 @@
 
 /* src/styles/components/task-cards.css - Consolidated task card styles */
 @layer components {
-  /* Essential task card class with width constraints */
-  .task-card-interactive {
+  /* Main task card class - single source of truth for all styling */
+  .task-card {
     @apply bg-card text-card-foreground border border-border p-6 rounded-xl shadow-sm;
     @apply transition-all duration-200 hover:shadow-md cursor-pointer;
+    @apply mb-4; /* Default spacing between cards */
+    
     /* Critical width constraints */
     max-width: 100%;
     width: 100%;
