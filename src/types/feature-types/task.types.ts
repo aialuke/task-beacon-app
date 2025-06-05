@@ -8,8 +8,11 @@
 // Import from unified type system instead of deleted common.types
 import type { ID, Timestamp, Status } from '../utility.types';
 
+// Task filter union type (not interface)
+export type TaskFilter = 'all' | 'pending' | 'complete' | 'overdue' | 'assigned';
+
 // Main task interfaces
-export interface TaskFilter {
+export interface TaskFilterOptions {
   status?: 'pending' | 'complete' | 'overdue' | 'all';
   search?: string;
   assignee?: string;
@@ -57,7 +60,7 @@ export interface TaskUpdateData extends Partial<TaskCreateData> {
 export interface TaskQueryOptions {
   page?: number;
   pageSize?: number;
-  filters?: TaskFilter;
+  filters?: TaskFilterOptions;
   sortBy?: 'due_date' | 'created_at' | 'title' | 'status';
   sortDirection?: 'asc' | 'desc';
   includeCompleted?: boolean;
@@ -89,6 +92,20 @@ export interface TaskRelationship {
   childIds: string[];
   siblingIds: string[];
   depth: number;
+}
+
+// Additional types for compatibility
+export interface TaskSearchFilters {
+  search?: string;
+  status?: TaskFilter;
+  assignee?: string;
+}
+
+export interface TaskListResponse {
+  data: any[];
+  total: number;
+  page: number;
+  pageSize: number;
 }
 
 // Export convenience type aliases

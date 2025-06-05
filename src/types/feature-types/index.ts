@@ -8,6 +8,7 @@
 // Task domain types (most commonly used)
 export type {
   TaskFilter,
+  TaskFilterOptions,
   TaskPriority,
   ParentTask,
   TaskCreateData,

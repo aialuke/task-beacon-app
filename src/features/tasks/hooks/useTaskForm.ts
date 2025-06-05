@@ -1,5 +1,4 @@
 
-
 // === EXTERNAL LIBRARIES ===
 import { useCallback, useState } from 'react';
 
@@ -134,7 +133,7 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
       due_date: dueDate || null,
       url_link: url.trim() || null, // Convert empty string back to null for API
       assignee_id: assigneeId || null,
-      priority: 'medium' as const,
+      priority: { level: 'medium' as const, value: 1 }, // Fixed priority type
     };
   }, [title, description, dueDate, url, assigneeId]);
 
@@ -147,7 +146,7 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
       url,
       pinned,
       assigneeId,
-      priority: 'medium',
+      priority: { level: 'medium' as const, value: 1 },
     });
   }, [validation, title, description, dueDate, url, pinned, assigneeId]);
 
@@ -207,4 +206,3 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     showValidationErrors: validation.showValidationErrors,
   };
 }
-

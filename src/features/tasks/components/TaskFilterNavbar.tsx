@@ -1,3 +1,4 @@
+
 import { memo } from 'react';
 import { ClockFading, ClockAlert, CircleCheckBig, Users } from 'lucide-react';
 import { SimpleNavbar } from '@/components/ui/simple-navbar';
@@ -8,22 +9,39 @@ interface TaskFilterNavbarProps {
   onFilterChange: (filter: TaskFilter) => void;
 }
 
+interface FilterItem {
+  name: string;
+  value: TaskFilter;
+  icon: React.ComponentType<any>;
+}
+
 function TaskFilterNavbarComponent({
   filter,
   onFilterChange,
 }: TaskFilterNavbarProps) {
-  const filters = [
-    { name: 'Current', value: 'all' as TaskFilter, icon: ClockFading },
-    { name: 'Overdue', value: 'overdue' as TaskFilter, icon: ClockAlert },
-    { name: 'Assigned', value: 'assigned' as TaskFilter, icon: Users },
-    { name: 'Complete', value: 'complete' as TaskFilter, icon: CircleCheckBig },
+  const filters: FilterItem[] = [
+    { name: 'Current', value: 'all', icon: ClockFading },
+    { name: 'Overdue', value: 'overdue', icon: ClockAlert },
+    { name: 'Assigned', value: 'assigned', icon: Users },
+    { name: 'Complete', value: 'complete', icon: CircleCheckBig },
   ];
+
+  // Convert to SimpleNavbar format
+  const navItems = filters.map(f => ({
+    name: f.name,
+    value: f.value as string,
+    icon: f.icon,
+  }));
+
+  const handleItemChange = (value: string) => {
+    onFilterChange(value as TaskFilter);
+  };
 
   return (
     <SimpleNavbar
-      items={filters}
-      activeItem={filter}
-      onItemChange={onFilterChange}
+      items={navItems}
+      activeItem={filter as string}
+      onItemChange={handleItemChange}
       className="w-full pb-1"
     />
   );

@@ -7,9 +7,8 @@
 
 // Import from unified type system (single source of truth)
 export type {
-  Task,
-  TaskStatus,
   TaskFilter,
+  TaskFilterOptions,
   TaskPriority,
   ParentTask,
   TaskCreateData,
