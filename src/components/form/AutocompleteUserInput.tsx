@@ -25,9 +25,9 @@ export function AutocompleteUserInput({
   className,
 }: AutocompleteUserInputProps) {
   const [inputValue, setInputValue] = useState('');
-  const [focusedIndex, setFocusedIndex] = useState(-1);
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const ghostRef = useRef<HTMLDivElement>(null);
   
   const { users, isLoading } = useUsersQuery();
   
@@ -37,32 +37,48 @@ export function AutocompleteUserInput({
     [users, value]
   );
 
-  // Filter suggestions based on input
-  const suggestions = useMemo(() => {
-    if (!inputValue.trim() || selectedUser) return [];
+  // Find the best matching suggestion for ghost text
+  const ghostSuggestion = useMemo(() => {
+    if (!inputValue.trim() || selectedUser) return null;
     
     const searchTerm = inputValue.toLowerCase();
-    return users
-      .filter(user => {
-        const displayName = user.name || user.email.split('@')[0];
-        return displayName.toLowerCase().includes(searchTerm) || 
-               user.email.toLowerCase().includes(searchTerm);
-      })
-      .slice(0, 5); // Limit to 5 suggestions
+    const match = users.find(user => {
+      const displayName = user.name || user.email.split('@')[0];
+      return displayName.toLowerCase().startsWith(searchTerm) || 
+             user.email.toLowerCase().startsWith(searchTerm);
+    });
+    
+    return match;
   }, [users, inputValue, selectedUser]);
+
+  // Generate ghost text completion
+  const ghostText = useMemo(() => {
+    if (!ghostSuggestion || !inputValue) return '';
+    
+    const displayName = ghostSuggestion.name || ghostSuggestion.email.split('@')[0];
+    const email = ghostSuggestion.email;
+    
+    // Check if input matches start of name or email
+    if (displayName.toLowerCase().startsWith(inputValue.toLowerCase())) {
+      return displayName.slice(inputValue.length);
+    } else if (email.toLowerCase().startsWith(inputValue.toLowerCase())) {
+      return email.slice(inputValue.length);
+    }
+    
+    return '';
+  }, [ghostSuggestion, inputValue]);
 
   // Determine validation state
   const validationState: ValidationState = useMemo(() => {
     if (selectedUser) return 'valid';
     if (!inputValue.trim()) return 'empty';
-    if (suggestions.length > 0) return 'partial';
+    if (ghostSuggestion) return 'partial';
     return 'invalid';
-  }, [selectedUser, inputValue, suggestions]);
+  }, [selectedUser, inputValue, ghostSuggestion]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setInputValue(newValue);
-    setFocusedIndex(-1);
     
     // Clear selection if user starts typing
     if (selectedUser) {
@@ -70,55 +86,50 @@ export function AutocompleteUserInput({
     }
   };
 
-  const handleUserSelect = (userId: string) => {
-    onChange(userId);
-    setInputValue('');
-    setFocusedIndex(-1);
-    inputRef.current?.blur();
+  const handleAcceptSuggestion = () => {
+    if (ghostSuggestion) {
+      onChange(ghostSuggestion.id);
+      setInputValue('');
+    }
   };
 
   const handleClear = () => {
     onChange('');
     setInputValue('');
-    setFocusedIndex(-1);
     inputRef.current?.focus();
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (!suggestions.length) return;
-
     switch (e.key) {
-      case 'ArrowDown':
-        e.preventDefault();
-        setFocusedIndex(prev => 
-          prev < suggestions.length - 1 ? prev + 1 : 0
-        );
-        break;
-      case 'ArrowUp':
-        e.preventDefault();
-        setFocusedIndex(prev => 
-          prev > 0 ? prev - 1 : suggestions.length - 1
-        );
+      case 'Tab':
+      case 'ArrowRight':
+        if (ghostSuggestion && ghostText) {
+          e.preventDefault();
+          handleAcceptSuggestion();
+        }
         break;
       case 'Enter':
-      case 'Tab':
-        e.preventDefault();
-        if (focusedIndex >= 0 && suggestions[focusedIndex]) {
-          handleUserSelect(suggestions[focusedIndex].id);
-        } else if (suggestions.length === 1) {
-          handleUserSelect(suggestions[0].id);
+        if (ghostSuggestion) {
+          e.preventDefault();
+          handleAcceptSuggestion();
         }
         break;
       case 'Escape':
         setInputValue('');
-        setFocusedIndex(-1);
         inputRef.current?.blur();
+        break;
+      case 'Backspace':
+        if (selectedUser && !inputValue) {
+          e.preventDefault();
+          handleClear();
+        }
         break;
     }
   };
 
   const getBorderColor = () => {
     if (disabled) return 'border-border/40';
+    if (selectedUser) return 'border-green-500';
     if (!isFocused && validationState === 'empty') return 'border-border/40';
     
     switch (validationState) {
@@ -130,8 +141,8 @@ export function AutocompleteUserInput({
   };
 
   const getStatusIcon = () => {
+    if (selectedUser) return <Check className="h-4 w-4 text-green-500" />;
     switch (validationState) {
-      case 'valid': return <Check className="h-4 w-4 text-green-500" />;
       case 'invalid': return <X className="h-4 w-4 text-red-500" />;
       default: return <UserIcon className="h-4 w-4 text-muted-foreground" />;
     }
@@ -139,6 +150,46 @@ export function AutocompleteUserInput({
 
   const isFloating = isFocused || selectedUser || inputValue;
 
+  // If user is selected, show Facebook-style tag
+  if (selectedUser) {
+    return (
+      <div className={cn('relative w-full', className)}>
+        <div className="group relative">
+          <div
+            className={cn(
+              'flex h-12 items-center rounded-2xl border bg-primary text-primary-foreground p-2 transition-all duration-300',
+              'hover:bg-primary/90',
+              disabled && 'cursor-not-allowed opacity-50'
+            )}
+          >
+            <Check className="h-4 w-4 mr-2" />
+            <div className="flex-1 min-w-0">
+              <span className="text-sm font-medium truncate">
+                {selectedUser.name || selectedUser.email.split('@')[0]}
+              </span>
+            </div>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="ml-2 h-6 w-6 p-0 text-primary-foreground hover:text-primary-foreground/80 hover:bg-primary-foreground/20"
+              onClick={handleClear}
+              disabled={disabled}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+          
+          {/* Floating label for selected state */}
+          <label className="pointer-events-none absolute left-11 top-2 select-none text-xs font-medium text-primary-foreground/80">
+            {placeholder}
+          </label>
+        </div>
+      </div>
+    );
+  }
+
+  // Normal input state with ghost text
   return (
     <div className={cn('relative w-full', className)}>
       <div className="group relative">
@@ -153,21 +204,24 @@ export function AutocompleteUserInput({
         >
           {getStatusIcon()}
 
-          {selectedUser ? (
-            <div className="flex w-full items-center justify-between ml-3">
-              <UserProfile user={selectedUser} compact />
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="ml-2 h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
-                onClick={handleClear}
-                disabled={disabled}
+          <div className="relative flex-1 ml-3">
+            {/* Ghost text overlay */}
+            {ghostText && isFocused && (
+              <div
+                ref={ghostRef}
+                className="absolute inset-0 pointer-events-none flex items-center"
+                style={{ paddingTop: '1.5rem', paddingBottom: '0.5rem' }}
               >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-          ) : (
+                <span className="text-sm text-transparent select-none">
+                  {inputValue}
+                </span>
+                <span className="text-sm text-muted-foreground/60 select-none">
+                  {ghostText}
+                </span>
+              </div>
+            )}
+            
+            {/* Actual input */}
             <Input
               ref={inputRef}
               type="text"
@@ -176,15 +230,11 @@ export function AutocompleteUserInput({
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
               onFocus={() => setIsFocused(true)}
-              onBlur={() => {
-                setIsFocused(false);
-                // Small delay to allow suggestion clicks
-                setTimeout(() => setFocusedIndex(-1), 150);
-              }}
-              className="h-auto flex-1 border-none bg-transparent p-0 pb-2 pl-3 pr-0 pt-6 text-sm text-foreground focus:ring-0"
+              onBlur={() => setIsFocused(false)}
+              className="h-auto border-none bg-transparent p-0 pb-2 pl-0 pr-0 pt-6 text-sm text-foreground focus:ring-0 relative z-10"
               disabled={disabled}
             />
-          )}
+          </div>
         </div>
 
         {/* Floating label */}
@@ -208,45 +258,6 @@ export function AutocompleteUserInput({
           )}
         />
       </div>
-
-      {/* Inline suggestions */}
-      {isFocused && suggestions.length > 0 && !selectedUser && (
-        <div className="mt-2 space-y-1">
-          <div className="text-xs text-muted-foreground px-2">
-            {isLoading ? 'Loading...' : `${suggestions.length} user${suggestions.length === 1 ? '' : 's'} found`}
-          </div>
-          <div className="space-y-1">
-            {suggestions.map((user, index) => (
-              <button
-                key={user.id}
-                onClick={() => handleUserSelect(user.id)}
-                className={cn(
-                  'w-full rounded-lg p-2 text-left transition-colors',
-                  'hover:bg-accent hover:text-accent-foreground',
-                  'focus:bg-accent focus:text-accent-foreground focus:outline-none',
-                  index === focusedIndex && 'bg-accent text-accent-foreground'
-                )}
-              >
-                <UserProfile user={user} compact />
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Validation feedback */}
-      {isFocused && inputValue && !selectedUser && (
-        <div className="mt-1 px-2">
-          {validationState === 'invalid' && (
-            <p className="text-xs text-red-500">No users found matching "{inputValue}"</p>
-          )}
-          {validationState === 'partial' && suggestions.length > 0 && (
-            <p className="text-xs text-yellow-600">
-              Press Enter to select {suggestions[0].name || suggestions[0].email.split('@')[0]}, or continue typing
-            </p>
-          )}
-        </div>
-      )}
     </div>
   );
 }
