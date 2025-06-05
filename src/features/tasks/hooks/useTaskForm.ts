@@ -1,4 +1,5 @@
 
+
 // === EXTERNAL LIBRARIES ===
 import { useCallback, useState } from 'react';
 
@@ -67,8 +68,9 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
   // Create validation schema - return string errors, not boolean
   const validationSchema = {
     title: (value: string) => {
-      const result = validation.validateTitle(value);
-      return result.isValid ? undefined : result.error;
+      // validateTitle returns a boolean, so we need to handle it differently
+      const isValid = validation.validateTitle(value);
+      return isValid ? undefined : 'Title is required and must be valid';
     },
     description: (value: string) => {
       const result = validation.validateField('description', value);
@@ -203,3 +205,4 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     showValidationErrors: validation.showValidationErrors,
   };
 }
+
