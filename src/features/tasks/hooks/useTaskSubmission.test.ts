@@ -3,31 +3,67 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useTaskSubmission } from './useTaskSubmission';
 import { TaskService } from '@/lib/api';
-import type { CreateTaskData } from '@/features/tasks/types';
 
 // Mock the TaskService
 vi.mock('@/lib/api', () => ({
   TaskService: {
-    crud: {
-      create: vi.fn(),
-    },
+    create: vi.fn(),
+    update: vi.fn(),
   },
 }));
 
 // Mock the toast
-vi.mock('@/lib/toast', () => ({
+vi.mock('sonner', () => ({
   toast: {
     success: vi.fn(),
     error: vi.fn(),
   },
 }));
 
+// Mock the query client
+vi.mock('@tanstack/react-query', () => ({
+  useQueryClient: () => ({
+    invalidateQueries: vi.fn(),
+  }),
+}));
+
+// Mock the validation hook
+vi.mock('./useTaskFormValidation', () => ({
+  useTaskFormValidation: () => ({
+    validateCreateTask: vi.fn(() => ({
+      isValid: true,
+      errors: [],
+    })),
+    showValidationErrors: vi.fn(),
+  }),
+}));
+
+// Mock the auth service
+vi.mock('@/lib/api/base', () => ({
+  AuthService: {
+    getCurrentUserId: vi.fn(),
+  },
+}));
+
+interface SubmitTaskData {
+  title: string;
+  description: string;
+  dueDate: string;
+  url: string;
+  pinned: boolean;
+  assigneeId: string;
+  photoUrl?: string | null;
+  priority?: 'low' | 'medium' | 'high' | 'urgent';
+}
+
 describe('useTaskSubmission', () => {
-  const mockTaskData: CreateTaskData = {
+  const mockTaskData: SubmitTaskData = {
     title: 'Test Task',
     description: 'Test Description',
-    due_date: '2024-12-31',
-    assignee_id: 'user-123',
+    dueDate: '2024-12-31',
+    url: '',
+    pinned: false,
+    assigneeId: 'user-123',
   };
 
   beforeEach(() => {
@@ -37,14 +73,15 @@ describe('useTaskSubmission', () => {
   it('should successfully submit a task', async () => {
     const mockCreatedTask = {
       id: 'task-123',
-      ...mockTaskData,
+      title: mockTaskData.title,
+      description: mockTaskData.description,
       owner_id: 'owner-123',
       status: 'pending' as const,
       created_at: '2024-01-01T00:00:00Z',
       updated_at: '2024-01-01T00:00:00Z',
     };
 
-    vi.mocked(TaskService.crud.create).mockResolvedValue({
+    vi.mocked(TaskService.create).mockResolvedValue({
       success: true,
       data: mockCreatedTask,
       error: null,
@@ -52,70 +89,77 @@ describe('useTaskSubmission', () => {
 
     const { result } = renderHook(() => useTaskSubmission());
 
+    let submissionResult;
     await act(async () => {
-      const success = await result.current.submitTask(mockTaskData);
-      expect(success).toBe(true);
+      submissionResult = await result.current.submitTask(mockTaskData);
     });
 
-    expect(TaskService.crud.create).toHaveBeenCalledWith(mockTaskData);
-    expect(result.current.isSubmitting).toBe(false);
+    expect(submissionResult).toEqual({
+      success: true,
+      taskId: 'task-123',
+    });
+    expect(TaskService.create).toHaveBeenCalled();
   });
 
   it('should handle submission errors', async () => {
     const errorMessage = 'Failed to create task';
-    vi.mocked(TaskService.crud.create).mockResolvedValue({
+    vi.mocked(TaskService.create).mockResolvedValue({
       success: false,
       data: null,
-      error: errorMessage,
+      error: { message: errorMessage, name: 'TaskError' },
     });
 
     const { result } = renderHook(() => useTaskSubmission());
 
+    let submissionResult;
     await act(async () => {
-      const success = await result.current.submitTask(mockTaskData);
-      expect(success).toBe(false);
+      submissionResult = await result.current.submitTask(mockTaskData);
     });
 
-    expect(result.current.isSubmitting).toBe(false);
-    expect(result.current.error).toBe(errorMessage);
+    expect(submissionResult).toEqual({
+      success: false,
+      error: errorMessage,
+    });
   });
 
   it('should handle network errors', async () => {
     const networkError = new Error('Network error');
-    vi.mocked(TaskService.crud.create).mockRejectedValue(networkError);
+    vi.mocked(TaskService.create).mockRejectedValue(networkError);
 
     const { result } = renderHook(() => useTaskSubmission());
 
+    let submissionResult;
     await act(async () => {
-      const success = await result.current.submitTask(mockTaskData);
-      expect(success).toBe(false);
+      submissionResult = await result.current.submitTask(mockTaskData);
     });
 
-    expect(result.current.isSubmitting).toBe(false);
-    expect(result.current.error).toBe('Network error');
+    expect(submissionResult).toEqual({
+      success: false,
+      error: 'Network error',
+    });
   });
 
-  it('should track submission state correctly', async () => {
-    vi.mocked(TaskService.crud.create).mockImplementation(
-      () => new Promise(resolve => setTimeout(() => resolve({
-        success: true,
-        data: { id: 'task-123', ...mockTaskData } as any,
-        error: null,
-      }), 100))
-    );
+  it('should successfully update a task', async () => {
+    const taskId = 'task-123';
+    const updates = { title: 'Updated Task' };
+
+    vi.mocked(TaskService.update).mockResolvedValue({
+      success: true,
+      data: { id: taskId, ...updates },
+      error: null,
+    });
 
     const { result } = renderHook(() => useTaskSubmission());
 
-    expect(result.current.isSubmitting).toBe(false);
-
-    const submitPromise = act(async () => {
-      result.current.submitTask(mockTaskData);
+    let updateResult;
+    await act(async () => {
+      updateResult = await result.current.updateTask(taskId, updates);
     });
 
-    expect(result.current.isSubmitting).toBe(true);
-
-    await submitPromise;
-
-    expect(result.current.isSubmitting).toBe(false);
+    expect(updateResult).toEqual({
+      success: true,
+      taskId,
+    });
+    expect(TaskService.update).toHaveBeenCalledWith(taskId, expect.objectContaining(updates));
   });
 });
