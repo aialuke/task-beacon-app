@@ -55,9 +55,9 @@ export class TaskQueryService {
           parent_task_id,
           owner_id,
           assignee_id,
-          parent_task:parent_task_id(id, title, photo_url),
-          owner:profiles!tasks_owner_id_fkey(id, name, avatar_url),
-          assignee:profiles!tasks_assignee_id_fkey(id, name, avatar_url)
+          parent_task:parent_task_id(id, title, description, photo_url, url_link),
+          owner:profiles!tasks_owner_id_fkey(id, name, email, avatar_url),
+          assignee:profiles!tasks_assignee_id_fkey(id, name, email, avatar_url)
         `, { count: 'exact' });
 
       // Apply filters using indexed columns first for optimal performance
@@ -195,9 +195,9 @@ export class TaskQueryService {
           parent_task_id,
           owner_id,
           assignee_id,
-          parent_task:parent_task_id(id, title, photo_url),
-          owner:profiles!tasks_owner_id_fkey(id, name, avatar_url),
-          assignee:profiles!tasks_assignee_id_fkey(id, name, avatar_url)
+          parent_task:parent_task_id(id, title, description, photo_url, url_link),
+          owner:profiles!tasks_owner_id_fkey(id, name, email, avatar_url),
+          assignee:profiles!tasks_assignee_id_fkey(id, name, email, avatar_url)
         `)
         .eq('status', status)
         .order('created_at', { ascending: false })
@@ -230,7 +230,7 @@ export class TaskQueryService {
           parent_task_id,
           owner_id,
           assignee_id,
-          owner:profiles!tasks_owner_id_fkey(id, name, avatar_url)
+          owner:profiles!tasks_owner_id_fkey(id, name, email, avatar_url)
         `)
         .eq('assignee_id', userId)
         .order(options.sortBy || 'created_at', { ascending: options.sortOrder === 'asc' })
