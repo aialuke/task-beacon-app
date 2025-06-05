@@ -1,81 +1,81 @@
 
-import { memo, useState } from 'react';
+// === EXTERNAL LIBRARIES ===
+import { memo } from 'react';
+
+// === INTERNAL UTILITIES ===
+import { cn } from '@/lib/utils';
+
+// === INTERNAL COMPONENTS ===
+import { LazyImage } from '@/components/ui/LazyImage';
 import { ImagePreviewModal } from './ImagePreviewModal';
 
+// === HOOKS ===
+import { useImagePreview } from '../hooks/useImagePreview';
+
+// === TYPES ===
+import type { Task } from '@/types';
+
 interface TaskImageGalleryProps {
-  photoUrl: string;
-  alt?: string;
+  task: Task;
+  className?: string;
 }
 
-function TaskImageGallery({ photoUrl, alt = 'Task attachment' }: TaskImageGalleryProps) {
-  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [imageError, setImageError] = useState(false);
+/**
+ * TaskImageGallery Component
+ * 
+ * Displays task images in a gallery format with preview capabilities.
+ * Provides lazy loading and click-to-preview functionality.
+ * 
+ * @component
+ * @example
+ * ```tsx
+ * <TaskImageGallery task={task} />
+ * ```
+ * 
+ * @param {Object} props - Component props
+ * @param {Task} props.task - The task object containing image data
+ * @param {string} [props.className] - Additional CSS classes
+ * 
+ * @since 1.4.0 - Extracted from TaskDetails during Phase 1 refactoring
+ * @version 1.0.0
+ */
+function TaskImageGallery({ task, className }: TaskImageGalleryProps) {
+  const { isPreviewOpen, previewImageUrl, openPreview, closePreview } = useImagePreview();
+
+  // Early return if no photo
+  if (!task.photo_url) {
+    return null;
+  }
 
   const handleImageClick = () => {
-    setIsImageModalOpen(true);
-  };
-
-  const handleImageModalClose = () => {
-    setIsImageModalOpen(false);
-  };
-
-  const handleImageLoad = () => {
-    setImageLoaded(true);
-    setImageError(false);
-  };
-
-  const handleImageError = () => {
-    setImageError(true);
-    setImageLoaded(false);
+    openPreview(task.photo_url!);
   };
 
   return (
     <>
-      <div>
-        <span className="text-sm font-medium text-muted-foreground">
-          Photo:
-        </span>
+      <div className={cn('task-image-gallery', className)}>
         <button
           onClick={handleImageClick}
-          className="mt-1 block transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/30 rounded-xl"
-          title="Click to view full size"
+          className="block w-full rounded-lg overflow-hidden hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+          aria-label="View task image"
         >
-          <div className="relative h-20 w-20 rounded-xl overflow-hidden bg-gray-100">
-            {!imageLoaded && !imageError && (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="h-4 w-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-              </div>
-            )}
-            {imageError && (
-              <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
-                <span className="text-xs text-gray-500">Failed to load</span>
-              </div>
-            )}
-            <img
-              src={photoUrl}
-              alt={alt}
-              className={`h-full w-full object-cover cursor-pointer transition-opacity duration-200 ${
-                imageLoaded ? 'opacity-100' : 'opacity-0'
-              }`}
-              loading="lazy"
-              decoding="async"
-              sizes="80px"
-              onLoad={handleImageLoad}
-              onError={handleImageError}
-            />
-          </div>
+          <LazyImage
+            src={task.photo_url}
+            alt="Task image"
+            className="w-full h-48 object-cover"
+          />
         </button>
       </div>
 
       <ImagePreviewModal
-        isOpen={isImageModalOpen}
-        onClose={handleImageModalClose}
-        imageUrl={photoUrl}
-        alt={alt}
+        isOpen={isPreviewOpen}
+        imageUrl={previewImageUrl}
+        onClose={closePreview}
+        alt={`Image for task: ${task.title}`}
       />
     </>
   );
 }
 
-export default memo(TaskImageGallery);
+TaskImageGallery.displayName = 'TaskImageGallery';
+export { TaskImageGallery };

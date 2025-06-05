@@ -39,24 +39,6 @@ describe('Task Workflow Integration Tests', () => {
     </AuthProvider>
   );
 
-  // TODO: Re-implement task creation tests when createTaskWithWorkflow is re-added
-  /*
-  describe('Complete Task Creation Workflow', () => {
-    it('should handle full task creation lifecycle with validation, API call, and success handling', async () => {
-      // This test is commented out because createTaskWithWorkflow was removed from useTaskWorkflow
-      // The functionality should be re-implemented or tested in a different hook
-    });
-
-    it('should handle task creation validation failures gracefully', async () => {
-      // This test is commented out because createTaskWithWorkflow was removed from useTaskWorkflow
-    });
-
-    it('should handle API errors during task creation', async () => {
-      // This test is commented out because createTaskWithWorkflow was removed from useTaskWorkflow
-    });
-  });
-  */
-
   describe('Task Update Workflow with Optimistic Updates', () => {
     it('should handle optimistic task status updates with rollback capability', async () => {
       const originalTask = createTestTask({ status: 'pending' });
@@ -68,7 +50,7 @@ describe('Task Workflow Integration Tests', () => {
       const { result } = renderHook(() => useTaskWorkflow(), { wrapper });
 
       // Act: Update task status
-      let updateResult: any; // Use any to handle the complex return type from mutations
+      let updateResult: any;
       await act(async () => {
         updateResult = await result.current.updateTaskWithWorkflow(
           originalTask,
@@ -98,6 +80,60 @@ describe('Task Workflow Integration Tests', () => {
         expect(result.current.workflowStatus.canSubmit).toBe(true);
         expect(result.current.workflowStatus.isReady).toBe(true);
       });
+    });
+
+    it('should handle form validation correctly', async () => {
+      const { result } = renderHook(() => useTaskWorkflow(), { wrapper });
+
+      // Test empty title validation
+      act(() => {
+        result.current.setTitle('');
+      });
+
+      await waitFor(() => {
+        expect(result.current.workflowStatus.canSubmit).toBe(false);
+        expect(result.current.workflowStatus.hasValidationErrors).toBe(true);
+      });
+
+      // Test valid title
+      act(() => {
+        result.current.setTitle('Valid Task Title');
+      });
+
+      await waitFor(() => {
+        expect(result.current.workflowStatus.canSubmit).toBe(true);
+        expect(result.current.workflowStatus.hasValidationErrors).toBe(false);
+      });
+    });
+  });
+
+  describe('Error Handling and Recovery', () => {
+    it('should handle API errors gracefully', async () => {
+      const originalTask = createTestTask({ status: 'pending' });
+
+      // Mock API error
+      mockDatabaseQuery('tasks', { 
+        data: null, 
+        error: { message: 'Network error', code: 'NETWORK_ERROR' } 
+      });
+
+      const { result } = renderHook(() => useTaskWorkflow(), { wrapper });
+
+      let updateResult: any;
+      await act(async () => {
+        try {
+          updateResult = await result.current.updateTaskWithWorkflow(
+            originalTask,
+            { status: 'complete' }
+          );
+        } catch (error) {
+          // Error should be handled gracefully
+          expect(error).toBeDefined();
+        }
+      });
+
+      // Workflow should handle errors and maintain state
+      expect(result.current.workflowStatus.error).toBeDefined();
     });
   });
 });
