@@ -34,6 +34,7 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
     { name: 'close-callback' }
   );
 
+  // Pass onClose to useTaskForm properly
   const taskForm = useTaskForm({ onClose: closeCallback });
   
   // Memoize photo upload configuration

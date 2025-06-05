@@ -29,6 +29,7 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
   const { validateTitle } = useTaskFormValidation();
   const { uploadPhotoIfPresent } = useCreateTaskPhotoUpload();
 
+  // Pass onClose to useTaskForm properly
   const taskForm = useTaskForm({
     onClose: onClose || (() => navigate('/')),
   });

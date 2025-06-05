@@ -1,6 +1,6 @@
 
 // === EXTERNAL LIBRARIES ===
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 
 // === INTERNAL UTILITIES ===
 import { useUnifiedFormState } from '@/hooks/unified/useUnifiedFormState';
@@ -19,6 +19,7 @@ interface UseTaskFormOptions {
   initialAssigneeId?: string | null;
   initialPinned?: boolean;
   onSubmit?: (values: TaskFormValues) => Promise<void> | void;
+  onClose?: () => void;
 }
 
 interface TaskFormValues {
@@ -45,9 +46,13 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     initialAssigneeId = null,
     initialPinned = false,
     onSubmit,
+    onClose,
   } = options;
 
   const validation = useTaskFormValidation();
+  
+  // Add local loading state for compatibility
+  const [loading, setLoading] = useState(false);
 
   // Create initial values
   const initialValues: TaskFormValues = {
@@ -59,11 +64,21 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     pinned: initialPinned,
   };
 
-  // Create validation schema
+  // Create validation schema - return string errors, not boolean
   const validationSchema = {
-    title: (value: string) => validation.validateTitle(value).error,
-    description: (value: string) => validation.validateField('description', value).error,
-    url: (value: string | null) => value ? validation.validateField('url', value).error : undefined,
+    title: (value: string) => {
+      const result = validation.validateTitle(value);
+      return result.isValid ? undefined : result.error;
+    },
+    description: (value: string) => {
+      const result = validation.validateField('description', value);
+      return result.isValid ? undefined : result.error;
+    },
+    url: (value: string | null) => {
+      if (!value) return undefined;
+      const result = validation.validateField('url', value);
+      return result.isValid ? undefined : result.error;
+    },
   };
 
   // Use unified form state
@@ -132,6 +147,13 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     });
   }, [validation, title, description, dueDate, url, pinned, assigneeId]);
 
+  // Reset form state including calling onClose
+  const resetFormState = useCallback(() => {
+    formActions.resetForm();
+    setLoading(false);
+    onClose?.();
+  }, [formActions, onClose]);
+
   return {
     // Individual field values
     title,
@@ -149,15 +171,18 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     setAssigneeId,
     setPinned,
 
-    // Form state
+    // Form state - maintain compatibility
     isValid: formState.isValid,
     isDirty: formState.isDirty,
     isSubmitting: formState.isSubmitting,
+    loading, // Local loading state for compatibility
     
-    // Form actions
+    // Form actions - maintain compatibility
     validateForm: validateTaskForm,
     resetForm: formActions.resetForm,
+    resetFormState, // Legacy compatibility
     submitForm: formActions.submitForm,
+    setLoading, // Local loading setter for compatibility
     
     // Task-specific utilities
     getTaskData,
