@@ -155,13 +155,13 @@ export function EnhancedUserSearch({
         />
       </div>
 
-      {/* Dropdown - keeping it relative to the input */}
+      {/* Dropdown */}
       {isOpen && !selectedUser && (
         <div
           ref={dropdownRef}
-          className="absolute z-[9999] mt-2 w-full overflow-hidden rounded-xl border border-border bg-popover shadow-lg"
+          className="absolute z-[9999] mt-2 w-full overflow-auto rounded-xl border border-border bg-popover shadow-lg"
         >
-          <div className="flex h-14 items-center justify-center p-2">
+          <div className="flex min-h-[3.5rem] items-center justify-center p-2">
             {isLoading ? (
               <div className="py-3 text-center text-sm text-muted-foreground">
                 Loading users...
@@ -171,7 +171,7 @@ export function EnhancedUserSearch({
                 {searchTerm ? 'No users found' : 'No users available'}
               </div>
             ) : (
-              <div className="space-y-1">
+              <div className="w-full space-y-1">
                 {filteredUsers.map((user) => (
                   <button
                     key={user.id}
