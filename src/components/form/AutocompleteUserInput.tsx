@@ -100,9 +100,10 @@ export function AutocompleteUserInput({
   const handleKeyDown = (e: React.KeyboardEvent) => {
     switch (e.key) {
       case 'Enter':
-        // Only accept suggestion if there's a valid ghostSuggestion (arrow is blue)
-        if (ghostSuggestion) {
+        // Only accept suggestion if there's a valid ghostSuggestion AND ghost text
+        if (ghostSuggestion && ghostText) {
           e.preventDefault();
+          e.stopPropagation(); // Prevent form submission
           handleAcceptSuggestion();
         }
         break;
@@ -233,19 +234,19 @@ export function AutocompleteUserInput({
             />
           </div>
 
-          {/* Arrow icon for confirmation - changes color based on suggestion availability */}
+          {/* Arrow icon for confirmation - only blue when there's both a ghost suggestion AND ghost text */}
           <Button
             type="button"
             variant="ghost"
             size="sm"
             className="ml-2 h-8 w-8 p-0 transition-colors"
             onClick={handleAcceptSuggestion}
-            disabled={disabled || !ghostSuggestion}
+            disabled={disabled || !ghostSuggestion || !ghostText}
           >
             <ArrowRight 
               className={cn(
                 "h-4 w-4 transition-colors",
-                ghostSuggestion ? "text-primary" : "text-muted-foreground"
+                (ghostSuggestion && ghostText) ? "text-primary" : "text-muted-foreground"
               )} 
             />
           </Button>
