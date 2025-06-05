@@ -29,7 +29,6 @@ export function UserSearchModal({
           <EnhancedUserSearch 
             value={value} 
             onChange={handleUserSelect}
-            className="fixed-position"
           />
        </div>
       </DialogContent>
