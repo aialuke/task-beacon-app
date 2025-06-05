@@ -6,21 +6,13 @@ import type { Task } from '@/types';
  */
 export function getTaskCardStyles(task: Task, isExpanded: boolean): React.CSSProperties {
   const baseStyles: React.CSSProperties = {
-    background: 'var(--card)',
-    border: '1px solid var(--border)',
-    borderRadius: '8px',
-    padding: '16px',
     transition: 'all 0.2s ease-in-out',
     cursor: 'pointer',
   };
 
-  // Status-based styling
+  // Status-based styling - only dynamic colors in inline styles
   if (task.status === 'complete') {
     baseStyles.opacity = 0.8;
-    baseStyles.background = 'var(--muted)';
-  } else if (task.status === 'overdue') {
-    baseStyles.borderColor = 'var(--destructive)';
-    baseStyles.borderWidth = '2px';
   }
 
   // Expanded state styling
@@ -35,14 +27,27 @@ export function getTaskCardStyles(task: Task, isExpanded: boolean): React.CSSPro
 /**
  * Get CSS classes for task cards based on expansion state
  */
-export function getTaskCardClasses(isExpanded: boolean): string {
+export function getTaskCardClasses(task: Task, isExpanded: boolean): string {
   const baseClasses = [
     'task-card',
     'mb-4',
+    'p-4',
     'transition-all',
     'duration-200',
     'hover:shadow-md',
+    'bg-card',
+    'text-card-foreground',
+    'border',
+    'border-border',
+    'rounded-xl', // XL border radius applied here
   ];
+
+  // Status-based classes
+  if (task.status === 'complete') {
+    baseClasses.push('bg-muted');
+  } else if (task.status === 'overdue') {
+    baseClasses.push('border-destructive', 'border-2');
+  }
 
   if (isExpanded) {
     baseClasses.push('expanded', 'z-10');

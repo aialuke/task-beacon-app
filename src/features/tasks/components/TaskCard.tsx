@@ -37,10 +37,10 @@ function TaskCard({ task }: TaskCardProps) {
   } = useTaskCard(task);
 
   const cardStyles = getTaskCardStyles(task, isExpanded);
-  const cardClasses = getTaskCardClasses(isExpanded);
+  const cardClasses = getTaskCardClasses(task, isExpanded);
 
   return (
-    <div ref={cardRef} className={`relative ${cardClasses}`} style={cardStyles}>
+    <div ref={cardRef} className={cardClasses} style={cardStyles}>
       <TaskCardHeader
         task={task}
         isExpanded={isExpanded}
