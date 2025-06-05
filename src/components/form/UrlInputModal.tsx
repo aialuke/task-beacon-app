@@ -1,10 +1,11 @@
-import { useState } from 'react';
-import { Link } from 'lucide-react';
+
+import { useState, useRef } from 'react';
+import { Link, ArrowRight } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
 } from '@/components/ui/dialog';
-import { FloatingInput } from '@/components/ui/form/FloatingInput';
+import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -22,73 +23,96 @@ export function UrlInputModal({
   onChange,
 }: UrlInputModalProps) {
   const [tempValue, setTempValue] = useState(value);
-  const [error, setError] = useState<string | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const validateUrl = (url: string): boolean => {
-    // Simple URL validation regex
-    const urlPattern = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)(\/[\w-./?%&=]*)?$/i;
+  // Simple URL validation with TLD check
+  const isValidUrl = (url: string): boolean => {
+    if (!url.trim()) return false;
+    // Simple regex to check for basic URL structure with TLD
+    const urlPattern = /^https?:\/\/[^\s/$.?#].[^\s]*\.[a-z]{2,}/i;
     return urlPattern.test(url);
   };
 
-  const handleSave = () => {
-    if (!tempValue) {
-      // Allow empty URL (optional field)
+  const isValid = isValidUrl(tempValue);
+
+  const handleSubmit = () => {
+    if (isValid) {
       onChange(tempValue);
       onClose();
-      return;
     }
-
-    if (!validateUrl(tempValue)) {
-      setError('Please enter a valid URL (e.g., https://example.com)');
-      return;
-    }
-
-    setError(null);
-    onChange(tempValue);
-    onClose();
   };
 
-  const handleCancel = () => {
-    setTempValue(value);
-    setError(null);
-    onClose();
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && isValid) {
+      e.preventDefault();
+      e.stopPropagation();
+      handleSubmit();
+    } else if (e.key === 'Escape') {
+      setTempValue(value);
+      onClose();
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTempValue(e.target.value);
+  };
+
+  const getBorderColor = () => {
+    if (isValid) return 'border-blue-500';
+    if (!tempValue.trim()) return 'border-border/40';
+    return 'border-border/60';
+  };
+
+  const getTextColor = () => {
+    return isValid ? 'text-blue-500' : 'text-foreground';
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="fixed top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 sm:max-w-md">
         <div className="space-y-4">
-          <div>
-            <FloatingInput
-              id="url-input"
-              type="text"
-              value={tempValue}
-              onChange={(e) => {
-                setTempValue(e.target.value);
-                setError(null); // Clear error on input change
-              }}
-              label="URL"
-              icon={<Link className="h-4 w-4" />}
-              autoFocus
-              className="[&_input]:h-12"
-            />
-            {error && (
-              <p
-                className={cn(
-                  'mt-1 text-sm text-destructive',
-                  'animate-in fade-in-0'
-                )}
-              >
-                {error}
-              </p>
-            )}
-          </div>
+          <div className="relative">
+            <div
+              className={cn(
+                'flex h-12 items-center rounded-2xl border bg-background/60 p-2 backdrop-blur-sm transition-all duration-300',
+                'hover:border-border/60 hover:bg-background/70',
+                getBorderColor()
+              )}
+            >
+              <Link className="h-4 w-4 text-muted-foreground ml-1" />
 
-          <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={handleCancel}>
-              Cancel
-            </Button>
-            <Button onClick={handleSave}>Save URL</Button>
+              <div className="flex-1 min-w-0 ml-3 flex items-center">
+                <Input
+                  ref={inputRef}
+                  type="text"
+                  placeholder="Enter URL"
+                  value={tempValue}
+                  onChange={handleInputChange}
+                  onKeyDown={handleKeyDown}
+                  className={cn(
+                    "h-auto border-none bg-transparent p-0 text-sm font-semibold focus:ring-0",
+                    getTextColor()
+                  )}
+                  autoFocus
+                />
+              </div>
+
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="ml-2 h-8 w-8 p-0 transition-colors"
+                onClick={handleSubmit}
+                disabled={!isValid}
+              >
+                <ArrowRight 
+                  className={cn(
+                    "h-4 w-4 transition-colors",
+                    isValid ? "text-blue-500" : "text-muted-foreground"
+                  )} 
+                />
+              </Button>
+            </div>
           </div>
         </div>
       </DialogContent>
