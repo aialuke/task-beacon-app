@@ -6,6 +6,7 @@
  * standardizing error handling, response patterns, and loading states.
  */
 
+// === TYPES ===
 import type { ApiResponse, ApiError } from '@/types/api.types';
 
 /**

@@ -5,15 +5,15 @@
  * Focused API utilities without legacy dependencies.
  */
 
-// Re-export core services
+// === CORE SERVICES ===
 export { AuthService } from './auth.service';
 export { StorageService } from './storage.service';
 export { DatabaseService } from './database.service';
 export { TaskService } from './tasks/task.service';
 export * from './users.service';
 
-// Error handling utilities
+// === ERROR HANDLING UTILITIES ===
 export { formatApiError, apiRequest } from './error-handling';
 
-// Supabase client
+// === SUPABASE CLIENT ===
 export { supabase } from '@/integrations/supabase/client';

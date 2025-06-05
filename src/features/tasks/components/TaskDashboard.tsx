@@ -1,5 +1,8 @@
 
+// === EXTERNAL LIBRARIES ===
 import { Suspense, memo, lazy } from 'react';
+
+// === INTERNAL COMPONENTS ===
 import TaskDashboardHeader from './TaskDashboardHeader';
 import { TaskProviders } from '@/features/tasks/providers/TaskProviders';
 import { TaskErrorBoundary } from './TaskErrorBoundary';

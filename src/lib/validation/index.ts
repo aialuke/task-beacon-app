@@ -7,10 +7,10 @@
  * and business logic validators.
  */
 
-// Types and constants
+// === TYPES AND CONSTANTS ===
 export * from './types';
 
-// Error handling utilities
+// === ERROR HANDLING UTILITIES ===
 export {
   createSuccessResult,
   createErrorResult,
@@ -21,7 +21,7 @@ export {
   withErrorHandling,
 } from './error-handling';
 
-// Database validators (async)
+// === DATABASE VALIDATORS (ASYNC) ===
 export {
   validateUserExists,
   validateTaskExists,
@@ -29,28 +29,28 @@ export {
   validateMultipleTasksExist,
 } from './database-validators';
 
-// Business validators (async)
+// === BUSINESS VALIDATORS (ASYNC) ===
 export {
   validateTaskOwnership,
 } from './business-validators';
 
-// Format validators (pure functions) - URL validation removed
+// === FORMAT VALIDATORS (PURE FUNCTIONS) ===
 export {
   validateEmail,
   validateUserName,
   validateDueDate,
 } from './format-validators';
 
-// Entity validators (composite)
+// === ENTITY VALIDATORS (COMPOSITE) ===
 export {
   validateProfileData,
 } from './entity-validators';
 
-// Re-export commonly used combinations
+// === RE-EXPORT COMMONLY USED COMBINATIONS ===
 export type {
   BasicValidationResult as ValidationResult,
   StandardValidationResult as DetailedValidationResult,
   ValidationContext,
   ValidationErrorCode,
   ValidationWarningCode,
-} from './types'; 
+} from './types';

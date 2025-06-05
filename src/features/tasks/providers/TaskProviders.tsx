@@ -1,7 +1,13 @@
+
+// === EXTERNAL LIBRARIES ===
 import React from 'react';
+
+// === FEATURE CONTEXTS ===
 import { TaskDataContextProvider } from '../context/TaskDataContext';
 import { TaskUIContextProvider, useTaskUIContext } from '../context/TaskUIContext';
 import { useTaskDataContext } from '../context/TaskDataContext';
+
+// === FEATURE HOOKS ===
 import { useTasksFilter } from '../hooks/useTasksFilter';
 
 interface TaskProvidersProps {
@@ -67,4 +73,4 @@ export function withTaskProviders<T extends object>(
   WrappedComponent.displayName = `withTaskProviders(${Component.displayName || Component.name})`;
   
   return WrappedComponent;
-} 
+}

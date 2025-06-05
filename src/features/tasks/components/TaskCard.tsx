@@ -1,11 +1,20 @@
 
+// === EXTERNAL LIBRARIES ===
 import { memo } from 'react';
-import { Task } from '@/types';
-import { useTaskCard } from '../hooks/useTaskCard';
+
+// === INTERNAL UTILITIES ===
 import { getTaskCardStyles, getTaskCardClasses } from '../utils/taskCardStyles';
+
+// === INTERNAL COMPONENTS ===
 import { TaskErrorBoundary } from './TaskErrorBoundary';
 import TaskCardHeader from './TaskCardHeader';
 import TaskCardContent from './TaskCardContent';
+
+// === HOOKS ===
+import { useTaskCard } from '../hooks/useTaskCard';
+
+// === TYPES ===
+import type { Task } from '@/types';
 
 interface TaskCardProps {
   task: Task;
