@@ -20,6 +20,11 @@ export function UserSearchModal({
 }: UserSearchModalProps) {
   const handleUserSelect = (selectedValue: string) => {
     onChange(selectedValue);
+    // Don't auto-close here - let the component handle the two-step process
+  };
+
+  const handleSubmit = () => {
+    // Only close modal when user actually submits (second Enter press)
     onClose();
   };
 
@@ -30,6 +35,7 @@ export function UserSearchModal({
           <AutocompleteUserInput 
             value={value} 
             onChange={handleUserSelect}
+            onSubmit={handleSubmit}
             placeholder="Search for a user to assign..."
           />
         </div>

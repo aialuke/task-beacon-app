@@ -9,6 +9,7 @@ import { useUsersQuery } from '@/features/users/hooks/useUsersQuery';
 interface AutocompleteUserInputProps {
   value: string; // user ID when selected, empty when not
   onChange: (userId: string) => void;
+  onSubmit?: () => void; // New prop for handling submission
   placeholder?: string;
   disabled?: boolean;
   className?: string;
@@ -19,6 +20,7 @@ type ValidationState = 'valid' | 'invalid' | 'partial' | 'empty';
 export function AutocompleteUserInput({
   value,
   onChange,
+  onSubmit,
   placeholder = 'Search and select user...',
   disabled = false,
   className,
@@ -106,8 +108,13 @@ export function AutocompleteUserInput({
           e.stopPropagation(); // Prevent form submission
           handleAcceptSuggestion();
         }
-        // Second case: if user is already selected, allow form submission (don't prevent default)
-        // This allows the form to submit normally when user presses Enter after selection
+        // Second case: if user is already selected and onSubmit is provided, call onSubmit
+        else if (selectedUser && onSubmit) {
+          e.preventDefault();
+          e.stopPropagation();
+          onSubmit();
+        }
+        // Third case: if user is selected but no onSubmit, allow normal form submission
         break;
       case 'Escape':
         setInputValue('');
@@ -211,7 +218,7 @@ export function AutocompleteUserInput({
             {ghostText && isFocused && (
               <div
                 className="absolute inset-0 pointer-events-none flex items-center"
-                style={{ paddingTop: '1.5rem', paddingBottom: '0.5rem' }}
+                style={{ paddingTop: '0.75rem', paddingBottom: '0.75rem' }}
               >
                 <span className="text-sm text-foreground font-semibold select-none">
                   {inputValue}
@@ -222,7 +229,7 @@ export function AutocompleteUserInput({
               </div>
             )}
             
-            {/* Actual input */}
+            {/* Actual input with proper vertical centering */}
             <Input
               ref={inputRef}
               type="text"
@@ -232,24 +239,24 @@ export function AutocompleteUserInput({
               onKeyDown={handleKeyDown}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
-              className="h-auto border-none bg-transparent p-0 pb-2 pl-0 pr-0 pt-6 text-sm text-foreground font-semibold focus:ring-0 relative z-10"
+              className="h-auto border-none bg-transparent p-0 py-3 pl-0 pr-0 text-sm text-foreground font-semibold focus:ring-0 relative z-10"
               disabled={disabled}
             />
           </div>
 
-          {/* Arrow icon for confirmation - only blue when user is selected */}
+          {/* Arrow icon for confirmation - blue when ghost suggestion is available OR user is selected */}
           <Button
             type="button"
             variant="ghost"
             size="sm"
             className="ml-2 h-8 w-8 p-0 transition-colors"
-            onClick={handleAcceptSuggestion}
-            disabled={disabled || !ghostSuggestion || !ghostText}
+            onClick={selectedUser ? onSubmit : handleAcceptSuggestion}
+            disabled={disabled || (!ghostSuggestion && !selectedUser)}
           >
             <ArrowRight 
               className={cn(
                 "h-4 w-4 transition-colors",
-                selectedUser ? "text-primary" : "text-muted-foreground"
+                (ghostSuggestion && ghostText) || selectedUser ? "text-primary" : "text-muted-foreground"
               )} 
             />
           </Button>
