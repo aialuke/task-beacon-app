@@ -1,0 +1,154 @@
+
+/* Phase 5 - Optimized Utility Classes */
+@layer utilities {
+  /* === SPACING UTILITIES === */
+  .space-compact > * + * {
+    margin-top: var(--spacing-2);
+  }
+
+  .space-normal > * + * {
+    margin-top: var(--spacing-4);
+  }
+
+  .space-comfortable > * + * {
+    margin-top: var(--spacing-6);
+  }
+
+  /* === LAYOUT UTILITIES === */
+  .layout-container {
+    width: 100%;
+    max-width: var(--layout-content-max-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--layout-container-padding);
+    padding-right: var(--layout-container-padding);
+  }
+
+  .layout-grid {
+    display: grid;
+    gap: var(--spacing-6);
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+
+  /* === ANIMATION UTILITIES === */
+  .animate-enter {
+    animation: fade-in var(--duration-normal) var(--ease-out);
+  }
+
+  .animate-exit {
+    animation: fade-out var(--duration-normal) var(--ease-out);
+  }
+
+  .animate-bounce-subtle {
+    animation: pulse-subtle 3s infinite ease-in-out;
+  }
+
+  /* === SHADOW UTILITIES === */
+  .shadow-task-card {
+    box-shadow: var(--shadow-sm);
+  }
+
+  .shadow-task-card-hover {
+    box-shadow: var(--shadow-md);
+  }
+
+  .shadow-focus {
+    box-shadow: 0 0 0 3px hsl(var(--primary) / 0.2);
+  }
+
+  /* === BORDER UTILITIES === */
+  .border-task-default {
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--radius-xl);
+  }
+
+  .border-task-active {
+    border: 2px solid hsl(var(--primary));
+    border-radius: var(--radius-xl);
+  }
+
+  .border-task-error {
+    border: 2px solid hsl(var(--destructive));
+    border-radius: var(--radius-xl);
+  }
+
+  /* === TEXT UTILITIES === */
+  .text-task-title {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-tight);
+  }
+
+  .text-task-description {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-normal);
+    line-height: var(--line-height-normal);
+    color: hsl(var(--muted-foreground));
+  }
+
+  .text-task-meta {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    color: hsl(var(--muted-foreground));
+  }
+
+  /* === COMPONENT UTILITIES === */
+  .task-card-base {
+    @apply border-task-default shadow-task-card;
+    background: hsl(var(--card));
+    color: hsl(var(--card-foreground));
+    padding: var(--card-padding);
+    transition: all var(--duration-normal) var(--ease-out);
+  }
+
+  .task-card-interactive {
+    @apply task-card-base interactive;
+  }
+
+  .task-card-interactive:hover {
+    @apply shadow-task-card-hover;
+  }
+
+  .button-base {
+    border-radius: var(--radius-full);
+    font-weight: var(--font-weight-medium);
+    transition: all var(--duration-normal) var(--ease-out);
+  }
+
+  .button-primary {
+    @apply button-base;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+  }
+
+  .button-secondary {
+    @apply button-base;
+    background: hsl(var(--secondary));
+    color: hsl(var(--secondary-foreground));
+  }
+
+  /* === STATUS UTILITIES === */
+  .status-pending {
+    color: var(--status-pending);
+  }
+
+  .status-overdue {
+    color: var(--status-overdue);
+  }
+
+  .status-complete {
+    color: var(--status-complete);
+  }
+
+  .status-bg-pending {
+    background-color: var(--status-pending);
+  }
+
+  .status-bg-overdue {
+    background-color: var(--status-overdue);
+  }
+
+  .status-bg-complete {
+    background-color: var(--status-complete);
+  }
+}

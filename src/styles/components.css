@@ -1,5 +1,5 @@
 
-/* Import all component-specific styles */
+/* Import all component-specific styles - Phase 5 Optimized */
 @import './components/task-cards.css';
 @import './components/virtualized-tasks.css';
 @import './components/forms.css';

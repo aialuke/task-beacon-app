@@ -1,13 +1,9 @@
-/* src/styles/utilities.css */
+
+/* src/styles/utilities.css - Phase 5 Optimized */
 @layer utilities {
-  /* Import specialized utility styles */
-  @import './utilities/layout.css';
-  @import './utilities/text.css';
-  @import './utilities/colors.css';
+  /* Import optimized utility modules */
+  @import './utilities/optimized-utilities.css';
   @import './utilities/animations.css';
-  @import './utilities/shadows.css';
   @import './utilities/accessibility.css';
   @import './utilities/responsive.css';
-  @import './utilities/borders.css';
-  @import './utilities/icons.css';
 }

@@ -1,15 +1,16 @@
-/* Optimized CSS with minimal imports */
+
+/* Optimized CSS with minimal imports - Phase 5 */
 
 /* Import Tailwind CSS directives first */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Import enhanced CSS architecture */
+/* Import optimized CSS architecture */
 @import './styles/architecture/css-variables.css';
 @import './styles/architecture/performance-optimizations.css';
 
-/* Import optimized custom styles */
+/* Import optimized base styles */
 @import './styles/base.css';
 @import './styles/components.css';
 @import './styles/utilities.css';
@@ -84,7 +85,7 @@ html {
 
   /* Optimize focus indicators */
   :focus-visible {
-    outline: 2px solid var(--color-ring);
+    outline: 2px solid hsl(var(--ring));
     outline-offset: 2px;
   }
 }
@@ -92,8 +93,8 @@ html {
 /* Optimized icon handling */
 svg {
   fill: none;
-  transition: stroke var(--duration-300) var(--ease-out), 
-              fill var(--duration-300) var(--ease-out);
+  transition: stroke var(--duration-normal) var(--ease-out), 
+              fill var(--duration-normal) var(--ease-out);
 }
 
 /* Theme handling */
@@ -110,16 +111,3 @@ svg {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
 }
-
-/* 
-Performance optimization classes are available directly from performance-optimizations.css:
-- task-card-optimized
-- interactive 
-- hw-accelerated
-- skeleton-optimized
-- debug-performance, debug-layout, debug-paint (development only)
-
-Use these classes directly in components:
-<div className="task-card-optimized interactive hw-accelerated">
-<div className="skeleton-optimized">
-*/
