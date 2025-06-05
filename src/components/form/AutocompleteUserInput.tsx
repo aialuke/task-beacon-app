@@ -1,6 +1,5 @@
-
-import { useState, useRef, useMemo } from 'react';
-import { User as UserIcon, ArrowRight } from 'lucide-react';
+import { useState, useRef, useMemo, useEffect } from 'react';
+import { User as UserIcon, ArrowRight, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -9,7 +8,7 @@ import { useUsersQuery } from '@/features/users/hooks/useUsersQuery';
 interface AutocompleteUserInputProps {
   value: string; // user ID when selected, empty when not
   onChange: (userId: string) => void;
-  onSubmit?: () => void; // New prop for handling submission
+  onSubmit?: () => void;
   placeholder?: string;
   disabled?: boolean;
   className?: string;
@@ -28,7 +27,6 @@ export function AutocompleteUserInput({
   const [inputValue, setInputValue] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const hiddenInputRef = useRef<HTMLInputElement>(null);
   
   const { users, isLoading } = useUsersQuery();
   
@@ -77,6 +75,13 @@ export function AutocompleteUserInput({
     return 'invalid';
   }, [selectedUser, inputValue, ghostSuggestion]);
 
+  // Auto-focus input after user selection
+  useEffect(() => {
+    if (selectedUser && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [selectedUser]);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setInputValue(newValue);
@@ -91,18 +96,16 @@ export function AutocompleteUserInput({
     if (ghostSuggestion) {
       onChange(ghostSuggestion.id);
       setInputValue('');
+      // Keep focus on input after selection
+      setTimeout(() => inputRef.current?.focus(), 0);
     }
   };
 
-  const handleClear = () => {
+  const handleClearUser = () => {
     onChange('');
     setInputValue('');
-    // Focus the appropriate input based on state
-    if (selectedUser) {
-      hiddenInputRef.current?.focus();
-    } else {
-      inputRef.current?.focus();
-    }
+    // Ensure input stays focused
+    setTimeout(() => inputRef.current?.focus(), 0);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -111,7 +114,7 @@ export function AutocompleteUserInput({
         // First check: if there's a ghost suggestion and no user selected, select the user
         if (ghostSuggestion && ghostText && !selectedUser) {
           e.preventDefault();
-          e.stopPropagation(); // Prevent form submission
+          e.stopPropagation();
           handleAcceptSuggestion();
         }
         // Second case: if user is already selected and onSubmit is provided, call onSubmit
@@ -120,20 +123,16 @@ export function AutocompleteUserInput({
           e.stopPropagation();
           onSubmit();
         }
-        // Third case: if user is selected but no onSubmit, allow normal form submission
         break;
       case 'Escape':
         setInputValue('');
-        if (selectedUser) {
-          hiddenInputRef.current?.blur();
-        } else {
-          inputRef.current?.blur();
-        }
+        inputRef.current?.blur();
         break;
       case 'Backspace':
+        // If input is empty and user is selected, clear the user
         if (selectedUser && !inputValue) {
           e.preventDefault();
-          handleClear();
+          handleClearUser();
         }
         break;
     }
@@ -160,72 +159,9 @@ export function AutocompleteUserInput({
     }
   };
 
-  // Show placeholder only when field is empty and not focused and no user selected
+  // Show placeholder only when no input, not focused, and no user selected
   const showPlaceholder = !inputValue && !isFocused && !selectedUser;
 
-  // Selected state with hidden input for backspace functionality
-  if (selectedUser) {
-    return (
-      <div className={cn('relative w-full', className)}>
-        <div className="group relative">
-          <div
-            className={cn(
-              'flex h-12 items-center rounded-2xl border bg-background/60 p-2 backdrop-blur-sm transition-all duration-300',
-              'hover:border-border/60 hover:bg-background/70',
-              'border-border/40',
-              disabled && 'cursor-not-allowed opacity-50'
-            )}
-          >
-            <UserIcon className="h-4 w-4 mr-3 text-muted-foreground" />
-            
-            <div className="flex-1 min-w-0 relative">
-              {/* Selected user with proper centering */}
-              <div className="py-3 flex items-center">
-                <span className="text-sm bg-primary/10 text-primary px-2 py-1 rounded-md">
-                  {selectedUser.name || selectedUser.email.split('@')[0]}
-                </span>
-              </div>
-              
-              {/* Hidden input for backspace functionality */}
-              <input
-                ref={hiddenInputRef}
-                type="text"
-                className="absolute inset-0 opacity-0 cursor-text"
-                onKeyDown={handleKeyDown}
-                onFocus={() => setIsFocused(true)}
-                onBlur={() => setIsFocused(false)}
-                disabled={disabled}
-                autoFocus
-              />
-            </div>
-
-            {/* Blue arrow icon for submission */}
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="ml-2 h-8 w-8 p-0 transition-colors"
-              onClick={onSubmit}
-              disabled={disabled}
-            >
-              <ArrowRight className="h-4 w-4 text-primary" />
-            </Button>
-          </div>
-          
-          {/* Enhanced focus ring */}
-          <div
-            className={cn(
-              'pointer-events-none absolute inset-0 rounded-2xl transition-all duration-300',
-              isFocused &&
-                'ring-2 ring-primary/30 ring-offset-2 ring-offset-background'
-            )}
-          />
-        </div>
-      </div>
-    );
-  }
-
-  // Normal input state with enhanced ghost text and arrow icon
   return (
     <div className={cn('relative w-full', className)}>
       <div className="group relative">
@@ -240,38 +176,53 @@ export function AutocompleteUserInput({
         >
           {getStatusIcon()}
 
-          <div className="relative flex-1 ml-3">
-            {/* Enhanced ghost text overlay with better contrast */}
-            {ghostText && isFocused && (
-              <div
-                className="absolute inset-0 pointer-events-none flex items-center"
-                style={{ paddingTop: '0.75rem', paddingBottom: '0.75rem' }}
-              >
-                <span className="text-sm text-foreground font-semibold select-none">
-                  {inputValue}
-                </span>
-                <span className="text-sm text-muted-foreground/70 select-none">
-                  {ghostText}
-                </span>
+          <div className="flex-1 min-w-0 ml-3 flex items-center gap-2">
+            {/* Selected user tag - displayed inline */}
+            {selectedUser && (
+              <div className="flex items-center bg-primary/10 text-primary px-2 py-1 rounded-md text-sm">
+                <span>{selectedUser.name || selectedUser.email.split('@')[0]}</span>
+                <button
+                  type="button"
+                  className="ml-1 text-primary/70 hover:text-primary"
+                  onClick={handleClearUser}
+                  disabled={disabled}
+                >
+                  <X className="h-3 w-3" />
+                </button>
               </div>
             )}
-            
-            {/* Actual input with proper vertical centering */}
-            <Input
-              ref={inputRef}
-              type="text"
-              placeholder=""
-              value={inputValue}
-              onChange={handleInputChange}
-              onKeyDown={handleKeyDown}
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
-              className="h-auto border-none bg-transparent p-0 py-3 pl-0 pr-0 text-sm text-foreground font-semibold focus:ring-0 relative z-10"
-              disabled={disabled}
-            />
+
+            {/* Input container with ghost text */}
+            <div className="relative flex-1 min-w-0">
+              {/* Ghost text overlay */}
+              {ghostText && isFocused && !selectedUser && (
+                <div className="absolute inset-0 pointer-events-none flex items-center">
+                  <span className="text-sm text-foreground font-semibold select-none">
+                    {inputValue}
+                  </span>
+                  <span className="text-sm text-muted-foreground/70 select-none">
+                    {ghostText}
+                  </span>
+                </div>
+              )}
+              
+              {/* Actual input */}
+              <Input
+                ref={inputRef}
+                type="text"
+                placeholder=""
+                value={inputValue}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
+                className="h-auto border-none bg-transparent p-0 py-3 pl-0 pr-0 text-sm text-foreground font-semibold focus:ring-0 relative z-10"
+                disabled={disabled}
+              />
+            </div>
           </div>
 
-          {/* Arrow icon for confirmation - blue when ghost suggestion is available OR user is selected */}
+          {/* Arrow icon for confirmation */}
           <Button
             type="button"
             variant="ghost"
@@ -289,7 +240,7 @@ export function AutocompleteUserInput({
           </Button>
         </div>
 
-        {/* Simple placeholder - show/hide without animation */}
+        {/* Placeholder */}
         {showPlaceholder && (
           <label
             className="pointer-events-none absolute left-11 top-1/2 -translate-y-1/2 select-none text-sm text-muted-foreground"
@@ -298,7 +249,7 @@ export function AutocompleteUserInput({
           </label>
         )}
 
-        {/* Enhanced focus ring */}
+        {/* Focus ring */}
         <div
           className={cn(
             'pointer-events-none absolute inset-0 rounded-2xl transition-all duration-300',
