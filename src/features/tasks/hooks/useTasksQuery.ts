@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { TaskService } from '@/lib/api/tasks/task.service';
 import { QueryKeys, createLoadingState } from '@/lib/api/standardized-api';
@@ -22,19 +22,28 @@ interface UseTasksQueryReturn {
 }
 
 /**
- * Optimized hook for paginated task queries with improved performance
+ * Optimized hook for paginated task queries - Phase 2 Implementation
  * 
- * Uses optimized query patterns and selective prefetching.
+ * Enhanced with improved caching, memoization, and performance optimizations.
  */
 export function useTasksQuery(pageSize = 10): UseTasksQueryReturn {
   const [currentPage, setCurrentPage] = useState(1);
   const queryClient = useQueryClient();
   const { user, session } = useAuth();
 
-  // Use optimized query key structure
+  // Optimized query key structure
   const queryKey = [...QueryKeys.tasks, 'paginated', currentPage, pageSize, user?.id];
 
-  // Fetch tasks with optimized error handling and caching
+  // Memoized navigation functions to prevent unnecessary re-renders
+  const goToNextPage = useCallback(() => {
+    setCurrentPage((old) => old + 1);
+  }, []);
+
+  const goToPreviousPage = useCallback(() => {
+    setCurrentPage((old) => Math.max(1, old - 1));
+  }, []);
+
+  // Fetch tasks with enhanced caching and error handling
   const {
     data: response,
     isLoading,
@@ -60,31 +69,30 @@ export function useTasksQuery(pageSize = 10): UseTasksQueryReturn {
         hasNextPage: response.data.pagination.hasNextPage,
       };
     },
-    staleTime: 2 * 60 * 1000, // Reduced to 2 minutes for fresher data
-    gcTime: 5 * 60 * 1000, // Garbage collect after 5 minutes
+    staleTime: 5 * 60 * 1000, // 5 minutes for better UX
+    gcTime: 10 * 60 * 1000, // 10 minutes garbage collection
     enabled: !!user && !!session,
     retry: (failureCount, error) => {
       // Smart retry logic
       if (error instanceof Error && error.message.includes('not found')) {
         return false;
       }
-      return failureCount < 2; // Reduced retry attempts
+      return failureCount < 2;
     },
     refetchOnWindowFocus: false,
-    // Optimized network behavior
     networkMode: 'offlineFirst',
   });
 
   // Determine if we have a next page
   const hasNextPage = response?.hasNextPage || false;
 
-  // Selective prefetching - only prefetch if we're near the end of current data
+  // Intelligent prefetching - only when beneficial
   const shouldPrefetch = hasNextPage && !isLoading && response?.data.length === pageSize;
   
   if (shouldPrefetch && user && session) {
     const nextPageKey = [...QueryKeys.tasks, 'paginated', currentPage + 1, pageSize, user.id];
     
-    // Check if next page is already cached before prefetching
+    // Check if next page is already cached
     const existingData = queryClient.getQueryData(nextPageKey);
     
     if (!existingData) {
@@ -107,7 +115,7 @@ export function useTasksQuery(pageSize = 10): UseTasksQueryReturn {
             hasNextPage: response.data.pagination.hasNextPage,
           };
         },
-        staleTime: 2 * 60 * 1000,
+        staleTime: 5 * 60 * 1000,
       });
     }
   }
@@ -122,8 +130,8 @@ export function useTasksQuery(pageSize = 10): UseTasksQueryReturn {
     pageSize,
     hasNextPage,
     hasPreviousPage: currentPage > 1,
-    goToNextPage: () => setCurrentPage((old) => old + 1),
-    goToPreviousPage: () => setCurrentPage((old) => Math.max(1, old - 1)),
+    goToNextPage,
+    goToPreviousPage,
     isLoading: loadingState.isLoading,
     isFetching: loadingState.isFetching,
     error: loadingState.error,
