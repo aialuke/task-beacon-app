@@ -252,17 +252,22 @@ export class TaskQueryService {
     total: number;
   }>> {
     return apiRequest('tasks.getTaskCounts', async () => {
-      let baseQuery = supabase.from('tasks');
+      // Build base queries with proper filtering
+      let pendingQuery = supabase.from('tasks').select('id', { count: 'exact', head: true }).eq('status', 'pending');
+      let completeQuery = supabase.from('tasks').select('id', { count: 'exact', head: true }).eq('status', 'complete');
+      let overdueQuery = supabase.from('tasks').select('id', { count: 'exact', head: true }).eq('status', 'overdue');
       
       if (userId) {
-        baseQuery = baseQuery.eq('owner_id', userId);
+        pendingQuery = pendingQuery.eq('owner_id', userId);
+        completeQuery = completeQuery.eq('owner_id', userId);
+        overdueQuery = overdueQuery.eq('owner_id', userId);
       }
 
       // Use indexes for efficient counting
       const [pendingCount, completeCount, overdueCount] = await Promise.all([
-        supabase.from('tasks').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
-        supabase.from('tasks').select('id', { count: 'exact', head: true }).eq('status', 'complete'),
-        supabase.from('tasks').select('id', { count: 'exact', head: true }).eq('status', 'overdue'),
+        pendingQuery,
+        completeQuery,
+        overdueQuery,
       ]);
 
       const pending = pendingCount.count || 0;
