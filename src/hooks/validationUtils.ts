@@ -99,7 +99,24 @@ export function validateWithError<T>(
  * Hook-friendly validation using consolidated field validation
  */
 export function validateFieldValue(field: string, value: string): ValidationResult {
-  const utilResult = utilValidateField(field, value);
+  // Create appropriate validation rules based on field name
+  const validationRules = {
+    required: true,
+    ...(field === 'email' && { email: true }),
+    ...(field === 'password' && { password: true }),
+    ...(field === 'url' && { customValidator: (val: unknown) => {
+      const str = String(val || '');
+      if (!str.trim()) return true; // Allow empty URLs
+      try {
+        new URL(str);
+        return true;
+      } catch {
+        return 'Please enter a valid URL';
+      }
+    }}),
+  };
+  
+  const utilResult = utilValidateField(value, validationRules);
   return convertValidationResult(utilResult);
 }
 
@@ -107,6 +124,19 @@ export function validateFieldValue(field: string, value: string): ValidationResu
  * Hook-friendly form validation using consolidated form validation
  */
 export function validateFormData(data: Record<string, unknown>): ValidationResult {
-  const utilResult = utilValidateForm(data);
-  return convertValidationResult(utilResult);
+  const formValidationResult = utilValidateForm(data, {});
+  
+  // Convert form validation result to hook-compatible format
+  const errors: Record<string, string> = {};
+  if (!formValidationResult.isValid) {
+    Object.entries(formValidationResult.errors).forEach(([field, fieldErrors]) => {
+      errors[field] = fieldErrors[0] || 'Validation failed';
+    });
+  }
+  
+  return {
+    isValid: formValidationResult.isValid,
+    errors,
+    firstError: Object.values(errors)[0],
+  };
 }

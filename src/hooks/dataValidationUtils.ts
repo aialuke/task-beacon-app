@@ -8,6 +8,7 @@
 // === INTERNAL UTILITIES ===
 import { 
   validateForm,
+  validateField,
   type ValidationResult as UtilValidationResult 
 } from '@/lib/utils/validation';
 
@@ -26,6 +27,19 @@ export function showValidationErrors(result: UtilValidationResult) {
  * Validates data and returns formatted errors for display
  */
 export function validateAndShowErrors(data: Record<string, unknown>) {
-  const validationResult = validateForm(data);
-  return showValidationErrors(validationResult);
+  const validationResult = validateForm(data, {});
+  
+  // Convert the form validation result to the expected format
+  const errors: string[] = [];
+  if (!validationResult.isValid) {
+    Object.values(validationResult.errors).forEach(fieldErrors => {
+      errors.push(...fieldErrors);
+    });
+  }
+  
+  return showValidationErrors({
+    isValid: validationResult.isValid,
+    errors,
+    warnings: [],
+  });
 }
