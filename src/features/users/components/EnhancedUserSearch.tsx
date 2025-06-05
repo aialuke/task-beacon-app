@@ -13,6 +13,7 @@ interface EnhancedUserSearchProps {
   placeholder?: string;
   disabled?: boolean;
   className?: string;
+  dropdownClassName?: string;
 }
 
 /**
@@ -24,6 +25,7 @@ export function EnhancedUserSearch({
   placeholder = 'Search users...',
   disabled = false,
   className,
+  dropdownClassName,
 }: EnhancedUserSearchProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
@@ -155,13 +157,10 @@ export function EnhancedUserSearch({
         />
       </div>
 
-      {/* Dropdown */}
+      {/* Dropdown with styling moved to parent */}
       {isOpen && !selectedUser && (
-        <div
-          ref={dropdownRef}
-          className="absolute z-[9999] mt-2 w-full overflow-auto rounded-xl border border-border bg-popover shadow-lg"
-        >
-          <div className="flex h-12 items-center justify-center p-2">
+        <div ref={dropdownRef} className={dropdownClassName}>
+          <div className="p-2">
             {isLoading ? (
               <div className="py-3 text-center text-sm text-muted-foreground">
                 Loading users...
