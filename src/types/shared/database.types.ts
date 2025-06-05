@@ -1,50 +1,58 @@
 
 /**
- * Shared Database Types
+ * Database Types - Shared Infrastructure
  * 
- * Types for database operations, table interfaces, and query patterns.
- * Used across all database interactions and API services.
+ * Core database operation types and interfaces.
  */
 
-import type { BaseEntity } from './common.types';
+// Import from unified type system instead of deleted common.types
+import type { ID, Timestamp } from '../utility.types';
 
-// Database operation types
-export type DatabaseOperation = 'INSERT' | 'UPDATE' | 'DELETE' | 'SELECT';
+// Core database operation interfaces
+export interface DatabaseOperation<T = unknown> {
+  id: string;
+  operation: 'create' | 'read' | 'update' | 'delete' | 'batch';
+  table: string;
+  data?: T;
+  filters?: Record<string, unknown>;
+  timestamp: Timestamp;
+  userId?: string;
+  status: 'pending' | 'completed' | 'failed';
+  error?: string;
+}
 
-// Table row base interface
-export interface TableRow extends BaseEntity {
+export interface TableRow {
+  id: ID;
+  created_at: Timestamp;
+  updated_at: Timestamp;
   [key: string]: unknown;
 }
 
-// Database query filters
 export interface QueryFilter {
-  column: string;
-  operator: 'eq' | 'neq' | 'gt' | 'gte' | 'lt' | 'lte' | 'like' | 'ilike' | 'in' | 'is' | 'not';
+  field: string;
+  operator: 'eq' | 'ne' | 'gt' | 'gte' | 'lt' | 'lte' | 'like' | 'ilike' | 'in' | 'not_in';
   value: unknown;
 }
 
 export interface QueryOptions {
-  select?: string;
   filters?: QueryFilter[];
   orderBy?: {
-    column: string;
-    ascending?: boolean;
+    field: string;
+    direction: 'asc' | 'desc';
   }[];
-  range?: {
-    from: number;
-    to: number;
-  };
-  single?: boolean;
+  limit?: number;
+  offset?: number;
+  select?: string[];
+  include?: string[];
 }
 
-// Database transaction types
+// Transaction and batch operation types
 export interface TransactionOptions {
-  isolationLevel?: 'READ_UNCOMMITTED' | 'READ_COMMITTED' | 'REPEATABLE_READ' | 'SERIALIZABLE';
-  readOnly?: boolean;
-  deferrable?: boolean;
+  isolationLevel?: 'read_uncommitted' | 'read_committed' | 'repeatable_read' | 'serializable';
+  timeout?: number;
+  retryAttempts?: number;
 }
 
-// Database connection types
 export interface DatabaseConfig {
   host: string;
   port: number;
@@ -53,116 +61,99 @@ export interface DatabaseConfig {
   password: string;
   ssl?: boolean;
   poolSize?: number;
-  timeout?: number;
+  connectionTimeout?: number;
+  queryTimeout?: number;
 }
 
-// Table schema types
+// Schema and migration types
 export interface ColumnDefinition {
   name: string;
-  type: 'text' | 'integer' | 'boolean' | 'timestamp' | 'uuid' | 'json' | 'array';
+  type: 'string' | 'number' | 'boolean' | 'date' | 'json' | 'uuid' | 'text';
   nullable?: boolean;
-  default?: unknown;
+  defaultValue?: unknown;
   primaryKey?: boolean;
   foreignKey?: {
     table: string;
     column: string;
   };
   unique?: boolean;
-  indexed?: boolean;
+  index?: boolean;
 }
 
 export interface TableSchema {
   name: string;
   columns: ColumnDefinition[];
+  indexes?: {
+    name: string;
+    columns: string[];
+    unique?: boolean;
+  }[];
   constraints?: {
-    primaryKey?: string[];
-    foreignKeys?: {
-      columns: string[];
-      references: {
-        table: string;
-        columns: string[];
-      };
-    }[];
-    unique?: string[][];
-    check?: {
-      name: string;
-      expression: string;
-    }[];
-  };
+    name: string;
+    type: 'check' | 'foreign_key' | 'unique';
+    definition: string;
+  }[];
 }
 
-// Migration types
 export interface Migration {
   id: string;
   name: string;
-  version: number;
-  up: string;
-  down: string;
-  createdAt: Date;
-  appliedAt?: Date;
-}
-
-// Database health and monitoring
-export interface DatabaseHealth {
-  connected: boolean;
-  responseTime: number;
-  activeConnections: number;
-  maxConnections: number;
   version: string;
-  lastChecked: Date;
+  up: () => Promise<void>;
+  down: () => Promise<void>;
+  appliedAt?: Timestamp;
 }
 
-// Audit log types
-export interface AuditLog extends BaseEntity {
-  table_name: string;
+// Monitoring and health types
+export interface DatabaseHealth {
+  status: 'healthy' | 'degraded' | 'unhealthy';
+  connectionPool: {
+    active: number;
+    idle: number;
+    total: number;
+  };
+  responseTime: number;
+  lastCheck: Timestamp;
+  errors?: string[];
+}
+
+export interface AuditLog {
+  id: string;
   operation: DatabaseOperation;
-  old_values?: Record<string, unknown>;
-  new_values?: Record<string, unknown>;
-  user_id?: string;
-  ip_address?: string;
-  user_agent?: string;
+  userId?: string;
+  timestamp: Timestamp;
+  changes?: {
+    before: Record<string, unknown>;
+    after: Record<string, unknown>;
+  };
+  metadata?: Record<string, unknown>;
 }
 
-// Database error types
 export interface DatabaseError {
   code: string;
   message: string;
-  severity: 'ERROR' | 'WARNING' | 'INFO';
-  detail?: string;
-  hint?: string;
-  position?: number;
-  internalPosition?: number;
-  internalQuery?: string;
-  where?: string;
-  schema?: string;
-  table?: string;
-  column?: string;
-  dataType?: string;
-  constraint?: string;
-  file?: string;
-  line?: number;
-  routine?: string;
+  details?: Record<string, unknown>;
+  query?: string;
+  parameters?: unknown[];
+  timestamp: Timestamp;
 }
 
-// Database performance metrics
+// Performance and analytics
 export interface QueryMetrics {
   queryId: string;
-  query: string;
+  sql: string;
   executionTime: number;
-  planningTime: number;
-  bufferHits: number;
-  bufferMisses: number;
-  rowsReturned: number;
   rowsAffected: number;
-  timestamp: Date;
+  timestamp: Timestamp;
+  userId?: string;
+  cached?: boolean;
 }
 
-// Backup and restore types
 export interface BackupConfig {
-  schedule: string; // cron expression
-  retention: number; // days
+  schedule: string; // Cron expression
+  retention: number; // Days to keep backups
   compression: boolean;
-  encryption: boolean;
+  encryption?: boolean;
   destination: string;
 }
 
@@ -170,8 +161,7 @@ export interface BackupInfo {
   id: string;
   filename: string;
   size: number;
-  createdAt: Date;
-  checksum: string;
-  compressed: boolean;
-  encrypted: boolean;
-} 
+  createdAt: Timestamp;
+  status: 'pending' | 'completed' | 'failed';
+  checksum?: string;
+}

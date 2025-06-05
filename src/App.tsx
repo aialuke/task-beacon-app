@@ -2,7 +2,7 @@
 import { Routes, Route } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import { AppProviders } from './components/providers/AppProviders';
-import { PageLoader } from './components/ui/layout/PageLoader';
+import UnifiedLoadingStates from './components/ui/loading/UnifiedLoadingStates';
 
 // Lazy load all major pages for optimal code splitting
 const AuthPage = lazy(() => import('./pages/AuthPage'));
@@ -13,12 +13,12 @@ const FollowUpTaskPage = lazy(() => import('./pages/FollowUpTaskPage'));
 
 const App = () => (
   <AppProviders>
-    <Suspense fallback={<PageLoader message="Loading application..." />}>
+    <Suspense fallback={<UnifiedLoadingStates variant="page" message="Loading application..." />}>
       <Routes>
         <Route 
           path="/" 
           element={
-            <Suspense fallback={<PageLoader variant="dashboard" message="Loading dashboard..." />}>
+            <Suspense fallback={<UnifiedLoadingStates variant="page" message="Loading dashboard..." />}>
               <AuthPage />
             </Suspense>
           } 
@@ -26,7 +26,7 @@ const App = () => (
         <Route 
           path="/create-task" 
           element={
-            <Suspense fallback={<PageLoader message="Loading task creation..." />}>
+            <Suspense fallback={<UnifiedLoadingStates variant="page" message="Loading task creation..." />}>
               <CreateTaskPage />
             </Suspense>
           } 
@@ -34,7 +34,7 @@ const App = () => (
         <Route
           path="/follow-up-task/:parentTaskId"
           element={
-            <Suspense fallback={<PageLoader message="Loading follow-up task..." />}>
+            <Suspense fallback={<UnifiedLoadingStates variant="page" message="Loading follow-up task..." />}>
               <FollowUpTaskPage />
             </Suspense>
           }
@@ -42,7 +42,7 @@ const App = () => (
         <Route 
           path="/tasks/:id" 
           element={
-            <Suspense fallback={<PageLoader message="Loading task details..." />}>
+            <Suspense fallback={<UnifiedLoadingStates variant="page" message="Loading task details..." />}>
               <TaskDetailsPage />
             </Suspense>
           } 
@@ -50,7 +50,7 @@ const App = () => (
         <Route 
           path="*" 
           element={
-            <Suspense fallback={<PageLoader variant="minimal" message="Loading page..." />}>
+            <Suspense fallback={<UnifiedLoadingStates variant="page" message="Loading page..." />}>
               <NotFound />
             </Suspense>
           } 

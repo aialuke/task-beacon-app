@@ -1,6 +1,6 @@
 
 import { lazy, Suspense, ComponentType } from 'react';
-import LoadingSpinner from './layout/LoadingSpinner';
+import UnifiedLoadingStates from './loading/UnifiedLoadingStates';
 
 interface LazyComponentProps {
   fallback?: React.ReactNode;
@@ -17,7 +17,7 @@ export function withLazyLoading<T extends Record<string, any>>(
   const LazyComponent = lazy(importFn);
   
   return function WrappedLazyComponent(props: T) {
-    const fallback = options.fallback || <LoadingSpinner />;
+    const fallback = options.fallback || <UnifiedLoadingStates variant="spinner" />;
     
     return (
       <Suspense fallback={fallback}>
@@ -32,7 +32,7 @@ export function withLazyLoading<T extends Record<string, any>>(
  */
 export function LazyWrapper({ 
   children, 
-  fallback = <LoadingSpinner /> 
+  fallback = <UnifiedLoadingStates variant="spinner" /> 
 }: { 
   children: React.ReactNode;
   fallback?: React.ReactNode;

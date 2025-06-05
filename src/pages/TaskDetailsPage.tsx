@@ -5,7 +5,7 @@ import { ArrowLeft, Calendar1, ExternalLink } from 'lucide-react';
 import { formatDate } from '@/lib/utils/shared';
 import { lazy, Suspense } from 'react';
 import { getTaskStatus } from '@/features/tasks/utils/taskUiUtils';
-import { PageLoader } from '@/components/ui/layout/PageLoader';
+import UnifiedLoadingStates from '@/components/ui/loading/UnifiedLoadingStates';
 import { useTaskQuery } from '@/features/tasks/hooks/useTaskQuery';
 
 // Lazy load heavy components for better performance
@@ -18,7 +18,7 @@ const TaskDetailsPage = () => {
   const { task, loading, error } = useTaskQuery(id);
 
   if (loading) {
-    return <PageLoader message="Loading task details..." />;
+    return <UnifiedLoadingStates variant="page" message="Loading task details..." />;
   }
 
   if (error || !task) {
@@ -55,7 +55,7 @@ const TaskDetailsPage = () => {
       <div className="space-y-6 rounded-xl bg-white p-6 shadow-sm">
         <div className="flex items-start gap-4">
           <div className="shrink-0">
-            <Suspense fallback={<div className="h-12 w-12 animate-pulse rounded-full bg-muted" />}>
+            <Suspense fallback={<UnifiedLoadingStates variant="spinner" size="lg" />}>
               <CountdownTimer dueDate={task.due_date} status={status} />
             </Suspense>
           </div>
@@ -125,7 +125,7 @@ const TaskDetailsPage = () => {
         )}
 
         <div className="border-t pt-4">
-          <Suspense fallback={<div className="h-10 animate-pulse rounded bg-muted" />}>
+          <Suspense fallback={<UnifiedLoadingStates variant="skeleton" count={2} />}>
             <TaskActions task={task} />
           </Suspense>
         </div>

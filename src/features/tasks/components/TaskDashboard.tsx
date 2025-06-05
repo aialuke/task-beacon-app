@@ -6,7 +6,7 @@ import { Suspense, memo, lazy } from 'react';
 import TaskDashboardHeader from './TaskDashboardHeader';
 import { TaskProviders } from '@/features/tasks/providers/TaskProviders';
 import { TaskErrorBoundary } from './TaskErrorBoundary';
-import { TaskPageLoader } from './TaskLoadingStates';
+import UnifiedLoadingStates from '@/components/ui/loading/UnifiedLoadingStates';
 
 // Correctly lazy load the enhanced task list
 const EnhancedTaskList = lazy(() => import('./EnhancedTaskList'));
@@ -31,7 +31,7 @@ function TaskDashboard() {
             {/* Main Content Section with Suspense */}
             <main className="task-dashboard-main" role="main">
               <Suspense fallback={
-                <TaskPageLoader message="Loading enhanced task interface..." />
+                <UnifiedLoadingStates variant="page" message="Loading enhanced task interface..." />
               }>
                 <EnhancedTaskList />
               </Suspense>

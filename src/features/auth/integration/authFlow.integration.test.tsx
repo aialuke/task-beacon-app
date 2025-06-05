@@ -1,14 +1,20 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { renderHook, act, waitFor } from '@testing-library/react';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactNode } from 'react';
 import { useAuth, AuthProvider } from '@/contexts/AuthContext';
 import { setupIntegrationTest } from '@/test/integration/setup';
 import { AuthService } from '@/lib/api';
 import type { User, Session, AuthResponse } from '@/types/shared';
-import type { ApiResponse } from '@/types/shared/api.types';
+import type { ApiResponse } from '@/types/api.types';
 
-// Integration test for complete auth workflow
+/**
+ * Authentication Flow Integration Tests
+ * 
+ * Tests the complete authentication workflow including login, logout,
+ * session management, and protected route access.
+ */
+
 describe('Auth Flow Integration Tests', () => {
   let cleanup: () => void;
   let queryClient: QueryClient;
