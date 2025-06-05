@@ -48,6 +48,16 @@ export function AutocompleteUserInput({
     });
   }, [users, inputValue, selectedUser]);
 
+  // Auto-select exact matches
+  useEffect(() => {
+    if (exactMatch && !selectedUser) {
+      onChange(exactMatch.id);
+      setInputValue('');
+      // Keep focus on input after selection
+      setTimeout(() => inputRef.current?.focus(), 0);
+    }
+  }, [exactMatch, selectedUser, onChange]);
+
   // Find the best matching suggestion for ghost text
   const ghostSuggestion = useMemo(() => {
     if (!inputValue.trim() || selectedUser || exactMatch) return null;
@@ -81,11 +91,11 @@ export function AutocompleteUserInput({
 
   // Determine validation state
   const validationState: ValidationState = useMemo(() => {
-    if (selectedUser || exactMatch) return 'valid';
+    if (selectedUser) return 'valid';
     if (!inputValue.trim()) return 'empty';
     if (ghostSuggestion) return 'partial';
     return 'invalid';
-  }, [selectedUser, exactMatch, inputValue, ghostSuggestion]);
+  }, [selectedUser, inputValue, ghostSuggestion]);
 
   // Auto-focus input after user selection
   useEffect(() => {
@@ -111,15 +121,6 @@ export function AutocompleteUserInput({
     }
   };
 
-  const handleAcceptExactMatch = () => {
-    if (exactMatch) {
-      onChange(exactMatch.id);
-      setInputValue('');
-      // Keep focus on input after selection
-      setTimeout(() => inputRef.current?.focus(), 0);
-    }
-  };
-
   const handleClearUser = () => {
     onChange('');
     setInputValue('');
@@ -136,13 +137,7 @@ export function AutocompleteUserInput({
           e.stopPropagation();
           handleAcceptSuggestion();
         }
-        // Second check: if there's an exact match and no user selected, select the user
-        else if (exactMatch && !selectedUser) {
-          e.preventDefault();
-          e.stopPropagation();
-          handleAcceptExactMatch();
-        }
-        // Third case: if user is already selected and onSubmit is provided, call onSubmit
+        // Second case: if user is already selected and onSubmit is provided, call onSubmit
         else if (selectedUser && onSubmit) {
           e.preventDefault();
           e.stopPropagation();
@@ -165,7 +160,7 @@ export function AutocompleteUserInput({
 
   const getBorderColor = () => {
     if (disabled) return 'border-border/40';
-    if (selectedUser || exactMatch) return 'border-green-500';
+    if (selectedUser) return 'border-green-500';
     if (!isFocused && validationState === 'empty') return 'border-border/40';
     
     switch (validationState) {
@@ -177,7 +172,7 @@ export function AutocompleteUserInput({
   };
 
   const getStatusIcon = () => {
-    if (selectedUser || exactMatch) return <UserIcon className="h-4 w-4 text-green-500" />;
+    if (selectedUser) return <UserIcon className="h-4 w-4 text-green-500" />;
     switch (validationState) {
       case 'invalid': return <UserIcon className="h-4 w-4 text-red-500" />;
       default: return <UserIcon className="h-4 w-4 text-muted-foreground" />;
@@ -186,9 +181,6 @@ export function AutocompleteUserInput({
 
   // Show placeholder only when no input, not focused, and no user selected
   const showPlaceholder = !inputValue && !isFocused && !selectedUser;
-
-  // Determine which user to show in the tag (selected user or exact match)
-  const displayUser = selectedUser || exactMatch;
 
   return (
     <div className={cn('relative w-full', className)}>
@@ -205,27 +197,25 @@ export function AutocompleteUserInput({
           {getStatusIcon()}
 
           <div className="flex-1 min-w-0 ml-3 flex items-center gap-2">
-            {/* User tag - displayed inline for selected or exact match */}
-            {displayUser && (
+            {/* User tag - displayed inline for selected user */}
+            {selectedUser && (
               <div className="flex items-center bg-primary/10 text-primary px-2 py-1 rounded-md text-sm">
-                <span>{displayUser.name || displayUser.email.split('@')[0]}</span>
-                {selectedUser && (
-                  <button
-                    type="button"
-                    className="ml-1 text-primary/70 hover:text-primary"
-                    onClick={handleClearUser}
-                    disabled={disabled}
-                  >
-                    <X className="h-3 w-3" />
-                  </button>
-                )}
+                <span>{selectedUser.name || selectedUser.email.split('@')[0]}</span>
+                <button
+                  type="button"
+                  className="ml-1 text-primary/70 hover:text-primary"
+                  onClick={handleClearUser}
+                  disabled={disabled}
+                >
+                  <X className="h-3 w-3" />
+                </button>
               </div>
             )}
 
             {/* Input container with ghost text */}
             <div className="relative flex-1 min-w-0">
               {/* Ghost text overlay */}
-              {ghostText && isFocused && !selectedUser && !exactMatch && (
+              {ghostText && isFocused && !selectedUser && (
                 <div className="absolute inset-0 pointer-events-none flex items-center">
                   <span className="text-sm text-foreground font-semibold select-none">
                     {inputValue}
@@ -258,13 +248,13 @@ export function AutocompleteUserInput({
             variant="ghost"
             size="sm"
             className="ml-2 h-8 w-8 p-0 transition-colors"
-            onClick={selectedUser ? onSubmit : exactMatch ? handleAcceptExactMatch : handleAcceptSuggestion}
-            disabled={disabled || (!ghostSuggestion && !selectedUser && !exactMatch)}
+            onClick={selectedUser ? onSubmit : handleAcceptSuggestion}
+            disabled={disabled || (!ghostSuggestion && !selectedUser)}
           >
             <ArrowRight 
               className={cn(
                 "h-4 w-4 transition-colors",
-                (ghostSuggestion && ghostText) || selectedUser || exactMatch ? "text-primary" : "text-muted-foreground"
+                selectedUser ? "text-primary" : "text-muted-foreground"
               )} 
             />
           </Button>
