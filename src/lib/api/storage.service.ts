@@ -1,3 +1,4 @@
+
 /**
  * Storage Service
  * 
@@ -21,8 +22,6 @@ export class StorageService {
     file: File
   ): Promise<ApiResponse<string>> {
     return apiRequest(`storage.upload.${bucket}`, async () => {
-      console.log('StorageService.uploadFile - Uploading to bucket:', bucket, 'path:', path);
-      
       const { data, error } = await supabase.storage
         .from(bucket)
         .upload(path, file, {
@@ -30,20 +29,15 @@ export class StorageService {
         });
 
       if (error) {
-        console.error('StorageService.uploadFile - Upload error:', error);
         throw error;
       }
       
       if (!data?.path) {
-        console.error('StorageService.uploadFile - No path returned from upload');
         throw new Error('Upload failed - no path returned');
       }
 
-      console.log('StorageService.uploadFile - Upload successful, path:', data.path);
-
       // Return the full URL
       const publicUrl = StorageService.getPublicUrl(bucket, data.path);
-      console.log('StorageService.uploadFile - Public URL:', publicUrl);
       
       return publicUrl;
     });

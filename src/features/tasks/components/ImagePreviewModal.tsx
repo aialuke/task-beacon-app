@@ -32,8 +32,7 @@ export const ImagePreviewModal = memo(function ImagePreviewModal({
     setImageError(false);
   };
 
-  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
-    console.error('Image failed to load:', imageUrl, e);
+  const handleImageError = () => {
     setImageError(true);
     setImageLoaded(false);
   };

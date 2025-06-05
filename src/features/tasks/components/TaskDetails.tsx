@@ -29,37 +29,26 @@ function TaskDetails({
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
-  // Debug logging
-  console.log('TaskDetails - Task object:', task);
-  console.log('TaskDetails - photo_url:', task.photo_url);
-  console.log('TaskDetails - photo_url type:', typeof task.photo_url);
-  console.log('TaskDetails - photo_url truthy:', !!task.photo_url);
-
   const handleImageClick = () => {
-    console.log('Image clicked, opening modal');
     setIsImageModalOpen(true);
   };
 
   const handleImageModalClose = () => {
-    console.log('Closing image modal');
     setIsImageModalOpen(false);
   };
 
   const handleImageLoad = () => {
-    console.log('Image loaded successfully:', task.photo_url);
     setImageLoaded(true);
     setImageError(false);
   };
 
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
-    console.error('Image failed to load:', task.photo_url, e);
     setImageError(true);
     setImageLoaded(false);
   };
 
   // Check if photo should be rendered - handle both null and string values properly
   const shouldRenderPhoto = task.photo_url && typeof task.photo_url === 'string' && task.photo_url.trim() !== '';
-  console.log('TaskDetails - shouldRenderPhoto:', shouldRenderPhoto);
 
   return (
     <>
