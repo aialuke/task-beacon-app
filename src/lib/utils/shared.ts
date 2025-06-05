@@ -1,11 +1,15 @@
 
 /**
- * Shared Utility Module - Optimized Imports
+ * Shared Utility Module - Standardized Import Patterns
  * 
  * This module consolidates commonly used utility functions from across the codebase
  * to eliminate duplication and provide a single source of truth for shared logic.
  */
 
+// === EXTERNAL LIBRARIES ===
+// (utilities are dependency-free)
+
+// === INTERNAL UTILITIES ===
 // Re-export format utilities
 export {
   truncateText,

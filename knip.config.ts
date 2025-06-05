@@ -1,3 +1,4 @@
+
 import type { KnipConfig } from 'knip';
 
 const config: KnipConfig = {
@@ -27,13 +28,7 @@ const config: KnipConfig = {
   ],
   ignoreBinaries: ['supabase'],
   ignoreDependencies: [
-    '@testing-library/user-event', // This is from depcheck report as unused
-    'autoprefixer', // From depcheck report as unused
-    'depcheck', // From depcheck report as unused
-    'eslint-plugin-unused-imports', // From depcheck report as unused
-    'postcss', // From depcheck report as unused
-    'prettier', // From depcheck report as unused
-    'prettier-plugin-tailwindcss', // From depcheck report as unused
+    // Removed dependencies that were identified as unused in the audit
   ],
   vite: {
     config: 'vite.config.ts',
@@ -50,4 +45,4 @@ const config: KnipConfig = {
   },
 };
 
-export default config; 
+export default config;

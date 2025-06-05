@@ -7,6 +7,12 @@
  * and business logic validators.
  */
 
+// === EXTERNAL LIBRARIES ===
+// (none currently used directly)
+
+// === INTERNAL UTILITIES ===
+// (validation utilities are self-contained)
+
 // === TYPES AND CONSTANTS ===
 export * from './types';
 
@@ -18,8 +24,11 @@ export {
   createValidationDetail,
   getStandardMessage,
   combineValidationResults,
+} from './result-creators';
+
+export {
   withErrorHandling,
-} from './error-handling';
+} from './async-wrapper';
 
 // === DATABASE VALIDATORS (ASYNC) ===
 export {

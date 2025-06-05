@@ -1,12 +1,18 @@
 
 /**
- * Base API Configuration - Optimized Clean Interface
+ * Base API Configuration - Optimized Import Structure
  * 
- * Focused API utilities without legacy dependencies.
+ * Clean API utilities with standardized import patterns.
  */
 
+// === EXTERNAL LIBRARIES ===
+// (Supabase integration handled separately)
+
+// === INTERNAL UTILITIES ===
+import { supabase } from '@/integrations/supabase/client';
+
 // === SUPABASE CLIENT ===
-export { supabase } from '@/integrations/supabase/client';
+export { supabase };
 
 // === CORE SERVICES ===
 export { AuthService } from './auth.service';

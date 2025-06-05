@@ -2,17 +2,14 @@
 /**
  * API Layer - Unified Type System Integration
  * 
- * Updated to use unified type system imports.
+ * Standardized import patterns and optimized exports.
  */
 
-// === CORE API UTILITIES ===
-export { 
-  QueryKeys, 
-  apiCall, 
-  transformApiError, 
-  createSuccessResponse, 
-  createErrorResponse 
-} from './standardized-api';
+// === EXTERNAL LIBRARIES ===
+// (Supabase client is imported from integration layer)
+
+// === INTERNAL UTILITIES ===
+import { supabase } from '@/integrations/supabase/client';
 
 // === TYPES (from unified system) ===
 export type {
@@ -35,6 +32,15 @@ export type {
   ProfileWithRelations,
 } from '@/types/database';
 
+// === CORE API UTILITIES ===
+export { 
+  QueryKeys, 
+  apiCall, 
+  transformApiError, 
+  createSuccessResponse, 
+  createErrorResponse 
+} from './standardized-api';
+
 // === MAIN SERVICES ===
 export { TaskService } from './tasks/task.service';
 export { AuthService } from './auth.service';
@@ -48,4 +54,4 @@ export * from './users.service';
 export { formatApiError, apiRequest } from './error-handling';
 
 // === SUPABASE CLIENT ===
-export { supabase } from '@/integrations/supabase/client';
+export { supabase };
