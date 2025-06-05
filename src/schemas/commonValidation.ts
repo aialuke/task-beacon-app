@@ -1,10 +1,19 @@
 
+/**
+ * Common Validation Schemas - Phase 4 Consolidation
+ * 
+ * Now uses consolidated validation functions to eliminate duplication.
+ */
+
+// === EXTERNAL LIBRARIES ===
 import { z } from 'zod';
+
+// === INTERNAL UTILITIES ===
 import {
   isValidEmail,
   isValidPassword,
   isDateInFuture,
-} from '@/lib/utils/validation';
+} from '@/lib/utils/shared'; // Use consolidated shared utilities
 
 // Common validation messages
 export const COMMON_VALIDATION_MESSAGES = {
@@ -22,10 +31,13 @@ export const COMMON_VALIDATION_MESSAGES = {
   TEXT_TOO_SHORT: 'Text is too short',
 } as const;
 
-// Use consolidated validation functions
+// Re-export consolidated validation functions
 export { isValidEmail, isValidPassword, isDateInFuture };
 
-// Generic text validation with configurable limits
+/**
+ * Generic text validation with configurable limits
+ * Uses consolidated validation patterns
+ */
 export const createTextSchema = (
   minLength = 0,
   maxLength = 1000,
@@ -53,3 +65,27 @@ export const createTextSchema = (
 
   return schema;
 };
+
+/**
+ * Email validation schema using consolidated validation
+ */
+export const emailSchema = z.string()
+  .min(1, COMMON_VALIDATION_MESSAGES.EMAIL_REQUIRED)
+  .refine(isValidEmail, COMMON_VALIDATION_MESSAGES.EMAIL_INVALID);
+
+/**
+ * Password validation schema using consolidated validation
+ */
+export const passwordSchema = z.string()
+  .min(1, COMMON_VALIDATION_MESSAGES.PASSWORD_REQUIRED)
+  .min(8, COMMON_VALIDATION_MESSAGES.PASSWORD_TOO_SHORT)
+  .refine(isValidPassword, COMMON_VALIDATION_MESSAGES.PASSWORD_TOO_WEAK);
+
+/**
+ * Future date validation schema using consolidated validation
+ */
+export const futureDateSchema = z.string()
+  .refine(
+    (date) => isDateInFuture(date),
+    COMMON_VALIDATION_MESSAGES.DATE_IN_PAST
+  );
