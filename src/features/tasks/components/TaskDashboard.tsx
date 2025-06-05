@@ -20,12 +20,10 @@ export default function TaskDashboard() {
     <div className="flex h-screen flex-col overflow-hidden bg-background">
       <TaskDashboardHeader />
       
-      <main className="flex-1 overflow-hidden px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl h-full">
-          <Suspense fallback={<UnifiedLoadingStates variant="skeleton" message="Loading tasks..." />}>
-            <TaskList />
-          </Suspense>
-        </div>
+      <main className="task-dashboard-main flex-1 overflow-hidden">
+        <Suspense fallback={<UnifiedLoadingStates variant="skeleton" message="Loading tasks..." />}>
+          <TaskList />
+        </Suspense>
       </main>
 
       {isMobile && <FabButton />}

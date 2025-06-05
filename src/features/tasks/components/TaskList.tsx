@@ -7,7 +7,7 @@ import UnifiedLoadingStates from '@/components/ui/loading/UnifiedLoadingStates';
 
 // === COMPONENTS ===
 import TaskCard from './TaskCard';
-import TaskListFilters from './optimized/TaskListFilters';
+import TaskFilterNavbar from './TaskFilterNavbar';
 import TaskListPagination from './optimized/TaskListPagination';
 
 // === HOOKS ===
@@ -33,7 +33,7 @@ function TaskListComponent() {
     isFetching 
   } = useTaskDataContext();
   
-  const { filter, isMobile } = useTaskUIContext();
+  const { filter, setFilter, isMobile } = useTaskUIContext();
   
   // Filter tasks based on current filter
   const filteredTasks = useTasksFilter(tasks, filter);
@@ -60,18 +60,20 @@ function TaskListComponent() {
   }
 
   return (
-    <div className="flex h-full flex-col py-6">
-      <div className="mb-6">
-        <TaskListFilters filter={filter} onFilterChange={() => {}} />
+    <div className="flex h-full flex-col">
+      {/* Navigation Bar Section */}
+      <div className="navbar-section">
+        <TaskFilterNavbar filter={filter} onFilterChange={setFilter} />
       </div>
       
-      <div className="flex-1 overflow-y-auto">
+      {/* Task List Section */}
+      <div className="task-list-section flex-1 overflow-y-auto">
         {filteredTasks.length === 0 ? (
           <div className="flex h-full items-center justify-center">
             <p className="text-muted-foreground">No tasks found</p>
           </div>
         ) : (
-          <div className={`space-y-4 ${isMobile ? 'pb-20' : 'pb-6'}`}>
+          <div className={`task-list ${isMobile ? 'pb-20' : 'pb-6'}`}>
             {filteredTasks.map((task: Task) => (
               <TaskCard key={task.id} task={task} />
             ))}
@@ -79,6 +81,7 @@ function TaskListComponent() {
         )}
       </div>
 
+      {/* Pagination Section */}
       {shouldShowPagination && (
         <div className="mt-6 pt-4 border-t border-border">
           <TaskListPagination
