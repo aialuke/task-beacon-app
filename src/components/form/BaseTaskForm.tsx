@@ -69,7 +69,7 @@ export function BaseTaskForm({
   };
 
   return (
-    <div className="w-full rounded-3xl border border-border/30 bg-card/40 p-8 text-card-foreground shadow-2xl shadow-black/5 backdrop-blur-xl">
+    <div className="fixed w-full rounded-3xl border border-border/30 bg-card/40 p-8 text-card-foreground shadow-2xl shadow-black/5 backdrop-blur-xl overflow-hidden">
       {/* Header - Optimized classes */}
       <header className="mb-4 text-center">
         <div className="relative inline-block">
