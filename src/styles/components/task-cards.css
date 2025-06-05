@@ -1,19 +1,23 @@
 
 /* src/styles/components/task-cards.css - Consolidated task card styles */
 @layer components {
-  /* Task card base - inherits from optimized utilities */
-  .task-card {
-    /* Inherits layout and spacing from task-card-interactive in optimized-utilities.css */
-    /* Inherits border radius from design tokens (rounded-lg = var(--radius)) */
+  /* Essential task card class with width constraints */
+  .task-card-interactive {
+    @apply bg-card text-card-foreground border border-border p-6 rounded-xl shadow-sm;
+    @apply transition-all duration-200 hover:shadow-md cursor-pointer;
+    /* Critical width constraints */
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   /* Task-specific animations using unified system */
   .task-card-enter {
-    @apply animate-unified-enter;
+    @apply animate-fade-in;
   }
 
   .task-card-exit {
-    @apply animate-unified-exit;
+    @apply animate-fade-out;
   }
 
   /* Task-specific indicators */
@@ -38,5 +42,30 @@
   /* Expanded state styling */
   .task-card.expanded {
     @apply transform scale-105 shadow-lg z-10;
+  }
+
+  /* Status color utilities - keep these as they use CSS variables */
+  .status-pending {
+    color: var(--status-pending);
+  }
+
+  .status-overdue {
+    color: var(--status-overdue);
+  }
+
+  .status-complete {
+    color: var(--status-complete);
+  }
+
+  .status-bg-pending {
+    background-color: var(--status-pending);
+  }
+
+  .status-bg-overdue {
+    background-color: var(--status-overdue);
+  }
+
+  .status-bg-complete {
+    background-color: var(--status-complete);
   }
 }

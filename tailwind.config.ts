@@ -107,10 +107,10 @@ export default {
         'destructive-foreground': '#fff',
       },
       borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
-        xl: '0.75rem', // Added explicit XL mapping
+        lg: 'calc(var(--radius) - 2px)',
+        md: 'calc(var(--radius) - 4px)',
+        sm: 'calc(var(--radius) - 6px)',
+        xl: 'var(--radius)', // Now xl maps to the default radius (0.75rem)
       },
       borderColor: {
         'sidebar-border': '#333',

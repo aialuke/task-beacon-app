@@ -1,4 +1,3 @@
-
 /* Optimized CSS with minimal imports - Restored Working Version */
 
 /* Import Tailwind CSS directives first */
@@ -23,11 +22,7 @@
 @import './styles/components/timer.css';
 
 /* Import utility styles */
-@import './styles/utilities/unified-utilities.css';
-@import './styles/utilities/layout.css';
-@import './styles/utilities/animations/unified-animations.css';
-@import './styles/utilities/accessibility.css';
-@import './styles/utilities/responsive.css';
+@import './styles/utilities.css';
 
 /* Optimized reset - only essential rules */
 *,
