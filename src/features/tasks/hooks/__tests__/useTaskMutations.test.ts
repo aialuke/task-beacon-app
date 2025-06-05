@@ -128,7 +128,7 @@ describe('Task Mutation Hooks', () => {
       expect(result.current.markAsIncomplete).toBeDefined();
 
       // Delete mutations
-      expect(result.current.deleteTask).toBeDefined();
+      expect(result.current.deleteTaskCallback).toBeDefined();
 
       // Follow-up task creation
       expect(result.current.createFollowUpTask).toBeDefined();
@@ -137,11 +137,11 @@ describe('Task Mutation Hooks', () => {
       expect(result.current.updateTaskOptimistically).toBeDefined();
 
       // Backward compatibility methods
-      expect(result.current.toggleTaskComplete).toBeDefined();
-      expect(result.current.deleteTaskById).toBeDefined();
+      expect(result.current.toggleTaskCompleteCallback).toBeDefined();
+      expect(result.current.deleteTaskCallback).toBeDefined();
     });
 
-    it('should maintain backward compatibility for toggleTaskComplete', async () => {
+    it('should maintain backward compatibility for toggleTaskCompleteCallback', async () => {
       vi.mocked(TaskService.updateStatus).mockResolvedValue({
         data: { ...mockTask, status: 'complete' },
         error: null,
@@ -152,7 +152,7 @@ describe('Task Mutation Hooks', () => {
 
       let mutationResult: any;
       await act(async () => {
-        mutationResult = await result.current.toggleTaskComplete(mockTask);
+        mutationResult = await result.current.toggleTaskCompleteCallback(mockTask);
       });
 
       expect(mutationResult).toEqual({
@@ -161,7 +161,7 @@ describe('Task Mutation Hooks', () => {
       });
     });
 
-    it('should maintain backward compatibility for deleteTaskById', async () => {
+    it('should maintain backward compatibility for deleteTaskCallback', async () => {
       vi.mocked(TaskService.delete).mockResolvedValue({
         data: undefined,
         error: null,
@@ -172,7 +172,7 @@ describe('Task Mutation Hooks', () => {
 
       let mutationResult: any;
       await act(async () => {
-        mutationResult = await result.current.deleteTaskById(mockTask.id);
+        mutationResult = await result.current.deleteTaskCallback(mockTask.id);
       });
 
       expect(mutationResult).toEqual({
@@ -208,4 +208,4 @@ describe('Task Mutation Hooks', () => {
       expect(TaskService.createFollowUp).toHaveBeenCalledWith(mockTask.id, taskData);
     });
   });
-}); 
+});

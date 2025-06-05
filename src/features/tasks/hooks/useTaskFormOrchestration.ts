@@ -41,9 +41,13 @@ export function useTaskFormOrchestration(options: UseTaskFormOrchestrationOption
         // Validate form before submission
         const validationResult = form.validateForm();
         if (!validationResult.isValid) {
+          const errorMessage = Array.isArray(validationResult.errors) 
+            ? validationResult.errors.join(', ') 
+            : 'Validation failed';
+          
           return {
             success: false,
-            error: validationResult.errors?.join(', ') || 'Validation failed',
+            error: errorMessage,
           };
         }
 
