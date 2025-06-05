@@ -1,6 +1,6 @@
 
 import { useState, useRef, useMemo } from 'react';
-import { User as UserIcon, X, ArrowRight } from 'lucide-react';
+import { User as UserIcon, ArrowRight } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -28,6 +28,7 @@ export function AutocompleteUserInput({
   const [inputValue, setInputValue] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const hiddenInputRef = useRef<HTMLInputElement>(null);
   
   const { users, isLoading } = useUsersQuery();
   
@@ -96,7 +97,12 @@ export function AutocompleteUserInput({
   const handleClear = () => {
     onChange('');
     setInputValue('');
-    inputRef.current?.focus();
+    // Focus the appropriate input based on state
+    if (selectedUser) {
+      hiddenInputRef.current?.focus();
+    } else {
+      inputRef.current?.focus();
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -118,7 +124,11 @@ export function AutocompleteUserInput({
         break;
       case 'Escape':
         setInputValue('');
-        inputRef.current?.blur();
+        if (selectedUser) {
+          hiddenInputRef.current?.blur();
+        } else {
+          inputRef.current?.blur();
+        }
         break;
       case 'Backspace':
         if (selectedUser && !inputValue) {
@@ -150,10 +160,10 @@ export function AutocompleteUserInput({
     }
   };
 
-  // Show placeholder only when field is empty and not focused
-  const showPlaceholder = !inputValue && !isFocused;
+  // Show placeholder only when field is empty and not focused and no user selected
+  const showPlaceholder = !inputValue && !isFocused && !selectedUser;
 
-  // Facebook-style selected state - show user inline with subtle highlight
+  // Selected state with hidden input for backspace functionality
   if (selectedUser) {
     return (
       <div className={cn('relative w-full', className)}>
@@ -169,30 +179,47 @@ export function AutocompleteUserInput({
             <UserIcon className="h-4 w-4 mr-3 text-muted-foreground" />
             
             <div className="flex-1 min-w-0 relative">
-              {/* Selected user with subtle highlight */}
-              <div className="pt-6 pb-2">
+              {/* Selected user with proper centering */}
+              <div className="py-3 flex items-center">
                 <span className="text-sm bg-primary/10 text-primary px-2 py-1 rounded-md">
                   {selectedUser.name || selectedUser.email.split('@')[0]}
                 </span>
               </div>
+              
+              {/* Hidden input for backspace functionality */}
+              <input
+                ref={hiddenInputRef}
+                type="text"
+                className="absolute inset-0 opacity-0 cursor-text"
+                onKeyDown={handleKeyDown}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
+                disabled={disabled}
+                autoFocus
+              />
             </div>
 
+            {/* Blue arrow icon for submission */}
             <Button
               type="button"
               variant="ghost"
               size="sm"
-              className="ml-2 h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
-              onClick={handleClear}
+              className="ml-2 h-8 w-8 p-0 transition-colors"
+              onClick={onSubmit}
               disabled={disabled}
             >
-              <X className="h-4 w-4" />
+              <ArrowRight className="h-4 w-4 text-primary" />
             </Button>
           </div>
           
-          {/* Floating label for selected state */}
-          <label className="pointer-events-none absolute left-11 top-2 select-none text-xs font-medium text-primary">
-            {placeholder}
-          </label>
+          {/* Enhanced focus ring */}
+          <div
+            className={cn(
+              'pointer-events-none absolute inset-0 rounded-2xl transition-all duration-300',
+              isFocused &&
+                'ring-2 ring-primary/30 ring-offset-2 ring-offset-background'
+            )}
+          />
         </div>
       </div>
     );
