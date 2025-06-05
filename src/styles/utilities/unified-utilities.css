@@ -1,0 +1,144 @@
+
+/* src/styles/utilities/unified-utilities.css - Consolidated utility patterns */
+@layer utilities {
+  /* ===== UNIFIED SPACING UTILITIES ===== */
+  .space-unified-sm { @apply space-y-2; }
+  .space-unified-md { @apply space-y-4; }
+  .space-unified-lg { @apply space-y-6; }
+  .space-unified-xl { @apply space-y-8; }
+
+  .gap-unified-sm { @apply gap-2; }
+  .gap-unified-md { @apply gap-4; }
+  .gap-unified-lg { @apply gap-6; }
+  .gap-unified-xl { @apply gap-8; }
+
+  /* ===== UNIFIED LAYOUT UTILITIES ===== */
+  .flex-unified-center {
+    @apply flex items-center justify-center;
+  }
+
+  .flex-unified-between {
+    @apply flex items-center justify-between;
+  }
+
+  .flex-unified-start {
+    @apply flex items-center justify-start;
+  }
+
+  .flex-unified-col {
+    @apply flex flex-col;
+  }
+
+  .flex-unified-col-center {
+    @apply flex flex-col items-center justify-center;
+  }
+
+  /* ===== UNIFIED GRID UTILITIES ===== */
+  .grid-unified-auto {
+    @apply grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3;
+  }
+
+  .grid-unified-responsive {
+    @apply grid gap-4;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  /* ===== UNIFIED TEXT UTILITIES ===== */
+  .text-unified-heading {
+    @apply text-lg font-semibold text-foreground sm:text-xl;
+  }
+
+  .text-unified-subheading {
+    @apply text-base font-medium text-foreground sm:text-lg;
+  }
+
+  .text-unified-body {
+    @apply text-sm text-muted-foreground;
+  }
+
+  .text-unified-caption {
+    @apply text-xs text-muted-foreground;
+  }
+
+  .text-unified-error {
+    @apply text-sm text-destructive;
+  }
+
+  .text-unified-success {
+    @apply text-sm text-success;
+  }
+
+  /* ===== UNIFIED BORDER UTILITIES ===== */
+  .border-unified {
+    @apply border border-border;
+  }
+
+  .border-unified-top {
+    @apply border-t border-border/20;
+  }
+
+  .border-unified-bottom {
+    @apply border-b border-border/20;
+  }
+
+  .border-unified-dashed {
+    @apply border border-dashed border-border;
+  }
+
+  /* ===== UNIFIED SHADOW UTILITIES ===== */
+  .shadow-unified-sm {
+    box-shadow: var(--shadow-sm);
+  }
+
+  .shadow-unified-md {
+    box-shadow: var(--shadow-md);
+  }
+
+  .shadow-unified-lg {
+    box-shadow: var(--shadow-lg);
+  }
+
+  .shadow-unified-focus {
+    box-shadow: var(--shadow-focus);
+  }
+
+  /* ===== UNIFIED PERFORMANCE UTILITIES ===== */
+  .will-change-unified {
+    will-change: transform, opacity;
+  }
+
+  .gpu-accelerated-unified {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  .optimize-rendering-unified {
+    contain: layout style paint;
+  }
+
+  /* ===== UNIFIED RESPONSIVE UTILITIES ===== */
+  .responsive-unified-container {
+    @apply mx-auto max-w-3xl px-2 py-6 sm:px-4;
+  }
+
+  .responsive-unified-grid {
+    @apply grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4;
+  }
+
+  .responsive-unified-text {
+    @apply text-sm sm:text-base lg:text-lg;
+  }
+
+  /* ===== UNIFIED ACCESSIBILITY UTILITIES ===== */
+  .sr-only-unified {
+    @apply sr-only;
+  }
+
+  .focus-visible-unified {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+  }
+
+  .keyboard-navigation-unified:focus-visible {
+    @apply outline-2 outline-offset-2 outline-primary;
+  }
+}

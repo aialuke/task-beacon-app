@@ -1,0 +1,110 @@
+
+/* src/styles/components/unified-components.css - Consolidated component styles */
+@layer components {
+  /* ===== UNIFIED BUTTON STYLING ===== */
+  .btn-unified {
+    @apply inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium;
+    @apply ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0;
+    @apply disabled:pointer-events-none disabled:opacity-50;
+    @apply hover:transform hover:translate-y-[-1px] active:translate-y-0;
+    @apply rounded-full shadow hover:shadow-md;
+  }
+
+  .btn-unified-primary {
+    @apply btn-unified bg-primary text-primary-foreground hover:bg-primary/90;
+  }
+
+  .btn-unified-secondary {
+    @apply btn-unified bg-secondary text-secondary-foreground hover:bg-secondary/80;
+  }
+
+  .btn-unified-outline {
+    @apply btn-unified border border-input bg-background hover:bg-accent hover:text-accent-foreground;
+  }
+
+  /* ===== UNIFIED FORM STYLING ===== */
+  .form-unified-field {
+    @apply w-full rounded-xl border border-border bg-background px-3 py-2 text-sm;
+    @apply ring-offset-background transition-colors;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .form-unified-error {
+    @apply border-destructive;
+    box-shadow: 0 0 0 2px hsl(var(--destructive) / 0.2);
+  }
+
+  .form-unified-success {
+    @apply border-success;
+    box-shadow: 0 0 0 2px hsl(var(--success) / 0.2);
+  }
+
+  /* ===== UNIFIED CARD STYLING ===== */
+  .card-unified {
+    @apply rounded-xl border border-border bg-card text-card-foreground;
+    @apply transition-all duration-200 hover:shadow-md;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .card-unified-elevated {
+    @apply card-unified;
+    box-shadow: var(--shadow-md);
+  }
+
+  .card-unified-interactive {
+    @apply card-unified cursor-pointer;
+    @apply hover:transform hover:translate-y-[-1px] hover:shadow-lg;
+    @apply active:translate-y-0 active:shadow-md;
+  }
+
+  /* ===== UNIFIED DIALOG/MODAL STYLING ===== */
+  .dialog-unified-content {
+    @apply fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%];
+    @apply gap-4 border bg-background p-6 shadow-lg duration-200;
+    @apply rounded-xl border-border;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+
+  .dialog-unified-overlay {
+    @apply fixed inset-0 z-50 bg-black/80;
+    backdrop-filter: blur(4px);
+  }
+
+  /* ===== UNIFIED FOCUS STYLES ===== */
+  .focus-unified {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+  }
+
+  /* ===== UNIFIED LOADING STATES ===== */
+  .loading-unified {
+    @apply animate-pulse opacity-70;
+  }
+
+  .loading-unified-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  /* ===== UNIFIED HOVER EFFECTS ===== */
+  .hover-unified-lift {
+    @apply transition-transform duration-200 hover:transform hover:translate-y-[-2px] hover:shadow-lg;
+  }
+
+  .hover-unified-scale {
+    @apply transition-transform duration-200 hover:scale-105;
+  }
+
+  .hover-unified-glow {
+    @apply transition-all duration-200;
+  }
+
+  .hover-unified-glow:hover {
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.3);
+  }
+}

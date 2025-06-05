@@ -1,22 +1,15 @@
-/* src/styles/components/dialogs.css - Simplified dialog and popover styling */
+
+/* src/styles/components/dialogs.css - Unified dialog and popover styling */
 @layer components {
-  /* ===== SOLID BACKGROUND ENFORCEMENT ===== */
+  /* ===== UNIFIED DIALOG STYLING ===== */
   [data-radix-dialog-content],
   [data-radix-popover-content] {
-    background-color: #1a1a1a;
-    color: #ffffff;
-    border: 1px solid #404040;
-    opacity: 1;
+    @apply dialog-unified-content;
   }
 
-  /* ===== LIGHT MODE OVERRIDES ===== */
-  .light [data-radix-dialog-content],
-  .light [data-radix-popover-content],
-  html:not(.dark) [data-radix-dialog-content],
-  html:not(.dark) [data-radix-popover-content] {
-    background-color: #ffffff;
-    color: #000000;
-    border: 1px solid #e5e5e5;
+  /* ===== OVERLAY STYLING ===== */
+  [data-radix-dialog-overlay] {
+    @apply dialog-unified-overlay;
   }
 
   /* ===== CALENDAR SPECIFIC STYLING ===== */
@@ -25,16 +18,9 @@
     color: inherit;
   }
 
-  /* ===== OVERLAY STYLING ===== */
-  [data-radix-dialog-overlay] {
-    background-color: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(4px);
-  }
-
   /* ===== ACCESSIBILITY ===== */
   [data-radix-dialog-content]:focus,
   [data-radix-popover-content]:focus {
-    outline: 2px solid #3b82f6;
-    outline-offset: 2px;
+    @apply focus-unified shadow-unified-focus;
   }
 }

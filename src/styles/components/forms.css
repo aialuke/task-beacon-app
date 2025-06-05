@@ -1,21 +1,22 @@
-/* src/styles/components/forms.css - Simplified form styling for consistent theming */
-@layer components {
-  /* ===== FORM STYLES ===== */
-  /* Removed .form-field-group (use Tailwind's space-y-*) */
 
-  /* ===== MINIMAL FORM FIELD OVERRIDES ===== */
-  /* Let components handle their own styling via Tailwind classes */
+/* src/styles/components/forms.css - Unified form styling */
+@layer components {
+  /* ===== UNIFIED FORM FIELD STYLING ===== */
+  input,
+  textarea,
+  select {
+    @apply form-unified-field;
+  }
 
   /* ===== FILE UPLOAD STYLES ===== */
   input[type='file'] {
-    @apply cursor-pointer rounded-xl border border-border bg-background p-2 text-sm text-foreground transition-colors;
+    @apply form-unified-field cursor-pointer;
     max-width: 100%;
   }
 
   input[type='file']::-webkit-file-upload-button {
-    @apply mr-3 cursor-pointer rounded-full border-none px-4 py-2 text-sm font-semibold transition-all;
+    @apply btn-unified-primary mr-3;
     background: var(--gradient-blue);
-    color: hsl(var(--primary-foreground));
     box-shadow: var(--shadow-sm);
   }
 
@@ -27,9 +28,8 @@
 
   /* Firefox file upload button */
   input[type='file']::file-selector-button {
-    @apply mr-3 cursor-pointer rounded-full border-none px-4 py-2 text-sm font-semibold transition-all;
+    @apply btn-unified-primary mr-3;
     background: var(--gradient-blue);
-    color: hsl(var(--primary-foreground));
     box-shadow: var(--shadow-sm);
   }
 
@@ -42,14 +42,12 @@
   /* ===== FORM VALIDATION STATES ===== */
   .form-error input,
   .form-error textarea {
-    @apply border-destructive;
-    box-shadow: 0 0 0 2px hsl(var(--destructive) / 0.2);
+    @apply form-unified-error;
   }
 
   .form-success input,
   .form-success textarea {
-    @apply border-success;
-    box-shadow: 0 0 0 2px hsl(var(--success) / 0.2);
+    @apply form-unified-success;
   }
 
   /* ===== RESPONSIVE FORM ELEMENTS ===== */

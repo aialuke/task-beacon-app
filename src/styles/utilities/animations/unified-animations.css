@@ -1,0 +1,117 @@
+
+/* src/styles/utilities/animations/unified-animations.css - Consolidated animation system */
+@layer utilities {
+  /* ===== CONSOLIDATED KEYFRAMES ===== */
+  @keyframes unified-fade-in {
+    0% {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes unified-fade-out {
+    0% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  }
+
+  @keyframes unified-scale-enter {
+    0% {
+      opacity: 0;
+      transform: translateY(5px) scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes unified-scale-exit {
+    0% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-5px) scale(0.9);
+    }
+  }
+
+  @keyframes unified-slide-up {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ===== UNIFIED ANIMATION CLASSES ===== */
+  .animate-unified-enter {
+    animation: unified-scale-enter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .animate-unified-exit {
+    animation: unified-scale-exit 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .animate-unified-fade-in {
+    animation: unified-fade-in 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .animate-unified-fade-out {
+    animation: unified-fade-out 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .animate-unified-slide-up {
+    animation: unified-slide-up 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ===== TASK CARD SPECIFIC ANIMATIONS ===== */
+  .task-card-enter {
+    animation: unified-scale-enter 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .task-card-exit {
+    animation: unified-scale-exit 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ===== PERFORMANCE OPTIMIZATIONS ===== */
+  .animate-unified-enter,
+  .animate-unified-exit,
+  .animate-unified-fade-in,
+  .animate-unified-fade-out,
+  .animate-unified-slide-up,
+  .task-card-enter,
+  .task-card-exit {
+    animation-fill-mode: both;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+  }
+
+  /* ===== REDUCED MOTION SUPPORT ===== */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-unified-enter,
+    .animate-unified-exit,
+    .animate-unified-fade-in,
+    .animate-unified-fade-out,
+    .animate-unified-slide-up,
+    .task-card-enter,
+    .task-card-exit {
+      animation: none;
+      transition: none;
+      transform: none;
+    }
+  }
+}

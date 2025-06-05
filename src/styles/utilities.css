@@ -1,9 +1,11 @@
 
-/* src/styles/utilities.css - Phase 5 Optimized */
+/* src/styles/utilities.css - Phase 5 Unified Utilities */
 @layer utilities {
-  /* Import optimized utility modules */
-  @import './utilities/optimized-utilities.css';
-  @import './utilities/animations.css';
+  /* Import unified utility modules */
+  @import './utilities/unified-utilities.css';
+  @import './utilities/animations/unified-animations.css';
+  
+  /* Import remaining specific utilities that don't have overlap */
   @import './utilities/accessibility.css';
   @import './utilities/responsive.css';
 }

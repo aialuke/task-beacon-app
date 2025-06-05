@@ -1,26 +1,27 @@
-/* src/styles/components/buttons.css - Enhanced button styling for dark mode */
+
+/* src/styles/components/buttons.css - Unified button styling */
 
 @layer components {
   /* ===== BUTTON STYLING CONSISTENCY ===== */
   button {
-    transition: all 0.2s ease-in-out;
-    font-weight: 500;
-    cursor: pointer;
+    @apply btn-unified; /* Use unified button base */
   }
 
-  button:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateY(-1px);
+  /* Specific button variants that extend unified styles */
+  button.primary {
+    @apply btn-unified-primary;
   }
 
-  button:active {
-    transform: translateY(0);
+  button.secondary {
+    @apply btn-unified-secondary;
   }
 
-  /* Enhanced focus states for accessibility */
+  button.outline {
+    @apply btn-unified-outline;
+  }
+
+  /* Enhanced focus states for accessibility - use unified focus */
   button:focus-visible {
-    outline: 2px solid hsl(var(--primary));
-    outline-offset: 2px;
-    box-shadow: 0 0 0 4px hsl(var(--primary) / 0.2);
+    @apply focus-unified shadow-unified-focus;
   }
 }

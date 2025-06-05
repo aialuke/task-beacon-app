@@ -1,33 +1,47 @@
-/* src/styles/components/task-cards.css - Minimal task card styling */
+
+/* src/styles/components/task-cards.css - Unified with consolidated animations */
 @layer components {
-  /* Only keep essential animations that don't conflict with borders */
+  /* Use unified animation classes - no need to redefine */
   .task-card-enter {
-    @apply translate-y-5 scale-90 transform opacity-0;
+    @apply animate-unified-enter;
   }
 
   .task-card-enter-active {
-    @apply duration-400 translate-y-0 scale-100 transform opacity-100 transition-all;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    /* Animation handled by unified system */
   }
 
   .task-card-exit {
-    @apply translate-y-0 scale-100 transform opacity-100;
+    @apply animate-unified-exit;
   }
 
   .task-card-exit-active {
-    @apply -translate-y-5 scale-90 transform opacity-0 transition-all duration-300;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    /* Animation handled by unified system */
   }
 
-  /* Reduced motion respect */
+  /* Task-specific styles that don't overlap with unified system */
+  .task-card-status-indicator {
+    @apply absolute left-0 top-0 h-full w-1 rounded-l-xl;
+  }
+
+  .task-card-priority-high {
+    @apply border-l-4 border-l-destructive;
+  }
+
+  .task-card-priority-medium {
+    @apply border-l-4 border-l-primary;
+  }
+
+  .task-card-priority-low {
+    @apply border-l-4 border-l-success;
+  }
+
+  /* Reduced motion respect - handled by unified system */
   @media (prefers-reduced-motion: reduce) {
     .task-card-enter,
     .task-card-enter-active,
     .task-card-exit,
     .task-card-exit-active {
-      transition: none;
-      animation: none;
-      transform: none;
+      /* Unified system handles this */
     }
   }
 }
