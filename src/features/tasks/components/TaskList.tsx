@@ -60,8 +60,10 @@ function TaskListComponent() {
   }
 
   return (
-    <div className="flex h-full flex-col">
-      <TaskListFilters filter={filter} onFilterChange={() => {}} />
+    <div className="flex h-full flex-col py-6">
+      <div className="mb-6">
+        <TaskListFilters filter={filter} onFilterChange={() => {}} />
+      </div>
       
       <div className="flex-1 overflow-y-auto">
         {filteredTasks.length === 0 ? (
@@ -69,7 +71,7 @@ function TaskListComponent() {
             <p className="text-muted-foreground">No tasks found</p>
           </div>
         ) : (
-          <div className={`space-y-2 p-4 ${isMobile ? 'pb-20' : ''}`}>
+          <div className={`space-y-4 ${isMobile ? 'pb-20' : 'pb-6'}`}>
             {filteredTasks.map((task: Task) => (
               <TaskCard key={task.id} task={task} />
             ))}
@@ -77,18 +79,22 @@ function TaskListComponent() {
         )}
       </div>
 
-      <TaskListPagination
-        currentPage={currentPage}
-        totalCount={totalCount}
-        pageSize={pageSize}
-        hasNextPage={hasNextPage}
-        hasPreviousPage={hasPreviousPage}
-        goToNextPage={goToNextPage}
-        goToPreviousPage={goToPreviousPage}
-        isFetching={isFetching}
-        isLoading={isLoading}
-        shouldShow={shouldShowPagination}
-      />
+      {shouldShowPagination && (
+        <div className="mt-6 pt-4 border-t border-border">
+          <TaskListPagination
+            currentPage={currentPage}
+            totalCount={totalCount}
+            pageSize={pageSize}
+            hasNextPage={hasNextPage}
+            hasPreviousPage={hasPreviousPage}
+            goToNextPage={goToNextPage}
+            goToPreviousPage={goToPreviousPage}
+            isFetching={isFetching}
+            isLoading={isLoading}
+            shouldShow={shouldShowPagination}
+          />
+        </div>
+      )}
     </div>
   );
 }
