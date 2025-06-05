@@ -1,11 +1,10 @@
 
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import { User as UserIcon, X, ArrowRight } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useUsersQuery } from '@/features/users/hooks/useUsersQuery';
-import UserProfile from '@/features/users/components/UserProfile';
 
 interface AutocompleteUserInputProps {
   value: string; // user ID when selected, empty when not
@@ -27,7 +26,6 @@ export function AutocompleteUserInput({
   const [inputValue, setInputValue] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const ghostRef = useRef<HTMLDivElement>(null);
   
   const { users, isLoading } = useUsersQuery();
   
@@ -102,6 +100,7 @@ export function AutocompleteUserInput({
   const handleKeyDown = (e: React.KeyboardEvent) => {
     switch (e.key) {
       case 'Enter':
+        // Only accept suggestion if there's a valid ghostSuggestion (arrow is blue)
         if (ghostSuggestion) {
           e.preventDefault();
           handleAcceptSuggestion();
@@ -207,14 +206,13 @@ export function AutocompleteUserInput({
             {/* Enhanced ghost text overlay with better contrast */}
             {ghostText && isFocused && (
               <div
-                ref={ghostRef}
                 className="absolute inset-0 pointer-events-none flex items-center"
                 style={{ paddingTop: '1.5rem', paddingBottom: '0.5rem' }}
               >
-                <span className="text-sm text-foreground font-medium select-none">
+                <span className="text-sm text-foreground font-semibold select-none">
                   {inputValue}
                 </span>
-                <span className="text-sm text-muted-foreground/40 select-none">
+                <span className="text-sm text-muted-foreground/70 select-none">
                   {ghostText}
                 </span>
               </div>
@@ -230,12 +228,12 @@ export function AutocompleteUserInput({
               onKeyDown={handleKeyDown}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
-              className="h-auto border-none bg-transparent p-0 pb-2 pl-0 pr-0 pt-6 text-sm text-foreground font-medium focus:ring-0 relative z-10"
+              className="h-auto border-none bg-transparent p-0 pb-2 pl-0 pr-0 pt-6 text-sm text-foreground font-semibold focus:ring-0 relative z-10"
               disabled={disabled}
             />
           </div>
 
-          {/* Arrow icon for confirmation */}
+          {/* Arrow icon for confirmation - changes color based on suggestion availability */}
           <Button
             type="button"
             variant="ghost"
