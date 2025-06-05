@@ -4,7 +4,9 @@ import { Link, ArrowRight } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
+  DialogTitle,
 } from '@/components/ui/dialog';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -92,6 +94,9 @@ export function UrlInputModal({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="fixed top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 sm:max-w-md">
+        <VisuallyHidden>
+          <DialogTitle>Enter URL</DialogTitle>
+        </VisuallyHidden>
         <div className="space-y-4">
           <div className="relative">
             <div

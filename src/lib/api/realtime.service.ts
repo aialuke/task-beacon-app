@@ -1,3 +1,4 @@
+
 /**
  * Realtime Service
  * 
@@ -18,22 +19,32 @@ export class RealtimeService {
     callback: (payload: any) => void,
     event: 'INSERT' | 'UPDATE' | 'DELETE' | '*' = '*'
   ) {
-    const channel = supabase
-      .channel(`public:${table}`)
-      .on('postgres_changes' as any, {
-        event,
-        schema: 'public',
-        table,
-      }, callback)
-      .subscribe();
+    try {
+      const channel = supabase
+        .channel(`public:${table}`)
+        .on('postgres_changes' as any, {
+          event,
+          schema: 'public',
+          table,
+        }, callback)
+        .subscribe();
 
-    return channel;
+      return channel;
+    } catch (error) {
+      console.error('Failed to create realtime subscription:', error);
+      throw error;
+    }
   }
 
   /**
    * Unsubscribe from real-time updates
    */
   static async unsubscribe(channel: any) {
-    return supabase.removeChannel(channel);
+    try {
+      return await supabase.removeChannel(channel);
+    } catch (error) {
+      console.error('Failed to unsubscribe from realtime channel:', error);
+      throw error;
+    }
   }
 }

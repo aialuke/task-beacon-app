@@ -1,3 +1,4 @@
+
 /**
  * API Layer - Updated to use streamlined type system
  * 
@@ -36,5 +37,5 @@ export { DatabaseService } from './database.service';
 // Error handling utilities
 export { formatApiError, apiRequest } from './error-handling';
 
-// Re-export commonly used Supabase client for edge cases
+// Re-export the consolidated Supabase client
 export { supabase } from '@/integrations/supabase/client';
