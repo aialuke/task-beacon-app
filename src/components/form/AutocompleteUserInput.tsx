@@ -1,6 +1,6 @@
 
 import { useState, useRef, useEffect, useMemo } from 'react';
-import { User as UserIcon, X, Check } from 'lucide-react';
+import { User as UserIcon, X, ArrowRight } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -101,13 +101,6 @@ export function AutocompleteUserInput({
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     switch (e.key) {
-      case 'Tab':
-      case 'ArrowRight':
-        if (ghostSuggestion && ghostText) {
-          e.preventDefault();
-          handleAcceptSuggestion();
-        }
-        break;
       case 'Enter':
         if (ghostSuggestion) {
           e.preventDefault();
@@ -141,38 +134,44 @@ export function AutocompleteUserInput({
   };
 
   const getStatusIcon = () => {
-    if (selectedUser) return <Check className="h-4 w-4 text-green-500" />;
+    if (selectedUser) return <UserIcon className="h-4 w-4 text-green-500" />;
     switch (validationState) {
-      case 'invalid': return <X className="h-4 w-4 text-red-500" />;
+      case 'invalid': return <UserIcon className="h-4 w-4 text-red-500" />;
       default: return <UserIcon className="h-4 w-4 text-muted-foreground" />;
     }
   };
 
   const isFloating = isFocused || selectedUser || inputValue;
 
-  // If user is selected, show Facebook-style tag
+  // Facebook-style selected state - show user inline with subtle highlight
   if (selectedUser) {
     return (
       <div className={cn('relative w-full', className)}>
         <div className="group relative">
           <div
             className={cn(
-              'flex h-12 items-center rounded-2xl border bg-primary text-primary-foreground p-2 transition-all duration-300',
-              'hover:bg-primary/90',
+              'flex h-12 items-center rounded-2xl border bg-background/60 p-2 backdrop-blur-sm transition-all duration-300',
+              'hover:border-border/60 hover:bg-background/70',
+              'border-border/40',
               disabled && 'cursor-not-allowed opacity-50'
             )}
           >
-            <Check className="h-4 w-4 mr-2" />
-            <div className="flex-1 min-w-0">
-              <span className="text-sm font-medium truncate">
-                {selectedUser.name || selectedUser.email.split('@')[0]}
-              </span>
+            <UserIcon className="h-4 w-4 mr-3 text-muted-foreground" />
+            
+            <div className="flex-1 min-w-0 relative">
+              {/* Selected user with subtle highlight */}
+              <div className="pt-6 pb-2">
+                <span className="text-sm bg-primary/10 text-primary px-2 py-1 rounded-md">
+                  {selectedUser.name || selectedUser.email.split('@')[0]}
+                </span>
+              </div>
             </div>
+
             <Button
               type="button"
               variant="ghost"
               size="sm"
-              className="ml-2 h-6 w-6 p-0 text-primary-foreground hover:text-primary-foreground/80 hover:bg-primary-foreground/20"
+              className="ml-2 h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
               onClick={handleClear}
               disabled={disabled}
             >
@@ -181,7 +180,7 @@ export function AutocompleteUserInput({
           </div>
           
           {/* Floating label for selected state */}
-          <label className="pointer-events-none absolute left-11 top-2 select-none text-xs font-medium text-primary-foreground/80">
+          <label className="pointer-events-none absolute left-11 top-2 select-none text-xs font-medium text-primary">
             {placeholder}
           </label>
         </div>
@@ -189,7 +188,7 @@ export function AutocompleteUserInput({
     );
   }
 
-  // Normal input state with ghost text
+  // Normal input state with enhanced ghost text and arrow icon
   return (
     <div className={cn('relative w-full', className)}>
       <div className="group relative">
@@ -205,17 +204,17 @@ export function AutocompleteUserInput({
           {getStatusIcon()}
 
           <div className="relative flex-1 ml-3">
-            {/* Ghost text overlay */}
+            {/* Enhanced ghost text overlay with better contrast */}
             {ghostText && isFocused && (
               <div
                 ref={ghostRef}
                 className="absolute inset-0 pointer-events-none flex items-center"
                 style={{ paddingTop: '1.5rem', paddingBottom: '0.5rem' }}
               >
-                <span className="text-sm text-transparent select-none">
+                <span className="text-sm text-foreground font-medium select-none">
                   {inputValue}
                 </span>
-                <span className="text-sm text-muted-foreground/60 select-none">
+                <span className="text-sm text-muted-foreground/40 select-none">
                   {ghostText}
                 </span>
               </div>
@@ -231,10 +230,27 @@ export function AutocompleteUserInput({
               onKeyDown={handleKeyDown}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
-              className="h-auto border-none bg-transparent p-0 pb-2 pl-0 pr-0 pt-6 text-sm text-foreground focus:ring-0 relative z-10"
+              className="h-auto border-none bg-transparent p-0 pb-2 pl-0 pr-0 pt-6 text-sm text-foreground font-medium focus:ring-0 relative z-10"
               disabled={disabled}
             />
           </div>
+
+          {/* Arrow icon for confirmation */}
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="ml-2 h-8 w-8 p-0 transition-colors"
+            onClick={handleAcceptSuggestion}
+            disabled={disabled || !ghostSuggestion}
+          >
+            <ArrowRight 
+              className={cn(
+                "h-4 w-4 transition-colors",
+                ghostSuggestion ? "text-primary" : "text-muted-foreground"
+              )} 
+            />
+          </Button>
         </div>
 
         {/* Floating label */}
