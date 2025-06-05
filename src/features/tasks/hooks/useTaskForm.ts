@@ -55,12 +55,12 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
   // Add local loading state for compatibility
   const [loading, setLoading] = useState(false);
 
-  // Create initial values
+  // Create initial values - ensure url is empty string instead of null for form compatibility
   const initialValues: TaskFormValues = {
     title: initialTitle,
     description: initialDescription,
     dueDate: initialDueDate,
-    url: initialUrl,
+    url: initialUrl || '', // Convert null to empty string
     assigneeId: initialAssigneeId,
     pinned: initialPinned,
   };
@@ -77,8 +77,9 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
       return result.isValid ? undefined : result.error;
     },
     url: (value: string | null) => {
-      if (!value) return undefined;
-      const result = validation.validateField('url', value);
+      // Ensure we always pass a string to validation, convert null/undefined to empty string
+      const urlValue = value || '';
+      const result = validation.validateField('url', urlValue);
       return result.isValid ? undefined : result.error;
     },
   };
@@ -95,7 +96,7 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
   const title = formState.fields.title.value;
   const description = formState.fields.description.value;
   const dueDate = formState.fields.dueDate.value;
-  const url = formState.fields.url.value;
+  const url = formState.fields.url.value || ''; // Ensure url is never null
   const assigneeId = formState.fields.assigneeId.value;
   const pinned = formState.fields.pinned.value;
 
@@ -113,7 +114,8 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
   }, [formActions]);
 
   const setUrl = useCallback((value: string | null) => {
-    formActions.setFieldValue('url', value);
+    // Convert null to empty string to prevent validation issues
+    formActions.setFieldValue('url', value || '');
   }, [formActions]);
 
   const setAssigneeId = useCallback((value: string | null) => {
@@ -130,7 +132,7 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
       title: title.trim(),
       description: description.trim() || undefined,
       due_date: dueDate || null,
-      url_link: url || null,
+      url_link: url.trim() || null, // Convert empty string back to null for API
       assignee_id: assigneeId || null,
       priority: 'medium' as const,
     };
@@ -178,13 +180,13 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     isDirty: formState.isDirty,
     isSubmitting: formState.isSubmitting,
     loading, // Local loading state for compatibility
+    setLoading, // Local loading setter for compatibility
     
     // Form actions - maintain compatibility
     validateForm: validateTaskForm,
     resetForm: formActions.resetForm,
     resetFormState, // Legacy compatibility
     submitForm: formActions.submitForm,
-    setLoading, // Local loading setter for compatibility
     
     // Task-specific utilities
     getTaskData,
