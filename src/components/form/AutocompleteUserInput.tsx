@@ -36,9 +36,21 @@ export function AutocompleteUserInput({
     [users, value]
   );
 
+  // Find exact match for typed input
+  const exactMatch = useMemo(() => {
+    if (!inputValue.trim() || selectedUser) return null;
+    
+    const searchTerm = inputValue.toLowerCase().trim();
+    return users.find(user => {
+      const displayName = user.name || user.email.split('@')[0];
+      return displayName.toLowerCase() === searchTerm || 
+             user.email.toLowerCase() === searchTerm;
+    });
+  }, [users, inputValue, selectedUser]);
+
   // Find the best matching suggestion for ghost text
   const ghostSuggestion = useMemo(() => {
-    if (!inputValue.trim() || selectedUser) return null;
+    if (!inputValue.trim() || selectedUser || exactMatch) return null;
     
     const searchTerm = inputValue.toLowerCase();
     const match = users.find(user => {
@@ -48,7 +60,7 @@ export function AutocompleteUserInput({
     });
     
     return match;
-  }, [users, inputValue, selectedUser]);
+  }, [users, inputValue, selectedUser, exactMatch]);
 
   // Generate ghost text completion
   const ghostText = useMemo(() => {
@@ -69,11 +81,11 @@ export function AutocompleteUserInput({
 
   // Determine validation state
   const validationState: ValidationState = useMemo(() => {
-    if (selectedUser) return 'valid';
+    if (selectedUser || exactMatch) return 'valid';
     if (!inputValue.trim()) return 'empty';
     if (ghostSuggestion) return 'partial';
     return 'invalid';
-  }, [selectedUser, inputValue, ghostSuggestion]);
+  }, [selectedUser, exactMatch, inputValue, ghostSuggestion]);
 
   // Auto-focus input after user selection
   useEffect(() => {
@@ -86,15 +98,22 @@ export function AutocompleteUserInput({
     const newValue = e.target.value;
     setInputValue(newValue);
     
-    // Clear selection if user starts typing
-    if (selectedUser) {
-      onChange('');
-    }
+    // Don't clear selection when typing - let the user keep typing to search
+    // Selection will only be cleared via backspace when input is empty
   };
 
   const handleAcceptSuggestion = () => {
     if (ghostSuggestion) {
       onChange(ghostSuggestion.id);
+      setInputValue('');
+      // Keep focus on input after selection
+      setTimeout(() => inputRef.current?.focus(), 0);
+    }
+  };
+
+  const handleAcceptExactMatch = () => {
+    if (exactMatch) {
+      onChange(exactMatch.id);
       setInputValue('');
       // Keep focus on input after selection
       setTimeout(() => inputRef.current?.focus(), 0);
@@ -117,7 +136,13 @@ export function AutocompleteUserInput({
           e.stopPropagation();
           handleAcceptSuggestion();
         }
-        // Second case: if user is already selected and onSubmit is provided, call onSubmit
+        // Second check: if there's an exact match and no user selected, select the user
+        else if (exactMatch && !selectedUser) {
+          e.preventDefault();
+          e.stopPropagation();
+          handleAcceptExactMatch();
+        }
+        // Third case: if user is already selected and onSubmit is provided, call onSubmit
         else if (selectedUser && onSubmit) {
           e.preventDefault();
           e.stopPropagation();
@@ -140,7 +165,7 @@ export function AutocompleteUserInput({
 
   const getBorderColor = () => {
     if (disabled) return 'border-border/40';
-    if (selectedUser) return 'border-green-500';
+    if (selectedUser || exactMatch) return 'border-green-500';
     if (!isFocused && validationState === 'empty') return 'border-border/40';
     
     switch (validationState) {
@@ -152,7 +177,7 @@ export function AutocompleteUserInput({
   };
 
   const getStatusIcon = () => {
-    if (selectedUser) return <UserIcon className="h-4 w-4 text-green-500" />;
+    if (selectedUser || exactMatch) return <UserIcon className="h-4 w-4 text-green-500" />;
     switch (validationState) {
       case 'invalid': return <UserIcon className="h-4 w-4 text-red-500" />;
       default: return <UserIcon className="h-4 w-4 text-muted-foreground" />;
@@ -161,6 +186,9 @@ export function AutocompleteUserInput({
 
   // Show placeholder only when no input, not focused, and no user selected
   const showPlaceholder = !inputValue && !isFocused && !selectedUser;
+
+  // Determine which user to show in the tag (selected user or exact match)
+  const displayUser = selectedUser || exactMatch;
 
   return (
     <div className={cn('relative w-full', className)}>
@@ -177,25 +205,27 @@ export function AutocompleteUserInput({
           {getStatusIcon()}
 
           <div className="flex-1 min-w-0 ml-3 flex items-center gap-2">
-            {/* Selected user tag - displayed inline */}
-            {selectedUser && (
+            {/* User tag - displayed inline for selected or exact match */}
+            {displayUser && (
               <div className="flex items-center bg-primary/10 text-primary px-2 py-1 rounded-md text-sm">
-                <span>{selectedUser.name || selectedUser.email.split('@')[0]}</span>
-                <button
-                  type="button"
-                  className="ml-1 text-primary/70 hover:text-primary"
-                  onClick={handleClearUser}
-                  disabled={disabled}
-                >
-                  <X className="h-3 w-3" />
-                </button>
+                <span>{displayUser.name || displayUser.email.split('@')[0]}</span>
+                {selectedUser && (
+                  <button
+                    type="button"
+                    className="ml-1 text-primary/70 hover:text-primary"
+                    onClick={handleClearUser}
+                    disabled={disabled}
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                )}
               </div>
             )}
 
             {/* Input container with ghost text */}
             <div className="relative flex-1 min-w-0">
               {/* Ghost text overlay */}
-              {ghostText && isFocused && !selectedUser && (
+              {ghostText && isFocused && !selectedUser && !exactMatch && (
                 <div className="absolute inset-0 pointer-events-none flex items-center">
                   <span className="text-sm text-foreground font-semibold select-none">
                     {inputValue}
@@ -228,13 +258,13 @@ export function AutocompleteUserInput({
             variant="ghost"
             size="sm"
             className="ml-2 h-8 w-8 p-0 transition-colors"
-            onClick={selectedUser ? onSubmit : handleAcceptSuggestion}
-            disabled={disabled || (!ghostSuggestion && !selectedUser)}
+            onClick={selectedUser ? onSubmit : exactMatch ? handleAcceptExactMatch : handleAcceptSuggestion}
+            disabled={disabled || (!ghostSuggestion && !selectedUser && !exactMatch)}
           >
             <ArrowRight 
               className={cn(
                 "h-4 w-4 transition-colors",
-                (ghostSuggestion && ghostText) || selectedUser ? "text-primary" : "text-muted-foreground"
+                (ghostSuggestion && ghostText) || selectedUser || exactMatch ? "text-primary" : "text-muted-foreground"
               )} 
             />
           </Button>
