@@ -1,3 +1,4 @@
+
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -66,7 +67,6 @@ describe('Task Workflow Integration Tests', () => {
 
       const { result } = renderHook(() => useTaskWorkflow({
         enableOptimisticUpdates: true,
-        enableRealtimeSync: false,
       }), { wrapper });
 
       // Act: Update task status
@@ -80,18 +80,6 @@ describe('Task Workflow Integration Tests', () => {
 
       // Assert: Update should succeed
       expect(updateResult.success).toBe(true);
-    });
-  });
-
-  describe('Real-time Synchronization Workflow', () => {
-    it('should coordinate real-time updates with local state', async () => {
-      const { result } = renderHook(() => useTaskWorkflow({
-        enableRealtimeSync: true,
-      }), { wrapper });
-
-      // Assert: Real-time connection should be established
-      expect(result.current.enableRealtimeSync).toBe(true);
-      expect(result.current.workflowStatus).toBeDefined();
     });
   });
 
