@@ -1,6 +1,6 @@
 
 /**
- * Task Query Service - Handles all task retrieval operations
+ * Task Query Service - Updated to use optimized database queries
  */
 
 import { apiRequest } from '../../error-handling';
@@ -62,17 +62,17 @@ export class TaskQueryService {
 
       // Apply filters using indexed columns first for optimal performance
       if (status !== 'all') {
-        // Uses idx_tasks_status index
+        // Uses idx_tasks_status_created_at index
         query = query.eq('status', status);
       }
 
       if (!includeCompleted) {
-        // Uses idx_tasks_status index
+        // Uses idx_tasks_status_created_at index
         query = query.neq('status', 'complete');
       }
 
       if (assignedToMe) {
-        // Uses idx_tasks_assignee_id index
+        // Uses idx_tasks_assignee_id_status index
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
           query = query.eq('assignee_id', user.id);
@@ -86,11 +86,14 @@ export class TaskQueryService {
 
       // Apply sorting using indexed columns
       if (sortBy === 'created_at') {
-        // Uses idx_tasks_created_at_desc or regular index
+        // Uses idx_tasks_status_created_at composite index for optimal performance
         query = query.order('created_at', { ascending: sortOrder === 'asc' });
       } else if (sortBy === 'due_date') {
-        // Uses idx_tasks_due_date_asc index
+        // Uses idx_tasks_due_date_status index
         query = query.order('due_date', { ascending: sortOrder === 'asc', nullsFirst: false });
+      } else if (sortBy === 'updated_at') {
+        // Uses idx_tasks_status_updated_at index
+        query = query.order('updated_at', { ascending: sortOrder === 'asc' });
       } else {
         // Fallback for other sort fields
         query = query.order(sortBy, { ascending: sortOrder === 'asc' });
@@ -214,7 +217,7 @@ export class TaskQueryService {
    */
   static async getAssignedTasks(userId: string, options: Omit<TaskQueryOptions, 'assignedToMe'> = {}): Promise<ApiResponse<Task[]>> {
     return apiRequest('tasks.getAssignedTasks', async () => {
-      // Uses idx_tasks_assignee_id index
+      // Uses idx_tasks_assignee_id_status index
       const { data, error } = await supabase
         .from('tasks')
         .select(`
@@ -252,12 +255,13 @@ export class TaskQueryService {
     total: number;
   }>> {
     return apiRequest('tasks.getTaskCounts', async () => {
-      // Build base queries with proper filtering
+      // Build base queries with proper filtering using our new indexes
       let pendingQuery = supabase.from('tasks').select('id', { count: 'exact', head: true }).eq('status', 'pending');
       let completeQuery = supabase.from('tasks').select('id', { count: 'exact', head: true }).eq('status', 'complete');
       let overdueQuery = supabase.from('tasks').select('id', { count: 'exact', head: true }).eq('status', 'overdue');
       
       if (userId) {
+        // Uses idx_tasks_owner_id_status index
         pendingQuery = pendingQuery.eq('owner_id', userId);
         completeQuery = completeQuery.eq('owner_id', userId);
         overdueQuery = overdueQuery.eq('owner_id', userId);

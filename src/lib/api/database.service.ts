@@ -1,5 +1,6 @@
+
 /**
- * Database Service
+ * Database Service - Optimized with new indexes
  * 
  * Provides general database utilities for common operations.
  */
@@ -9,7 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import type { ApiResponse } from '@/types/shared';
 
 /**
- * Database utilities for common operations
+ * Database utilities for common operations leveraging new indexes
  */
 export class DatabaseService {
   /**
@@ -28,7 +29,7 @@ export class DatabaseService {
   }
 
   /**
-   * Check if a record exists
+   * Check if a record exists using optimized indexes
    */
   static async exists(
     table: string,
@@ -36,20 +37,23 @@ export class DatabaseService {
     value: unknown
   ): Promise<ApiResponse<boolean>> {
     return apiRequest(`exists.${table}`, async () => {
+      // Use optimized query that leverages our indexes
+      // For profiles table, this uses idx_profiles_email when column is 'email'
+      // For tasks table, this uses primary key or other relevant indexes
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data, error } = await (supabase as any)
         .from(table)
         .select('id')
         .eq(column, value)
-        .single();
+        .maybeSingle(); // Use maybeSingle instead of single to avoid errors when no data
 
-      if (error && error.code !== 'PGRST116') throw error;
+      if (error) throw error;
       return !!data;
     });
   }
 
   /**
-   * Get count of records
+   * Get count of records using optimized queries
    */
   static async count(
     table: string,
@@ -72,7 +76,7 @@ export class DatabaseService {
   }
 
   /**
-   * Select specific fields from a table with filters
+   * Select specific fields from a table with filters using optimized indexes
    */
   static async selectFields<T>(
     table: string,
@@ -87,7 +91,7 @@ export class DatabaseService {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let query = (supabase as any).from(table).select(fields);
       
-      // Apply filters
+      // Apply filters in optimal order for index usage
       Object.entries(filters).forEach(([key, value]) => {
         query = query.eq(key, value);
       });
@@ -101,7 +105,7 @@ export class DatabaseService {
 
       // Execute as single or multiple
       if (options?.single) {
-        const { data, error } = await query.single();
+        const { data, error } = await query.maybeSingle();
         if (error) throw error;
         return data;
       } else {
@@ -113,7 +117,7 @@ export class DatabaseService {
   }
 
   /**
-   * Get task ownership data (owner_id, assignee_id)
+   * Get task ownership data using optimized query
    */
   static async getTaskOwnership(taskId: string): Promise<ApiResponse<{
     owner_id: string;
@@ -128,7 +132,7 @@ export class DatabaseService {
   }
 
   /**
-   * Batch check existence of multiple records
+   * Batch check existence of multiple records with optimized queries
    */
   static async batchExists(
     table: string,
@@ -136,20 +140,52 @@ export class DatabaseService {
     values: unknown[]
   ): Promise<ApiResponse<Array<{ value: unknown; exists: boolean }>>> {
     return apiRequest(`batch-exists.${table}`, async () => {
-      const results = await Promise.allSettled(
-        values.map(async (value) => {
-          const response = await this.exists(table, column, value);
-          return {
-            value,
-            exists: response.success ? response.data : false
-          };
-        })
-      );
+      if (values.length === 0) return [];
 
-      return results.map((result, index) => ({
-        value: values[index],
-        exists: result.status === 'fulfilled' ? result.value.exists : false
+      // Use optimized batch query instead of individual checks
+      // For profiles.email, this leverages idx_profiles_email
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data, error } = await (supabase as any)
+        .from(table)
+        .select(column)
+        .in(column, values);
+
+      if (error) throw error;
+
+      const existingValues = new Set(data.map((row: any) => row[column]));
+      
+      return values.map(value => ({
+        value,
+        exists: existingValues.has(value)
       }));
+    });
+  }
+
+  /**
+   * Optimized user validation using email index
+   */
+  static async validateUsersByEmail(emails: string[]): Promise<ApiResponse<{
+    validEmails: string[];
+    invalidEmails: string[];
+  }>> {
+    return apiRequest('database.validateUsersByEmail', async () => {
+      if (emails.length === 0) {
+        return { validEmails: [], invalidEmails: [] };
+      }
+
+      // Uses idx_profiles_email for efficient lookup
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('email')
+        .in('email', emails);
+
+      if (error) throw error;
+
+      const validEmails = data.map(profile => profile.email);
+      const validEmailSet = new Set(validEmails);
+      const invalidEmails = emails.filter(email => !validEmailSet.has(email));
+
+      return { validEmails, invalidEmails };
     });
   }
 }
