@@ -15,7 +15,6 @@ import {
 import { 
   createSuccessResult,
   createErrorResult,
-  withErrorHandling,
   getStandardMessage,
   combineValidationResults 
 } from './error-handling';
@@ -68,33 +67,27 @@ export class DatabaseValidationOps {
   static async checkExistence(
     options: ValidationQueryOptions
   ): Promise<BasicValidationResult> {
-    const context = options.context || { validator: 'checkExistence' };
-    
-    const operationResult = await withErrorHandling(
-      async () => {
-        const response = await DatabaseService.exists(options.table, options.column, options.value);
-        
-        if (!response.success) {
-          throw new Error(`Failed to check existence in ${options.table}`);
-        }
+    try {
+      const response = await DatabaseService.exists(options.table, options.column, options.value);
+      
+      if (!response.success) {
+        return createErrorResult(
+          getStandardMessage(ValidationErrorCode.DATABASE_ERROR, `Failed to check existence in ${options.table}`)
+        );
+      }
 
-        return response.data;
-      },
-      context,
-      ValidationErrorCode.DATABASE_ERROR
-    );
+      if (!response.data) {
+        return createErrorResult(
+          getStandardMessage(ValidationErrorCode.NOT_FOUND, `Resource not found in ${options.table}`)
+        );
+      }
 
-    if (!operationResult.success) {
-      return operationResult.result;
-    }
-
-    if (!operationResult.data) {
+      return createSuccessResult();
+    } catch (error) {
       return createErrorResult(
-        getStandardMessage(ValidationErrorCode.NOT_FOUND, `Resource not found in ${options.table}`)
+        getStandardMessage(ValidationErrorCode.DATABASE_ERROR, `Database error for ${options.table}`)
       );
     }
-
-    return createSuccessResult();
   }
 
   /**
@@ -187,26 +180,22 @@ export class DatabaseValidationOps {
   static async getTaskOwnership(
     taskId: string,
     context?: ValidationContext
-  ): Promise<{ success: true; data: TaskOwnershipData } | { success: false; result: BasicValidationResult }> {
-    const ctx = context || { validator: 'getTaskOwnership' };
+  ): Promise<{ success: true; data: TaskOwnershipData } | { success: false; error: string }> {
+    try {
+      const response = await DatabaseService.getTaskOwnership(taskId);
+      
+      if (!response.success) {
+        return { success: false, error: response.error?.message || 'Failed to get task ownership' };
+      }
 
-    return await withErrorHandling(
-      async () => {
-        const response = await DatabaseService.getTaskOwnership(taskId);
-        
-        if (!response.success) {
-          throw new Error(response.error?.message || 'Failed to get task ownership');
-        }
+      if (!response.data) {
+        return { success: false, error: 'Task not found' };
+      }
 
-        if (!response.data) {
-          throw new Error('Task not found');
-        }
-
-        return response.data;
-      },
-      ctx,
-      ValidationErrorCode.DATABASE_ERROR
-    );
+      return { success: true, data: response.data };
+    } catch (error) {
+      return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+    }
   }
 
   /**
