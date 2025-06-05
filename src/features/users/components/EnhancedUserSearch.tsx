@@ -6,10 +6,6 @@ import { cn } from '@/lib/utils';
 import { useUsersQuery } from '../hooks/useUsersQuery';
 import { useUsersFilter } from '../hooks/useUsersFilter';
 import UserProfile from './UserProfile';
-import {
-  Dialog,
-  DialogContent,
-} from '@/components/ui/dialog';
 
 interface EnhancedUserSearchProps {
   value: string;
@@ -163,9 +159,9 @@ export function EnhancedUserSearch({
       {isOpen && !selectedUser && (
         <div
           ref={dropdownRef}
-          className="absolute z-[9999] mt-2 w-full overflow-visible rounded-xl border border-border bg-popover shadow-lg"
+          className="absolute z-[9999] mt-2 w-full overflow-auto rounded-xl border border-border bg-popover shadow-lg"
         >
-          <div className="flex flex-col p-2">
+          <div className="flex h-12 items-center justify-center p-2">
             {isLoading ? (
               <div className="py-3 text-center text-sm text-muted-foreground">
                 Loading users...
@@ -191,38 +187,5 @@ export function EnhancedUserSearch({
         </div>
       )}
     </div>
-  );
-}
-
-interface UserSearchModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  value: string;
-  onChange: (value: string) => void;
-}
-
-export function UserSearchModal({
-  isOpen,
-  onClose,
-  value,
-  onChange,
-}: UserSearchModalProps) {
-  const handleUserSelect = (selectedValue: string) => {
-    onChange(selectedValue);
-    onClose();
-  };
-
-  return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="fixed top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 sm:max-w-md h-auto min-h-[200px]">
-        <div className="flex flex-col space-y-2">
-          <EnhancedUserSearch 
-            value={value} 
-            onChange={handleUserSelect}
-            className="flex-grow"
-          />
-        </div>
-      </DialogContent>
-    </Dialog>
   );
 }

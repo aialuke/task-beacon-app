@@ -3,7 +3,6 @@ import {
   DialogContent,
 } from '@/components/ui/dialog';
 import { EnhancedUserSearch } from '@/features/users/components/EnhancedUserSearch';
-import { useState } from 'react';
 
 interface UserSearchModalProps {
   isOpen: boolean;
@@ -25,14 +24,12 @@ export function UserSearchModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="fixed top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 sm:max-w-md">
-        <div className="space-y-4">
-          <div className="relative">
-            <EnhancedUserSearch 
-              value={value} 
-              onChange={handleUserSelect}
-            />
-          </div>
+      <DialogContent className="fixed top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 sm:max-w-md max-h-[60vh] overflow-visible">
+        <div className="h-full">
+          <EnhancedUserSearch 
+            value={value} 
+            onChange={handleUserSelect}
+          />
         </div>
       </DialogContent>
     </Dialog>
