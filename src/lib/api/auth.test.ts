@@ -1,3 +1,4 @@
+
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { AuthService } from './auth.service';
 import { supabase } from '@/integrations/supabase/client';
@@ -18,6 +19,7 @@ vi.mock('@/integrations/supabase/client', () => ({
       signInWithPassword: vi.fn(),
       signUp: vi.fn(),
       getUser: vi.fn(),
+      getSession: vi.fn(),
       signOut: vi.fn(),
       refreshSession: vi.fn(),
     },
@@ -188,7 +190,7 @@ describe('AuthService', () => {
       const result = await AuthService.getCurrentUser();
 
       expect(result.success).toBe(false);
-      expect(result.error?.message).toContain('No authenticated user');
+      expect(result.error).toContain('No authenticated user');
     });
 
     it('should handle auth error', async () => {
@@ -203,7 +205,7 @@ describe('AuthService', () => {
       const result = await AuthService.getCurrentUser();
 
       expect(result.success).toBe(false);
-      expect(result.error?.message).toContain('Token expired');
+      expect(result.error).toContain('Token expired');
     });
   });
 
@@ -233,7 +235,7 @@ describe('AuthService', () => {
       const result = await AuthService.getCurrentUserId();
 
       expect(result.success).toBe(false);
-      expect(result.error?.message).toContain('No authenticated user');
+      expect(result.error).toContain('No authenticated user');
     });
   });
 

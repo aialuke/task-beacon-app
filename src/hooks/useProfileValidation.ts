@@ -4,10 +4,10 @@ import { useCallback } from 'react';
 
 // === INTERNAL UTILITIES (unified validation system) ===
 import { 
-  validateField, 
-  validateForm, 
+  validateEmail, 
+  validateUserName,
   type ValidationResult 
-} from '@/lib/utils/validation';
+} from '@/lib/validation';
 
 // === TYPES ===
 interface ProfileData {
@@ -39,7 +39,17 @@ export function useProfileValidation() {
     field: keyof ProfileData,
     value: string
   ): ValidationResult => {
-    return validateField(field, value, { required: true });
+    switch (field) {
+      case 'name':
+        return validateUserName(value);
+      case 'email':
+        return validateEmail(value);
+      case 'avatar_url':
+        // Avatar URL is optional, so it's always valid
+        return { isValid: true, errors: [], warnings: [] };
+      default:
+        return { isValid: false, errors: ['Unknown field'], warnings: [] };
+    }
   }, []);
 
   /**
@@ -52,24 +62,22 @@ export function useProfileValidation() {
     
     // Validate each field
     if (profileData.name !== undefined) {
-      const nameResult = validateField('name', profileData.name, { required: true });
-      if (!nameResult.isValid && nameResult.error) {
-        errors.name = nameResult.error;
+      const nameResult = validateUserName(profileData.name);
+      if (!nameResult.isValid && nameResult.errors.length > 0) {
+        errors.name = nameResult.errors[0];
       }
     }
     
     if (profileData.email !== undefined) {
-      const emailResult = validateField('email', profileData.email, { required: true, email: true });
-      if (!emailResult.isValid && emailResult.error) {
-        errors.email = emailResult.error;
+      const emailResult = validateEmail(profileData.email);
+      if (!emailResult.isValid && emailResult.errors.length > 0) {
+        errors.email = emailResult.errors[0];
       }
     }
     
     if (profileData.avatar_url !== undefined) {
-      const urlResult = validateField('avatar_url', profileData.avatar_url);
-      if (!urlResult.isValid && urlResult.error) {
-        errors.avatar_url = urlResult.error;
-      }
+      // Avatar URL validation is optional
+      // Could add URL validation here if needed
     }
 
     return {
@@ -93,7 +101,7 @@ export function useProfileValidation() {
   /**
    * Validate profile email
    */
-  const validateEmail = useCallback((email: string): ValidationResult => {
+  const validateEmailField = useCallback((email: string): ValidationResult => {
     return validateProfileField('email', email);
   }, [validateProfileField]);
 
@@ -108,7 +116,7 @@ export function useProfileValidation() {
     validateProfile,
     validateProfileField,
     validateName,
-    validateEmail,
+    validateEmail: validateEmailField,
     validateAvatarUrl,
   };
 }

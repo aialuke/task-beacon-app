@@ -53,10 +53,10 @@ export function useAuth(): UseAuthReturn {
       setError(null);
       
       const response = await AuthService.signIn(email, password);
-      if (!response.isSuccess) {
-        setError({ 
+      if (!response.success) {
+        setError(response.error || { 
           name: 'SignInError', 
-          message: response.error || 'Failed to sign in' 
+          message: 'Failed to sign in' 
         });
         clearAuthState();
         return;

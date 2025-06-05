@@ -150,8 +150,9 @@ export function useAuthFormState(): UseAuthFormStateReturn {
 
       if (mode === 'signin') {
         const response = await AuthService.signIn(email, password);
-        if (!response.isSuccess) {
-          throw new Error(response.error || 'Sign in failed');
+        if (!response.success) {
+          const errorMessage = response.error?.message || 'Sign in failed';
+          throw new Error(errorMessage);
         }
         setTimeout(() => {
           window.location.href = '/';
@@ -163,8 +164,9 @@ export function useAuthFormState(): UseAuthFormStateReturn {
             name: name
           }
         });
-        if (!response.isSuccess) {
-          throw new Error(response.error || 'Sign up failed');
+        if (!response.success) {
+          const errorMessage = response.error?.message || 'Sign up failed';
+          throw new Error(errorMessage);
         }
         setTimeout(() => {
           window.location.href = '/';

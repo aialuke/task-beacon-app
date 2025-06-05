@@ -6,8 +6,17 @@ import type { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 
 // === TYPES (direct imports from unified system) ===
-import type { ApiResponse, ServiceResult, ActionResult } from '@/types/api.types';
-import type { SignInCredentials, SignUpCredentials } from '@/types/shared/auth.types';
+import type { ApiResponse, ServiceResult, ApiError } from '@/types/api.types';
+import type { SignInCredentials, SignUpCredentials, AuthResponse } from '@/types/shared/auth.types';
+
+// === HELPER FUNCTIONS ===
+function createApiError(message: string, code?: string): ApiError {
+  return {
+    message,
+    name: 'AuthError',
+    code: code || 'AUTH_ERROR',
+  };
+}
 
 // === AUTH SERVICE ===
 export class AuthService {
@@ -51,6 +60,14 @@ export class AuthService {
         return {
           success: false,
           error: error.message,
+          data: null,
+        };
+      }
+
+      if (!user) {
+        return {
+          success: false,
+          error: 'No authenticated user',
           data: null,
         };
       }
@@ -99,30 +116,59 @@ export class AuthService {
   }
 
   /**
+   * Check if user is authenticated
+   */
+  static async isAuthenticated(): Promise<boolean> {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      return !!user;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
    * Sign in user
    */
-  static async signIn(email: string, password: string): Promise<ActionResult> {
+  static async signIn(email: string, password: string): Promise<ApiResponse<AuthResponse>> {
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) {
         return {
-          isSuccess: false,
-          error: error.message,
+          success: false,
+          error: createApiError(error.message),
+          data: null,
         };
       }
 
+      if (!data.user) {
+        return {
+          success: false,
+          error: createApiError('Sign in failed - no user returned'),
+          data: null,
+        };
+      }
+
+      const authResponse: AuthResponse = {
+        user: data.user,
+        session: data.session,
+        emailConfirmed: !!data.user.email_confirmed_at,
+      };
+
       return {
-        isSuccess: true,
+        success: true,
         error: null,
+        data: authResponse,
       };
     } catch (error) {
       return {
-        isSuccess: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        success: false,
+        error: createApiError(error instanceof Error ? error.message : 'Unknown error'),
+        data: null,
       };
     }
   }
@@ -130,9 +176,9 @@ export class AuthService {
   /**
    * Sign up user
    */
-  static async signUp(email: string, password: string, options?: any): Promise<ActionResult> {
+  static async signUp(email: string, password: string, options?: any): Promise<ApiResponse<AuthResponse>> {
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options,
@@ -140,19 +186,36 @@ export class AuthService {
 
       if (error) {
         return {
-          isSuccess: false,
-          error: error.message,
+          success: false,
+          error: createApiError(error.message),
+          data: null,
         };
       }
 
+      if (!data.user) {
+        return {
+          success: false,
+          error: createApiError('Sign up failed - no user returned'),
+          data: null,
+        };
+      }
+
+      const authResponse: AuthResponse = {
+        user: data.user,
+        session: data.session,
+        emailConfirmed: !!data.user.email_confirmed_at,
+      };
+
       return {
-        isSuccess: true,
+        success: true,
         error: null,
+        data: authResponse,
       };
     } catch (error) {
       return {
-        isSuccess: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        success: false,
+        error: createApiError(error instanceof Error ? error.message : 'Unknown error'),
+        data: null,
       };
     }
   }
@@ -160,25 +223,68 @@ export class AuthService {
   /**
    * Sign out user
    */
-  static async signOut(): Promise<ActionResult> {
+  static async signOut(): Promise<ApiResponse<void>> {
     try {
       const { error } = await supabase.auth.signOut();
 
       if (error) {
         return {
-          isSuccess: false,
-          error: error.message,
+          success: false,
+          error: createApiError(error.message),
+          data: null,
         };
       }
 
       return {
-        isSuccess: true,
+        success: true,
         error: null,
+        data: null,
       };
     } catch (error) {
       return {
-        isSuccess: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        success: false,
+        error: createApiError(error instanceof Error ? error.message : 'Unknown error'),
+        data: null,
+      };
+    }
+  }
+
+  /**
+   * Refresh session
+   */
+  static async refreshSession(): Promise<ApiResponse<{ user: User; session: Session }>> {
+    try {
+      const { data, error } = await supabase.auth.refreshSession();
+
+      if (error) {
+        return {
+          success: false,
+          error: createApiError(error.message),
+          data: null,
+        };
+      }
+
+      if (!data.user || !data.session) {
+        return {
+          success: false,
+          error: createApiError('Failed to refresh session'),
+          data: null,
+        };
+      }
+
+      return {
+        success: true,
+        error: null,
+        data: {
+          user: data.user,
+          session: data.session,
+        },
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: createApiError(error instanceof Error ? error.message : 'Unknown error'),
+        data: null,
       };
     }
   }
