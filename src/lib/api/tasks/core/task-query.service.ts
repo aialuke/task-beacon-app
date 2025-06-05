@@ -16,7 +16,6 @@ export interface TaskQueryOptions {
   sortBy?: 'created_at' | 'due_date' | 'title' | 'updated_at';
   sortOrder?: 'asc' | 'desc';
   search?: string;
-  pinnedOnly?: boolean;
 }
 
 /**
@@ -36,7 +35,6 @@ export class TaskQueryService {
         sortBy = 'created_at',
         sortOrder = 'desc',
         search,
-        pinnedOnly = false,
       } = options;
 
       // Start building the query - make sure to select ALL fields including photo_url
@@ -60,10 +58,6 @@ export class TaskQueryService {
 
       if (search) {
         query = query.or(`title.ilike.%${search}%,description.ilike.%${search}%`);
-      }
-
-      if (pinnedOnly) {
-        query = query.eq('pinned', true);
       }
 
       // Apply sorting
@@ -161,28 +155,6 @@ export class TaskQueryService {
           assignee:profiles!tasks_assignee_id_fkey(id, name, email, avatar_url)
         `)
         .eq('status', status)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-
-      return data || [];
-    });
-  }
-
-  /**
-   * Get pinned tasks for the current user
-   */
-  static async getPinned(): Promise<ApiResponse<Task[]>> {
-    return apiRequest('tasks.getPinned', async () => {
-      const { data, error } = await supabase
-        .from('tasks')
-        .select(`
-          *,
-          parent_task:parent_task_id(id, title, description, photo_url, url_link),
-          owner:profiles!tasks_owner_id_fkey(id, name, email, avatar_url),
-          assignee:profiles!tasks_assignee_id_fkey(id, name, email, avatar_url)
-        `)
-        .eq('pinned', true)
         .order('created_at', { ascending: false });
 
       if (error) throw error;

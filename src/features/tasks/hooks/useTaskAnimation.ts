@@ -1,15 +1,14 @@
+
 import { useSpring, SpringValue } from '@react-spring/web';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export interface TaskAnimationState {
   height: SpringValue<number>;
   opacity: SpringValue<number>;
 }
 
-export function useTaskAnimation(
-  contentRef: React.RefObject<HTMLDivElement>,
-  isExpanded: boolean
-) {
+export function useTaskAnimation(contentRef: React.RefObject<HTMLDivElement>) {
+  const [isExpanded, setIsExpanded] = useState(false);
   const initialHeightRef = useRef<number | null>(null);
 
   const [animationProps, setAnimationProps] = useSpring(() => ({
@@ -17,6 +16,10 @@ export function useTaskAnimation(
     opacity: 0,
     config: { tension: 280, friction: 60 },
   }));
+
+  const toggleExpanded = () => {
+    setIsExpanded(prev => !prev);
+  };
 
   useEffect(() => {
     if (!contentRef.current) return;
@@ -46,6 +49,8 @@ export function useTaskAnimation(
   }, [isExpanded, contentRef, setAnimationProps]);
 
   return {
+    isExpanded,
+    toggleExpanded,
     animationState: animationProps,
   };
 }
