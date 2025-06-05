@@ -31,7 +31,6 @@ export interface Task extends BaseEntity {
   owner_id: ID;
   parent_task_id: ID | null;
   parent_task: ParentTask | null;
-  pinned: boolean;
   status: TaskStatus;
   assignee_id: ID | null;
   priority?: TaskPriority;
@@ -50,7 +49,6 @@ export interface TaskCreateData {
   url_link?: string | null;
   assignee_id?: ID | null;
   parent_task_id?: ID | null;
-  pinned?: boolean;
   priority?: TaskPriority;
   tags?: string[];
   estimated_hours?: number;
@@ -63,7 +61,6 @@ export interface TaskUpdateData {
   photo_url?: string | null;
   url_link?: string | null;
   assignee_id?: ID | null;
-  pinned?: boolean;
   status?: TaskStatus;
   priority?: TaskPriority;
   tags?: string[];
@@ -102,7 +99,6 @@ export interface TaskSearchFilters {
   due_after?: Timestamp;
   due_before?: Timestamp;
   has_attachments?: boolean;
-  is_pinned?: boolean;
 }
 
 // Task list and pagination interfaces
@@ -241,4 +237,4 @@ export interface TaskImportResult {
     row: number;
     error: string;
   }[];
-} 
+}

@@ -49,7 +49,6 @@ export type Database = {
           owner_id: string
           parent_task_id: string | null
           photo_url: string | null
-          pinned: boolean
           status: Database["public"]["Enums"]["task_status"]
           title: string
           updated_at: string
@@ -64,7 +63,6 @@ export type Database = {
           owner_id: string
           parent_task_id?: string | null
           photo_url?: string | null
-          pinned?: boolean
           status?: Database["public"]["Enums"]["task_status"]
           title: string
           updated_at?: string
@@ -79,7 +77,6 @@ export type Database = {
           owner_id?: string
           parent_task_id?: string | null
           photo_url?: string | null
-          pinned?: boolean
           status?: Database["public"]["Enums"]["task_status"]
           title?: string
           updated_at?: string
