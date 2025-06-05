@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 interface TaskMutationResult {
   success: boolean;
   message?: string;
+  error?: string;
   data?: Task;
 }
 
@@ -147,41 +148,55 @@ export function useTaskMutations() {
 
   // Optimized callback wrappers for better performance
   const toggleTaskCompleteCallback = useOptimizedCallback(
-    (task: Task) => toggleTaskComplete.mutateAsync(task),
+    async (task: Task) => {
+      const result = await toggleTaskComplete.mutateAsync(task);
+      return result;
+    },
     [toggleTaskComplete],
     { name: 'toggleTaskComplete' }
   );
 
   const deleteTaskCallback = useOptimizedCallback(
-    (taskId: string) => deleteTask.mutateAsync(taskId),
+    async (taskId: string) => {
+      const result = await deleteTask.mutateAsync(taskId);
+      return result;
+    },
     [deleteTask],
     { name: 'deleteTask' }
   );
 
   const createTaskCallback = useOptimizedCallback(
-    (taskData: { title: string; description?: string; due_date?: string | null; url_link?: string | null; assignee_id?: string | null; priority?: string }) => createTask.mutateAsync(taskData),
+    async (taskData: { title: string; description?: string; due_date?: string | null; url_link?: string | null; assignee_id?: string | null; priority?: string }) => {
+      const result = await createTask.mutateAsync(taskData);
+      return result;
+    },
     [createTask],
     { name: 'createTask' }
   );
 
   const updateTaskCallback = useOptimizedCallback(
-    (taskId: string, updates: Partial<Task>) => updateTask.mutateAsync({ taskId, updates }),
+    async (taskId: string, updates: Partial<Task>) => {
+      const result = await updateTask.mutateAsync({ taskId, updates });
+      return result;
+    },
     [updateTask],
     { name: 'updateTask' }
   );
 
   // Create follow-up task
   const createFollowUpTask = useOptimizedCallback(
-    async (parentTask: Task, taskData: { title: string; description?: string }) => {
+    async (parentTask: Task, taskData: { title: string; description?: string }): Promise<TaskMutationResult> => {
       const followUpData = {
         ...taskData,
         parent_task_id: parentTask.id,
-        priority: 'medium',
+        priority: 'medium' as const,
       };
       const result = await createTask.mutateAsync(followUpData);
       return {
         success: result.success,
         message: result.success ? 'Follow-up task created successfully' : 'Failed to create follow-up task',
+        error: result.success ? undefined : 'Failed to create follow-up task',
+        data: result.data,
       };
     },
     [createTask],
@@ -193,18 +208,19 @@ export function useTaskMutations() {
   
   // Status mutations for backward compatibility
   const markAsComplete = useOptimizedCallback(
-    (taskId: string) => {
-      // Find task and toggle it
-      // This is a simplified version - in practice you'd get the task first
+    async (taskId: string) => {
+      // This would need the actual task object to work properly
       console.log('markAsComplete called with taskId:', taskId);
+      return { success: false, error: 'Task object required for completion toggle' };
     },
     [],
     { name: 'markAsComplete' }
   );
 
   const markAsIncomplete = useOptimizedCallback(
-    (taskId: string) => {
+    async (taskId: string) => {
       console.log('markAsIncomplete called with taskId:', taskId);
+      return { success: false, error: 'Task object required for completion toggle' };
     },
     [],
     { name: 'markAsIncomplete' }

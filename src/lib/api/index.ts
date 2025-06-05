@@ -1,11 +1,15 @@
 
 /**
- * API Layer - Updated to use streamlined type system
+ * API Layer - Updated to use standardized patterns
  * 
- * This index file now uses the organized type system for better consistency.
+ * This index file provides a clean, standardized interface for all API operations.
+ * Phase 2: Complete migration to service layer with standardized patterns.
  */
 
-// Base API utilities and types from streamlined system
+// Standardized API utilities
+export * from './standardized-api';
+
+// Base API utilities and types
 export type {
   ApiResponse,
   ApiError,
@@ -24,11 +28,11 @@ export type {
   ProfileWithRelations,
 } from '@/types/database';
 
-// Service classes
-export * from './tasks/task.service';
+// Main service classes (primary interface)
+export { TaskService } from './tasks/task.service';
 export * from './users.service';
 
-// Individual service exports for better tree-shaking
+// Specialized services for direct access
 export { AuthService } from './auth.service';
 export { StorageService } from './storage.service';
 export { DatabaseService } from './database.service';
@@ -36,5 +40,8 @@ export { DatabaseService } from './database.service';
 // Error handling utilities
 export { formatApiError, apiRequest } from './error-handling';
 
-// Re-export the consolidated Supabase client
+// Supabase client (consolidated)
 export { supabase } from '@/integrations/supabase/client';
+
+// Query utilities
+export { QueryKeys, apiCall, transformApiError, createSuccessResponse, createErrorResponse } from './standardized-api';

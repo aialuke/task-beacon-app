@@ -1,7 +1,7 @@
 
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
 import { TaskService } from '@/lib/api/tasks/task.service';
+import { QueryKeys, createLoadingState } from '@/lib/api/standardized-api';
 import type { Task } from '@/types';
 
 interface UseTaskQueryReturn {
@@ -11,18 +11,17 @@ interface UseTaskQueryReturn {
 }
 
 /**
- * Custom hook for querying a single task by ID
- * Handles loading states and error management
+ * Standardized hook for querying a single task by ID - Phase 2 Implementation
+ * 
+ * Uses standardized query keys, error handling, and loading state patterns.
  */
 export function useTaskQuery(taskId: string | undefined): UseTaskQueryReturn {
-  const [error, setError] = useState<string | null>(null);
-
   const {
     data: task,
-    isLoading: loading,
+    isLoading,
     error: queryError,
   } = useQuery({
-    queryKey: ['task', taskId],
+    queryKey: QueryKeys.task(taskId || ''),
     queryFn: async () => {
       if (!taskId) {
         throw new Error('Task ID is required');
@@ -51,14 +50,12 @@ export function useTaskQuery(taskId: string | undefined): UseTaskQueryReturn {
     },
   });
 
-  // Handle query errors
-  if (queryError && !error) {
-    setError(queryError instanceof Error ? queryError.message : 'Failed to fetch task');
-  }
+  // Standardized loading state
+  const loadingState = createLoadingState(isLoading, false, queryError);
 
   return {
     task: task || null,
-    loading,
-    error: error || (queryError instanceof Error ? queryError.message : null),
+    loading: loadingState.isLoading,
+    error: loadingState.error,
   };
 }

@@ -5,7 +5,7 @@ import type { Task } from '@/types';
 import { useTasksQuery } from '@/features/tasks/hooks/useTasksQuery';
 
 interface TaskDataContextValue {
-  // Data state (from React Query)
+  // Data state (from React Query with standardized patterns)
   tasks: Task[];
   isLoading: boolean;
   isFetching: boolean;
@@ -32,20 +32,20 @@ interface TaskDataContextProviderProps {
 }
 
 /**
- * Task Data Context Provider - Server State Only
+ * Task Data Context Provider - Phase 2 Optimized
  * 
- * Provides only server-side data state and pagination controls.
- * Does not manage UI state, form state, or mutations.
+ * Provides only server-side data state with standardized patterns.
+ * Uses optimized query hooks with prefetching and consistent error handling.
  * 
  * Follows the principle: React Query for server state, Context for UI state only.
  */
 export function TaskDataContextProvider({
   children,
 }: TaskDataContextProviderProps) {
-  // Only server state from React Query
+  // Use standardized task queries with optimized data flow
   const taskQueries = useTasksQuery();
 
-  // Ensure we only expose data-related state
+  // Provide only data-related state with standardized interface
   const contextValue: TaskDataContextValue = {
     tasks: taskQueries.tasks,
     isLoading: taskQueries.isLoading,

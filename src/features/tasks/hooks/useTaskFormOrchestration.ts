@@ -72,11 +72,11 @@ export function useTaskFormOrchestration(options: UseTaskFormOrchestrationOption
             task: result.data,
           };
         } else {
-          const error = new Error('Failed to create task');
+          const error = new Error(result.error || 'Failed to create task');
           onSubmitError?.(error);
           return {
             success: false,
-            error: 'Failed to create task',
+            error: result.error || 'Failed to create task',
           };
         }
       } catch (error) {
@@ -108,7 +108,7 @@ export function useTaskFormOrchestration(options: UseTaskFormOrchestrationOption
         } else {
           return {
             success: false,
-            error: 'Failed to update task',
+            error: result.error || 'Failed to update task',
           };
         }
       } catch (error) {
