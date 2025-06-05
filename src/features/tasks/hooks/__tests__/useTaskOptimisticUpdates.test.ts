@@ -27,8 +27,13 @@ describe('useTaskOptimisticUpdates', () => {
   };
 
   it('should provide optimistic update functions', () => {
+    const TestWrapper = ({ children }: { children: React.ReactNode }) => {
+      const { container } = renderWithProviders(<div>{children}</div>, {});
+      return container.firstChild as React.ReactElement;
+    };
+
     const { result } = renderHook(() => useTaskOptimisticUpdates(), {
-      wrapper: ({ children }) => renderWithProviders(<>{children}</>, {}).container.firstChild as any,
+      wrapper: TestWrapper,
     });
 
     expect(result.current.updateTaskOptimistically).toBeDefined();
@@ -42,8 +47,13 @@ describe('useTaskOptimisticUpdates', () => {
   });
 
   it('should handle optimistic updates correctly', () => {
+    const TestWrapper = ({ children }: { children: React.ReactNode }) => {
+      const { container } = renderWithProviders(<div>{children}</div>, {});
+      return container.firstChild as React.ReactElement;
+    };
+
     const { result } = renderHook(() => useTaskOptimisticUpdates(), {
-      wrapper: ({ children }) => renderWithProviders(<>{children}</>, {}).container.firstChild as any,
+      wrapper: TestWrapper,
     });
 
     // Test that functions can be called without throwing

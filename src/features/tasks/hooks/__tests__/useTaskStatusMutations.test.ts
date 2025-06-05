@@ -43,8 +43,13 @@ describe('useTaskStatusMutations', () => {
   };
 
   it('should provide status mutation functions', () => {
+    const TestWrapper = ({ children }: { children: React.ReactNode }) => {
+      const { container } = renderWithProviders(<div>{children}</div>, {});
+      return container.firstChild as React.ReactElement;
+    };
+
     const { result } = renderHook(() => useTaskStatusMutations(), {
-      wrapper: ({ children }) => renderWithProviders(<>{children}</>, {}).container.firstChild as any,
+      wrapper: TestWrapper,
     });
 
     expect(result.current.markAsComplete).toBeDefined();
@@ -56,8 +61,13 @@ describe('useTaskStatusMutations', () => {
   });
 
   it('should handle loading states correctly', () => {
+    const TestWrapper = ({ children }: { children: React.ReactNode }) => {
+      const { container } = renderWithProviders(<div>{children}</div>, {});
+      return container.firstChild as React.ReactElement;
+    };
+
     const { result } = renderHook(() => useTaskStatusMutations(), {
-      wrapper: ({ children }) => renderWithProviders(<>{children}</>, {}).container.firstChild as any,
+      wrapper: TestWrapper,
     });
 
     expect(result.current.isLoading).toBe(false);
