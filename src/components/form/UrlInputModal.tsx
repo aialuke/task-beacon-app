@@ -70,7 +70,7 @@ export function UrlInputModal({
               label="URL"
               icon={<Link className="h-4 w-4" />}
               autoFocus
-              className="h-10"
+              className="[&_input]:h-10"
             />
             {error && (
               <p
