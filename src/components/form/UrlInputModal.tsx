@@ -82,11 +82,11 @@ export function UrlInputModal({
   };
 
   const getTextColor = () => {
-    return isValid ? 'text-green-500' : 'text-foreground';
+    return isValid ? 'text-blue-500' : 'text-foreground';
   };
 
   const getIconColor = () => {
-    return isValid ? 'text-green-500' : 'text-muted-foreground';
+    return isValid ? 'text-blue-500' : 'text-muted-foreground';
   };
 
   return (
@@ -96,7 +96,7 @@ export function UrlInputModal({
           <div className="relative">
             <div
               className={cn(
-                'flex h-12 items-center rounded-2xl border bg-background/60 p-2 backdrop-blur-sm transition-all duration-300',
+                'flex h-12 items-center rounded-2xl border bg-background/60 p-2 backdrop-blur-sm',
                 'hover:border-border/60 hover:bg-background/70',
                 getBorderColor()
               )}
@@ -112,7 +112,7 @@ export function UrlInputModal({
                   onChange={handleInputChange}
                   onKeyDown={handleKeyDown}
                   className={cn(
-                    "h-auto border-none bg-transparent p-0 text-sm font-semibold focus:ring-0",
+                    "h-auto border-none bg-transparent pl-1 pr-0 text-sm font-semibold focus:ring-0",
                     getTextColor()
                   )}
                   autoFocus
@@ -130,7 +130,7 @@ export function UrlInputModal({
                 <ArrowRight 
                   className={cn(
                     "h-4 w-4 transition-colors",
-                    isValid ? "text-green-500" : "text-muted-foreground"
+                    isValid ? "text-blue-500" : "text-muted-foreground"
                   )} 
                 />
               </Button>
