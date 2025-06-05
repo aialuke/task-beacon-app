@@ -1,3 +1,4 @@
+
 /**
  * Consolidated Validation Utilities
  * 
@@ -10,17 +11,6 @@ export const isValidEmail = (email: string): boolean => {
   if (!email || typeof email !== 'string') return false;
   const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
   return emailRegex.test(email.trim());
-};
-
-// URL validation
-export const isValidUrl = (url: string): boolean => {
-  if (!url || url.length === 0) return true; // Allow empty URLs
-  try {
-    new URL(url);
-    return true;
-  } catch {
-    return false;
-  }
 };
 
 // Password validation
@@ -99,7 +89,6 @@ export const validateField = (
   rules: {
     required?: boolean;
     email?: boolean;
-    url?: boolean;
     password?: boolean;
     minLength?: number;
     maxLength?: number;
@@ -124,11 +113,6 @@ export const validateField = (
   // Email validation
   if (rules.email && !isValidEmail(stringValue)) {
     errors.push('Please enter a valid email address');
-  }
-
-  // URL validation
-  if (rules.url && !isValidUrl(stringValue)) {
-    errors.push('Please enter a valid URL');
   }
 
   // Password validation

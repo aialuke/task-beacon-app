@@ -1,5 +1,5 @@
+
 import { z } from 'zod';
-import { isValidUrl } from '@/lib/utils/validation';
 
 export const VALIDATION_MESSAGES = {
   TITLE_REQUIRED: 'Task title is required',
@@ -14,6 +14,25 @@ export const VALIDATION_MESSAGES = {
   URL_INVALID: 'Please enter a valid URL',
   USER_ID_REQUIRED: 'User ID is required',
 } as const;
+
+// Enhanced URL validation that accepts domains without protocol
+const isValidUrlEnhanced = (url: string): boolean => {
+  if (!url.trim()) return true; // Allow empty URLs
+  
+  // Check if it already has a protocol
+  if (/^https?:\/\//.test(url)) {
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+  
+  // Check for domain pattern without protocol (e.g., google.com, www.google.com)
+  const domainPattern = /^(www\.)?[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
+  return domainPattern.test(url);
+};
 
 // Title schema with proper character limits (matching database constraints)
 export const taskTitleSchema = z
@@ -54,7 +73,7 @@ export const baseTaskSchema = z.object({
     .or(z.literal('')),
   url: z
     .string()
-    .refine(isValidUrl, VALIDATION_MESSAGES.URL_INVALID)
+    .refine(isValidUrlEnhanced, VALIDATION_MESSAGES.URL_INVALID)
     .optional()
     .nullable()
     .or(z.literal('')),
@@ -76,7 +95,7 @@ export const taskFormSchema = z.object({
   title: taskTitleSchema,
   description: z.string().max(500, VALIDATION_MESSAGES.DESCRIPTION_TOO_LONG).default(''),
   dueDate: z.string().default(''),
-  url: z.string().refine(isValidUrl, VALIDATION_MESSAGES.URL_INVALID).default(''),
+  url: z.string().refine(isValidUrlEnhanced, VALIDATION_MESSAGES.URL_INVALID).default(''),
   pinned: z.boolean().default(false),
   assigneeId: z.string().default(''),
   priority: z.enum(['low', 'medium', 'high', 'urgent']).default('medium'),

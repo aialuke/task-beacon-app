@@ -73,26 +73,6 @@ export const validateUserName = (
 };
 
 /**
- * Validate URL format
- */
-export const validateUrl = (
-  url: string | null | undefined,
-  context?: ValidationContext
-): BasicValidationResult => {
-  // Empty URLs are valid
-  if (!url || url.trim().length === 0) {
-    return createSuccessResult();
-  }
-
-  try {
-    new URL(url);
-    return createSuccessResult();
-  } catch {
-    return createErrorResult(getStandardMessage(ValidationErrorCode.INVALID_FORMAT, 'Invalid URL format'));
-  }
-};
-
-/**
  * Validate due date
  */
 export const validateDueDate = (

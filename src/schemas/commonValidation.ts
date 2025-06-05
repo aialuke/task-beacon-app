@@ -2,7 +2,6 @@
 import { z } from 'zod';
 import {
   isValidEmail,
-  isValidUrl,
   isValidPassword,
   isDateInFuture,
 } from '@/lib/utils/validation';
@@ -24,7 +23,7 @@ export const COMMON_VALIDATION_MESSAGES = {
 } as const;
 
 // Use consolidated validation functions
-export { isValidEmail, isValidUrl, isValidPassword, isDateInFuture };
+export { isValidEmail, isValidPassword, isDateInFuture };
 
 // Generic text validation with configurable limits
 export const createTextSchema = (

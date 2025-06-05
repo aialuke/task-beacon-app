@@ -1,3 +1,4 @@
+
 /**
  * Shared Utility Module - Updated
  * 
@@ -50,10 +51,9 @@ export {
   isDarkMode,
 } from './ui';
 
-// Re-export consolidated validation functions
+// Re-export consolidated validation functions (excluding conflicting URL validation)
 export {
   isValidEmail,
-  isValidUrl,
   isValidPassword,
   isDateInFuture,
   isValidUserName,
