@@ -1,4 +1,3 @@
-
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
@@ -12,7 +11,7 @@ export default function CreateTaskPage() {
   };
 
   return (
-    <div className="min-h-screen animate-fade-in bg-gradient-to-br from-background via-background to-muted/20">
+    <div className="min-h-screen overflow-hidden animate-fade-in bg-gradient-to-br from-background via-background to-muted/20">
       <div className="container mx-auto max-w-2xl px-4 py-8">
         <div className="mb-8 flex items-center">
           <Button
