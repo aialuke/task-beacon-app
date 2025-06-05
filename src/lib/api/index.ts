@@ -31,7 +31,6 @@ export * from './users.service';
 // Individual service exports for better tree-shaking
 export { AuthService } from './auth.service';
 export { StorageService } from './storage.service';
-export { RealtimeService } from './realtime.service';
 export { DatabaseService } from './database.service';
 
 // Error handling utilities

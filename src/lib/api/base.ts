@@ -15,7 +15,6 @@ import { supabase } from '@/integrations/supabase/client';
 export * from './error-handling';
 export * from './auth.service';
 export * from './storage.service';
-export * from './realtime.service';
 export * from './database.service';
 
 // Service classes
@@ -25,7 +24,6 @@ export * from './users.service';
 // Individual service exports for better tree-shaking
 export { AuthService } from './auth.service';
 export { StorageService } from './storage.service';
-export { RealtimeService } from './realtime.service';
 export { DatabaseService } from './database.service';
 
 // Error handling utilities

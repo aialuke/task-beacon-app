@@ -20,10 +20,5 @@ export const supabase = createClient<Database>(
       autoRefreshToken: true,
       detectSessionInUrl: true,
     },
-    realtime: {
-      params: {
-        eventsPerSecond: 10,
-      },
-    },
   }
 );

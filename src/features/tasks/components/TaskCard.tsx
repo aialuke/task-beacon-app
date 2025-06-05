@@ -2,11 +2,9 @@
 import { memo } from 'react';
 import { Task } from '@/types';
 import { useTaskCard } from '../hooks/useTaskCard';
-import { useRealtimeTaskUpdates } from '../hooks/useRealtimeTaskUpdates';
 import { getTaskCardStyles, getTaskCardClasses } from '../utils/taskCardStyles';
 import TaskCardHeader from './TaskCardHeader';
 import TaskCardContent from './TaskCardContent';
-import RealtimeUpdateIndicator from './RealtimeUpdateIndicator';
 
 interface TaskCardProps {
   task: Task;
@@ -41,18 +39,11 @@ function TaskCard({ task }: TaskCardProps) {
     isPinLoading,
   } = useTaskCard(task);
 
-  const { isTaskUpdated } = useRealtimeTaskUpdates();
-
   const cardStyles = getTaskCardStyles(task, isExpanded);
   const cardClasses = getTaskCardClasses(isExpanded);
 
   return (
     <div ref={cardRef} className={`relative ${cardClasses}`} style={cardStyles}>
-      <RealtimeUpdateIndicator
-        show={isTaskUpdated(task.id)}
-        type="updated"
-      />
-      
       <TaskCardHeader
         task={task}
         isExpanded={isExpanded}

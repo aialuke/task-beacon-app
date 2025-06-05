@@ -1,12 +1,11 @@
+
 import { useTaskForm } from '@/features/tasks/hooks/useTaskForm';
 import { useTaskMutations } from '@/features/tasks/hooks/useTaskMutations';
-import { useRealtimeTaskUpdates } from '@/features/tasks/hooks/useRealtimeTaskUpdates';
 import { useOptimizedMemo, useOptimizedCallback } from '@/hooks/useOptimizedMemo';
 import { Task } from '@/types';
 import { UseTaskFormStateOptions } from '@/features/tasks/hooks/useTaskFormState';
 
 interface UseTaskWorkflowOptions extends UseTaskFormStateOptions {
-  enableRealtimeSync?: boolean;
   enableOptimisticUpdates?: boolean;
   onWorkflowComplete?: (result: { success: boolean; taskId?: string }) => void;
 }
@@ -20,12 +19,10 @@ interface WorkflowResult {
 /**
  * Optimized workflow orchestration hook for task operations
  * 
- * Now with improved performance through better memoization and
- * cleaner separation of workflow concerns.
+ * Streamlined workflow management without realtime dependencies.
  */
 export function useTaskWorkflow(options: UseTaskWorkflowOptions = {}) {
   const {
-    enableRealtimeSync = true,
     enableOptimisticUpdates = true,
     onWorkflowComplete,
     ...formOptions
@@ -33,15 +30,14 @@ export function useTaskWorkflow(options: UseTaskWorkflowOptions = {}) {
 
   // Memoize configuration to prevent unnecessary hook re-initializations
   const config = useOptimizedMemo(
-    () => ({ enableRealtimeSync, enableOptimisticUpdates }),
-    [enableRealtimeSync, enableOptimisticUpdates],
+    () => ({ enableOptimisticUpdates }),
+    [enableOptimisticUpdates],
     { name: 'workflow-config' }
   );
 
   // Initialize constituent hooks with stable configuration
   const form = useTaskForm(formOptions);
   const mutations = useTaskMutations();
-  const realtime = useRealtimeTaskUpdates();
 
   /**
    * Optimized task update workflow with proper error handling
@@ -52,10 +48,6 @@ export function useTaskWorkflow(options: UseTaskWorkflowOptions = {}) {
         if (config.enableOptimisticUpdates) {
           const result = await mutations.toggleTaskComplete(task);
           
-          if (config.enableRealtimeSync && result.success) {
-            realtime.markTaskAsUpdated(task.id);
-          }
-
           return {
             success: result.success,
             error: result.success ? undefined : result.message,
@@ -69,7 +61,7 @@ export function useTaskWorkflow(options: UseTaskWorkflowOptions = {}) {
         return { success: false, error: errorMessage, taskId: task.id };
       }
     },
-    [mutations, realtime, config],
+    [mutations, config],
     { name: 'updateTaskWithWorkflow' }
   );
 
@@ -109,11 +101,10 @@ export function useTaskWorkflow(options: UseTaskWorkflowOptions = {}) {
     () => ({
       isFormReady: form.title.trim().length > 0,
       isLoading: form.loading,
-      isRealtimeConnected: realtime.isSubscribed,
       hasUnsavedChanges: Boolean(form.title || form.description || form.url),
       canSubmit: form.title.trim().length > 0 && !form.loading,
     }),
-    [form.title, form.loading, form.description, form.url, realtime.isSubscribed],
+    [form.title, form.loading, form.description, form.url],
     { name: 'workflow-status' }
   );
 
@@ -130,12 +121,7 @@ export function useTaskWorkflow(options: UseTaskWorkflowOptions = {}) {
       // Computed workflow status
       workflowStatus,
       
-      // Real-time information
-      isRealtimeConnected: realtime.isSubscribed,
-      realtimeUpdatedTasks: realtime.updatedTasksCount,
-      
       // Configuration
-      enableRealtimeSync: config.enableRealtimeSync,
       enableOptimisticUpdates: config.enableOptimisticUpdates,
     }),
     [
@@ -143,8 +129,6 @@ export function useTaskWorkflow(options: UseTaskWorkflowOptions = {}) {
       updateTaskWithWorkflow, 
       batchTaskOperations, 
       workflowStatus, 
-      realtime.isSubscribed, 
-      realtime.updatedTasksCount,
       config
     ],
     { name: 'workflow-return' }

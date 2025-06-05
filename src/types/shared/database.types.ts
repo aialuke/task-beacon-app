@@ -1,3 +1,4 @@
+
 /**
  * Shared Database Types
  * 
@@ -9,7 +10,6 @@ import type { BaseEntity } from './common.types';
 
 // Database operation types
 export type DatabaseOperation = 'INSERT' | 'UPDATE' | 'DELETE' | 'SELECT';
-export type RealTimeEvent = 'INSERT' | 'UPDATE' | 'DELETE' | '*';
 
 // Table row base interface
 export interface TableRow extends BaseEntity {
@@ -35,21 +35,6 @@ export interface QueryOptions {
     to: number;
   };
   single?: boolean;
-}
-
-// Real-time subscription types
-export interface RealtimeSubscription {
-  table: string;
-  event: RealTimeEvent;
-  schema?: string;
-  filter?: string;
-}
-
-export interface RealtimePayload<T = unknown> {
-  eventType: RealTimeEvent;
-  new: T | null;
-  old: T | null;
-  errors: unknown[] | null;
 }
 
 // Database transaction types
