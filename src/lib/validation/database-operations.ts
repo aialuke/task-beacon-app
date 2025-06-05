@@ -1,3 +1,4 @@
+
 /**
  * Centralized Database Validation Operations
  * 
@@ -83,7 +84,7 @@ export class DatabaseValidationOps {
       ValidationErrorCode.DATABASE_ERROR
     );
 
-    if (operationResult.success === false) {
+    if (!operationResult.success) {
       return operationResult.result;
     }
 
@@ -153,7 +154,7 @@ export class DatabaseValidationOps {
             
             results.push({
               identifier: request.identifier,
-              exists: individualCheck.success,
+              exists: individualCheck.isValid,
               value: request.value
             });
             
@@ -306,13 +307,10 @@ export async function validateMultipleExistence(
     identifier: `check_${index}`
   }));
 
-  return DatabaseValidationOps.validateBatchExistence(requests.map((req, index) => ({
-    identifier: req.identifier,
-    table: req.table,
-    column: req.column,
-    value: req.value,
-    errorMessage: `Entity ${index + 1} not found`
-  })));
+  const { validationResults } = await DatabaseValidationOps.batchCheckExistence(requests);
+  const results = Object.values(validationResults);
+  
+  return combineValidationResults(results);
 }
 
 /**

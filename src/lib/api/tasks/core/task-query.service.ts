@@ -52,7 +52,6 @@ export class TaskQueryService {
           status,
           created_at,
           updated_at,
-          pinned,
           parent_task_id,
           owner_id,
           assignee_id,
@@ -137,7 +136,6 @@ export class TaskQueryService {
           status,
           created_at,
           updated_at,
-          pinned,
           parent_task_id,
           owner_id,
           assignee_id,
@@ -194,7 +192,6 @@ export class TaskQueryService {
           status,
           created_at,
           updated_at,
-          pinned,
           parent_task_id,
           owner_id,
           assignee_id,
@@ -226,10 +223,13 @@ export class TaskQueryService {
           description,
           due_date,
           photo_url,
+          url_link,
           status,
           created_at,
+          updated_at,
           parent_task_id,
           owner_id,
+          assignee_id,
           owner:profiles!tasks_owner_id_fkey(id, name, avatar_url)
         `)
         .eq('assignee_id', userId)
