@@ -1,13 +1,17 @@
+
 import { ReactNode } from 'react';
 import { createStandardContext } from '@/lib/utils/createContext';
 import type { Task } from '@/types';
 import { useTasksQuery } from '@/features/tasks/hooks/useTasksQuery';
 
 interface TaskDataContextValue {
+  // Data state (from React Query)
   tasks: Task[];
   isLoading: boolean;
   isFetching: boolean;
   error: string | null;
+  
+  // Pagination state and controls
   totalCount: number;
   currentPage: number;
   pageSize: number;
@@ -28,18 +32,36 @@ interface TaskDataContextProviderProps {
 }
 
 /**
- * Task Data Context Provider
+ * Task Data Context Provider - Server State Only
  * 
- * Provides task data state and pagination controls to child components.
- * Uses the standardized context pattern for consistent error handling.
+ * Provides only server-side data state and pagination controls.
+ * Does not manage UI state, form state, or mutations.
+ * 
+ * Follows the principle: React Query for server state, Context for UI state only.
  */
 export function TaskDataContextProvider({
   children,
 }: TaskDataContextProviderProps) {
+  // Only server state from React Query
   const taskQueries = useTasksQuery();
 
+  // Ensure we only expose data-related state
+  const contextValue: TaskDataContextValue = {
+    tasks: taskQueries.tasks,
+    isLoading: taskQueries.isLoading,
+    isFetching: taskQueries.isFetching,
+    error: taskQueries.error,
+    totalCount: taskQueries.totalCount,
+    currentPage: taskQueries.currentPage,
+    pageSize: taskQueries.pageSize,
+    hasNextPage: taskQueries.hasNextPage,
+    hasPreviousPage: taskQueries.hasPreviousPage,
+    goToNextPage: taskQueries.goToNextPage,
+    goToPreviousPage: taskQueries.goToPreviousPage,
+  };
+
   return (
-    <TaskDataProvider value={taskQueries}>
+    <TaskDataProvider value={contextValue}>
       {children}
     </TaskDataProvider>
   );

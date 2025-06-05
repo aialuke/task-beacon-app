@@ -1,12 +1,11 @@
 
-import { useTaskForm } from '@/features/tasks/hooks/useTaskForm';
-import { useTaskMutations } from '@/features/tasks/hooks/useTaskMutations';
+import { useTaskFormOrchestration } from './useTaskFormOrchestration';
+import { useTaskMutations } from './useTaskMutations';
 import { useOptimizedMemo, useOptimizedCallback } from '@/hooks/useOptimizedMemo';
 import { Task } from '@/types';
-import { UseTaskFormStateOptions } from '@/features/tasks/hooks/useTaskFormState';
+import { UseTaskFormStateOptions } from './useTaskFormState';
 
 interface UseTaskWorkflowOptions extends UseTaskFormStateOptions {
-  enableOptimisticUpdates?: boolean;
   onWorkflowComplete?: (result: { success: boolean; taskId?: string }) => void;
 }
 
@@ -17,56 +16,55 @@ interface WorkflowResult {
 }
 
 /**
- * Optimized workflow orchestration hook for task operations
+ * Simplified workflow orchestration hook
  * 
- * Streamlined workflow management without realtime dependencies.
+ * Now focuses on high-level workflow coordination without duplicating
+ * form and mutation logic. Uses composition instead of reimplementation.
  */
 export function useTaskWorkflow(options: UseTaskWorkflowOptions = {}) {
-  const {
-    enableOptimisticUpdates = true,
-    onWorkflowComplete,
-    ...formOptions
-  } = options;
+  const { onWorkflowComplete, ...formOptions } = options;
 
-  // Memoize configuration to prevent unnecessary hook re-initializations
-  const config = useOptimizedMemo(
-    () => ({ enableOptimisticUpdates }),
-    [enableOptimisticUpdates],
-    { name: 'workflow-config' }
-  );
+  // Use the simplified form orchestration
+  const formOrchestration = useTaskFormOrchestration({
+    ...formOptions,
+    onSubmitSuccess: (task) => {
+      onWorkflowComplete?.({ success: true, taskId: task.id });
+    },
+    onSubmitError: () => {
+      onWorkflowComplete?.({ success: false });
+    },
+  });
 
-  // Initialize constituent hooks with stable configuration
-  const form = useTaskForm(formOptions);
+  // Get mutations for direct task operations
   const mutations = useTaskMutations();
 
   /**
-   * Optimized task update workflow with proper error handling
+   * Simplified task update workflow
    */
   const updateTaskWithWorkflow = useOptimizedCallback(
     async (task: Task, updates: Partial<Task>): Promise<WorkflowResult> => {
       try {
-        if (config.enableOptimisticUpdates) {
-          const result = await mutations.toggleTaskComplete(task);
-          
-          return {
-            success: result.success,
-            error: result.success ? undefined : result.message,
-            taskId: task.id,
-          };
+        const result = await mutations.updateTaskCallback(task.id, updates);
+        
+        if (result.success) {
+          onWorkflowComplete?.({ success: true, taskId: task.id });
+          return { success: true, taskId: task.id };
+        } else {
+          onWorkflowComplete?.({ success: false, taskId: task.id });
+          return { success: false, error: 'Update failed', taskId: task.id };
         }
-
-        return { success: true, taskId: task.id };
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        onWorkflowComplete?.({ success: false, taskId: task.id });
         return { success: false, error: errorMessage, taskId: task.id };
       }
     },
-    [mutations, config],
+    [mutations, onWorkflowComplete],
     { name: 'updateTaskWithWorkflow' }
   );
 
   /**
-   * Optimized batch operations with better error tracking
+   * Batch task operations
    */
   const batchTaskOperations = useOptimizedCallback(
     async (operations: Array<{ type: 'update'; data: Partial<Task>; task: Task }>): Promise<{
@@ -76,7 +74,6 @@ export function useTaskWorkflow(options: UseTaskWorkflowOptions = {}) {
     }> => {
       const results: WorkflowResult[] = [];
       
-      // Process operations in batches for better performance
       for (const operation of operations) {
         if (operation.type === 'update' && operation.task) {
           const result = await updateTaskWithWorkflow(operation.task, operation.data);
@@ -96,41 +93,26 @@ export function useTaskWorkflow(options: UseTaskWorkflowOptions = {}) {
     { name: 'batchTaskOperations' }
   );
 
-  // Optimized workflow status computation
+  // Simplified workflow status that doesn't duplicate form status
   const workflowStatus = useOptimizedMemo(
     () => ({
-      isFormReady: form.title.trim().length > 0,
-      isLoading: form.loading,
-      hasUnsavedChanges: Boolean(form.title || form.description || form.url),
-      canSubmit: form.title.trim().length > 0 && !form.loading,
+      isReady: formOrchestration.formStatus.canSubmit,
+      isBusy: formOrchestration.isSubmitting || mutations.isLoading,
+      canSubmit: formOrchestration.formStatus.canSubmit,
     }),
-    [form.title, form.loading, form.description, form.url],
+    [formOrchestration.formStatus, formOrchestration.isSubmitting, mutations.isLoading],
     { name: 'workflow-status' }
   );
 
-  // Memoize return object to prevent unnecessary re-renders
-  return useOptimizedMemo(
-    () => ({
-      // Form state and actions
-      ...form,
-      
-      // Optimized workflow actions
-      updateTaskWithWorkflow,
-      batchTaskOperations,
-      
-      // Computed workflow status
-      workflowStatus,
-      
-      // Configuration
-      enableOptimisticUpdates: config.enableOptimisticUpdates,
-    }),
-    [
-      form, 
-      updateTaskWithWorkflow, 
-      batchTaskOperations, 
-      workflowStatus, 
-      config
-    ],
-    { name: 'workflow-return' }
-  );
+  return {
+    // Delegate form functionality to form orchestration
+    ...formOrchestration,
+    
+    // Workflow-specific actions
+    updateTaskWithWorkflow,
+    batchTaskOperations,
+    
+    // Workflow status (simplified, non-overlapping with form status)
+    workflowStatus,
+  };
 }

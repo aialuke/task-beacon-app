@@ -1,26 +1,34 @@
 
 /**
- * Main Types Index - Streamlined Type System
+ * Main Types Index - Streamlined and Simplified
  * 
- * Centralized and organized type exports with clear categorization and improved IntelliSense.
- * This replaces the previous complex type organization with a simpler, more maintainable system.
+ * Single source of truth for all types with clear categorization.
+ * Eliminates duplication and provides better IntelliSense.
  */
 
-// === CORE TYPES (Most commonly used) ===
+// === CORE DATABASE TYPES ===
 export type {
-  // Database types
+  // Primary entities
   TaskWithRelations as Task,
   ProfileTable as User,
-  TaskStatusEnum as TaskStatus,
-  UserRoleEnum as UserRole,
   TaskTable,
   ProfileTable,
   TaskWithRelations,
   ProfileWithRelations,
+  
+  // Enums
+  TaskStatusEnum as TaskStatus,
+  UserRoleEnum as UserRole,
+  
+  // Database utilities
+  Tables,
+  TablesInsert,
+  TablesUpdate,
+  Enums,
 } from './database';
 
+// === API TYPES ===
 export type {
-  // API types
   ApiResponse,
   ApiError,
   ServiceResult,
@@ -29,28 +37,47 @@ export type {
   BaseQueryParams,
 } from './api.types';
 
+// === FORM TYPES ===
 export type {
-  // Form types
   FormState,
   ValidationResult,
   FormSubmissionResult,
   InputFieldProps,
   TextareaFieldProps,
   SelectFieldProps,
+  FormErrors,
+  FormTouched,
 } from './form.types';
 
+// === UI COMPONENT TYPES ===
 export type {
-  // Component types
   BaseComponentProps,
   ButtonProps,
   ModalProps,
   CardProps,
-  TableProps,
   LoadingProps,
   Size,
   Variant,
   ColorScheme,
 } from './component.types';
+
+// === FEATURE-SPECIFIC TYPES ===
+export type {
+  // Task domain
+  TaskFilter,
+  TaskPriority,
+  ParentTask,
+  TaskCreateData,
+  TaskUpdateData,
+  TaskQueryOptions,
+  
+  // User domain
+  UserPreferences,
+  NotificationPreferences,
+  UserCreateData,
+  UserUpdateData,
+  UserQueryOptions,
+} from './feature-types';
 
 // === UTILITY TYPES ===
 export type {
@@ -66,39 +93,11 @@ export type {
   ID,
   Timestamp,
   Status,
-} from './utility.types';
-
-// === FEATURE-SPECIFIC TYPES ===
-export type {
-  TaskFilter,
-  TaskPriority,
-  ParentTask,
-  TaskCreateData,
-  TaskUpdateData,
-  TaskQueryOptions,
-} from './feature-types/task.types';
-
-export type {
-  UserPreferences,
-  NotificationPreferences,
-  UserCreateData,
-  UserUpdateData,
-  UserQueryOptions,
-} from './feature-types/user.types';
-
-// Re-export database utilities for convenience
-export type {
-  Tables,
-  TablesInsert,
-  TablesUpdate,
-  Enums,
-} from './database';
-
-// Re-export commonly used patterns
-export type {
   EventHandler,
   AsyncEventHandler,
+} from './utility.types';
+
+// Re-export commonly used type patterns for convenience
+export type {
   ApiState,
-  FormErrors,
-  FormTouched,
 } from './utility.types';
