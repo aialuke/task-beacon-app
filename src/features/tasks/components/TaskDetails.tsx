@@ -26,6 +26,8 @@ function TaskDetails({
 }: TaskDetailsProps) {
   const { isMobile } = useTaskUIContext();
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   // Debug logging
   console.log('TaskDetails - Task object:', task);
@@ -41,6 +43,18 @@ function TaskDetails({
   const handleImageModalClose = () => {
     console.log('Closing image modal');
     setIsImageModalOpen(false);
+  };
+
+  const handleImageLoad = () => {
+    console.log('Image loaded successfully:', task.photo_url);
+    setImageLoaded(true);
+    setImageError(false);
+  };
+
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    console.error('Image failed to load:', task.photo_url, e);
+    setImageError(true);
+    setImageLoaded(false);
   };
 
   // Check if photo should be rendered - handle both null and string values properly
@@ -91,14 +105,30 @@ function TaskDetails({
                 className="mt-1 block transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/30 rounded-xl"
                 title="Click to view full size"
               >
-                <img
-                  src={task.photo_url}
-                  alt="Task attachment"
-                  className="h-20 w-20 rounded-xl object-cover cursor-pointer"
-                  loading="lazy"
-                  onLoad={() => console.log('Image loaded successfully:', task.photo_url)}
-                  onError={(e) => console.error('Image failed to load:', task.photo_url, e)}
-                />
+                <div className="relative h-20 w-20 rounded-xl overflow-hidden bg-gray-100">
+                  {!imageLoaded && !imageError && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="h-4 w-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                    </div>
+                  )}
+                  {imageError && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
+                      <span className="text-xs text-gray-500">Failed to load</span>
+                    </div>
+                  )}
+                  <img
+                    src={task.photo_url}
+                    alt="Task attachment"
+                    className={`h-full w-full object-cover cursor-pointer transition-opacity duration-200 ${
+                      imageLoaded ? 'opacity-100' : 'opacity-0'
+                    }`}
+                    loading="lazy"
+                    decoding="async"
+                    sizes="80px"
+                    onLoad={handleImageLoad}
+                    onError={handleImageError}
+                  />
+                </div>
               </button>
             </div>
           )}

@@ -1,6 +1,7 @@
+
 import { ImageUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import type { ProcessingResult } from '@/lib/utils/image/types';
 
 interface SimplePhotoUploadProps {
@@ -23,6 +24,8 @@ export function SimplePhotoUpload({
   loading = false,
 }: SimplePhotoUploadProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const handleButtonClick = () => {
     if (photoPreview && onSubmit) {
@@ -30,6 +33,16 @@ export function SimplePhotoUpload({
     } else {
       fileInputRef.current?.click();
     }
+  };
+
+  const handleImageLoad = () => {
+    setImageLoaded(true);
+    setImageError(false);
+  };
+
+  const handleImageError = () => {
+    setImageError(true);
+    setImageLoaded(false);
   };
 
   const fileName = processingResult?.metadata?.name || 'Uploaded image';
@@ -45,13 +58,32 @@ export function SimplePhotoUpload({
           }
         >
           {photoPreview ? (
-            <img
-              className="size-full object-cover"
-              src={photoPreview}
-              alt="Preview of uploaded image"
-              width={32}
-              height={32}
-            />
+            <div className="relative size-full">
+              {!imageLoaded && !imageError && (
+                <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
+                  <div className="w-3 h-3 border border-primary border-t-transparent rounded-full animate-spin" />
+                </div>
+              )}
+              {imageError && (
+                <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
+                  <ImageUp className="opacity-40" size={12} />
+                </div>
+              )}
+              <img
+                className={`size-full object-cover transition-opacity duration-200 ${
+                  imageLoaded ? 'opacity-100' : 'opacity-0'
+                }`}
+                src={photoPreview}
+                alt="Preview of uploaded image"
+                width={64}
+                height={64}
+                loading="lazy"
+                decoding="async"
+                sizes="64px"
+                onLoad={handleImageLoad}
+                onError={handleImageError}
+              />
+            </div>
           ) : (
             <div aria-hidden="true">
               <ImageUp className="opacity-60" size={16} />
