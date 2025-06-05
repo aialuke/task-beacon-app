@@ -76,7 +76,7 @@ export function UrlInputModal({
   };
 
   const getBorderColor = () => {
-    if (isValid) return 'border-green-500';
+    if (isValid) return 'border-blue-500';
     if (!tempValue.trim()) return 'border-border/40';
     return 'border-border/60';
   };
