@@ -48,10 +48,14 @@ describe('useTaskOptimisticUpdates', () => {
       wrapper: createWrapper(),
     });
 
-    expect(result.current.applyOptimisticUpdate).toBeDefined();
-    expect(result.current.revertOptimisticUpdate).toBeDefined();
-    expect(typeof result.current.applyOptimisticUpdate).toBe('function');
-    expect(typeof result.current.revertOptimisticUpdate).toBe('function');
+    expect(result.current.updateTaskOptimistically).toBeDefined();
+    expect(result.current.removeTaskOptimistically).toBeDefined();
+    expect(result.current.getPreviousData).toBeDefined();
+    expect(result.current.rollbackToData).toBeDefined();
+    expect(typeof result.current.updateTaskOptimistically).toBe('function');
+    expect(typeof result.current.removeTaskOptimistically).toBe('function');
+    expect(typeof result.current.getPreviousData).toBe('function');
+    expect(typeof result.current.rollbackToData).toBe('function');
   });
 
   it('should handle optimistic updates correctly', () => {
@@ -61,11 +65,15 @@ describe('useTaskOptimisticUpdates', () => {
 
     // Test that functions can be called without throwing
     expect(() => {
-      result.current.applyOptimisticUpdate(mockTask, { status: 'complete' });
+      result.current.updateTaskOptimistically(mockTask.id, { status: 'complete' });
     }).not.toThrow();
 
     expect(() => {
-      result.current.revertOptimisticUpdate(mockTask);
+      result.current.removeTaskOptimistically(mockTask.id);
+    }).not.toThrow();
+
+    expect(() => {
+      result.current.rollbackToData(null);
     }).not.toThrow();
   });
 });

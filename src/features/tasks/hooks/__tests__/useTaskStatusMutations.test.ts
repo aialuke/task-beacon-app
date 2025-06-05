@@ -14,6 +14,11 @@ vi.mock('@/lib/api/tasks/task.service', () => ({
       data: { status: 'complete' },
       error: null,
     }),
+    update: vi.fn().mockResolvedValue({
+      success: true,
+      data: { pinned: true },
+      error: null,
+    }),
   },
 }));
 
@@ -59,10 +64,12 @@ describe('useTaskStatusMutations', () => {
       wrapper: createWrapper(),
     });
 
-    expect(result.current.toggleTaskComplete).toBeDefined();
-    expect(result.current.toggleTaskPin).toBeDefined();
-    expect(typeof result.current.toggleTaskComplete).toBe('function');
-    expect(typeof result.current.toggleTaskPin).toBe('function');
+    expect(result.current.markAsComplete).toBeDefined();
+    expect(result.current.markAsIncomplete).toBeDefined();
+    expect(result.current.togglePin).toBeDefined();
+    expect(typeof result.current.markAsComplete).toBe('function');
+    expect(typeof result.current.markAsIncomplete).toBe('function');
+    expect(typeof result.current.togglePin).toBe('function');
   });
 
   it('should handle loading states correctly', () => {
