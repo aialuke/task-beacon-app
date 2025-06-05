@@ -2,8 +2,8 @@
 /* src/styles/tokens/design-tokens.css - Design system tokens */
 
 :root {
-  /* Updated border radius - changed default to XL */
-  --radius: 1rem; /* Changed from 0.5rem to 1rem (XL) */
+  /* Updated border radius - XL as default */
+  --radius: 0.75rem; /* Changed to XL (12px) as default */
   --radius-full: 9999px; /* Full border radius for pills and circular elements */
 
   /* Enhanced shadow system - single source of truth */

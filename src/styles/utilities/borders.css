@@ -1,7 +1,6 @@
+
 /* src/styles/utilities/borders.css - Enhanced border utilities beyond Tailwind defaults */
 @layer utilities {
-  /* Removed .rounded-xl-container and .rounded-full-container (use Tailwind's rounded-*) */
-
   /* Enhanced border with gradient - not available in Tailwind */
   .border-gradient {
     border: 1px solid;

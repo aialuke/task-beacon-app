@@ -1,3 +1,4 @@
+
 import { Link, ExternalLink } from 'lucide-react';
 
 interface ReferenceCardProps {
@@ -22,7 +23,7 @@ export function ReferenceCard({
       className={`rounded-xl border border-accent/40 bg-accent/30 p-4 shadow-sm backdrop-blur-sm ${className}`}
     >
       <div className="flex items-start gap-3">
-        <div className="mt-0.5 rounded-lg bg-accent/50 p-2">
+        <div className="mt-0.5 rounded-xl bg-accent/50 p-2">
           {icon || <Link className="h-4 w-4 text-accent-foreground" />}
         </div>
         <div className="flex-1 space-y-1">
