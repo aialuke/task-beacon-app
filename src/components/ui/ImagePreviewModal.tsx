@@ -59,7 +59,7 @@ export const ImagePreviewModal = memo(function ImagePreviewModal({
           <img
             src={imageUrl}
             alt={alt}
-            className="max-w-full max-h-[70vh] object-contain rounded-lg shadow-lg"
+            className="max-w-full max-h-[70vh] object-contain shadow-lg"
             onError={(e) => console.error('Image failed to load:', e)}
           />
         </div>

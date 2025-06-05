@@ -199,7 +199,7 @@ export function AutocompleteUserInput({
           <div className="flex-1 min-w-0 ml-3 flex items-center gap-2">
             {/* User tag - displayed inline for selected user */}
             {selectedUser && (
-              <div className="flex items-center bg-primary/10 text-primary px-2 py-1 rounded-md text-sm">
+              <div className="flex items-center bg-primary/10 text-primary px-2 py-1 text-sm">
                 <span>{selectedUser.name || selectedUser.email.split('@')[0]}</span>
                 <button
                   type="button"

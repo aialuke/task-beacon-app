@@ -1,3 +1,4 @@
+
 import React, { Component, ReactNode } from 'react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 import { logger } from '@/lib/logger';
@@ -122,7 +123,7 @@ export class TaskErrorBoundary extends Component<
             <div className="space-y-3">
               <button
                 onClick={this.handleRetry}
-                className="flex w-full items-center justify-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
+                className="flex w-full items-center justify-center gap-2 bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
               >
                 <RefreshCw className="h-4 w-4" />
                 Try Again
@@ -131,7 +132,7 @@ export class TaskErrorBoundary extends Component<
               <div className="flex gap-2">
                 <button
                   onClick={this.handleNavigateHome}
-                  className="flex flex-1 items-center justify-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors"
+                  className="flex flex-1 items-center justify-center gap-2 border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors"
                 >
                   <Home className="h-4 w-4" />
                   Home
@@ -139,7 +140,7 @@ export class TaskErrorBoundary extends Component<
                 
                 <button
                   onClick={this.handleClearTaskData}
-                  className="flex flex-1 items-center justify-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors"
+                  className="flex flex-1 items-center justify-center border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors"
                 >
                   Reset Data
                 </button>
@@ -152,7 +153,7 @@ export class TaskErrorBoundary extends Component<
                 <summary className="cursor-pointer text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100">
                   Error Details (Dev)
                 </summary>
-                <div className="mt-2 p-3 bg-gray-100 dark:bg-gray-800 rounded-md text-xs font-mono text-gray-600 dark:text-gray-400 whitespace-pre-wrap break-all max-h-32 overflow-y-auto">
+                <div className="mt-2 p-3 bg-gray-100 dark:bg-gray-800 text-xs font-mono text-gray-600 dark:text-gray-400 whitespace-pre-wrap break-all max-h-32 overflow-y-auto">
                   {this.state.error.message}
                   {this.state.errorInfo && (
                     <>

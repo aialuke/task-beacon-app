@@ -1,3 +1,4 @@
+
 import { Component, ReactNode } from 'react';
 
 interface ErrorBoundaryState {
@@ -82,13 +83,13 @@ export class ErrorBoundary extends Component<
             <div className="flex gap-2 justify-center">
               <button
                 onClick={this.handleRetry}
-                className="px-4 py-2 text-sm font-medium text-primary-foreground bg-primary rounded-md hover:bg-primary/90 transition-colors"
+                className="px-4 py-2 text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 transition-colors"
               >
                 Try Again
               </button>
               <button
                 onClick={this.handleReload}
-                className="px-4 py-2 text-sm font-medium text-muted-foreground bg-muted rounded-md hover:bg-muted/80 transition-colors"
+                className="px-4 py-2 text-sm font-medium text-muted-foreground bg-muted hover:bg-muted/80 transition-colors"
               >
                 Reload Page
               </button>
@@ -100,7 +101,7 @@ export class ErrorBoundary extends Component<
                 <summary className="cursor-pointer text-sm font-medium text-muted-foreground hover:text-foreground">
                   Error Details (Development Only)
                 </summary>
-                <div className="mt-2 p-3 bg-muted rounded-md text-xs font-mono text-muted-foreground whitespace-pre-wrap break-all">
+                <div className="mt-2 p-3 bg-muted text-xs font-mono text-muted-foreground whitespace-pre-wrap break-all">
                   {this.state.error.message}
                   {this.state.errorInfo && (
                     <>

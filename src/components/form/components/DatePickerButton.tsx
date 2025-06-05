@@ -1,3 +1,4 @@
+
 import { memo, useState } from 'react';
 import { Calendar } from 'lucide-react';
 import { format } from 'date-fns';
@@ -70,7 +71,7 @@ export const DatePickerButton = memo(function DatePickerButton({
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className="w-auto border-border bg-popover p-0 text-popover-foreground shadow-lg rounded-lg"
+        className="w-auto border-border bg-popover p-0 text-popover-foreground shadow-lg"
         align="start"
         sideOffset={8}
       >
