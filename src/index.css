@@ -6,13 +6,15 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Import essential CSS modules in correct order */
+/* Import CSS variables and tokens FIRST to ensure availability */
 @import './styles/architecture/css-variables.css';
 @import './styles/tokens/colors.css';
 @import './styles/tokens/design-tokens.css';
+
+/* Import base styles after variables are defined */
 @import './styles/base.css';
 
-/* Import component styles */
+/* Import component styles after base and variables */
 @import './styles/components/unified-components.css';
 @import './styles/components/task-cards.css';
 @import './styles/components/virtualized-tasks.css';
@@ -22,7 +24,7 @@
 @import './styles/components/avatars.css';
 @import './styles/components/timer.css';
 
-/* Import utility styles */
+/* Import utility styles last */
 @import './styles/utilities.css';
 
 /* Set dark mode as default with better performance */
@@ -109,8 +111,8 @@ svg {
 /* Reduce motion for accessibility */
 @media (prefers-reduced-motion: reduce) {
   *,
-  ::before,
-  ::after {
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;

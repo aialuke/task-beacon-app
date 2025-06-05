@@ -42,23 +42,25 @@
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
 
-  /* === BORDER RADIUS === */
+  /* === BORDER RADIUS - CONSOLIDATED === */
+  --radius: 0.75rem;       /* DEFAULT radius - 12px (xl) */
   --radius-sm: 0.125rem;   /* 2px */
   --radius-base: 0.25rem;  /* 4px */
   --radius-md: 0.375rem;   /* 6px */
   --radius-lg: 0.5rem;     /* 8px */
-  --radius-xl: 0.75rem;    /* 12px - DEFAULT */
+  --radius-xl: 0.75rem;    /* 12px - same as default */
   --radius-2xl: 1rem;      /* 16px */
   --radius-3xl: 1.5rem;    /* 24px */
   --radius-full: 9999px;
 
-  /* === OPTIMIZED SHADOWS === */
+  /* === CONSOLIDATED SHADOWS === */
   --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --shadow-base: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   --shadow-xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  --shadow-focus: 0 0 0 2px hsl(var(--ring));
 
   /* === Z-INDEX SCALE === */
   --z-dropdown: 1000;
@@ -94,7 +96,7 @@
   --input-height-lg: 3rem;
 
   --card-padding: var(--spacing-6);
-  --card-radius: var(--radius-xl);
+  --card-radius: var(--radius);
   --card-shadow: var(--shadow-sm);
 
   /* === LAYOUT CONSTANTS === */

@@ -2,10 +2,6 @@
 /* src/styles/tokens/design-tokens.css - Design system tokens */
 
 :root {
-  /* Border radius - using default as XL */
-  --radius: 0.75rem; /* XL (12px) as default - inherited by rounded-lg */
-  --radius-full: 9999px; /* Full border radius for pills and circular elements */
-
   /* Gradient backgrounds - Updated with new primary color */
   --gradient-light: linear-gradient(to bottom right, #ffffff, #f9fafb);
   --gradient-blue: linear-gradient(45deg, hsl(225 77% 60%), hsl(225 77% 70%));

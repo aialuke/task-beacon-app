@@ -3,22 +3,29 @@
 @layer components {
   /* Main task card class - single source of truth for all styling */
   .task-card {
-    /* Use Tailwind utilities that will override any conflicting resets */
-    @apply bg-card text-card-foreground border border-border rounded-xl shadow-sm;
+    /* Base card styling using Tailwind utilities */
+    @apply bg-card text-card-foreground border border-border shadow-sm;
     @apply transition-all duration-200 hover:shadow-md cursor-pointer;
-    @apply mb-4 p-6; /* Default spacing and padding */
+    @apply mb-4 w-full; /* Remove fixed padding, let components control it */
     
-    /* Critical width constraints - using CSS properties to ensure they take precedence */
-    max-width: 100% !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
+    /* Use CSS variables for consistent styling */
+    border-radius: var(--radius);
+    padding: var(--card-padding);
+    box-shadow: var(--card-shadow);
     
-    /* Ensure border is visible and overrides any resets */
-    border-width: 1px !important;
-    border-style: solid !important;
+    /* Ensure proper box model */
+    box-sizing: border-box;
+    max-width: 100%;
     
-    /* Ensure padding is applied and overrides any resets */
-    padding: 1.5rem !important; /* 24px = p-6 */
+    /* Performance optimizations */
+    contain: layout style;
+    will-change: transform, box-shadow;
+  }
+
+  /* Hover state enhancement */
+  .task-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
   }
 
   /* Task-specific animations using unified system */
@@ -51,7 +58,9 @@
 
   /* Expanded state styling */
   .task-card.expanded {
-    @apply transform scale-105 shadow-lg z-10;
+    transform: scale(1.02);
+    box-shadow: var(--shadow-lg);
+    z-index: 10;
   }
 
   /* Status color utilities - keep these as they use CSS variables */
