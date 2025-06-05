@@ -1,3 +1,4 @@
+
 import { renderHook, act } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactNode, createElement } from 'react';
@@ -5,7 +6,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { 
   useTaskMutations,
   useTaskStatusMutations,
-  useTaskPinMutations,
   useTaskDeleteMutations 
 } from '../useTaskMutations';
 import { TaskService } from '@/lib/api/tasks/task.service';
@@ -24,7 +24,6 @@ const mockTask: Task = {
   created_at: '2024-01-01T00:00:00Z',
   updated_at: '2024-01-01T00:00:00Z',
   due_date: '2024-12-31T23:59:59Z',
-  pinned: false,
   owner_id: 'test-user-id',
   assignee_id: null,
   parent_task_id: null,
@@ -51,11 +50,6 @@ describe('Task Mutation Hooks', () => {
     // Create wrapper with QueryClient using createElement
     wrapper = ({ children }: { children: ReactNode }) =>
       createElement(QueryClientProvider, { client: queryClient }, children);
-
-    // At the top or in beforeEach, add:
-    // vi.spyOn(TaskService, 'updateStatus').mockResolvedValue({ success: true });
-    // vi.spyOn(TaskService, 'update').mockResolvedValue({ success: true });
-    // vi.spyOn(TaskService, 'delete').mockResolvedValue({ success: true });
   });
 
   describe('useTaskStatusMutations', () => {
@@ -64,7 +58,6 @@ describe('Task Mutation Hooks', () => {
 
       expect(result.current.markAsComplete).toBeDefined();
       expect(result.current.markAsIncomplete).toBeDefined();
-      expect(result.current.togglePin).toBeDefined();
       expect(typeof result.current.isLoading).toBe('boolean');
     });
 
@@ -101,49 +94,6 @@ describe('Task Mutation Hooks', () => {
     });
   });
 
-  describe('useTaskPinMutations', () => {
-    it('should provide pin mutation functions', () => {
-      const { result } = renderHook(() => useTaskPinMutations(), { wrapper });
-
-      expect(result.current.togglePin).toBeDefined();
-      expect(result.current.pinTask).toBeDefined();
-      expect(result.current.unpinTask).toBeDefined();
-      expect(typeof result.current.isLoading).toBe('boolean');
-    });
-
-    it('should call togglePin correctly', () => {
-      vi.mocked(TaskService.update).mockResolvedValue({
-        data: { ...mockTask, pinned: true },
-        error: null,
-        success: true,
-      });
-
-      const { result } = renderHook(() => useTaskPinMutations(), { wrapper });
-
-      act(() => {
-        result.current.togglePin(mockTask);
-      });
-
-      expect(TaskService.update).toHaveBeenCalledWith(mockTask.id, { pinned: !mockTask.pinned });
-    });
-
-    it('should call pinTask correctly', () => {
-      vi.mocked(TaskService.update).mockResolvedValue({
-        data: { ...mockTask, pinned: true },
-        error: null,
-        success: true,
-      });
-
-      const { result } = renderHook(() => useTaskPinMutations(), { wrapper });
-
-      act(() => {
-        result.current.pinTask(mockTask.id);
-      });
-
-      expect(TaskService.update).toHaveBeenCalledWith(mockTask.id, { pinned: true });
-    });
-  });
-
   describe('useTaskDeleteMutations', () => {
     it('should provide delete mutation functions', () => {
       const { result } = renderHook(() => useTaskDeleteMutations(), { wrapper });
@@ -177,11 +127,6 @@ describe('Task Mutation Hooks', () => {
       expect(result.current.markAsComplete).toBeDefined();
       expect(result.current.markAsIncomplete).toBeDefined();
 
-      // Pin mutations
-      expect(result.current.togglePin).toBeDefined();
-      expect(result.current.pinTask).toBeDefined();
-      expect(result.current.unpinTask).toBeDefined();
-
       // Delete mutations
       expect(result.current.deleteTask).toBeDefined();
 
@@ -193,7 +138,6 @@ describe('Task Mutation Hooks', () => {
 
       // Backward compatibility methods
       expect(result.current.toggleTaskComplete).toBeDefined();
-      expect(result.current.toggleTaskPin).toBeDefined();
       expect(result.current.deleteTaskById).toBeDefined();
     });
 
@@ -214,26 +158,6 @@ describe('Task Mutation Hooks', () => {
       expect(mutationResult).toEqual({
         success: true,
         message: 'Task completed successfully',
-      });
-    });
-
-    it('should maintain backward compatibility for toggleTaskPin', async () => {
-      vi.mocked(TaskService.update).mockResolvedValue({
-        data: { ...mockTask, pinned: true },
-        error: null,
-        success: true,
-      });
-
-      const { result } = renderHook(() => useTaskMutations(), { wrapper });
-
-      let mutationResult: any;
-      await act(async () => {
-        mutationResult = await result.current.toggleTaskPin(mockTask);
-      });
-
-      expect(mutationResult).toEqual({
-        success: true,
-        message: 'Task pinned',
       });
     });
 

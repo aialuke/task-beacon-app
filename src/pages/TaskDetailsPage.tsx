@@ -12,7 +12,7 @@ import { useTaskQuery } from '@/features/tasks/hooks/useTaskQuery';
 const TaskDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { task, loading, error, isPinned, setIsPinned } = useTaskQuery(id);
+  const { task, loading, error } = useTaskQuery(id);
 
   if (loading) {
     return (
@@ -136,7 +136,7 @@ const TaskDetailsPage = () => {
         )}
 
         <div className="border-t pt-4">
-          <TaskActions task={{ ...task, pinned: isPinned }} onPinChange={setIsPinned} />
+          <TaskActions task={task} />
         </div>
       </div>
     </div>
