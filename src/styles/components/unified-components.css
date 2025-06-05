@@ -40,24 +40,6 @@
     box-shadow: 0 0 0 2px hsl(var(--success) / 0.2);
   }
 
-  /* ===== UNIFIED CARD STYLING ===== */
-  .card-unified {
-    @apply rounded-xl border border-border bg-card text-card-foreground;
-    @apply transition-all duration-200 hover:shadow-md;
-    box-shadow: var(--shadow-sm);
-  }
-
-  .card-unified-elevated {
-    @apply card-unified;
-    box-shadow: var(--shadow-md);
-  }
-
-  .card-unified-interactive {
-    @apply card-unified cursor-pointer;
-    @apply hover:transform hover:translate-y-[-1px] hover:shadow-lg;
-    @apply active:translate-y-0 active:shadow-md;
-  }
-
   /* ===== UNIFIED DIALOG/MODAL STYLING ===== */
   .dialog-unified-content {
     @apply fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%];
