@@ -1,3 +1,4 @@
+
 import { useState, useRef, useCallback } from 'react';
 import { AuthService } from '@/lib/api';
 import { isValidEmail, isValidPassword, isValidUserName } from '@/lib/utils/validation';
@@ -149,14 +150,12 @@ export function useAuthFormState(): UseAuthFormStateReturn {
 
       if (mode === 'signin') {
         const response = await AuthService.signIn(email, password);
-        if (!response.success) {
-          throw new Error(response.error?.message || 'Sign in failed');
+        if (!response.isSuccess) {
+          throw new Error(response.error || 'Sign in failed');
         }
-        if (response.data?.user) {
-          setTimeout(() => {
-            window.location.href = '/';
-          }, 1000);
-        }
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 1000);
       } else {
         const response = await AuthService.signUp(email, password, {
           data: {
@@ -164,14 +163,12 @@ export function useAuthFormState(): UseAuthFormStateReturn {
             name: name
           }
         });
-        if (!response.success) {
-          throw new Error(response.error?.message || 'Sign up failed');
+        if (!response.isSuccess) {
+          throw new Error(response.error || 'Sign up failed');
         }
-        if (response.data?.user) {
-          setTimeout(() => {
-            window.location.href = '/';
-          }, 1500);
-        }
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 1500);
       }
     } catch (error: unknown) {
       handleError(error, 'Authentication');

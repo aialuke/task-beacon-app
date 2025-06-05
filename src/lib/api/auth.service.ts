@@ -21,11 +21,7 @@ export class AuthService {
       if (error) {
         return {
           success: false,
-          error: {
-            message: error.message,
-            name: 'AuthError',
-            code: error.name,
-          },
+          error: error.message,
           data: null,
         };
       }
@@ -38,10 +34,7 @@ export class AuthService {
     } catch (error) {
       return {
         success: false,
-        error: {
-          message: error instanceof Error ? error.message : 'Unknown error',
-          name: 'AuthError',
-        },
+        error: error instanceof Error ? error.message : 'Unknown error',
         data: null,
       };
     }
@@ -57,11 +50,7 @@ export class AuthService {
       if (error) {
         return {
           success: false,
-          error: {
-            message: error.message,
-            name: 'AuthError',
-            code: error.name,
-          },
+          error: error.message,
           data: null,
         };
       }
@@ -74,10 +63,7 @@ export class AuthService {
     } catch (error) {
       return {
         success: false,
-        error: {
-          message: error instanceof Error ? error.message : 'Unknown error',
-          name: 'AuthError',
-        },
+        error: error instanceof Error ? error.message : 'Unknown error',
         data: null,
       };
     }
@@ -93,10 +79,7 @@ export class AuthService {
       if (!userResult.success || !userResult.data) {
         return {
           success: false,
-          error: userResult.error || {
-            message: 'No user found',
-            name: 'AuthError',
-          },
+          error: userResult.error || 'No user found',
           data: null,
         };
       }
@@ -109,10 +92,7 @@ export class AuthService {
     } catch (error) {
       return {
         success: false,
-        error: {
-          message: error instanceof Error ? error.message : 'Unknown error',
-          name: 'AuthError',
-        },
+        error: error instanceof Error ? error.message : 'Unknown error',
         data: null,
       };
     }
@@ -121,35 +101,28 @@ export class AuthService {
   /**
    * Sign in user
    */
-  static async signIn(credentials: SignInCredentials): Promise<ActionResult> {
+  static async signIn(email: string, password: string): Promise<ActionResult> {
     try {
       const { error } = await supabase.auth.signInWithPassword({
-        email: credentials.email,
-        password: credentials.password,
+        email,
+        password,
       });
 
       if (error) {
         return {
-          success: false,
-          error: {
-            message: error.message,
-            name: 'AuthError',
-            code: error.name,
-          },
+          isSuccess: false,
+          error: error.message,
         };
       }
 
       return {
-        success: true,
+        isSuccess: true,
         error: null,
       };
     } catch (error) {
       return {
-        success: false,
-        error: {
-          message: error instanceof Error ? error.message : 'Unknown error',
-          name: 'AuthError',
-        },
+        isSuccess: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
       };
     }
   }
@@ -157,40 +130,29 @@ export class AuthService {
   /**
    * Sign up user
    */
-  static async signUp(credentials: SignUpCredentials): Promise<ActionResult> {
+  static async signUp(email: string, password: string, options?: any): Promise<ActionResult> {
     try {
       const { error } = await supabase.auth.signUp({
-        email: credentials.email,
-        password: credentials.password,
-        options: {
-          data: {
-            name: credentials.name,
-          },
-        },
+        email,
+        password,
+        options,
       });
 
       if (error) {
         return {
-          success: false,
-          error: {
-            message: error.message,
-            name: 'AuthError',
-            code: error.name,
-          },
+          isSuccess: false,
+          error: error.message,
         };
       }
 
       return {
-        success: true,
+        isSuccess: true,
         error: null,
       };
     } catch (error) {
       return {
-        success: false,
-        error: {
-          message: error instanceof Error ? error.message : 'Unknown error',
-          name: 'AuthError',
-        },
+        isSuccess: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
       };
     }
   }
@@ -204,26 +166,19 @@ export class AuthService {
 
       if (error) {
         return {
-          success: false,
-          error: {
-            message: error.message,
-            name: 'AuthError',
-            code: error.name,
-          },
+          isSuccess: false,
+          error: error.message,
         };
       }
 
       return {
-        success: true,
+        isSuccess: true,
         error: null,
       };
     } catch (error) {
       return {
-        success: false,
-        error: {
-          message: error instanceof Error ? error.message : 'Unknown error',
-          name: 'AuthError',
-        },
+        isSuccess: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
       };
     }
   }

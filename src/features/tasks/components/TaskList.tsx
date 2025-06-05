@@ -45,7 +45,7 @@ function TaskListComponent() {
   );
 
   if (isLoading) {
-    return <UnifiedLoadingStates variant="list" message="Loading tasks..." />;
+    return <UnifiedLoadingStates variant="skeleton" message="Loading tasks..." />;
   }
 
   if (error) {

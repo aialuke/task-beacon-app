@@ -42,7 +42,7 @@ function EnhancedTaskListComponent({
     containerHeight: 600,
   }), [enableVirtualization, filteredTasks.length, itemHeight, overscan]);
   
-  const { virtualItems, totalSize, scrollElementRef } = useTaskListVirtualization(
+  const { containerRef, visibleItems } = useTaskListVirtualization(
     filteredTasks,
     virtualizationConfig
   );
@@ -53,13 +53,12 @@ function EnhancedTaskListComponent({
       <VirtualizedTaskCard
         task={task}
         index={index}
-        isExpanded={expandedTaskId === task.id}
       />
     </div>
-  ), [expandedTaskId]);
+  ), []);
 
   if (isLoading) {
-    return <UnifiedLoadingStates variant="list" message="Loading enhanced task list..." />;
+    return <UnifiedLoadingStates variant="skeleton" message="Loading enhanced task list..." />;
   }
 
   if (error) {
@@ -85,19 +84,19 @@ function EnhancedTaskListComponent({
   if (virtualizationConfig.enabled) {
     return (
       <div
-        ref={scrollElementRef}
+        ref={containerRef}
         className={`h-full overflow-auto ${isMobile ? 'pb-20' : ''}`}
         style={{ height: virtualizationConfig.containerHeight }}
       >
-        <div style={{ height: totalSize, position: 'relative' }}>
-          {virtualItems.map((virtualItem) => {
-            const task = filteredTasks[virtualItem.index];
-            return renderTaskItem(task, virtualItem.index, {
+        <div style={{ position: 'relative' }}>
+          {visibleItems.map((item) => {
+            const task = filteredTasks[item.index];
+            return renderTaskItem(task, item.index, {
               position: 'absolute',
-              top: virtualItem.start,
+              top: item.top,
               left: 0,
               right: 0,
-              height: virtualItem.size,
+              height: item.height,
             });
           })}
         </div>

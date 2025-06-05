@@ -53,16 +53,16 @@ export function useAuth(): UseAuthReturn {
       setError(null);
       
       const response = await AuthService.signIn(email, password);
-      if (!response.success || !response.data) {
+      if (!response.isSuccess) {
         setError({ 
           name: 'SignInError', 
-          message: response.error?.message || 'Failed to sign in' 
+          message: response.error || 'Failed to sign in' 
         });
         clearAuthState();
         return;
       }
       
-      updateSessionAndUser(response.data.session);
+      // Session will be updated by the auth state listener
     } catch (err: any) {
       setError({ 
         name: 'SignInError', 
@@ -72,7 +72,7 @@ export function useAuth(): UseAuthReturn {
     } finally {
       setLoading(false);
     }
-  }, [updateSessionAndUser, clearAuthState]);
+  }, [clearAuthState]);
 
   // Sign out operation
   const signOut = useCallback(async () => {

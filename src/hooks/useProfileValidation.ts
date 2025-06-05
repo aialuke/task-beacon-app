@@ -8,7 +8,6 @@ import {
   validateForm, 
   type ValidationResult 
 } from '@/lib/utils/validation';
-import { validateUserProfile } from '@/lib/validation/entity-validators';
 
 // === TYPES ===
 interface ProfileData {
@@ -40,7 +39,7 @@ export function useProfileValidation() {
     field: keyof ProfileData,
     value: string
   ): ValidationResult => {
-    return validateField(field, value);
+    return validateField(field, value, { required: true });
   }, []);
 
   /**
@@ -49,30 +48,37 @@ export function useProfileValidation() {
   const validateProfile = useCallback((
     profileData: ProfileData
   ): ProfileValidationResult => {
-    // Use unified validation system
-    const validationResult = validateUserProfile({
-      name: profileData.name || '',
-      email: profileData.email || '',
-      avatar_url: profileData.avatar_url || '',
-    });
-
-    // Transform to expected format
-    const fieldErrors: Record<string, string> = {};
-    if (!validationResult.isValid && validationResult.errors) {
-      Object.entries(validationResult.errors).forEach(([field, error]) => {
-        if (error) {
-          fieldErrors[field] = error;
-        }
-      });
+    const errors: Record<string, string> = {};
+    
+    // Validate each field
+    if (profileData.name !== undefined) {
+      const nameResult = validateField('name', profileData.name, { required: true });
+      if (!nameResult.isValid && nameResult.error) {
+        errors.name = nameResult.error;
+      }
+    }
+    
+    if (profileData.email !== undefined) {
+      const emailResult = validateField('email', profileData.email, { required: true, email: true });
+      if (!emailResult.isValid && emailResult.error) {
+        errors.email = emailResult.error;
+      }
+    }
+    
+    if (profileData.avatar_url !== undefined) {
+      const urlResult = validateField('avatar_url', profileData.avatar_url);
+      if (!urlResult.isValid && urlResult.error) {
+        errors.avatar_url = urlResult.error;
+      }
     }
 
     return {
-      isValid: validationResult.isValid,
-      errors: fieldErrors,
+      isValid: Object.keys(errors).length === 0,
+      errors,
       fieldErrors: {
-        name: fieldErrors.name,
-        email: fieldErrors.email,
-        avatar_url: fieldErrors.avatar_url,
+        name: errors.name,
+        email: errors.email,
+        avatar_url: errors.avatar_url,
       },
     };
   }, []);
