@@ -2,7 +2,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import { useTaskStatusMutations } from '../useTaskStatusMutations';
-import { renderWithProviders } from '@/lib/testing/context-helpers';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactNode } from 'react';
 import type { Task } from '@/types';
 
 // Mock the task service
@@ -42,14 +43,26 @@ describe('useTaskStatusMutations', () => {
     updated_at: '2024-01-01T00:00:00Z',
   };
 
-  it('should provide status mutation functions', () => {
-    const TestWrapper = ({ children }: { children: React.ReactNode }) => {
-      const { container } = renderWithProviders(<div>{children}</div>, {});
-      return container.firstChild as React.ReactElement;
-    };
+  function createTestWrapper() {
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: { retry: false, gcTime: 0 },
+        mutations: { retry: false },
+      },
+    });
 
+    return function TestWrapper({ children }: { children: ReactNode }) {
+      return (
+        <QueryClientProvider client={queryClient}>
+          {children}
+        </QueryClientProvider>
+      );
+    };
+  }
+
+  it('should provide status mutation functions', () => {
     const { result } = renderHook(() => useTaskStatusMutations(), {
-      wrapper: TestWrapper,
+      wrapper: createTestWrapper(),
     });
 
     expect(result.current.markAsComplete).toBeDefined();
@@ -61,13 +74,8 @@ describe('useTaskStatusMutations', () => {
   });
 
   it('should handle loading states correctly', () => {
-    const TestWrapper = ({ children }: { children: React.ReactNode }) => {
-      const { container } = renderWithProviders(<div>{children}</div>, {});
-      return container.firstChild as React.ReactElement;
-    };
-
     const { result } = renderHook(() => useTaskStatusMutations(), {
-      wrapper: TestWrapper,
+      wrapper: createTestWrapper(),
     });
 
     expect(result.current.isLoading).toBe(false);
