@@ -3,6 +3,7 @@
 @layer utilities {
   /* Import unified utility modules */
   @import './utilities/unified-utilities.css';
+  @import './utilities/optimized-utilities.css';
   @import './utilities/animations/unified-animations.css';
   @import './utilities/layout.css';
   @import './utilities/accessibility.css';

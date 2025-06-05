@@ -1,19 +1,6 @@
 
 /* Phase 5 - Optimized Utility Classes */
 @layer utilities {
-  /* === SPACING UTILITIES === */
-  .space-compact > * + * {
-    margin-top: var(--spacing-2);
-  }
-
-  .space-normal > * + * {
-    margin-top: var(--spacing-4);
-  }
-
-  .space-comfortable > * + * {
-    margin-top: var(--spacing-6);
-  }
-
   /* === LAYOUT UTILITIES === */
   .layout-container {
     width: 100%;
@@ -30,6 +17,42 @@
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   }
 
+  /* === COMPONENT UTILITIES === */
+  .task-card-base {
+    @apply border border-border;
+    background: hsl(var(--card));
+    color: hsl(var(--card-foreground));
+    padding: var(--card-padding);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--duration-normal) var(--ease-out);
+  }
+
+  .task-card-interactive {
+    @apply task-card-base interactive;
+    /* Critical width constraints that were missing */
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .task-card-interactive:hover {
+    box-shadow: var(--shadow-md);
+  }
+
+  /* === SPACING UTILITIES === */
+  .space-compact > * + * {
+    margin-top: var(--spacing-2);
+  }
+
+  .space-normal > * + * {
+    margin-top: var(--spacing-4);
+  }
+
+  .space-comfortable > * + * {
+    margin-top: var(--spacing-6);
+  }
+
   /* === ANIMATION UTILITIES === */
   .animate-enter {
     animation: fade-in var(--duration-normal) var(--ease-out);
@@ -43,33 +66,20 @@
     animation: pulse-subtle 3s infinite ease-in-out;
   }
 
-  /* === SHADOW UTILITIES === */
-  .shadow-task-card {
-    box-shadow: var(--shadow-sm);
-  }
-
-  .shadow-task-card-hover {
-    box-shadow: var(--shadow-md);
-  }
-
-  .shadow-focus {
-    box-shadow: 0 0 0 3px hsl(var(--primary) / 0.2);
-  }
-
   /* === BORDER UTILITIES === */
   .border-task-default {
     border: 1px solid hsl(var(--border));
-    border-radius: var(--radius-xl);
+    border-radius: var(--radius);
   }
 
   .border-task-active {
     border: 2px solid hsl(var(--primary));
-    border-radius: var(--radius-xl);
+    border-radius: var(--radius);
   }
 
   .border-task-error {
     border: 2px solid hsl(var(--destructive));
-    border-radius: var(--radius-xl);
+    border-radius: var(--radius);
   }
 
   /* === TEXT UTILITIES === */
@@ -92,23 +102,7 @@
     color: hsl(var(--muted-foreground));
   }
 
-  /* === COMPONENT UTILITIES === */
-  .task-card-base {
-    @apply border-task-default shadow-task-card;
-    background: hsl(var(--card));
-    color: hsl(var(--card-foreground));
-    padding: var(--card-padding);
-    transition: all var(--duration-normal) var(--ease-out);
-  }
-
-  .task-card-interactive {
-    @apply task-card-base interactive;
-  }
-
-  .task-card-interactive:hover {
-    @apply shadow-task-card-hover;
-  }
-
+  /* === BUTTON UTILITIES === */
   .button-base {
     border-radius: var(--radius-full);
     font-weight: var(--font-weight-medium);

@@ -29,7 +29,7 @@ export function getTaskCardStyles(task: Task, isExpanded: boolean): React.CSSPro
  */
 export function getTaskCardClasses(task: Task, isExpanded: boolean): string {
   const baseClasses = [
-    'task-card',
+    'task-card-interactive', // Use the optimized class that includes width constraints
     'mb-4',
     'p-4',
     'transition-all',
@@ -39,7 +39,7 @@ export function getTaskCardClasses(task: Task, isExpanded: boolean): string {
     'text-card-foreground',
     'border',
     'border-border',
-    'rounded-xl', // XL border radius applied here
+    'rounded-lg', // Use default radius instead of xl
   ];
 
   // Status-based classes

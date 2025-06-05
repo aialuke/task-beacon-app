@@ -1,28 +1,28 @@
 
-/* src/styles/components/task-cards.css - Unified with consolidated animations */
+/* src/styles/components/task-cards.css - Consolidated task card styles */
 @layer components {
-  /* Use unified animation classes - no need to redefine */
-  .task-card-enter {
-    @apply animate-unified-enter;
+  /* Task card base - inherits from optimized utilities */
+  .task-card {
+    /* Inherits layout and spacing from task-card-interactive in optimized-utilities.css */
+    /* Inherits border radius from design tokens (rounded-lg = var(--radius)) */
   }
 
-  .task-card-enter-active {
-    /* Animation handled by unified system */
+  /* Task-specific animations using unified system */
+  .task-card-enter {
+    @apply animate-unified-enter;
   }
 
   .task-card-exit {
     @apply animate-unified-exit;
   }
 
-  .task-card-exit-active {
-    /* Animation handled by unified system */
-  }
-
-  /* Task-specific styles that don't overlap with unified system */
+  /* Task-specific indicators */
   .task-card-status-indicator {
-    @apply absolute left-0 top-0 h-full w-1 rounded-l-xl;
+    @apply absolute left-0 top-0 h-full w-1;
+    border-radius: var(--radius) 0 0 var(--radius);
   }
 
+  /* Priority indicators using border classes */
   .task-card-priority-high {
     @apply border-l-4 border-l-destructive;
   }
@@ -35,13 +35,8 @@
     @apply border-l-4 border-l-success;
   }
 
-  /* Reduced motion respect - handled by unified system */
-  @media (prefers-reduced-motion: reduce) {
-    .task-card-enter,
-    .task-card-enter-active,
-    .task-card-exit,
-    .task-card-exit-active {
-      /* Unified system handles this */
-    }
+  /* Expanded state styling */
+  .task-card.expanded {
+    @apply transform scale-105 shadow-lg z-10;
   }
 }

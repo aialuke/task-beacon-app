@@ -2,20 +2,9 @@
 /* src/styles/tokens/design-tokens.css - Design system tokens */
 
 :root {
-  /* Updated border radius - XL as default */
-  --radius: 0.75rem; /* Changed to XL (12px) as default */
+  /* Border radius - using default as XL */
+  --radius: 0.75rem; /* XL (12px) as default - inherited by rounded-lg */
   --radius-full: 9999px; /* Full border radius for pills and circular elements */
-
-  /* Enhanced shadow system - single source of truth */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
-  --shadow-md:
-    0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg:
-    0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-xl:
-    0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  --shadow-focus: 0 0 0 3px hsl(225 77% 60% / 0.2);
 
   /* Gradient backgrounds - Updated with new primary color */
   --gradient-light: linear-gradient(to bottom right, #ffffff, #f9fafb);
@@ -30,17 +19,6 @@
 /* Dark mode design tokens */
 .dark,
 :root.dark {
-  /* Dark mode shadows with better contrast */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.25);
-  --shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
-  --shadow-md:
-    0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
-  --shadow-lg:
-    0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
-  --shadow-xl:
-    0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
-  --shadow-focus: 0 0 0 3px hsl(225 77% 70% / 0.4);
-
   /* Dark mode gradients - Updated with new primary color */
   --gradient-light: linear-gradient(to bottom right, #141b2b, #0a0f1c);
   --gradient-blue: linear-gradient(45deg, hsl(225 77% 70%), hsl(225 77% 80%));
@@ -53,16 +31,6 @@
 
 /* Light mode explicit override */
 .light {
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
-  --shadow-md:
-    0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg:
-    0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-xl:
-    0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  --shadow-focus: 0 0 0 3px hsl(225 77% 60% / 0.2);
-
   --gradient-light: linear-gradient(to bottom right, #ffffff, #f9fafb);
   --gradient-blue: linear-gradient(45deg, hsl(225 77% 60%), hsl(225 77% 70%));
   --gradient-blue-dark: linear-gradient(
