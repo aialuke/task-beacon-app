@@ -3,14 +3,13 @@
 @layer components {
   /* Main task card class - single source of truth for all styling */
   .task-card {
-    /* Base card styling using Tailwind utilities */
-    @apply bg-card text-card-foreground border border-border shadow-sm;
+    /* Base card styling using direct Tailwind utilities - no CSS variables */
+    @apply bg-card text-card-foreground border-2 border-gray-300 shadow-sm;
     @apply transition-all duration-200 hover:shadow-md cursor-pointer;
-    @apply mb-4 w-full rounded-xl; /* Use Tailwind's rounded-xl directly */
+    @apply mb-4 w-full rounded-xl;
     
-    /* Use CSS variables for consistent styling - remove duplicate border-radius */
-    padding: var(--card-padding);
-    box-shadow: var(--card-shadow);
+    /* Use direct values instead of CSS variables for testing */
+    padding: 1.5rem;
     
     /* Ensure proper box model */
     box-sizing: border-box;
@@ -21,9 +20,14 @@
     will-change: transform, box-shadow;
   }
 
+  /* Dark mode override for better visibility */
+  .dark .task-card {
+    @apply border-gray-600;
+  }
+
   /* Hover state enhancement */
   .task-card:hover {
-    box-shadow: var(--shadow-md);
+    @apply shadow-md;
     transform: translateY(-1px);
   }
 
@@ -39,51 +43,51 @@
   /* Task-specific indicators */
   .task-card-status-indicator {
     @apply absolute left-0 top-0 h-full w-1;
-    border-radius: var(--radius) 0 0 var(--radius);
+    border-radius: 0.75rem 0 0 0.75rem;
   }
 
-  /* Priority indicators using border classes - remove conflicting styles */
+  /* Priority indicators using direct border classes */
   .task-card-priority-high {
-    @apply border-l-4 border-l-destructive;
+    @apply border-l-4 border-l-red-500;
   }
 
   .task-card-priority-medium {
-    @apply border-l-4 border-l-primary;
+    @apply border-l-4 border-l-blue-500;
   }
 
   .task-card-priority-low {
-    @apply border-l-4 border-l-success;
+    @apply border-l-4 border-l-green-500;
   }
 
   /* Expanded state styling */
   .task-card.expanded {
     transform: scale(1.02);
-    box-shadow: var(--shadow-lg);
+    @apply shadow-lg;
     z-index: 10;
   }
 
-  /* Status color utilities - keep these as they use CSS variables */
+  /* Status color utilities - simplified */
   .status-pending {
-    color: var(--status-pending);
+    @apply text-blue-600;
   }
 
   .status-overdue {
-    color: var(--status-overdue);
+    @apply text-red-600;
   }
 
   .status-complete {
-    color: var(--status-complete);
+    @apply text-green-600;
   }
 
   .status-bg-pending {
-    background-color: var(--status-pending);
+    @apply bg-blue-100;
   }
 
   .status-bg-overdue {
-    background-color: var(--status-overdue);
+    @apply bg-red-100;
   }
 
   .status-bg-complete {
-    background-color: var(--status-complete);
+    @apply bg-green-100;
   }
 }
