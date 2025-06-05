@@ -18,9 +18,3 @@ export type {
   DatabaseOperationResult,
   TablesResponse,
 } from '../api.types';
-
-// Legacy exports for backward compatibility (will be removed in future)
-export type { 
-  ApiResponse as TablesResponse,
-  ServiceResult as DatabaseOperationResult,
-} from '../api.types';
