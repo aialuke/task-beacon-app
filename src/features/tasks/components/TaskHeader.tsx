@@ -1,7 +1,6 @@
+
 import { memo } from 'react';
-import { Button } from '@/components/ui/button';
 import type { Task } from '@/types';
-import { Pin } from 'lucide-react';
 import TaskStatus from './TaskStatus';
 import TaskExpandButton from './TaskExpandButton';
 
@@ -9,16 +8,12 @@ interface TaskHeaderProps {
   task: Task;
   isExpanded: boolean;
   toggleExpand: () => void;
-  handleTogglePin: () => void;
-  isPinLoading?: boolean;
 }
 
 function TaskHeader({
   task,
   isExpanded,
   toggleExpand,
-  handleTogglePin,
-  isPinLoading = false,
 }: TaskHeaderProps) {
   return (
     <div className="flex w-full items-center gap-2">
@@ -32,21 +27,6 @@ function TaskHeader({
           {task.title}
         </h3>
       </div>
-
-      <Button
-        variant="ghost"
-        size="icon"
-        className="shadow-none ml-1 h-8 w-8 shrink-0"
-        onClick={handleTogglePin}
-        disabled={isPinLoading}
-        title={isPinLoading ? 'Updating...' : (task.pinned ? 'Unpin task' : 'Pin task')}
-      >
-        {task.pinned ? (
-          <Pin size={16} className="fill-current text-card-foreground" />
-        ) : (
-          <Pin size={16} className="text-card-foreground opacity-80" />
-        )}
-      </Button>
 
       <TaskExpandButton isExpanded={isExpanded} onClick={toggleExpand} />
     </div>

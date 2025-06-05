@@ -1,5 +1,5 @@
+
 import { useTaskStatusMutations } from './useTaskStatusMutations';
-import { useTaskPinMutations } from './useTaskPinMutations';
 import { useTaskDeleteMutations } from './useTaskDeleteMutations';
 import { useTaskOptimisticUpdates } from './useTaskOptimisticUpdates';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -22,7 +22,6 @@ import type { Task } from '@/types';
 export function useTaskMutations() {
   const queryClient = useQueryClient();
   const statusMutations = useTaskStatusMutations();
-  const pinMutations = useTaskPinMutations();
   const deleteMutations = useTaskDeleteMutations();
   const optimisticUpdates = useTaskOptimisticUpdates();
 
@@ -53,11 +52,6 @@ export function useTaskMutations() {
     // Status mutations
     markAsComplete: statusMutations.markAsComplete,
     markAsIncomplete: statusMutations.markAsIncomplete,
-
-    // Pin mutations
-    togglePin: pinMutations.togglePin,
-    pinTask: pinMutations.pinTask,
-    unpinTask: pinMutations.unpinTask,
 
     // Delete mutations
     deleteTask: deleteMutations.deleteTask,
@@ -96,22 +90,6 @@ export function useTaskMutations() {
       }
     },
 
-    toggleTaskPin: async (task: Task) => {
-      try {
-        pinMutations.togglePin(task);
-        return { 
-          success: true, 
-          message: task.pinned ? 'Task unpinned' : 'Task pinned' 
-        };
-      } catch (error) {
-        return { 
-          success: false, 
-          error: true,
-          message: error instanceof Error ? error.message : 'Failed to update task pin status' 
-        };
-      }
-    },
-
     deleteTaskById: async (taskId: string) => {
       try {
         deleteMutations.deleteTask(taskId);
@@ -132,6 +110,5 @@ export function useTaskMutations() {
 
 // Re-export individual hooks for targeted usage
 export { useTaskStatusMutations } from './useTaskStatusMutations';
-export { useTaskPinMutations } from './useTaskPinMutations';
 export { useTaskDeleteMutations } from './useTaskDeleteMutations';
 export { useTaskOptimisticUpdates } from './useTaskOptimisticUpdates';

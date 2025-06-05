@@ -21,7 +21,6 @@ const arePropsEqual = (prevProps: TaskCardProps, nextProps: TaskCardProps): bool
     prev.description === next.description &&
     prev.due_date === next.due_date &&
     prev.url_link === next.url_link &&
-    prev.pinned === next.pinned &&
     prev.status === next.status &&
     prev.photo_url === next.photo_url &&
     prev.updated_at === next.updated_at
@@ -35,8 +34,6 @@ function TaskCard({ task }: TaskCardProps) {
     isExpanded,
     animationState,
     toggleExpand,
-    handleTogglePin,
-    isPinLoading,
   } = useTaskCard(task);
 
   const cardStyles = getTaskCardStyles(task, isExpanded);
@@ -48,8 +45,6 @@ function TaskCard({ task }: TaskCardProps) {
         task={task}
         isExpanded={isExpanded}
         toggleExpand={toggleExpand}
-        handleTogglePin={handleTogglePin}
-        isPinLoading={isPinLoading}
       />
 
       <TaskCardContent

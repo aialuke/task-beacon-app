@@ -1,3 +1,4 @@
+
 /**
  * Task Service - Main orchestrator for all task operations
  * 
@@ -71,13 +72,6 @@ export class TaskService {
    */
   static async updateStatus(taskId: string, status: Parameters<typeof TaskStatusService.updateStatus>[1]) {
     return this.status.updateStatus(taskId, status);
-  }
-
-  /**
-   * Toggle task pin status
-   */
-  static async togglePin(taskId: string, pinned: boolean) {
-    return this.status.togglePin(taskId, pinned);
   }
 
   /**
