@@ -80,5 +80,11 @@ export type {
   AsyncEventHandler,
 } from './utility.types';
 
-// Convenience type aliases - fix the AsyncState reference
-export type ApiState = AsyncState;
+// Convenience type aliases - define directly to avoid import issues
+export type ApiState<T = unknown, E = string> = {
+  data: T | null;
+  loading: boolean;
+  error: E | null;
+  success: boolean;
+  lastFetch?: Date;
+};
