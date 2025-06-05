@@ -133,7 +133,7 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
       due_date: dueDate || null,
       url_link: url.trim() || null, // Convert empty string back to null for API
       assignee_id: assigneeId || null,
-      priority: { level: 'medium' as const, value: 1 }, // Fixed priority type
+      priority: 'medium', // Fixed to use string type instead of object
     };
   }, [title, description, dueDate, url, assigneeId]);
 
@@ -146,7 +146,7 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
       url,
       pinned,
       assigneeId,
-      priority: { level: 'medium' as const, value: 1 },
+      priority: 'medium', // Fixed to use string type
     });
   }, [validation, title, description, dueDate, url, pinned, assigneeId]);
 
