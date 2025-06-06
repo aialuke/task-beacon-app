@@ -1,3 +1,4 @@
+
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Calendar1, ExternalLink } from "lucide-react";
@@ -135,7 +136,7 @@ const TaskDetailsPage = () => {
           <Suspense
             fallback={<UnifiedLoadingStates variant="skeleton" count={2} />}
           >
-            <TaskActions task={task} />
+            <TaskActions task={task} onView={() => navigate(`/tasks/${task.id}`)} />
           </Suspense>
         </div>
       </div>
