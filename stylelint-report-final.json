@@ -1,0 +1,141 @@
+
+src/styles/base/reset.css
+  77:10  ✖  Expected id selector "#__next" to be kebab-case  selector-id-pattern
+
+src/styles/utilities/colors.css
+  79:5  ✖  Unexpected duplicate "background-clip"  declaration-block-no-duplicate-properties
+  90:5  ✖  Unexpected duplicate "background-clip"  declaration-block-no-duplicate-properties
+
+src/styles/utilities/layout.css
+   6:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  11:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  16:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  20:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  25:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  30:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  36:7  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  42:7  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  48:7  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+
+src/styles/utilities/responsive.css
+  15:5  ✖  Expected ".xs\:inline" to match pattern "^[a-z][a-zA-Z0-9-]+$"  selector-class-pattern
+
+src/styles/utilities/text.css
+   5:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  11:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  16:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+
+src/styles/utilities/unified-utilities.css
+    5:23  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+    6:23  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+    7:23  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+    8:23  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+   10:21  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+   11:21  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+   12:21  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+   13:21  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+   17:5   ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+   21:5   ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+   25:5   ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+   29:5   ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+   33:5   ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+   38:5   ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+   42:5   ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+   49:5   ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+   53:5   ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+   57:5   ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+   61:5   ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+   65:5   ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+   69:5   ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+   74:5   ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+   78:5   ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+   82:5   ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+   86:5   ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  122:5   ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  126:5   ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  130:5   ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  135:5   ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  139:5   ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  143:5   ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+
+src/styles/components/dialogs.css
+   7:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  12:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  24:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+
+src/styles/components/forms.css
+   8:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  13:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  19:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  33:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  48:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  53:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+
+src/styles/components/task-cards.css
+   6:3  ✖  Expected empty line before rule  rule-empty-line-before
+   9:3  ✖  Expected empty line before rule  rule-empty-line-before
+  12:3  ✖  Expected empty line before rule  rule-empty-line-before
+  15:3  ✖  Expected empty line before rule  rule-empty-line-before
+  18:3  ✖  Expected empty line before rule  rule-empty-line-before
+
+src/styles/components/timer.css
+  133:3  ✖  Expected selector ".light .timer-container" to come before selector ".dark      no-descending-specificity
+            .timer-container:hover"
+
+src/styles/components/unified-components.css
+   6:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+   7:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+   8:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+   9:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  10:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  14:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  18:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  22:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  27:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  28:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  29:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  30:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  37:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  43:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  50:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  51:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  52:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  61:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  68:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  73:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  87:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  91:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+  95:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+
+src/styles/components/virtualized-tasks.css
+   7:5   ✖  Unexpected deprecated at-rule "@apply"                              at-rule-no-deprecated
+  18:22  ✖  Cannot parse property value "theme(colors.muted.foreground)         declaration-property-value-no-unknown
+            theme(colors.muted.default)" for property "scrollbar-color"
+  22:5   ✖  Unexpected deprecated at-rule "@apply"                              at-rule-no-deprecated
+  26:5   ✖  Unexpected deprecated at-rule "@apply"                              at-rule-no-deprecated
+  30:5   ✖  Unexpected deprecated at-rule "@apply"                              at-rule-no-deprecated
+  34:5   ✖  Unexpected deprecated at-rule "@apply"                              at-rule-no-deprecated
+  40:5   ✖  Unexpected deprecated at-rule "@apply"                              at-rule-no-deprecated
+  52:5   ✖  Unexpected deprecated at-rule "@apply"                              at-rule-no-deprecated
+  70:29  ✖  Unexpected unknown media feature value "high" for name              media-feature-name-value-no-unknown
+            "prefers-contrast"
+  72:7   ✖  Unexpected deprecated at-rule "@apply"                              at-rule-no-deprecated
+
+src/styles/architecture/css-variables.css
+  136:3  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
+
+src/styles/architecture/performance-optimizations.css
+   12:3   ✖  Unexpected duplicate "transform"                               declaration-block-no-duplicate-properties
+   14:3   ✖  Unexpected duplicate "backface-visibility"                     declaration-block-no-duplicate-properties
+   21:3   ✖  Unexpected duplicate "transform"                               declaration-block-no-duplicate-properties
+   65:3   ✖  Unexpected duplicate "transform"                               declaration-block-no-duplicate-properties
+   68:3   ✖  Unexpected unknown property "overflow-scrolling"               property-no-unknown
+  308:3   ✖  Unexpected unknown property "overflow-scrolling"               property-no-unknown
+  337:9   ✖  Unexpected unknown media feature name                          media-feature-name-no-unknown
+             "min-device-pixel-ratio"
+  373:27  ✖  Unexpected unknown media feature value "high" for name         media-feature-name-value-no-unknown
+             "prefers-contrast"
+
+✖ 104 problems (104 errors, 0 warnings)
+  95 errors potentially fixable with the "--fix" option.
+
