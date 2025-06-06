@@ -47,6 +47,7 @@ function TaskCard({ task }: TaskCardProps) {
       ? "animate-fade-out"
       : "";
   const expandedClass = isExpanded ? "scale-102 shadow-expanded z-10" : "";
+  
   // Status-based styles
   const statusStyles: React.CSSProperties = {
     opacity: task.status === "complete" ? 0.8 : 1,
@@ -68,7 +69,7 @@ function TaskCard({ task }: TaskCardProps) {
           task.status === "complete"
             ? "bg-muted"
             : task.status === "overdue"
-            ? "!border-destructive"
+            ? "border-destructive"
             : ""
         }`}
         style={statusStyles}

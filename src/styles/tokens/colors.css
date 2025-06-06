@@ -1,3 +1,4 @@
+
 /* src/styles/tokens/colors.css - Single source of truth for all color definitions */
 
 :root {
@@ -50,31 +51,31 @@
   --status-complete: #059669; /* Green #059669 - 4.5:1 contrast */
 }
 
-/* ===== DARK MODE COLORS (WCAG AA COMPLIANT) ===== */
+/* ===== DARK MODE COLORS - NEUTRAL GRAYS ===== */
 
 .dark,
 :root.dark {
-  /* Dark mode background and surfaces - Enhanced contrast */
-  --background: 222 84% 5%; /* Very dark blue-gray #0A0F1C */
-  --foreground: 213 31% 91%; /* Light gray #E8ECEF - 7:1 contrast */
-  --card: 222 84% 8%; /* Slightly lighter #141B2B */
-  --card-foreground: 213 31% 91%; /* Light gray #E8ECEF */
-  --popover: 222 84% 8%; /* Dark card color #141B2B */
-  --popover-foreground: 213 31% 91%; /* Light gray #E8ECEF */
+  /* Dark mode background and surfaces - Pure grays */
+  --background: 0 0% 6.7%; /* Very dark gray #111111 (gray-900 equivalent) */
+  --foreground: 0 0% 98%; /* Near white #FAFAFA - excellent contrast */
+  --card: 0 0% 12.2%; /* Dark gray #1F1F1F (gray-800 equivalent) */
+  --card-foreground: 0 0% 98%; /* Near white #FAFAFA */
+  --popover: 0 0% 12.2%; /* Dark gray #1F1F1F */
+  --popover-foreground: 0 0% 98%; /* Near white #FAFAFA */
 
   /* Primary colors adjusted for dark mode */
   --primary: 225 77% 70%; /* Brighter blue for dark mode - better contrast */
-  --primary-foreground: 222 84% 5%; /* Very dark blue-gray #0A0F1C */
+  --primary-foreground: 0 0% 6.7%; /* Very dark gray #111111 */
 
-  /* Secondary and muted colors */
-  --secondary: 215 28% 17%; /* Dark gray #252B35 */
-  --secondary-foreground: 213 31% 91%; /* Light gray #E8ECEF */
-  --muted: 215 28% 17%; /* Dark gray #252B35 */
-  --muted-foreground: 215 20% 65%; /* Medium gray #9CA3AF - 4.5:1 contrast */
+  /* Secondary and muted colors - neutral grays */
+  --secondary: 0 0% 18.8%; /* Dark gray #303030 (gray-700 equivalent) */
+  --secondary-foreground: 0 0% 98%; /* Near white #FAFAFA */
+  --muted: 0 0% 18.8%; /* Dark gray #303030 */
+  --muted-foreground: 0 0% 63.9%; /* Light gray #A3A3A3 - 4.5:1 contrast */
 
   /* Accent colors */
-  --accent: 215 28% 17%; /* Dark gray #252B35 */
-  --accent-foreground: 213 31% 91%; /* Light gray #E8ECEF */
+  --accent: 0 0% 18.8%; /* Dark gray #303030 */
+  --accent-foreground: 0 0% 98%; /* Near white #FAFAFA */
   --accent-yellow: 51 100% 70%; /* Brighter yellow #FFE666 */
 
   /* Status colors - enhanced for dark mode visibility */
@@ -83,14 +84,14 @@
   --success: 152 76% 50%; /* Brighter green #10D175 - 4.5:1 contrast */
   --success-foreground: 0 0% 98%; /* Near white #FAFAFA */
 
-  /* Enhanced borders for dark mode */
-  --border: 215 28% 25%; /* More visible dark borders #3A414A */
-  --input: 215 28% 17%; /* Dark input background #252B35 */
+  /* Enhanced borders for dark mode - more visible */
+  --border: 0 0% 25.5%; /* Visible gray border #414141 (gray-600 equivalent) */
+  --input: 0 0% 18.8%; /* Dark input background #303030 */
   --ring: 225 77% 70%; /* Primary color for focus rings */
 
   /* Surface colors */
-  --surface: 222 84% 8%; /* Dark surface #141B2B */
-  --surface-foreground: 213 31% 91%; /* Light gray #E8ECEF */
+  --surface: 0 0% 12.2%; /* Dark surface #1F1F1F */
+  --surface-foreground: 0 0% 98%; /* Near white #FAFAFA */
   --brand-light: 225 77% 15%; /* Dark brand light #1A2332 */
 
   /* Task status colors for dark mode - enhanced visibility */

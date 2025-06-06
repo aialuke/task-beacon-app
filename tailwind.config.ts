@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 import animate from "tailwindcss-animate";
 
@@ -94,6 +95,20 @@ export default {
         "task-overdue": "var(--status-overdue)",
         "task-complete": "var(--status-complete)",
         "task-timer": "var(--status-pending)",
+        // Enhanced gray scale for better dark mode
+        gray: {
+          50: "#f9fafb",
+          100: "#f3f4f6", 
+          200: "#e5e7eb",
+          300: "#d1d5db",
+          400: "#9ca3af",
+          500: "#6b7280",
+          600: "#4b5563",
+          700: "#374151",
+          800: "#1f2937",
+          900: "#111827",
+          950: "#030712",
+        },
         sidebar: "#1a1a1a",
         "sidebar-foreground": "#f3f3f3",
         "sidebar-accent": "#23272f",
