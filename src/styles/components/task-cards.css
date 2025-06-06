@@ -1,20 +1,24 @@
 @layer components {
-  /* Status classes using CSS variables */
   .status-pending {
     color: var(--status-pending);
   }
+
   .status-overdue {
     color: var(--status-overdue);
   }
+
   .status-complete {
     color: var(--status-complete);
   }
+
   .status-bg-pending {
     background-color: var(--status-pending);
   }
+
   .status-bg-overdue {
     background-color: var(--status-overdue);
   }
+
   .status-bg-complete {
     background-color: var(--status-complete);
   }

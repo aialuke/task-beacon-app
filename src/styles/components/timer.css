@@ -4,15 +4,18 @@
     box-shadow: var(--shadow-sm);
     overflow: hidden;
   }
+
   .timer-container:hover {
     transform: scale(1.05);
     box-shadow: var(--shadow-md);
   }
+
   .timer-container:focus-visible {
     outline: 2px solid hsl(var(--primary));
     outline-offset: 3px;
     box-shadow: var(--shadow-lg);
   }
+
   .timer-container[data-status="complete"] {
     background: linear-gradient(
       135deg,
@@ -21,6 +24,7 @@
     );
     border: 2px solid hsl(var(--success) / 30%);
   }
+
   .timer-container[data-status="overdue"] {
     background: linear-gradient(
       135deg,
@@ -30,6 +34,7 @@
     border: 2px solid hsl(var(--destructive) / 30%);
     animation: pulse-warning 2s ease-in-out infinite;
   }
+
   .timer-container[data-status="pending"] {
     background: linear-gradient(
       135deg,
@@ -38,14 +43,17 @@
     );
     border: 2px solid hsl(var(--accent-yellow) / 30%);
   }
+
   .timer-ring {
     clip-path: circle(50%);
     filter: drop-shadow(0 2px 4px rgb(0 0 0 / 10%));
   }
+
   .timer-progress {
     transition: stroke-dashoffset 0.5s ease-out, stroke 0.3s ease;
     filter: drop-shadow(0 1px 2px rgb(0 0 0 / 20%));
   }
+
   .timer-text {
     font-weight: 600;
     letter-spacing: -0.01em;
@@ -53,53 +61,66 @@
     font-feature-settings: "tnum";
     font-variant-numeric: tabular-nums;
   }
+
   .timer-container[data-status="complete"] .timer-progress {
     animation: timer-complete 0.6s ease-out;
   }
+
   @keyframes pulse-warning {
     0%,
     100% {
       transform: scale(1);
       opacity: 1;
     }
+
     50% {
       transform: scale(1.02);
       opacity: 0.9;
     }
   }
+
   @keyframes timer-complete {
     0% {
       transform: scale(1);
     }
+
     50% {
       transform: scale(1.1);
     }
+
     100% {
       transform: scale(1);
     }
   }
+
   @media (prefers-reduced-motion: reduce) {
     .timer-container {
       transition: none;
     }
+
     .timer-container:hover {
       transform: none;
     }
+
     .timer-progress {
       transition: stroke-dashoffset 0.1s linear;
     }
+
     .timer-container[data-status="overdue"] {
       animation: none;
     }
   }
+
   @media (forced-colors: active) {
     .timer-container {
       border: 2px solid CanvasText;
       background: Canvas;
     }
+
     .timer-ring {
       stroke: CanvasText;
     }
+
     .timer-text {
       color: CanvasText;
       text-shadow: none;

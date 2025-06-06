@@ -79,8 +79,27 @@ src/styles/components/task-cards.css
   18:3  ✖  Expected empty line before rule  rule-empty-line-before
 
 src/styles/components/timer.css
-  133:3  ✖  Expected selector ".light .timer-container" to come before selector ".dark      no-descending-specificity
-            .timer-container:hover"
+    7:3  ✖  Expected empty line before rule     rule-empty-line-before
+   11:3  ✖  Expected empty line before rule     rule-empty-line-before
+   16:3  ✖  Expected empty line before rule     rule-empty-line-before
+   24:3  ✖  Expected empty line before rule     rule-empty-line-before
+   33:3  ✖  Expected empty line before rule     rule-empty-line-before
+   41:3  ✖  Expected empty line before rule     rule-empty-line-before
+   45:3  ✖  Expected empty line before rule     rule-empty-line-before
+   49:3  ✖  Expected empty line before rule     rule-empty-line-before
+   56:3  ✖  Expected empty line before rule     rule-empty-line-before
+   59:3  ✖  Expected empty line before at-rule  at-rule-empty-line-before
+   65:5  ✖  Expected empty line before rule     rule-empty-line-before
+   70:3  ✖  Expected empty line before at-rule  at-rule-empty-line-before
+   74:5  ✖  Expected empty line before rule     rule-empty-line-before
+   77:5  ✖  Expected empty line before rule     rule-empty-line-before
+   81:3  ✖  Expected empty line before at-rule  at-rule-empty-line-before
+   85:5  ✖  Expected empty line before rule     rule-empty-line-before
+   88:5  ✖  Expected empty line before rule     rule-empty-line-before
+   91:5  ✖  Expected empty line before rule     rule-empty-line-before
+   95:3  ✖  Expected empty line before at-rule  at-rule-empty-line-before
+  100:5  ✖  Expected empty line before rule     rule-empty-line-before
+  103:5  ✖  Expected empty line before rule     rule-empty-line-before
 
 src/styles/components/unified-components.css
    6:5  ✖  Unexpected deprecated at-rule "@apply"  at-rule-no-deprecated
@@ -136,6 +155,6 @@ src/styles/architecture/performance-optimizations.css
   373:27  ✖  Unexpected unknown media feature value "high" for name         media-feature-name-value-no-unknown
              "prefers-contrast"
 
-✖ 104 problems (104 errors, 0 warnings)
-  95 errors potentially fixable with the "--fix" option.
+✖ 124 problems (124 errors, 0 warnings)
+  116 errors potentially fixable with the "--fix" option.
 

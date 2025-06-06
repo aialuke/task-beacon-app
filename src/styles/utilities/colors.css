@@ -77,7 +77,6 @@
       hsl(var(--primary) / 80%)
     );
     background-clip: text;
-    background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
@@ -87,7 +86,6 @@
       hsl(var(--accent-blue)),
       hsl(var(--accent-green))
     );
-    background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
