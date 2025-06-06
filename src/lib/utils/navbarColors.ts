@@ -1,3 +1,4 @@
+
 /**
  * Navbar color computation utilities
  * Handles theme-aware color calculations for navbar components
@@ -44,8 +45,8 @@ export function computeNavbarColors(): NavbarColors {
         primaryLight: `rgba(${r}, ${g}, ${b}, 0.2)`,
         primaryVeryLight: `rgba(${r}, ${g}, ${b}, 0.1)`,
         primaryGlow: `rgba(${r}, ${g}, ${b}, 0.3)`,
-        indicatorColor: 'hsl(0 0% 98% / 1)',
-        highlightColor: 'hsl(240 5.9% 10%)',
+        indicatorColor: isDarkMode ? 'hsl(0 0% 100% / 1)' : 'hsl(0 0% 98% / 1)',
+        highlightColor: isDarkMode ? 'hsl(0 0% 10%)' : 'hsl(240 5.9% 10%)',
         isDarkMode,
       };
     }
@@ -58,8 +59,8 @@ export function computeNavbarColors(): NavbarColors {
     primaryLight: 'rgba(54, 98, 227, 0.2)',
     primaryVeryLight: 'rgba(54, 98, 227, 0.1)',
     primaryGlow: 'rgba(54, 98, 227, 0.3)',
-    indicatorColor: 'hsl(0 0% 98% / 1)',
-    highlightColor: 'hsl(240 5.9% 10%)',
+    indicatorColor: isDarkMode ? 'hsl(0 0% 100% / 1)' : 'hsl(0 0% 98% / 1)',
+    highlightColor: isDarkMode ? 'hsl(0 0% 10%)' : 'hsl(240 5.9% 10%)',
     isDarkMode: false,
   };
 }

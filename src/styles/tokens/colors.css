@@ -67,11 +67,11 @@
   --primary: 225 77% 60%; /* Blue for buttons */
   --primary-foreground: 0 0% 100%; /* Pure white text/icons on blue buttons */
 
-  /* Secondary and muted colors - neutral grays */
+  /* Secondary and muted colors - neutral grays with white text */
   --secondary: 0 0% 15%; /* Darker gray #262626 */
   --secondary-foreground: 0 0% 100%; /* Pure white #FFFFFF */
   --muted: 0 0% 15%; /* Darker gray #262626 */
-  --muted-foreground: 0 0% 70%; /* Light gray #B3B3B3 - good contrast */
+  --muted-foreground: 0 0% 100%; /* Pure white for better visibility */
 
   /* Accent colors */
   --accent: 0 0% 15%; /* Darker gray #262626 */

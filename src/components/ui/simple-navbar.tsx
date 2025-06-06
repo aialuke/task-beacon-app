@@ -47,7 +47,7 @@ export function SimpleNavbar({
         aria-orientation="horizontal"
         aria-label="Navigation"
         onKeyDown={handleKeyDown}
-        className="relative z-[100] flex items-center gap-1 rounded-full border border-border bg-secondary/80 p-2 shadow-lg backdrop-blur-md"
+        className="relative z-[100] flex items-center gap-1 rounded-full border border-border bg-card/80 p-2 shadow-lg backdrop-blur-md"
       >
         {/* Active indicator line above button */}
         <animated.div
@@ -118,7 +118,7 @@ export function SimpleNavbar({
                 'relative z-[120] flex h-10 min-w-[2.5rem] items-center justify-center rounded-full px-3 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
                 isActive
                   ? 'text-foreground'
-                  : 'text-muted-foreground hover:text-foreground'
+                  : 'text-foreground/70 hover:text-foreground'
               )}
               title={item.name}
             >
