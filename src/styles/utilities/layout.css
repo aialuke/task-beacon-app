@@ -31,19 +31,19 @@
   }
 
   /* ===== RESPONSIVE SPACING ===== */
-  @media (min-width: 640px) {
+  @media (width >= 640px) {
     .task-list {
       @apply space-y-6;
     }
   }
 
-  @media (min-width: 768px) {
+  @media (width >= 768px) {
     .dashboard-container {
       @apply max-w-5xl;
     }
   }
 
-  @media (min-width: 1024px) {
+  @media (width >= 1024px) {
     .dashboard-container {
       @apply max-w-6xl;
     }

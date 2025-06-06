@@ -1,30 +1,21 @@
-
-// === EXTERNAL LIBRARIES ===
-import { memo } from 'react';
-
-// === INTERNAL UTILITIES ===
-import { getTaskCardStyles, getTaskCardClasses } from '../utils/taskCardStyles';
-
-// === INTERNAL COMPONENTS ===
-import { TaskErrorBoundary } from './TaskErrorBoundary';
-import TaskCardHeader from './TaskCardHeader';
-import TaskCardContent from './TaskCardContent';
-
-// === HOOKS ===
-import { useTaskCard } from '../hooks/useTaskCard';
-
-// === TYPES ===
-import type { Task } from '@/types';
+import { memo } from "react";
+import { TaskErrorBoundary } from "./TaskErrorBoundary";
+import TaskCardHeader from "./TaskCardHeader";
+import TaskCardContent from "./TaskCardContent";
+import TaskStatus from "./TaskStatus";
+import { useTaskCard } from "../hooks/useTaskCard";
+import type { Task } from "@/types";
 
 interface TaskCardProps {
   task: Task;
 }
 
-// Optimized equality check for memoization
-const arePropsEqual = (prevProps: TaskCardProps, nextProps: TaskCardProps): boolean => {
+const arePropsEqual = (
+  prevProps: TaskCardProps,
+  nextProps: TaskCardProps
+): boolean => {
   const prev = prevProps.task;
   const next = nextProps.task;
-
   return (
     prev.id === next.id &&
     prev.title === next.title &&
@@ -42,25 +33,45 @@ function TaskCard({ task }: TaskCardProps) {
     contentRef,
     cardRef,
     isExpanded,
+    animationPhase,
     animationState,
     toggleExpand,
   } = useTaskCard(task);
 
-  const cardStyles = getTaskCardStyles(task, isExpanded);
-  const cardClasses = getTaskCardClasses(task, isExpanded);
+  // Dynamic classes
+  const statusClass = `status-${task.status.toLowerCase()}`;
+  const animationClass =
+    animationPhase === "enter"
+      ? "animate-fade-in"
+      : animationPhase === "exit"
+      ? "animate-fade-out"
+      : "";
+  const expandedClass = isExpanded ? "scale-102 shadow-expanded z-10" : "";
+  // Status-based styles
+  const statusStyles: React.CSSProperties = {
+    opacity: task.status === "complete" ? 0.8 : 1,
+  };
 
   return (
     <TaskErrorBoundary
       fallback={
         <div className="p-4 rounded-xl border border-destructive/20 bg-destructive/5">
-          <p className="text-sm text-destructive">Failed to load task: {task.title}</p>
+          <p className="text-sm text-destructive">
+            Failed to load task: {task.title}
+          </p>
         </div>
       }
     >
-      <article 
-        ref={cardRef} 
-        className={cardClasses} 
-        style={cardStyles}
+      <article
+        ref={cardRef}
+        className={`bg-card text-card-foreground border border-border shadow-task-card transition-all duration-200 hover:shadow-md cursor-pointer mb-4 w-full rounded-xl p-card box-border max-w-full ${statusClass} ${animationClass} ${expandedClass} ${
+          task.status === "complete"
+            ? "bg-muted"
+            : task.status === "overdue"
+            ? "!border-destructive"
+            : ""
+        }`}
+        style={statusStyles}
         role="article"
         aria-label={`Task: ${task.title}`}
       >
@@ -69,17 +80,17 @@ function TaskCard({ task }: TaskCardProps) {
           isExpanded={isExpanded}
           toggleExpand={toggleExpand}
         />
-
         <TaskCardContent
           task={task}
           isExpanded={isExpanded}
           animationState={animationState}
           contentRef={contentRef}
         />
+        <TaskStatus task={task} />
       </article>
     </TaskErrorBoundary>
   );
 }
 
-TaskCard.displayName = 'TaskCard';
+TaskCard.displayName = "TaskCard";
 export default memo(TaskCard, arePropsEqual);

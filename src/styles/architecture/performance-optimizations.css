@@ -10,16 +10,16 @@
 /* Force hardware acceleration for specific elements */
 .hw-accelerated {
   transform: translate3d(0, 0, 0);
-  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 /* Optimize for animations */
 .animate-optimized {
   will-change: transform, opacity;
   transform: translateZ(0);
-  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 /* Remove will-change after animation completes */
@@ -63,7 +63,7 @@
 /* Reduce paint on scroll */
 .scroll-optimized {
   transform: translateZ(0);
-  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
   -webkit-overflow-scrolling: touch;
   overflow-scrolling: touch;
 }
@@ -76,6 +76,7 @@
     opacity: 0;
     transform: translate3d(0, 10px, 0);
   }
+
   to {
     opacity: 1;
     transform: translate3d(0, 0, 0);
@@ -87,6 +88,7 @@
     opacity: 1;
     transform: translate3d(0, 0, 0);
   }
+
   to {
     opacity: 0;
     transform: translate3d(0, -10px, 0);
@@ -98,6 +100,7 @@
   from {
     transform: translate3d(0, 100%, 0);
   }
+
   to {
     transform: translate3d(0, 0, 0);
   }
@@ -107,6 +110,7 @@
   from {
     transform: translate3d(0, -100%, 0);
   }
+
   to {
     transform: translate3d(0, 0, 0);
   }
@@ -116,6 +120,7 @@
   from {
     transform: translate3d(100%, 0, 0);
   }
+
   to {
     transform: translate3d(0, 0, 0);
   }
@@ -125,6 +130,7 @@
   from {
     transform: translate3d(-100%, 0, 0);
   }
+
   to {
     transform: translate3d(0, 0, 0);
   }
@@ -136,6 +142,7 @@
     opacity: 0;
     transform: translate3d(0, 0, 0) scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: translate3d(0, 0, 0) scale(1);
@@ -147,6 +154,7 @@
     opacity: 1;
     transform: translate3d(0, 0, 0) scale(1);
   }
+
   to {
     opacity: 0;
     transform: translate3d(0, 0, 0) scale(0.95);
@@ -158,12 +166,15 @@
   0%, 20%, 53%, 80%, 100% {
     transform: translate3d(0, 0, 0);
   }
+
   40%, 43% {
     transform: translate3d(0, -30px, 0);
   }
+
   70% {
     transform: translate3d(0, -15px, 0);
   }
+
   90% {
     transform: translate3d(0, -4px, 0);
   }
@@ -247,6 +258,7 @@
   0% {
     transform: translate3d(-100%, 0, 0);
   }
+
   100% {
     transform: translate3d(100%, 0, 0);
   }
@@ -261,14 +273,11 @@
 .skeleton-optimized::after {
   content: '';
   position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  inset: 0;
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.4),
+    rgb(255 255 255 / 40%),
     transparent
   );
   transform: translate3d(-100%, 0, 0);
@@ -280,6 +289,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -310,7 +320,7 @@
 /* === RESPONSIVE OPTIMIZATIONS === */
 
 /* Optimize for mobile devices */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .mobile-optimized {
     contain: layout style;
     will-change: transform;
@@ -324,7 +334,7 @@
 }
 
 /* Optimize for high-density displays */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+@media (min-device-pixel-ratio: 2), (resolution >= 192dpi) {
   .retina-optimized {
     transform: translateZ(0);
     -webkit-font-smoothing: antialiased;
@@ -372,7 +382,7 @@
 /* Debug performance issues in development */
 .debug-performance {
   outline: 2px solid red;
-  background: rgba(255, 0, 0, 0.1) !important;
+  background: rgb(255 0 0 / 10%) !important;
 }
 
 .debug-performance::before {
@@ -393,8 +403,8 @@
 }
 
 @keyframes debug-paint-flash {
-  0% { background-color: rgba(255, 0, 0, 0.3); }
-  100% { background-color: rgba(0, 255, 0, 0.3); }
+  0% { background-color: rgb(255 0 0 / 30%); }
+  100% { background-color: rgb(0 255 0 / 30%); }
 }
 
 /* Layout shift indicator */

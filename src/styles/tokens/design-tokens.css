@@ -3,12 +3,12 @@
 
 :root {
   /* Gradient backgrounds - Updated with new primary color */
-  --gradient-light: linear-gradient(to bottom right, #ffffff, #f9fafb);
-  --gradient-blue: linear-gradient(45deg, hsl(225 77% 60%), hsl(225 77% 70%));
+  --gradient-light: linear-gradient(to bottom right, #fff, #f9fafb);
+  --gradient-blue: linear-gradient(45deg, hsl(225deg 77% 60%), hsl(225deg 77% 70%));
   --gradient-blue-dark: linear-gradient(
     45deg,
-    hsl(225 77% 50%),
-    hsl(225 77% 60%)
+    hsl(225deg 77% 50%),
+    hsl(225deg 77% 60%)
   );
 }
 
@@ -17,21 +17,21 @@
 :root.dark {
   /* Dark mode gradients - Updated with new primary color */
   --gradient-light: linear-gradient(to bottom right, #141b2b, #0a0f1c);
-  --gradient-blue: linear-gradient(45deg, hsl(225 77% 70%), hsl(225 77% 80%));
+  --gradient-blue: linear-gradient(45deg, hsl(225deg 77% 70%), hsl(225deg 77% 80%));
   --gradient-blue-dark: linear-gradient(
     45deg,
-    hsl(225 77% 60%),
-    hsl(225 77% 70%)
+    hsl(225deg 77% 60%),
+    hsl(225deg 77% 70%)
   );
 }
 
 /* Light mode explicit override */
 .light {
-  --gradient-light: linear-gradient(to bottom right, #ffffff, #f9fafb);
-  --gradient-blue: linear-gradient(45deg, hsl(225 77% 60%), hsl(225 77% 70%));
+  --gradient-light: linear-gradient(to bottom right, #fff, #f9fafb);
+  --gradient-blue: linear-gradient(45deg, hsl(225deg 77% 60%), hsl(225deg 77% 70%));
   --gradient-blue-dark: linear-gradient(
     45deg,
-    hsl(225 77% 50%),
-    hsl(225 77% 60%)
+    hsl(225deg 77% 50%),
+    hsl(225deg 77% 60%)
   );
 }

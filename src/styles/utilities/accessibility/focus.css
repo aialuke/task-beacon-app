@@ -31,12 +31,12 @@
   .focus-glow:focus-visible {
     outline: 2px solid hsl(var(--primary));
     outline-offset: 2px;
-    box-shadow: 0 0 0 4px hsl(var(--primary) / 0.2);
+    box-shadow: 0 0 0 4px hsl(var(--primary) / 20%);
   }
 
   /* Dark mode focus enhancements */
   .dark .focus-glow:focus-visible {
-    box-shadow: 0 0 0 4px hsl(var(--primary) / 0.3);
+    box-shadow: 0 0 0 4px hsl(var(--primary) / 30%);
   }
 
   .dark .skip-link {
@@ -45,12 +45,12 @@
 
   /* Light mode focus overrides */
   .light .focus-glow:focus-visible {
-    box-shadow: 0 0 0 4px rgba(54, 98, 227, 0.2);
+    box-shadow: 0 0 0 4px rgb(54 98 227 / 20%);
   }
 
   .light .skip-link {
     background: #3662e3;
     color: white;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgb(0 0 0 / 10%);
   }
 }

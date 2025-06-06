@@ -1,40 +1,23 @@
-import { useMemo } from 'react';
-import { useSpring, animated } from '@react-spring/web';
-import { TaskStatus } from '@/types';
-import TimerRing from './timer/TimerRing';
-import TimerDisplay from './timer/TimerDisplay';
-import { useTaskUIContext } from '@/features/tasks/context/TaskUIContext';
+import { useMemo } from "react";
+import { useSpring, animated } from "@react-spring/web";
+import { TaskStatus } from "@/types";
+import TimerRing from "./timer/TimerRing";
+import TimerDisplay from "./timer/TimerDisplay";
+import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
 import {
   Tooltip,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip';
-import TimerTooltip from '@/features/tasks/components/TimerTooltip';
-import { useCountdown } from '@/features/tasks/hooks/useCountdown';
-import { useMotionPreferences } from '@/hooks/useMotionPreferences';
+} from "@/components/ui/tooltip";
+import TimerTooltip from "@/features/tasks/components/TimerTooltip";
+import { useCountdown } from "@/features/tasks/hooks/useCountdown";
+import { useMotionPreferences } from "@/hooks/useMotionPreferences";
 
-/**
- * CountdownTimer component displays a circular timer that visualizes the time remaining
- * until a task's due date.
- *
- * Features:
- * - Visually displays time left as a circular progress indicator
- * - Adapts display based on task status (pending, complete, overdue)
- * - Shows different styling based on priority
- * - Resizes based on mobile/desktop view
- * - Provides detailed due date information via tooltip
- * - Respects user motion preferences for accessibility
- *
- * @param dueDate - The due date of the task as an ISO string
- * @param status - The current status of the task
- * @param size - The size of the timer in pixels (default: 48)
- * @param priority - The priority of the task (default: "medium")
- */
 interface CountdownTimerProps {
   dueDate: string | null;
   status: TaskStatus;
   size?: number;
-  priority?: 'low' | 'medium' | 'high';
+  priority?: "low" | "medium" | "high";
 }
 
 const AnimatedDiv = animated.div;
@@ -43,39 +26,31 @@ function CountdownTimer({
   dueDate,
   status,
   size = 48,
-  priority = 'medium',
+  priority = "medium",
 }: CountdownTimerProps) {
   const { isMobile } = useTaskUIContext();
   const { shouldReduceMotion, getAnimationConfig } = useMotionPreferences();
 
-  // Calculate and memoize size-related values to avoid recalculation
   const { dynamicSize, radius, circumference } = useMemo(() => {
     const dynamicSize = isMobile
-      ? priority === 'high'
+      ? priority === "high"
         ? size * 1.1
-        : priority === 'low'
-          ? size * 0.7
-          : size * 0.9
-      : priority === 'high'
-        ? size * 1.2
-        : priority === 'low'
-          ? size * 0.8
-          : size;
-
+        : priority === "low"
+        ? size * 0.7
+        : size * 0.9
+      : priority === "high"
+      ? size * 1.2
+      : priority === "low"
+      ? size * 0.8
+      : size;
     const radius = dynamicSize / 2 - 4;
     const circumference = 2 * Math.PI * radius;
-
     return { dynamicSize, radius, circumference };
   }, [isMobile, priority, size]);
 
-  // Use our custom hook to manage countdown logic
-  const { timeDisplay, dashOffset, tooltipContent, ariaLabel, daysRemaining } = useCountdown(
-    dueDate,
-    status,
-    circumference
-  );
+  const { timeDisplay, dashOffset, tooltipContent, ariaLabel, daysRemaining } =
+    useCountdown(dueDate, status, circumference);
 
-  // Animation configuration based on motion preferences
   const springConfig = useMemo(
     () =>
       getAnimationConfig(
@@ -85,23 +60,21 @@ function CountdownTimer({
     [getAnimationConfig]
   );
 
-  // Animation for the timer ring with motion preference support
   const { strokeDashoffset } = useSpring({
     strokeDashoffset: dashOffset,
     config: springConfig,
     immediate:
-      status === 'complete' ||
-      status === 'overdue' ||
+      status === "complete" ||
+      status === "overdue" ||
       !dueDate ||
       shouldReduceMotion,
   });
 
-  // Apply GPU acceleration for better performance on non-reduced motion
   const containerStyles = useMemo(
     () => ({
       width: dynamicSize,
       height: dynamicSize,
-      ...(shouldReduceMotion ? {} : { transform: 'translateZ(0)' }),
+      transform: shouldReduceMotion ? undefined : "translateZ(0)",
     }),
     [dynamicSize, shouldReduceMotion]
   );
@@ -114,13 +87,13 @@ function CountdownTimer({
             role="timer"
             tabIndex={0}
             aria-label={ariaLabel}
-            className={`timer-container relative rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
-              status === 'pending' &&
+            className={`timer-container relative flex items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 transition-all ${
+              status === "pending" &&
               Number(timeDisplay) === 0 &&
               !shouldReduceMotion
-                ? 'animate-pulse-subtle'
-                : ''
-            } ${shouldReduceMotion ? 'reduce-motion-duration' : 'gpu-accelerated'}`}
+                ? "animate-pulse-subtle"
+                : ""
+            } ${shouldReduceMotion ? "" : "gpu-accelerated"}`}
             style={containerStyles}
           >
             <TimerRing
@@ -144,4 +117,4 @@ function CountdownTimer({
   );
 }
 
-export default CountdownTimer; 
+export default CountdownTimer;

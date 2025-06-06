@@ -28,18 +28,21 @@
     @apply ring-offset-background transition-colors;
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
     @apply disabled:cursor-not-allowed disabled:opacity-50;
+
     /* Use Tailwind's default rounded-xl instead of custom rounded-xl */
     border-radius: var(--radius);
   }
 
   .form-unified-error {
     @apply border-destructive;
-    box-shadow: 0 0 0 2px hsl(var(--destructive) / 0.2);
+
+    box-shadow: 0 0 0 2px hsl(var(--destructive) / 20%);
   }
 
   .form-unified-success {
     @apply border-success;
-    box-shadow: 0 0 0 2px hsl(var(--success) / 0.2);
+
+    box-shadow: 0 0 0 2px hsl(var(--success) / 20%);
   }
 
   /* ===== UNIFIED DIALOG/MODAL STYLING ===== */
@@ -47,6 +50,7 @@
     @apply fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%];
     @apply gap-4 border bg-background p-6 shadow-lg duration-200;
     @apply border-border;
+
     /* Use Tailwind's default rounded-xl instead of custom rounded-xl */
     border-radius: var(--radius);
     background-color: hsl(var(--background));
@@ -55,6 +59,7 @@
 
   .dialog-unified-overlay {
     @apply fixed inset-0 z-50 bg-black/80;
+
     backdrop-filter: blur(4px);
   }
 
@@ -71,7 +76,7 @@
   .loading-unified-spinner {
     width: 20px;
     height: 20px;
-    border: 2px solid currentColor;
+    border: 2px solid currentcolor;
     border-top-color: transparent;
     border-radius: 50%; /* Keep border-radius: 50% for circular spinner */
     animation: spin 1s linear infinite;
@@ -91,6 +96,6 @@
   }
 
   .hover-unified-glow:hover {
-    box-shadow: 0 0 20px hsl(var(--primary) / 0.3);
+    box-shadow: 0 0 20px hsl(var(--primary) / 30%);
   }
 }

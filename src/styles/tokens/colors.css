@@ -2,6 +2,7 @@
 
 :root {
   /* ===== LIGHT MODE COLORS (WCAG AA COMPLIANT) ===== */
+
   /* Background and surface colors */
   --background: 0 0% 100%; /* Pure white #FFFFFF */
   --foreground: 240 10% 3.9%; /* Nearly black #0A0A0B - 4.5:1 contrast */
@@ -125,7 +126,6 @@
   --success-foreground: 0 0% 98%;
   --accent-yellow: 51 100% 50%;
   --brand-light: 225 77% 95%;
-
   --status-pending: #f59e0b;
   --status-overdue: #dc2626;
   --status-complete: #059669;

@@ -11,11 +11,13 @@
   /* ===== FILE UPLOAD STYLES ===== */
   input[type='file'] {
     @apply form-unified-field cursor-pointer;
+
     max-width: 100%;
   }
 
   input[type='file']::-webkit-file-upload-button {
     @apply btn-unified-primary mr-3;
+
     background: var(--gradient-blue);
     box-shadow: var(--shadow-sm);
   }
@@ -29,6 +31,7 @@
   /* Firefox file upload button */
   input[type='file']::file-selector-button {
     @apply btn-unified-primary mr-3;
+
     background: var(--gradient-blue);
     box-shadow: var(--shadow-sm);
   }
@@ -51,7 +54,7 @@
   }
 
   /* ===== RESPONSIVE FORM ELEMENTS ===== */
-  @media (max-width: 640px) {
+  @media (width <= 640px) {
     input[type='file'] {
       max-width: 100%;
       font-size: 0.75rem;

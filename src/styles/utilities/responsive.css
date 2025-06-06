@@ -1,7 +1,7 @@
 /* src/styles/utilities/responsive.css - Responsive design utilities */
 @layer utilities {
   /* ===== RESPONSIVE UTILITIES ===== */
-  @media (max-width: 480px) {
+  @media (width <= 480px) {
     .filter-dropdown-mobile {
       width: 45%;
     }
@@ -17,7 +17,7 @@
     }
   }
 
-  @media (max-width: 640px) {
+  @media (width <= 640px) {
     .filter-dropdown-mobile {
       width: 40%;
     }
@@ -28,7 +28,7 @@
     }
   }
 
-  @media (min-width: 641px) {
+  @media (width >= 641px) {
     .filter-dropdown-mobile {
       width: 25%;
     }

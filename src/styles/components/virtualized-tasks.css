@@ -15,7 +15,7 @@
     
     /* Improve scrollbar styling */
     scrollbar-width: thin;
-    scrollbar-color: theme(colors.muted.foreground) theme(colors.muted.DEFAULT);
+    scrollbar-color: theme(colors.muted.foreground) theme(colors.muted.default);
   }
 
   .virtualized-task-container::-webkit-scrollbar {
@@ -50,6 +50,7 @@
   /* Focus management for accessibility */
   .virtualized-task-card:focus-within {
     @apply ring-2 ring-primary ring-offset-2;
+
     outline: none;
   }
 

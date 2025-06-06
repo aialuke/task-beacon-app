@@ -1,6 +1,5 @@
-
-import { useSpring, SpringValue } from '@react-spring/web';
-import { useEffect, useRef, useState } from 'react';
+import { useSpring, SpringValue } from "@react-spring/web";
+import { useEffect, useRef, useState } from "react";
 
 export interface TaskAnimationState {
   height: SpringValue<number>;
@@ -9,6 +8,9 @@ export interface TaskAnimationState {
 
 export function useTaskAnimation(contentRef: React.RefObject<HTMLDivElement>) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [animationPhase, setAnimationPhase] = useState<"enter" | "exit" | "">(
+    "enter"
+  );
   const initialHeightRef = useRef<number | null>(null);
 
   const [animationProps, setAnimationProps] = useSpring(() => ({
@@ -18,31 +20,27 @@ export function useTaskAnimation(contentRef: React.RefObject<HTMLDivElement>) {
   }));
 
   const toggleExpanded = () => {
-    setIsExpanded(prev => !prev);
+    setIsExpanded((prev) => {
+      setAnimationPhase(prev ? "exit" : "enter");
+      return !prev;
+    });
   };
 
   useEffect(() => {
     if (!contentRef.current) return;
-
-    // Get scrollHeight for complete content height including any overflow
     const contentHeight = contentRef.current.scrollHeight;
-
-    // Store initial height for animations
     if (!initialHeightRef.current) {
       initialHeightRef.current = contentHeight;
     }
-
     const height = isExpanded ? contentHeight : 0;
     const opacity = isExpanded ? 1 : 0;
-
     setAnimationProps.start({
       height,
       opacity,
       immediate: false,
-      // Reset height to auto after animation completes if expanded
       onRest: () => {
         if (isExpanded && contentRef.current) {
-          contentRef.current.style.height = 'auto';
+          contentRef.current.style.height = "auto";
         }
       },
     });
@@ -52,5 +50,6 @@ export function useTaskAnimation(contentRef: React.RefObject<HTMLDivElement>) {
     isExpanded,
     toggleExpanded,
     animationState: animationProps,
+    animationPhase,
   };
 }

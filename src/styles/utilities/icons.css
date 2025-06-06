@@ -2,11 +2,11 @@
 @layer utilities {
   /* ===== ENHANCED ICON UTILITIES ===== */
   .icon-filled {
-    fill: currentColor;
+    fill: currentcolor;
   }
 
   .icon-stroked {
-    stroke: currentColor;
+    stroke: currentcolor;
     fill: none;
   }
 }

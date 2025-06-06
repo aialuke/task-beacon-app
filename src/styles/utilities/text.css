@@ -3,6 +3,7 @@
   /* ===== TEXT UTILITIES ===== */
   .header-text {
     @apply my-2 text-lg font-semibold;
+
     color: hsl(var(--foreground));
   }
 
@@ -13,6 +14,7 @@
   /* ===== LINK UTILITIES ===== */
   .external-link {
     @apply flex items-center gap-1 hover:underline;
+
     word-break: break-all;
     color: hsl(var(--primary));
   }

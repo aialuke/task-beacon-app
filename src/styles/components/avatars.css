@@ -9,6 +9,6 @@
   /* ===== HEADER & LOGO ===== */
   .header-logo {
     color: hsl(var(--primary));
-    fill: currentColor;
+    fill: currentcolor;
   }
 }

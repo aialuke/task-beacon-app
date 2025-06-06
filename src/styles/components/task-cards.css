@@ -1,88 +1,20 @@
-
-/* src/styles/components/task-cards.css - Consolidated task card styles */
 @layer components {
-  /* Main task card class - single source of truth for all styling */
-  .task-card {
-    /* Base card styling using Tailwind utilities */
-    @apply bg-card text-card-foreground border border-border shadow-sm;
-    @apply transition-all duration-200 hover:shadow-md cursor-pointer;
-    @apply mb-4 w-full rounded-xl; /* Use Tailwind's rounded-xl directly */
-    
-    /* Use CSS variables for consistent styling - remove duplicate border-radius */
-    padding: var(--card-padding);
-    box-shadow: var(--card-shadow);
-    
-    /* Ensure proper box model */
-    box-sizing: border-box;
-    max-width: 100%;
-    
-    /* Performance optimizations */
-    contain: layout style;
-    will-change: transform, box-shadow;
-  }
-
-  /* Hover state enhancement */
-  .task-card:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateY(-1px);
-  }
-
-  /* Task-specific animations using unified system */
-  .task-card-enter {
-    @apply animate-fade-in;
-  }
-
-  .task-card-exit {
-    @apply animate-fade-out;
-  }
-
-  /* Task-specific indicators */
-  .task-card-status-indicator {
-    @apply absolute left-0 top-0 h-full w-1;
-    border-radius: var(--radius) 0 0 var(--radius);
-  }
-
-  /* Priority indicators using border classes - remove conflicting styles */
-  .task-card-priority-high {
-    @apply border-l-4 border-l-destructive;
-  }
-
-  .task-card-priority-medium {
-    @apply border-l-4 border-l-primary;
-  }
-
-  .task-card-priority-low {
-    @apply border-l-4 border-l-success;
-  }
-
-  /* Expanded state styling */
-  .task-card.expanded {
-    transform: scale(1.02);
-    box-shadow: var(--shadow-lg);
-    z-index: 10;
-  }
-
-  /* Status color utilities - keep these as they use CSS variables */
+  /* Status classes using CSS variables */
   .status-pending {
     color: var(--status-pending);
   }
-
   .status-overdue {
     color: var(--status-overdue);
   }
-
   .status-complete {
     color: var(--status-complete);
   }
-
   .status-bg-pending {
     background-color: var(--status-pending);
   }
-
   .status-bg-overdue {
     background-color: var(--status-overdue);
   }
-
   .status-bg-complete {
     background-color: var(--status-complete);
   }
