@@ -51,47 +51,47 @@
   --status-complete: #059669; /* Green #059669 - 4.5:1 contrast */
 }
 
-/* ===== DARK MODE COLORS - NEUTRAL GRAYS ===== */
+/* ===== DARK MODE COLORS - DARKER BACKGROUND WITH WHITE BORDERS ===== */
 
 .dark,
 :root.dark {
-  /* Dark mode background and surfaces - Pure grays */
-  --background: 0 0% 6.7%; /* Very dark gray #111111 (gray-900 equivalent) */
-  --foreground: 0 0% 98%; /* Near white #FAFAFA - excellent contrast */
-  --card: 0 0% 12.2%; /* Dark gray #1F1F1F (gray-800 equivalent) */
-  --card-foreground: 0 0% 98%; /* Near white #FAFAFA */
+  /* Dark mode background and surfaces - Much darker background */
+  --background: 0 0% 3%; /* Almost black background #080808 */
+  --foreground: 0 0% 100%; /* Pure white #FFFFFF - maximum contrast */
+  --card: 0 0% 12.2%; /* Dark gray #1F1F1F (keeps current card color) */
+  --card-foreground: 0 0% 100%; /* Pure white #FFFFFF */
   --popover: 0 0% 12.2%; /* Dark gray #1F1F1F */
-  --popover-foreground: 0 0% 98%; /* Near white #FAFAFA */
+  --popover-foreground: 0 0% 100%; /* Pure white #FFFFFF */
 
   /* Primary colors adjusted for dark mode */
   --primary: 225 77% 70%; /* Brighter blue for dark mode - better contrast */
-  --primary-foreground: 0 0% 6.7%; /* Very dark gray #111111 */
+  --primary-foreground: 0 0% 3%; /* Almost black #080808 */
 
   /* Secondary and muted colors - neutral grays */
   --secondary: 0 0% 18.8%; /* Dark gray #303030 (gray-700 equivalent) */
-  --secondary-foreground: 0 0% 98%; /* Near white #FAFAFA */
+  --secondary-foreground: 0 0% 100%; /* Pure white #FFFFFF */
   --muted: 0 0% 18.8%; /* Dark gray #303030 */
-  --muted-foreground: 0 0% 63.9%; /* Light gray #A3A3A3 - 4.5:1 contrast */
+  --muted-foreground: 0 0% 70%; /* Light gray #B3B3B3 - good contrast */
 
   /* Accent colors */
   --accent: 0 0% 18.8%; /* Dark gray #303030 */
-  --accent-foreground: 0 0% 98%; /* Near white #FAFAFA */
+  --accent-foreground: 0 0% 100%; /* Pure white #FFFFFF */
   --accent-yellow: 51 100% 70%; /* Brighter yellow #FFE666 */
 
   /* Status colors - enhanced for dark mode visibility */
   --destructive: 351 83% 63%; /* Lighter red #E55D73 - 4.5:1 contrast */
-  --destructive-foreground: 0 0% 98%; /* Near white #FAFAFA */
+  --destructive-foreground: 0 0% 100%; /* Pure white #FFFFFF */
   --success: 152 76% 50%; /* Brighter green #10D175 - 4.5:1 contrast */
-  --success-foreground: 0 0% 98%; /* Near white #FAFAFA */
+  --success-foreground: 0 0% 100%; /* Pure white #FFFFFF */
 
-  /* Enhanced borders for dark mode - more visible */
-  --border: 0 0% 25.5%; /* Visible gray border #414141 (gray-600 equivalent) */
-  --input: 0 0% 18.8%; /* Dark input background #303030 */
+  /* WHITE BORDERS for maximum contrast */
+  --border: 0 0% 100%; /* Pure white borders #FFFFFF */
+  --input: 0 0% 12.2%; /* Dark input background #1F1F1F */
   --ring: 225 77% 70%; /* Primary color for focus rings */
 
   /* Surface colors */
   --surface: 0 0% 12.2%; /* Dark surface #1F1F1F */
-  --surface-foreground: 0 0% 98%; /* Near white #FAFAFA */
+  --surface-foreground: 0 0% 100%; /* Pure white #FFFFFF */
   --brand-light: 225 77% 15%; /* Dark brand light #1A2332 */
 
   /* Task status colors for dark mode - enhanced visibility */
