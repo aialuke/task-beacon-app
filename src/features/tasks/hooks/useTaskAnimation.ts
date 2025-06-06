@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 export interface TaskAnimationState {
   height: SpringValue<number>;
   opacity: SpringValue<number>;
+  animationPhase: "enter" | "exit" | "";
 }
 
 export function useTaskAnimation(contentRef: React.RefObject<HTMLDivElement>) {
@@ -49,7 +50,10 @@ export function useTaskAnimation(contentRef: React.RefObject<HTMLDivElement>) {
   return {
     isExpanded,
     toggleExpanded,
-    animationState: animationProps,
+    animationState: {
+      ...animationProps,
+      animationPhase,
+    },
     animationPhase,
   };
 }

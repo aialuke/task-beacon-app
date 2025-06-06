@@ -14,6 +14,7 @@ import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
 
 export default function TaskDashboard() {
   const { isMobile } = useTaskUIContext();
+  console.log("isMobile:", isMobile); // Debug log
 
   return (
     <div className="min-h-screen bg-background">
