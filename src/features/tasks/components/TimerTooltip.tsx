@@ -1,7 +1,9 @@
-
-import { TooltipContent, TooltipArrow } from '@/components/ui/tooltip';
-import type { TaskStatus } from '@/types';
-import { getStatusTooltipClass, getTooltipArrowClass } from '@/features/tasks/utils/taskUiUtils';
+import { TooltipContent, TooltipArrow } from "@/components/ui/tooltip";
+import type { TaskStatus } from "@/types";
+import {
+  getStatusTooltipClass,
+  getTooltipArrowClass,
+} from "@/features/tasks/utils/taskUiUtils";
 
 interface TimerTooltipProps {
   tooltipContent: string;
@@ -12,7 +14,9 @@ const TimerTooltip = ({ tooltipContent, status }: TimerTooltipProps) => {
   return (
     <TooltipContent
       id="timer-tooltip"
-      className={`z-50 px-5 py-3 text-lg shadow-xl ${getStatusTooltipClass(status)}`}
+      className={`z-50 px-5 py-3 text-lg shadow-xl ${getStatusTooltipClass(
+        status
+      )}`}
       side="top"
       sideOffset={10}
     >
