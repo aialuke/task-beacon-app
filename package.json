@@ -23,7 +23,7 @@
     "test:ci": "vitest run --coverage --reporter=junit --outputFile=test-results.xml --pool=forks --maxConcurrency=1 --maxWorkers=1",
     "analyze": "knip",
     "analyze:fix": "knip --fix",
-    "purge:audit": "postcss src/index.css -o purged.css --config postcss.purge.js"
+    "purge:audit": "postcss src/index.css -o purged.css --config postcss.purge.js && npx stylelint \"src/styles/{architecture,tokens,components,base,utilities}/*.css\" \"src/styles/utilities/{accessibility,animations}/*.css\" --fix --verbose --output-file stylelint-report-final5.json"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.0",

@@ -1,8 +1,13 @@
-
-import { memo } from 'react';
-import { ClockFading, ClockAlert, CircleCheckBig, Users } from 'lucide-react';
-import { SimpleNavbar } from '@/components/ui/simple-navbar';
-import type { TaskFilter } from '@/types';
+import { memo } from "react";
+import {
+  ClockFading,
+  ClockAlert,
+  CircleCheckBig,
+  Users,
+  LucideIcon,
+} from "lucide-react";
+import { SimpleNavbar } from "@/components/ui/simple-navbar";
+import type { TaskFilter } from "@/types";
 
 interface TaskFilterNavbarProps {
   filter: TaskFilter;
@@ -12,7 +17,7 @@ interface TaskFilterNavbarProps {
 interface FilterItem {
   name: string;
   value: TaskFilter;
-  icon: React.ComponentType<any>;
+  icon: LucideIcon;
 }
 
 function TaskFilterNavbarComponent({
@@ -20,17 +25,17 @@ function TaskFilterNavbarComponent({
   onFilterChange,
 }: TaskFilterNavbarProps) {
   const filters: FilterItem[] = [
-    { name: 'Current', value: 'all', icon: ClockFading },
-    { name: 'Overdue', value: 'overdue', icon: ClockAlert },
-    { name: 'Assigned', value: 'assigned', icon: Users },
-    { name: 'Complete', value: 'complete', icon: CircleCheckBig },
+    { name: "Current", value: "all", icon: ClockFading },
+    { name: "Overdue", value: "overdue", icon: ClockAlert },
+    { name: "Assigned", value: "assigned", icon: Users },
+    { name: "Complete", value: "complete", icon: CircleCheckBig },
   ];
 
-  // Convert to SimpleNavbar format with proper typing
-  const navItems = filters.map(f => ({
+  // Convert to SimpleNavbar format
+  const navItems = filters.map((f) => ({
     name: f.name,
     value: f.value as string,
-    icon: f.icon as any, // Type assertion to match LucideIcon requirement
+    icon: f.icon,
   }));
 
   const handleItemChange = (value: string) => {

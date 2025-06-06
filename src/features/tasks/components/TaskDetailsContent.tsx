@@ -1,50 +1,62 @@
-import { memo } from "react";
-import { Task } from "@/types";
-import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
-import TaskActions from "./TaskActions";
-import TaskMetadata from "./TaskMetadata";
-import ParentTaskInfo from "./ParentTaskInfo";
+import { Calendar1, ExternalLink } from "lucide-react";
+import { formatDate } from "@/lib/utils/shared";
 import { TaskImageGallery } from "./TaskImageGallery";
+import { ParentTaskReference } from "@/components/form/ParentTaskReference";
+import { TaskActions } from "./TaskActions";
+import { getTaskStatus } from "../utils/taskUiUtils";
+import { useNavigate } from "react-router-dom";
+import type { Task } from "@/types";
 
 interface TaskDetailsContentProps {
   task: Task;
 }
 
-function TaskDetailsContent({ task }: TaskDetailsContentProps) {
-  const { isMobile } = useTaskUIContext();
-
-  // Check if photo should be rendered - handle both null and string values properly
-  const shouldRenderPhoto =
-    task.photo_url &&
-    typeof task.photo_url === "string" &&
-    task.photo_url.trim() !== "";
+export default function TaskDetailsContent({ task }: TaskDetailsContentProps) {
+  const navigate = useNavigate();
+  const status = getTaskStatus(task);
 
   return (
-    <div
-      className={`space-y-3 ${isMobile ? "pb-4 pl-4 pt-2" : "pb-4 pl-6 pt-2"}`}
-      style={{ height: "auto", overflowY: "hidden" }}
-    >
-      {task.description && (
-        <div className="text-sm text-muted-foreground">{task.description}</div>
+    <div className="space-y-4 rounded-xl">
+      <div className="flex items-start gap-3">
+        {task.description && (
+          <p className="text-sm text-muted-foreground">{task.description}</p>
+        )}
+      </div>
+
+      <div className="border-t pt-4">
+        <div className="mb-3 flex items-center gap-3">
+          <Calendar1 className="h-4 w-4 text-muted-foreground" />
+          <span className="text-sm text-muted-foreground">
+            {task.due_date ? formatDate(task.due_date) : "No due date"}
+          </span>
+        </div>
+
+        {task.url_link && (
+          <div className="mb-3 flex items-center gap-2">
+            <ExternalLink className="h-4 w-4 text-primary" />
+            <a
+              href={task.url_link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 text-sm text-primary hover:underline"
+            >
+              {task.url_link}
+            </a>
+          </div>
+        )}
+      </div>
+
+      <TaskImageGallery task={task} className="border-t pt-4" />
+
+      {task.parent_task && (
+        <div className="border-t pt-4">
+          <ParentTaskReference parentTask={task.parent_task} />
+        </div>
       )}
 
-      <TaskMetadata dueDate={task.due_date} url={task.url_link} />
-
-      {task.parent_task && task.parent_task_id && (
-        <ParentTaskInfo
-          parentTask={{
-            ...task.parent_task,
-            status: "pending", // Default status since parent_task doesn't include status
-          }}
-          parentTaskId={task.parent_task_id}
-        />
-      )}
-
-      {shouldRenderPhoto && <TaskImageGallery task={task} />}
-
-      <TaskActions task={task} />
+      <div className="border-t pt-4">
+        <TaskActions task={task} onView={() => navigate(`/tasks/${task.id}`)} />
+      </div>
     </div>
   );
 }
-
-export default memo(TaskDetailsContent);
