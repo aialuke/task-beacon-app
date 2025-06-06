@@ -35,7 +35,7 @@
   --success: 152 76% 36%; /* Green #059669 - 4.5:1 contrast on white */
   --success-foreground: 0 0% 98%; /* Near white #FAFAFA */
 
-  /* Border and input colors */
+  /* Border and input colors - Updated for consistency */
   --border: 240 5.9% 90%; /* Light border #E5E7EB */
   --input: 240 5.9% 90%; /* Light input border #E5E7EB */
   --ring: 225 77% 60%; /* Primary blue for focus rings */
@@ -51,7 +51,7 @@
   --status-complete: #059669; /* Green #059669 - 4.5:1 contrast */
 }
 
-/* ===== DARK MODE COLORS - UPDATED PERCENTAGES ===== */
+/* ===== DARK MODE COLORS - UPDATED WITH WHITE BORDERS ===== */
 
 .dark,
 :root.dark {
@@ -84,9 +84,9 @@
   --success: 152 76% 50%; /* Brighter green #10D175 - 4.5:1 contrast */
   --success-foreground: 0 0% 100%; /* Pure white #FFFFFF */
 
-  /* WHITE BORDERS for maximum contrast */
-  --border: 0 0% 100%; /* Pure white borders #FFFFFF */
-  --input: 0 0% 10%; /* Surfaces at 10% */
+  /* WHITE BORDERS for maximum contrast - THEME DEFAULT */
+  --border: 0 0% 100%; /* Pure white borders #FFFFFF - now default for all components */
+  --input: 0 0% 100%; /* Pure white input borders #FFFFFF */
   --ring: 225 77% 70%; /* Primary color for focus rings */
 
   /* Surface colors */
@@ -120,7 +120,7 @@
   --accent-foreground: 240 5.9% 10%;
   --destructive: 351 83% 48%;
   --destructive-foreground: 0 0% 98%;
-  --border: 240 5.9% 90%;
+  --border: 240 5.9% 90%; /* Light mode borders remain gray */
   --input: 240 5.9% 90%;
   --ring: 225 77% 60%;
   --surface: 0 0% 100%;
