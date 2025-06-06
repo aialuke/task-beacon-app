@@ -1,10 +1,20 @@
 /* src/styles/base.css - Consolidated base styles imports */
 
 /* Import design system tokens first */
-@import './tokens/colors.css';
-@import './tokens/design-tokens.css';
+@import "./tokens/colors.css";
+@import "./tokens/design-tokens.css";
 
 /* Import base styles in dependency order */
-@import './base/reset.css';
-@import './base/typography.css';
-@import './base/accessibility.css';
+@import "./base/reset.css";
+@import "./base/typography.css";
+@import "./base/accessibility.css";
+
+/* Import component styles */
+@import "./components/unified-components.css";
+@import "./components/task-cards.css";
+@import "./components/virtualized-tasks.css";
+@import "./components/avatars.css";
+@import "./components/timer.css";
+
+/* Import utility styles last */
+@import "./utilities.css";

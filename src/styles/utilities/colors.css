@@ -1,8 +1,10 @@
 /* src/styles/utilities/colors.css */
+
 @layer utilities {
   /* Enhanced color utilities with improved contrast and accessibility */
 
   /* Status Colors */
+
   .text-warning {
     color: hsl(var(--warning));
   }
@@ -16,6 +18,7 @@
   }
 
   /* Success Colors */
+
   .text-success {
     color: hsl(var(--success));
   }
@@ -29,6 +32,7 @@
   }
 
   /* Error/Destructive Colors */
+
   .text-error {
     color: hsl(var(--destructive));
   }
@@ -42,6 +46,7 @@
   }
 
   /* Accent Colors */
+
   .text-accent-blue {
     color: hsl(var(--accent-blue));
   }
@@ -59,6 +64,7 @@
   }
 
   /* Glass Effect Colors */
+
   .bg-glass {
     background-color: hsl(var(--background) / 80%);
     backdrop-filter: blur(8px);
@@ -70,6 +76,7 @@
   }
 
   /* Gradient Text */
+
   .text-gradient-primary {
     background: linear-gradient(
       135deg,
@@ -91,6 +98,7 @@
   }
 
   /* Interactive Color States */
+
   .hover-accent:hover {
     color: hsl(var(--accent-blue));
     transition: color 0.2s ease-in-out;
@@ -102,6 +110,7 @@
   }
 
   /* Focus ring colors */
+
   .focus-ring-primary:focus {
     outline: 2px solid hsl(var(--primary));
     outline-offset: 2px;
@@ -114,6 +123,7 @@
 }
 
 /* CSS Variables for warning color fallback */
+
 :root {
   --warning: 38 92% 50%; /* Orange/amber color */
   --success: 152 76% 36%; /* Green color */
