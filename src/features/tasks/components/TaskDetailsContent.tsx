@@ -2,13 +2,17 @@ import { Calendar1, ExternalLink } from "lucide-react";
 import { formatDate } from "@/lib/utils/shared";
 import { TaskImageGallery } from "./TaskImageGallery";
 import { ParentTaskReference } from "@/components/form/ParentTaskReference";
-import TaskActions from "./TaskActions"; // Updated import
+import TaskActions from "./TaskActions";
 import { getTaskStatus } from "../utils/taskUiUtils";
 import { useNavigate } from "react-router-dom";
 import type { Task } from "@/types";
 
+interface TaskWithPartialRelations extends Omit<Task, "parent_task"> {
+  parent_task?: Pick<Task, "id" | "title" | "description" | "url_link">;
+}
+
 interface TaskDetailsContentProps {
-  task: Task;
+  task: TaskWithPartialRelations;
 }
 
 export default function TaskDetailsContent({ task }: TaskDetailsContentProps) {

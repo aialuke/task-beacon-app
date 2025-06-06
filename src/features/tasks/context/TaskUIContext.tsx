@@ -1,4 +1,3 @@
-
 import {
   createContext,
   useContext,
@@ -6,8 +5,8 @@ import {
   useEffect,
   useMemo,
   ReactNode,
-} from 'react';
-import { TaskFilter } from '../types';
+} from "react";
+import { TaskFilter } from "../types";
 
 // Define the shape of our UI context
 interface TaskUIContextType {
@@ -34,7 +33,7 @@ const TaskUIContext = createContext<TaskUIContextType | undefined>(undefined);
  */
 export function TaskUIContextProvider({ children }: { children: ReactNode }) {
   // UI States
-  const [filter, setFilter] = useState<TaskFilter>('all');
+  const [filter, setFilter] = useState<TaskFilter>("all");
   const [expandedTaskId, setExpandedTaskId] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -45,9 +44,9 @@ export function TaskUIContextProvider({ children }: { children: ReactNode }) {
     };
 
     checkIfMobile();
-    window.addEventListener('resize', checkIfMobile);
+    window.addEventListener("resize", checkIfMobile);
 
-    return () => window.removeEventListener('resize', checkIfMobile);
+    return () => window.removeEventListener("resize", checkIfMobile);
   }, []);
 
   const value = useMemo(
@@ -76,7 +75,7 @@ export function useTaskUIContext() {
   const context = useContext(TaskUIContext);
   if (context === undefined) {
     throw new Error(
-      'useTaskUIContext must be used within a TaskUIContextProvider'
+      "useTaskUIContext must be used within a TaskUIContextProvider"
     );
   }
   return context;

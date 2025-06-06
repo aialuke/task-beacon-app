@@ -1,11 +1,10 @@
-
 // External libraries
-import { useCallback, memo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Trash2 } from 'lucide-react';
+import { useCallback, memo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Trash2 } from "lucide-react";
 
 // Components
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -14,19 +13,20 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 
 // Hooks
-import { useTaskMutations } from '@/features/tasks/hooks/useTaskMutations';
+import { useTaskMutations } from "@/features/tasks/hooks/useTaskMutations";
 
 // Types
-import type { Task } from '@/types';
+import type { Task } from "@/types";
 
 interface TaskActionsProps {
   task: Task;
+  onView: () => void; // Added onView prop
 }
 
-function TaskActions({ task }: TaskActionsProps) {
+function TaskActions({ task, onView }: TaskActionsProps) {
   const navigate = useNavigate();
   const { toggleTaskCompleteCallback, deleteTaskCallback } = useTaskMutations();
   const [isDeleting, setIsDeleting] = useState(false);
@@ -65,16 +65,19 @@ function TaskActions({ task }: TaskActionsProps) {
   return (
     <div className="flex flex-wrap gap-2 border-t border-gray-100 pt-2">
       <Button
-        variant={task.status === 'complete' ? 'outline' : 'default'}
+        variant={task.status === "complete" ? "outline" : "default"}
         size="sm"
         onClick={handleToggleComplete}
       >
-        {task.status === 'complete' ? 'Mark Incomplete' : 'Complete'}
+        {task.status === "complete" ? "Mark Incomplete" : "Complete"}
       </Button>
       <Button variant="outline" size="sm" onClick={handleCreateFollowUp}>
         Follow Up
       </Button>
-      
+      <Button variant="outline" size="sm" onClick={onView}>
+        View Details
+      </Button>
+
       {/* Delete button inline with other buttons */}
       <div className="ml-auto">
         <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
@@ -92,7 +95,8 @@ function TaskActions({ task }: TaskActionsProps) {
             <DialogHeader>
               <DialogTitle>Delete Task</DialogTitle>
               <DialogDescription>
-                Are you sure you want to delete "{task.title}"? This action cannot be undone.
+                Are you sure you want to delete "{task.title}"? This action
+                cannot be undone.
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>
@@ -108,7 +112,7 @@ function TaskActions({ task }: TaskActionsProps) {
                 onClick={handleDelete}
                 disabled={isDeleting}
               >
-                {isDeleting ? 'Deleting...' : 'Delete'}
+                {isDeleting ? "Deleting..." : "Delete"}
               </Button>
             </DialogFooter>
           </DialogContent>

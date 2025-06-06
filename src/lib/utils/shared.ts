@@ -1,7 +1,6 @@
-
 /**
  * Shared Utility Module - Standardized Import Patterns
- * 
+ *
  * This module consolidates commonly used utility functions from across the codebase
  * to eliminate duplication and provide a single source of truth for shared logic.
  */
@@ -16,9 +15,9 @@ export {
   truncateUrl,
   formatFileSize,
   formatPercentage,
-} from './format';
+} from "./format";
 
-// Re-export date utilities  
+// Re-export date utilities
 export {
   formatDate,
   getDaysRemaining,
@@ -28,14 +27,10 @@ export {
   getTooltipContent,
   formatTimeDisplay,
   getUpdateInterval,
-} from './date';
+} from "./date";
 
 // Re-export core utilities
-export {
-  generateUUID,
-  debounce,
-  throttle,
-} from './core';
+export { generateUUID, debounce, throttle } from "./core";
 
 // Re-export data manipulation utilities
 export {
@@ -46,14 +41,10 @@ export {
   paginateArray,
   isEmpty,
   safeJsonParse,
-} from './data';
+} from "./data";
 
 // Re-export UI utilities
-export {
-  cn,
-  isElementInViewport,
-  isDarkMode,
-} from './ui';
+export { cn, isElementInViewport, isDarkMode } from "./ui";
 
 // Re-export validation functions
 export {
@@ -67,4 +58,4 @@ export {
   validateField,
   validateForm,
   type ValidationResult,
-} from './validation';
+} from "./validation";

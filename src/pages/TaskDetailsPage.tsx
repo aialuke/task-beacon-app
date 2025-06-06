@@ -1,16 +1,19 @@
-
-import { useParams, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { ArrowLeft, Calendar1, ExternalLink } from 'lucide-react';
-import { formatDate } from '@/lib/utils/shared';
-import { lazy, Suspense } from 'react';
-import { getTaskStatus } from '@/features/tasks/utils/taskUiUtils';
-import UnifiedLoadingStates from '@/components/ui/loading/UnifiedLoadingStates';
-import { useTaskQuery } from '@/features/tasks/hooks/useTaskQuery';
+import { useParams, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, Calendar1, ExternalLink } from "lucide-react";
+import { formatDate } from "@/lib/utils/shared";
+import { lazy, Suspense } from "react";
+import { getTaskStatus } from "@/features/tasks/utils/taskUiUtils";
+import UnifiedLoadingStates from "@/components/ui/loading/UnifiedLoadingStates";
+import { useTaskQuery } from "@/features/tasks/hooks/useTaskQuery";
 
 // Lazy load heavy components for better performance
-const CountdownTimer = lazy(() => import('@/features/tasks/components/CountdownTimer'));
-const TaskActions = lazy(() => import('@/features/tasks/components/TaskActions'));
+const CountdownTimer = lazy(
+  () => import("@/features/tasks/components/CountdownTimer")
+);
+const TaskActions = lazy(
+  () => import("@/features/tasks/components/TaskActions")
+);
 
 const TaskDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -18,7 +21,9 @@ const TaskDetailsPage = () => {
   const { task, loading, error } = useTaskQuery(id);
 
   if (loading) {
-    return <UnifiedLoadingStates variant="page" message="Loading task details..." />;
+    return (
+      <UnifiedLoadingStates variant="page" message="Loading task details..." />
+    );
   }
 
   if (error || !task) {
@@ -33,7 +38,7 @@ const TaskDetailsPage = () => {
           <ArrowLeft size={16} className="mr-2" /> Back
         </Button>
         <div className="rounded-lg bg-red-50 p-4 text-red-600">
-          {error || 'Task not found'}
+          {error || "Task not found"}
         </div>
       </div>
     );
@@ -55,7 +60,9 @@ const TaskDetailsPage = () => {
       <div className="space-y-6 rounded-xl bg-white p-6 shadow-sm">
         <div className="flex items-start gap-4">
           <div className="shrink-0">
-            <Suspense fallback={<UnifiedLoadingStates variant="spinner" size="lg" />}>
+            <Suspense
+              fallback={<UnifiedLoadingStates variant="spinner" size="lg" />}
+            >
               <CountdownTimer dueDate={task.due_date} status={status} />
             </Suspense>
           </div>
@@ -71,7 +78,7 @@ const TaskDetailsPage = () => {
           <div className="mb-3 flex items-center gap-3">
             <Calendar1 size={18} className="text-gray-500" />
             <span>
-              {task.due_date ? formatDate(task.due_date) : 'No due date'}
+              {task.due_date ? formatDate(task.due_date) : "No due date"}
             </span>
           </div>
 
@@ -82,7 +89,7 @@ const TaskDetailsPage = () => {
                 href={task.url_link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-primary hover:underline"
+                className="flex items-center gap-1 text-primary hover:underline"
               >
                 {task.url_link}
               </a>
@@ -125,7 +132,9 @@ const TaskDetailsPage = () => {
         )}
 
         <div className="border-t pt-4">
-          <Suspense fallback={<UnifiedLoadingStates variant="skeleton" count={2} />}>
+          <Suspense
+            fallback={<UnifiedLoadingStates variant="skeleton" count={2} />}
+          >
             <TaskActions task={task} />
           </Suspense>
         </div>

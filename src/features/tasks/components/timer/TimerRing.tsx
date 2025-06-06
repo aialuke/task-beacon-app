@@ -1,20 +1,7 @@
-import { memo, useMemo } from 'react';
-import { animated, SpringValue } from '@react-spring/web';
-import { TaskStatus } from '@/types';
+import { memo, useMemo } from "react";
+import { animated, SpringValue } from "@react-spring/web";
+import { TaskStatus } from "@/types";
 
-/**
- * TimerRing Component
- *
- * Renders the circular progress indicator for the countdown timer with the appropriate
- * styling based on task status. Uses SVG with gradients and filters for visual effects.
- *
- * @param size - The diameter of the timer ring in pixels
- * @param radius - The radius of the timer ring in pixels
- * @param circumference - The circumference of the timer ring
- * @param strokeDashoffset - The animated stroke dash offset value
- * @param status - The current status of the task
- * @param daysRemaining - The number of days remaining for the task
- */
 export interface TimerRingProps {
   size: number;
   radius: number;
@@ -24,8 +11,6 @@ export interface TimerRingProps {
   daysRemaining: number | null;
 }
 
-// Define gradients once outside the component to avoid recreating them on each render
-// This is moved to a separate component and memoized to prevent re-renders
 const GradientDefs = memo(() => (
   <defs>
     <linearGradient id="gradientPending" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -40,26 +25,20 @@ const GradientDefs = memo(() => (
       <stop offset="0%" stopColor="#10B981" />
       <stop offset="100%" stopColor="#34D399" />
     </linearGradient>
-
-    {/* Add filters for glow effects */}
     <filter id="glowOverdue" x="-20%" y="-20%" width="140%" height="140%">
       <feGaussianBlur stdDeviation="2" result="blur" />
       <feComposite in="SourceGraphic" in2="blur" operator="over" />
     </filter>
-
     <filter id="glowPending" x="-20%" y="-20%" width="140%" height="140%">
       <feGaussianBlur stdDeviation="1" result="blur" />
       <feComposite in="SourceGraphic" in2="blur" operator="over" />
     </filter>
-
     <filter id="glowComplete" x="-20%" y="-20%" width="140%" height="140%">
       <feGaussianBlur stdDeviation="1.5" result="blur" />
       <feComposite in="SourceGraphic" in2="blur" operator="over" />
     </filter>
   </defs>
 ));
-
-GradientDefs.displayName = 'GradientDefs';
 
 const TimerRing = ({
   size,
@@ -69,30 +48,24 @@ const TimerRing = ({
   status,
   daysRemaining,
 }: TimerRingProps) => {
-  // Memoize derived values that don't need to be recalculated on every render
   const staticProps = useMemo(() => {
     let gradientId: string;
-    
-    // Use green for tasks with 5+ days remaining
-    if (status === 'pending' && daysRemaining !== null && daysRemaining >= 5) {
-      gradientId = 'url(#gradientComplete)'; // Reuse green gradient
-    } else if (status === 'pending') {
-      gradientId = 'url(#gradientPending)'; // Yellow for < 5 days
-    } else if (status === 'overdue') {
-      gradientId = 'url(#gradientOverdue)'; // Red for overdue
+    if (status === "pending" && daysRemaining !== null && daysRemaining >= 5) {
+      gradientId = "url(#gradientComplete)";
+    } else if (status === "pending") {
+      gradientId = "url(#gradientPending)";
+    } else if (status === "overdue") {
+      gradientId = "url(#gradientOverdue)";
     } else {
-      gradientId = 'url(#gradientComplete)'; // Green for complete
+      gradientId = "url(#gradientComplete)";
     }
-
     const filterId =
-      status === 'overdue'
-        ? 'url(#glowOverdue)'
-        : status === 'complete'
-          ? 'url(#glowComplete)'
-          : 'url(#glowPending)';
-
-    const strokeWidth = status === 'overdue' ? '5px' : '4px';
-
+      status === "overdue"
+        ? "url(#glowOverdue)"
+        : status === "complete"
+        ? "url(#glowComplete)"
+        : "url(#glowPending)";
+    const strokeWidth = status === "overdue" ? "5px" : "4px";
     return { gradientId, filterId, strokeWidth };
   }, [status, daysRemaining]);
 
@@ -101,15 +74,11 @@ const TimerRing = ({
       width={size}
       height={size}
       viewBox={`0 0 ${size} ${size}`}
-      style={{
-        overflow: 'visible',
-      }}
+      style={{ overflow: "visible" }}
       className="timer-ring"
-      aria-hidden="true" // Mark as decorative for accessibility
+      aria-hidden="true"
     >
       <GradientDefs />
-
-      {/* Background circle */}
       <circle
         cx={size / 2}
         cy={size / 2}
@@ -117,10 +86,8 @@ const TimerRing = ({
         fill="none"
         strokeWidth="2.5"
         stroke="#F9FAFB"
-        style={{ strokeWidth: '2.5px' }}
+        style={{ strokeWidth: "2.5px" }}
       />
-
-      {/* Animated foreground circle */}
       <animated.circle
         cx={size / 2}
         cy={size / 2}
@@ -141,7 +108,6 @@ const TimerRing = ({
   );
 };
 
-// Use React.memo with a custom equality function to prevent unnecessary re-renders
 export default memo(TimerRing, (prevProps, nextProps) => {
   return (
     prevProps.size === nextProps.size &&
@@ -149,10 +115,9 @@ export default memo(TimerRing, (prevProps, nextProps) => {
     prevProps.circumference === nextProps.circumference &&
     prevProps.status === nextProps.status &&
     prevProps.daysRemaining === nextProps.daysRemaining &&
-    // For the strokeDashoffset, we need special handling since it might be a SpringValue
     (prevProps.strokeDashoffset === nextProps.strokeDashoffset ||
-      (typeof prevProps.strokeDashoffset === 'number' &&
-        typeof nextProps.strokeDashoffset === 'number' &&
+      (typeof prevProps.strokeDashoffset === "number" &&
+        typeof nextProps.strokeDashoffset === "number" &&
         prevProps.strokeDashoffset === nextProps.strokeDashoffset))
   );
 });

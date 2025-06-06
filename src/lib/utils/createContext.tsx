@@ -1,22 +1,22 @@
-import React, { createContext, useContext, ReactNode } from 'react';
+import React, { createContext, useContext, ReactNode } from "react";
 
 interface CreateContextOptions<T> {
   /**
    * The display name for the context (used in DevTools and error messages)
    */
   name: string;
-  
+
   /**
    * Whether to throw an error when the hook is used outside the provider
    * @default true
    */
   strict?: boolean;
-  
+
   /**
    * Default value for non-strict mode
    */
   defaultValue?: T;
-  
+
   /**
    * Custom error message when used outside provider
    */
@@ -28,7 +28,7 @@ interface ContextReturn<T> {
    * The React context
    */
   Context: React.Context<T | undefined>;
-  
+
   /**
    * Provider component
    */
@@ -36,7 +36,7 @@ interface ContextReturn<T> {
     children: ReactNode;
     value: T;
   }>;
-  
+
   /**
    * Hook to access context value
    */
@@ -45,37 +45,37 @@ interface ContextReturn<T> {
 
 /**
  * Standardized context creation utility
- * 
+ *
  * Provides consistent patterns for:
  * - Context creation with proper error handling
  * - Provider components with proper display names
  * - Hooks with validation and error messages
  * - Optional strict/non-strict modes
- * 
+ *
  * @example
  * ```tsx
  * interface AuthContextValue {
  *   user: User | null;
  *   login: (email: string, password: string) => Promise<void>;
  * }
- * 
+ *
  * const { Provider: AuthProvider, useContext: useAuth } = createStandardContext<AuthContextValue>({
  *   name: 'Auth',
  *   errorMessage: 'useAuth must be used within AuthProvider'
  * });
- * 
+ *
  * // Usage
  * function MyAuthProvider({ children }: { children: ReactNode }) {
  *   const [user, setUser] = useState(null);
  *   const login = async (email, password) => { ... };
- *   
+ *
  *   return (
  *     <AuthProvider value={{ user, login }}>
  *       {children}
  *     </AuthProvider>
  *   );
  * }
- * 
+ *
  * function SomeComponent() {
  *   const { user, login } = useAuth();
  *   // ...
@@ -85,12 +85,7 @@ interface ContextReturn<T> {
 export function createStandardContext<T>(
   options: CreateContextOptions<T>
 ): ContextReturn<T> {
-  const {
-    name,
-    strict = true,
-    defaultValue,
-    errorMessage,
-  } = options;
+  const { name, strict = true, defaultValue, errorMessage } = options;
 
   // Create the context with undefined as initial value
   const Context = createContext<T | undefined>(undefined);
@@ -103,9 +98,7 @@ export function createStandardContext<T>(
     children: ReactNode;
     value: T;
   }> = ({ children, value }) => (
-    <Context.Provider value={value}>
-      {children}
-    </Context.Provider>
+    <Context.Provider value={value}>{children}</Context.Provider>
   );
 
   // Set display name for Provider
@@ -117,8 +110,8 @@ export function createStandardContext<T>(
 
     // Handle strict mode (default)
     if (strict && context === undefined) {
-      const message = errorMessage || 
-        `use${name} must be used within a ${name}Provider`;
+      const message =
+        errorMessage || `use${name} must be used within a ${name}Provider`;
       throw new Error(message);
     }
 
@@ -140,4 +133,4 @@ export function createStandardContext<T>(
     Provider,
     useContext: useContextHook,
   };
-} 
+}

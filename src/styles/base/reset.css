@@ -3,6 +3,7 @@
 
 @layer base {
   /* Only reset what's absolutely necessary, without conflicting with Tailwind utilities */
+
   html {
     box-sizing: border-box;
   }
@@ -14,6 +15,7 @@
   }
 
   /* Remove default margins only where needed */
+
   body,
   h1, h2, h3, h4, h5, h6,
   p, blockquote, pre,
@@ -24,16 +26,19 @@
   }
 
   /* Remove default padding only where needed */
+
   dd, ol, ul {
     padding: 0;
   }
 
   /* Remove list styles */
+
   ol, ul {
     list-style: none;
   }
 
   /* Improve text rendering */
+
   body {
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
@@ -41,17 +46,20 @@
   }
 
   /* Improve media defaults */
+
   img, picture, video, canvas, svg {
     display: block;
     max-width: 100%;
   }
 
   /* Improve form defaults */
+
   input, button, textarea, select {
     font: inherit;
   }
 
   /* More targeted button reset - only for unstyled buttons */
+
   button:not([class]) {
     background: none;
     border: none;
@@ -60,6 +68,7 @@
   }
 
   /* Reset only default browser button styles, not styled buttons */
+
   button[type="button"]:not([class]),
   button[type="reset"]:not([class]),
   button[type="submit"]:not([class]) {
@@ -69,11 +78,13 @@
   }
 
   /* Ensure text elements don't break out of containers */
+
   p, h1, h2, h3, h4, h5, h6 {
     overflow-wrap: break-word;
   }
 
   /* Root stacking context for isolation */
+
   #root, #__next {
     isolation: isolate;
   }

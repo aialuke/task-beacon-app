@@ -1,7 +1,9 @@
-
-import { useCallback, useMemo } from 'react';
-import { useOptimizedMemo, useOptimizedCallback } from '@/hooks/useOptimizedMemo';
-import type { Task } from '@/types';
+import { useCallback, useMemo } from "react";
+import {
+  useOptimizedMemo,
+  useOptimizedCallback,
+} from "@/hooks/useOptimizedMemo";
+import type { Task } from "@/types";
 
 interface TaskCardOptimizationOptions {
   enableVirtualization?: boolean;
@@ -11,7 +13,7 @@ interface TaskCardOptimizationOptions {
 
 /**
  * Advanced Task Card Optimization Hook - Phase 4 Implementation
- * 
+ *
  * Provides advanced performance optimizations for task cards including:
  * - Memory management for large lists
  * - Image prefetching for better UX
@@ -19,7 +21,7 @@ interface TaskCardOptimizationOptions {
  * - Intersection observer for lazy loading
  */
 export function useTaskCardOptimization(
-  task: Task, 
+  task: Task,
   options: TaskCardOptimizationOptions = {}
 ) {
   const {
@@ -38,9 +40,9 @@ export function useTaskCardOptimization(
       hasPhoto: !!task.photo_url,
       hasUrl: !!task.url_link,
       hasDescription: !!task.description,
-      isOverdue: task.status === 'overdue',
-      isPending: task.status === 'pending',
-      isComplete: task.status === 'complete',
+      isOverdue: task.status === "overdue",
+      isPending: task.status === "pending",
+      isComplete: task.status === "complete",
     }),
     [
       task.id,
@@ -51,8 +53,8 @@ export function useTaskCardOptimization(
       task.url_link,
       task.description,
     ],
-    { 
-      name: 'task-metadata',
+    {
+      name: "task-metadata",
       warnOnSlowComputation: false,
     }
   );
@@ -62,34 +64,37 @@ export function useTaskCardOptimization(
     () => {
       if (!enableAccessibility) return {};
 
-      const statusText = taskMetadata.isComplete 
-        ? 'completed' 
-        : taskMetadata.isOverdue 
-        ? 'overdue' 
-        : 'pending';
+      const statusText = taskMetadata.isComplete
+        ? "completed"
+        : taskMetadata.isOverdue
+        ? "overdue"
+        : "pending";
 
       return {
-        role: 'article' as const,
-        'aria-label': `Task: ${task.title}, Status: ${statusText}`,
-        'aria-describedby': `task-${task.id}-description`,
-        'aria-live': (taskMetadata.isOverdue ? 'assertive' : 'polite') as 'assertive' | 'polite' | 'off',
+        role: "article" as const,
+        "aria-label": `Task: ${task.title}, Status: ${statusText}`,
+        "aria-describedby": `task-${task.id}-description`,
+        "aria-live": (taskMetadata.isOverdue ? "assertive" : "polite") as
+          | "assertive"
+          | "polite"
+          | "off",
         tabIndex: 0,
       };
     },
     [taskMetadata, task.id, task.title, enableAccessibility],
-    { name: 'accessibility-props' }
+    { name: "accessibility-props" }
   );
 
   // Image prefetching for better performance
   const prefetchImage = useOptimizedCallback(
     () => {
       if (!prefetchImages || !task.photo_url) return;
-      
+
       const img = new Image();
       img.src = task.photo_url;
     },
     [task.photo_url, prefetchImages],
-    { name: 'prefetch-image' }
+    { name: "prefetch-image" }
   );
 
   // Memory-efficient event handlers
@@ -119,17 +124,17 @@ export function useTaskCardOptimization(
       return {
         onKeyDown: (event: React.KeyboardEvent) => {
           // Enhanced keyboard navigation
-          if (event.key === 'Enter' || event.key === ' ') {
+          if (event.key === "Enter" || event.key === " ") {
             event.preventDefault();
             // Focus on first interactive element within card
-            const firstButton = event.currentTarget.querySelector('button');
+            const firstButton = event.currentTarget.querySelector("button");
             firstButton?.focus();
           }
         },
       };
     },
     [enableAccessibility],
-    { name: 'keyboard-handlers' }
+    { name: "keyboard-handlers" }
   );
 
   return {

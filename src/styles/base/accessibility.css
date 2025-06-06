@@ -1,6 +1,7 @@
 /* src/styles/base/accessibility.css - Essential accessibility base styles */
 
 /* High contrast mode support */
+
 @media (forced-colors: active) {
   .timer-ring {
     stroke: CanvasText;
@@ -19,6 +20,7 @@
 }
 
 /* Respect user's motion preferences */
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms;
@@ -29,6 +31,7 @@
 }
 
 /* Color scheme indicators */
+
 .dark {
   color-scheme: dark;
 }

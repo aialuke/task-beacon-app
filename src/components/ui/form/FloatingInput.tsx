@@ -1,7 +1,7 @@
-import { Input } from '@/components/ui/input';
-import { useState, ReactNode } from 'react';
-import { cn } from '@/lib/utils';
-import { AnimatedCharacterCount } from './AnimatedCharacterCount';
+import { Input } from "@/components/ui/input";
+import { useState, ReactNode } from "react";
+import { cn } from "@/lib/utils";
+import { AnimatedCharacterCount } from "./AnimatedCharacterCount";
 
 interface FloatingInputProps {
   id: string;
@@ -18,7 +18,7 @@ interface FloatingInputProps {
 
 export function FloatingInput({
   id,
-  type = 'text',
+  type = "text",
   value,
   onChange,
   label,
@@ -34,13 +34,13 @@ export function FloatingInput({
   const showCounter = maxLength && (isFocused || hasValue);
 
   return (
-    <div className={cn('group relative', className)}>
+    <div className={cn("group relative", className)}>
       <div className="relative">
         {icon && (
           <div
             className={cn(
-              'absolute left-3 top-1/2 z-10 -translate-y-1/2 transform transition-all duration-300',
-              isFloating ? 'scale-95 text-primary' : 'text-muted-foreground'
+              "absolute left-3 top-1/2 z-10 -translate-y-1/2 transform transition-all duration-300",
+              isFloating ? "scale-95 text-primary" : "text-muted-foreground"
             )}
           >
             {icon}
@@ -59,20 +59,20 @@ export function FloatingInput({
           required={required}
           autoFocus={autoFocus}
           className={cn(
-            'peer h-14 rounded-2xl border-border/40 bg-background/60 pb-2 pt-6 backdrop-blur-sm transition-all duration-300 hover:border-border/60 hover:bg-background/70 focus:border-primary/60 focus:bg-background/80 focus:shadow-lg focus:shadow-primary/10',
-            icon ? 'pl-11' : 'pl-4',
-            maxLength ? 'pr-16' : 'pr-4'
+            "peer h-14 rounded-2xl border-border/40 bg-background/60 pb-2 pt-6 backdrop-blur-sm transition-all duration-300 hover:border-border/60 hover:bg-background/70 focus:border-primary/60 focus:bg-background/80 focus:shadow-lg focus:shadow-primary/10",
+            icon ? "pl-11" : "pl-4",
+            maxLength ? "pr-16" : "pr-4"
           )}
         />
 
         <label
           htmlFor={id}
           className={cn(
-            'pointer-events-none absolute select-none font-medium transition-all duration-300',
-            icon ? 'left-11' : 'left-4',
+            "pointer-events-none absolute select-none font-medium transition-all duration-300",
+            icon ? "left-11" : "left-4",
             isFloating
-              ? 'top-2 text-xs text-primary'
-              : 'top-1/2 -translate-y-1/2 text-sm text-muted-foreground'
+              ? "top-2 text-xs text-primary"
+              : "top-1/2 -translate-y-1/2 text-sm text-muted-foreground"
           )}
         >
           {label}
@@ -89,9 +89,9 @@ export function FloatingInput({
       {/* Enhanced focus ring */}
       <div
         className={cn(
-          'pointer-events-none absolute inset-0 rounded-2xl transition-all duration-300',
+          "pointer-events-none absolute inset-0 rounded-2xl transition-all duration-300",
           isFocused &&
-            'ring-2 ring-primary/30 ring-offset-2 ring-offset-background'
+            "ring-2 ring-primary/30 ring-offset-2 ring-offset-background"
         )}
       />
     </div>

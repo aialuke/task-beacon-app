@@ -1,114 +1,81 @@
+/* Import CSS variables and tokens FIRST */
+@import "./styles/architecture/css-variables.css";
+@import "./styles/tokens/colors.css";
+@import "./styles/tokens/design-tokens.css";
+@import "./styles/base.css";
+@import "./styles/components/unified-components.css";
+@import "./styles/components/task-cards.css";
+@import "./styles/components/virtualized-tasks.css";
+@import "./styles/components/avatars.css";
+@import "./styles/components/timer.css";
+@import "./styles/utilities.css";
 
-/* Optimized CSS with minimal imports - Fixed Reset Conflicts */
-
-/* Import Tailwind CSS directives first */
+/* Tailwind directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Import CSS variables and tokens FIRST to ensure availability */
-@import './styles/architecture/css-variables.css';
-@import './styles/tokens/colors.css';
-@import './styles/tokens/design-tokens.css';
-
-/* Import base styles after variables are defined */
-@import './styles/base.css';
-
-/* Import component styles after base and variables */
-@import './styles/components/unified-components.css';
-@import './styles/components/task-cards.css';
-@import './styles/components/virtualized-tasks.css';
-@import './styles/components/forms.css';
-@import './styles/components/buttons.css';
-@import './styles/components/dialogs.css';
-@import './styles/components/avatars.css';
-@import './styles/components/timer.css';
-
-/* Import utility styles last */
-@import './styles/utilities.css';
-
-/* Set dark mode as default with better performance */
-:root {
-  color-scheme: dark;
-}
-
+/* Base styles */
 @layer base {
-  /* Enhanced base styles for performance */
   html {
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-variant-ligatures: common-ligatures;
-    /* Critical font loading */
     font-display: swap;
   }
-
   body {
     line-height: 1.5;
-    font-family: system-ui, -apple-system, 'Inter', sans-serif;
-    /* Optimize compositing */
+    font-family: system-ui, -apple-system, "Inter", sans-serif;
     will-change: auto;
   }
-
-  /* Optimize focus indicators */
   :focus-visible {
     outline: 2px solid hsl(var(--ring, 222.2 84% 4.9%));
     outline-offset: 2px;
   }
-
-  /* Performance optimizations */
   button {
     cursor: pointer;
-    /* Optimize button interactions */
     touch-action: manipulation;
   }
-
   button:disabled {
     cursor: not-allowed;
   }
 }
 
-/* Optimized icon handling */
+/* Custom styles */
+:root {
+  color-scheme: dark;
+}
 svg {
   fill: none;
-  /* Simplified transitions for better performance */
   transition: stroke 0.2s ease, fill 0.2s ease;
 }
-
-/* Optimize backdrop-blur for better performance */
 .backdrop-blur-fix {
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  /* Optimize compositing */
   transform: translateZ(0);
 }
-
-/* Performance utilities */
 .gpu-accelerated {
   transform: translateZ(0);
   will-change: transform;
 }
-
 .optimize-animations {
   animation-fill-mode: both;
   animation-timing-function: ease-out;
 }
-
-/* Critical CSS for immediate rendering */
 .loading-spinner {
   width: 20px;
   height: 20px;
-  border: 2px solid currentColor;
+  border: 2px solid currentcolor;
   border-top-color: transparent;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
-
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
-
-/* Reduce motion for accessibility */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

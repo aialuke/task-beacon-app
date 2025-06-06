@@ -1,6 +1,8 @@
 /* src/styles/utilities/accessibility/contrast.css - High contrast and color utilities */
+
 @layer utilities {
   /* ===== HIGH CONTRAST MODE UTILITIES (Non-redundant) ===== */
+
   @media (forced-colors: active) {
     .high-contrast-border {
       border: 1px solid CanvasText;
@@ -18,6 +20,7 @@
   }
 
   /* ===== ENHANCED COLOR CONTRAST UTILITIES (Specific enhancements) ===== */
+
   .text-high-contrast {
     color: hsl(var(--foreground));
     font-weight: 500;
