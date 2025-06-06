@@ -16,7 +16,7 @@ interface State {
 }
 
 /**
- * Task Error Boundary - Phase 3 Implementation
+ * Task Error Boundary - Enhanced with Mobile Debugging
  * 
  * Provides standardized error handling for task-related components
  * with recovery actions and proper error reporting.
@@ -28,14 +28,27 @@ export class TaskErrorBoundary extends Component<Props, State> {
   }
 
   static getDerivedStateFromError(error: Error): State {
-    return {
-      hasError: true,
-      error,
-      errorInfo: null,
+    return { 
+      hasError: true, 
+      error 
     };
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    // Enhanced error logging for mobile debugging
+    console.error('TaskErrorBoundary caught an error:', {
+      error,
+      errorInfo,
+      timestamp: new Date().toISOString(),
+      userAgent: navigator.userAgent,
+      url: window.location.href,
+      isMobile: /Mobi|Android/i.test(navigator.userAgent),
+      viewport: {
+        width: window.innerWidth,
+        height: window.innerHeight
+      }
+    });
+
     this.setState({
       error,
       errorInfo,
@@ -43,13 +56,16 @@ export class TaskErrorBoundary extends Component<Props, State> {
 
     // Call optional error handler
     this.props.onError?.(error, errorInfo);
-
-    // Log error for debugging
-    console.error('TaskErrorBoundary caught an error:', error, errorInfo);
   }
 
   handleRetry = () => {
+    console.log('TaskErrorBoundary: Retrying after error');
     this.setState({ hasError: false, error: null, errorInfo: null });
+  };
+
+  handleReload = () => {
+    console.log('TaskErrorBoundary: Reloading page after error');
+    window.location.reload();
   };
 
   render() {
@@ -59,7 +75,7 @@ export class TaskErrorBoundary extends Component<Props, State> {
         return this.props.fallback;
       }
 
-      // Default error UI
+      // Default error UI with enhanced mobile debugging
       return (
         <div className="flex items-center justify-center min-h-[400px] p-8">
           <div className="text-center space-y-6 max-w-md">
@@ -76,16 +92,32 @@ export class TaskErrorBoundary extends Component<Props, State> {
               </p>
             </div>
 
-            {/* Error details for development */}
-            {process.env.NODE_ENV === 'development' && this.state.error && (
+            {/* Show simplified error details for all environments to help with mobile debugging */}
+            {this.state.error && (
               <details className="text-left">
                 <summary className="cursor-pointer text-sm text-muted-foreground hover:text-foreground">
                   Error Details
                 </summary>
-                <pre className="mt-2 p-4 bg-muted rounded-md text-xs overflow-auto max-h-40">
-                  {this.state.error.toString()}
-                  {this.state.errorInfo?.componentStack}
-                </pre>
+                <div className="mt-2 p-4 bg-muted rounded-md text-xs font-mono text-muted-foreground whitespace-pre-wrap break-all max-h-40 overflow-auto">
+                  <div className="mb-2">
+                    <strong>Error:</strong> {this.state.error.message}
+                  </div>
+                  <div className="mb-2">
+                    <strong>User Agent:</strong> {navigator.userAgent}
+                  </div>
+                  <div className="mb-2">
+                    <strong>URL:</strong> {window.location.href}
+                  </div>
+                  <div className="mb-2">
+                    <strong>Viewport:</strong> {window.innerWidth}x{window.innerHeight}
+                  </div>
+                  {this.state.errorInfo?.componentStack && (
+                    <div>
+                      <strong>Component Stack:</strong>
+                      {this.state.errorInfo.componentStack}
+                    </div>
+                  )}
+                </div>
               </details>
             )}
 
@@ -101,7 +133,7 @@ export class TaskErrorBoundary extends Component<Props, State> {
               </Button>
               
               <Button
-                onClick={() => window.location.reload()}
+                onClick={this.handleReload}
                 variant="outline"
                 size="sm"
               >

@@ -1,6 +1,6 @@
 
 /**
- * Simplified Auth Hook
+ * Simplified Auth Hook - Enhanced with Mobile Error Handling
  * 
  * Consolidates all auth functionality into a single, easy-to-use hook.
  * Replaces the complex multi-hook architecture with a simpler approach.
@@ -32,28 +32,46 @@ export function useAuth(): UseAuthReturn {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<ApiError | null>(null);
 
+  // Enhanced logging for mobile debugging
+  const logMobileDebug = useCallback((message: string, data?: any) => {
+    console.log(`[useAuth Mobile Debug] ${message}`, {
+      timestamp: new Date().toISOString(),
+      isMobile: /Mobi|Android/i.test(navigator.userAgent),
+      userAgent: navigator.userAgent,
+      url: window.location.href,
+      ...data
+    });
+  }, []);
+
   // Update session and user together
   const updateSessionAndUser = useCallback((newSession: Session | null) => {
+    logMobileDebug('Updating session and user', { 
+      hasSession: !!newSession, 
+      hasUser: !!newSession?.user 
+    });
     setSession(newSession);
     setUser(newSession?.user ?? null);
     setError(null);
-  }, []);
+  }, [logMobileDebug]);
 
   // Clear auth state
   const clearAuthState = useCallback(() => {
+    logMobileDebug('Clearing auth state');
     setSession(null);
     setUser(null);
     setError(null);
-  }, []);
+  }, [logMobileDebug]);
 
   // Sign in operation
   const signIn = useCallback(async (email: string, password: string) => {
     try {
+      logMobileDebug('Starting sign in process');
       setLoading(true);
       setError(null);
       
       const response = await AuthService.signIn(email, password);
       if (!response.success) {
+        logMobileDebug('Sign in failed', { error: response.error });
         setError(response.error || { 
           name: 'SignInError', 
           message: 'Failed to sign in' 
@@ -62,8 +80,10 @@ export function useAuth(): UseAuthReturn {
         return;
       }
       
+      logMobileDebug('Sign in successful');
       // Session will be updated by the auth state listener
     } catch (err: any) {
+      logMobileDebug('Sign in error caught', { error: err });
       setError({ 
         name: 'SignInError', 
         message: err?.message || 'Failed to sign in' 
@@ -72,11 +92,12 @@ export function useAuth(): UseAuthReturn {
     } finally {
       setLoading(false);
     }
-  }, [clearAuthState]);
+  }, [clearAuthState, logMobileDebug]);
 
   // Sign out operation
   const signOut = useCallback(async () => {
     try {
+      logMobileDebug('Starting sign out process');
       setLoading(true);
       setError(null);
 
@@ -85,12 +106,15 @@ export function useAuth(): UseAuthReturn {
       
       const { error } = await supabase.auth.signOut();
       if (error) {
+        logMobileDebug('Sign out error', { error });
         setError({ name: 'SignOutError', message: error.message });
         return;
       }
 
+      logMobileDebug('Sign out successful');
       clearAuthState();
     } catch (err: any) {
+      logMobileDebug('Sign out error caught', { error: err });
       setError({ 
         name: 'SignOutError', 
         message: 'An unexpected error occurred during sign out' 
@@ -98,20 +122,25 @@ export function useAuth(): UseAuthReturn {
     } finally {
       setLoading(false);
     }
-  }, [clearAuthState]);
+  }, [clearAuthState, logMobileDebug]);
 
   // Refresh session operation
   const refreshSession = useCallback(async () => {
     try {
+      logMobileDebug('Starting session refresh');
       setLoading(true);
       setError(null);
 
       const { error } = await supabase.auth.refreshSession();
       if (error) {
+        logMobileDebug('Session refresh error', { error });
         setError({ name: 'RefreshError', message: error.message });
         return;
       }
+      
+      logMobileDebug('Session refresh successful');
     } catch (err: any) {
+      logMobileDebug('Session refresh error caught', { error: err });
       setError({ 
         name: 'RefreshError', 
         message: 'Failed to refresh session' 
@@ -119,7 +148,7 @@ export function useAuth(): UseAuthReturn {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [logMobileDebug]);
 
   // Initialize auth and set up listener
   useEffect(() => {
@@ -127,18 +156,22 @@ export function useAuth(): UseAuthReturn {
 
     const initializeAuth = async () => {
       try {
+        logMobileDebug('Initializing auth');
         // Get initial session
         const { data: { session }, error } = await supabase.auth.getSession();
         
         if (!mounted) return;
         
         if (error) {
+          logMobileDebug('Initial session error', { error });
           clearAuthState();
           return;
         }
 
+        logMobileDebug('Initial session retrieved', { hasSession: !!session });
         updateSessionAndUser(session);
       } catch (err) {
+        logMobileDebug('Initialize auth error caught', { error: err });
         if (mounted) {
           clearAuthState();
         }
@@ -153,6 +186,8 @@ export function useAuth(): UseAuthReturn {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         if (!mounted) return;
+        
+        logMobileDebug('Auth state change', { event, hasSession: !!session });
         
         updateSessionAndUser(session);
         
@@ -170,10 +205,11 @@ export function useAuth(): UseAuthReturn {
     initializeAuth();
 
     return () => {
+      logMobileDebug('Cleaning up auth hook');
       mounted = false;
       subscription.unsubscribe();
     };
-  }, [updateSessionAndUser, clearAuthState]);
+  }, [updateSessionAndUser, clearAuthState, logMobileDebug]);
 
   return {
     user,
