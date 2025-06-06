@@ -51,30 +51,30 @@
   --status-complete: #059669; /* Green #059669 - 4.5:1 contrast */
 }
 
-/* ===== DARK MODE COLORS - DARKER BACKGROUND WITH WHITE BORDERS ===== */
+/* ===== DARK MODE COLORS - SIMILAR TO REFERENCE IMAGES ===== */
 
 .dark,
 :root.dark {
-  /* Dark mode background and surfaces - Much darker background */
-  --background: 0 0% 3%; /* Almost black background #080808 */
+  /* Dark mode background and surfaces - Similar to reference images */
+  --background: 0 0% 12%; /* Dark gray background #1E1E1E - similar to images */
   --foreground: 0 0% 100%; /* Pure white #FFFFFF - maximum contrast */
-  --card: 0 0% 12.2%; /* Dark gray #1F1F1F (keeps current card color) */
+  --card: 0 0% 16%; /* Slightly lighter card #292929 */
   --card-foreground: 0 0% 100%; /* Pure white #FFFFFF */
-  --popover: 0 0% 12.2%; /* Dark gray #1F1F1F */
+  --popover: 0 0% 16%; /* Dark gray #292929 */
   --popover-foreground: 0 0% 100%; /* Pure white #FFFFFF */
 
-  /* Primary colors adjusted for dark mode */
-  --primary: 225 77% 70%; /* Brighter blue for dark mode - better contrast */
-  --primary-foreground: 0 0% 3%; /* Almost black #080808 */
+  /* Primary colors adjusted for dark mode - WHITE TEXT ON BLUE */
+  --primary: 225 77% 60%; /* Blue for buttons */
+  --primary-foreground: 0 0% 100%; /* Pure white text/icons on blue buttons */
 
   /* Secondary and muted colors - neutral grays */
-  --secondary: 0 0% 18.8%; /* Dark gray #303030 (gray-700 equivalent) */
+  --secondary: 0 0% 20%; /* Dark gray #333333 */
   --secondary-foreground: 0 0% 100%; /* Pure white #FFFFFF */
-  --muted: 0 0% 18.8%; /* Dark gray #303030 */
+  --muted: 0 0% 20%; /* Dark gray #333333 */
   --muted-foreground: 0 0% 70%; /* Light gray #B3B3B3 - good contrast */
 
   /* Accent colors */
-  --accent: 0 0% 18.8%; /* Dark gray #303030 */
+  --accent: 0 0% 20%; /* Dark gray #333333 */
   --accent-foreground: 0 0% 100%; /* Pure white #FFFFFF */
   --accent-yellow: 51 100% 70%; /* Brighter yellow #FFE666 */
 
@@ -86,11 +86,11 @@
 
   /* WHITE BORDERS for maximum contrast */
   --border: 0 0% 100%; /* Pure white borders #FFFFFF */
-  --input: 0 0% 12.2%; /* Dark input background #1F1F1F */
+  --input: 0 0% 16%; /* Dark input background #292929 */
   --ring: 225 77% 70%; /* Primary color for focus rings */
 
   /* Surface colors */
-  --surface: 0 0% 12.2%; /* Dark surface #1F1F1F */
+  --surface: 0 0% 16%; /* Dark surface #292929 */
   --surface-foreground: 0 0% 100%; /* Pure white #FFFFFF */
   --brand-light: 225 77% 15%; /* Dark brand light #1A2332 */
 

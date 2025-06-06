@@ -51,7 +51,7 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(225 77% 60%)",
+          DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
@@ -88,7 +88,7 @@ export default {
           foreground: "hsl(var(--success-foreground))",
         },
         brand: {
-          DEFAULT: "hsl(225 77% 60%)",
+          DEFAULT: "hsl(var(--primary))",
           light: "hsl(var(--brand-light))",
         },
         "task-pending": "var(--status-pending)",
