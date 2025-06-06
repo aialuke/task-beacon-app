@@ -1,84 +1,18 @@
-
-/* Phase 4 - Virtualized Task Components Styling */
 @layer components {
-  /* Virtualized container optimizations */
   .virtualized-task-container {
-    /* Enable hardware acceleration */
-    @apply transform-gpu;
-    
-    /* Optimize scrolling performance */
     scroll-behavior: smooth;
     will-change: scroll-position;
-    
-    /* Enhance rendering performance */
     contain: layout style paint;
-    
-    /* Improve scrollbar styling */
     scrollbar-width: thin;
-    scrollbar-color: theme(colors.muted.foreground) theme(colors.muted.default);
   }
-
-  .virtualized-task-container::-webkit-scrollbar {
-    @apply w-2;
-  }
-
-  .virtualized-task-container::-webkit-scrollbar-track {
-    @apply bg-muted;
-  }
-
-  .virtualized-task-container::-webkit-scrollbar-thumb {
-    @apply bg-muted-foreground rounded-full;
-  }
-
-  .virtualized-task-container::-webkit-scrollbar-thumb:hover {
-    @apply bg-muted-foreground/80;
-  }
-
-  /* Enhanced task card animations for virtualization */
   .virtualized-task-card {
-    /* Optimize repaints */
-    @apply backface-hidden;
-    
-    /* Enable hardware acceleration */
     transform: translateZ(0);
     will-change: transform, opacity;
-    
-    /* Contain layout thrashing */
     contain: layout style;
   }
-
-  /* Focus management for accessibility */
-  .virtualized-task-card:focus-within {
-    @apply ring-2 ring-primary ring-offset-2;
-
-    outline: none;
-  }
-
-  /* Reduce motion for accessibility */
-  @media (prefers-reduced-motion: reduce) {
-    .virtualized-task-container {
-      scroll-behavior: auto;
-    }
-    
-    .virtualized-task-card {
-      will-change: auto;
-      transform: none;
-    }
-  }
-
-  /* High contrast mode support */
-  @media (prefers-contrast: high) {
-    .virtualized-task-card {
-      @apply border-2 border-foreground;
-    }
-  }
-
-  /* Performance optimizations for large lists */
   .task-list-performance-mode {
-    /* Disable expensive visual effects during scrolling */
     pointer-events: none;
   }
-
   .task-list-performance-mode * {
     animation-play-state: paused;
     transition: none;
