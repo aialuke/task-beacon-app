@@ -1,6 +1,8 @@
 /* src/styles/utilities/accessibility/screen-reader.css - Screen reader utilities */
+
 @layer utilities {
   /* ===== SCREEN READER UTILITIES ===== */
+
   .sr-only {
     position: absolute;
     width: 1px;
@@ -30,6 +32,7 @@
   }
 
   /* ===== ANNOUNCEMENT UTILITIES ===== */
+
   .announce-polite {
     position: absolute;
     left: -10000px;
@@ -47,6 +50,7 @@
   }
 
   /* ===== ERROR AND SUCCESS ANNOUNCEMENT ===== */
+
   .announce-error {
     color: hsl(var(--destructive));
     font-weight: 600;
@@ -58,6 +62,7 @@
   }
 
   /* ===== LOADING STATE ACCESSIBILITY ===== */
+
   .loading-indicator {
     position: relative;
   }
@@ -72,6 +77,7 @@
   }
 
   /* ===== DARK MODE SCREEN READER OVERRIDES ===== */
+
   .dark .sr-only-focusable:focus {
     background-color: hsl(var(--card));
     color: hsl(var(--card-foreground));
@@ -80,6 +86,7 @@
   }
 
   /* ===== LIGHT MODE SCREEN READER OVERRIDES ===== */
+
   .light .sr-only-focusable:focus {
     background-color: white;
     color: #1a202c;

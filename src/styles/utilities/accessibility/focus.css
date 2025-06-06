@@ -1,8 +1,10 @@
 /* src/styles/utilities/accessibility/focus.css - Focus management utilities */
+
 @layer utilities {
   /* ===== ENHANCED FOCUS UTILITIES (Non-redundant with Tailwind) ===== */
 
   /* Skip link utilities - Tailwind doesn't provide these */
+
   .skip-link {
     position: absolute;
     top: -40px;
@@ -22,12 +24,14 @@
   }
 
   /* Keyboard-only focus (complement to Tailwind's focus-visible) */
+
   .keyboard-only:focus:not(:focus-visible) {
     outline: none;
     box-shadow: none;
   }
 
   /* Enhanced focus with glow effect - specific enhancement over Tailwind */
+
   .focus-glow:focus-visible {
     outline: 2px solid hsl(var(--primary));
     outline-offset: 2px;
@@ -35,6 +39,7 @@
   }
 
   /* Dark mode focus enhancements */
+
   .dark .focus-glow:focus-visible {
     box-shadow: 0 0 0 4px hsl(var(--primary) / 30%);
   }
@@ -44,6 +49,7 @@
   }
 
   /* Light mode focus overrides */
+
   .light .focus-glow:focus-visible {
     box-shadow: 0 0 0 4px rgb(54 98 227 / 20%);
   }

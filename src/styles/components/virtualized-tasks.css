@@ -5,14 +5,17 @@
     contain: layout style paint;
     scrollbar-width: thin;
   }
+
   .virtualized-task-card {
     transform: translateZ(0);
     will-change: transform, opacity;
     contain: layout style;
   }
+
   .task-list-performance-mode {
     pointer-events: none;
   }
+
   .task-list-performance-mode * {
     animation-play-state: paused;
     transition: none;

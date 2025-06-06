@@ -51,6 +51,7 @@
 }
 
 /* ===== DARK MODE COLORS (WCAG AA COMPLIANT) ===== */
+
 .dark,
 :root.dark {
   /* Dark mode background and surfaces - Enhanced contrast */
@@ -99,6 +100,7 @@
 }
 
 /* ===== LIGHT MODE EXPLICIT OVERRIDE ===== */
+
 .light {
   /* Reset to light mode values */
   --background: 0 0% 100%;

@@ -1,7 +1,9 @@
 
 /* src/styles/utilities/borders.css - Enhanced border utilities beyond Tailwind defaults */
+
 @layer utilities {
   /* Enhanced border with gradient - not available in Tailwind */
+
   .border-gradient {
     border: 1px solid;
     border-image: linear-gradient(
@@ -13,6 +15,7 @@
   }
 
   /* Force border color override when needed - useful for dynamic states */
+
   .border-force-destructive {
     border-color: hsl(var(--destructive)) !important;
   }

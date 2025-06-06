@@ -1,7 +1,9 @@
 
 /* src/styles/utilities/animations/unified-animations.css - Consolidated animation system */
+
 @layer utilities {
   /* ===== CONSOLIDATED KEYFRAMES ===== */
+
   @keyframes unified-fade-in {
     0% {
       opacity: 0;
@@ -63,6 +65,7 @@
   }
 
   /* ===== UNIFIED ANIMATION CLASSES ===== */
+
   .animate-unified-enter {
     animation: unified-scale-enter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -84,6 +87,7 @@
   }
 
   /* ===== TASK CARD SPECIFIC ANIMATIONS ===== */
+
   .task-card-enter {
     animation: unified-scale-enter 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -93,6 +97,7 @@
   }
 
   /* ===== PERFORMANCE OPTIMIZATIONS ===== */
+
   .animate-unified-enter,
   .animate-unified-exit,
   .animate-unified-fade-in,
@@ -106,6 +111,7 @@
   }
 
   /* ===== REDUCED MOTION SUPPORT ===== */
+
   @media (prefers-reduced-motion: reduce) {
     .animate-unified-enter,
     .animate-unified-exit,

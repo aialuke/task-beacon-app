@@ -1,6 +1,8 @@
 /* src/styles/utilities/responsive.css - Responsive design utilities */
+
 @layer utilities {
   /* ===== RESPONSIVE UTILITIES ===== */
+
   @media (width <= 480px) {
     .filter-dropdown-mobile {
       width: 45%;
@@ -12,6 +14,7 @@
     }
 
     /* Extra small screen utilities */
+
     .xs\:inline {
       display: inline;
     }
@@ -40,6 +43,7 @@
   }
 
   /* Mobile keyboard handling */
+
   @supports (height: 100dvh) {
     .min-h-screen {
       min-height: 100dvh;
@@ -47,6 +51,7 @@
   }
 
   /* Safe area handling for iOS */
+
   .safe-area-top {
     padding-top: env(safe-area-inset-top);
   }

@@ -13,6 +13,7 @@
 }
 
 /* Dark mode design tokens */
+
 .dark,
 :root.dark {
   /* Dark mode gradients - Updated with new primary color */
@@ -26,6 +27,7 @@
 }
 
 /* Light mode explicit override */
+
 .light {
   --gradient-light: linear-gradient(to bottom right, #fff, #f9fafb);
   --gradient-blue: linear-gradient(45deg, hsl(225deg 77% 60%), hsl(225deg 77% 70%));

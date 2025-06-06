@@ -1,7 +1,9 @@
 
 /* Phase 5 - Optimized Animation Utilities */
+
 @layer utilities {
   /* === KEYFRAME DEFINITIONS === */
+
   @keyframes fade-in {
     from {
       opacity: 0;
@@ -63,6 +65,7 @@
   }
 
   /* === ANIMATION CLASSES === */
+
   .animate-fade-in {
     animation: fade-in var(--duration-normal) var(--ease-out);
   }
@@ -84,6 +87,7 @@
   }
 
   /* === TRANSITION UTILITIES === */
+
   .transition-smooth {
     transition: all var(--duration-normal) var(--ease-out);
   }
@@ -97,6 +101,7 @@
   }
 
   /* === HOVER EFFECTS === */
+
   .hover-lift {
     transition: transform var(--duration-normal) var(--ease-out);
   }
@@ -114,6 +119,7 @@
   }
 
   /* === PERFORMANCE OPTIMIZATIONS === */
+
   .hw-accelerated {
     transform: var(--transform-gpu);
     backface-visibility: var(--backface-visibility);
