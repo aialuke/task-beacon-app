@@ -1,3 +1,4 @@
+
 import { useRef, useEffect, forwardRef } from 'react';
 import { cn } from '@/lib/utils';
 
@@ -65,12 +66,12 @@ const FloatingInput = forwardRef<HTMLInputElement, FloatingInputProps>(
           disabled={disabled}
           required={required}
           className={cn(
-            'peer h-10 w-full rounded-xl border bg-input/20 px-3 py-2 outline-none transition-all duration-300', // Changed bg-background/20 to bg-input/20
+            'peer h-10 w-full rounded-xl border bg-input/20 px-3 py-2 outline-none transition-all duration-300', // Removed explicit border-border to use default
             'focus:border-primary focus:bg-input/30 focus:ring-2 focus:ring-primary/20',
             'focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2', // Added focus-visible styles
             error
               ? 'border-destructive focus:border-destructive focus:ring-destructive/20 focus-visible:ring-destructive focus-visible:ring-offset-2'
-              : 'border-border hover:border-primary/50',
+              : 'hover:border-primary/50',
             disabled && 'cursor-not-allowed opacity-50',
             className
           )}
