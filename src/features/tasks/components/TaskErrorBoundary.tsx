@@ -30,7 +30,8 @@ export class TaskErrorBoundary extends Component<Props, State> {
   static getDerivedStateFromError(error: Error): State {
     return { 
       hasError: true, 
-      error 
+      error,
+      errorInfo: null
     };
   }
 
