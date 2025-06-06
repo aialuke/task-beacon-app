@@ -51,16 +51,16 @@
   --status-complete: #059669; /* Green #059669 - 4.5:1 contrast */
 }
 
-/* ===== DARK MODE COLORS - DARKER THEME ===== */
+/* ===== DARK MODE COLORS - UPDATED PERCENTAGES ===== */
 
 .dark,
 :root.dark {
-  /* Dark mode background and surfaces - Much darker */
-  --background: 0 0% 7%; /* Very dark background #121212 */
+  /* Dark mode background and surfaces - Updated percentages */
+  --background: 0 0% 9%; /* Background at 9% */
   --foreground: 0 0% 100%; /* Pure white #FFFFFF - maximum contrast */
-  --card: 0 0% 11%; /* Darker card #1C1C1C */
+  --card: 0 0% 10%; /* Surfaces at 10% */
   --card-foreground: 0 0% 100%; /* Pure white #FFFFFF */
-  --popover: 0 0% 11%; /* Dark gray #1C1C1C */
+  --popover: 0 0% 10%; /* Surfaces at 10% */
   --popover-foreground: 0 0% 100%; /* Pure white #FFFFFF */
 
   /* Primary colors adjusted for dark mode - WHITE TEXT ON BLUE */
@@ -86,11 +86,11 @@
 
   /* WHITE BORDERS for maximum contrast */
   --border: 0 0% 100%; /* Pure white borders #FFFFFF */
-  --input: 0 0% 11%; /* Dark input background #1C1C1C */
+  --input: 0 0% 10%; /* Surfaces at 10% */
   --ring: 225 77% 70%; /* Primary color for focus rings */
 
   /* Surface colors */
-  --surface: 0 0% 11%; /* Dark surface #1C1C1C */
+  --surface: 0 0% 10%; /* Surfaces at 10% */
   --surface-foreground: 0 0% 100%; /* Pure white #FFFFFF */
   --brand-light: 225 77% 15%; /* Dark brand light #1A2332 */
 
