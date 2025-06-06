@@ -1,8 +1,8 @@
+
 import { memo } from "react";
 import { TaskErrorBoundary } from "./TaskErrorBoundary";
 import TaskCardHeader from "./TaskCardHeader";
 import TaskCardContent from "./TaskCardContent";
-import TaskStatus from "./TaskStatus";
 import { useTaskCard } from "../hooks/useTaskCard";
 import type { Task } from "@/types";
 
@@ -86,7 +86,6 @@ function TaskCard({ task }: TaskCardProps) {
           animationState={animationState}
           contentRef={contentRef}
         />
-        <TaskStatus task={task} />
       </article>
     </TaskErrorBoundary>
   );
