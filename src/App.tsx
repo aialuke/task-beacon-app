@@ -15,46 +15,11 @@ const App = () => (
   <AppProviders>
     <Suspense fallback={<UnifiedLoadingStates variant="page" message="Loading application..." />}>
       <Routes>
-        <Route 
-          path="/" 
-          element={
-            <Suspense fallback={<UnifiedLoadingStates variant="page" message="Loading dashboard..." />}>
-              <AuthPage />
-            </Suspense>
-          } 
-        />
-        <Route 
-          path="/create-task" 
-          element={
-            <Suspense fallback={<UnifiedLoadingStates variant="page" message="Loading task creation..." />}>
-              <CreateTaskPage />
-            </Suspense>
-          } 
-        />
-        <Route
-          path="/follow-up-task/:parentTaskId"
-          element={
-            <Suspense fallback={<UnifiedLoadingStates variant="page" message="Loading follow-up task..." />}>
-              <FollowUpTaskPage />
-            </Suspense>
-          }
-        />
-        <Route 
-          path="/tasks/:id" 
-          element={
-            <Suspense fallback={<UnifiedLoadingStates variant="page" message="Loading task details..." />}>
-              <TaskDetailsPage />
-            </Suspense>
-          } 
-        />
-        <Route 
-          path="*" 
-          element={
-            <Suspense fallback={<UnifiedLoadingStates variant="page" message="Loading page..." />}>
-              <NotFound />
-            </Suspense>
-          } 
-        />
+        <Route path="/" element={<AuthPage />} />
+        <Route path="/create-task" element={<CreateTaskPage />} />
+        <Route path="/follow-up-task/:parentTaskId" element={<FollowUpTaskPage />} />
+        <Route path="/tasks/:id" element={<TaskDetailsPage />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
   </AppProviders>

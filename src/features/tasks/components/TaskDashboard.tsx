@@ -1,8 +1,6 @@
-// === EXTERNAL LIBRARIES ===
-import { Suspense } from "react";
 
-// === INTERNAL UTILITIES ===
-import UnifiedLoadingStates from "@/components/ui/loading/UnifiedLoadingStates";
+// === EXTERNAL LIBRARIES ===
+import React from "react";
 
 // === COMPONENTS ===
 import TaskDashboardHeader from "./TaskDashboardHeader";
@@ -14,7 +12,6 @@ import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
 
 export default function TaskDashboard() {
   const { isMobile } = useTaskUIContext();
-  console.log("isMobile:", isMobile); // Debug log
 
   return (
     <div className="min-h-screen bg-background">
@@ -22,16 +19,7 @@ export default function TaskDashboard() {
         <TaskDashboardHeader />
 
         <main className="relative">
-          <Suspense
-            fallback={
-              <UnifiedLoadingStates
-                variant="skeleton"
-                message="Loading tasks..."
-              />
-            }
-          >
-            <TaskList />
-          </Suspense>
+          <TaskList />
         </main>
 
         {isMobile && <FabButton />}
