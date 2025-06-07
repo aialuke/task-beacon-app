@@ -1,17 +1,9 @@
 
-// === EXTERNAL LIBRARIES ===
-import { useCallback, useState } from 'react';
-
-// === INTERNAL UTILITIES ===
+import { useCallback } from 'react';
 import { useUnifiedFormState } from '@/hooks/unified/useUnifiedFormState';
-
-// === HOOKS ===
-import { useTaskFormValidation } from './useTaskFormValidation';
-
-// === TYPES ===
 import type { TaskCreateData } from '@/types';
 
-interface UseTaskFormOptions {
+export interface UseTaskFormOptions {
   initialTitle?: string;
   initialDescription?: string;
   initialDueDate?: string | null;
@@ -21,7 +13,7 @@ interface UseTaskFormOptions {
   onClose?: () => void;
 }
 
-interface TaskFormValues {
+export interface TaskFormValues {
   title: string;
   description: string;
   dueDate: string | null;
@@ -30,10 +22,10 @@ interface TaskFormValues {
 }
 
 /**
- * Unified Task Form Hook - Phase 3 Consolidation
+ * Task form hook with validation and state management
  * 
- * Now uses the unified form state management system to reduce duplication
- * and provide consistent form handling patterns.
+ * This hook provides form state management and validation for task creation.
+ * It uses the unified form state hook internally for consistent form behavior.
  */
 export function useTaskForm(options: UseTaskFormOptions = {}) {
   const {
@@ -46,13 +38,8 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     onClose,
   } = options;
 
-  const validation = useTaskFormValidation();
-  
-  // Add local loading state for compatibility
-  const [loading, setLoading] = useState(false);
-
-  // Create initial values - ensure url is empty string instead of null for form compatibility
-  const initialValues: TaskFormValues = {
+  // Create initial form state
+  const initialState: TaskFormValues = {
     title: initialTitle,
     description: initialDescription,
     dueDate: initialDueDate,
@@ -61,33 +48,32 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
   };
 
   // Create validation schema - return string errors, not boolean
-  const validationSchema = {
-    title: (value: string) => {
-      // validateTitle returns a boolean, so we need to handle it differently
-      const isValid = validation.validateTitle(value);
-      return isValid ? undefined : 'Title is required and must be valid';
-    },
-    description: (value: string) => {
-      const result = validation.validateField('description', value);
-      return result.isValid ? undefined : result.error;
-    },
-    url: (value: string | null) => {
-      // Ensure we always pass a string to validation, convert null/undefined to empty string
-      const urlValue = value || '';
-      const result = validation.validateField('url', urlValue);
-      return result.isValid ? undefined : result.error;
-    },
-  };
+  const validation = useCallback((values: TaskFormValues) => {
+    const errors: Partial<Record<keyof TaskFormValues, string>> = {};
+    
+    if (!values.title?.trim()) {
+      errors.title = 'Title is required';
+    }
+    
+    if (values.url && values.url.trim()) {
+      try {
+        new URL(values.url);
+      } catch {
+        errors.url = 'Please enter a valid URL';
+      }
+    }
+    
+    return errors;
+  }, []);
 
   // Use unified form state
-  const [formState, formActions] = useUnifiedFormState({
-    initialValues,
-    validationSchema,
+  const { formState, formActions } = useUnifiedFormState({
+    initialState,
+    validation,
     onSubmit,
-    resetOnSubmit: false,
   });
 
-  // Convenience getters for individual field values
+  // Extract current field values for convenience
   const title = formState.fields.title.value;
   const description = formState.fields.description.value;
   const dueDate = formState.fields.dueDate.value;
@@ -103,16 +89,15 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     formActions.setFieldValue('description', value);
   }, [formActions]);
 
-  const setDueDate = useCallback((value: string | null) => {
+  const setDueDate = useCallback((value: string) => {
     formActions.setFieldValue('dueDate', value);
   }, [formActions]);
 
-  const setUrl = useCallback((value: string | null) => {
-    // Convert null to empty string to prevent validation issues
-    formActions.setFieldValue('url', value || '');
+  const setUrl = useCallback((value: string) => {
+    formActions.setFieldValue('url', value);
   }, [formActions]);
 
-  const setAssigneeId = useCallback((value: string | null) => {
+  const setAssigneeId = useCallback((value: string) => {
     formActions.setFieldValue('assigneeId', value);
   }, [formActions]);
 
@@ -121,16 +106,16 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     return {
       title: title.trim(),
       description: description.trim() || undefined,
-      due_date: dueDate || null,
-      url_link: url.trim() || null, // Convert empty string back to null for API
-      assignee_id: assigneeId || null,
-      priority: 'medium', // Fixed to use string type instead of object
+      dueDate: dueDate || undefined,
+      photoUrl: null,
+      urlLink: url.trim() || undefined,
+      assigneeId: assigneeId || undefined,
     };
   }, [title, description, dueDate, url, assigneeId]);
 
-  // Validate entire form using task-specific validation
-  const validateTaskForm = useCallback(() => {
-    return validation.validateTaskForm({
+  // Manual validation trigger
+  const validateForm = useCallback(() => {
+    return validation({
       title,
       description,
       dueDate,
@@ -143,12 +128,11 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
   // Reset form state including calling onClose
   const resetFormState = useCallback(() => {
     formActions.resetForm();
-    setLoading(false);
-    onClose?.();
+    if (onClose) onClose();
   }, [formActions, onClose]);
 
   return {
-    // Individual field values
+    // Current field values
     title,
     description,
     dueDate,
@@ -164,33 +148,17 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
 
     // Form state - maintain compatibility
     isValid: formState.isValid,
-    isDirty: formState.isDirty,
+    errors: formState.errors,
     isSubmitting: formState.isSubmitting,
-    loading, // Local loading state for compatibility
-    setLoading, // Local loading setter for compatibility
-    
-    // Form actions - maintain compatibility
-    validateForm: validateTaskForm,
-    resetForm: formActions.resetForm,
-    resetFormState, // Legacy compatibility
-    submitForm: formActions.submitForm,
-    
-    // Task-specific utilities
-    getTaskData,
-    
-    // Field errors
-    titleError: formState.fields.title.error,
-    descriptionError: formState.fields.description.error,
-    urlError: formState.fields.url.error,
-    
-    // Field touched states
-    titleTouched: formState.fields.title.touched,
-    descriptionTouched: formState.fields.description.touched,
-    urlTouched: formState.fields.url.touched,
 
-    // Validation utilities
-    validateTitle: validation.validateTitle,
-    validateField: validation.validateField,
-    showValidationErrors: validation.showValidationErrors,
+    // Form actions
+    handleSubmit: formActions.handleSubmit,
+    resetFormState,
+    validateForm,
+    getTaskData,
+
+    // Direct access to form state for advanced usage
+    formState,
+    formActions,
   };
 }
