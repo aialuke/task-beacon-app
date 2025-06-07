@@ -58,10 +58,12 @@ export function useUnifiedFormState<T extends Record<string, string>>(
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitCount, setSubmitCount] = useState(0);
 
-  // Validate a single field
+  // Validate a single field - fix the indexing issue by ensuring we have a proper key
   const validateField = useOptimizedCallback(
     (fieldName: string, value: string): string | null => {
-      const validator = validationRules[fieldName as keyof T];
+      // Type-safe access to validation rules
+      const fieldKey = fieldName as keyof T;
+      const validator = validationRules[fieldKey];
       return validator ? validator(value) : null;
     },
     [validationRules],

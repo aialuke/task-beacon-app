@@ -17,16 +17,7 @@ export async function validateTaskOwnership(
     if (!ownerValidation.isValid) {
       return createErrorResult(
         ValidationErrorCode.NOT_FOUND,
-        'Task owner not found',
-        [
-          {
-            field: 'owner_id',
-            code: ValidationErrorCode.NOT_FOUND,
-            message: 'The specified task owner does not exist',
-            severity: 'error' as const,
-            value: ownerId,
-          },
-        ]
+        'Task owner not found'
       );
     }
 
@@ -36,16 +27,7 @@ export async function validateTaskOwnership(
       if (!assigneeValidation.isValid) {
         return createErrorResult(
           ValidationErrorCode.NOT_FOUND,
-          'Task assignee not found',
-          [
-            {
-              field: 'assignee_id',
-              code: ValidationErrorCode.NOT_FOUND,
-              message: 'The specified task assignee does not exist',
-              severity: 'error' as const,
-              value: assigneeId,
-            },
-          ]
+          'Task assignee not found'
         );
       }
     }
@@ -58,8 +40,7 @@ export async function validateTaskOwnership(
     console.error('Task ownership validation error:', error);
     return createErrorResult(
       ValidationErrorCode.UNKNOWN_ERROR,
-      'Failed to validate task ownership',
-      []
+      'Failed to validate task ownership'
     );
   }
 }
