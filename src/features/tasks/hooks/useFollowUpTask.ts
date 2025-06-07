@@ -60,11 +60,11 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
         }
         const currentUserId = userResponse.data;
 
-        // Handle photo upload using base hook method
+        // Handle photo upload using base hook's upload method
         let photoUrl: string | null = null;
         if (baseHook.photoPreview) {
-          // Use the base hook's photo handling instead of manual upload
-          photoUrl = await baseHook.handlePhotoChange();
+          // Use the handlePhotoUpload method instead of handlePhotoChange
+          photoUrl = await baseHook.handlePhotoUpload();
         }
 
         // Prepare follow-up task data with assignee handling
