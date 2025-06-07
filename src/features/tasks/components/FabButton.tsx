@@ -11,7 +11,7 @@ export function FabButton() {
       onClick={() => navigate("/create-task")}
       aria-label="Create new task"
     >
-      <ClockPlus size={24} strokeWidth={2.5} className="text-primary-foreground" />
+      <ClockPlus size={25} strokeWidth={2.5} className="text-primary-foreground" />
     </button>
   );
 }
