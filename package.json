@@ -26,7 +26,7 @@
     "purge:audit": "postcss src/index.css -o purged.css --config postcss.purge.js && npx stylelint \"src/styles/{architecture,tokens,components,base,utilities}/*.css\" \"src/styles/utilities/{accessibility,animations}/*.css\" --fix --formatter verbose --output-file stylelint-report-final5.json"
   },
   "dependencies": {
-    "@radix-ui/react-avatar": "^1.1.0",
+    "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-popover": "^1.1.1",
     "@radix-ui/react-slot": "^1.2.3",
