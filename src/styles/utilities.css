@@ -1,10 +1,228 @@
 
 /* src/styles/utilities.css - Clean unified utilities */
 @layer utilities {
-  /* Import unified utility modules */
-  @import './utilities/unified-utilities.css';
-  @import './utilities/animations/unified-animations.css';
-  @import './utilities/layout.css';
-  @import './utilities/accessibility.css';
-  @import './utilities/responsive.css';
+  /* ===== UNIFIED UTILITIES ===== */
+  .grid-unified-responsive {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  .shadow-unified-sm {
+    box-shadow: var(--shadow-sm);
+  }
+
+  .shadow-unified-md {
+    box-shadow: var(--shadow-md);
+  }
+
+  .shadow-unified-lg {
+    box-shadow: var(--shadow-lg);
+  }
+
+  .shadow-unified-focus {
+    box-shadow: var(--shadow-focus);
+  }
+
+  .will-change-unified {
+    will-change: transform, opacity;
+  }
+
+  .gpu-accelerated-unified {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  .optimize-rendering-unified {
+    contain: layout style paint;
+  }
+
+  /* ===== UNIFIED ANIMATION UTILITIES ===== */
+  @keyframes unified-fade-in {
+    0% {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes unified-fade-out {
+    0% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  }
+
+  @keyframes unified-scale-enter {
+    0% {
+      opacity: 0;
+      transform: translateY(5px) scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes unified-scale-exit {
+    0% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-5px) scale(0.9);
+    }
+  }
+
+  @keyframes unified-slide-up {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-unified-enter {
+    animation: unified-scale-enter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .animate-unified-exit {
+    animation: unified-scale-exit 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .animate-unified-fade-in {
+    animation: unified-fade-in 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .animate-unified-fade-out {
+    animation: unified-fade-out 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .animate-unified-slide-up {
+    animation: unified-slide-up 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .task-card-enter {
+    animation: unified-scale-enter 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .task-card-exit {
+    animation: unified-scale-exit 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .animate-unified-enter,
+  .animate-unified-exit,
+  .animate-unified-fade-in,
+  .animate-unified-fade-out,
+  .animate-unified-slide-up,
+  .task-card-enter,
+  .task-card-exit {
+    animation-fill-mode: both;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+  }
+
+  /* ===== RESPONSIVE UTILITIES ===== */
+  @media (width <= 480px) {
+    .filter-dropdown-mobile {
+      width: 45%;
+    }
+
+    .touch-target {
+      min-height: 44px;
+      min-width: 44px;
+    }
+
+    .xs\:inline {
+      display: inline;
+    }
+  }
+
+  @media (width <= 640px) {
+    .filter-dropdown-mobile {
+      width: 40%;
+    }
+
+    .touch-target {
+      min-height: 44px;
+      min-width: 44px;
+    }
+  }
+
+  @media (width >= 641px) {
+    .filter-dropdown-mobile {
+      width: 25%;
+    }
+
+    .touch-target {
+      min-height: 32px;
+      min-width: 32px;
+    }
+  }
+
+  @supports (height: 100dvh) {
+    .min-h-screen {
+      min-height: 100dvh;
+    }
+  }
+
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-area-left {
+    padding-left: env(safe-area-inset-left);
+  }
+
+  .safe-area-right {
+    padding-right: env(safe-area-inset-right);
+  }
+
+  /* ===== ACCESSIBILITY UTILITIES ===== */
+  @media (forced-colors: active) {
+    .timer-ring {
+      stroke: CanvasText;
+    }
+
+    button,
+    a[role='button'],
+    .btn-primary,
+    .btn-secondary {
+      border: 1px solid CanvasText;
+    }
+
+    svg {
+      forced-color-adjust: auto;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-unified-enter,
+    .animate-unified-exit,
+    .animate-unified-fade-in,
+    .animate-unified-fade-out,
+    .animate-unified-slide-up,
+    .task-card-enter,
+    .task-card-exit {
+      animation: none;
+      transition: none;
+      transform: none;
+    }
+  }
+
+  /* ===== LAYOUT UTILITIES ===== */
+  /* Use Tailwind classes in components instead of custom utilities */
 }
