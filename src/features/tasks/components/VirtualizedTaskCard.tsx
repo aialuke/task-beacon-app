@@ -1,3 +1,4 @@
+
 import { memo, forwardRef } from "react";
 import { Task } from "@/types";
 import { useTaskCard } from "../hooks/useTaskCard";
@@ -78,7 +79,7 @@ const VirtualizedTaskCard = memo(
         >
           <article
             ref={ref || cardRef}
-            className={`virtualized-task-card bg-card text-card-foreground border border-border shadow-task-card transition-all duration-200 hover:shadow-md cursor-pointer mb-4 w-full rounded-xl p-card box-border max-w-full ${statusClass} ${animationClass} ${expandedClass} ${
+            className={`virtualized-task-card bg-card text-card-foreground border border-border shadow-task-card transition-all duration-200 hover:shadow-md cursor-pointer mb-4 w-full rounded-xl p-4 box-border max-w-full ${statusClass} ${animationClass} ${expandedClass} ${
               task.status === "complete"
                 ? "bg-muted"
                 : task.status === "overdue"
