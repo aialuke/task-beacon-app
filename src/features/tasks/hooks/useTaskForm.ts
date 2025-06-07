@@ -13,7 +13,7 @@ export interface UseTaskFormOptions {
   onClose?: () => void;
 }
 
-export interface TaskFormValues {
+export interface TaskFormValues extends Record<string, string> {
   title: string;
   description: string;
   dueDate: string;
@@ -69,10 +69,10 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
   }, []);
 
   // Use unified form state - properly destructure the tuple
-  const [formState, formActions] = useUnifiedFormState({
+  const [formState, formActions] = useUnifiedFormState<TaskFormValues>({
     initialValues,
     validationSchema: validationSchema(),
-    onSubmit,
+    onSubmit: onSubmit as ((values: Record<string, string>) => Promise<void> | void) | undefined,
   });
 
   // Extract current field values for convenience

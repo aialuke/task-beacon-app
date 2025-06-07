@@ -1,3 +1,4 @@
+
 /**
  * Text and data formatting utilities
  */
@@ -41,8 +42,50 @@ export function formatFileSize(bytes: number, decimals: number = 2): string {
 }
 
 /**
+ * Formats bytes with alias to formatFileSize for backward compatibility
+ */
+export function formatBytes(bytes: number, decimals: number = 2): string {
+  return formatFileSize(bytes, decimals);
+}
+
+/**
  * Formats a number as a percentage
  */
 export function formatPercentage(value: number, decimals: number = 0): string {
   return `${(value * 100).toFixed(decimals)}%`;
+}
+
+/**
+ * Formats a price/currency value
+ */
+export function formatPrice(value: number, currency: string = '$'): string {
+  return `${currency}${value.toFixed(2)}`;
+}
+
+/**
+ * Formats a currency value (alias to formatPrice)
+ */
+export function formatCurrency(value: number, currency: string = '$'): string {
+  return formatPrice(value, currency);
+}
+
+/**
+ * Formats a number with thousand separators
+ */
+export function formatNumber(value: number, locale: string = 'en-US'): string {
+  return new Intl.NumberFormat(locale).format(value);
+}
+
+/**
+ * Parses a price string to number
+ */
+export function parsePrice(priceString: string): number {
+  return parseFloat(priceString.replace(/[^0-9.-]+/g, ''));
+}
+
+/**
+ * Parses a formatted number string to number
+ */
+export function parseNumber(numberString: string): number {
+  return parseFloat(numberString.replace(/[^0-9.-]+/g, ''));
 }

@@ -1,4 +1,3 @@
-
 /**
  * Centralized utilities index
  * 
@@ -31,16 +30,8 @@ export * from './data';
 // Date and time utilities
 export * from './date';
 
-// Format utilities (currency, numbers, etc.) - excluding formatFileSize to avoid conflict
-export {
-  formatPrice,
-  formatNumber,
-  formatBytes,
-  formatPercentage,
-  formatCurrency,
-  parsePrice,
-  parseNumber,
-} from './format';
+// Format utilities (currency, numbers, etc.)
+export * from './format';
 
 // =====================================================
 // ENHANCED UTILITIES (Available - Refactored & Migrated)
@@ -188,8 +179,14 @@ export type {
   ValidationResult as UtilValidationResult,
 } from './validation';
 
-// Enhanced shared utilities (including formatFileSize from shared.ts)
-export * from './shared';
+// Enhanced shared utilities - explicitly import only what doesn't conflict
+export {
+  isValidUrl,
+  formatFileSize as formatFileSizeShared,
+  truncateUrl as truncateUrlShared,
+  formatDate as formatDateShared,
+  getDaysRemaining as getDaysRemainingShared,
+} from './shared';
 
 // Enhanced error handling
 export * from './error';
