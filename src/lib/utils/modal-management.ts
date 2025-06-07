@@ -1,3 +1,4 @@
+
 /**
  * Consolidated Modal Management Utilities
  * 
@@ -12,7 +13,7 @@ import React, { useCallback, useContext, createContext, useState, useRef, useEff
  */
 export interface ModalConfig {
   id: string;
-  component: React.ComponentType<unknown>;
+  component: React.ComponentType<any>;
   props?: Record<string, unknown>;
   persistent?: boolean; // Cannot be closed by ESC or backdrop click
   priority?: number; // Higher priority modals appear on top
@@ -153,6 +154,12 @@ export function ModalManagerProvider({ children }: { children: React.ReactNode }
     if (!modal.isOpen) return null;
     
     const ModalComponent = modal.component;
+    const modalProps = {
+      ...modal.props,
+      isOpen: modal.isOpen,
+      onClose: () => { closeModal(modal.id); }
+    };
+
     return React.createElement(
       'div',
       {
@@ -160,11 +167,7 @@ export function ModalManagerProvider({ children }: { children: React.ReactNode }
         style: { zIndex: modal.zIndex },
         className: 'fixed inset-0'
       },
-      React.createElement(ModalComponent, {
-        ...modal.props,
-        isOpen: modal.isOpen,
-        onClose: () => { closeModal(modal.id); }
-      })
+      React.createElement(ModalComponent, modalProps)
     );
   }).filter(Boolean);
 

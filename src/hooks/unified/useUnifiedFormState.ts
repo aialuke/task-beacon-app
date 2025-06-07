@@ -123,11 +123,11 @@ export function useUnifiedFormState<T extends Record<string, string>>(
   // Get current form values
   const values = useOptimizedMemo(
     () => {
-      const formValues = {} as Record<string, string>;
+      const formValues = {} as T;
       Object.keys(fields).forEach(key => {
-        formValues[key] = fields[key]?.value || '';
+        (formValues as Record<string, string>)[key] = fields[key]?.value || '';
       });
-      return formValues as T;
+      return formValues;
     },
     [fields],
     { name: 'formValues' }
