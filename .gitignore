@@ -36,6 +36,7 @@ coverage/
 *.njsproj
 *.sln
 *.sw?
+.cursor/rules
 
 # Temporary Files
 *.bak
