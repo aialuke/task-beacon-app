@@ -4,8 +4,12 @@
 # https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
 
 version: 2
-updates: on
-  - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/package.json" # Location of package manifests
+updates:
+  - package-ecosystem: "npm"
+    directory: "/" # Location of package.json and package-lock.json
     schedule:
-      interval: "weekly"
+      interval: "weekly" # Check for updates weekly
+    open-pull-requests-limit: 10 # Limit to 10 open PRs
+    labels:
+      - "dependencies"
+      - "npm"
