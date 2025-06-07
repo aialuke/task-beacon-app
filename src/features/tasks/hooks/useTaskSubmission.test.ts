@@ -8,8 +8,10 @@ import type { TaskWithRelations } from '@/types';
 // Mock the TaskService
 vi.mock('@/lib/api', () => ({
   TaskService: {
-    create: vi.fn(),
-    update: vi.fn(),
+    crud: {
+      create: vi.fn(),
+      update: vi.fn(),
+    },
   },
 }));
 
@@ -87,7 +89,7 @@ describe('useTaskSubmission', () => {
       url_link: null,
     };
 
-    vi.mocked(TaskService.create).mockResolvedValue({
+    vi.mocked(TaskService.crud.create).mockResolvedValue({
       success: true,
       data: mockCreatedTask,
       error: null,
@@ -104,12 +106,12 @@ describe('useTaskSubmission', () => {
       success: true,
       taskId: 'task-123',
     });
-    expect(TaskService.create).toHaveBeenCalled();
+    expect(TaskService.crud.create).toHaveBeenCalled();
   });
 
   it('should handle submission errors', async () => {
     const errorMessage = 'Failed to create task';
-    vi.mocked(TaskService.create).mockResolvedValue({
+    vi.mocked(TaskService.crud.create).mockResolvedValue({
       success: false,
       data: null,
       error: { message: errorMessage, name: 'TaskError' },
@@ -130,7 +132,7 @@ describe('useTaskSubmission', () => {
 
   it('should handle network errors', async () => {
     const networkError = new Error('Network error');
-    vi.mocked(TaskService.create).mockRejectedValue(networkError);
+    vi.mocked(TaskService.crud.create).mockRejectedValue(networkError);
 
     const { result } = renderHook(() => useTaskSubmission());
 
@@ -164,7 +166,7 @@ describe('useTaskSubmission', () => {
       url_link: null,
     };
 
-    vi.mocked(TaskService.update).mockResolvedValue({
+    vi.mocked(TaskService.crud.update).mockResolvedValue({
       success: true,
       data: mockUpdatedTask,
       error: null,
@@ -181,6 +183,6 @@ describe('useTaskSubmission', () => {
       success: true,
       taskId,
     });
-    expect(TaskService.update).toHaveBeenCalledWith(taskId, expect.objectContaining(updates));
+    expect(TaskService.crud.update).toHaveBeenCalledWith(taskId, expect.objectContaining(updates));
   });
 });

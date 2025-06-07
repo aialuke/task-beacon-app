@@ -29,7 +29,7 @@ export function useTaskStatusMutations() {
     }) => {
       // Call the appropriate service method
       if (updates.status) {
-        return await TaskService.updateStatus(taskId, updates.status);
+        return await TaskService.status.updateStatus(taskId, updates.status);
       }
       
       throw new Error('Invalid status update operation');

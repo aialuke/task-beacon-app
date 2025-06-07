@@ -62,7 +62,7 @@ describe('Task Mutation Hooks', () => {
     });
 
     it('should call markAsComplete correctly', () => {
-      vi.mocked(TaskService.updateStatus).mockResolvedValue({
+      vi.mocked(TaskService.status.updateStatus).mockResolvedValue({
         data: { ...mockTask, status: 'complete' },
         error: null,
         success: true,
@@ -74,11 +74,11 @@ describe('Task Mutation Hooks', () => {
         result.current.markAsComplete(mockTask.id);
       });
 
-      expect(TaskService.updateStatus).toHaveBeenCalledWith(mockTask.id, 'complete');
+      expect(TaskService.status.updateStatus).toHaveBeenCalledWith(mockTask.id, 'complete');
     });
 
     it('should call markAsIncomplete correctly', () => {
-      vi.mocked(TaskService.updateStatus).mockResolvedValue({
+      vi.mocked(TaskService.status.updateStatus).mockResolvedValue({
         data: { ...mockTask, status: 'pending' },
         error: null,
         success: true,
@@ -90,7 +90,7 @@ describe('Task Mutation Hooks', () => {
         result.current.markAsIncomplete(mockTask.id);
       });
 
-      expect(TaskService.updateStatus).toHaveBeenCalledWith(mockTask.id, 'pending');
+      expect(TaskService.status.updateStatus).toHaveBeenCalledWith(mockTask.id, 'pending');
     });
   });
 
@@ -103,7 +103,7 @@ describe('Task Mutation Hooks', () => {
     });
 
     it('should call deleteTask correctly', () => {
-      vi.mocked(TaskService.delete).mockResolvedValue({
+      vi.mocked(TaskService.crud.delete).mockResolvedValue({
         data: undefined,
         error: null,
         success: true,
@@ -115,7 +115,7 @@ describe('Task Mutation Hooks', () => {
         result.current.deleteTask(mockTask.id);
       });
 
-      expect(TaskService.delete).toHaveBeenCalledWith(mockTask.id);
+      expect(TaskService.crud.delete).toHaveBeenCalledWith(mockTask.id);
     });
   });
 
@@ -142,7 +142,7 @@ describe('Task Mutation Hooks', () => {
     });
 
     it('should maintain backward compatibility for toggleTaskCompleteCallback', async () => {
-      vi.mocked(TaskService.updateStatus).mockResolvedValue({
+      vi.mocked(TaskService.status.updateStatus).mockResolvedValue({
         data: { ...mockTask, status: 'complete' },
         error: null,
         success: true,
@@ -162,7 +162,7 @@ describe('Task Mutation Hooks', () => {
     });
 
     it('should maintain backward compatibility for deleteTaskCallback', async () => {
-      vi.mocked(TaskService.delete).mockResolvedValue({
+      vi.mocked(TaskService.crud.delete).mockResolvedValue({
         data: undefined,
         error: null,
         success: true,
@@ -187,7 +187,7 @@ describe('Task Mutation Hooks', () => {
         description: 'Follow-up Description',
       };
 
-      vi.mocked(TaskService.createFollowUp).mockResolvedValue({
+      vi.mocked(TaskService.hierarchy.createFollowUp).mockResolvedValue({
         data: { ...mockTask, title: taskData.title, parent_task_id: mockTask.id },
         error: null,
         success: true,
@@ -205,7 +205,7 @@ describe('Task Mutation Hooks', () => {
         message: 'Follow-up task created successfully',
       });
 
-      expect(TaskService.createFollowUp).toHaveBeenCalledWith(mockTask.id, taskData);
+      expect(TaskService.hierarchy.createFollowUp).toHaveBeenCalledWith(mockTask.id, taskData);
     });
   });
 });

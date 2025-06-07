@@ -53,7 +53,7 @@ export function useTasksQuery(pageSize = 10): UseTasksQueryReturn {
   } = useQuery({
     queryKey,
     queryFn: async () => {
-      const response = await TaskService.getMany({
+      const response = await TaskService.query.getMany({
         page: currentPage,
         pageSize: pageSize,
         assignedToMe: false,
@@ -99,7 +99,7 @@ export function useTasksQuery(pageSize = 10): UseTasksQueryReturn {
       queryClient.prefetchQuery({
         queryKey: nextPageKey,
         queryFn: async () => {
-          const response = await TaskService.getMany({
+          const response = await TaskService.query.getMany({
             page: currentPage + 1,
             pageSize: pageSize,
             assignedToMe: false,

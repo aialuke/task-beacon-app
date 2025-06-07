@@ -26,7 +26,7 @@ export function useTaskDeleteMutations() {
 
   const deleteMutation = useMutation({
     mutationFn: async (taskId: string) => {
-      return await TaskService.delete(taskId);
+      return await TaskService.crud.delete(taskId);
     },
     onMutate: async (taskId: string) => {
       // Cancel any outgoing refetches

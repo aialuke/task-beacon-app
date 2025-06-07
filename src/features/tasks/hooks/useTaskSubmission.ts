@@ -75,7 +75,7 @@ export function useTaskSubmission() {
       };
 
       // Submit to API
-      const response = await TaskService.create(serviceData);
+      const response = await TaskService.crud.create(serviceData);
 
       if (!response.success) {
         console.error('Task creation failed:', response.error);
@@ -108,7 +108,7 @@ export function useTaskSubmission() {
     updates: Partial<SubmitTaskData>
   ): Promise<SubmissionResult> => {
     try {
-      const response = await TaskService.update(taskId, {
+      const response = await TaskService.crud.update(taskId, {
         title: updates.title,
         description: updates.description,
         dueDate: updates.dueDate,

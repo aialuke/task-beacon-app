@@ -182,7 +182,7 @@ export function useFormPhotoUpload(options?: {
       }
 
       try {
-        const response = await TaskService.uploadPhoto(photoState.photo);
+        const response = await TaskService.media.uploadPhoto(photoState.photo);
         if (!response.success) {
           console.error('Photo upload failed:', response.error);
           throw new Error(response.error?.message || 'Photo upload failed');

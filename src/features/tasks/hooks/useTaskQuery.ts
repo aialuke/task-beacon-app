@@ -27,7 +27,7 @@ export function useTaskQuery(taskId: string | undefined): UseTaskQueryReturn {
         throw new Error('Task ID is required');
       }
 
-      const response = await TaskService.getById(taskId);
+      const response = await TaskService.crud.getById(taskId);
       
       if (!response.success) {
         throw new Error(response.error?.message || 'Failed to fetch task');

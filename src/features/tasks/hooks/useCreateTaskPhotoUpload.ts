@@ -13,7 +13,7 @@ export function useCreateTaskPhotoUpload() {
       }
 
       try {
-        const response = await TaskService.uploadPhoto(photo);
+        const response = await TaskService.media.uploadPhoto(photo);
         
         if (!response.success) {
           console.error('Photo upload failed:', response.error);
