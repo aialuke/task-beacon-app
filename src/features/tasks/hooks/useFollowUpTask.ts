@@ -66,44 +66,40 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
           photoUrl = await baseHook.handlePhotoUpload();
         }
 
-        // Prepare follow-up task data with assignee handling
+        // Prepare follow-up task data with assignee handling - ensure proper typing
+        const taskTitle = String(baseHook.title).trim();
+        const taskDescription = String(baseHook.description || `Follow-up from task: ${parentTask.title}`).trim();
+        const taskDueDate = String(baseHook.dueDate || '');
+        const taskUrl = String(baseHook.url || '').trim();
+
         const rawTaskData = {
-          title: baseHook.title,
-          description: baseHook.description || `Follow-up from task: ${parentTask.title}`,
-          dueDate: baseHook.dueDate,
-          url: baseHook.url,
-          assigneeId: assigneeId || currentUserId, // Use selected assignee or current user
+          title: taskTitle,
+          description: taskDescription,
+          dueDate: taskDueDate,
+          url: taskUrl,
+          assigneeId: assigneeId || currentUserId,
           priority: 'medium' as const,
           photoUrl: photoUrl || undefined,
-          urlLink: baseHook.url?.trim() || undefined,
+          urlLink: taskUrl || undefined,
           parentTaskId: parentTask.id,
         };
 
-        // Use base hook's validation to prepare data
-        const taskData = baseHook.showValidationErrors ? 
-          // If validation helper exists, use it
-          (() => {
-            // Simple validation check
-            if (!rawTaskData.title?.trim()) {
-              toast.error('Task title is required');
-              return null;
-            }
-            return {
-              title: rawTaskData.title.trim(),
-              description: rawTaskData.description?.trim() || undefined,
-              due_date: rawTaskData.dueDate || undefined,
-              photo_url: rawTaskData.photoUrl,
-              url_link: rawTaskData.urlLink,
-              assignee_id: rawTaskData.assigneeId || undefined,
-              parent_task_id: rawTaskData.parentTaskId,
-              priority: rawTaskData.priority,
-            };
-          })() :
-          rawTaskData;
-
-        if (!taskData) {
-          return; // Validation errors already shown
+        // Simple validation check
+        if (!taskTitle) {
+          toast.error('Task title is required');
+          return;
         }
+
+        const taskData = {
+          title: taskTitle,
+          description: taskDescription || undefined,
+          due_date: taskDueDate || undefined,
+          photo_url: photoUrl,
+          url_link: taskUrl || undefined,
+          assignee_id: assigneeId || currentUserId,
+          parent_task_id: parentTask.id,
+          priority: 'medium' as const,
+        };
 
         console.log('Creating validated follow-up task:', taskData);
 
@@ -124,7 +120,7 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
         if (currentUserId) {
           showBrowserNotification(
             'Follow-up Task Created',
-            `Follow-up task "${baseHook.title}" has been created`
+            `Follow-up task "${taskTitle}" has been created`
           );
         }
         

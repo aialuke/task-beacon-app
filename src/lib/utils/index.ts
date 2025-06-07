@@ -1,3 +1,4 @@
+
 /**
  * Centralized utilities index
  * 
@@ -30,8 +31,16 @@ export * from './data';
 // Date and time utilities
 export * from './date';
 
-// Format utilities (currency, numbers, etc.)
-export * from './format';
+// Format utilities (currency, numbers, etc.) - excluding formatFileSize to avoid conflict
+export {
+  formatPrice,
+  formatNumber,
+  formatBytes,
+  formatPercentage,
+  formatCurrency,
+  parsePrice,
+  parseNumber,
+} from './format';
 
 // =====================================================
 // ENHANCED UTILITIES (Available - Refactored & Migrated)
@@ -161,7 +170,7 @@ export type { AsyncOperationState as AsyncOpState } from './async-operations';
 // ENHANCED UTILITIES (Previous Phases)
 // =====================================================
 
-// Enhanced validation utilities (URL validation removed)
+// Enhanced validation utilities
 export {
   isValidEmail,
   isValidPassword,
@@ -179,7 +188,7 @@ export type {
   ValidationResult as UtilValidationResult,
 } from './validation';
 
-// Enhanced shared utilities
+// Enhanced shared utilities (including formatFileSize from shared.ts)
 export * from './shared';
 
 // Enhanced error handling

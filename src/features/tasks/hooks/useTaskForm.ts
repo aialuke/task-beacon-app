@@ -16,9 +16,9 @@ export interface UseTaskFormOptions {
 export interface TaskFormValues {
   title: string;
   description: string;
-  dueDate: string | null;
-  url: string | null;
-  assigneeId: string | null;
+  dueDate: string;
+  url: string;
+  assigneeId: string;
 }
 
 /**
@@ -38,13 +38,13 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     onClose,
   } = options;
 
-  // Create initial form state
+  // Create initial form state - ensure all values are strings
   const initialValues: TaskFormValues = {
     title: initialTitle,
     description: initialDescription,
-    dueDate: initialDueDate,
-    url: initialUrl || '', // Convert null to empty string
-    assigneeId: initialAssigneeId,
+    dueDate: initialDueDate || '',
+    url: initialUrl || '',
+    assigneeId: initialAssigneeId || '',
   };
 
   // Create validation schema - return string errors, not boolean
@@ -65,7 +65,7 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
         }
         return undefined;
       },
-    };
+    } as Record<keyof TaskFormValues, (value: string) => string | undefined>;
   }, []);
 
   // Use unified form state - properly destructure the tuple
@@ -79,7 +79,7 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
   const title = formState.fields.title.value;
   const description = formState.fields.description.value;
   const dueDate = formState.fields.dueDate.value;
-  const url = formState.fields.url.value || ''; // Ensure url is never null
+  const url = formState.fields.url.value;
   const assigneeId = formState.fields.assigneeId.value;
 
   // Convenience setters
@@ -108,7 +108,7 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     return {
       title: title.trim(),
       description: description.trim() || undefined,
-      due_date: dueDate || undefined, // Use due_date for API
+      due_date: dueDate || undefined,
       photo_url: null,
       url_link: url.trim() || undefined,
       assignee_id: assigneeId || undefined,

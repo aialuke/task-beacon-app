@@ -9,15 +9,15 @@
 import { useState, useCallback, useMemo } from 'react';
 import { validateField, validateForm, type ValidationResult } from '@/lib/utils/shared';
 
-export interface FormField<T = unknown> {
+export interface FormField<T = string> {
   value: T;
   error?: string;
   touched: boolean;
   dirty: boolean;
 }
 
-export interface FormState<T extends Record<string, unknown> = Record<string, unknown>> {
-  fields: Record<keyof T, FormField>;
+export interface FormState<T extends Record<string, string> = Record<string, string>> {
+  fields: Record<keyof T, FormField<T[keyof T]>>;
   isValid: boolean;
   isSubmitting: boolean;
   isDirty: boolean;
@@ -25,8 +25,8 @@ export interface FormState<T extends Record<string, unknown> = Record<string, un
   submitCount: number;
 }
 
-export interface FormActions<T extends Record<string, unknown> = Record<string, unknown>> {
-  setFieldValue: (name: keyof T, value: unknown) => void;
+export interface FormActions<T extends Record<string, string> = Record<string, string>> {
+  setFieldValue: (name: keyof T, value: T[keyof T]) => void;
   setFieldError: (name: keyof T, error: string | undefined) => void;
   setFieldTouched: (name: keyof T, touched: boolean) => void;
   validateField: (name: keyof T) => ValidationResult;
@@ -37,9 +37,9 @@ export interface FormActions<T extends Record<string, unknown> = Record<string, 
   setSubmitting: (submitting: boolean) => void;
 }
 
-export interface UseUnifiedFormStateOptions<T extends Record<string, unknown> = Record<string, unknown>> {
+export interface UseUnifiedFormStateOptions<T extends Record<string, string> = Record<string, string>> {
   initialValues: T;
-  validationSchema?: Record<keyof T, (value: unknown) => string | undefined>;
+  validationSchema?: Record<keyof T, (value: T[keyof T]) => string | undefined>;
   onSubmit?: (values: T) => Promise<void> | void;
   validateOnChange?: boolean;
   validateOnBlur?: boolean;
@@ -48,16 +48,16 @@ export interface UseUnifiedFormStateOptions<T extends Record<string, unknown> = 
 /**
  * Unified form state management hook
  */
-export function useUnifiedFormState<T extends Record<string, unknown> = Record<string, unknown>>({
+export function useUnifiedFormState<T extends Record<string, string> = Record<string, string>>({
   initialValues,
-  validationSchema = {},
+  validationSchema = {} as Record<keyof T, (value: T[keyof T]) => string | undefined>,
   onSubmit,
   validateOnChange = false,
   validateOnBlur = true,
 }: UseUnifiedFormStateOptions<T>): [FormState<T>, FormActions<T>] {
   // Initialize form fields
-  const [fields, setFields] = useState<Record<keyof T, FormField>>(() => {
-    const initialFields: Record<keyof T, FormField> = {} as Record<keyof T, FormField>;
+  const [fields, setFields] = useState<Record<keyof T, FormField<T[keyof T]>>>(() => {
+    const initialFields: Record<keyof T, FormField<T[keyof T]>> = {} as Record<keyof T, FormField<T[keyof T]>>;
     Object.keys(initialValues).forEach(key => {
       const fieldKey = key as keyof T;
       initialFields[fieldKey] = {
@@ -123,7 +123,7 @@ export function useUnifiedFormState<T extends Record<string, unknown> = Record<s
   }, [fields, validateFieldInternal]);
 
   // Actions
-  const setFieldValue = useCallback((name: keyof T, value: unknown) => {
+  const setFieldValue = useCallback((name: keyof T, value: T[keyof T]) => {
     setFields(prev => ({
       ...prev,
       [name]: {
@@ -162,7 +162,7 @@ export function useUnifiedFormState<T extends Record<string, unknown> = Record<s
 
   const resetForm = useCallback(() => {
     setFields(() => {
-      const resetFields: Record<keyof T, FormField> = {} as Record<keyof T, FormField>;
+      const resetFields: Record<keyof T, FormField<T[keyof T]>> = {} as Record<keyof T, FormField<T[keyof T]>>;
       Object.keys(initialValues).forEach(key => {
         const fieldKey = key as keyof T;
         resetFields[fieldKey] = {

@@ -72,11 +72,15 @@ export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions 
 
   // Prepare task data for submission
   const prepareTaskData = useOptimizedCallback((photoUrl: string | null): any => {
+    const titleStr = String(taskForm.title).trim();
+    const descriptionStr = String(taskForm.description).trim();
+    const urlStr = String(taskForm.url).trim();
+    
     const rawTaskData = {
-      title: taskForm.title,
-      description: taskForm.description || (parentTask ? `Follow-up from task: ${parentTask.title}` : undefined),
+      title: titleStr,
+      description: descriptionStr || (parentTask ? `Follow-up from task: ${parentTask.title}` : undefined),
       dueDate: taskForm.dueDate,
-      url: taskForm.url,
+      url: urlStr,
       assigneeId: taskForm.assigneeId,
       priority: 'medium' as const,
     };
@@ -84,7 +88,7 @@ export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions 
     return validation.prepareTaskData({
       ...rawTaskData,
       photoUrl: photoUrl || undefined,
-      urlLink: rawTaskData.url?.trim() || undefined,
+      urlLink: urlStr || undefined,
       parentTaskId: parentTask?.id || undefined,
     });
   }, [taskForm, parentTask, validation], { name: 'prepareTaskData' });

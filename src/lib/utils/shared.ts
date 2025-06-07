@@ -89,6 +89,57 @@ export const isValidText = (
   return trimmed.length >= minLength && trimmed.length <= maxLength;
 };
 
+// === DATE UTILITIES ===
+export const formatDate = (dateInput: string | Date): string => {
+  const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
+  
+  if (isNaN(date.getTime())) {
+    return 'Invalid Date';
+  }
+  
+  return new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  }).format(date);
+};
+
+export const getDaysRemaining = (dueDateString: string): number | null => {
+  if (!dueDateString) return null;
+  
+  const dueDate = new Date(dueDateString);
+  const now = new Date();
+  
+  if (isNaN(dueDate.getTime())) return null;
+  
+  const diffTime = dueDate.getTime() - now.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  return diffDays;
+};
+
+// === URL UTILITIES ===
+export const truncateUrl = (url: string, maxLength: number = 30): string => {
+  if (!url || typeof url !== 'string') return '';
+  
+  if (url.length <= maxLength) return url;
+  
+  try {
+    const urlObj = new URL(url);
+    const domain = urlObj.hostname;
+    
+    if (domain.length <= maxLength) return domain;
+    
+    return domain.length > maxLength 
+      ? `${domain.substring(0, maxLength - 3)}...`
+      : domain;
+  } catch {
+    return url.length > maxLength 
+      ? `${url.substring(0, maxLength - 3)}...`
+      : url;
+  }
+};
+
 // === FILE SIZE FORMATTING ===
 export const formatFileSize = (bytes: number): string => {
   if (bytes === 0) return '0 Bytes';

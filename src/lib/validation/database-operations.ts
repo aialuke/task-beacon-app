@@ -15,7 +15,6 @@ import {
 import { 
   createSuccessResult,
   createErrorResult,
-  getStandardMessage 
 } from './result-creators';
 
 export class DatabaseValidationOps {
@@ -35,17 +34,17 @@ export class DatabaseValidationOps {
 
       if (error) {
         console.error('Database error checking user existence:', error);
-        return createErrorResult(getStandardMessage(ValidationErrorCode.DATABASE_ERROR, 'Failed to validate user existence'));
+        return createErrorResult('Failed to validate user existence');
       }
 
       if (!data) {
-        return createErrorResult(getStandardMessage(ValidationErrorCode.NOT_FOUND, 'User not found'));
+        return createErrorResult('User not found');
       }
 
       return createSuccessResult();
     } catch (error) {
       console.error('Unexpected error in validateUserExists:', error);
-      return createErrorResult(getStandardMessage(ValidationErrorCode.DATABASE_ERROR, 'Database validation failed'));
+      return createErrorResult('Database validation failed');
     }
   }
 
@@ -65,17 +64,17 @@ export class DatabaseValidationOps {
 
       if (error) {
         console.error('Database error checking task existence:', error);
-        return createErrorResult(getStandardMessage(ValidationErrorCode.DATABASE_ERROR, 'Failed to validate task existence'));
+        return createErrorResult('Failed to validate task existence');
       }
 
       if (!data) {
-        return createErrorResult(getStandardMessage(ValidationErrorCode.NOT_FOUND, 'Task not found'));
+        return createErrorResult('Task not found');
       }
 
       return createSuccessResult();
     } catch (error) {
       console.error('Unexpected error in validateTaskExists:', error);
-      return createErrorResult(getStandardMessage(ValidationErrorCode.DATABASE_ERROR, 'Database validation failed'));
+      return createErrorResult('Database validation failed');
     }
   }
 
