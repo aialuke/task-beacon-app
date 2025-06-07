@@ -52,9 +52,9 @@ export async function validateTaskOwnership(
     }
 
     // All validations passed
-    return createStandardResult(true, [], [], {
-      validatedAt: new Date(),
+    return createStandardResult(true, [], {
       validator: context?.validator || 'validateTaskOwnership',
+      validatedAt: new Date(),
     });
   }, context);
 }

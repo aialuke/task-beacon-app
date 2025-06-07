@@ -1,3 +1,4 @@
+
 import { useEffect, useRef, useCallback } from 'react';
 
 interface MemoryManagementOptions {
@@ -23,7 +24,9 @@ export function useMemoryManagement(options: MemoryManagementOptions = {}) {
   } = options;
 
   const cleanupFunctionsRef = useRef<Set<() => void>>(new Set());
-  const cacheRef = useRef(enableWeakMapCache ? new WeakMap() : new Map());
+  const cacheRef = useRef<WeakMap<object, any> | Map<any, any>>(
+    enableWeakMapCache ? new WeakMap() : new Map()
+  );
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Register cleanup function
@@ -38,7 +41,7 @@ export function useMemoryManagement(options: MemoryManagementOptions = {}) {
   // Memory-efficient cache management
   const managedCache = useCallback(() => {
     return {
-      set: (key: unknown, value: any) => {
+      set: (key: object, value: any) => {
         if (enableWeakMapCache && cacheRef.current instanceof WeakMap) {
           cacheRef.current.set(key, value);
         } else if (cacheRef.current instanceof Map) {
@@ -55,15 +58,15 @@ export function useMemoryManagement(options: MemoryManagementOptions = {}) {
         }
       },
       
-      get: (key: unknown) => {
+      get: (key: object) => {
         return cacheRef.current.get(key);
       },
       
-      has: (key: unknown) => {
+      has: (key: object) => {
         return cacheRef.current.has(key);
       },
       
-      delete: (key: unknown) => {
+      delete: (key: object) => {
         return cacheRef.current.delete(key);
       },
       

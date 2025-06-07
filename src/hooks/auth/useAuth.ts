@@ -33,13 +33,13 @@ export function useAuth(): UseAuthReturn {
   const [error, setError] = useState<ApiError | null>(null);
 
   // Enhanced logging for mobile debugging
-  const logMobileDebug = useCallback((message: string, data?: unknown) => {
+  const logMobileDebug = useCallback((message: string, data?: Record<string, unknown>) => {
     console.log(`[useAuth Mobile Debug] ${message}`, {
       timestamp: new Date().toISOString(),
       isMobile: /Mobi|Android/i.test(navigator.userAgent),
       userAgent: navigator.userAgent,
       url: window.location.href,
-      ...data
+      ...(data || {})
     });
   }, []);
 
@@ -84,9 +84,10 @@ export function useAuth(): UseAuthReturn {
       // Session will be updated by the auth state listener
     } catch (err: unknown) {
       logMobileDebug('Sign in error caught', { error: err });
+      const errorMessage = err instanceof Error ? err.message : 'Failed to sign in';
       setError({ 
         name: 'SignInError', 
-        message: err?.message || 'Failed to sign in' 
+        message: errorMessage 
       });
       clearAuthState();
     } finally {
@@ -113,7 +114,7 @@ export function useAuth(): UseAuthReturn {
 
       logMobileDebug('Sign out successful');
       clearAuthState();
-    } catch (err: any) {
+    } catch (err: unknown) {
       logMobileDebug('Sign out error caught', { error: err });
       setError({ 
         name: 'SignOutError', 
@@ -139,7 +140,7 @@ export function useAuth(): UseAuthReturn {
       }
       
       logMobileDebug('Session refresh successful');
-    } catch (err: any) {
+    } catch (err: unknown) {
       logMobileDebug('Session refresh error caught', { error: err });
       setError({ 
         name: 'RefreshError', 

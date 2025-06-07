@@ -1,3 +1,4 @@
+
 import { useCallback, useMemo, useRef } from 'react';
 import { debounce } from 'lodash-es';
 
@@ -5,6 +6,11 @@ interface FormPerformanceOptions {
   debounceMs?: number;
   enableOptimisticUpdates?: boolean;
   validateOnChange?: boolean;
+}
+
+interface OptimisticUpdate {
+  value: unknown;
+  timestamp: number;
 }
 
 /**
@@ -27,7 +33,7 @@ export function useFormPerformance<T extends Record<string, unknown>>(
   } = options;
 
   const validationCacheRef = useRef(new Map<string, unknown>());
-  const optimisticUpdatesRef = useRef(new Map<string, unknown>());
+  const optimisticUpdatesRef = useRef(new Map<string, OptimisticUpdate>());
 
   // Debounced validation function
   const debouncedValidation = useMemo(

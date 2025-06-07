@@ -1,5 +1,5 @@
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback } from 'react';
 import { useOptimizedMemo, useOptimizedCallback } from '@/hooks/useOptimizedMemo';
 import type { FormState, ValidationResult } from '@/types/utility.types';
 
@@ -37,16 +37,19 @@ export function useUnifiedFormState<T extends Record<string, string>>(
     const fields: Record<string, FormFieldState> = {};
     
     // If we have initial values, use them to set up fields
-    const initialKeys = Object.keys(initialValues) as Array<keyof T>;
-    initialKeys.forEach((key) => {
-      const stringKey = String(key);
-      fields[stringKey] = {
-        value: (initialValues[key] as string) || '',
-        error: null,
-        touched: false,
-        isDirty: false,
-      };
-    });
+    if (initialValues && typeof initialValues === 'object') {
+      const initialKeys = Object.keys(initialValues) as Array<keyof T>;
+      initialKeys.forEach((key) => {
+        const stringKey = String(key);
+        const value = initialValues[key];
+        fields[stringKey] = {
+          value: typeof value === 'string' ? value : '',
+          error: null,
+          touched: false,
+          isDirty: false,
+        };
+      });
+    }
     
     return fields;
   }, [initialValues]);

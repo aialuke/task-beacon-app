@@ -1,3 +1,4 @@
+
 /**
  * Database Operations for Validation
  * 
@@ -9,12 +10,33 @@ import { supabase } from '@/integrations/supabase/client';
 import { 
   BasicValidationResult,
   ValidationContext,
-  ValidationErrorCode 
 } from './types';
 import { 
   createSuccessResult,
   createErrorResult,
 } from './result-creators';
+
+// Define missing types locally
+interface QueryResult<T> {
+  success: boolean;
+  data: T | null;
+  error: {
+    code: string;
+    message: string;
+    details?: string;
+  } | null;
+}
+
+interface UserCheckResult {
+  userId: string;
+  exists: boolean;
+  email?: string;
+}
+
+interface TaskCheckResult {
+  taskId: string;
+  exists: boolean;
+}
 
 export class DatabaseValidationOps {
   /**
@@ -122,7 +144,7 @@ export class DatabaseValidationOps {
         if (userQueryResult.error) {
           usersResult = createErrorResult('Failed to validate users');
         } else {
-          const foundEmails = userQueryResult.data?.map((u: unknown) => u.email) || [];
+          const foundEmails = userQueryResult.data?.map((u: { email: string }) => u.email) || [];
           const missingEmails = emails.filter(email => !foundEmails.includes(email));
           if (missingEmails.length > 0) {
             usersResult = createErrorResult(`Users not found: ${missingEmails.join(', ')}`);
@@ -135,7 +157,7 @@ export class DatabaseValidationOps {
         if (taskQueryResult.error) {
           tasksResult = createErrorResult('Failed to validate tasks');
         } else {
-          const foundTaskIds = taskQueryResult.data?.map((t: unknown) => t.id) || [];
+          const foundTaskIds = taskQueryResult.data?.map((t: { id: string }) => t.id) || [];
           const missingTaskIds = taskIds.filter(id => !foundTaskIds.includes(id));
           if (missingTaskIds.length > 0) {
             tasksResult = createErrorResult(`Tasks not found: ${missingTaskIds.join(', ')}`);
@@ -168,20 +190,21 @@ export class DatabaseValidationOps {
 }
 
 /**
- * Executes a Supabase query with proper error handling
+ * Validates that a user exists in the database
  */
-export async function executeQuery<T>(
-  queryFn: () => PostgrestQueryBuilder<any, any, any, unknown>,
+export async function checkUserExists(
+  userId: string,
   context?: ValidationContext
-): Promise<QueryResult<T>> {
+): Promise<QueryResult<boolean>> {
   try {
-    const { data, error } = await queryFn();
-    
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('id', userId)
+      .single();
+
     if (error) {
-      if (context?.logger) {
-        context.logger.error('Database query failed', error);
-      }
-      
+      console.error('Database error checking user existence:', error);
       return {
         success: false,
         error: {
@@ -195,14 +218,12 @@ export async function executeQuery<T>(
 
     return {
       success: true,
-      data: data as T,
+      data: data !== null,
       error: null,
     };
   } catch (error) {
     const errorObj = error as Error;
-    if (context?.logger) {
-      context.logger.error('Database query execution failed', errorObj);
-    }
+    console.error('Database query execution failed', errorObj);
     
     return {
       success: false,
@@ -217,65 +238,51 @@ export async function executeQuery<T>(
 }
 
 /**
- * Validates that a user exists in the database
- */
-export async function checkUserExists(
-  userId: string,
-  context?: ValidationContext
-): Promise<QueryResult<boolean>> {
-  const query = () => 
-    supabase
-      .from('profiles')
-      .select('id')
-      .eq('id', userId)
-      .single();
-
-  const result = await executeQuery<{ id: string }>(query, context);
-  
-  if (!result.success) {
-    return {
-      success: false,
-      error: result.error,
-      data: null,
-    };
-  }
-
-  return {
-    success: true,
-    data: result.data !== null,
-    error: null,
-  };
-}
-
-/**
  * Validates that a task exists in the database
  */
 export async function checkTaskExists(
   taskId: string,
   context?: ValidationContext
 ): Promise<QueryResult<boolean>> {
-  const query = () =>
-    supabase
+  try {
+    const { data, error } = await supabase
       .from('tasks')
       .select('id')
       .eq('id', taskId)
       .single();
 
-  const result = await executeQuery<{ id: string }>(query, context);
-  
-  if (!result.success) {
+    if (error) {
+      console.error('Database error checking task existence:', error);
+      return {
+        success: false,
+        error: {
+          code: error.code || 'DATABASE_ERROR',
+          message: error.message || 'Database operation failed',
+          details: error.details,
+        },
+        data: null,
+      };
+    }
+
+    return {
+      success: true,
+      data: data !== null,
+      error: null,
+    };
+  } catch (error) {
+    const errorObj = error as Error;
+    console.error('Database query execution failed', errorObj);
+    
     return {
       success: false,
-      error: result.error,
+      error: {
+        code: 'EXECUTION_ERROR',
+        message: errorObj.message || 'Query execution failed',
+        details: errorObj.stack,
+      },
       data: null,
     };
   }
-
-  return {
-    success: true,
-    data: result.data !== null,
-    error: null,
-  };
 }
 
 /**
@@ -293,43 +300,55 @@ export async function checkMultipleUsersExist(
     };
   }
 
-  const query = () =>
-    supabase
+  try {
+    const { data, error } = await supabase
       .from('profiles')
       .select('id, email')
       .in('id', userIds);
 
-  const result = await executeQuery<Array<{ id: string; email: string }>>(query, context);
-  
-  if (!result.success) {
+    if (error) {
+      console.error('Database error checking multiple users:', error);
+      return {
+        success: false,
+        error: {
+          code: error.code || 'DATABASE_ERROR',
+          message: error.message || 'Database operation failed',
+          details: error.details,
+        },
+        data: null,
+      };
+    }
+
+    const foundUsers = data || [];
+    const results: UserCheckResult[] = userIds.map(userId => {
+      const found = foundUsers.find(user => user.id === userId);
+      
+      return {
+        userId,
+        exists: !!found,
+        email: found?.email,
+      };
+    });
+
+    return {
+      success: true,
+      data: results,
+      error: null,
+    };
+  } catch (error) {
+    const errorObj = error as Error;
+    console.error('Database query execution failed', errorObj);
+    
     return {
       success: false,
-      error: result.error,
+      error: {
+        code: 'EXECUTION_ERROR',
+        message: errorObj.message || 'Query execution failed',
+        details: errorObj.stack,
+      },
       data: null,
     };
   }
-
-  const foundUsers = result.data || [];
-  const results: UserCheckResult[] = userIds.map(userId => {
-    const found = foundUsers.find(user => {
-      if (typeof user === 'object' && user !== null && 'email' in user) {
-        return (user as { id: string; email: string }).id === userId;
-      }
-      return false;
-    });
-    
-    return {
-      userId,
-      exists: !!found,
-      email: found ? (found as { id: string; email: string }).email : undefined,
-    };
-  });
-
-  return {
-    success: true,
-    data: results,
-    error: null,
-  };
 }
 
 /**
@@ -347,40 +366,52 @@ export async function checkMultipleTasksExist(
     };
   }
 
-  const query = () =>
-    supabase
+  try {
+    const { data, error } = await supabase
       .from('tasks')
       .select('id')
       .in('id', taskIds);
 
-  const result = await executeQuery<Array<{ id: string }>>(query, context);
-  
-  if (!result.success) {
+    if (error) {
+      console.error('Database error checking multiple tasks:', error);
+      return {
+        success: false,
+        error: {
+          code: error.code || 'DATABASE_ERROR',
+          message: error.message || 'Database operation failed',
+          details: error.details,
+        },
+        data: null,
+      };
+    }
+
+    const foundTasks = data || [];
+    const results: TaskCheckResult[] = taskIds.map(taskId => {
+      const found = foundTasks.find(task => task.id === taskId);
+      
+      return {
+        taskId,
+        exists: !!found,
+      };
+    });
+
+    return {
+      success: true,
+      data: results,
+      error: null,
+    };
+  } catch (error) {
+    const errorObj = error as Error;
+    console.error('Database query execution failed', errorObj);
+    
     return {
       success: false,
-      error: result.error,
+      error: {
+        code: 'EXECUTION_ERROR',
+        message: errorObj.message || 'Query execution failed',
+        details: errorObj.stack,
+      },
       data: null,
     };
   }
-
-  const foundTasks = result.data || [];
-  const results: TaskCheckResult[] = taskIds.map(taskId => {
-    const found = foundTasks.find(task => {
-      if (typeof task === 'object' && task !== null && 'id' in task) {
-        return (task as { id: string }).id === taskId;
-      }
-      return false;
-    });
-    
-    return {
-      taskId,
-      exists: !!found,
-    };
-  });
-
-  return {
-    success: true,
-    data: results,
-    error: null,
-  };
 }
