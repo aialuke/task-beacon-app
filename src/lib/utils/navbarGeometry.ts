@@ -12,7 +12,7 @@ interface ButtonBounds {
 
 /**
  * Calculates the position and dimensions of the active button
- * Returns positions relative to the container's content area (after padding)
+ * Returns positions relative to the container's full area (including padding)
  */
 export function calculateActiveButtonBounds(
   activeIndex: number,
@@ -30,8 +30,9 @@ export function calculateActiveButtonBounds(
   const buttonRect = activeButton.getBoundingClientRect();
   const containerRect = container.getBoundingClientRect();
 
-  // Calculate position relative to container's content area (after padding)
-  const x = buttonRect.left - containerRect.left - containerPadding;
+  // Calculate position relative to container's full area (including padding)
+  // This aligns with how CSS positioning works for absolutely positioned children
+  const x = buttonRect.left - containerRect.left;
   const width = buttonRect.width;
   const centerX = x + width / 2;
 
