@@ -39,11 +39,11 @@ export {
  */
 export const consolidatedErrorHandler = {
   // Global setup
-  setupGlobal: () => import('./error/global-handlers').then(m => m.setupGlobalErrorHandlers()),
+  setupGlobal: () => import('./error/global-handlers').then(m => { m.setupGlobalErrorHandlers(); }),
   
   // API error handling
   handleApi: (error: unknown, operation?: string, options = {}) => 
-    import('./error/api-handlers').then(m => m.handleApiError(error, operation, options)),
+    import('./error/api-handlers').then(m => { m.handleApiError(error, operation, options); }),
   
   // Auth-specific errors
   handleAuth: (error: unknown, operation: string) =>
@@ -78,7 +78,7 @@ export const consolidatedErrorHandler = {
  * @deprecated Use consolidatedErrorHandler instead for new code
  */
 export const legacyErrorUtils = {
-  setupGlobalErrorHandlers: () => import('./error/global-handlers').then(m => m.setupGlobalErrorHandlers()),
+  setupGlobalErrorHandlers: () => import('./error/global-handlers').then(m => { m.setupGlobalErrorHandlers(); }),
   handleApiError: (error: unknown, operation?: string, options = {}) => 
     import('./error/api-handlers').then(m => m.handleApiError(error, operation, options)),
   handleAuthError: (error: unknown, operation: string) =>

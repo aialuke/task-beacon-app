@@ -68,7 +68,7 @@ class Logger {
    * Get current environment
    */
   private getEnvironment(): string {
-    if (typeof process !== 'undefined' && process.env?.NODE_ENV) {
+    if (typeof process !== 'undefined' && process.env.NODE_ENV) {
       return process.env.NODE_ENV;
     }
     return 'development';
@@ -281,7 +281,7 @@ export function logFunctionCall<T extends (...args: unknown[]) => unknown>(
             logger.debug(`Function completed: ${functionName}`, { result: res });
             return res;
           })
-          .catch((error) => {
+          .catch((error: unknown) => {
             logger.error(`Function failed: ${functionName}`, error, { args });
             throw error;
           });

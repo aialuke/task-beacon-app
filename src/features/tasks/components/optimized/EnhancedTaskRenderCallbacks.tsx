@@ -9,7 +9,7 @@ const TaskCard = lazy(() => import('../TaskCard'));
 
 interface EnhancedRenderOptions {
   shouldVirtualize: boolean;
-  visibleItems: any[];
+  visibleItems: unknown[];
   totalHeight: number;
   containerStyles: React.CSSProperties;
   spacerStyles: React.CSSProperties;
@@ -105,7 +105,7 @@ export const useEnhancedTaskRenderCallbacks = (options: EnhancedRenderOptions) =
           className="virtualized-task-container"
         >
           <div style={spacerStyles}>
-            {visibleItems.map((item: any) => (
+            {visibleItems.map((item: unknown) => (
               <Suspense key={item.task.id} fallback={
                 <div 
                   style={{ 

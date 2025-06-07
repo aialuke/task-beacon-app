@@ -48,7 +48,7 @@ function TaskImageGallery({ task, className }: TaskImageGalleryProps) {
   }
 
   const handleImageClick = () => {
-    openPreview(task.photo_url!);
+    openPreview(task.photo_url);
   };
 
   return (

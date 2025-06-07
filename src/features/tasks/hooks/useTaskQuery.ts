@@ -21,7 +21,7 @@ export function useTaskQuery(taskId: string | undefined): UseTaskQueryReturn {
     isLoading,
     error: queryError,
   } = useQuery({
-    queryKey: QueryKeys.task(taskId || ''),
+    queryKey: QueryKeys.task(taskId ?? ''),
     queryFn: async () => {
       if (!taskId) {
         throw new Error('Task ID is required');

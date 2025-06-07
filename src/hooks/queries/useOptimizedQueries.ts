@@ -51,7 +51,7 @@ export const QUERY_DEFAULTS = {
 /**
  * Smart retry logic that considers error types
  */
-export function createSmartRetryFn(maxRetries: number = 3) {
+export function createSmartRetryFn(maxRetries = 3) {
   return (failureCount: number, error: unknown): boolean => {
     if (failureCount >= maxRetries) return false;
     
@@ -72,7 +72,7 @@ export function createSmartRetryFn(maxRetries: number = 3) {
 /**
  * Exponential backoff retry delay
  */
-export function createRetryDelay(baseDelay: number = 1000) {
+export function createRetryDelay(baseDelay = 1000) {
   return (retryAttempt: number): number => {
     return Math.min(baseDelay * Math.pow(2, retryAttempt), 30000); // Max 30 seconds
   };

@@ -33,7 +33,7 @@ const TaskDetailsPage = () => {
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => navigate(-1)}
+          onClick={() => { navigate(-1); }}
           className="mb-4"
         >
           <ArrowLeft size={16} className="mr-2" /> Back
@@ -123,7 +123,7 @@ const TaskDetailsPage = () => {
                 variant="ghost"
                 size="sm"
                 className="mt-3"
-                onClick={() => navigate(`/tasks/${task.parent_task_id}`)}
+                onClick={() => { navigate(`/tasks/${task.parent_task_id}`); }}
               >
                 <ExternalLink size={14} className="mr-2" />
                 View Original Task
@@ -136,7 +136,7 @@ const TaskDetailsPage = () => {
           <Suspense
             fallback={<UnifiedLoadingStates variant="skeleton" count={2} />}
           >
-            <TaskActions task={task} onView={() => navigate(`/tasks/${task.id}`)} />
+            <TaskActions task={task} onView={() => { navigate(`/tasks/${task.id}`); }} />
           </Suspense>
         </div>
       </div>

@@ -48,11 +48,11 @@ export async function showBrowserNotification(
     try {
       new Notification(title, {
         body,
-        icon: options.icon || "/favicon.ico",
+        icon: options.icon ?? "/favicon.ico",
         badge: options.badge,
         tag: options.tag,
-        requireInteraction: options.requireInteraction || false,
-        silent: options.silent || false,
+        requireInteraction: options.requireInteraction ?? false,
+        silent: options.silent ?? false,
       });
       return true;
     } catch (error) {

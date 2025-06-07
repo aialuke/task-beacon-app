@@ -38,7 +38,7 @@ export default function FollowUpTaskPage() {
     return <UnifiedLoadingStates variant="page" message="Loading parent task data..." />;
   }
 
-  if (error || !parentTask) {
+  if (error ?? !parentTask) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
         <div className="container mx-auto max-w-2xl px-4 py-8">
@@ -46,7 +46,7 @@ export default function FollowUpTaskPage() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => navigate('/')}
+              onClick={() => { navigate('/'); }}
               className="rounded-full p-3 shadow-sm transition-all duration-200 hover:scale-105 hover:bg-accent/80 hover:shadow-md"
             >
               <ArrowLeft className="h-5 w-5" />

@@ -8,7 +8,7 @@ import { Task } from '@/types';
 
 interface UseTaskWorkflowOptions {
   onClose?: () => void;
-  parentTask?: any;
+  parentTask?: unknown;
   onWorkflowComplete?: (result: { success: boolean; taskId?: string }) => void;
 }
 

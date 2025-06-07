@@ -150,7 +150,7 @@ export function createPortalRenderer(containerId: string) {
 /**
  * Compound component pattern helper
  */
-export function createCompoundComponent<T extends Record<string, React.ComponentType<any>>>(
+export function createCompoundComponent<T extends Record<string, React.ComponentType<unknown>>>(
   components: T
 ) {
   return Object.assign(
@@ -177,8 +177,8 @@ export function memo<T extends object>(
  */
 export interface StateManagerOptions<T> {
   initialState: T;
-  reducer?: (state: T, action: any) => T;
-  middleware?: Array<(state: T, action: any) => T>;
+  reducer?: (state: T, action: unknown) => T;
+  middleware?: Array<(state: T, action: unknown) => T>;
 }
 
 export function createStateManager<T>(options: StateManagerOptions<T>) {
@@ -187,7 +187,7 @@ export function createStateManager<T>(options: StateManagerOptions<T>) {
   return function useStateManager() {
     const [state, setState] = useState<T>(initialState);
 
-    const dispatch = useCallback((action: any) => {
+    const dispatch = useCallback((action: unknown) => {
       setState(currentState => {
         let newState = reducer ? reducer(currentState, action) : currentState;
         
@@ -207,7 +207,7 @@ export function createStateManager<T>(options: StateManagerOptions<T>) {
 /**
  * Event handling patterns
  */
-export function useEventCallback<T extends (...args: any[]) => any>(
+export function useEventCallback<T extends (...args: unknown[]) => any>(
   callback: T,
   deps: React.DependencyList
 ): T {
@@ -217,7 +217,7 @@ export function useEventCallback<T extends (...args: any[]) => any>(
     ref.current = callback;
   }, deps);
 
-  return useCallback((...args: any[]) => {
+  return useCallback((...args: unknown[]) => {
     return ref.current(...args);
   }, []) as T;
 }
@@ -225,14 +225,14 @@ export function useEventCallback<T extends (...args: any[]) => any>(
 /**
  * Debounced callback pattern
  */
-export function useDebouncedCallback<T extends (...args: any[]) => any>(
+export function useDebouncedCallback<T extends (...args: unknown[]) => any>(
   callback: T,
   delay: number,
   deps: React.DependencyList
 ): T {
   const timeoutRef = useRef<NodeJS.Timeout>();
 
-  const debouncedCallback = useCallback((...args: any[]) => {
+  const debouncedCallback = useCallback((...args: unknown[]) => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
@@ -271,7 +271,7 @@ export function usePrevious<T>(value: T): T | undefined {
  */
 export function useForceUpdate() {
   const [, setToggle] = useState(false);
-  return useCallback(() => setToggle(prev => !prev), []);
+  return useCallback(() => { setToggle(prev => !prev); }, []);
 }
 
 /**

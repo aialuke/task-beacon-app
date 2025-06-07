@@ -76,8 +76,8 @@ export interface StandardValidationDetail {
   code: ValidationErrorCode | ValidationWarningCode;
   message: string;
   severity: 'error' | 'warning' | 'info';
-  value?: any;
-  context?: Record<string, any>;
+  value?: unknown;
+  context?: Record<string, unknown>;
 }
 
 /**
@@ -100,7 +100,7 @@ export interface ValidationContext {
   validator: string;
   field?: string;
   operation?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -150,5 +150,5 @@ export type AsyncValidationResult = Promise<StandardValidationResult>;
 /**
  * Validator function signatures
  */
-export type SyncValidator<T = any> = (value: T, context?: ValidationContext) => BasicValidationResult;
-export type AsyncValidator<T = any> = (value: T, context?: ValidationContext, config?: AsyncValidationConfig) => AsyncValidationResult;
+export type SyncValidator<T = unknown> = (value: T, context?: ValidationContext) => BasicValidationResult;
+export type AsyncValidator<T = unknown> = (value: T, context?: ValidationContext, config?: AsyncValidationConfig) => AsyncValidationResult;

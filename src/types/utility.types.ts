@@ -35,10 +35,10 @@ export type ArrayElement<T> = T extends readonly (infer U)[] ? U : never;
 export type RecordValue<T> = T extends Record<string, infer U> ? U : never;
 
 // Function utilities
-export type AsyncReturnType<T extends (...args: any) => Promise<any>> = 
-  T extends (...args: any) => Promise<infer R> ? R : never;
+export type AsyncReturnType<T extends (...args: unknown) => Promise<any>> = 
+  T extends (...args: unknown) => Promise<infer R> ? R : never;
 
-export type Parameters<T extends (...args: any) => any> = T extends (...args: infer P) => any ? P : never;
+export type Parameters<T extends (...args: unknown) => any> = T extends (...args: infer P) => any ? P : never;
 
 // Conditional utilities
 export type If<C extends boolean, T, F> = C extends true ? T : F;
@@ -66,13 +66,13 @@ export interface BaseComponentProps {
 }
 
 // State management utilities
-export type AsyncState<T, E = string> = {
+export interface AsyncState<T, E = string> {
   data: T | null;
   loading: boolean;
   error: E | null;
 };
 
-export type LoadingState = {
+export interface LoadingState {
   isLoading: boolean;
   isSubmitting?: boolean;
   isValidating?: boolean;
@@ -125,7 +125,7 @@ export type Timestamp = string; // ISO 8601 format
 
 // Status utilities
 export type Status = 'idle' | 'loading' | 'success' | 'error';
-export type AsyncOperationState = {
+export interface AsyncOperationState {
   status: Status;
   error?: string;
   data?: unknown;

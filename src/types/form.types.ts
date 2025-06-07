@@ -84,7 +84,7 @@ export interface TextareaFieldProps extends BaseFieldProps {
 export interface SelectFieldProps extends BaseFieldProps {
   value: string;
   onChange: (value: string) => void;
-  options: Array<{ value: string; label: string; disabled?: boolean }>;
+  options: { value: string; label: string; disabled?: boolean }[];
 }
 
 // Form configuration

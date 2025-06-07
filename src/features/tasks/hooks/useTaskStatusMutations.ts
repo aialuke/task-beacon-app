@@ -68,15 +68,15 @@ export function useTaskStatusMutations() {
     },
     onSettled: () => {
       // Always refetch after error or success to ensure consistency
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      void queryClient.invalidateQueries({ queryKey: ['tasks'] });
     },
   });
 
   return {
     markAsComplete: (taskId: string) =>
-      statusMutation.mutate({ taskId, updates: { status: 'complete' }, action: 'complete' }),
+      { statusMutation.mutate({ taskId, updates: { status: 'complete' }, action: 'complete' }); },
     markAsIncomplete: (taskId: string) =>
-      statusMutation.mutate({ taskId, updates: { status: 'pending' }, action: 'incomplete' }),
+      { statusMutation.mutate({ taskId, updates: { status: 'pending' }, action: 'incomplete' }); },
     isLoading: statusMutation.isPending,
     statusMutation,
   };

@@ -57,11 +57,11 @@ const FloatingInput = forwardRef<HTMLInputElement, FloatingInputProps>(
           </label>
         )}
         <input
-          ref={ref || inputRef} // Use forwarded ref if provided, otherwise use local ref
+          ref={ref ?? inputRef} // Use forwarded ref if provided, otherwise use local ref
           id={id}
           type={type}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => { onChange(e.target.value); }}
           autoComplete={autoComplete}
           disabled={disabled}
           required={required}

@@ -26,7 +26,7 @@ function TaskMetadata({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <a href={url} target="_blank" rel="noopener noreferrer" className="flex max-w-[180px] items-center gap-2 truncate text-sm text-primary hover:underline sm:max-w-[280px]" onClick={e => e.stopPropagation()} aria-label={`Open ${url} in new tab`}>
+                <a href={url} target="_blank" rel="noopener noreferrer" className="flex max-w-[180px] items-center gap-2 truncate text-sm text-primary hover:underline sm:max-w-[280px]" onClick={e => { e.stopPropagation(); }} aria-label={`Open ${url} in new tab`}>
                   <ExternalLink size={16} className="shrink-0 text-primary" />
                   <span>{truncateUrl(url, 20)}</span>
                 </a>

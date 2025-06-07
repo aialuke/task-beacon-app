@@ -132,7 +132,7 @@ export function useTaskListVirtualization(
 
     observer.observe(containerRef.current);
 
-    return () => observer.disconnect();
+    return () => { observer.disconnect(); };
   }, [shouldVirtualize]);
 
   // Container styles for virtualization

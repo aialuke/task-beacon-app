@@ -88,7 +88,7 @@ export function QuickActionBar({
           label={hasAssignee ? 'Assigned' : 'Assign'}
           active={hasAssignee}
           disabled={disabled}
-          onClick={() => setIsUserModalOpen(true)}
+          onClick={() => { setIsUserModalOpen(true); }}
         />
 
         {/* Photo Button */}
@@ -106,7 +106,7 @@ export function QuickActionBar({
           label={hasUrl ? 'Link Added' : 'Link'}
           active={hasUrl}
           disabled={disabled}
-          onClick={() => setIsUrlModalOpen(true)}
+          onClick={() => { setIsUrlModalOpen(true); }}
         />
       </div>
 
@@ -121,14 +121,14 @@ export function QuickActionBar({
       {/* Modals */}
       <UrlInputModal
         isOpen={isUrlModalOpen}
-        onClose={() => setIsUrlModalOpen(false)}
+        onClose={() => { setIsUrlModalOpen(false); }}
         value={url}
         onChange={onUrlChange}
       />
 
       <UserSearchModal
         isOpen={isUserModalOpen}
-        onClose={() => setIsUserModalOpen(false)}
+        onClose={() => { setIsUserModalOpen(false); }}
         value={assigneeId}
         onChange={onAssigneeChange}
       />
@@ -136,7 +136,7 @@ export function QuickActionBar({
       {/* Simple Photo Upload Modal */}
       <SimplePhotoUploadModal
         isOpen={isPhotoModalOpen}
-        onClose={() => setIsPhotoModalOpen(false)}
+        onClose={() => { setIsPhotoModalOpen(false); }}
         photoPreview={photoPreview}
         onPhotoChange={onPhotoChange}
         onPhotoRemove={onPhotoRemove}

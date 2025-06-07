@@ -46,7 +46,7 @@ export function TaskUIContextProvider({ children }: { children: ReactNode }) {
     checkIfMobile();
     window.addEventListener("resize", checkIfMobile);
 
-    return () => window.removeEventListener("resize", checkIfMobile);
+    return () => { window.removeEventListener("resize", checkIfMobile); };
   }, []);
 
   const value = useMemo(

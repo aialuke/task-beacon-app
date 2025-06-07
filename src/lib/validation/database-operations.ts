@@ -123,7 +123,7 @@ export class DatabaseValidationOps {
         if (userQueryResult.error) {
           usersResult = createErrorResult('Failed to validate users');
         } else {
-          const foundEmails = userQueryResult.data?.map((u: any) => u.email) || [];
+          const foundEmails = userQueryResult.data?.map((u: unknown) => u.email) || [];
           const missingEmails = emails.filter(email => !foundEmails.includes(email));
           if (missingEmails.length > 0) {
             usersResult = createErrorResult(`Users not found: ${missingEmails.join(', ')}`);
@@ -136,7 +136,7 @@ export class DatabaseValidationOps {
         if (taskQueryResult.error) {
           tasksResult = createErrorResult('Failed to validate tasks');
         } else {
-          const foundTaskIds = taskQueryResult.data?.map((t: any) => t.id) || [];
+          const foundTaskIds = taskQueryResult.data?.map((t: unknown) => t.id) || [];
           const missingTaskIds = taskIds.filter(id => !foundTaskIds.includes(id));
           if (missingTaskIds.length > 0) {
             tasksResult = createErrorResult(`Tasks not found: ${missingTaskIds.join(', ')}`);

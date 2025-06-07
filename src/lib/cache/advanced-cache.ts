@@ -51,11 +51,11 @@ export class AdvancedCache<T> {
     };
 
     // Periodic cleanup
-    setInterval(() => this.cleanup(), 60000); // Every minute
+    setInterval(() => { this.cleanup(); }, 60000); // Every minute
   }
 
   set(key: string, data: T, ttl?: number): void {
-    const entryTTL = ttl || this.options.defaultTTL!;
+    const entryTTL = ttl ?? this.options.defaultTTL!;
     const size = this.calculateSize(data);
     
     // Check if we need to evict entries
@@ -213,7 +213,7 @@ export function useCachedData<T>(
         setData(result);
         setError(null);
       })
-      .catch(err => {
+      .catch((err: unknown) => {
         setError(err);
       })
       .finally(() => {

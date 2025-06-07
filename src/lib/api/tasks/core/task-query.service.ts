@@ -236,8 +236,8 @@ export class TaskQueryService {
           owner:profiles!tasks_owner_id_fkey(id, name, email, avatar_url)
         `)
         .eq('assignee_id', userId)
-        .order(options.sortBy || 'created_at', { ascending: options.sortOrder === 'asc' })
-        .limit(options.pageSize || 50);
+        .order(options.sortBy ?? 'created_at', { ascending: options.sortOrder === 'asc' })
+        .limit(options.pageSize ?? 50);
 
       if (error) throw error;
 

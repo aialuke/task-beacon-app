@@ -53,8 +53,8 @@ export function FloatingInput({
           type={type}
           value={value}
           onChange={onChange}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
+          onFocus={() => { setIsFocused(true); }}
+          onBlur={() => { setIsFocused(false); }}
           placeholder=""
           maxLength={maxLength}
           required={required}

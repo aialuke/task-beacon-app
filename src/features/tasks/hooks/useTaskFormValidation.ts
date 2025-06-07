@@ -20,7 +20,7 @@ export function useTaskFormValidation() {
    * Validate complete task form data with enhanced error handling
    */
   const validateTaskForm = useCallback(
-    (data: unknown): { isValid: boolean; errors: Record<string, string>; data?: any } => {
+    (data: unknown): { isValid: boolean; errors: Record<string, string>; data?: unknown } => {
       const result = taskFormSchema.safeParse(data);
       
       if (result.success) {
@@ -89,7 +89,7 @@ export function useTaskFormValidation() {
    */
   const validateField = useCallback(
     (fieldName: string, value: unknown): { isValid: boolean; error?: string } => {
-      let result: z.SafeParseReturnType<any, any>;
+      let result: z.SafeParseReturnType<unknown, any>;
       
       switch (fieldName) {
         case 'title':
@@ -170,7 +170,7 @@ export function useTaskFormValidation() {
   /**
    * Enhanced task data preparation with validation
    */
-  const prepareTaskData = useCallback((formData: unknown): any => {
+  const prepareTaskData = useCallback((formData: unknown): unknown => {
     console.log('Preparing task data:', formData);
     
     const validation = validateCreateTask(formData);
@@ -186,10 +186,10 @@ export function useTaskFormValidation() {
       title: validatedData.title?.trim(),
       description: validatedData.description?.trim() || undefined,
       dueDate: validatedData.dueDate || undefined,
-      photoUrl: (formData as any).photoUrl || undefined,
+      photoUrl: (formData as unknown).photoUrl || undefined,
       urlLink: validatedData.url?.trim() || undefined,
       assigneeId: validatedData.assigneeId || undefined,
-      parentTaskId: (formData as any).parentTaskId || undefined,
+      parentTaskId: (formData as unknown).parentTaskId || undefined,
       priority: validatedData.priority || 'medium',
     };
     

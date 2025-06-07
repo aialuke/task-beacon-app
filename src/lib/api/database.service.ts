@@ -138,7 +138,7 @@ export class DatabaseService {
     table: string,
     column: string,
     values: unknown[]
-  ): Promise<ApiResponse<Array<{ value: unknown; exists: boolean }>>> {
+  ): Promise<ApiResponse<{ value: unknown; exists: boolean }[]>> {
     return apiRequest(`batch-exists.${table}`, async () => {
       if (values.length === 0) return [];
 
@@ -152,7 +152,7 @@ export class DatabaseService {
 
       if (error) throw error;
 
-      const existingValues = new Set(data.map((row: any) => row[column]));
+      const existingValues = new Set(data.map((row: unknown) => row[column]));
       
       return values.map(value => ({
         value,

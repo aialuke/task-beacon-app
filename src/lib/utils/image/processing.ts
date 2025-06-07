@@ -49,7 +49,7 @@ export function calculateOptimalDimensions(
   originalHeight: number,
   maxWidth: number,
   maxHeight: number,
-  preserveAspectRatio: boolean = true
+  preserveAspectRatio = true
 ): DimensionResult {
   const aspectRatio = originalWidth / originalHeight;
 
@@ -212,7 +212,7 @@ export async function processImageWithCanvas(
   file: File,
   canvasProcessor: (canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, img: HTMLImageElement) => void,
   outputFormat: 'webp' | 'jpeg' | 'png' = 'jpeg',
-  quality: number = 0.85
+  quality = 0.85
 ): Promise<Blob> {
   return new Promise((resolve, reject) => {
     const img = new Image();

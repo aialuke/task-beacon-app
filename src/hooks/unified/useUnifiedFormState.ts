@@ -98,7 +98,7 @@ export function useUnifiedFormState<T extends Record<string, string> = Record<st
       return { isValid: true, errors: [] };
     }
 
-    const error = validator(field?.value);
+    const error = validator(field.value);
     return {
       isValid: !error,
       errors: error ? [error] : [],
@@ -131,7 +131,7 @@ export function useUnifiedFormState<T extends Record<string, string> = Record<st
         value,
         dirty: value !== initialValues[name],
         ...(validateOnChange && {
-          error: validationSchema[name]?.(value),
+          error: validationSchema[name](value),
         }),
       },
     }));
@@ -154,7 +154,7 @@ export function useUnifiedFormState<T extends Record<string, string> = Record<st
         ...prev[name],
         touched,
         ...(validateOnBlur && touched && {
-          error: validationSchema[name]?.(prev[name]?.value),
+          error: validationSchema[name](prev[name]?.value),
         }),
       },
     }));
@@ -216,9 +216,9 @@ export function useUnifiedFormState<T extends Record<string, string> = Record<st
     try {
       const values = Object.keys(fields).reduce((acc, key) => {
         const fieldKey = key as keyof T;
-        acc[fieldKey] = fields[fieldKey]?.value as T[keyof T];
+        acc[fieldKey] = fields[fieldKey].value as T[keyof T];
         return acc;
-      }, {} as T);
+      }, {});
 
       await onSubmit(values);
     } catch (error) {

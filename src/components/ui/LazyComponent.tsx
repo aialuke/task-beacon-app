@@ -10,18 +10,18 @@ interface LazyComponentProps {
 /**
  * Higher-order component for lazy loading with error boundary
  */
-export function withLazyLoading<T extends Record<string, any>>(
+export function withLazyLoading<T extends Record<string, unknown>>(
   importFn: () => Promise<{ default: ComponentType<T> }>,
   options: LazyComponentProps = {}
 ) {
   const LazyComponent = lazy(importFn);
   
   return function WrappedLazyComponent(props: T) {
-    const fallback = options.fallback || <UnifiedLoadingStates variant="spinner" />;
+    const fallback = options.fallback ?? <UnifiedLoadingStates variant="spinner" />;
     
     return (
       <Suspense fallback={fallback}>
-        <LazyComponent {...(props as any)} />
+        <LazyComponent {...(props as unknown)} />
       </Suspense>
     );
   };

@@ -18,7 +18,7 @@ interface TaskMutationResult {
   success: boolean;
   message?: string;
   error?: string;
-  data?: any;
+  data?: unknown;
 }
 
 /**
@@ -43,7 +43,7 @@ export function useTaskCreation() {
       };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      void queryClient.invalidateQueries({ queryKey: ['tasks'] });
       toast.success('Task created successfully');
     },
     onError: (error) => {
@@ -61,7 +61,7 @@ export function useTaskCreation() {
   );
 
   const createFollowUpTask = useOptimizedCallback(
-    async (parentTask: any, taskData: { title: string; description?: string }): Promise<TaskMutationResult> => {
+    async (parentTask: unknown, taskData: { title: string; description?: string }): Promise<TaskMutationResult> => {
       const followUpData = {
         ...taskData,
         parentTaskId: parentTask.id,

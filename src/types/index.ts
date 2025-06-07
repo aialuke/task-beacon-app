@@ -83,7 +83,7 @@ export type {
 } from './utility.types';
 
 // Convenience type aliases - unified definitions
-export type ApiState<T = unknown, E = string> = {
+export interface ApiState<T = unknown, E = string> {
   data: T | null;
   loading: boolean;
   error: E | null;

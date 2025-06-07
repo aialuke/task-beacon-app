@@ -106,7 +106,7 @@ export const mockFailedAuth = (errorMessage = "Authentication failed") => {
       message: errorMessage,
       name: "AuthError",
       status: 401,
-    } as unknown,
+    } as any,
   });
 };
 

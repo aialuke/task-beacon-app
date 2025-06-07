@@ -30,7 +30,7 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
 
   // Use shared base hook functionality
   const baseHook = useTaskFormBase({
-    onClose: onClose || (() => navigate('/')),
+    onClose: onClose || (() => { navigate('/'); }),
     parentTask,
   });
 
@@ -79,7 +79,7 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
           url: taskUrl,
           assigneeId: assigneeId || currentUserId,
           priority: 'medium' as const,
-          photoUrl: photoUrl || undefined,
+          photoUrl: photoUrl ?? undefined,
           urlLink: taskUrl || undefined,
           parentTaskId: parentTask.id,
         };
@@ -114,7 +114,7 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
         toast.success('Follow-up task created successfully');
         
         // Invalidate queries to refresh the task list
-        queryClient.invalidateQueries({ queryKey: ['tasks'] });
+        void queryClient.invalidateQueries({ queryKey: ['tasks'] });
         
         triggerHapticFeedback();
         if (currentUserId) {
@@ -127,7 +127,7 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
         // Reset form and navigate
         baseHook.resetForm();
         
-        const closeCallback = onClose || (() => navigate('/'));
+        const closeCallback = onClose ?? (() => navigate('/'));
         closeCallback();
 
       } catch (error: unknown) {

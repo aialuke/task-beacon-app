@@ -34,10 +34,10 @@ const ModernAuthForm: React.FC = () => {
       }
     };
     const timer = setTimeout(focusFirstInput, 100);
-    return () => clearTimeout(timer);
+    return () => { clearTimeout(timer); };
   }, [mode, nameInputRef, emailInputRef]);
 
-  const handleTogglePassword = () => setShowPassword(!showPassword);
+  const handleTogglePassword = () => { setShowPassword(!showPassword); };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background via-background to-muted/20 p-4">

@@ -71,7 +71,7 @@ export function groupBy<T>(array: T[], key: keyof T): Record<string, T[]> {
       result[groupKey].push(item);
       return result;
     },
-    {} as Record<string, T[]>
+    {}
   );
 }
 
@@ -95,8 +95,8 @@ export function uniqueBy<T>(array: T[], key: keyof T): T[] {
  */
 export function paginateArray<T>(
   array: T[],
-  page: number = 1,
-  pageSize: number = 10
+  page = 1,
+  pageSize = 10
 ): T[] {
   const startIndex = (page - 1) * pageSize;
   return array.slice(startIndex, startIndex + pageSize);
@@ -110,7 +110,7 @@ export function isEmpty(value: unknown): boolean {
   if (typeof value === 'string') return value.trim() === '';
   if (Array.isArray(value)) return value.length === 0;
   if (typeof value === 'object')
-    return Object.keys(value as object).length === 0;
+    return Object.keys(value).length === 0;
   return false;
 }
 

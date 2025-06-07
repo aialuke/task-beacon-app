@@ -15,9 +15,9 @@ import { WebPDetector } from './webp-detector';
  */
 export async function compressAndResizePhoto(
   file: File,
-  maxWidth: number = 1200,
-  maxHeight: number = 1200,
-  quality: number = 0.85
+  maxWidth = 1200,
+  maxHeight = 1200,
+  quality = 0.85
 ): Promise<File> {
   const result = await processImageEnhanced(file, {
     maxWidth,
@@ -38,7 +38,7 @@ export async function compressAndResizePhoto(
  */
 export async function generateThumbnailEnhanced(
   file: File,
-  size: number = 150,
+  size = 150,
   format: 'auto' | 'webp' | 'jpeg' = 'auto'
 ): Promise<Blob> {
   const result = await processImageEnhanced(file, {
@@ -98,7 +98,7 @@ export async function resizeImage(
  */
 export async function compressImage(
   file: File,
-  quality: number = 0.8,
+  quality = 0.8,
   format: 'auto' | 'webp' | 'jpeg' | 'png' = 'auto'
 ): Promise<Blob> {
   const result = await processImageEnhanced(file, {
@@ -117,7 +117,7 @@ export async function compressImage(
 export async function createSquareThumbnail(
   file: File,
   size: number = 150,
-  quality: number = 0.8
+  quality = 0.8
 ): Promise<Blob> {
   const result = await processImageEnhanced(file, {
     maxWidth: size,
@@ -151,8 +151,8 @@ export async function convertImageFormat(
  */
 export async function optimizeForWeb(
   file: File,
-  maxWidth: number = 1920,
-  maxHeight: number = 1080
+  maxWidth = 1920,
+  maxHeight = 1080
 ): Promise<{ 
   optimized: Blob;
   thumbnail: Blob;
@@ -188,9 +188,9 @@ export async function optimizeForWeb(
  */
 export async function createImageSizes(
   file: File,
-  sizes: Array<{ name: string; width: number; height: number }>,
+  sizes: { name: string; width: number; height: number }[],
   quality: number = 0.85
-): Promise<Array<{ name: string; blob: Blob; size: number }>> {
+): Promise<{ name: string; blob: Blob; size: number }[]> {
   const results = await Promise.all(
     sizes.map(async ({ name, width, height }) => {
       const result = await processImageEnhanced(file, {

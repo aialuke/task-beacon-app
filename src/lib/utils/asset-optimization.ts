@@ -54,7 +54,7 @@ export function generateSrcSet(src: string, widths: number[]): string {
 /**
  * Generate responsive sizes attribute
  */
-export function generateSizes(breakpoints: Array<{ condition: string; size: string }>): string {
+export function generateSizes(breakpoints: { condition: string; size: string }[]): string {
   return breakpoints
     .map(({ condition, size }) => `${condition} ${size}`)
     .join(', ');

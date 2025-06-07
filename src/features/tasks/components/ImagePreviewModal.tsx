@@ -52,7 +52,7 @@ export const ImagePreviewModal = memo(function ImagePreviewModal({
       {/* Modal Window */}
       <div 
         className="relative bg-white rounded-2xl shadow-2xl max-w-[90vw] max-h-[90vh] overflow-hidden"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) => { e.stopPropagation(); }}
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b bg-gray-50">

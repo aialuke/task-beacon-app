@@ -62,12 +62,12 @@ export function useTaskDeleteMutations() {
     },
     onSettled: () => {
       // Always refetch after error or success to ensure consistency
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      void queryClient.invalidateQueries({ queryKey: ['tasks'] });
     },
   });
 
   return {
-    deleteTask: (taskId: string) => deleteMutation.mutate(taskId),
+    deleteTask: (taskId: string) => { deleteMutation.mutate(taskId); },
     isLoading: deleteMutation.isPending,
     mutation: deleteMutation,
   };

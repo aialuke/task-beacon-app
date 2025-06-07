@@ -18,7 +18,7 @@ export function useOptimizedMemo<T>(
     warnOnSlowComputation = true,
     slowComputationThreshold = 10,
     trackDependencyChanges = true,
-  } = options || {};
+  } = options ?? {};
 
   const memoizedValueRef = useRef<T>();
   const previousDepsRef = useRef<React.DependencyList>();
@@ -28,7 +28,7 @@ export function useOptimizedMemo<T>(
   // Check if dependencies have changed using Object.is for better comparison
   const depsChanged = !previousDepsRef.current || 
     deps.length !== previousDepsRef.current.length ||
-    deps.some((dep, index) => !Object.is(dep, previousDepsRef.current![index]));
+    deps.some((dep, index) => !Object.is(dep, previousDepsRef.current?.[index]));
 
   if (depsChanged || isInitialRenderRef.current) {
     const startTime = performance.now();
@@ -54,7 +54,7 @@ export function useOptimizedMemo<T>(
       
       if (trackDependencyChanges && !isInitialRenderRef.current) {
         const changedIndices = deps
-          .map((dep, index) => (!Object.is(dep, previousDepsRef.current![index]) ? index : -1))
+          .map((dep, index) => (!Object.is(dep, previousDepsRef.current?.[index]) ? index : -1))
           .filter(index => index !== -1);
           
         if (changedIndices.length > 0) {

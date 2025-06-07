@@ -53,7 +53,7 @@ const VirtualizedTaskCard = memo(
         ...style,
         position: "absolute" as const,
         width: "100%",
-        transform: style?.transform || "none",
+        transform: style?.transform ?? "none",
       };
 
       const combinedProps = {
@@ -78,7 +78,7 @@ const VirtualizedTaskCard = memo(
           }
         >
           <article
-            ref={ref || cardRef}
+            ref={ref ?? cardRef}
             className={`virtualized-task-card bg-card text-card-foreground border border-border shadow-task-card transition-all duration-200 hover:shadow-md cursor-pointer mb-4 w-full rounded-xl p-4 box-border max-w-full ${statusClass} ${animationClass} ${expandedClass} ${
               task.status === "complete"
                 ? "bg-muted"

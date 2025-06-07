@@ -18,7 +18,7 @@ export function calculateActiveButtonBounds(
   activeIndex: number,
   buttonRefs: (HTMLButtonElement | null)[],
   container: HTMLDivElement | null,
-  containerPadding: number = 8
+  containerPadding = 8
 ): ButtonBounds {
   const activeButton = buttonRefs[activeIndex];
 
@@ -51,7 +51,7 @@ export function calculateActiveButtonBounds(
  */
 export function calculateIndicatorPosition(
   centerX: number,
-  indicatorWidth: number = 24
+  indicatorWidth = 24
 ): { x: number; width: number } {
   const x = centerX - indicatorWidth / 2;
   console.log('Indicator position:', { centerX, indicatorWidth, x });
@@ -68,7 +68,7 @@ export function calculateIndicatorPosition(
  */
 export function calculateGlowPosition(
   bounds: ButtonBounds,
-  glowPadding: number = 8
+  glowPadding = 8
 ): { x: number; width: number } {
   const glowWidth = bounds.width + glowPadding * 2;
   const x = bounds.centerX - glowWidth / 2;

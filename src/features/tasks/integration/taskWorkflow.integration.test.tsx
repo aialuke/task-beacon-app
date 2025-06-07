@@ -50,7 +50,7 @@ describe('Task Workflow Integration Tests', () => {
       const { result } = renderHook(() => useTaskWorkflow(), { wrapper });
 
       // Act: Update task status
-      let updateResult: any;
+      let updateResult: unknown;
       await act(async () => {
         updateResult = await result.current.updateTaskWithWorkflow(
           originalTask,

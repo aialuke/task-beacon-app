@@ -67,7 +67,7 @@ export function createStandardResult(
     errorCode: !isValid ? details.find(d => d.severity === 'error')?.code as ValidationErrorCode : undefined,
     metadata: {
       validatedAt: new Date(),
-      validator: context?.validator || 'unknown',
+      validator: context?.validator ?? 'unknown',
     },
   };
 }
