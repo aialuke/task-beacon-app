@@ -1,3 +1,4 @@
+
 /**
  * Task CRUD Service - Handles basic Create, Read, Update, Delete operations
  */
@@ -15,7 +16,6 @@ interface TaskDatabaseRow {
   photo_url?: string | null;
   url_link?: string | null;
   assignee_id?: string | null;
-  pinned?: boolean;
   status?: TaskStatus;
 }
 
@@ -27,7 +27,6 @@ export interface TaskCreateData {
   urlLink?: string | null;
   assigneeId?: string | null;
   parentTaskId?: string | null;
-  pinned?: boolean;
 }
 
 export interface TaskUpdateData {
@@ -37,7 +36,6 @@ export interface TaskUpdateData {
   photoUrl?: string | null;
   urlLink?: string | null;
   assigneeId?: string | null;
-  pinned?: boolean;
   status?: TaskStatus;
 }
 
@@ -89,7 +87,6 @@ export class TaskCrudService {
           url_link: taskData.urlLink || null,
           owner_id: userResponse.data,
           parent_task_id: taskData.parentTaskId || null,
-          pinned: taskData.pinned || false,
           status: 'pending' as const,
           assignee_id: taskData.assigneeId || null,
         })
@@ -123,7 +120,6 @@ export class TaskCrudService {
       if (taskData.photoUrl !== undefined) updateData.photo_url = taskData.photoUrl;
       if (taskData.urlLink !== undefined) updateData.url_link = taskData.urlLink;
       if (taskData.assigneeId !== undefined) updateData.assignee_id = taskData.assigneeId;
-      if (taskData.pinned !== undefined) updateData.pinned = taskData.pinned;
       if (taskData.status !== undefined) updateData.status = taskData.status;
 
       const { data, error } = await supabase

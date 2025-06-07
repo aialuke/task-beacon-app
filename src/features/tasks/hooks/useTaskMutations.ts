@@ -1,3 +1,4 @@
+
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Task } from '@/types';
 import { TaskService } from '@/lib/api';
@@ -99,7 +100,6 @@ export function useTaskMutations() {
       urlLink?: string; 
       assigneeId?: string; 
       parentTaskId?: string; 
-      pinned?: boolean; 
     }): Promise<TaskMutationResult> => {
       const result = await TaskService.crud.create(taskData);
       
@@ -182,7 +182,6 @@ export function useTaskMutations() {
       urlLink?: string; 
       assigneeId?: string; 
       parentTaskId?: string; 
-      pinned?: boolean; 
     }) => {
       const result = await createTask.mutateAsync(taskData);
       return result;
@@ -206,7 +205,6 @@ export function useTaskMutations() {
       const followUpData = {
         ...taskData,
         parentTaskId: parentTask.id, // Use camelCase
-        pinned: false,
       };
       const result = await createTask.mutateAsync(followUpData);
       return {

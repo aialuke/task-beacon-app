@@ -77,7 +77,6 @@ export const baseTaskSchema = z.object({
     .optional()
     .nullable()
     .or(z.literal('')),
-  pinned: z.boolean().default(false),
   assigneeId: z.string().optional().nullable().or(z.literal('')),
 });
 
@@ -96,7 +95,6 @@ export const taskFormSchema = z.object({
   description: z.string().max(500, VALIDATION_MESSAGES.DESCRIPTION_TOO_LONG).default(''),
   dueDate: z.string().default(''),
   url: z.string().refine(isValidUrlEnhanced, VALIDATION_MESSAGES.URL_INVALID).default(''),
-  pinned: z.boolean().default(false),
   assigneeId: z.string().default(''),
   priority: z.enum(['low', 'medium', 'high', 'urgent']).default('medium'),
 });

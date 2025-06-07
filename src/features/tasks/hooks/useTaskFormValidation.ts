@@ -190,7 +190,6 @@ export function useTaskFormValidation() {
       urlLink: validatedData.url?.trim() || undefined,
       assigneeId: validatedData.assigneeId || undefined,
       parentTaskId: (formData as any).parentTaskId || undefined,
-      pinned: validatedData.pinned || false,
       priority: validatedData.priority || 'medium',
     };
     

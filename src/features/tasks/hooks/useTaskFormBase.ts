@@ -16,7 +16,6 @@ interface TaskFormData {
   description?: string;
   dueDate?: string;
   url?: string;
-  pinned?: boolean;
   assigneeId?: string;
   priority: 'medium';
   parentTaskId?: string;
@@ -57,7 +56,6 @@ export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions 
       description: taskForm.description,
       dueDate: taskForm.dueDate || '',
       url: taskForm.url || '',
-      pinned: taskForm.pinned || false,
       assigneeId: taskForm.assigneeId || '',
       priority: 'medium' as const,
     };
@@ -87,7 +85,6 @@ export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions 
       description: taskForm.description || (parentTask ? `Follow-up from task: ${parentTask.title}` : undefined),
       dueDate: taskForm.dueDate,
       url: taskForm.url,
-      pinned: taskForm.pinned,
       assigneeId: taskForm.assigneeId,
       priority: 'medium' as const,
     };

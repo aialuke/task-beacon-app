@@ -63,7 +63,6 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
         // Handle photo upload using base hook's upload method
         let photoUrl: string | null = null;
         if (baseHook.photoPreview) {
-          // Use the handlePhotoUpload method instead of handlePhotoChange
           photoUrl = await baseHook.handlePhotoUpload();
         }
 
@@ -73,7 +72,6 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
           description: baseHook.description || `Follow-up from task: ${parentTask.title}`,
           dueDate: baseHook.dueDate,
           url: baseHook.url,
-          pinned: baseHook.pinned,
           assigneeId: assigneeId || currentUserId, // Use selected assignee or current user
           priority: 'medium' as const,
           photoUrl: photoUrl || undefined,
@@ -98,7 +96,6 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
               urlLink: rawTaskData.urlLink,
               assigneeId: rawTaskData.assigneeId || undefined,
               parentTaskId: rawTaskData.parentTaskId,
-              pinned: rawTaskData.pinned || false,
               priority: rawTaskData.priority,
             };
           })() :
