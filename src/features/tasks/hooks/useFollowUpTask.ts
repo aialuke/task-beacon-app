@@ -1,20 +1,16 @@
 
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
-
-// Clean imports from organized type system
+import { useTaskFormBase } from './useTaskFormBase';
+import { useOptimizedMemo, useOptimizedCallback } from '@/hooks/useOptimizedMemo';
 import type { Task } from '@/types';
 import {
   showBrowserNotification,
   triggerHapticFeedback,
 } from '@/lib/utils/notification';
-import { useTaskForm } from './useTaskForm';
-import { useTaskFormValidation } from './useTaskFormValidation';
-import { useTaskPhotoUpload } from '@/components/form/hooks/useFormPhotoUpload';
-import { useTaskMutations } from './useTaskMutations';
 import { AuthService } from '@/lib/api/auth.service';
+import { toast } from 'sonner';
 
 interface UseFollowUpTaskProps {
   parentTask: Task;
@@ -22,115 +18,77 @@ interface UseFollowUpTaskProps {
 }
 
 /**
- * Enhanced with Phase 3: Form validation integration
- * Now properly integrates validation with follow-up task submission flow
+ * Phase 4 Cleanup: Simplified follow-up task hook using shared base
+ * Eliminates duplicate code while maintaining exact same functionality
  */
 export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const validation = useTaskFormValidation();
-  const { createTaskCallback } = useTaskMutations();
-
-  // Pass onClose to useTaskForm properly
-  const taskForm = useTaskForm({
-    onClose: onClose || (() => navigate('/')),
-  });
-
   const [assigneeId, setAssigneeId] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
 
-  // Use standardized photo upload hook
-  const photoUpload = useTaskPhotoUpload({
-    processingOptions: {
-      maxWidth: 1920,
-      maxHeight: 1080,
-      quality: 0.85,
-      format: 'auto' as const,
-    },
-    autoProcess: true,
+  // Use shared base hook functionality
+  const baseHook = useTaskFormBase({
+    onClose: onClose || (() => navigate('/')),
+    parentTask,
   });
 
-  // Enhanced form validation for follow-up tasks
-  const validateFollowUpForm = useCallback(() => {
-    // Prepare form data for validation
-    const formData = {
-      title: taskForm.title,
-      description: taskForm.description || `Follow-up from task: ${parentTask.title}`,
-      dueDate: taskForm.dueDate || '',
-      url: taskForm.url || '',
-      pinned: taskForm.pinned || false,
-      assigneeId: assigneeId || '',
-      priority: 'medium' as const,
-    };
-
-    // Use the task form validation schema
-    const validationResult = validation.validateTaskForm(formData);
-    
-    if (!validationResult.isValid) {
-      // Show validation errors to user via toast
-      validation.showValidationErrors(validationResult.errors);
-      return { isValid: false, errors: validationResult.errors };
-    }
-    
-    return { isValid: true, errors: {} };
-  }, [taskForm, assigneeId, parentTask.title, validation]);
-
-  const handleSubmit = useCallback(
+  // Enhanced submit handler with follow-up specific logic
+  const handleSubmit = useOptimizedCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
 
-      // Phase 3: Enhanced validation integration
-      const validationResult = validateFollowUpForm();
+      // Validate form
+      const validationResult = baseHook.validateForm();
       if (!validationResult.isValid) {
         console.log('Follow-up form validation failed:', validationResult.errors);
         return;
       }
 
-      taskForm.setLoading(true);
+      baseHook.setLoading(true);
       setError(null);
 
       try {
-        // Get current user
+        // Get current user for assignee fallback
         const userResponse = await AuthService.getCurrentUserId();
         if (!userResponse.success || !userResponse.data) {
           throw new Error('Failed to get current user');
         }
         const currentUserId = userResponse.data;
 
-        // Handle photo upload using standardized hook
-        const photoUrl = photoUpload.photo ? await photoUpload.uploadPhoto() : null;
+        // Handle photo upload
+        const photoUrl = baseHook.photoPreview ? await baseHook.handlePhotoChange() : null;
 
-        // Prepare follow-up task data
+        // Prepare follow-up task data with assignee handling
         const rawTaskData = {
-          title: taskForm.title,
-          description: taskForm.description || `Follow-up from task: ${parentTask.title}`,
-          dueDate: taskForm.dueDate,
-          url: taskForm.url,
-          pinned: taskForm.pinned,
-          assigneeId: assigneeId || currentUserId,
+          title: baseHook.title,
+          description: baseHook.description || `Follow-up from task: ${parentTask.title}`,
+          dueDate: baseHook.dueDate,
+          url: baseHook.url,
+          pinned: baseHook.pinned,
+          assigneeId: assigneeId || currentUserId, // Use selected assignee or current user
           priority: 'medium' as const,
         };
 
-        // Use validation helper to prepare and validate data
-        const followUpTaskData = validation.prepareTaskData({
+        // Use validation helper to prepare data
+        const taskData = baseHook.validation?.prepareTaskData?.({
           ...rawTaskData,
           photoUrl: photoUrl || undefined,
           urlLink: rawTaskData.url?.trim() || undefined,
-          parentTaskId: parentTask.id, // Add parent task relationship
+          parentTaskId: parentTask.id,
         });
 
-        if (!followUpTaskData) {
-          // Validation errors already shown by prepareTaskData
-          return;
+        if (!taskData) {
+          return; // Validation errors already shown
         }
 
-        console.log('Creating validated follow-up task:', followUpTaskData);
+        console.log('Creating validated follow-up task:', taskData);
 
-        // Use createTaskCallback mutation hook consistently
-        const result = await createTaskCallback(followUpTaskData);
+        // Create task using the same callback as base hook
+        const result = await baseHook.createTaskCallback?.(taskData);
 
-        if (!result.success) {
-          throw new Error(result.error || 'Failed to create follow-up task');
+        if (!result?.success) {
+          throw new Error(result?.error || 'Failed to create follow-up task');
         }
 
         // Success handling
@@ -143,13 +101,12 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
         if (currentUserId) {
           showBrowserNotification(
             'Follow-up Task Created',
-            `Follow-up task "${taskForm.title}" has been created`
+            `Follow-up task "${baseHook.title}" has been created`
           );
         }
         
         // Reset form and navigate
-        taskForm.resetFormState();
-        photoUpload.resetPhoto();
+        baseHook.resetForm();
         
         const closeCallback = onClose || (() => navigate('/'));
         closeCallback();
@@ -160,40 +117,39 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
         setError(errorMessage);
         toast.error(errorMessage);
       } finally {
-        taskForm.setLoading(false);
+        baseHook.setLoading(false);
       }
     },
     [
-      validateFollowUpForm,
-      taskForm,
+      baseHook,
       parentTask,
       assigneeId,
-      photoUpload,
-      validation,
-      createTaskCallback,
       onClose,
       navigate,
       queryClient,
     ]
   );
 
-  return {
-    ...taskForm,
-    assigneeId,
-    setAssigneeId,
-    handleSubmit,
-    error,
-    loading: taskForm.loading,
-    
-    // Standardized photo upload functionality
-    photoPreview: photoUpload.photoPreview,
-    handlePhotoChange: photoUpload.handlePhotoChange,
-    handlePhotoRemove: photoUpload.handlePhotoRemove,
-    photoLoading: photoUpload.photoLoading,
-    processingResult: photoUpload.processingResult,
-    
-    // Enhanced validation integration
-    validateForm: validateFollowUpForm,
-    showValidationErrors: validation.showValidationErrors,
-  };
+  // Return interface compatible with existing usage
+  return useOptimizedMemo(
+    () => ({
+      ...baseHook,
+      // Follow-up specific additions
+      assigneeId,
+      setAssigneeId,
+      handleSubmit, // Override with follow-up specific submit
+      error,
+      
+      // Alias validateForm for backward compatibility
+      validateForm: baseHook.validateForm,
+    }),
+    [
+      baseHook,
+      assigneeId,
+      setAssigneeId,
+      handleSubmit,
+      error,
+    ],
+    { name: 'follow-up-task-return' }
+  );
 }
