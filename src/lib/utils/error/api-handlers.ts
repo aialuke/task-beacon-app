@@ -99,8 +99,8 @@ export function handleApiError(
     logPrefix = 'API Error',
   } = options;
 
-  // Extract user-friendly message
-  const userMessage = extractErrorMessage(error) || operation ?? 'An error occurred';
+  // Extract user-friendly message - fixed operator precedence
+  const userMessage = extractErrorMessage(error) || (operation ?? 'An error occurred');
 
   // Use logger instead of console.error
   if (logToConsole) {
