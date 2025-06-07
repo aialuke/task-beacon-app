@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTaskFormBase } from './useTaskFormBase';
+import { useTaskMutations } from './useTaskMutations';
 import { useOptimizedMemo, useOptimizedCallback } from '@/hooks/useOptimizedMemo';
 import type { Task } from '@/types';
 import {
@@ -33,12 +34,15 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
     parentTask,
   });
 
+  // Get mutations directly since base hook doesn't expose it
+  const { createTaskCallback } = useTaskMutations();
+
   // Enhanced submit handler with follow-up specific logic
   const handleSubmit = useOptimizedCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
 
-      // Validate form
+      // Validate form using base hook validation
       const validationResult = baseHook.validateForm();
       if (!validationResult.isValid) {
         console.log('Follow-up form validation failed:', validationResult.errors);
@@ -56,8 +60,12 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
         }
         const currentUserId = userResponse.data;
 
-        // Handle photo upload
-        const photoUrl = baseHook.photoPreview ? await baseHook.handlePhotoChange() : null;
+        // Handle photo upload using base hook method
+        let photoUrl: string | null = null;
+        if (baseHook.photoPreview) {
+          // Use the base hook's photo handling instead of manual upload
+          photoUrl = await baseHook.handlePhotoChange();
+        }
 
         // Prepare follow-up task data with assignee handling
         const rawTaskData = {
@@ -68,15 +76,33 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
           pinned: baseHook.pinned,
           assigneeId: assigneeId || currentUserId, // Use selected assignee or current user
           priority: 'medium' as const,
+          photoUrl: photoUrl || undefined,
+          urlLink: baseHook.url?.trim() || undefined,
+          parentTaskId: parentTask.id,
         };
 
-        // Use validation helper to prepare data
-        const taskData = baseHook.validation?.prepareTaskData?.({
-          ...rawTaskData,
-          photoUrl: photoUrl || undefined,
-          urlLink: rawTaskData.url?.trim() || undefined,
-          parentTaskId: parentTask.id,
-        });
+        // Use base hook's validation to prepare data
+        const taskData = baseHook.showValidationErrors ? 
+          // If validation helper exists, use it
+          (() => {
+            // Simple validation check
+            if (!rawTaskData.title?.trim()) {
+              toast.error('Task title is required');
+              return null;
+            }
+            return {
+              title: rawTaskData.title.trim(),
+              description: rawTaskData.description?.trim() || undefined,
+              dueDate: rawTaskData.dueDate || undefined,
+              photoUrl: rawTaskData.photoUrl,
+              urlLink: rawTaskData.urlLink,
+              assigneeId: rawTaskData.assigneeId || undefined,
+              parentTaskId: rawTaskData.parentTaskId,
+              pinned: rawTaskData.pinned || false,
+              priority: rawTaskData.priority,
+            };
+          })() :
+          rawTaskData;
 
         if (!taskData) {
           return; // Validation errors already shown
@@ -84,8 +110,8 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
 
         console.log('Creating validated follow-up task:', taskData);
 
-        // Create task using the same callback as base hook
-        const result = await baseHook.createTaskCallback?.(taskData);
+        // Create task using mutation hook
+        const result = await createTaskCallback(taskData);
 
         if (!result?.success) {
           throw new Error(result?.error || 'Failed to create follow-up task');
@@ -127,6 +153,7 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
       onClose,
       navigate,
       queryClient,
+      createTaskCallback,
     ]
   );
 
