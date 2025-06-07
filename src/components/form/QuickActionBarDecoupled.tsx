@@ -141,7 +141,6 @@ export function QuickActionBarDecoupled({
         onPhotoChange={onPhotoChange}
         onPhotoRemove={onPhotoRemove}
         onSubmit={handlePhotoSubmit}
-        processingResult={processingResult}
         loading={photoLoading}
         title="Upload Task Image"
       />
