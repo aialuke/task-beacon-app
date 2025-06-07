@@ -6,7 +6,7 @@
  * standardizing error handling, response patterns, and loading states.
  */
 
-// === TYPES ===
+import type { QueryClient } from '@tanstack/react-query';
 import type { ApiResponse, ApiError } from '@/types/api.types';
 
 /**
@@ -84,11 +84,11 @@ export const QueryKeys = {
   userProfile: (id: string) => ['users', id, 'profile'] as const,
   
   // Utility for invalidating related queries
-  invalidateTaskQueries: (queryClient: unknown) => {
+  invalidateTaskQueries: (queryClient: QueryClient) => {
     return queryClient.invalidateQueries({ queryKey: QueryKeys.tasks });
   },
   
-  invalidateUserQueries: (queryClient: unknown) => {
+  invalidateUserQueries: (queryClient: QueryClient) => {
     return queryClient.invalidateQueries({ queryKey: QueryKeys.users });
   },
 } as const;

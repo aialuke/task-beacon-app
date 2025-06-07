@@ -6,10 +6,11 @@ import { useTaskFormValidation } from './useTaskFormValidation';
 import { useTaskPhotoUpload } from '@/components/form/hooks/useFormPhotoUpload';
 import { useTaskMutations } from './useTaskMutations';
 import { toast } from 'sonner';
+import type { Task } from '@/types';
 
 interface UseTaskFormBaseOptions {
   onClose?: () => void;
-  parentTask?: unknown; // For follow-up tasks
+  parentTask?: Task; // Properly typed parent task
 }
 
 /**
@@ -71,7 +72,7 @@ export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions 
   }, [photoUpload.photo, photoUpload.uploadPhoto], { name: 'handlePhotoUpload' });
 
   // Prepare task data for submission
-  const prepareTaskData = useOptimizedCallback((photoUrl: string | null): unknown => {
+  const prepareTaskData = useOptimizedCallback((photoUrl: string | null) => {
     const titleStr = String(taskForm.title).trim();
     const descriptionStr = String(taskForm.description).trim();
     const urlStr = String(taskForm.url).trim();
@@ -83,14 +84,12 @@ export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions 
       url: urlStr,
       assigneeId: taskForm.assigneeId,
       priority: 'medium' as const,
-    };
-
-    return validation.prepareTaskData({
-      ...rawTaskData,
       photoUrl: photoUrl ?? undefined,
       urlLink: urlStr || undefined,
       parentTaskId: parentTask?.id || undefined,
-    });
+    };
+
+    return validation.prepareTaskData(rawTaskData);
   }, [taskForm, parentTask, validation], { name: 'prepareTaskData' });
 
   // Unified form reset
@@ -125,7 +124,7 @@ export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions 
 
         console.log('Submitting validated task data:', taskData);
 
-        const result = await createTaskCallback(taskData);
+        const result = await createTaskCallback(taskData as any);
 
         if (result.success) {
           const successMessage = parentTask ? 'Follow-up task created successfully' : 'Task created successfully';

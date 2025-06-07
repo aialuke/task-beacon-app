@@ -34,11 +34,11 @@ export type NonNullable<T> = T extends null | undefined ? never : T;
 export type ArrayElement<T> = T extends readonly (infer U)[] ? U : never;
 export type RecordValue<T> = T extends Record<string, infer U> ? U : never;
 
-// Function utilities
-export type AsyncReturnType<T extends (...args: unknown) => Promise<any>> = 
-  T extends (...args: unknown) => Promise<infer R> ? R : never;
+// Function utilities - Fixed parameter types
+export type AsyncReturnType<T extends (...args: any[]) => Promise<any>> = 
+  T extends (...args: any[]) => Promise<infer R> ? R : never;
 
-export type Parameters<T extends (...args: unknown) => any> = T extends (...args: infer P) => any ? P : never;
+export type Parameters<T extends (...args: any[]) => any> = T extends (...args: infer P) => any ? P : never;
 
 // Conditional utilities
 export type If<C extends boolean, T, F> = C extends true ? T : F;

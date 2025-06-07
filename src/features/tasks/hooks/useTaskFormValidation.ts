@@ -10,6 +10,18 @@ import {
   taskDescriptionSchema,
 } from '@/features/tasks/schemas/taskSchema';
 
+interface FormDataWithExtras {
+  title: string;
+  description?: string;
+  dueDate?: string;
+  url?: string;
+  assigneeId?: string;
+  priority?: string;
+  photoUrl?: string;
+  urlLink?: string;
+  parentTaskId?: string;
+}
+
 /**
  * Enhanced task form validation hook - Phase 3
  * 
@@ -170,7 +182,7 @@ export function useTaskFormValidation() {
   /**
    * Enhanced task data preparation with validation
    */
-  const prepareTaskData = useCallback((formData: unknown): unknown => {
+  const prepareTaskData = useCallback((formData: FormDataWithExtras): unknown => {
     console.log('Preparing task data:', formData);
     
     const validation = validateCreateTask(formData);
@@ -186,10 +198,10 @@ export function useTaskFormValidation() {
       title: validatedData.title?.trim(),
       description: validatedData.description?.trim() || undefined,
       dueDate: validatedData.dueDate || undefined,
-      photoUrl: (formData as unknown).photoUrl || undefined,
+      photoUrl: formData.photoUrl || undefined,
       urlLink: validatedData.url?.trim() || undefined,
       assigneeId: validatedData.assigneeId || undefined,
-      parentTaskId: (formData as unknown).parentTaskId || undefined,
+      parentTaskId: formData.parentTaskId || undefined,
       priority: validatedData.priority || 'medium',
     };
     

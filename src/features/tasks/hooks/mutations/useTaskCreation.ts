@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { TaskService } from '@/lib/api';
 import { useOptimizedCallback } from '@/hooks/useOptimizedMemo';
 import { toast } from 'sonner';
+import type { Task } from '@/types';
 
 interface TaskCreationData {
   title: string;
@@ -61,7 +62,7 @@ export function useTaskCreation() {
   );
 
   const createFollowUpTask = useOptimizedCallback(
-    async (parentTask: unknown, taskData: { title: string; description?: string }): Promise<TaskMutationResult> => {
+    async (parentTask: Task, taskData: { title: string; description?: string }): Promise<TaskMutationResult> => {
       const followUpData = {
         ...taskData,
         parentTaskId: parentTask.id,

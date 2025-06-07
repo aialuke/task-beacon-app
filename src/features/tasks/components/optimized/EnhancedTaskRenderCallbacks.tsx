@@ -7,9 +7,17 @@ import type { Task } from '@/types';
 const VirtualizedTaskCard = lazy(() => import('../VirtualizedTaskCard'));
 const TaskCard = lazy(() => import('../TaskCard'));
 
+// Define proper types for virtualized items
+interface VirtualizedItem {
+  task: Task;
+  top: number;
+  height: number;
+  index: number;
+}
+
 interface EnhancedRenderOptions {
   shouldVirtualize: boolean;
-  visibleItems: unknown[];
+  visibleItems: VirtualizedItem[];
   totalHeight: number;
   containerStyles: React.CSSProperties;
   spacerStyles: React.CSSProperties;
@@ -105,7 +113,7 @@ export const useEnhancedTaskRenderCallbacks = (options: EnhancedRenderOptions) =
           className="virtualized-task-container"
         >
           <div style={spacerStyles}>
-            {visibleItems.map((item: unknown) => (
+            {visibleItems.map((item: VirtualizedItem) => (
               <Suspense key={item.task.id} fallback={
                 <div 
                   style={{ 
