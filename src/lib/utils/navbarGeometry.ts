@@ -12,6 +12,7 @@ interface ButtonBounds {
 
 /**
  * Calculates the position and dimensions of the active button
+ * Returns positions relative to the container's content area (after padding)
  */
 export function calculateActiveButtonBounds(
   activeIndex: number,
@@ -22,45 +23,60 @@ export function calculateActiveButtonBounds(
   const activeButton = buttonRefs[activeIndex];
 
   if (!activeButton || !container) {
+    console.log('Missing activeButton or container');
     return { x: 0, width: 0, centerX: 0 };
   }
 
   const buttonRect = activeButton.getBoundingClientRect();
   const containerRect = container.getBoundingClientRect();
 
+  // Calculate position relative to container's content area (after padding)
   const x = buttonRect.left - containerRect.left - containerPadding;
-  const centerX = x + buttonRect.width / 2;
+  const width = buttonRect.width;
+  const centerX = x + width / 2;
+
+  console.log('Button bounds:', { x, width, centerX, containerPadding });
 
   return {
     x,
-    width: buttonRect.width,
+    width,
     centerX,
   };
 }
 
 /**
  * Calculates centered position for indicator line
+ * Uses transform-based positioning from the button's center
  */
 export function calculateIndicatorPosition(
   centerX: number,
   indicatorWidth: number = 24
 ): { x: number; width: number } {
+  const x = centerX - indicatorWidth / 2;
+  console.log('Indicator position:', { centerX, indicatorWidth, x });
+  
   return {
-    x: centerX - indicatorWidth / 2,
+    x,
     width: indicatorWidth,
   };
 }
 
 /**
  * Calculates centered position for glow effect
+ * Centers the glow around the button with additional padding
  */
 export function calculateGlowPosition(
   bounds: ButtonBounds,
   glowPadding: number = 8
 ): { x: number; width: number } {
+  const glowWidth = bounds.width + glowPadding * 2;
+  const x = bounds.centerX - glowWidth / 2;
+  
+  console.log('Glow position:', { bounds, glowPadding, glowWidth, x });
+  
   return {
-    x: bounds.centerX - (bounds.width + glowPadding * 2) / 2,
-    width: bounds.width + glowPadding * 2,
+    x,
+    width: glowWidth,
   };
 }
 
