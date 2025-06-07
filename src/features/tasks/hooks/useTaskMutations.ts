@@ -1,4 +1,3 @@
-
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Task } from '@/types';
 import { TaskService } from '@/lib/api';
@@ -92,7 +91,16 @@ export function useTaskMutations() {
 
   // Create task
   const createTask = useMutation({
-    mutationFn: async (taskData: { title: string; description?: string; due_date?: string | null; url_link?: string | null; assignee_id?: string | null; priority?: string }): Promise<TaskMutationResult> => {
+    mutationFn: async (taskData: { 
+      title: string; 
+      description?: string; 
+      dueDate?: string; 
+      photoUrl?: string; 
+      urlLink?: string; 
+      assigneeId?: string; 
+      parentTaskId?: string; 
+      pinned?: boolean; 
+    }): Promise<TaskMutationResult> => {
       const result = await TaskService.crud.create(taskData);
       
       if (!result.success) {
@@ -166,7 +174,16 @@ export function useTaskMutations() {
   );
 
   const createTaskCallback = useOptimizedCallback(
-    async (taskData: { title: string; description?: string; due_date?: string | null; url_link?: string | null; assignee_id?: string | null; priority?: string }) => {
+    async (taskData: { 
+      title: string; 
+      description?: string; 
+      dueDate?: string; 
+      photoUrl?: string; 
+      urlLink?: string; 
+      assigneeId?: string; 
+      parentTaskId?: string; 
+      pinned?: boolean; 
+    }) => {
       const result = await createTask.mutateAsync(taskData);
       return result;
     },
@@ -188,8 +205,8 @@ export function useTaskMutations() {
     async (parentTask: Task, taskData: { title: string; description?: string }): Promise<TaskMutationResult> => {
       const followUpData = {
         ...taskData,
-        parent_task_id: parentTask.id,
-        priority: 'medium' as const,
+        parentTaskId: parentTask.id, // Use camelCase
+        pinned: false,
       };
       const result = await createTask.mutateAsync(followUpData);
       return {

@@ -2,8 +2,6 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { TaskService } from '@/lib/api/tasks/task.service';
-import { AuthService } from '@/lib/api/auth.service';
 import { toast } from 'sonner';
 
 // Clean imports from organized type system
@@ -14,7 +12,9 @@ import {
 } from '@/lib/utils/notification';
 import { useTaskForm } from './useTaskForm';
 import { useTaskFormValidation } from './useTaskFormValidation';
-import { useCreateTaskPhotoUpload } from './useCreateTaskPhotoUpload';
+import { useTaskPhotoUpload } from '@/components/form/hooks/useFormPhotoUpload';
+import { useTaskMutations } from './useTaskMutations';
+import { AuthService } from '@/lib/api/auth.service';
 
 interface UseFollowUpTaskProps {
   parentTask: Task;
@@ -23,12 +23,13 @@ interface UseFollowUpTaskProps {
 
 /**
  * Hook for creating follow-up tasks with standardized validation and photo upload
+ * FIXED: Now uses consistent camelCase data format and createTaskCallback
  */
 export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { validateTitle } = useTaskFormValidation();
-  const { uploadPhotoIfPresent } = useCreateTaskPhotoUpload();
+  const { createTaskCallback } = useTaskMutations(); // Use mutation hook consistently
 
   // Pass onClose to useTaskForm properly
   const taskForm = useTaskForm({
@@ -38,27 +39,16 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
   const [assigneeId, setAssigneeId] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
 
-  // Photo upload state
-  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
-  const [selectedPhoto, setSelectedPhoto] = useState<File | null>(null);
-
-  // Photo upload handlers
-  const handlePhotoChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setSelectedPhoto(file);
-      const url = URL.createObjectURL(file);
-      setPhotoPreview(url);
-    }
-  }, []);
-
-  const handlePhotoRemove = useCallback(() => {
-    setSelectedPhoto(null);
-    if (photoPreview) {
-      URL.revokeObjectURL(photoPreview);
-      setPhotoPreview(null);
-    }
-  }, [photoPreview]);
+  // FIXED: Use standardized photo upload hook instead of manual state
+  const photoUpload = useTaskPhotoUpload({
+    processingOptions: {
+      maxWidth: 1920,
+      maxHeight: 1080,
+      quality: 0.85,
+      format: 'auto' as const,
+    },
+    autoProcess: true,
+  });
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -80,27 +70,28 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
         }
         const currentUserId = userResponse.data;
 
-        // Upload photo if present
-        const photoUrl = await uploadPhotoIfPresent(selectedPhoto);
+        // Handle photo upload using standardized hook
+        const photoUrl = photoUpload.photo ? await photoUpload.uploadPhoto() : null;
 
-        // Create follow-up task data with the correct structure
+        // FIXED: Create follow-up task data with camelCase format matching TaskCreateData
         const followUpTaskData = {
           title: taskForm.title.trim(),
           description: taskForm.description?.trim() || `Follow-up from task: ${parentTask.title}`,
-          due_date: taskForm.dueDate || null,
-          photo_url: photoUrl,
-          url_link: taskForm.url?.trim() || null,
-          assignee_id: assigneeId || currentUserId,
+          dueDate: taskForm.dueDate || undefined,        // Changed from due_date
+          photoUrl: photoUrl || undefined,               // Changed from photo_url
+          urlLink: taskForm.url?.trim() || undefined,    // Changed from url_link
+          assigneeId: assigneeId || currentUserId,       // Changed from assignee_id
+          parentTaskId: parentTask.id,                   // Added for follow-up relationship
           pinned: taskForm.pinned || false,
         };
 
-        console.log('Creating follow-up task:', followUpTaskData);
+        console.log('Creating follow-up task (camelCase):', followUpTaskData);
 
-        // Create the follow-up task using the hierarchy service
-        const createResult = await TaskService.createFollowUp(parentTask.id, followUpTaskData);
+        // FIXED: Use createTaskCallback mutation hook consistently
+        const result = await createTaskCallback(followUpTaskData);
 
-        if (!createResult.success) {
-          throw new Error(createResult.error?.message || 'Failed to create follow-up task');
+        if (!result.success) {
+          throw new Error(result.error || 'Failed to create follow-up task');
         }
 
         // Success handling
@@ -119,7 +110,7 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
         
         // Reset form and navigate
         taskForm.resetFormState();
-        handlePhotoRemove();
+        photoUpload.resetPhoto();
         
         const closeCallback = onClose || (() => navigate('/'));
         closeCallback();
@@ -138,12 +129,11 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
       parentTask,
       validateTitle,
       assigneeId,
-      selectedPhoto,
-      uploadPhotoIfPresent,
+      photoUpload,
+      createTaskCallback, // Updated dependency
       onClose,
       navigate,
       queryClient,
-      handlePhotoRemove,
     ]
   );
 
@@ -154,9 +144,11 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
     handleSubmit,
     error,
     loading: taskForm.loading, // Use the form's loading state
-    // Simplified photo upload functionality
-    photoPreview,
-    handlePhotoChange,
-    handlePhotoRemove,
+    // FIXED: Standardized photo upload functionality using useTaskPhotoUpload
+    photoPreview: photoUpload.photoPreview,
+    handlePhotoChange: photoUpload.handlePhotoChange,
+    handlePhotoRemove: photoUpload.handlePhotoRemove,
+    photoLoading: photoUpload.photoLoading,
+    processingResult: photoUpload.processingResult,
   };
 }

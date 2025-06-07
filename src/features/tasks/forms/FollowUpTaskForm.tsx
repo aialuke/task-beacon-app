@@ -25,10 +25,12 @@ export default function FollowUpTaskForm({
     photoPreview,
     assigneeId,
     setAssigneeId,
-    loading, // This should now exist
+    loading,
     handlePhotoChange,
     handleSubmit,
     handlePhotoRemove,
+    photoLoading,
+    processingResult, // Now available from standardized photo upload
   } = useFollowUpTask({ parentTask, onClose });
 
   return (
@@ -54,6 +56,8 @@ export default function FollowUpTaskForm({
       titleLabel="Follow-up Title"
       descriptionPlaceholder="Describe your follow-up task..."
       onPhotoRemove={handlePhotoRemove}
+      photoLoading={photoLoading}
+      processingResult={processingResult}
     >
       {/* Parent Task Reference moved to bottom */}
       <div className="mt-8 border-t border-border/20 pt-6">

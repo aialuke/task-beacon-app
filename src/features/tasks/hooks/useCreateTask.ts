@@ -62,7 +62,7 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
     return uploadResult || null;
   }, [photoUpload.photo, photoUpload.uploadPhoto], { name: 'handlePhotoUpload' });
 
-  // Main submit handler with optimized flow
+  // Main submit handler with optimized flow and FIXED camelCase data format
   const handleSubmit = useOptimizedCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
@@ -75,20 +75,20 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
         // Handle photo upload
         const photoUrl = await handlePhotoUpload();
 
-        // Prepare task data in the correct format for the API
+        // FIXED: Prepare task data in camelCase format matching TaskCreateData interface
         const taskData = {
           title: taskForm.title.trim(),
           description: taskForm.description?.trim() || undefined,
-          due_date: taskForm.dueDate || null,
-          photo_url: photoUrl,
-          url_link: taskForm.url?.trim() || null,
-          assignee_id: taskForm.assigneeId || null,
+          dueDate: taskForm.dueDate || undefined, // Changed from due_date
+          photoUrl: photoUrl || undefined,        // Changed from photo_url
+          urlLink: taskForm.url?.trim() || undefined, // Changed from url_link
+          assigneeId: taskForm.assigneeId || undefined, // Changed from assignee_id
           pinned: taskForm.pinned || false,
         };
 
-        console.log('Submitting task data:', taskData);
+        console.log('Submitting task data (camelCase):', taskData);
 
-        // Submit using the mutation hook
+        // Submit using the mutation hook with proper camelCase data
         const result = await createTaskCallback(taskData);
 
         if (result.success) {
