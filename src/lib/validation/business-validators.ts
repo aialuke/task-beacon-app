@@ -2,7 +2,6 @@
 import { createStandardResult, createErrorResult } from './result-creators';
 import { ValidationContext, StandardValidationResult, ValidationErrorCode } from './types';
 import { validateUserExists } from './database-validators';
-import { withErrorHandling } from './async-wrapper';
 
 /**
  * Validates task ownership and assignee relationships
@@ -12,7 +11,7 @@ export async function validateTaskOwnership(
   assigneeId?: string | null,
   context?: ValidationContext
 ): Promise<StandardValidationResult> {
-  return withErrorHandling(async () => {
+  try {
     // Validate owner exists
     const ownerValidation = await validateUserExists(ownerId, context);
     if (!ownerValidation.isValid) {
@@ -55,5 +54,12 @@ export async function validateTaskOwnership(
     return createStandardResult(true, [], {
       validator: context?.validator || 'validateTaskOwnership',
     });
-  }, context);
+  } catch (error) {
+    console.error('Task ownership validation error:', error);
+    return createErrorResult(
+      ValidationErrorCode.UNKNOWN_ERROR,
+      'Failed to validate task ownership',
+      []
+    );
+  }
 }

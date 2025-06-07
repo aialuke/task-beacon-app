@@ -120,12 +120,13 @@ export function useUnifiedFormState<T extends Record<string, string>>(
     { name: 'getFieldProps' }
   );
 
-  // Get current form values
+  // Get current form values - fix the type indexing issue
   const values = useOptimizedMemo(
     () => {
       const formValues = {} as T;
       Object.keys(fields).forEach(key => {
-        (formValues as any)[key] = fields[key]?.value || '';
+        // Use type assertion to avoid indexing issue
+        (formValues as Record<string, string>)[key] = fields[key]?.value || '';
       });
       return formValues;
     },
