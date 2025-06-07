@@ -149,8 +149,10 @@ export function createMockContextValue<T>(
  * Note: expect function should be available in test environment
  */
 export function expectContextError(hookFunction: () => void, contextName: string) {
-  // This function is meant to be used in test files where expect is available
-  const expectFn = (global as unknown).expect;
+  // Type-safe access to expect function in test environment
+  const globalScope = globalThis as { expect?: typeof expect };
+  const expectFn = globalScope.expect;
+  
   if (expectFn) {
     expectFn(hookFunction).toThrow(
       `use${contextName} must be used within a ${contextName}Provider`
@@ -263,4 +265,4 @@ export function createMockTaskProviderStatus() {
     isReady: true,
     isLoading: false,
   };
-} 
+}

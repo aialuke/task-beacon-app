@@ -61,7 +61,7 @@ export function useUnifiedFormState<T extends Record<string, string>>(
   // Validate a single field - fix the indexing issue by ensuring we have a proper key
   const validateField = useOptimizedCallback(
     (fieldName: string, value: string): string | null => {
-      // Type-safe access to validation rules
+      // Type-safe access to validation rules with proper type assertion
       const fieldKey = fieldName as keyof T;
       const validator = validationRules[fieldKey];
       return validator ? validator(value) : null;
@@ -125,12 +125,11 @@ export function useUnifiedFormState<T extends Record<string, string>>(
   // Get current form values - fix the type indexing issue
   const values = useOptimizedMemo(
     () => {
-      const formValues = {} as T;
+      const formValues = {} as Record<string, string>;
       Object.keys(fields).forEach(key => {
-        // Use type assertion to avoid indexing issue
-        (formValues as Record<string, string>)[key] = fields[key]?.value || '';
+        formValues[key] = fields[key]?.value || '';
       });
-      return formValues;
+      return formValues as T;
     },
     [fields],
     { name: 'formValues' }
