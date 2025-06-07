@@ -55,7 +55,7 @@ export function SimpleNavbar({
           style={{
             position: 'absolute',
             top: '-4px',
-            left: '12px',
+            left: '0px',
             height: '4px',
             borderRadius: '9999px',
             zIndex: 120,
@@ -74,7 +74,7 @@ export function SimpleNavbar({
           style={{
             position: 'absolute',
             top: '8px',
-            left: '8px',
+            left: '0px',
             height: '40px',
             borderRadius: '9999px',
             zIndex: 110,

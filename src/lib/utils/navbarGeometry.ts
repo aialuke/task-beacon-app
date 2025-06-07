@@ -59,7 +59,7 @@ export function calculateGlowPosition(
   glowPadding: number = 8
 ): { x: number; width: number } {
   return {
-    x: bounds.x - glowPadding,
+    x: bounds.centerX - (bounds.width + glowPadding * 2) / 2,
     width: bounds.width + glowPadding * 2,
   };
 }
