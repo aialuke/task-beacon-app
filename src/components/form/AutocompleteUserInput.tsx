@@ -1,3 +1,4 @@
+
 import { useState, useRef, useMemo, useEffect } from 'react';
 import { User as UserIcon, ArrowRight, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -189,7 +190,7 @@ export function AutocompleteUserInput({
           className={cn(
             'flex h-12 items-center rounded-2xl border bg-background/60 p-2 backdrop-blur-sm transition-all duration-300',
             'hover:border-border/60 hover:bg-background/70',
-            isFocused && 'bg-background/80 shadow-lg shadow-primary/10',
+            isFocused && 'bg-background/80',
             getBorderColor(),
             disabled && 'cursor-not-allowed opacity-50'
           )}

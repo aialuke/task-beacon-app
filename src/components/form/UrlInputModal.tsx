@@ -92,7 +92,7 @@ export function UrlInputModal({
           <DialogTitle>Enter URL</DialogTitle>
         </VisuallyHidden>
         <div className="space-y-4">
-          <div className="relative flex h-12 items-center p-2 rounded-2xl bg-background/60 backdrop-blur-sm hover:bg-background/70">
+          <div className="relative flex h-12 items-center p-2 rounded-2xl border border-border bg-background/60 backdrop-blur-sm hover:bg-background/70">
             <Link className={cn('h-4 w-4 ml-1', getIconColor())} />
 
             <div className="flex-1 min-w-0 ml-3 flex items-center">
