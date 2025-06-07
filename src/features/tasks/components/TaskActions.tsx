@@ -1,4 +1,3 @@
-
 // External libraries
 import { useCallback, memo, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -70,10 +69,16 @@ function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
         variant={task.status === "complete" ? "outline" : "default"}
         size="sm"
         onClick={handleToggleComplete}
+        className="rounded-full"
       >
         {task.status === "complete" ? "Mark Incomplete" : "Complete"}
       </Button>
-      <Button variant="outline" size="sm" onClick={handleCreateFollowUp}>
+      <Button 
+        variant="outline" 
+        size="sm" 
+        onClick={handleCreateFollowUp}
+        className="rounded-full"
+      >
         Follow Up
       </Button>
       
