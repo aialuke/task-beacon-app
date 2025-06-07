@@ -21,7 +21,7 @@ export function withLazyLoading<T extends Record<string, any>>(
     
     return (
       <Suspense fallback={fallback}>
-        <LazyComponent {...(props as T)} />
+        <LazyComponent {...props} />
       </Suspense>
     );
   };

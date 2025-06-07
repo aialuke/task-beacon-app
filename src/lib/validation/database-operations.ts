@@ -1,4 +1,3 @@
-
 /**
  * Database Operations for Validation
  * 
@@ -166,4 +165,222 @@ export class DatabaseValidationOps {
       };
     }
   }
+}
+
+/**
+ * Executes a Supabase query with proper error handling
+ */
+export async function executeQuery<T>(
+  queryFn: () => PostgrestQueryBuilder<any, any, any, unknown>,
+  context?: ValidationContext
+): Promise<QueryResult<T>> {
+  try {
+    const { data, error } = await queryFn();
+    
+    if (error) {
+      if (context?.logger) {
+        context.logger.error('Database query failed', error);
+      }
+      
+      return {
+        success: false,
+        error: {
+          code: error.code || 'DATABASE_ERROR',
+          message: error.message || 'Database operation failed',
+          details: error.details,
+        },
+        data: null,
+      };
+    }
+
+    return {
+      success: true,
+      data: data as T,
+      error: null,
+    };
+  } catch (error) {
+    const errorObj = error as Error;
+    if (context?.logger) {
+      context.logger.error('Database query execution failed', errorObj);
+    }
+    
+    return {
+      success: false,
+      error: {
+        code: 'EXECUTION_ERROR',
+        message: errorObj.message || 'Query execution failed',
+        details: errorObj.stack,
+      },
+      data: null,
+    };
+  }
+}
+
+/**
+ * Validates that a user exists in the database
+ */
+export async function checkUserExists(
+  userId: string,
+  context?: ValidationContext
+): Promise<QueryResult<boolean>> {
+  const query = () => 
+    supabase
+      .from('profiles')
+      .select('id')
+      .eq('id', userId)
+      .single();
+
+  const result = await executeQuery<{ id: string }>(query, context);
+  
+  if (!result.success) {
+    return {
+      success: false,
+      error: result.error,
+      data: null,
+    };
+  }
+
+  return {
+    success: true,
+    data: result.data !== null,
+    error: null,
+  };
+}
+
+/**
+ * Validates that a task exists in the database
+ */
+export async function checkTaskExists(
+  taskId: string,
+  context?: ValidationContext
+): Promise<QueryResult<boolean>> {
+  const query = () =>
+    supabase
+      .from('tasks')
+      .select('id')
+      .eq('id', taskId)
+      .single();
+
+  const result = await executeQuery<{ id: string }>(query, context);
+  
+  if (!result.success) {
+    return {
+      success: false,
+      error: result.error,
+      data: null,
+    };
+  }
+
+  return {
+    success: true,
+    data: result.data !== null,
+    error: null,
+  };
+}
+
+/**
+ * Validates multiple users exist in the database
+ */
+export async function checkMultipleUsersExist(
+  userIds: string[],
+  context?: ValidationContext
+): Promise<QueryResult<UserCheckResult[]>> {
+  if (userIds.length === 0) {
+    return {
+      success: true,
+      data: [],
+      error: null,
+    };
+  }
+
+  const query = () =>
+    supabase
+      .from('profiles')
+      .select('id, email')
+      .in('id', userIds);
+
+  const result = await executeQuery<Array<{ id: string; email: string }>>(query, context);
+  
+  if (!result.success) {
+    return {
+      success: false,
+      error: result.error,
+      data: null,
+    };
+  }
+
+  const foundUsers = result.data || [];
+  const results: UserCheckResult[] = userIds.map(userId => {
+    const found = foundUsers.find(user => {
+      if (typeof user === 'object' && user !== null && 'email' in user) {
+        return (user as { id: string; email: string }).id === userId;
+      }
+      return false;
+    });
+    
+    return {
+      userId,
+      exists: !!found,
+      email: found ? (found as { id: string; email: string }).email : undefined,
+    };
+  });
+
+  return {
+    success: true,
+    data: results,
+    error: null,
+  };
+}
+
+/**
+ * Validates multiple tasks exist in the database
+ */
+export async function checkMultipleTasksExist(
+  taskIds: string[],
+  context?: ValidationContext
+): Promise<QueryResult<TaskCheckResult[]>> {
+  if (taskIds.length === 0) {
+    return {
+      success: true,
+      data: [],
+      error: null,
+    };
+  }
+
+  const query = () =>
+    supabase
+      .from('tasks')
+      .select('id')
+      .in('id', taskIds);
+
+  const result = await executeQuery<Array<{ id: string }>>(query, context);
+  
+  if (!result.success) {
+    return {
+      success: false,
+      error: result.error,
+      data: null,
+    };
+  }
+
+  const foundTasks = result.data || [];
+  const results: TaskCheckResult[] = taskIds.map(taskId => {
+    const found = foundTasks.find(task => {
+      if (typeof task === 'object' && task !== null && 'id' in task) {
+        return (task as { id: string }).id === taskId;
+      }
+      return false;
+    });
+    
+    return {
+      taskId,
+      exists: !!found,
+    };
+  });
+
+  return {
+    success: true,
+    data: results,
+    error: null,
+  };
 }

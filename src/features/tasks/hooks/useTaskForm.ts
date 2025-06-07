@@ -47,61 +47,61 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     assigneeId: initialAssigneeId ?? '',
   };
 
-  // Create validation schema - return string errors, not boolean
-  const validationSchema = useCallback(() => {
+  // Create validation rules - return string errors, not boolean
+  const validationRules = useCallback(() => {
     return {
       title: (value: string) => {
         if (!value.trim()) return 'Title is required';
-        return undefined;
+        return null;
       },
       url: (value: string) => {
         if (value?.trim()) {
           try {
             new URL(value);
-            return undefined;
+            return null;
           } catch {
             return 'Please enter a valid URL';
           }
         }
-        return undefined;
+        return null;
       },
-    } as Record<keyof TaskFormValues, (value: string) => string | undefined>;
+    } as Record<keyof TaskFormValues, (value: string) => string | null>;
   }, []);
 
-  // Use unified form state - properly destructure the tuple
-  const [formState, formActions] = useUnifiedFormState<TaskFormValues>({
+  // Use unified form state with proper destructuring
+  const formState = useUnifiedFormState<TaskFormValues>({
     initialValues,
-    validationSchema: validationSchema(),
+    validationRules: validationRules(),
     onSubmit: onSubmit as ((values: Record<string, string>) => Promise<void> | void) | undefined,
   });
 
   // Extract current field values for convenience
-  const title = formState.fields.title.value;
-  const description = formState.fields.description.value;
-  const dueDate = formState.fields.dueDate.value;
-  const url = formState.fields.url.value;
-  const assigneeId = formState.fields.assigneeId.value;
+  const title = formState.values.title || '';
+  const description = formState.values.description || '';
+  const dueDate = formState.values.dueDate || '';
+  const url = formState.values.url || '';
+  const assigneeId = formState.values.assigneeId || '';
 
   // Convenience setters
   const setTitle = useCallback((value: string) => {
-    formActions.setFieldValue('title', value);
-  }, [formActions]);
+    formState.setFieldValue('title', value);
+  }, [formState]);
 
   const setDescription = useCallback((value: string) => {
-    formActions.setFieldValue('description', value);
-  }, [formActions]);
+    formState.setFieldValue('description', value);
+  }, [formState]);
 
   const setDueDate = useCallback((value: string) => {
-    formActions.setFieldValue('dueDate', value);
-  }, [formActions]);
+    formState.setFieldValue('dueDate', value);
+  }, [formState]);
 
   const setUrl = useCallback((value: string) => {
-    formActions.setFieldValue('url', value);
-  }, [formActions]);
+    formState.setFieldValue('url', value);
+  }, [formState]);
 
   const setAssigneeId = useCallback((value: string) => {
-    formActions.setFieldValue('assigneeId', value);
-  }, [formActions]);
+    formState.setFieldValue('assigneeId', value);
+  }, [formState]);
 
   // Create task data formatter
   const getTaskData = useCallback((): TaskCreateData => {
@@ -117,14 +117,14 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
 
   // Manual validation trigger
   const validateForm = useCallback(() => {
-    return formActions.validateForm();
-  }, [formActions]);
+    return formState.validateForm();
+  }, [formState]);
 
   // Reset form state including calling onClose
   const resetFormState = useCallback(() => {
-    formActions.resetForm();
+    formState.resetForm();
     if (onClose) onClose();
-  }, [formActions, onClose]);
+  }, [formState, onClose]);
 
   return {
     // Current field values
@@ -143,19 +143,16 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
 
     // Form state - maintain compatibility
     isValid: formState.isValid,
-    errors: Object.fromEntries(
-      Object.entries(formState.fields).map(([key, field]) => [key, field.error])
-    ),
+    errors: formState.errors,
     isSubmitting: formState.isSubmitting,
 
     // Form actions
-    handleSubmit: formActions.submitForm,
+    handleSubmit: formState.handleSubmit,
     resetFormState,
     validateForm,
     getTaskData,
 
     // Direct access to form state for advanced usage
     formState,
-    formActions,
   };
 }

@@ -37,9 +37,11 @@ export function useUnifiedFormState<T extends Record<string, string>>(
     const fields: Record<string, FormFieldState> = {};
     
     // If we have initial values, use them to set up fields
-    Object.keys(initialValues).forEach((key) => {
-      fields[key] = {
-        value: (initialValues as Record<string, string>)[key] || '',
+    const initialKeys = Object.keys(initialValues) as Array<keyof T>;
+    initialKeys.forEach((key) => {
+      const stringKey = String(key);
+      fields[stringKey] = {
+        value: (initialValues[key] as string) || '',
         error: null,
         touched: false,
         isDirty: false,
