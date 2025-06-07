@@ -31,12 +31,15 @@ export function calculateActiveButtonBounds(
   const containerRect = container.getBoundingClientRect();
 
   // Calculate position relative to container's full area (including padding)
-  // This aligns with how CSS positioning works for absolutely positioned children
-  const x = buttonRect.left - containerRect.left;
+  // Add small compensation for gap spacing and sub-pixel rendering
+  const gapCompensation = activeIndex * 1; // Account for 4px gap between buttons
+  const subPixelOffset = 1; // Fine-tune for visual alignment
+  
+  const x = buttonRect.left - containerRect.left + gapCompensation + subPixelOffset;
   const width = buttonRect.width;
   const centerX = x + width / 2;
 
-  console.log('Button bounds:', { x, width, centerX, containerPadding });
+  console.log('Button bounds:', { x, width, centerX, containerPadding, gapCompensation, subPixelOffset });
 
   return {
     x,
