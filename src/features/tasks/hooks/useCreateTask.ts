@@ -1,23 +1,13 @@
 
 import { useOptimizedMemo, useOptimizedCallback } from '@/hooks/useOptimizedMemo';
 import { useTaskForm } from './useTaskForm';
-import { useTaskSubmission } from './useTaskSubmission';
+import { useTaskMutations } from './useTaskMutations';
 import { useTasksNavigate } from './useTasksNavigate';
 import { useTaskPhotoUpload } from '@/components/form/hooks/useFormPhotoUpload';
+import { toast } from 'sonner';
 
 interface UseCreateTaskProps {
   onClose?: () => void;
-}
-
-interface TaskFormData {
-  title: string;
-  description: string;
-  dueDate: string;
-  url: string;
-  pinned: boolean;
-  assigneeId: string;
-  photoUrl: string | null;
-  priority: 'medium';
 }
 
 /**
@@ -25,7 +15,7 @@ interface TaskFormData {
  */
 export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
   const { navigateToDashboard } = useTasksNavigate();
-  const { submitTask } = useTaskSubmission();
+  const { createTaskCallback } = useTaskMutations();
   
   // Memoize close callback to prevent unnecessary re-renders
   const closeCallback = useOptimizedMemo(
@@ -72,28 +62,6 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
     return uploadResult || null;
   }, [photoUpload.photo, photoUpload.uploadPhoto], { name: 'handlePhotoUpload' });
 
-  // Optimized form data preparation
-  const prepareTaskData = useOptimizedCallback(
-    (photoUrl: string | null): TaskFormData => ({
-      title: taskForm.title,
-      description: taskForm.description,
-      dueDate: taskForm.dueDate,
-      url: taskForm.url,
-      pinned: taskForm.pinned,
-      assigneeId: taskForm.assigneeId,
-      photoUrl,
-      priority: 'medium' as const,
-    }),
-    [taskForm],
-    { name: 'prepareTaskData' }
-  );
-
-  // Optimized form reset
-  const resetForm = useOptimizedCallback(() => {
-    taskForm.resetFormState();
-    photoUpload.resetPhoto();
-  }, [taskForm, photoUpload], { name: 'resetForm' });
-
   // Main submit handler with optimized flow
   const handleSubmit = useOptimizedCallback(
     async (e: React.FormEvent) => {
@@ -107,28 +75,44 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
         // Handle photo upload
         const photoUrl = await handlePhotoUpload();
 
-        // Prepare and submit task data
-        const taskData = prepareTaskData(photoUrl);
-        const result = await submitTask(taskData);
+        // Prepare task data in the correct format for the API
+        const taskData = {
+          title: taskForm.title.trim(),
+          description: taskForm.description?.trim() || undefined,
+          due_date: taskForm.dueDate || null,
+          photo_url: photoUrl,
+          url_link: taskForm.url?.trim() || null,
+          assignee_id: taskForm.assigneeId || null,
+          pinned: taskForm.pinned || false,
+        };
+
+        console.log('Submitting task data:', taskData);
+
+        // Submit using the mutation hook
+        const result = await createTaskCallback(taskData);
 
         if (result.success) {
-          resetForm();
+          toast.success('Task created successfully');
+          taskForm.resetFormState();
+          photoUpload.resetPhoto();
           closeCallback();
+        } else {
+          toast.error(result.error || 'Failed to create task');
         }
       } catch (error) {
-        // Error handling is managed by the submission hook
+        console.error('Task creation error:', error);
+        toast.error('Failed to create task');
       } finally {
         taskForm.setLoading(false);
       }
     },
     [
       validateForm,
-      taskForm.setLoading,
+      taskForm,
       handlePhotoUpload,
-      prepareTaskData,
-      submitTask,
-      resetForm,
+      createTaskCallback,
       closeCallback,
+      photoUpload,
     ],
     { name: 'handleSubmit' }
   );

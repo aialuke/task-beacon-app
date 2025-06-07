@@ -84,7 +84,7 @@ export function BaseTaskForm({
         </p>
       </header>
 
-      <form className="space-y-6">
+      <form className="space-y-6" onSubmit={handleSubmit}>
         {/* Main Title Input */}
         <FloatingInput
           id="title"
