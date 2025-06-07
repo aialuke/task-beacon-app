@@ -11,9 +11,12 @@ export { useTaskUpdates } from './mutations/useTaskUpdates';
 export { useTaskDeletion } from './mutations/useTaskDeletion';
 export { useTaskStatus } from './mutations/useTaskStatus';
 
+// Import the orchestrator for backward compatibility functions
+import { useTaskMutationsOrchestrator } from './mutations/useTaskMutationsOrchestrator';
+
 // Backward compatibility exports
 export function useTaskStatusMutations() {
-  const mutations = useTaskMutations();
+  const mutations = useTaskMutationsOrchestrator();
   return {
     markAsComplete: mutations.markAsComplete,
     markAsIncomplete: mutations.markAsIncomplete,
@@ -22,7 +25,7 @@ export function useTaskStatusMutations() {
 }
 
 export function useTaskDeleteMutations() {
-  const mutations = useTaskMutations();
+  const mutations = useTaskMutationsOrchestrator();
   return {
     deleteTask: mutations.deleteTaskCallback,
     isLoading: mutations.isLoading,
