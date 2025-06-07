@@ -9,6 +9,12 @@ import { TaskProviders } from '@/features/tasks/providers/TaskProviders';
 import type { TaskStatus } from '@/types/feature-types/task.types';
 import { AuthProvider } from '@/contexts/AuthContext';
 
+interface WorkflowResult {
+  success: boolean;
+  error?: string;
+  taskId?: string;
+}
+
 // Integration test for complete task workflow
 describe('Task Workflow Integration Tests', () => {
   let cleanup: () => void;
@@ -50,7 +56,7 @@ describe('Task Workflow Integration Tests', () => {
       const { result } = renderHook(() => useTaskWorkflow(), { wrapper });
 
       // Act: Update task status
-      let updateResult: unknown;
+      let updateResult: WorkflowResult;
       await act(async () => {
         updateResult = await result.current.updateTaskWithWorkflow(
           originalTask,
@@ -59,7 +65,7 @@ describe('Task Workflow Integration Tests', () => {
       });
 
       // Assert: Update should succeed
-      expect(updateResult.success).toBe(true);
+      expect(updateResult!.success).toBe(true);
     });
   });
 
@@ -117,7 +123,7 @@ describe('Task Workflow Integration Tests', () => {
 
       const { result } = renderHook(() => useTaskWorkflow(), { wrapper });
 
-      let updateResult: any;
+      let updateResult: WorkflowResult | undefined;
       await act(async () => {
         try {
           updateResult = await result.current.updateTaskWithWorkflow(
