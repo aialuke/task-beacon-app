@@ -20,6 +20,7 @@ export function useTaskDeletion() {
 
   const deleteTask = useMutation({
     mutationFn: async (taskId: string): Promise<TaskMutationResult> => {
+      // Use direct service access
       const result = await TaskService.crud.delete(taskId);
       
       if (!result.success) {

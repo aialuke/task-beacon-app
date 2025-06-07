@@ -22,6 +22,7 @@ export function useTaskUpdates() {
 
   const updateTask = useMutation({
     mutationFn: async ({ taskId, updates }: { taskId: string; updates: Partial<Task> }): Promise<TaskMutationResult> => {
+      // Use direct service access
       const result = await TaskService.crud.update(taskId, updates);
       
       if (!result.success) {

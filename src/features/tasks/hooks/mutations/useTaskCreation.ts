@@ -29,6 +29,7 @@ export function useTaskCreation() {
 
   const createTask = useMutation({
     mutationFn: async (taskData: TaskCreationData): Promise<TaskMutationResult> => {
+      // Use direct service access instead of convenience method
       const result = await TaskService.crud.create(taskData);
       
       if (!result.success) {

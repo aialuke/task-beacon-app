@@ -23,6 +23,7 @@ export function useTaskStatus() {
   const toggleTaskComplete = useMutation({
     mutationFn: async (task: Task): Promise<TaskMutationResult> => {
       const newStatus = task.status === 'complete' ? 'pending' : 'complete';
+      // Use direct service access
       const result = await TaskService.status.updateStatus(task.id, newStatus);
       
       if (!result.success) {
