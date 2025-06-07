@@ -11,7 +11,6 @@ interface SubmitTaskData {
   description: string;
   dueDate: string;
   url: string;
-  pinned: boolean;
   assigneeId: string;
   photoUrl?: string | null;
   priority?: 'low' | 'medium' | 'high' | 'urgent';
@@ -46,7 +45,6 @@ export function useTaskSubmission() {
         description: taskData.description || undefined,
         url: taskData.url || undefined,
         dueDate: taskData.dueDate || undefined,
-        pinned: taskData.pinned,
         assigneeId: taskData.assigneeId || undefined,
         priority: taskData.priority || 'medium',
       });
@@ -74,7 +72,6 @@ export function useTaskSubmission() {
         photoUrl: taskData.photoUrl,
         urlLink: taskData.url || undefined,
         assigneeId: finalAssigneeId,
-        pinned: taskData.pinned,
       };
 
       // Submit to API
@@ -117,7 +114,6 @@ export function useTaskSubmission() {
         dueDate: updates.dueDate,
         photoUrl: updates.photoUrl,
         urlLink: updates.url,
-        pinned: updates.pinned,
         assigneeId: updates.assigneeId,
       });
 

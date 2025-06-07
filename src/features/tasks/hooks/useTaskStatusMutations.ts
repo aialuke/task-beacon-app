@@ -5,9 +5,10 @@ import { useTaskOptimisticUpdates } from './useTaskOptimisticUpdates';
 import { showSuccessMessage, showErrorMessage } from '@/lib/utils/notification';
 
 /**
- * Custom hook for task status mutations (complete/incomplete/pin/unpin)
+ * Custom hook for task status mutations (complete/incomplete)
  * 
  * Provides optimistic updates and proper error handling for task status changes.
+ * Note: Pin functionality removed due to database schema constraints.
  */
 export function useTaskStatusMutations() {
   const queryClient = useQueryClient();
@@ -23,14 +24,12 @@ export function useTaskStatusMutations() {
       updates
     }: { 
       taskId: string; 
-      updates: { status?: 'complete' | 'pending' | 'overdue'; pinned?: boolean }; 
+      updates: { status?: 'complete' | 'pending' | 'overdue' }; 
       action: string;
     }) => {
       // Call the appropriate service method
       if (updates.status) {
         return await TaskService.updateStatus(taskId, updates.status);
-      } else if (typeof updates.pinned === 'boolean') {
-        return await TaskService.update(taskId, { pinned: updates.pinned });
       }
       
       throw new Error('Invalid status update operation');
@@ -78,8 +77,6 @@ export function useTaskStatusMutations() {
       statusMutation.mutate({ taskId, updates: { status: 'complete' }, action: 'complete' }),
     markAsIncomplete: (taskId: string) =>
       statusMutation.mutate({ taskId, updates: { status: 'pending' }, action: 'incomplete' }),
-    togglePin: (taskId: string, pinned: boolean) =>
-      statusMutation.mutate({ taskId, updates: { pinned }, action: pinned ? 'pin' : 'unpin' }),
     isLoading: statusMutation.isPending,
     statusMutation,
   };
