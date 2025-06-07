@@ -10,7 +10,7 @@ import { createStandardContext } from '@/lib/utils/createContext';
 import { TaskErrorBoundary } from '../components/TaskErrorBoundary';
 import { useTasksQueryOptimized } from '../hooks/useTasksQueryOptimized';
 import { useStandardizedLoading, LoadingState } from '@/hooks/queries/useStandardizedLoading';
-import { useEnhancedErrorHandling } from '@/hooks/queries/useEnhancedErrorHandling';
+import { useErrorBoundaryIntegration } from '@/hooks/queries/useEnhancedErrorHandling';
 import type { Task } from '@/types';
 
 interface TaskDataContextOptimizedValue {
@@ -57,7 +57,7 @@ interface TaskDataContextOptimizedProviderProps {
 export function TaskDataContextOptimizedProvider({
   children,
 }: TaskDataContextOptimizedProviderProps) {
-  const { reportError } = useEnhancedErrorHandling();
+  const { reportError } = useErrorBoundaryIntegration();
   
   // Use optimized task queries
   const taskQueries = useTasksQueryOptimized();

@@ -36,7 +36,7 @@ export function useTaskQueryOptimized(taskId: string | undefined): UseTaskQueryO
     isInitialLoading,
     refetch,
   } = useOptimizedQuery(
-    QueryKeys.task(taskId || ''),
+    [...QueryKeys.task(taskId || '')],
     async () => {
       if (!taskId) {
         throw new Error('Task ID is required');
