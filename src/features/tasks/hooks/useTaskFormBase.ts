@@ -1,4 +1,5 @@
 
+import { useState } from 'react';
 import { useOptimizedMemo, useOptimizedCallback } from '@/hooks/useOptimizedMemo';
 import { useTaskForm } from './useTaskForm';
 import { useTaskFormValidation } from './useTaskFormValidation';
@@ -11,21 +12,12 @@ interface UseTaskFormBaseOptions {
   parentTask?: any; // For follow-up tasks
 }
 
-interface TaskFormData {
-  title: string;
-  description?: string;
-  dueDate?: string;
-  url?: string;
-  assigneeId?: string;
-  priority: 'medium';
-  parentTaskId?: string;
-}
-
 /**
  * Base hook for task form functionality
  * Shared between create and follow-up task forms
  */
 export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions = {}) {
+  const [loading, setLoading] = useState(false);
   const validation = useTaskFormValidation();
   const { createTaskCallback } = useTaskMutations();
 
@@ -114,7 +106,7 @@ export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions 
         return;
       }
 
-      taskForm.setLoading(true);
+      setLoading(true);
       
       try {
         // Handle photo upload
@@ -144,12 +136,11 @@ export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions 
         const errorMessage = error instanceof Error ? error.message : 'Failed to create task';
         toast.error(errorMessage);
       } finally {
-        taskForm.setLoading(false);
+        setLoading(false);
       }
     },
     [
       validateForm,
-      taskForm,
       handlePhotoUpload,
       prepareTaskData,
       createTaskCallback,
@@ -161,9 +152,9 @@ export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions 
   );
 
   // Combined loading state
-  const loading = useOptimizedMemo(
-    () => taskForm.loading || photoUpload.photoLoading,
-    [taskForm.loading, photoUpload.photoLoading],
+  const combinedLoading = useOptimizedMemo(
+    () => loading || photoUpload.photoLoading,
+    [loading, photoUpload.photoLoading],
     { name: 'loading-state' }
   );
 
@@ -172,7 +163,8 @@ export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions 
     () => ({
       // Form state
       ...taskForm,
-      loading,
+      loading: combinedLoading,
+      setLoading,
       
       // Photo upload functionality
       photoPreview: photoUpload.photoPreview,
@@ -192,7 +184,7 @@ export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions 
     }),
     [
       taskForm,
-      loading,
+      combinedLoading,
       photoUpload.photoPreview,
       photoUpload.handlePhotoChange,
       photoUpload.handlePhotoRemove,

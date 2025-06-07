@@ -91,11 +91,11 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
             return {
               title: rawTaskData.title.trim(),
               description: rawTaskData.description?.trim() || undefined,
-              dueDate: rawTaskData.dueDate || undefined,
-              photoUrl: rawTaskData.photoUrl,
-              urlLink: rawTaskData.urlLink,
-              assigneeId: rawTaskData.assigneeId || undefined,
-              parentTaskId: rawTaskData.parentTaskId,
+              due_date: rawTaskData.dueDate || undefined,
+              photo_url: rawTaskData.photoUrl,
+              url_link: rawTaskData.urlLink,
+              assignee_id: rawTaskData.assigneeId || undefined,
+              parent_task_id: rawTaskData.parentTaskId,
               priority: rawTaskData.priority,
             };
           })() :

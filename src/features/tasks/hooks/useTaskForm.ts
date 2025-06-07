@@ -39,7 +39,7 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
   } = options;
 
   // Create initial form state
-  const initialState: TaskFormValues = {
+  const initialValues: TaskFormValues = {
     title: initialTitle,
     description: initialDescription,
     dueDate: initialDueDate,
@@ -48,28 +48,30 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
   };
 
   // Create validation schema - return string errors, not boolean
-  const validation = useCallback((values: TaskFormValues) => {
-    const errors: Partial<Record<keyof TaskFormValues, string>> = {};
-    
-    if (!values.title?.trim()) {
-      errors.title = 'Title is required';
-    }
-    
-    if (values.url && values.url.trim()) {
-      try {
-        new URL(values.url);
-      } catch {
-        errors.url = 'Please enter a valid URL';
-      }
-    }
-    
-    return errors;
+  const validationSchema = useCallback(() => {
+    return {
+      title: (value: string) => {
+        if (!value?.trim()) return 'Title is required';
+        return undefined;
+      },
+      url: (value: string) => {
+        if (value && value.trim()) {
+          try {
+            new URL(value);
+            return undefined;
+          } catch {
+            return 'Please enter a valid URL';
+          }
+        }
+        return undefined;
+      },
+    };
   }, []);
 
-  // Use unified form state
-  const { formState, formActions } = useUnifiedFormState({
-    initialState,
-    validation,
+  // Use unified form state - properly destructure the tuple
+  const [formState, formActions] = useUnifiedFormState({
+    initialValues,
+    validationSchema: validationSchema(),
     onSubmit,
   });
 
@@ -106,24 +108,17 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     return {
       title: title.trim(),
       description: description.trim() || undefined,
-      dueDate: dueDate || undefined,
-      photoUrl: null,
-      urlLink: url.trim() || undefined,
-      assigneeId: assigneeId || undefined,
+      due_date: dueDate || undefined, // Use due_date for API
+      photo_url: null,
+      url_link: url.trim() || undefined,
+      assignee_id: assigneeId || undefined,
     };
   }, [title, description, dueDate, url, assigneeId]);
 
   // Manual validation trigger
   const validateForm = useCallback(() => {
-    return validation({
-      title,
-      description,
-      dueDate,
-      url,
-      assigneeId,
-      priority: 'medium', // Fixed to use string type
-    });
-  }, [validation, title, description, dueDate, url, assigneeId]);
+    return formActions.validateForm();
+  }, [formActions]);
 
   // Reset form state including calling onClose
   const resetFormState = useCallback(() => {
@@ -148,11 +143,13 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
 
     // Form state - maintain compatibility
     isValid: formState.isValid,
-    errors: formState.errors,
+    errors: Object.fromEntries(
+      Object.entries(formState.fields).map(([key, field]) => [key, field.error])
+    ),
     isSubmitting: formState.isSubmitting,
 
     // Form actions
-    handleSubmit: formActions.handleSubmit,
+    handleSubmit: formActions.submitForm,
     resetFormState,
     validateForm,
     getTaskData,
