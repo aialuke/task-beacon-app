@@ -1,3 +1,4 @@
+
 import React, { ReactElement, ReactNode } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -150,7 +151,7 @@ export function createMockContextValue<T>(
  */
 export function expectContextError(hookFunction: () => void, contextName: string) {
   // Type-safe access to expect function in test environment
-  const globalScope = globalThis as { expect?: typeof expect };
+  const globalScope = globalThis as { expect?: typeof import('vitest').expect };
   const expectFn = globalScope.expect;
   
   if (expectFn) {
