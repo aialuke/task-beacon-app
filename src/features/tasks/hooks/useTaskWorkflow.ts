@@ -1,13 +1,14 @@
 
-import { useTaskFormOrchestration } from './useTaskFormOrchestration';
+import { useTaskFormBase } from './useTaskFormBase';
 import { useTaskMutations } from './useTaskMutations';
 import { useTaskBatchOperations } from './useTaskBatchOperations';
 import { useTaskWorkflowStatus } from './useTaskWorkflowStatus';
 import { useOptimizedCallback } from '@/hooks/useOptimizedMemo';
 import { Task } from '@/types';
-import { UseTaskFormStateOptions } from './useTaskFormState';
 
-interface UseTaskWorkflowOptions extends UseTaskFormStateOptions {
+interface UseTaskWorkflowOptions {
+  onClose?: () => void;
+  parentTask?: any;
   onWorkflowComplete?: (result: { success: boolean; taskId?: string }) => void;
 }
 
@@ -22,26 +23,34 @@ interface WorkflowResult {
  * Now composed of smaller, focused hooks for better maintainability
  */
 export function useTaskWorkflow(options: UseTaskWorkflowOptions = {}) {
-  const { onWorkflowComplete, ...formOptions } = options;
+  const { onWorkflowComplete, onClose, parentTask } = options;
 
-  // Use specialized hooks
-  const formOrchestration = useTaskFormOrchestration({
-    ...formOptions,
-    onSubmitSuccess: (task) => {
-      onWorkflowComplete?.({ success: true, taskId: task.id });
-    },
-    onSubmitError: () => {
-      onWorkflowComplete?.({ success: false });
-    },
-  });
-
+  // Use the base form hook for form functionality
+  const formBase = useTaskFormBase({ onClose, parentTask });
+  
   const mutations = useTaskMutations();
   const { executeBatchOperations } = useTaskBatchOperations();
   const { workflowStatus } = useTaskWorkflowStatus({
-    canSubmit: formOrchestration.formStatus.canSubmit,
-    isSubmitting: formOrchestration.isSubmitting,
+    canSubmit: formBase.isValid,
+    isSubmitting: formBase.loading,
     isLoading: mutations.isLoading,
   });
+
+  /**
+   * Enhanced submit handler with workflow completion callback
+   */
+  const handleSubmitWithWorkflow = useOptimizedCallback(
+    async (e: React.FormEvent) => {
+      try {
+        await formBase.handleSubmit(e);
+        onWorkflowComplete?.({ success: true });
+      } catch (error) {
+        onWorkflowComplete?.({ success: false });
+      }
+    },
+    [formBase.handleSubmit, onWorkflowComplete],
+    { name: 'handleSubmitWithWorkflow' }
+  );
 
   /**
    * Simplified task update workflow
@@ -69,8 +78,11 @@ export function useTaskWorkflow(options: UseTaskWorkflowOptions = {}) {
   );
 
   return {
-    // Delegate form functionality to form orchestration
-    ...formOrchestration,
+    // Delegate form functionality to form base
+    ...formBase,
+    
+    // Override submit with workflow callback
+    handleSubmit: handleSubmitWithWorkflow,
     
     // Workflow-specific actions
     updateTaskWithWorkflow,
