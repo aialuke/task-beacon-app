@@ -400,3 +400,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 **Built with ❤️ using React, TypeScript, and Supabase**
+
+![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/aialuke/task-beacon-app?utm_source=oss&utm_medium=github&utm_campaign=aialuke%2Ftask-beacon-app&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
