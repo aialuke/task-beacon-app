@@ -12,8 +12,8 @@ import React, { useCallback, useContext, createContext, useState, useRef, useEff
  */
 export interface ModalConfig {
   id: string;
-  component: React.ComponentType<any>;
-  props?: Record<string, any>;
+  component: React.ComponentType<unknown>;
+  props?: Record<string, unknown>;
   persistent?: boolean; // Cannot be closed by ESC or backdrop click
   priority?: number; // Higher priority modals appear on top
   onClose?: () => void;
@@ -71,7 +71,7 @@ export function ModalManagerProvider({ children }: { children: React.ReactNode }
     };
 
     document.addEventListener('keydown', handleEscapeKey);
-    return () => document.removeEventListener('keydown', handleEscapeKey);
+    return () => { document.removeEventListener('keydown', handleEscapeKey); };
   }, [modals]);
 
   const openModal = useCallback((config: ModalConfig) => {
@@ -163,7 +163,7 @@ export function ModalManagerProvider({ children }: { children: React.ReactNode }
       React.createElement(ModalComponent, {
         ...modal.props,
         isOpen: modal.isOpen,
-        onClose: () => closeModal(modal.id)
+        onClose: () => { closeModal(modal.id); }
       })
     );
   }).filter(Boolean);
@@ -238,8 +238,8 @@ export const modalPresets = {
 
   form: (
     title: string,
-    FormComponent: React.ComponentType<any>,
-    formProps?: Record<string, any>
+    FormComponent: React.ComponentType<unknown>,
+    formProps?: Record<string, unknown>
   ): Partial<ModalConfig> => ({
     props: { title, FormComponent, ...formProps },
     persistent: true,
@@ -274,9 +274,9 @@ export function withModal<T extends object>(
  * Modal registry for dynamic modal management
  */
 class ModalRegistry {
-  private modals = new Map<string, React.ComponentType<any>>();
+  private modals = new Map<string, React.ComponentType<unknown>>();
 
-  register(id: string, component: React.ComponentType<any>) {
+  register(id: string, component: React.ComponentType<unknown>) {
     this.modals.set(id, component);
   }
 
@@ -298,10 +298,10 @@ export const modalRegistry = new ModalRegistry();
 /**
  * Hook to register modal components
  */
-export function useModalRegistry(id: string, component: React.ComponentType<any>) {
+export function useModalRegistry(id: string, component: React.ComponentType<unknown>) {
   useEffect(() => {
     modalRegistry.register(id, component);
-    return () => modalRegistry.unregister(id);
+    return () => { modalRegistry.unregister(id); };
   }, [id, component]);
 }
 

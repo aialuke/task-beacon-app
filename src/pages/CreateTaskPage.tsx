@@ -22,7 +22,7 @@ export default function CreateTaskPage() {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigate('/')}
+            onClick={() => { navigate('/'); }}
             className="rounded-full p-3 shadow-sm transition-all duration-200 hover:scale-105 hover:bg-accent/80 hover:shadow-md"
           >
             <ArrowLeft className="h-5 w-5" />

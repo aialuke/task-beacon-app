@@ -169,7 +169,7 @@ const UnifiedLoadingStates = memo(function UnifiedLoadingStates({
   };
 
   return (
-    <div role="status" aria-label={message || "Loading content"}>
+    <div role="status" aria-label={message ?? "Loading content"}>
       {renderContent()}
     </div>
   );

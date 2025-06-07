@@ -49,7 +49,7 @@ export function useUsersQuery(enabled = true): UseUsersQueryReturn {
     () => ({
       users: response || [],
       isLoading,
-      error: error ? (error as Error).message : null,
+      error: error ? (error).message : null,
       refetch,
     }),
     [response, isLoading, error, refetch],

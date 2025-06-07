@@ -96,7 +96,7 @@ describe('Auth Flow Integration Tests', () => {
 
     it('should handle sign in validation failures', async () => {
       // Act: Attempt sign in with invalid data
-      let error: any = null;
+      let error: unknown = null;
       const { result } = renderHook(() => useAuth(), { wrapper });
       await act(async () => {
         try {

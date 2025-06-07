@@ -38,7 +38,7 @@ export function useMemoryManagement(options: MemoryManagementOptions = {}) {
   // Memory-efficient cache management
   const managedCache = useCallback(() => {
     return {
-      set: (key: any, value: any) => {
+      set: (key: unknown, value: any) => {
         if (enableWeakMapCache && cacheRef.current instanceof WeakMap) {
           cacheRef.current.set(key, value);
         } else if (cacheRef.current instanceof Map) {
@@ -48,22 +48,22 @@ export function useMemoryManagement(options: MemoryManagementOptions = {}) {
             cacheRef.current.clear();
             // Keep most recent half
             entries.slice(-Math.floor(maxCacheSize / 2)).forEach(([k, v]) => {
-              (cacheRef.current as Map<any, any>).set(k, v);
+              (cacheRef.current as Map<unknown, any>).set(k, v);
             });
           }
           cacheRef.current.set(key, value);
         }
       },
       
-      get: (key: any) => {
+      get: (key: unknown) => {
         return cacheRef.current.get(key);
       },
       
-      has: (key: any) => {
+      has: (key: unknown) => {
         return cacheRef.current.has(key);
       },
       
-      delete: (key: any) => {
+      delete: (key: unknown) => {
         return cacheRef.current.delete(key);
       },
       

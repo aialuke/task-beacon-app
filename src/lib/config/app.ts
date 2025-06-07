@@ -47,7 +47,7 @@ interface AppConfig {
  * Get the current environment
  */
 function getEnvironment(): AppConfig['app']['environment'] {
-  if (typeof process !== 'undefined' && process.env?.NODE_ENV) {
+  if (typeof process !== 'undefined' && process.env.NODE_ENV) {
     const env = process.env.NODE_ENV;
     if (env === 'production' || env === 'test') {
       return env;

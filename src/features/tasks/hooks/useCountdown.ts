@@ -114,7 +114,7 @@ export function useCountdown(
     // Calculate dash offset for the timer ring
     const dashOffset = calculateTimerOffset(
       circumference,
-      timeLeft.days || 0,
+      timeLeft.days ?? 0,
       status,
       dueDate
     );

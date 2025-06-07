@@ -79,5 +79,5 @@ export function setupThemeObserver(callback: () => void): () => void {
 
   observer.observe(document.documentElement, { attributes: true });
 
-  return () => observer.disconnect();
+  return () => { observer.disconnect(); };
 }

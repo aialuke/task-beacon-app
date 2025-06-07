@@ -23,7 +23,7 @@ Object.defineProperty(window, 'matchMedia', {
 class MockIntersectionObserver implements IntersectionObserver {
   readonly root: Element | null = null;
   readonly rootMargin: string = '';
-  readonly thresholds: ReadonlyArray<number> = [];
+  readonly thresholds: readonly number[] = [];
   disconnect(): void {}
   observe(): void {}
   takeRecords(): IntersectionObserverEntry[] { return []; }

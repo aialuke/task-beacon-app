@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 
 interface UseTaskFormBaseOptions {
   onClose?: () => void;
-  parentTask?: any; // For follow-up tasks
+  parentTask?: unknown; // For follow-up tasks
 }
 
 /**
@@ -71,7 +71,7 @@ export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions 
   }, [photoUpload.photo, photoUpload.uploadPhoto], { name: 'handlePhotoUpload' });
 
   // Prepare task data for submission
-  const prepareTaskData = useOptimizedCallback((photoUrl: string | null): any => {
+  const prepareTaskData = useOptimizedCallback((photoUrl: string | null): unknown => {
     const titleStr = String(taskForm.title).trim();
     const descriptionStr = String(taskForm.description).trim();
     const urlStr = String(taskForm.url).trim();
@@ -87,7 +87,7 @@ export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions 
 
     return validation.prepareTaskData({
       ...rawTaskData,
-      photoUrl: photoUrl || undefined,
+      photoUrl: photoUrl ?? undefined,
       urlLink: urlStr || undefined,
       parentTaskId: parentTask?.id || undefined,
     });

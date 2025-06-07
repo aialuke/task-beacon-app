@@ -46,7 +46,7 @@ export function useTaskSubmission() {
         url: taskData.url || undefined,
         dueDate: taskData.dueDate || undefined,
         assigneeId: taskData.assigneeId || undefined,
-        priority: taskData.priority || 'medium',
+        priority: taskData.priority ?? 'medium',
       });
 
       if (!validationResult.isValid) {

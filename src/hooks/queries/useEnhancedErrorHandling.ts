@@ -202,7 +202,7 @@ export function useErrorBoundaryIntegration() {
   const reportError = useCallback((error: Error, errorInfo?: { componentStack: string }) => {
     handleError(error, {
       operation: 'render',
-      component: errorInfo?.componentStack?.split('\n')[1]?.trim(),
+      component: errorInfo?.componentStack.split('\n')[1]?.trim(),
     });
   }, [handleError]);
 

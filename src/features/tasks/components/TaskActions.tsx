@@ -113,7 +113,7 @@ function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
             <DialogFooter>
               <Button
                 variant="outline"
-                onClick={() => setIsDeleteDialogOpen(false)}
+                onClick={() => { setIsDeleteDialogOpen(false); }}
                 disabled={isDeleting}
               >
                 Cancel

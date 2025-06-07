@@ -44,7 +44,7 @@ export function useTaskDeletion() {
       toast.error(`Failed to delete task: ${error.message}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      void queryClient.invalidateQueries({ queryKey: ['tasks'] });
       toast.success('Task deleted successfully');
     },
   });

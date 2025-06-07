@@ -30,7 +30,7 @@ export interface EnhancedImageValidationOptions {
   maxHeight?: number;
   minWidth?: number;
   minHeight?: number;
-  allowedAspectRatios?: Array<{ min: number; max: number }>;
+  allowedAspectRatios?: { min: number; max: number }[];
 }
 
 /**

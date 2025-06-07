@@ -61,7 +61,7 @@ export const validateTaskOwnership = async (
     ValidationErrorCode.DATABASE_ERROR
   );
 
-  if (operationResult.success === false) {
+  if (!operationResult.success) {
     // Check if it's a not found error
     if (operationResult.result.errors.some(err => err.includes('Task not found'))) {
       return createErrorResult(getStandardMessage(ValidationErrorCode.NOT_FOUND, 'Task not found'));

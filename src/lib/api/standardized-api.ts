@@ -84,11 +84,11 @@ export const QueryKeys = {
   userProfile: (id: string) => ['users', id, 'profile'] as const,
   
   // Utility for invalidating related queries
-  invalidateTaskQueries: (queryClient: any) => {
+  invalidateTaskQueries: (queryClient: unknown) => {
     return queryClient.invalidateQueries({ queryKey: QueryKeys.tasks });
   },
   
-  invalidateUserQueries: (queryClient: any) => {
+  invalidateUserQueries: (queryClient: unknown) => {
     return queryClient.invalidateQueries({ queryKey: QueryKeys.users });
   },
 } as const;

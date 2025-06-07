@@ -16,7 +16,7 @@ interface FormPerformanceOptions {
  * - Reduced re-render cycles
  * - Memory leak prevention
  */
-export function useFormPerformance<T extends Record<string, any>>(
+export function useFormPerformance<T extends Record<string, unknown>>(
   initialValues: T,
   options: FormPerformanceOptions = {}
 ) {
@@ -26,12 +26,12 @@ export function useFormPerformance<T extends Record<string, any>>(
     validateOnChange = true,
   } = options;
 
-  const validationCacheRef = useRef(new Map<string, any>());
-  const optimisticUpdatesRef = useRef(new Map<string, any>());
+  const validationCacheRef = useRef(new Map<string, unknown>());
+  const optimisticUpdatesRef = useRef(new Map<string, unknown>());
 
   // Debounced validation function
   const debouncedValidation = useMemo(
-    () => debounce((fieldName: string, value: any, validator?: (value: any) => any) => {
+    () => debounce((fieldName: string, value: unknown, validator?: (value: any) => any) => {
       if (!validator || !validateOnChange) return;
 
       // Check cache first
@@ -60,7 +60,7 @@ export function useFormPerformance<T extends Record<string, any>>(
 
   // Optimistic update handler
   const handleOptimisticUpdate = useCallback(
-    (fieldName: string, value: any) => {
+    (fieldName: string, value: unknown) => {
       if (!enableOptimisticUpdates) return;
       
       optimisticUpdatesRef.current.set(fieldName, {
@@ -80,7 +80,7 @@ export function useFormPerformance<T extends Record<string, any>>(
 
   // Get optimistic value
   const getOptimisticValue = useCallback(
-    (fieldName: string, currentValue: any) => {
+    (fieldName: string, currentValue: unknown) => {
       if (!enableOptimisticUpdates) return currentValue;
       
       const optimistic = optimisticUpdatesRef.current.get(fieldName);
@@ -95,8 +95,8 @@ export function useFormPerformance<T extends Record<string, any>>(
 
   // Memory-efficient field change handler
   const createFieldChangeHandler = useCallback(
-    (fieldName: string, validator?: (value: any) => any) => {
-      return (value: any) => {
+    (fieldName: string, validator?: (value: unknown) => any) => {
+      return (value: unknown) => {
         // Handle optimistic update
         handleOptimisticUpdate(fieldName, value);
         

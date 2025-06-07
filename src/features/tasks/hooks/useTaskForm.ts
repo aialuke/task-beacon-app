@@ -42,20 +42,20 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
   const initialValues: TaskFormValues = {
     title: initialTitle,
     description: initialDescription,
-    dueDate: initialDueDate || '',
-    url: initialUrl || '',
-    assigneeId: initialAssigneeId || '',
+    dueDate: initialDueDate ?? '',
+    url: initialUrl ?? '',
+    assigneeId: initialAssigneeId ?? '',
   };
 
   // Create validation schema - return string errors, not boolean
   const validationSchema = useCallback(() => {
     return {
       title: (value: string) => {
-        if (!value?.trim()) return 'Title is required';
+        if (!value.trim()) return 'Title is required';
         return undefined;
       },
       url: (value: string) => {
-        if (value && value.trim()) {
+        if (value?.trim()) {
           try {
             new URL(value);
             return undefined;

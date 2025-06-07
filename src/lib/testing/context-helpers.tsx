@@ -150,7 +150,7 @@ export function createMockContextValue<T>(
  */
 export function expectContextError(hookFunction: () => void, contextName: string) {
   // This function is meant to be used in test files where expect is available
-  const expectFn = (global as any).expect;
+  const expectFn = (global as unknown).expect;
   if (expectFn) {
     expectFn(hookFunction).toThrow(
       `use${contextName} must be used within a ${contextName}Provider`
@@ -204,7 +204,7 @@ export function createContextValueTracker<T>() {
  */
 export function debugContextValue<T>(
   contextValue: T,
-  contextName: string = 'Context'
+  contextName = 'Context'
 ) {
   if (process.env.NODE_ENV === 'test') {
     console.log(`${contextName} Value:`, JSON.stringify(contextValue, null, 2));

@@ -235,8 +235,8 @@ export function AutocompleteUserInput({
                 value={inputValue}
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
-                onFocus={() => setIsFocused(true)}
-                onBlur={() => setIsFocused(false)}
+                onFocus={() => { setIsFocused(true); }}
+                onBlur={() => { setIsFocused(false); }}
                 className="h-auto border-none bg-transparent p-0 py-3 pl-0 pr-0 text-sm text-foreground font-semibold focus:ring-0 focus-visible:ring-0 relative z-10"
                 disabled={disabled}
               />

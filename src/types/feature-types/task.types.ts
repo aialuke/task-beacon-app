@@ -99,7 +99,7 @@ export interface TaskSearchFilters {
 }
 
 export interface TaskListResponse {
-  data: any[];
+  data: unknown[];
   total: number;
   page: number;
   pageSize: number;

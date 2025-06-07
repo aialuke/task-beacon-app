@@ -69,8 +69,8 @@ export function setupAnimationVariables(
  */
 export function getStaggeredDelay(
   index: number,
-  baseDelay: number = 50,
-  increment: number = 50
+  baseDelay = 50,
+  increment = 50
 ): string {
   return `${baseDelay + index * increment}ms`;
 }
@@ -81,8 +81,8 @@ export function getStaggeredDelay(
 export function animateElement(
   element: HTMLElement | null,
   className: string,
-  duration: number = 300,
-  useGPU: boolean = true
+  duration = 300,
+  useGPU = true
 ): Promise<void> {
   if (!element) return Promise.resolve();
 
@@ -113,8 +113,8 @@ export function animateElement(
  */
 export function pulseElement(
   element: HTMLElement | null,
-  duration: number = 1000,
-  respectMotionPreference: boolean = true
+  duration = 1000,
+  respectMotionPreference = true
 ): Promise<void> {
   // Check motion preferences if requested
   if (respectMotionPreference && prefersReducedMotion()) {

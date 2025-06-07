@@ -85,7 +85,7 @@ export function useNavbar({ items, activeItem, onItemChange }: UseNavbarOptions)
     const frame = requestAnimationFrame(() => {
       updateActiveButtonBounds();
     });
-    return () => cancelAnimationFrame(frame);
+    return () => { cancelAnimationFrame(frame); };
   }, [updateActiveButtonBounds]);
 
   // Handle window resize
@@ -95,7 +95,7 @@ export function useNavbar({ items, activeItem, onItemChange }: UseNavbarOptions)
     };
 
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    return () => { window.removeEventListener('resize', handleResize); };
   }, [updateActiveButtonBounds]);
 
   // Keyboard navigation

@@ -170,7 +170,7 @@ export interface SelectFieldProps extends BaseComponentProps {
   label?: string;
   value: string;
   onChange: (value: string) => void;
-  options: Array<{ value: string; label: string; disabled?: boolean }>;
+  options: { value: string; label: string; disabled?: boolean }[];
   placeholder?: string;
   required?: boolean;
   disabled?: boolean;

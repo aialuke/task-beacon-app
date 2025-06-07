@@ -14,7 +14,7 @@ function createApiError(message: string, code?: string): ApiError {
   return {
     message,
     name: 'AuthError',
-    code: code || 'AUTH_ERROR',
+    code: code ?? 'AUTH_ERROR',
   };
 }
 
@@ -176,7 +176,7 @@ export class AuthService {
   /**
    * Sign up user
    */
-  static async signUp(email: string, password: string, options?: any): Promise<ApiResponse<AuthResponse>> {
+  static async signUp(email: string, password: string, options?: unknown): Promise<ApiResponse<AuthResponse>> {
     try {
       const { data, error } = await supabase.auth.signUp({
         email,

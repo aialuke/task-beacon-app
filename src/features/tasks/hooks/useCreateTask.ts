@@ -16,7 +16,7 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
   
   // Use shared base hook functionality
   const baseHook = useTaskFormBase({
-    onClose: onClose || navigateToDashboard,
+    onClose: onClose ?? navigateToDashboard,
   });
 
   // Return the same interface as before - no breaking changes

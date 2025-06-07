@@ -15,13 +15,13 @@ import { useOptimizedCallback, useOptimizedMemo } from '@/hooks/useOptimizedMemo
 // === TYPES ===
 interface ModalState {
   isOpen: boolean;
-  data?: any;
+  data?: unknown;
   loading?: boolean;
   error?: string | null;
 }
 
 interface ModalActions {
-  open: (data?: any) => void;
+  open: (data?: unknown) => void;
   close: () => void;
   toggle: () => void;
   setLoading: (loading: boolean) => void;
@@ -33,7 +33,7 @@ interface ModalOptions {
   closeOnEscape?: boolean;
   closeOnBackdrop?: boolean;
   preventScroll?: boolean;
-  onOpen?: (data?: any) => void;
+  onOpen?: (data?: unknown) => void;
   onClose?: () => void;
 }
 
@@ -59,7 +59,7 @@ export function useUnifiedModal(options: ModalOptions = {}): [ModalState, ModalA
 
   // Open modal
   const open = useOptimizedCallback(
-    (data?: any) => {
+    (data?: unknown) => {
       setState(prev => ({
         ...prev,
         isOpen: true,
@@ -145,7 +145,7 @@ export function useUnifiedModal(options: ModalOptions = {}): [ModalState, ModalA
     };
 
     document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
+    return () => { document.removeEventListener('keydown', handleEscape); };
   }, [closeOnEscape, state.isOpen, close]);
 
   // Cleanup on unmount

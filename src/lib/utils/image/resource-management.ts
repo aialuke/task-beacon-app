@@ -13,7 +13,7 @@ import type { ImagePreview } from './types';
  */
 export function createImagePreviewEnhanced(
   file: File,
-  autoRevoke: boolean = true,
+  autoRevoke = true,
   revokeDelay: number = 5 * 60 * 1000 // 5 minutes
 ): ImagePreview {
   const url = URL.createObjectURL(file);
@@ -55,7 +55,7 @@ export function createImagePreviews(
   files: File[],
   autoRevoke: boolean = true,
   revokeDelay: number = 5 * 60 * 1000
-): Array<{ file: File; preview: ImagePreview }> {
+): { file: File; preview: ImagePreview }[] {
   return files.map(file => ({
     file,
     preview: createImagePreviewEnhanced(file, autoRevoke, revokeDelay),
@@ -65,7 +65,7 @@ export function createImagePreviews(
 /**
  * Cleanup all previews at once
  */
-export function cleanupImagePreviews(previews: Array<{ file: File; preview: ImagePreview }>): void {
+export function cleanupImagePreviews(previews: { file: File; preview: ImagePreview }[]): void {
   previews.forEach(({ preview }) => {
     preview.revoke();
   });
@@ -93,7 +93,7 @@ export function createManagedPreview(file: File): {
  */
 export function downloadImage(
   blob: Blob,
-  filename: string = 'processed-image.jpg'
+  filename = 'processed-image.jpg'
 ): void {
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
@@ -116,7 +116,7 @@ export function downloadImage(
  * Download multiple images as individual files
  */
 export function downloadImages(
-  results: Array<{ blob: Blob; filename: string }>
+  results: { blob: Blob; filename: string }[]
 ): void {
   results.forEach(({ blob, filename }, index) => {
     // Add small delay between downloads to avoid browser blocking
@@ -132,7 +132,7 @@ export function downloadImages(
 export async function blobToDataURL(blob: Blob): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onload = () => resolve(reader.result as string);
+    reader.onload = () => { resolve(reader.result as string); };
     reader.onerror = reject;
     reader.readAsDataURL(blob);
   });
@@ -161,14 +161,14 @@ export class ImagePreviewManager {
   private previews = new Map<string, ImagePreview>();
   private maxPreviews: number;
 
-  constructor(maxPreviews: number = 50) {
+  constructor(maxPreviews = 50) {
     this.maxPreviews = maxPreviews;
   }
 
   /**
    * Create or get existing preview
    */
-  getPreview(file: File, autoRevoke: boolean = true): ImagePreview {
+  getPreview(file: File, autoRevoke = true): ImagePreview {
     const key = `${file.name}-${file.size}-${file.lastModified}`;
     
     if (this.previews.has(key)) {
@@ -208,7 +208,7 @@ export class ImagePreviewManager {
    * Clean up all previews
    */
   cleanup(): void {
-    this.previews.forEach(preview => preview.revoke());
+    this.previews.forEach(preview => { preview.revoke(); });
     this.previews.clear();
   }
 

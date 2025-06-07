@@ -66,7 +66,7 @@ export const DatePickerButton = memo(function DatePickerButton({
             )}
           />
           <span className="hidden whitespace-nowrap text-sm font-medium sm:inline">
-            {hasDate ? format(selectedDate!, 'MMM d') : 'Due Date'}
+            {hasDate ? format(selectedDate, 'MMM d') : 'Due Date'}
           </span>
         </Button>
       </PopoverTrigger>

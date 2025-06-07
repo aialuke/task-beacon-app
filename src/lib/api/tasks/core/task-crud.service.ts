@@ -81,14 +81,14 @@ export class TaskCrudService {
         .from('tasks')
         .insert({
           title: taskData.title,
-          description: taskData.description || null,
-          due_date: taskData.dueDate || null,
-          photo_url: taskData.photoUrl || null,
-          url_link: taskData.urlLink || null,
+          description: taskData.description ?? null,
+          due_date: taskData.dueDate ?? null,
+          photo_url: taskData.photoUrl ?? null,
+          url_link: taskData.urlLink ?? null,
           owner_id: userResponse.data,
-          parent_task_id: taskData.parentTaskId || null,
+          parent_task_id: taskData.parentTaskId ?? null,
           status: 'pending' as const,
-          assignee_id: taskData.assigneeId || null,
+          assignee_id: taskData.assigneeId ?? null,
         })
         .select(`
           *,

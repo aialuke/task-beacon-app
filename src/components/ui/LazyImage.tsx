@@ -53,7 +53,7 @@ export const LazyImage = memo(function LazyImage({
     <div className={cn('relative', className)}>
       {!imageLoaded && !imageError && (
         <div className="absolute inset-0">
-          {placeholder || (
+          {placeholder ?? (
             <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
               <div className="h-4 w-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
             </div>

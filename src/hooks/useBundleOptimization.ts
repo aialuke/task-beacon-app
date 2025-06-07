@@ -31,6 +31,6 @@ export function useBundleOptimization() {
     // Delay preloading to not interfere with critical resources
     const timeoutId = setTimeout(preloadRoutes, 2000);
     
-    return () => clearTimeout(timeoutId);
+    return () => { clearTimeout(timeoutId); };
   }, []);
 }

@@ -100,11 +100,11 @@ export function handleApiError(
   } = options;
 
   // Extract user-friendly message
-  const userMessage = extractErrorMessage(error) || operation || 'An error occurred';
+  const userMessage = extractErrorMessage(error) || operation ?? 'An error occurred';
 
   // Use logger instead of console.error
   if (logToConsole) {
-    logger.error(`${logPrefix}: ${operation || 'An error occurred'}`, error as Error, {
+    logger.error(`${logPrefix}: ${operation ?? 'An error occurred'}`, error as Error, {
       userMessage,
     });
   }

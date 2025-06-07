@@ -119,7 +119,7 @@ export const getDaysRemaining = (dueDateString: string): number | null => {
 };
 
 // === URL UTILITIES ===
-export const truncateUrl = (url: string, maxLength: number = 30): string => {
+export const truncateUrl = (url: string, maxLength = 30): string => {
   if (!url || typeof url !== 'string') return '';
   
   if (url.length <= maxLength) return url;
@@ -214,7 +214,7 @@ export const validateField = (
     const customResult = rules.customValidator(value);
     if (typeof customResult === 'string') {
       errors.push(customResult);
-    } else if (customResult === false) {
+    } else if (!customResult) {
       errors.push('Validation failed');
     }
   }

@@ -61,7 +61,7 @@ export function removeUnusedCSS(): void {
   
   unusedClasses.forEach(className => {
     const elements = document.querySelectorAll(`.${className}`);
-    elements.forEach(el => el.classList.remove(className));
+    elements.forEach(el => { el.classList.remove(className); });
   });
 }
 

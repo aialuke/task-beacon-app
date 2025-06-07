@@ -25,9 +25,9 @@ export {
 
 // Legacy compatibility export
 export const errorUtils = {
-  setupGlobalErrorHandlers: () => import('./global-handlers').then(m => m.setupGlobalErrorHandlers()),
+  setupGlobalErrorHandlers: () => import('./global-handlers').then(m => { m.setupGlobalErrorHandlers(); }),
   handleApiError: (error: unknown, operation?: string, options = {}) => 
-    import('./api-handlers').then(m => m.handleApiError(error, operation, options)),
+    import('./api-handlers').then(m => { m.handleApiError(error, operation, options); }),
   handleAuthError: (error: unknown, operation: string) =>
     import('./api-handlers').then(m => m.handleAuthError(error, operation)),
   handleValidationError: (error: unknown, fieldName: string) =>

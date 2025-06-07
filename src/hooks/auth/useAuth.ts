@@ -33,7 +33,7 @@ export function useAuth(): UseAuthReturn {
   const [error, setError] = useState<ApiError | null>(null);
 
   // Enhanced logging for mobile debugging
-  const logMobileDebug = useCallback((message: string, data?: any) => {
+  const logMobileDebug = useCallback((message: string, data?: unknown) => {
     console.log(`[useAuth Mobile Debug] ${message}`, {
       timestamp: new Date().toISOString(),
       isMobile: /Mobi|Android/i.test(navigator.userAgent),
@@ -82,7 +82,7 @@ export function useAuth(): UseAuthReturn {
       
       logMobileDebug('Sign in successful');
       // Session will be updated by the auth state listener
-    } catch (err: any) {
+    } catch (err: unknown) {
       logMobileDebug('Sign in error caught', { error: err });
       setError({ 
         name: 'SignInError', 
@@ -202,7 +202,7 @@ export function useAuth(): UseAuthReturn {
     );
 
     // Initialize auth state
-    initializeAuth();
+    void initializeAuth();
 
     return () => {
       logMobileDebug('Cleaning up auth hook');

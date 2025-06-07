@@ -58,7 +58,7 @@ export const OptimizedImage = memo(function OptimizedImage({
       observer.observe(imgRef.current);
     }
 
-    return () => observer.disconnect();
+    return () => { observer.disconnect(); };
   }, [priority, isInView]);
 
   const handleLoad = () => {

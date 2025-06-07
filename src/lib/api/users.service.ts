@@ -252,7 +252,7 @@ export class UserService {
       const profileData: ProfileInsert = {
         id: userData.id,
         email: userData.email,
-        name: userData.name || null,
+        name: userData.name ?? null,
         role: userData.role || ('user' as const),
       };
 

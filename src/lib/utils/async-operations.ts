@@ -12,7 +12,7 @@ import { useErrorHandler } from '@/hooks/useErrorHandler';
 /**
  * Async operation state interface
  */
-export interface AsyncOperationState<T = any> {
+export interface AsyncOperationState<T = unknown> {
   data: T | null;
   loading: boolean;
   error: Error | null;
@@ -41,7 +41,7 @@ export interface AsyncOperationOptions {
  * Async operation result
  */
 export interface AsyncOperationResult<T> extends AsyncOperationState<T> {
-  execute: (...args: any[]) => Promise<T | null>;
+  execute: (...args: unknown[]) => Promise<T | null>;
   retry: () => Promise<T | null>;
   reset: () => void;
   cancel: () => void;
@@ -50,7 +50,7 @@ export interface AsyncOperationResult<T> extends AsyncOperationState<T> {
 /**
  * Hook for managing async operations with comprehensive error handling
  */
-export function useAsyncOperation<T = any, TArgs extends any[] = any[]>(
+export function useAsyncOperation<T = unknown, TArgs extends any[] = any[]>(
   asyncFn: (...args: TArgs) => Promise<T>,
   options: AsyncOperationOptions = {}
 ): AsyncOperationResult<T> {
@@ -105,7 +105,7 @@ export function useAsyncOperation<T = any, TArgs extends any[] = any[]>(
       
       clearTimeout(timeoutId);
 
-      if (!abortControllerRef.current?.signal.aborted) {
+      if (!abortControllerRef.current.signal.aborted) {
         setState({
           data: result,
           loading: false,
@@ -116,7 +116,7 @@ export function useAsyncOperation<T = any, TArgs extends any[] = any[]>(
         return result;
       }
     } catch (error) {
-      if (abortControllerRef.current?.signal.aborted) {
+      if (abortControllerRef.current.signal.aborted) {
         return null; // Operation was cancelled
       }
 
@@ -201,7 +201,7 @@ export function useAsyncOperation<T = any, TArgs extends any[] = any[]>(
 /**
  * Hook for batch async operations
  */
-export function useBatchAsyncOperation<T = any, TArgs extends any[] = any[]>(
+export function useBatchAsyncOperation<T = unknown, TArgs extends any[] = any[]>(
   asyncFn: (...args: TArgs) => Promise<T>,
   options: AsyncOperationOptions = {}
 ) {
@@ -217,8 +217,8 @@ export function useBatchAsyncOperation<T = any, TArgs extends any[] = any[]>(
   });
 
   const executeBatch = useCallback(async (
-    operationsData: Array<{ id: string; args: TArgs }>
-  ): Promise<Array<{ id: string; result: T | null; error: Error | null }>> => {
+    operationsData: { id: string; args: TArgs }[]
+  ): Promise<{ id: string; result: T | null; error: Error | null }[]> => {
     // Initialize operations
     setOperations(operationsData.map(op => ({
       ...op,
@@ -284,7 +284,7 @@ export function useBatchAsyncOperation<T = any, TArgs extends any[] = any[]>(
   }, [asyncFn, handleError]);
 
   const getOperationState = useCallback((id: string) => {
-    return operations.find(op => op.id === id)?.state || {
+    return operations.find(op => op.id === id)?.state ?? {
       data: null,
       loading: false,
       error: null,
@@ -311,7 +311,7 @@ export function useBatchAsyncOperation<T = any, TArgs extends any[] = any[]>(
 /**
  * Hook for optimistic updates
  */
-export function useOptimisticAsyncOperation<T = any, TArgs extends any[] = any[]>(
+export function useOptimisticAsyncOperation<T = unknown, TArgs extends any[] = any[]>(
   asyncFn: (...args: TArgs) => Promise<T>,
   optimisticUpdateFn?: (currentData: T | null, ...args: TArgs) => T,
   options: AsyncOperationOptions = {}
@@ -338,7 +338,7 @@ export function useOptimisticAsyncOperation<T = any, TArgs extends any[] = any[]
 
   return {
     ...baseOperation,
-    data: optimisticData || baseOperation.data,
+    data: optimisticData ?? baseOperation.data,
     execute: executeOptimistic,
     isOptimistic: optimisticData !== null,
   };
@@ -347,7 +347,7 @@ export function useOptimisticAsyncOperation<T = any, TArgs extends any[] = any[]
 /**
  * Utility for creating async operation factories
  */
-export function createAsyncOperationFactory<T = any, TArgs extends any[] = any[]>(
+export function createAsyncOperationFactory<T = unknown, TArgs extends any[] = any[]>(
   defaultOptions: AsyncOperationOptions = {}
 ) {
   return function createAsyncOperation(

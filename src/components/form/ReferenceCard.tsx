@@ -24,7 +24,7 @@ export function ReferenceCard({
     >
       <div className="flex items-start gap-3">
         <div className="mt-0.5 rounded-xl bg-accent/50 p-2">
-          {icon || <Link className="h-4 w-4 text-accent-foreground" />}
+          {icon ?? <Link className="h-4 w-4 text-accent-foreground" />}
         </div>
         <div className="flex-1 space-y-1">
           <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">

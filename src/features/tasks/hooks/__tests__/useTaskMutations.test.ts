@@ -150,7 +150,7 @@ describe('Task Mutation Hooks', () => {
 
       const { result } = renderHook(() => useTaskMutations(), { wrapper });
 
-      let mutationResult: any;
+      let mutationResult: unknown;
       await act(async () => {
         mutationResult = await result.current.toggleTaskCompleteCallback(mockTask);
       });

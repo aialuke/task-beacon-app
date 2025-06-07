@@ -66,7 +66,7 @@ export default function TaskDetailsContent({ task, isExpanded = false }: TaskDet
 
       {/* Single Border Separator + Action Buttons */}
       <div className="border-t pt-4">
-        <TaskActions task={task} onView={() => navigate(`/tasks/${task.id}`)} isExpanded={isExpanded} />
+        <TaskActions task={task} onView={() => { navigate(`/tasks/${task.id}`); }} isExpanded={isExpanded} />
       </div>
     </div>
   );
