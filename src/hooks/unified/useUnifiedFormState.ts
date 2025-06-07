@@ -125,7 +125,7 @@ export function useUnifiedFormState<T extends Record<string, string>>(
     () => {
       const formValues = {} as T;
       Object.keys(fields).forEach(key => {
-        (formValues as Record<string, string>)[key] = fields[key]?.value || '';
+        (formValues as any)[key] = fields[key]?.value || '';
       });
       return formValues;
     },

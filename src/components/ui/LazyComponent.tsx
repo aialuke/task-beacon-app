@@ -10,7 +10,7 @@ interface LazyComponentProps {
 /**
  * Higher-order component for lazy loading with error boundary
  */
-export function withLazyLoading<T extends object = object>(
+export function withLazyLoading<T extends Record<string, any> = Record<string, any>>(
   importFn: () => Promise<{ default: ComponentType<T> }>,
   options: LazyComponentProps = {}
 ) {
@@ -21,7 +21,7 @@ export function withLazyLoading<T extends object = object>(
     
     return (
       <Suspense fallback={fallback}>
-        <LazyComponent {...props as T} />
+        <LazyComponent {...(props as any)} />
       </Suspense>
     );
   };
