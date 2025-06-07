@@ -12,7 +12,7 @@ import { FabButton } from "./FabButton";
 import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
 
 export default function TaskDashboard() {
-  const { isMobile, filter, setFilter } = useTaskUIContext();
+  const { filter, setFilter } = useTaskUIContext();
 
   return (
     <div className="min-h-screen bg-background">
@@ -29,7 +29,7 @@ export default function TaskDashboard() {
           <TaskList />
         </main>
 
-        {isMobile && <FabButton />}
+        <FabButton />
       </div>
     </div>
   );
