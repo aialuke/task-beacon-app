@@ -183,6 +183,7 @@ export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions 
       handlePhotoRemove: photoUpload.handlePhotoRemove,
       photoLoading: photoUpload.photoLoading,
       processingResult: photoUpload.processingResult,
+      handlePhotoUpload, // Expose the upload method
       
       // Form actions
       handleSubmit,
@@ -200,6 +201,7 @@ export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions 
       photoUpload.handlePhotoRemove,
       photoUpload.photoLoading,
       photoUpload.processingResult,
+      handlePhotoUpload,
       handleSubmit,
       resetForm,
       validateForm,
