@@ -4,6 +4,7 @@ import { useTaskForm } from './useTaskForm';
 import { useTaskMutations } from './useTaskMutations';
 import { useTasksNavigate } from './useTasksNavigate';
 import { useTaskPhotoUpload } from '@/components/form/hooks/useFormPhotoUpload';
+import { useTaskFormValidation } from './useTaskFormValidation';
 import { toast } from 'sonner';
 
 interface UseCreateTaskProps {
@@ -11,11 +12,13 @@ interface UseCreateTaskProps {
 }
 
 /**
- * Now uses performance-optimized hooks and better separation of concerns.
+ * Enhanced with Phase 3: Form validation integration
+ * Now properly integrates validation with form submission flow
  */
 export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
   const { navigateToDashboard } = useTasksNavigate();
   const { createTaskCallback } = useTaskMutations();
+  const validation = useTaskFormValidation();
   
   // Memoize close callback to prevent unnecessary re-renders
   const closeCallback = useOptimizedMemo(
@@ -44,15 +47,30 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
 
   const photoUpload = useTaskPhotoUpload(photoUploadConfig);
 
-  // Optimized form validation
+  // Enhanced form validation with proper error handling
   const validateForm = useOptimizedCallback(() => {
-    const validationResult = taskForm.validateForm();
+    // Prepare form data for validation
+    const formData = {
+      title: taskForm.title,
+      description: taskForm.description,
+      dueDate: taskForm.dueDate || '',
+      url: taskForm.url || '',
+      pinned: taskForm.pinned || false,
+      assigneeId: taskForm.assigneeId || '',
+      priority: 'medium' as const,
+    };
+
+    // Use the task form validation schema
+    const validationResult = validation.validateTaskForm(formData);
+    
     if (!validationResult.isValid) {
-      taskForm.showValidationErrors(validationResult.errors);
-      return false;
+      // Show validation errors to user via toast
+      validation.showValidationErrors(validationResult.errors);
+      return { isValid: false, errors: validationResult.errors };
     }
-    return true;
-  }, [taskForm], { name: 'validateForm' });
+    
+    return { isValid: true, errors: {} };
+  }, [taskForm, validation], { name: 'validateForm' });
 
   // Optimized photo upload handling
   const handlePhotoUpload = useOptimizedCallback(async (): Promise<string | null> => {
@@ -62,12 +80,17 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
     return uploadResult || null;
   }, [photoUpload.photo, photoUpload.uploadPhoto], { name: 'handlePhotoUpload' });
 
-  // Main submit handler with optimized flow and FIXED camelCase data format
+  // Enhanced submit handler with improved validation integration
   const handleSubmit = useOptimizedCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
 
-      if (!validateForm()) return;
+      // Phase 3: Enhanced validation integration
+      const validationResult = validateForm();
+      if (!validationResult.isValid) {
+        console.log('Validation failed:', validationResult.errors);
+        return;
+      }
 
       taskForm.setLoading(true);
       
@@ -75,20 +98,32 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
         // Handle photo upload
         const photoUrl = await handlePhotoUpload();
 
-        // FIXED: Prepare task data in camelCase format matching TaskCreateData interface
-        const taskData = {
-          title: taskForm.title.trim(),
-          description: taskForm.description?.trim() || undefined,
-          dueDate: taskForm.dueDate || undefined, // Changed from due_date
-          photoUrl: photoUrl || undefined,        // Changed from photo_url
-          urlLink: taskForm.url?.trim() || undefined, // Changed from url_link
-          assigneeId: taskForm.assigneeId || undefined, // Changed from assignee_id
-          pinned: taskForm.pinned || false,
+        // Prepare task data using validation helper
+        const rawTaskData = {
+          title: taskForm.title,
+          description: taskForm.description,
+          dueDate: taskForm.dueDate,
+          url: taskForm.url,
+          pinned: taskForm.pinned,
+          assigneeId: taskForm.assigneeId,
+          priority: 'medium' as const,
         };
 
-        console.log('Submitting task data (camelCase):', taskData);
+        // Use validation helper to prepare and validate data
+        const taskData = validation.prepareTaskData({
+          ...rawTaskData,
+          photoUrl: photoUrl || undefined,
+          urlLink: rawTaskData.url?.trim() || undefined,
+        });
 
-        // Submit using the mutation hook with proper camelCase data
+        if (!taskData) {
+          // Validation errors already shown by prepareTaskData
+          return;
+        }
+
+        console.log('Submitting validated task data:', taskData);
+
+        // Submit using the mutation hook with validated data
         const result = await createTaskCallback(taskData);
 
         if (result.success) {
@@ -101,7 +136,8 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
         }
       } catch (error) {
         console.error('Task creation error:', error);
-        toast.error('Failed to create task');
+        const errorMessage = error instanceof Error ? error.message : 'Failed to create task';
+        toast.error(errorMessage);
       } finally {
         taskForm.setLoading(false);
       }
@@ -110,6 +146,7 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
       validateForm,
       taskForm,
       handlePhotoUpload,
+      validation,
       createTaskCallback,
       closeCallback,
       photoUpload,
@@ -140,6 +177,10 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
       
       // Submit handler
       handleSubmit,
+      
+      // Enhanced validation integration
+      validateForm,
+      showValidationErrors: validation.showValidationErrors,
     }),
     [
       taskForm,
@@ -150,6 +191,8 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
       photoUpload.photoLoading,
       photoUpload.processingResult,
       handleSubmit,
+      validateForm,
+      validation.showValidationErrors,
     ],
     { name: 'create-task-return' }
   );

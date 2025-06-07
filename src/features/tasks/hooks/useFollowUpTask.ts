@@ -22,14 +22,14 @@ interface UseFollowUpTaskProps {
 }
 
 /**
- * Hook for creating follow-up tasks with standardized validation and photo upload
- * FIXED: Now uses consistent camelCase data format and createTaskCallback
+ * Enhanced with Phase 3: Form validation integration
+ * Now properly integrates validation with follow-up task submission flow
  */
 export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { validateTitle } = useTaskFormValidation();
-  const { createTaskCallback } = useTaskMutations(); // Use mutation hook consistently
+  const validation = useTaskFormValidation();
+  const { createTaskCallback } = useTaskMutations();
 
   // Pass onClose to useTaskForm properly
   const taskForm = useTaskForm({
@@ -39,7 +39,7 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
   const [assigneeId, setAssigneeId] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
 
-  // FIXED: Use standardized photo upload hook instead of manual state
+  // Use standardized photo upload hook
   const photoUpload = useTaskPhotoUpload({
     processingOptions: {
       maxWidth: 1920,
@@ -50,12 +50,39 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
     autoProcess: true,
   });
 
+  // Enhanced form validation for follow-up tasks
+  const validateFollowUpForm = useCallback(() => {
+    // Prepare form data for validation
+    const formData = {
+      title: taskForm.title,
+      description: taskForm.description || `Follow-up from task: ${parentTask.title}`,
+      dueDate: taskForm.dueDate || '',
+      url: taskForm.url || '',
+      pinned: taskForm.pinned || false,
+      assigneeId: assigneeId || '',
+      priority: 'medium' as const,
+    };
+
+    // Use the task form validation schema
+    const validationResult = validation.validateTaskForm(formData);
+    
+    if (!validationResult.isValid) {
+      // Show validation errors to user via toast
+      validation.showValidationErrors(validationResult.errors);
+      return { isValid: false, errors: validationResult.errors };
+    }
+    
+    return { isValid: true, errors: {} };
+  }, [taskForm, assigneeId, parentTask.title, validation]);
+
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
 
-      if (!validateTitle(taskForm.title)) {
-        toast.error('Please enter a valid task title');
+      // Phase 3: Enhanced validation integration
+      const validationResult = validateFollowUpForm();
+      if (!validationResult.isValid) {
+        console.log('Follow-up form validation failed:', validationResult.errors);
         return;
       }
 
@@ -73,21 +100,33 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
         // Handle photo upload using standardized hook
         const photoUrl = photoUpload.photo ? await photoUpload.uploadPhoto() : null;
 
-        // FIXED: Create follow-up task data with camelCase format matching TaskCreateData
-        const followUpTaskData = {
-          title: taskForm.title.trim(),
-          description: taskForm.description?.trim() || `Follow-up from task: ${parentTask.title}`,
-          dueDate: taskForm.dueDate || undefined,        // Changed from due_date
-          photoUrl: photoUrl || undefined,               // Changed from photo_url
-          urlLink: taskForm.url?.trim() || undefined,    // Changed from url_link
-          assigneeId: assigneeId || currentUserId,       // Changed from assignee_id
-          parentTaskId: parentTask.id,                   // Added for follow-up relationship
-          pinned: taskForm.pinned || false,
+        // Prepare follow-up task data
+        const rawTaskData = {
+          title: taskForm.title,
+          description: taskForm.description || `Follow-up from task: ${parentTask.title}`,
+          dueDate: taskForm.dueDate,
+          url: taskForm.url,
+          pinned: taskForm.pinned,
+          assigneeId: assigneeId || currentUserId,
+          priority: 'medium' as const,
         };
 
-        console.log('Creating follow-up task (camelCase):', followUpTaskData);
+        // Use validation helper to prepare and validate data
+        const followUpTaskData = validation.prepareTaskData({
+          ...rawTaskData,
+          photoUrl: photoUrl || undefined,
+          urlLink: rawTaskData.url?.trim() || undefined,
+          parentTaskId: parentTask.id, // Add parent task relationship
+        });
 
-        // FIXED: Use createTaskCallback mutation hook consistently
+        if (!followUpTaskData) {
+          // Validation errors already shown by prepareTaskData
+          return;
+        }
+
+        console.log('Creating validated follow-up task:', followUpTaskData);
+
+        // Use createTaskCallback mutation hook consistently
         const result = await createTaskCallback(followUpTaskData);
 
         if (!result.success) {
@@ -125,12 +164,13 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
       }
     },
     [
+      validateFollowUpForm,
       taskForm,
       parentTask,
-      validateTitle,
       assigneeId,
       photoUpload,
-      createTaskCallback, // Updated dependency
+      validation,
+      createTaskCallback,
       onClose,
       navigate,
       queryClient,
@@ -143,12 +183,17 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
     setAssigneeId,
     handleSubmit,
     error,
-    loading: taskForm.loading, // Use the form's loading state
-    // FIXED: Standardized photo upload functionality using useTaskPhotoUpload
+    loading: taskForm.loading,
+    
+    // Standardized photo upload functionality
     photoPreview: photoUpload.photoPreview,
     handlePhotoChange: photoUpload.handlePhotoChange,
     handlePhotoRemove: photoUpload.handlePhotoRemove,
     photoLoading: photoUpload.photoLoading,
     processingResult: photoUpload.processingResult,
+    
+    // Enhanced validation integration
+    validateForm: validateFollowUpForm,
+    showValidationErrors: validation.showValidationErrors,
   };
 }

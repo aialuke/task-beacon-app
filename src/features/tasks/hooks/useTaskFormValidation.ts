@@ -1,3 +1,4 @@
+
 import { useCallback } from 'react';
 import { z } from 'zod';
 import { toast } from 'sonner';
@@ -10,14 +11,13 @@ import {
 } from '@/features/tasks/schemas/taskSchema';
 
 /**
- * Unified task form validation hook using Zod
- *
- * Single source of truth for all task validation logic
- * Provides consistent validation patterns across the application
+ * Enhanced task form validation hook - Phase 3
+ * 
+ * Improved integration with form submission flow and better error handling
  */
 export function useTaskFormValidation() {
   /**
-   * Validate complete task form data
+   * Validate complete task form data with enhanced error handling
    */
   const validateTaskForm = useCallback(
     (data: unknown): { isValid: boolean; errors: Record<string, string>; data?: any } => {
@@ -33,13 +33,14 @@ export function useTaskFormValidation() {
         errors[field] = err.message;
       });
       
+      console.log('Form validation errors:', errors);
       return { isValid: false, errors };
     },
     []
   );
 
   /**
-   * Validate data for creating a task
+   * Validate data for creating a task with enhanced error reporting
    */
   const validateCreateTask = useCallback(
     (data: unknown): { isValid: boolean; errors: Record<string, string>; data?: any } => {
@@ -55,6 +56,7 @@ export function useTaskFormValidation() {
         errors[field] = err.message;
       });
       
+      console.log('Create task validation errors:', errors);
       return { isValid: false, errors };
     },
     []
@@ -83,7 +85,7 @@ export function useTaskFormValidation() {
   );
 
   /**
-   * Validate individual fields
+   * Validate individual fields with enhanced error handling
    */
   const validateField = useCallback(
     (fieldName: string, value: unknown): { isValid: boolean; error?: string } => {
@@ -106,6 +108,10 @@ export function useTaskFormValidation() {
           }
       }
       
+      if (!result.success) {
+        console.log(`Field '${fieldName}' validation failed:`, result.error.errors[0]?.message);
+      }
+      
       return {
         isValid: result.success,
         error: result.success ? undefined : result.error.errors[0]?.message,
@@ -119,6 +125,9 @@ export function useTaskFormValidation() {
    */
   const validateTitle = useCallback((value: string): boolean => {
     const result = taskTitleSchema.safeParse(value);
+    if (!result.success) {
+      console.log('Title validation failed:', result.error.errors[0]?.message);
+    }
     return result.success;
   }, []);
 
@@ -135,24 +144,35 @@ export function useTaskFormValidation() {
   }, []);
 
   /**
-   * Show validation errors in toast notifications
+   * Enhanced validation error display with better UX
    */
   const showValidationErrors = useCallback((errors: Record<string, string>) => {
-    const errorMessages = Object.entries(errors)
-      .map(([field, message]) => `${field}: ${message}`)
-      .join('\n');
+    const errorEntries = Object.entries(errors);
     
-    if (errorMessages) {
-      toast.error('Validation Failed', {
-        description: errorMessages,
+    if (errorEntries.length === 0) return;
+    
+    // Show the first error prominently
+    const [firstField, firstError] = errorEntries[0];
+    
+    if (errorEntries.length === 1) {
+      toast.error(`${firstField}: ${firstError}`);
+    } else {
+      // Multiple errors - show count and first error
+      toast.error(`Validation Failed: ${firstError}`, {
+        description: `${errorEntries.length} validation errors found. Please check all fields.`,
       });
     }
+    
+    // Log all errors for debugging
+    console.log('All validation errors:', errors);
   }, []);
 
   /**
-   * Validate and transform form data for API submission
+   * Enhanced task data preparation with validation
    */
   const prepareTaskData = useCallback((formData: unknown): any => {
+    console.log('Preparing task data:', formData);
+    
     const validation = validateCreateTask(formData);
     
     if (!validation.isValid) {
@@ -160,7 +180,22 @@ export function useTaskFormValidation() {
       return null;
     }
     
-    return validation.data;
+    // Transform validated data to API format (camelCase)
+    const validatedData = validation.data;
+    const taskData = {
+      title: validatedData.title?.trim(),
+      description: validatedData.description?.trim() || undefined,
+      dueDate: validatedData.dueDate || undefined,
+      photoUrl: (formData as any).photoUrl || undefined,
+      urlLink: validatedData.url?.trim() || undefined,
+      assigneeId: validatedData.assigneeId || undefined,
+      parentTaskId: (formData as any).parentTaskId || undefined,
+      pinned: validatedData.pinned || false,
+      priority: validatedData.priority || 'medium',
+    };
+    
+    console.log('Prepared task data for API:', taskData);
+    return taskData;
   }, [validateCreateTask, showValidationErrors]);
 
   return {
