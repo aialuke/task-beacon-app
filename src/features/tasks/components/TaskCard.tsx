@@ -65,7 +65,7 @@ function TaskCard({ task }: TaskCardProps) {
     >
       <article
         ref={cardRef}
-        className={`bg-card text-card-foreground border border-border shadow-task-card transition-all duration-200 hover:shadow-md cursor-pointer mb-4 w-full rounded-xl p-card box-border max-w-full ${statusClass} ${animationClass} ${expandedClass} ${
+        className={`bg-card text-card-foreground border border-border shadow-task-card transition-all duration-200 hover:shadow-md cursor-pointer mb-4 w-full max-w-3xl mx-auto rounded-xl p-card box-border ${statusClass} ${animationClass} ${expandedClass} ${
           task.status === "complete"
             ? "bg-muted"
             : task.status === "overdue"
