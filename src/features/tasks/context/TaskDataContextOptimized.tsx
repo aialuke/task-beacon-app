@@ -85,7 +85,7 @@ export function TaskDataContextOptimizedProvider({
   return (
     <TaskErrorBoundary
       onError={(error, errorInfo) => {
-        reportError(error, errorInfo);
+        reportError(error, errorInfo.componentStack ? { componentStack: errorInfo.componentStack } : undefined);
       }}
     >
       <TaskDataProvider value={contextValue}>
