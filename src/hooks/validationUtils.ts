@@ -1,8 +1,8 @@
 
 /**
- * Validation Utilities Hook - Phase 4 Consolidation
+ * Validation Utilities Hook - Updated to use unified validation system
  * 
- * Now uses the unified validation system to eliminate duplication.
+ * Now uses the consolidated validation system to eliminate duplication.
  * Provides a hook-friendly interface while leveraging centralized validation.
  */
 
@@ -14,7 +14,7 @@ import {
   validateForm as utilValidateForm,
   validateField as utilValidateField,
   type ValidationResult as UtilValidationResult 
-} from '@/lib/utils/validation';
+} from '@/lib/utils/shared';
 
 // === TYPES ===
 // Maintain compatibility with existing hook interface

@@ -1,290 +1,245 @@
 
 /**
- * Unified Form State Management Hook
+ * Unified Form State Hook
  * 
- * Consolidates multiple form state management approaches into a single,
- * consistent pattern. Replaces scattered form hooks with unified functionality.
+ * Centralized form state management that consolidates patterns from multiple form hooks.
+ * Provides consistent form behavior across the application.
  */
 
-// === EXTERNAL LIBRARIES ===
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useMemo } from 'react';
+import { validateField, validateForm, type ValidationResult } from '@/lib/utils/shared';
 
-// === INTERNAL UTILITIES ===
-import { useOptimizedMemo, useOptimizedCallback } from '@/hooks/useOptimizedMemo';
-
-// === TYPES ===
-interface FormField<T = any> {
+export interface FormField<T = unknown> {
   value: T;
   error?: string;
   touched: boolean;
   dirty: boolean;
 }
 
-interface FormState<T extends Record<string, any>> {
-  fields: { [K in keyof T]: FormField<T[K]> };
+export interface FormState<T extends Record<string, unknown> = Record<string, unknown>> {
+  fields: Record<keyof T, FormField>;
   isValid: boolean;
-  isDirty: boolean;
   isSubmitting: boolean;
+  isDirty: boolean;
+  hasErrors: boolean;
   submitCount: number;
 }
 
-interface FormOptions<T> {
-  initialValues: T;
-  validationSchema?: Partial<{ [K in keyof T]: (value: T[K]) => string | undefined }>;
-  onSubmit?: (values: T) => Promise<void> | void;
-  resetOnSubmit?: boolean;
+export interface FormActions<T extends Record<string, unknown> = Record<string, unknown>> {
+  setFieldValue: (name: keyof T, value: unknown) => void;
+  setFieldError: (name: keyof T, error: string | undefined) => void;
+  setFieldTouched: (name: keyof T, touched: boolean) => void;
+  validateField: (name: keyof T) => ValidationResult;
+  validateForm: () => { isValid: boolean; errors: Record<string, string> };
+  resetForm: () => void;
+  resetField: (name: keyof T) => void;
+  submitForm: (e?: React.FormEvent) => Promise<void>;
+  setSubmitting: (submitting: boolean) => void;
 }
 
-interface FormActions<T> {
-  setFieldValue: <K extends keyof T>(field: K, value: T[K]) => void;
-  setFieldError: <K extends keyof T>(field: K, error: string | undefined) => void;
-  touchField: <K extends keyof T>(field: K) => void;
-  resetField: <K extends keyof T>(field: K) => void;
-  resetForm: () => void;
-  validateField: <K extends keyof T>(field: K) => string | undefined;
-  validateForm: () => boolean;
-  submitForm: () => Promise<void>;
+export interface UseUnifiedFormStateOptions<T extends Record<string, unknown> = Record<string, unknown>> {
+  initialValues: T;
+  validationSchema?: Record<keyof T, (value: unknown) => string | undefined>;
+  onSubmit?: (values: T) => Promise<void> | void;
+  validateOnChange?: boolean;
+  validateOnBlur?: boolean;
 }
 
 /**
  * Unified form state management hook
- * Consolidates various form patterns used throughout the application
  */
-export function useUnifiedFormState<T extends Record<string, any>>(
-  options: FormOptions<T>
-): [FormState<T>, FormActions<T>] {
-  const { initialValues, validationSchema, onSubmit, resetOnSubmit = false } = options;
-  const initialStateRef = useRef(initialValues);
-
-  // Create initial form state
-  const createInitialState = useOptimizedCallback((): FormState<T> => {
-    const fields = {} as { [K in keyof T]: FormField<T[K]> };
-    
-    for (const key in initialValues) {
-      fields[key] = {
-        value: initialValues[key],
-        error: undefined,
+export function useUnifiedFormState<T extends Record<string, unknown> = Record<string, unknown>>({
+  initialValues,
+  validationSchema = {},
+  onSubmit,
+  validateOnChange = false,
+  validateOnBlur = true,
+}: UseUnifiedFormStateOptions<T>): [FormState<T>, FormActions<T>] {
+  // Initialize form fields
+  const [fields, setFields] = useState<Record<keyof T, FormField>>(() => {
+    const initialFields: Record<keyof T, FormField> = {} as Record<keyof T, FormField>;
+    Object.keys(initialValues).forEach(key => {
+      const fieldKey = key as keyof T;
+      initialFields[fieldKey] = {
+        value: initialValues[fieldKey],
         touched: false,
         dirty: false,
       };
-    }
+    });
+    return initialFields;
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitCount, setSubmitCount] = useState(0);
+
+  // Computed form state
+  const formState = useMemo((): FormState<T> => {
+    const fieldValues = Object.values(fields);
+    const hasErrors = fieldValues.some(field => !!field.error);
+    const isDirty = fieldValues.some(field => field.dirty);
+    const isValid = !hasErrors;
 
     return {
       fields,
-      isValid: true,
-      isDirty: false,
-      isSubmitting: false,
-      submitCount: 0,
-    };
-  }, [initialValues], { name: 'createInitialState' });
-
-  const [formState, setFormState] = useState<FormState<T>>(createInitialState);
-
-  // Field value setter
-  const setFieldValue = useOptimizedCallback(
-    <K extends keyof T>(field: K, value: T[K]) => {
-      setFormState(prev => {
-        const newFields = { ...prev.fields };
-        newFields[field] = {
-          ...newFields[field],
-          value,
-          dirty: value !== initialStateRef.current[field],
-        };
-
-        // Validate field if schema exists
-        let error: string | undefined;
-        if (validationSchema?.[field]) {
-          error = validationSchema[field]!(value);
-        }
-        newFields[field].error = error;
-
-        const isDirty = Object.values(newFields).some(f => f.dirty);
-        const isValid = Object.values(newFields).every(f => !f.error);
-
-        return {
-          ...prev,
-          fields: newFields,
-          isDirty,
-          isValid,
-        };
-      });
-    },
-    [validationSchema],
-    { name: 'setFieldValue' }
-  );
-
-  // Field error setter
-  const setFieldError = useOptimizedCallback(
-    <K extends keyof T>(field: K, error: string | undefined) => {
-      setFormState(prev => {
-        const newFields = { ...prev.fields };
-        newFields[field] = { ...newFields[field], error };
-        
-        const isValid = Object.values(newFields).every(f => !f.error);
-        
-        return {
-          ...prev,
-          fields: newFields,
-          isValid,
-        };
-      });
-    },
-    [],
-    { name: 'setFieldError' }
-  );
-
-  // Touch field
-  const touchField = useOptimizedCallback(
-    <K extends keyof T>(field: K) => {
-      setFormState(prev => ({
-        ...prev,
-        fields: {
-          ...prev.fields,
-          [field]: { ...prev.fields[field], touched: true },
-        },
-      }));
-    },
-    [],
-    { name: 'touchField' }
-  );
-
-  // Reset field
-  const resetField = useOptimizedCallback(
-    <K extends keyof T>(field: K) => {
-      setFormState(prev => ({
-        ...prev,
-        fields: {
-          ...prev.fields,
-          [field]: {
-            value: initialStateRef.current[field],
-            error: undefined,
-            touched: false,
-            dirty: false,
-          },
-        },
-      }));
-    },
-    [],
-    { name: 'resetField' }
-  );
-
-  // Reset entire form
-  const resetForm = useOptimizedCallback(() => {
-    setFormState(createInitialState());
-  }, [createInitialState], { name: 'resetForm' });
-
-  // Validate single field
-  const validateField = useOptimizedCallback(
-    <K extends keyof T>(field: K): string | undefined => {
-      const value = formState.fields[field].value;
-      if (validationSchema?.[field]) {
-        return validationSchema[field]!(value);
-      }
-      return undefined;
-    },
-    [formState.fields, validationSchema],
-    { name: 'validateField' }
-  );
-
-  // Validate entire form
-  const validateForm = useOptimizedCallback((): boolean => {
-    if (!validationSchema) return true;
-
-    let isValid = true;
-    const newFields = { ...formState.fields };
-
-    for (const field in formState.fields) {
-      if (validationSchema[field]) {
-        const error = validationSchema[field]!(formState.fields[field].value);
-        newFields[field] = { ...newFields[field], error, touched: true };
-        if (error) isValid = false;
-      }
-    }
-
-    setFormState(prev => ({
-      ...prev,
-      fields: newFields,
       isValid,
-    }));
+      isSubmitting,
+      isDirty,
+      hasErrors,
+      submitCount,
+    };
+  }, [fields, isSubmitting, submitCount]);
 
-    return isValid;
-  }, [formState.fields, validationSchema], { name: 'validateForm' });
-
-  // Submit form
-  const submitForm = useOptimizedCallback(async (): Promise<void> => {
-    setFormState(prev => ({ ...prev, isSubmitting: true }));
-
-    try {
-      const isValid = validateForm();
-      if (!isValid) {
-        throw new Error('Form validation failed');
-      }
-
-      if (onSubmit) {
-        const values = {} as T;
-        for (const key in formState.fields) {
-          values[key] = formState.fields[key].value;
-        }
-        await onSubmit(values);
-      }
-
-      setFormState(prev => ({
-        ...prev,
-        submitCount: prev.submitCount + 1,
-        isSubmitting: false,
-      }));
-
-      if (resetOnSubmit) {
-        resetForm();
-      }
-    } catch (error) {
-      setFormState(prev => ({
-        ...prev,
-        isSubmitting: false,
-        submitCount: prev.submitCount + 1,
-      }));
-      throw error;
+  // Field validation using consolidated validation
+  const validateFieldInternal = useCallback((name: keyof T): ValidationResult => {
+    const field = fields[name];
+    const validator = validationSchema[name];
+    
+    if (!validator) {
+      return { isValid: true, errors: [] };
     }
-  }, [formState.fields, onSubmit, resetOnSubmit, validateForm, resetForm], { name: 'submitForm' });
 
-  // Memoize form values for easy access
-  const formValues = useOptimizedMemo(
-    () => {
-      const values = {} as T;
-      for (const key in formState.fields) {
-        values[key] = formState.fields[key].value;
+    const error = validator(field?.value);
+    return {
+      isValid: !error,
+      errors: error ? [error] : [],
+    };
+  }, [fields, validationSchema]);
+
+  // Form validation
+  const validateFormInternal = useCallback(() => {
+    const errors: Record<string, string> = {};
+    let isValid = true;
+
+    Object.keys(fields).forEach(key => {
+      const fieldKey = key as keyof T;
+      const result = validateFieldInternal(fieldKey);
+      if (!result.isValid && result.errors.length > 0) {
+        errors[key] = result.errors[0];
+        isValid = false;
       }
-      return values;
-    },
-    [formState.fields],
-    { name: 'formValues' }
-  );
+    });
 
-  // Create actions object
-  const actions: FormActions<T> = useOptimizedMemo(
-    () => ({
-      setFieldValue,
-      setFieldError,
-      touchField,
-      resetField,
-      resetForm,
-      validateField,
-      validateForm,
-      submitForm,
-    }),
-    [setFieldValue, setFieldError, touchField, resetField, resetForm, validateField, validateForm, submitForm],
-    { name: 'formActions' }
-  );
+    return { isValid, errors };
+  }, [fields, validateFieldInternal]);
 
-  // Add values to state for convenience
-  const stateWithValues = useOptimizedMemo(
-    () => ({
-      ...formState,
-      values: formValues,
-    }),
-    [formState, formValues],
-    { name: 'stateWithValues' }
-  );
+  // Actions
+  const setFieldValue = useCallback((name: keyof T, value: unknown) => {
+    setFields(prev => ({
+      ...prev,
+      [name]: {
+        ...prev[name],
+        value,
+        dirty: value !== initialValues[name],
+        ...(validateOnChange && {
+          error: validationSchema[name]?.(value),
+        }),
+      },
+    }));
+  }, [initialValues, validationSchema, validateOnChange]);
 
-  return [stateWithValues, actions];
+  const setFieldError = useCallback((name: keyof T, error: string | undefined) => {
+    setFields(prev => ({
+      ...prev,
+      [name]: {
+        ...prev[name],
+        error,
+      },
+    }));
+  }, []);
+
+  const setFieldTouched = useCallback((name: keyof T, touched: boolean) => {
+    setFields(prev => ({
+      ...prev,
+      [name]: {
+        ...prev[name],
+        touched,
+        ...(validateOnBlur && touched && {
+          error: validationSchema[name]?.(prev[name]?.value),
+        }),
+      },
+    }));
+  }, [validationSchema, validateOnBlur]);
+
+  const resetForm = useCallback(() => {
+    setFields(() => {
+      const resetFields: Record<keyof T, FormField> = {} as Record<keyof T, FormField>;
+      Object.keys(initialValues).forEach(key => {
+        const fieldKey = key as keyof T;
+        resetFields[fieldKey] = {
+          value: initialValues[fieldKey],
+          touched: false,
+          dirty: false,
+        };
+      });
+      return resetFields;
+    });
+    setIsSubmitting(false);
+    setSubmitCount(0);
+  }, [initialValues]);
+
+  const resetField = useCallback((name: keyof T) => {
+    setFields(prev => ({
+      ...prev,
+      [name]: {
+        value: initialValues[name],
+        touched: false,
+        dirty: false,
+      },
+    }));
+  }, [initialValues]);
+
+  const submitForm = useCallback(async (e?: React.FormEvent) => {
+    if (e) {
+      e.preventDefault();
+    }
+
+    setSubmitCount(prev => prev + 1);
+    
+    // Validate all fields
+    const validation = validateFormInternal();
+    
+    // Update field errors
+    Object.keys(validation.errors).forEach(key => {
+      const fieldKey = key as keyof T;
+      setFieldError(fieldKey, validation.errors[key]);
+    });
+
+    if (!validation.isValid) {
+      return;
+    }
+
+    if (!onSubmit) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const values = Object.keys(fields).reduce((acc, key) => {
+        const fieldKey = key as keyof T;
+        acc[fieldKey] = fields[fieldKey]?.value as T[keyof T];
+        return acc;
+      }, {} as T);
+
+      await onSubmit(values);
+    } catch (error) {
+      console.error('Form submission error:', error);
+      throw error;
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [validateFormInternal, setFieldError, onSubmit, fields]);
+
+  const actions: FormActions<T> = {
+    setFieldValue,
+    setFieldError,
+    setFieldTouched,
+    validateField: validateFieldInternal,
+    validateForm: validateFormInternal,
+    resetForm,
+    resetField,
+    submitForm,
+    setSubmitting: setIsSubmitting,
+  };
+
+  return [formState, actions];
 }
