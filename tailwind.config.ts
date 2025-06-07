@@ -1,4 +1,5 @@
 
+
 import type { Config } from "tailwindcss";
 import animate from "tailwindcss-animate";
 
@@ -119,7 +120,7 @@ export default {
         lg: "calc(var(--radius) - 2px)",
         md: "calc(var(--radius) - 4px)",
         sm: "calc(var(--radius) - 6px)",
-        xl: "var(--radius)",
+        xl: "var(--radius)", // This now maps to 16px (2xl)
       },
       borderColor: {
         "sidebar-border": "#333",
@@ -192,3 +193,4 @@ export default {
   },
   plugins: [animate],
 } satisfies Config;
+
