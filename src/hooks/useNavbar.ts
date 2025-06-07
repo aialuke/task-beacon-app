@@ -7,6 +7,8 @@ import {
 } from '@/lib/utils/navbarColors';
 import {
   calculateActiveButtonBounds,
+  calculateIndicatorPosition,
+  calculateGlowPosition,
 } from '@/lib/utils/navbarGeometry';
 
 interface NavItem {
@@ -38,6 +40,7 @@ export function useNavbar({ items, activeItem, onItemChange }: UseNavbarOptions)
   const [activeButtonBounds, setActiveButtonBounds] = useState({
     x: 0,
     width: 0,
+    centerX: 0,
   });
   const [isInitialized, setIsInitialized] = useState(false);
   const [computedColors, setComputedColors] = useState(() =>
@@ -128,10 +131,14 @@ export function useNavbar({ items, activeItem, onItemChange }: UseNavbarOptions)
     }
   }, [items, activeItem, onItemChange]);
 
-  // Spring animations
+  // Calculate positions for effects
+  const indicatorPosition = calculateIndicatorPosition(activeButtonBounds.centerX, 24);
+  const glowPosition = calculateGlowPosition(activeButtonBounds, 8);
+
+  // Spring animations with centered positioning
   const indicatorLineSpring = useSpring({
-    transform: `translateX(${activeButtonBounds.x}px)`,
-    width: 40,
+    transform: `translateX(${indicatorPosition.x}px)`,
+    width: indicatorPosition.width,
     opacity: isInitialized ? 1 : 0,
     config: {
       tension: 300,
@@ -150,8 +157,8 @@ export function useNavbar({ items, activeItem, onItemChange }: UseNavbarOptions)
   });
 
   const glowSpring = useSpring({
-    transform: `translateX(${activeButtonBounds.x - 8}px)`,
-    width: activeButtonBounds.width + 16,
+    transform: `translateX(${glowPosition.x}px)`,
+    width: glowPosition.width,
     opacity: isInitialized ? 1 : 0,
     config: {
       tension: 250,
@@ -181,4 +188,4 @@ export function useNavbar({ items, activeItem, onItemChange }: UseNavbarOptions)
     buttonBackgroundSpring,
     glowSpring,
   };
-} 
+}

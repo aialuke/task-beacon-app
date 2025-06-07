@@ -1,3 +1,4 @@
+
 /**
  * Navbar geometry calculation utilities
  * Handles button positioning and bounds calculations
@@ -6,6 +7,7 @@
 interface ButtonBounds {
   x: number;
   width: number;
+  centerX: number;
 }
 
 /**
@@ -20,15 +22,45 @@ export function calculateActiveButtonBounds(
   const activeButton = buttonRefs[activeIndex];
 
   if (!activeButton || !container) {
-    return { x: 0, width: 0 };
+    return { x: 0, width: 0, centerX: 0 };
   }
 
   const buttonRect = activeButton.getBoundingClientRect();
   const containerRect = container.getBoundingClientRect();
 
+  const x = buttonRect.left - containerRect.left - containerPadding;
+  const centerX = x + buttonRect.width / 2;
+
   return {
-    x: buttonRect.left - containerRect.left - containerPadding,
+    x,
     width: buttonRect.width,
+    centerX,
+  };
+}
+
+/**
+ * Calculates centered position for indicator line
+ */
+export function calculateIndicatorPosition(
+  centerX: number,
+  indicatorWidth: number = 24
+): { x: number; width: number } {
+  return {
+    x: centerX - indicatorWidth / 2,
+    width: indicatorWidth,
+  };
+}
+
+/**
+ * Calculates centered position for glow effect
+ */
+export function calculateGlowPosition(
+  bounds: ButtonBounds,
+  glowPadding: number = 8
+): { x: number; width: number } {
+  return {
+    x: bounds.x - glowPadding,
+    width: bounds.width + glowPadding * 2,
   };
 }
 
