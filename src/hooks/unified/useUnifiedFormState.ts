@@ -1,4 +1,3 @@
-
 import { useState, useCallback } from 'react';
 import { useOptimizedMemo, useOptimizedCallback } from '@/hooks/useOptimizedMemo';
 import type { FormState, ValidationResult } from '@/types/utility.types';
@@ -26,7 +25,7 @@ export function useUnifiedFormState<T extends Record<string, string>>(
 ) {
   const {
     initialValues = {} as Partial<T>,
-    validationRules = {},
+    validationRules = {} as Partial<Record<keyof T, (value: string) => string | null>>,
     onSubmit,
     validateOnChange = true,
     validateOnBlur = true,
@@ -58,12 +57,13 @@ export function useUnifiedFormState<T extends Record<string, string>>(
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitCount, setSubmitCount] = useState(0);
 
-  // Validate a single field - fix the indexing issue by ensuring we have a proper key
+  // Validate a single field - fix the indexing issue with proper type assertion
   const validateField = useOptimizedCallback(
     (fieldName: string, value: string): string | null => {
-      // Type-safe access to validation rules with proper type assertion
+      // Type-safe access to validation rules
       const fieldKey = fieldName as keyof T;
-      const validator = validationRules[fieldKey];
+      const typedValidationRules = validationRules as Partial<Record<keyof T, (value: string) => string | null>>;
+      const validator = typedValidationRules[fieldKey];
       return validator ? validator(value) : null;
     },
     [validationRules],
