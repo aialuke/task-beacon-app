@@ -59,7 +59,7 @@ export function FloatingTextarea({
           placeholder=""
           rows={1}
           className={cn(
-            'peer min-h-28 resize-none overflow-hidden rounded-2xl border bg-background/60 pb-2 pt-6 backdrop-blur-sm transition-all duration-300 hover:bg-background/70 focus:border-primary/60 focus:bg-background/80 focus:shadow-lg focus:shadow-primary/10', // Removed border-border/40 to use default border
+            'peer min-h-28 resize-none overflow-hidden bg-background/60 pb-2 pt-6 backdrop-blur-sm transition-all duration-300 hover:bg-background/70 focus:bg-background/80 focus:shadow-lg focus:shadow-primary/10',
             icon ? 'pl-11' : 'pl-4',
             'pr-4'
           )}
@@ -78,15 +78,6 @@ export function FloatingTextarea({
           {label}
         </label>
       </div>
-
-      {/* Elegant focus ring with animation */}
-      <div
-        className={cn(
-          'pointer-events-none absolute inset-0 rounded-2xl transition-all duration-300',
-          isFocused &&
-            'ring-2 ring-primary/30 ring-offset-2 ring-offset-background'
-        )}
-      />
     </div>
   );
 }

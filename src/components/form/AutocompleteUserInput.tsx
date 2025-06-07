@@ -236,7 +236,7 @@ export function AutocompleteUserInput({
                 onKeyDown={handleKeyDown}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
-                className="h-auto border-none bg-transparent p-0 py-3 pl-0 pr-0 text-sm text-foreground font-semibold focus:ring-0 relative z-10"
+                className="h-auto border-none bg-transparent p-0 py-3 pl-0 pr-0 text-sm text-foreground font-semibold focus:ring-0 focus-visible:ring-0 relative z-10"
                 disabled={disabled}
               />
             </div>
@@ -268,15 +268,6 @@ export function AutocompleteUserInput({
             {placeholder}
           </label>
         )}
-
-        {/* Focus ring */}
-        <div
-          className={cn(
-            'pointer-events-none absolute inset-0 rounded-2xl transition-all duration-300',
-            isFocused &&
-              'ring-2 ring-primary/30 ring-offset-2 ring-offset-background'
-          )}
-        />
       </div>
     </div>
   );

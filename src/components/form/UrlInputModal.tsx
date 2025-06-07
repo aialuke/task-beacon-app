@@ -77,12 +77,6 @@ export function UrlInputModal({
     setTempValue(e.target.value);
   };
 
-  const getBorderColor = () => {
-    if (isValid) return 'border-blue-500';
-    if (!tempValue.trim()) return 'border-border/40';
-    return 'border-border/60';
-  };
-
   const getTextColor = () => {
     return isValid ? 'text-blue-500' : 'text-foreground';
   };
@@ -98,48 +92,40 @@ export function UrlInputModal({
           <DialogTitle>Enter URL</DialogTitle>
         </VisuallyHidden>
         <div className="space-y-4">
-          <div className="relative">
-            <div
-              className={cn(
-                'flex h-12 items-center rounded-2xl border bg-background/60 p-2 backdrop-blur-sm',
-                'hover:border-border/60 hover:bg-background/70',
-                getBorderColor()
-              )}
-            >
-              <Link className={cn('h-4 w-4 ml-1', getIconColor())} />
+          <div className="relative flex h-12 items-center p-2 rounded-2xl bg-background/60 backdrop-blur-sm hover:bg-background/70">
+            <Link className={cn('h-4 w-4 ml-1', getIconColor())} />
 
-              <div className="flex-1 min-w-0 ml-3 flex items-center">
-                <Input
-                  ref={inputRef}
-                  type="text"
-                  placeholder="Enter URL"
-                  value={tempValue}
-                  onChange={handleInputChange}
-                  onKeyDown={handleKeyDown}
-                  className={cn(
-                    "h-auto border-none bg-transparent pl-1 pr-0 text-sm font-semibold focus:ring-0",
-                    getTextColor()
-                  )}
-                  autoFocus
-                />
-              </div>
-
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="ml-2 h-8 w-8 p-0 transition-colors"
-                onClick={handleSubmit}
-                disabled={!isValid}
-              >
-                <ArrowRight 
-                  className={cn(
-                    "h-4 w-4 transition-colors",
-                    isValid ? "text-blue-500" : "text-muted-foreground"
-                  )} 
-                />
-              </Button>
+            <div className="flex-1 min-w-0 ml-3 flex items-center">
+              <Input
+                ref={inputRef}
+                type="text"
+                placeholder="Enter URL"
+                value={tempValue}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
+                className={cn(
+                  "h-auto border-none bg-transparent pl-1 pr-0 text-sm font-semibold focus:ring-0 focus-visible:ring-0",
+                  getTextColor()
+                )}
+                autoFocus
+              />
             </div>
+
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="ml-2 h-8 w-8 p-0 transition-colors"
+              onClick={handleSubmit}
+              disabled={!isValid}
+            >
+              <ArrowRight 
+                className={cn(
+                  "h-4 w-4 transition-colors",
+                  isValid ? "text-blue-500" : "text-muted-foreground"
+                )} 
+              />
+            </Button>
           </div>
         </div>
       </DialogContent>
