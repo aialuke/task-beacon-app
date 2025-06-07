@@ -7,7 +7,6 @@ import UnifiedLoadingStates from "@/components/ui/loading/UnifiedLoadingStates";
 
 // === COMPONENTS ===
 import TaskCard from "./TaskCard";
-import TaskFilterNavbar from "./TaskFilterNavbar";
 import TaskListPagination from "./optimized/TaskListPagination";
 
 // === HOOKS ===
@@ -33,7 +32,7 @@ function TaskListComponent() {
     isFetching,
   } = useTaskDataContext();
 
-  const { filter, setFilter, isMobile } = useTaskUIContext();
+  const { filter, isMobile } = useTaskUIContext();
 
   // Filter tasks based on current filter
   const filteredTasks = useTasksFilter(tasks, filter);
@@ -63,23 +62,14 @@ function TaskListComponent() {
 
   return (
     <div className="space-y-6">
-      {/* Navigation Bar Section */}
-      <div className="w-full">
-        <TaskFilterNavbar filter={filter} onFilterChange={setFilter} />
-      </div>
-
-      {/* Task List Section */}
+      {/* Task List Content */}
       <div className="space-y-4 sm:space-y-6">
         {filteredTasks.length === 0 ? (
           <div className="flex h-64 items-center justify-center">
             <p className="text-muted-foreground">No tasks found</p>
           </div>
         ) : (
-          <div
-            className={`space-y-4 sm:space-y-6 px-4 ${
-              isMobile ? "pb-20" : "pb-6"
-            }`}
-          >
+          <div className={`space-y-4 sm:space-y-6 ${isMobile ? "pb-20" : "pb-6"}`}>
             {filteredTasks.map((task: Task) => (
               <TaskCard key={task.id} task={task} />
             ))}
