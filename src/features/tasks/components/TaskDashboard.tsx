@@ -16,7 +16,7 @@ export default function TaskDashboard() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="mx-auto max-w-4xl px-4 py-6 sm:px-6 lg:px-8 md:max-w-5xl lg:max-w-6xl">
+      <div className="mx-auto max-w-4xl px-4 py-6 sm:px-6 lg:px-8">
         <TaskDashboardHeader />
 
         <main className="relative space-y-6">
