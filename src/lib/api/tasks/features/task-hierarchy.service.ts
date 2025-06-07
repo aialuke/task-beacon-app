@@ -1,3 +1,4 @@
+
 /**
  * Task Hierarchy Service - Handles parent-child task relationships
  */
@@ -15,7 +16,6 @@ export interface TaskCreateData {
   urlLink?: string | null;
   assigneeId?: string | null;
   parentTaskId?: string | null;
-  pinned?: boolean;
 }
 
 export class TaskHierarchyService {
@@ -39,7 +39,6 @@ export class TaskHierarchyService {
           url_link: taskData.urlLink || null,
           owner_id: userResponse.data,
           parent_task_id: parentTaskId,
-          pinned: taskData.pinned || false,
           status: 'pending' as const,
           assignee_id: taskData.assigneeId || null,
         })
@@ -84,4 +83,4 @@ export class TaskHierarchyService {
       return (data as Task[]) || [];
     });
   }
-} 
+}

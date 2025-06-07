@@ -23,7 +23,6 @@ export function useTaskFormState({
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState('');
   const [url, setUrl] = useState(initialUrl);
-  const [pinned, setPinned] = useState(false);
   const [assigneeId, setAssigneeId] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -32,7 +31,6 @@ export function useTaskFormState({
     setDescription('');
     setDueDate('');
     setUrl(initialUrl);
-    setPinned(false);
     setAssigneeId('');
     if (onClose) onClose();
   }, [initialUrl, onClose]);
@@ -47,8 +45,6 @@ export function useTaskFormState({
     setDueDate,
     url,
     setUrl,
-    pinned,
-    setPinned,
     assigneeId,
     setAssigneeId,
 

@@ -17,7 +17,6 @@ interface UseTaskFormOptions {
   initialDueDate?: string | null;
   initialUrl?: string | null;
   initialAssigneeId?: string | null;
-  initialPinned?: boolean;
   onSubmit?: (values: TaskFormValues) => Promise<void> | void;
   onClose?: () => void;
 }
@@ -28,7 +27,6 @@ interface TaskFormValues {
   dueDate: string | null;
   url: string | null;
   assigneeId: string | null;
-  pinned: boolean;
 }
 
 /**
@@ -44,7 +42,6 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     initialDueDate = null,
     initialUrl = null,
     initialAssigneeId = null,
-    initialPinned = false,
     onSubmit,
     onClose,
   } = options;
@@ -61,7 +58,6 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     dueDate: initialDueDate,
     url: initialUrl || '', // Convert null to empty string
     assigneeId: initialAssigneeId,
-    pinned: initialPinned,
   };
 
   // Create validation schema - return string errors, not boolean
@@ -97,7 +93,6 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
   const dueDate = formState.fields.dueDate.value;
   const url = formState.fields.url.value || ''; // Ensure url is never null
   const assigneeId = formState.fields.assigneeId.value;
-  const pinned = formState.fields.pinned.value;
 
   // Convenience setters
   const setTitle = useCallback((value: string) => {
@@ -121,10 +116,6 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     formActions.setFieldValue('assigneeId', value);
   }, [formActions]);
 
-  const setPinned = useCallback((value: boolean) => {
-    formActions.setFieldValue('pinned', value);
-  }, [formActions]);
-
   // Create task data formatter
   const getTaskData = useCallback((): TaskCreateData => {
     return {
@@ -144,11 +135,10 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
       description,
       dueDate,
       url,
-      pinned,
       assigneeId,
       priority: 'medium', // Fixed to use string type
     });
-  }, [validation, title, description, dueDate, url, pinned, assigneeId]);
+  }, [validation, title, description, dueDate, url, assigneeId]);
 
   // Reset form state including calling onClose
   const resetFormState = useCallback(() => {
@@ -164,7 +154,6 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     dueDate,
     url,
     assigneeId,
-    pinned,
 
     // Individual field setters
     setTitle,
@@ -172,7 +161,6 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     setDueDate,
     setUrl,
     setAssigneeId,
-    setPinned,
 
     // Form state - maintain compatibility
     isValid: formState.isValid,

@@ -51,7 +51,6 @@ export interface TaskCreateData {
 export interface TaskUpdateData extends Partial<TaskCreateData> {
   id: string;
   status?: 'pending' | 'complete' | 'overdue';
-  pinned?: boolean;
 }
 
 // Query and filtering options
