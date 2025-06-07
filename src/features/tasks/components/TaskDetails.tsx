@@ -1,3 +1,4 @@
+
 import { memo } from "react";
 import { Task } from "@/types";
 import { animated, SpringValue } from "@react-spring/web";
@@ -33,7 +34,7 @@ function TaskDetails({
       }}
       className="mt-1 w-full"
     >
-      <TaskDetailsContent task={task} />
+      <TaskDetailsContent task={task} isExpanded={isExpanded} />
     </animated.div>
   );
 }

@@ -1,3 +1,4 @@
+
 // External libraries
 import { useCallback, memo, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -23,10 +24,11 @@ import type { Task } from "@/types";
 
 interface TaskActionsProps {
   task: Task;
-  onView: () => void; // Added onView prop
+  onView: () => void;
+  isExpanded?: boolean;
 }
 
-function TaskActions({ task, onView }: TaskActionsProps) {
+function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
   const navigate = useNavigate();
   const { toggleTaskCompleteCallback, deleteTaskCallback } = useTaskMutations();
   const [isDeleting, setIsDeleting] = useState(false);
@@ -63,7 +65,7 @@ function TaskActions({ task, onView }: TaskActionsProps) {
   }, [deleteTaskCallback, task.id]);
 
   return (
-    <div className="flex flex-wrap gap-2 border-t border-gray-100 pt-2">
+    <div className="flex flex-wrap gap-2">
       <Button
         variant={task.status === "complete" ? "outline" : "default"}
         size="sm"
@@ -74,18 +76,22 @@ function TaskActions({ task, onView }: TaskActionsProps) {
       <Button variant="outline" size="sm" onClick={handleCreateFollowUp}>
         Follow Up
       </Button>
-      <Button variant="outline" size="sm" onClick={onView}>
-        View Details
-      </Button>
+      
+      {/* Only show View Details button when not expanded */}
+      {!isExpanded && (
+        <Button variant="outline" size="sm" onClick={onView}>
+          View Details
+        </Button>
+      )}
 
-      {/* Delete button inline with other buttons */}
+      {/* Delete button */}
       <div className="ml-auto">
         <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
           <DialogTrigger asChild>
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 text-white hover:bg-white/10 hover:text-white"
+              className="h-8 w-8 text-muted-foreground hover:bg-muted hover:text-foreground"
               disabled={isDeleting}
             >
               <Trash2 size={16} />

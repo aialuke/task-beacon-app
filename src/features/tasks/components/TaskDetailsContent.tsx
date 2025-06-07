@@ -10,53 +10,63 @@ import type { Task } from "@/types";
 
 interface TaskDetailsContentProps {
   task: Task;
+  isExpanded?: boolean;
 }
 
-export default function TaskDetailsContent({ task }: TaskDetailsContentProps) {
+export default function TaskDetailsContent({ task, isExpanded = false }: TaskDetailsContentProps) {
   const navigate = useNavigate();
   const status = getTaskStatus(task);
 
   return (
-    <div className="space-y-4 rounded-xl">
-      <div className="flex items-start gap-3">
-        {task.description && (
+    <div className="space-y-4">
+      {/* Task Description */}
+      {task.description && (
+        <div>
           <p className="text-sm text-muted-foreground">{task.description}</p>
-        )}
-      </div>
-
-      <div className="border-t pt-4">
-        <div className="mb-3 flex items-center gap-3">
-          <Calendar1 className="h-4 w-4 text-muted-foreground" />
-          <span className="text-sm text-muted-foreground">
-            {task.due_date ? formatDate(task.due_date) : "No due date"}
-          </span>
         </div>
+      )}
 
-        {task.url_link && (
-          <div className="mb-3 flex items-center gap-2">
-            <ExternalLink className="h-4 w-4 text-primary" />
-            <a
-              href={task.url_link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1 text-sm text-primary hover:underline"
-            >
-              {task.url_link}
-            </a>
-          </div>
-        )}
-      </div>
+      {/* Image Gallery */}
+      <TaskImageGallery task={task} />
 
-      <TaskImageGallery task={task} className="border-t pt-4" />
+      {/* Date + URL Info (Combined Section) */}
+      {(task.due_date || task.url_link) && (
+        <div className="space-y-3">
+          {task.due_date && (
+            <div className="flex items-center gap-3">
+              <Calendar1 className="h-4 w-4 text-muted-foreground" />
+              <span className="text-sm text-muted-foreground">
+                {formatDate(task.due_date)}
+              </span>
+            </div>
+          )}
 
+          {task.url_link && (
+            <div className="flex items-center gap-2">
+              <ExternalLink className="h-4 w-4 text-primary" />
+              <a
+                href={task.url_link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 text-sm text-primary hover:underline"
+              >
+                {task.url_link}
+              </a>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Parent Task Reference */}
       {task.parent_task && (
-        <div className="border-t pt-4">
+        <div>
           <ParentTaskReference parentTask={task.parent_task} />
         </div>
       )}
 
+      {/* Single Border Separator + Action Buttons */}
       <div className="border-t pt-4">
-        <TaskActions task={task} onView={() => navigate(`/tasks/${task.id}`)} />
+        <TaskActions task={task} onView={() => navigate(`/tasks/${task.id}`)} isExpanded={isExpanded} />
       </div>
     </div>
   );
