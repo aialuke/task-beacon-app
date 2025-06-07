@@ -1,3 +1,4 @@
+
 /**
  * Environment-aware logging utility for the application.
  * 
@@ -282,7 +283,8 @@ export function logFunctionCall<T extends (...args: unknown[]) => unknown>(
             return res;
           })
           .catch((error: unknown) => {
-            logger.error(`Function failed: ${functionName}`, error, { args });
+            const errorObj = error instanceof Error ? error : new Error(String(error));
+            logger.error(`Function failed: ${functionName}`, errorObj, { args });
             throw error;
           });
       } else {
@@ -290,7 +292,8 @@ export function logFunctionCall<T extends (...args: unknown[]) => unknown>(
         return result;
       }
     } catch (error) {
-      logger.error(`Function failed: ${functionName}`, error as Error, { args });
+      const errorObj = error instanceof Error ? error : new Error(String(error));
+      logger.error(`Function failed: ${functionName}`, errorObj, { args });
       throw error;
     }
   }) as T;
@@ -317,10 +320,11 @@ export async function logAsyncOperation<T>(
     return result;
   } catch (error) {
     const duration = performance.now() - startTime;
-    logger.error(`Async operation failed: ${operationName}`, error as Error, {
+    const errorObj = error instanceof Error ? error : new Error(String(error));
+    logger.error(`Async operation failed: ${operationName}`, errorObj, {
       duration: `${duration.toFixed(2)}ms`,
       ...context,
     });
     throw error;
   }
-} 
+}

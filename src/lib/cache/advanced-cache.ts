@@ -214,7 +214,8 @@ export function useCachedData<T>(
         setError(null);
       })
       .catch((err: unknown) => {
-        setError(err);
+        const errorObj = err instanceof Error ? err : new Error(String(err));
+        setError(errorObj);
       })
       .finally(() => {
         setLoading(false);
