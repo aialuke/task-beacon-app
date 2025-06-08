@@ -1,33 +1,54 @@
 
-/**
- * Main task mutations hook - now delegates to focused mutation hooks
- * This maintains backward compatibility while using the new focused architecture
- */
-export { useTaskMutationsOrchestrator as useTaskMutations } from './mutations/useTaskMutationsOrchestrator';
+import { useTaskCreation } from './mutations/useTaskCreation';
+import { useTaskUpdates } from './mutations/useTaskUpdates';
+import { useTaskDeletion } from './mutations/useTaskDeletion';
+import { useTaskStatus } from './mutations/useTaskStatus';
+import { useOptimizedMemo } from '@/hooks/performance';
 
-// Re-export specialized hooks for direct usage
+/**
+ * Standardized task mutations hook - Phase 2.3 Hook Pattern Standardization
+ * 
+ * Simplified to directly use focused mutation hooks without orchestrator complexity
+ */
+export function useTaskMutations() {
+  const creation = useTaskCreation();
+  const updates = useTaskUpdates();
+  const deletion = useTaskDeletion();
+  const status = useTaskStatus();
+
+  // Memoize the combined interface for stable references
+  return useOptimizedMemo(
+    () => ({
+      // Creation operations
+      createTask: creation.createTaskCallback,
+      createTaskCallback: creation.createTaskCallback,
+      createFollowUpTask: creation.createFollowUpTask,
+      
+      // Update operations
+      updateTask: updates.updateTaskCallback,
+      updateTaskCallback: updates.updateTaskCallback,
+      
+      // Deletion operations
+      deleteTask: deletion.deleteTaskCallback,
+      deleteTaskCallback: deletion.deleteTaskCallback,
+      deleteTaskById: deletion.deleteTaskCallback,
+      
+      // Status operations
+      toggleTaskComplete: status.toggleTaskCompleteCallback,
+      toggleTaskCompleteCallback: status.toggleTaskCompleteCallback,
+      markAsComplete: status.markAsComplete,
+      markAsIncomplete: status.markAsIncomplete,
+      
+      // Combined loading state
+      isLoading: creation.isLoading || updates.isLoading || deletion.isLoading || status.isLoading,
+    }),
+    [creation, updates, deletion, status],
+    { name: 'task-mutations-return' }
+  );
+}
+
+// Re-export focused hooks for direct usage
 export { useTaskCreation } from './mutations/useTaskCreation';
 export { useTaskUpdates } from './mutations/useTaskUpdates';
 export { useTaskDeletion } from './mutations/useTaskDeletion';
 export { useTaskStatus } from './mutations/useTaskStatus';
-
-// Import the orchestrator for backward compatibility functions
-import { useTaskMutationsOrchestrator } from './mutations/useTaskMutationsOrchestrator';
-
-// Backward compatibility exports
-export function useTaskStatusMutations() {
-  const mutations = useTaskMutationsOrchestrator();
-  return {
-    markAsComplete: mutations.markAsComplete,
-    markAsIncomplete: mutations.markAsIncomplete,
-    isLoading: mutations.isLoading,
-  };
-}
-
-export function useTaskDeleteMutations() {
-  const mutations = useTaskMutationsOrchestrator();
-  return {
-    deleteTask: mutations.deleteTaskCallback,
-    isLoading: mutations.isLoading,
-  };
-}

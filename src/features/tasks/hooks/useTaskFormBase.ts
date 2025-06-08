@@ -1,21 +1,20 @@
-
 import { useState } from 'react';
 import { useOptimizedMemo, useOptimizedCallback } from '@/hooks/performance';
 import { useTaskForm } from './useTaskForm';
 import { useTaskFormValidation } from './useTaskFormValidation';
-import { useTaskPhotoUpload } from '@/components/form/hooks/useFormPhotoUpload';
+import { useTaskPhotoUpload } from '@/components/form/hooks/useTaskPhotoUpload';
 import { useTaskMutations } from './useTaskMutations';
 import { toast } from 'sonner';
 import type { Task } from '@/types';
 
 interface UseTaskFormBaseOptions {
   onClose?: () => void;
-  parentTask?: Task; // Properly typed parent task
+  parentTask?: Task;
 }
 
 /**
- * Base hook for task form functionality - Phase 2 Update
- * Updated to use centralized Zod validation from Phase 1
+ * Base hook for task form functionality - Phase 2.3 Hook Standardization
+ * Updated to use standardized photo upload patterns
  */
 export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions = {}) {
   const [loading, setLoading] = useState(false);
@@ -25,43 +24,15 @@ export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions 
   // Initialize form with proper onClose handling
   const taskForm = useTaskForm({ onClose });
 
-  // Standardized photo upload configuration
-  const photoUploadConfig = useOptimizedMemo(
-    () => ({
-      processingOptions: {
-        maxWidth: 1920,
-        maxHeight: 1080,
-        quality: 0.85,
-        format: 'auto' as const,
-      },
-      autoProcess: true,
-    }),
-    [],
-    { name: 'photo-upload-config' }
-  );
-
-  const photoUpload = useTaskPhotoUpload(photoUploadConfig);
-
-  // Updated form validation using new centralized schemas
-  const validateForm = useOptimizedCallback(() => {
-    const formData = {
-      title: taskForm.title,
-      description: taskForm.description,
-      dueDate: taskForm.dueDate || '',
-      url: taskForm.url || '',
-      assigneeId: taskForm.assigneeId || '',
-      priority: 'medium' as const,
-    };
-
-    const validationResult = validation.validateTaskForm(formData);
-    
-    if (!validationResult.isValid) {
-      validation.showValidationErrors(validationResult.errors);
-      return { isValid: false, errors: validationResult.errors };
-    }
-    
-    return { isValid: true, errors: {} };
-  }, [taskForm, validation], { name: 'validateForm' });
+  // Use standardized photo upload hook
+  const photoUpload = useTaskPhotoUpload({
+    processingOptions: {
+      maxWidth: 1920,
+      maxHeight: 1080,
+      quality: 0.85,
+      format: 'auto' as const,
+    },
+  });
 
   // Unified photo upload handling
   const handlePhotoUpload = useOptimizedCallback(async (): Promise<string | null> => {
@@ -103,9 +74,17 @@ export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions 
     async (e: React.FormEvent) => {
       e.preventDefault();
 
-      const validationResult = validateForm();
+      const validationResult = validation.validateTaskForm({
+        title: taskForm.title,
+        description: taskForm.description,
+        dueDate: taskForm.dueDate || '',
+        url: taskForm.url || '',
+        assigneeId: taskForm.assigneeId || '',
+        priority: 'medium' as const,
+      });
+      
       if (!validationResult.isValid) {
-        console.log('Validation failed:', validationResult.errors);
+        validation.showValidationErrors(validationResult.errors);
         return;
       }
 
@@ -142,15 +121,7 @@ export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions 
         setLoading(false);
       }
     },
-    [
-      validateForm,
-      handlePhotoUpload,
-      prepareTaskData,
-      createTaskCallback,
-      resetForm,
-      onClose,
-      parentTask,
-    ],
+    [taskForm, photoUpload, validation, createTaskCallback, onClose, parentTask],
     { name: 'handleSubmit' }
   );
 
@@ -175,30 +146,35 @@ export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions 
       handlePhotoRemove: photoUpload.handlePhotoRemove,
       photoLoading: photoUpload.photoLoading,
       processingResult: photoUpload.processingResult,
-      handlePhotoUpload, // Expose the upload method
       
       // Form actions
       handleSubmit,
       resetForm,
       
       // Validation
-      validateForm,
+      validateForm: useOptimizedCallback(() => {
+        const formData = {
+          title: taskForm.title,
+          description: taskForm.description,
+          dueDate: taskForm.dueDate || '',
+          url: taskForm.url || '',
+          assigneeId: taskForm.assigneeId || '',
+          priority: 'medium' as const,
+        };
+
+        const validationResult = validation.validateTaskForm(formData);
+        
+        if (!validationResult.isValid) {
+          validation.showValidationErrors(validationResult.errors);
+          return { isValid: false, errors: validationResult.errors };
+        }
+        
+        return { isValid: true, errors: {} };
+      }, [taskForm, validation], { name: 'validateForm' }),
+      
       showValidationErrors: validation.showValidationErrors,
     }),
-    [
-      taskForm,
-      combinedLoading,
-      photoUpload.photoPreview,
-      photoUpload.handlePhotoChange,
-      photoUpload.handlePhotoRemove,
-      photoUpload.photoLoading,
-      photoUpload.processingResult,
-      handlePhotoUpload,
-      handleSubmit,
-      resetForm,
-      validateForm,
-      validation.showValidationErrors,
-    ],
+    [taskForm, loading, photoUpload, validation, createTaskCallback, onClose, parentTask],
     { name: 'task-form-base-return' }
   );
 }
