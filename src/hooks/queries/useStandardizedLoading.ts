@@ -1,35 +1,46 @@
 
 /**
- * Standardized Loading States - Phase 3.2 Implementation
+ * Standardized Loading State Management - Phase 2.2 Implementation
  * 
- * Consistent loading state management across all components.
+ * Provides consistent loading state patterns across all components.
  */
 
 import { useMemo } from 'react';
 
 export interface LoadingState {
+  // Primary loading states
   isLoading: boolean;
   isInitialLoading: boolean;
   isFetching: boolean;
   isRefetching: boolean;
+  
+  // Error states
   isError: boolean;
-  isSuccess: boolean;
   error: string | null;
+  
+  // Data states
+  hasData: boolean;
   isEmpty: boolean;
+  
+  // Computed states
+  isReady: boolean;
+  showSkeleton: boolean;
+  showEmptyState: boolean;
+  canRetry: boolean;
 }
 
-export interface LoadingStateOptions {
+export interface UseStandardizedLoadingParams {
   isLoading?: boolean;
   isInitialLoading?: boolean;
   isFetching?: boolean;
   isRefetching?: boolean;
   error?: unknown;
-  data?: unknown[] | unknown;
+  data?: unknown;
   hasData?: boolean;
 }
 
 /**
- * Creates standardized loading state from React Query states
+ * Standardized loading state hook
  */
 export function useStandardizedLoading({
   isLoading = false,
@@ -37,87 +48,35 @@ export function useStandardizedLoading({
   isFetching = false,
   isRefetching = false,
   error = null,
-  data,
+  data = null,
   hasData,
-}: LoadingStateOptions): LoadingState {
+}: UseStandardizedLoadingParams): LoadingState {
   return useMemo(() => {
     const isError = !!error;
-    const isSuccess = !isError && !isLoading;
+    const errorMessage = error instanceof Error ? error.message : error ? String(error) : null;
+    const dataExists = hasData ?? (data !== null && data !== undefined);
+    const isEmpty = !isLoading && !isError && !dataExists;
     
-    // Determine if data is empty
-    let isEmpty = false;
-    if (hasData !== undefined) {
-      isEmpty = !hasData;
-    } else if (Array.isArray(data)) {
-      isEmpty = data.length === 0;
-    } else {
-      isEmpty = !data;
-    }
-
     return {
+      // Primary loading states
       isLoading,
       isInitialLoading,
       isFetching,
       isRefetching,
+      
+      // Error states
       isError,
-      isSuccess,
-      error: error instanceof Error ? error.message : error ? String(error) : null,
-      isEmpty: isEmpty && isSuccess,
+      error: errorMessage,
+      
+      // Data states
+      hasData: dataExists,
+      isEmpty,
+      
+      // Computed states
+      isReady: !isLoading && !isError && dataExists,
+      showSkeleton: isInitialLoading || (isLoading && !dataExists),
+      showEmptyState: isEmpty,
+      canRetry: isError && !isLoading,
     };
   }, [isLoading, isInitialLoading, isFetching, isRefetching, error, data, hasData]);
-}
-
-/**
- * Loading state variants for different UI contexts
- */
-export const LoadingVariants = {
-  // Full page loading
-  page: {
-    showSpinner: true,
-    showSkeleton: false,
-    blockInteraction: true,
-  },
-  
-  // Card/component loading
-  card: {
-    showSpinner: false,
-    showSkeleton: true,
-    blockInteraction: false,
-  },
-  
-  // Background refresh
-  background: {
-    showSpinner: false,
-    showSkeleton: false,
-    blockInteraction: false,
-  },
-  
-  // Button/action loading
-  action: {
-    showSpinner: true,
-    showSkeleton: false,
-    blockInteraction: true,
-  },
-} as const;
-
-export type LoadingVariant = keyof typeof LoadingVariants;
-
-/**
- * Hook for managing loading states with variants
- */
-export function useLoadingVariant(
-  loadingState: LoadingState,
-  variant: LoadingVariant = 'card'
-) {
-  return useMemo(() => {
-    const variantConfig = LoadingVariants[variant];
-    
-    return {
-      ...loadingState,
-      shouldShowSpinner: loadingState.isLoading && variantConfig.showSpinner,
-      shouldShowSkeleton: loadingState.isLoading && variantConfig.showSkeleton,
-      shouldBlockInteraction: loadingState.isLoading && variantConfig.blockInteraction,
-      variant,
-    };
-  }, [loadingState, variant]);
 }

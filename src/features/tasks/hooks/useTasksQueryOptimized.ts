@@ -1,6 +1,6 @@
 
 /**
- * Optimized Tasks Query Hook - Phase 3.1 Implementation
+ * Optimized Tasks Query Hook - Phase 2.2 Implementation
  * 
  * Enhanced version of useTasksQuery with improved caching, prefetching, and error handling.
  */

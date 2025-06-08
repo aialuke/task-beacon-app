@@ -1,6 +1,6 @@
 
 /**
- * Optimized Single Task Query Hook - Phase 3.1 Implementation
+ * Optimized Single Task Query Hook - Phase 2.2 Implementation
  * 
  * Enhanced version of useTaskQuery with improved error handling and caching.
  */
