@@ -6,8 +6,8 @@ import { memo, useMemo } from "react";
 import UnifiedLoadingStates from "@/components/ui/loading/UnifiedLoadingStates";
 
 // === COMPONENTS ===
-import TaskCard from "./TaskCard";
-import TaskListPagination from "./optimized/TaskListPagination";
+import { TaskCard } from "../cards";
+import TaskListPagination from "../optimized/TaskListPagination";
 
 // === HOOKS ===
 import { useTaskDataContext } from "@/features/tasks/context/TaskDataContext";

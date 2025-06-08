@@ -3,8 +3,8 @@ import { Calendar1, ExternalLink } from "lucide-react";
 import { formatDate } from "@/lib/utils/shared";
 import { TaskImageGallery } from "./TaskImageGallery";
 import { ParentTaskReference } from "@/components/form/ParentTaskReference";
-import TaskActions from "./TaskActions";
-import { getTaskStatus } from "../utils/taskUiUtils";
+import TaskActions from "../actions/TaskActions";
+import { getTaskStatus } from "../../utils/taskUiUtils";
 import { useNavigate } from "react-router-dom";
 import type { Task } from "@/types";
 

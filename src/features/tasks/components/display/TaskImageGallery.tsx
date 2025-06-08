@@ -7,10 +7,10 @@ import { cn } from '@/lib/utils';
 
 // === INTERNAL COMPONENTS ===
 import { LazyImage } from '@/components/ui/LazyImage';
-import { ImagePreviewModal } from './ImagePreviewModal';
+import { ImagePreviewModal } from '../ImagePreviewModal';
 
 // === HOOKS ===
-import { useImagePreview } from '../hooks/useImagePreview';
+import { useImagePreview } from '../../hooks/useImagePreview';
 
 // === TYPES ===
 import type { Task } from '@/types';

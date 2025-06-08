@@ -3,10 +3,10 @@
 import React from "react";
 
 // === COMPONENTS ===
-import TaskDashboardHeader from "./TaskDashboardHeader";
-import TaskFilterNavbar from "./TaskFilterNavbar";
+import TaskDashboardHeader from "../TaskDashboardHeader";
+import TaskFilterNavbar from "../TaskFilterNavbar";
 import TaskList from "./TaskList";
-import { FabButton } from "./FabButton";
+import { FabButton } from "../actions";
 
 // === HOOKS ===
 import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";

@@ -1,8 +1,8 @@
 
 import { memo, forwardRef } from "react";
 import { Task } from "@/types";
-import { useTaskCard } from "../hooks/useTaskCard";
-import { TaskErrorBoundary } from "./TaskErrorBoundary";
+import { useTaskCard } from "../../hooks/useTaskCard";
+import { TaskErrorBoundary } from "../TaskErrorBoundary";
 import TaskCardHeader from "./TaskCardHeader";
 import TaskCardContent from "./TaskCardContent";
 

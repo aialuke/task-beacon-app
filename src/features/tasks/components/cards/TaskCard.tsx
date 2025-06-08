@@ -1,9 +1,9 @@
 
 import { memo } from "react";
-import { TaskErrorBoundary } from "./TaskErrorBoundary";
+import { TaskErrorBoundary } from "../TaskErrorBoundary";
 import TaskCardHeader from "./TaskCardHeader";
 import TaskCardContent from "./TaskCardContent";
-import { useTaskCard } from "../hooks/useTaskCard";
+import { useTaskCard } from "../../hooks/useTaskCard";
 import type { Task } from "@/types";
 
 interface TaskCardProps {

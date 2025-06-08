@@ -1,6 +1,7 @@
+
 import { memo } from "react";
 import { Task } from "@/types";
-import TaskHeader from "./TaskHeader";
+import TaskHeader from "../display/TaskHeader";
 
 interface TaskCardHeaderProps {
   task: Task;

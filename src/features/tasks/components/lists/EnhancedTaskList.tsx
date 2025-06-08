@@ -6,7 +6,7 @@ import { memo, useMemo, useCallback, useRef, useState, useEffect } from 'react';
 import UnifiedLoadingStates from '@/components/ui/loading/UnifiedLoadingStates';
 
 // === COMPONENTS ===
-import VirtualizedTaskCard from './VirtualizedTaskCard';
+import { VirtualizedTaskCard } from '../cards';
 
 // === HOOKS ===
 import { useTaskDataContext } from '@/features/tasks/context/TaskDataContext';
