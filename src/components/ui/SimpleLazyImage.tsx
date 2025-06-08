@@ -21,8 +21,8 @@ type ImageAction =
   | { type: 'ERROR'; message: string }
   | { type: 'RESET' };
 
-// Memoized reducer for better performance
-const imageReducer = memo((state: ImageState, action: ImageAction): ImageState => {
+// Standard reducer function (not memoized - reducers don't need memo)
+function imageReducer(state: ImageState, action: ImageAction): ImageState {
   switch (action.type) {
     case 'LOAD':
       return { type: 'loading' };
@@ -35,7 +35,7 @@ const imageReducer = memo((state: ImageState, action: ImageAction): ImageState =
     default:
       return state;
   }
-});
+}
 
 interface SimpleLazyImageProps {
   src: string;

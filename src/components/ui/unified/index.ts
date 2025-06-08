@@ -29,12 +29,6 @@ export {
   LazyComponents 
 } from '../LazyComponent';
 
-// === BUNDLE OPTIMIZATION - Remove in production ===
-if (process.env.NODE_ENV !== 'production') {
-  // Development-only exports for debugging
-  export { default as UnifiedLoadingStates } from '../loading/UnifiedLoadingStates';
-}
-
 // === PERFORMANCE TYPES (for better tree-shaking) ===
 export type {
   LoadingSpinnerProps,

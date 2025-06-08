@@ -11,12 +11,12 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 // === PERFORMANCE OPTIMIZED INTERFACES ===
 
-interface LoadingSpinnerProps {
+export interface LoadingSpinnerProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
 }
 
-interface SkeletonProps {
+export interface SkeletonProps {
   className?: string;
   aspectRatio?: string;
 }
@@ -95,10 +95,6 @@ export const ImageSkeleton = memo(function ImageSkeleton({
 // === PERFORMANCE METRICS (Development only) ===
 if (process.env.NODE_ENV === 'development') {
   // Track component render performance
-  const originalLoadingSpinner = LoadingSpinner;
-  const originalCardSkeleton = CardSkeleton;
-  const originalImageSkeleton = ImageSkeleton;
-  
   (LoadingSpinner as any).displayName = 'LoadingSpinner';
   (CardSkeleton as any).displayName = 'CardSkeleton';
   (ImageSkeleton as any).displayName = 'ImageSkeleton';
