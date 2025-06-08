@@ -1,4 +1,5 @@
 
+
 import { useMemo, useCallback, useRef } from 'react';
 
 interface OptimizationOptions {
@@ -21,7 +22,7 @@ export function useOptimizedMemo<T>(
   // Handle both string and object formats for backward compatibility
   const debugName = typeof options === 'string' ? options : options?.name;
   const warnOnSlowComputation = typeof options === 'object' ? options.warnOnSlowComputation : false;
-  const slowComputationThreshold = typeof options === 'object' ? options.slowComputationThreshold || 10 : 10;
+  const slowComputationThreshold = typeof options === 'object' ? (options.slowComputationThreshold ?? 10) : 10;
   
   return useMemo(() => {
     if (debugName) {
