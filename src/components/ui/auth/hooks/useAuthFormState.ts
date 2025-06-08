@@ -1,7 +1,13 @@
 
 import { useState, useRef, useCallback } from 'react';
 import { AuthService } from '@/lib/api';
-import { isValidEmail, isValidPassword, isValidUserName } from '@/lib/utils/validation';
+import { 
+  validateSignIn, 
+  validateSignUp, 
+  emailSchema, 
+  passwordSchema, 
+  userNameSchema 
+} from '@/schemas';
 import { useErrorHandler } from '@/hooks/core';
 
 type AuthMode = 'signin' | 'signup';
@@ -37,10 +43,9 @@ interface UseAuthFormStateReturn {
 }
 
 /**
- * Standardized auth form state hook
+ * Enhanced auth form state hook - Phase 2 Update
  * 
- * Follows naming pattern: use[Feature][Entity][Action]
- * Feature: Auth, Entity: Form, Action: State
+ * Now uses centralized Zod validation from Phase 1 implementation
  */
 export function useAuthFormState(): UseAuthFormStateReturn {
   const [mode, setMode] = useState<AuthMode>('signin');
@@ -59,26 +64,26 @@ export function useAuthFormState(): UseAuthFormStateReturn {
   const emailInputRef = useRef<HTMLInputElement>(null);
   const { handleError } = useErrorHandler({ showToast: false });
 
-  // Validation functions using consolidated utilities
-  const validateEmail = (value: string) => {
+  // Enhanced validation using centralized Zod schemas
+  const validateEmail = useCallback((value: string) => {
     if (!value) return 'Email is required';
-    if (!isValidEmail(value)) return 'Please enter a valid email address';
-    return '';
-  };
+    const result = emailSchema.safeParse(value);
+    return result.success ? '' : result.error.errors[0]?.message || 'Invalid email';
+  }, []);
 
-  const validatePassword = (value: string) => {
+  const validatePassword = useCallback((value: string) => {
     if (!value) return 'Password is required';
-    if (!isValidPassword(value)) return 'Password must be at least 8 characters with uppercase, lowercase, number, and special character';
-    return '';
-  };
+    const result = passwordSchema.safeParse(value);
+    return result.success ? '' : result.error.errors[0]?.message || 'Invalid password';
+  }, []);
 
-  const validateName = (value: string) => {
+  const validateName = useCallback((value: string) => {
     if (!value) return 'Name is required';
-    if (!isValidUserName(value)) return 'Name must be between 2 and 50 characters';
-    return '';
-  };
+    const result = userNameSchema.safeParse(value);
+    return result.success ? '' : result.error.errors[0]?.message || 'Invalid name';
+  }, []);
 
-  const validateForm = () => {
+  const validateForm = useCallback(() => {
     const emailError = validateEmail(email);
     const passwordError = validatePassword(password);
     const nameError = mode === 'signup' ? validateName(name) : '';
@@ -90,10 +95,10 @@ export function useAuthFormState(): UseAuthFormStateReturn {
     });
 
     return !emailError && !passwordError && !nameError;
-  };
+  }, [email, password, name, mode, validateEmail, validatePassword, validateName]);
 
   // Clean up auth state utility
-  const cleanupAuthState = () => {
+  const cleanupAuthState = useCallback(() => {
     Object.keys(localStorage).forEach(key => {
       if (key.startsWith('supabase.auth.') || key.includes('sb-')) {
         localStorage.removeItem(key);
@@ -104,7 +109,7 @@ export function useAuthFormState(): UseAuthFormStateReturn {
         sessionStorage.removeItem(key);
       }
     });
-  };
+  }, []);
 
   const handleEmailChange = useCallback((value: string) => {
     setEmail(value);
@@ -112,7 +117,7 @@ export function useAuthFormState(): UseAuthFormStateReturn {
       const error = validateEmail(value);
       setErrors(prev => ({ ...prev, email: error }));
     }
-  }, [errors.email]);
+  }, [errors.email, validateEmail]);
 
   const handlePasswordChange = useCallback((value: string) => {
     setPassword(value);
@@ -120,7 +125,7 @@ export function useAuthFormState(): UseAuthFormStateReturn {
       const error = validatePassword(value);
       setErrors(prev => ({ ...prev, password: error }));
     }
-  }, [errors.password]);
+  }, [errors.password, validatePassword]);
 
   const handleNameChange = useCallback((value: string) => {
     setName(value);
@@ -128,7 +133,7 @@ export function useAuthFormState(): UseAuthFormStateReturn {
       const error = validateName(value);
       setErrors(prev => ({ ...prev, name: error }));
     }
-  }, [errors.name]);
+  }, [errors.name, validateName]);
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
@@ -149,6 +154,12 @@ export function useAuthFormState(): UseAuthFormStateReturn {
       }
 
       if (mode === 'signin') {
+        // Validate with centralized schema
+        const validationResult = validateSignIn({ email, password });
+        if (!validationResult.success) {
+          throw new Error('Invalid sign-in data');
+        }
+
         const response = await AuthService.signIn(email, password);
         if (!response.success) {
           const errorMessage = response.error?.message || 'Sign in failed';
@@ -158,6 +169,12 @@ export function useAuthFormState(): UseAuthFormStateReturn {
           window.location.href = '/';
         }, 1000);
       } else {
+        // Validate with centralized schema
+        const validationResult = validateSignUp({ email, password, name });
+        if (!validationResult.success) {
+          throw new Error('Invalid sign-up data');
+        }
+
         const response = await AuthService.signUp(email, password, {
           data: {
             full_name: name,
@@ -198,7 +215,7 @@ export function useAuthFormState(): UseAuthFormStateReturn {
     } finally {
       setLoading(false);
     }
-  }, [mode, email, password, name, handleError]);
+  }, [mode, email, password, name, handleError, validateForm, cleanupAuthState]);
 
   const toggleMode = useCallback(() => {
     setMode(prevMode => prevMode === 'signin' ? 'signup' : 'signin');
