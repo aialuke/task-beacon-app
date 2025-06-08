@@ -51,30 +51,32 @@ export class PaginationService {
       const { page, pageSize } = validation.sanitized;
       const { table, select = '*', filters = {}, orderBy } = options;
 
-      // Build the query with proper typing
-      let query = supabase
+      // Build the base query
+      const baseQuery = supabase
         .from(table)
         .select(select, { count: 'exact' });
 
       // Apply filters
+      let filteredQuery = baseQuery;
       Object.entries(filters).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
-          query = query.eq(key, value);
+          filteredQuery = filteredQuery.eq(key, value);
         }
       });
 
       // Apply ordering
+      let orderedQuery = filteredQuery;
       if (orderBy) {
-        query = query.order(orderBy.column, { ascending: orderBy.ascending ?? true });
+        orderedQuery = orderedQuery.order(orderBy.column, { ascending: orderBy.ascending ?? true });
       }
 
       // Apply pagination
       const from = (page - 1) * pageSize;
       const to = from + pageSize - 1;
-      query = query.range(from, to);
+      const finalQuery = orderedQuery.range(from, to);
 
       // Execute query
-      const { data, error, count } = await query;
+      const { data, error, count } = await finalQuery;
 
       if (error) {
         return {
@@ -125,18 +127,19 @@ export class PaginationService {
     filters: Record<string, unknown> = {}
   ): Promise<ApiResponse<number>> {
     try {
-      let query = supabase
+      const baseQuery = supabase
         .from(table)
         .select('*', { count: 'exact', head: true });
 
       // Apply filters
+      let filteredQuery = baseQuery;
       Object.entries(filters).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
-          query = query.eq(key, value);
+          filteredQuery = filteredQuery.eq(key, value);
         }
       });
 
-      const { count, error } = await query;
+      const { count, error } = await filteredQuery;
 
       if (error) {
         return {
