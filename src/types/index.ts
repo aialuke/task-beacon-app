@@ -6,6 +6,9 @@
  * This consolidates all scattered type definitions into one organized system.
  */
 
+// === AUTHENTICATION IMPORTS (must come first) ===
+import type { User, Session } from '@supabase/supabase-js';
+
 // === CORE ENTITIES (from database types) ===
 export type {
   TaskWithRelations as Task,
@@ -84,7 +87,7 @@ export type {
 export type { User as AuthUser, Session } from '@supabase/supabase-js';
 
 export interface AuthResponse {
-  user: AuthUser;
+  user: User;
   session: Session | null;
   emailConfirmed: boolean;
 }
@@ -99,7 +102,7 @@ export interface SignUpOptions {
 }
 
 export interface AuthContextType {
-  user: AuthUser | null;
+  user: User | null;
   session: Session | null;
   loading: boolean;
   error: Error | null;
@@ -111,7 +114,7 @@ export interface AuthContextType {
 export interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
-  user: AuthUser | null;
+  user: User | null;
   session: Session | null;
   error: string | null;
 }
