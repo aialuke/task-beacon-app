@@ -35,8 +35,18 @@ export {
   createErrorResponse 
 } from './standardized-api';
 
-// === MAIN SERVICES ===
-export { TaskService } from './tasks/task.service';
+// === SIMPLIFIED TASK OPERATIONS ===
+export { 
+  TaskService,
+  createTask,
+  updateTask,
+  deleteTask,
+  getTaskById,
+  getTasks,
+  updateTaskStatus,
+} from './tasks';
+
+// === OTHER SERVICES ===
 export { AuthService } from './auth.service';
 export { StorageService } from './storage.service';
 export { DatabaseService } from './database.service';
