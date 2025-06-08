@@ -31,6 +31,18 @@ export interface PaginationParams {
 }
 
 /**
+ * Base query parameters interface
+ * Used for extending pagination with additional query options
+ */
+export interface BaseQueryParams {
+  page?: number;
+  pageSize?: number;
+  sortBy?: string;
+  sortDirection?: 'asc' | 'desc';
+  search?: string;
+}
+
+/**
  * Pagination state interface for components
  * Used in hooks and component state management
  */
@@ -56,7 +68,13 @@ export interface PaginationControls {
  * Complete pagination interface combining state and controls
  * Used in contexts and comprehensive pagination components
  */
-export interface PaginationAPI extends PaginationState, PaginationControls {
+export interface PaginationAPI extends PaginationControls {
+  currentPage: number;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
   isFetching?: boolean;
   isLoading?: boolean;
 }

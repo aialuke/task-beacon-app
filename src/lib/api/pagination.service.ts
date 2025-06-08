@@ -14,7 +14,7 @@ import { supabase } from '@/integrations/supabase/client';
 import type { ApiResponse } from '@/types/api.types';
 
 interface PaginationServiceOptions {
-  table: string;
+  table: 'profiles' | 'tasks';
   select?: string;
   filters?: Record<string, unknown>;
   orderBy?: { column: string; ascending?: boolean };
@@ -51,7 +51,7 @@ export class PaginationService {
       const { page, pageSize } = validation.sanitized;
       const { table, select = '*', filters = {}, orderBy } = options;
 
-      // Build the query
+      // Build the query with proper typing
       let query = supabase
         .from(table)
         .select(select, { count: 'exact' });
@@ -121,7 +121,7 @@ export class PaginationService {
    * Count total records for pagination metadata
    */
   static async count(
-    table: string,
+    table: 'profiles' | 'tasks',
     filters: Record<string, unknown> = {}
   ): Promise<ApiResponse<number>> {
     try {

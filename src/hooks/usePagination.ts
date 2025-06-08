@@ -112,7 +112,7 @@ export function usePagination(options: UsePaginationOptions = {}): UsePagination
   }
 
   return {
-    // State
+    // State - using PaginationAPI interface property names
     currentPage: page,
     pageSize,
     totalCount,

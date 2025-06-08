@@ -107,7 +107,7 @@ function GenericPaginationComponent({
                 <PaginationEllipsis />
               ) : (
                 <PaginationLink
-                  onClick={() => goToPage(page)}
+                  onClick={() => goToPage(page as number)}
                   isActive={page === currentPage}
                   className="cursor-pointer"
                 >
