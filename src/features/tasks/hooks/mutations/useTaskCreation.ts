@@ -1,8 +1,7 @@
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { TaskService } from '@/lib/api/tasks';
 import { useCallback } from 'react';
-import { toast } from 'sonner';
+import { useBaseMutation } from './useBaseMutation';
 import type { Task } from '@/types';
 
 interface TaskCreationData {
@@ -23,41 +22,29 @@ interface TaskMutationResult {
 }
 
 /**
- * Focused hook for task creation mutations - Phase 2.4 Simplified
+ * Consolidated task creation hook - Phase 3 Simplified
+ * Uses base mutation pattern to eliminate duplicate code
  */
 export function useTaskCreation() {
-  const queryClient = useQueryClient();
-
-  const createTask = useMutation({
-    mutationFn: async (taskData: TaskCreationData): Promise<TaskMutationResult> => {
-      // Use direct service access instead of convenience method
+  const baseMutation = useBaseMutation<Task, TaskCreationData>({
+    mutationFn: async (taskData: TaskCreationData) => {
       const result = await TaskService.crud.create(taskData);
       
       if (!result.success) {
         throw new Error(result.error?.message || 'Failed to create task');
       }
       
-      return {
-        success: true,
-        message: 'Task created successfully',
-        data: result.data,
-      };
+      return result.data as Task;
     },
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['tasks'] });
-      toast.success('Task created successfully');
-    },
-    onError: (error) => {
-      toast.error(`Failed to create task: ${error.message}`);
-    },
+    successMessage: 'Task created successfully',
+    errorMessagePrefix: 'Failed to create task',
   });
 
   const createTaskCallback = useCallback(
-    async (taskData: TaskCreationData) => {
-      const result = await createTask.mutateAsync(taskData);
-      return result;
+    async (taskData: TaskCreationData): Promise<TaskMutationResult> => {
+      return await baseMutation.execute(taskData);
     },
-    [createTask]
+    [baseMutation]
   );
 
   const createFollowUpTask = useCallback(
@@ -66,21 +53,15 @@ export function useTaskCreation() {
         ...taskData,
         parentTaskId: parentTask.id,
       };
-      const result = await createTask.mutateAsync(followUpData);
-      return {
-        success: result.success,
-        message: result.success ? 'Follow-up task created successfully' : 'Failed to create follow-up task',
-        error: result.success ? undefined : 'Failed to create follow-up task',
-        data: result.data,
-      };
+      return await baseMutation.execute(followUpData);
     },
-    [createTask]
+    [baseMutation]
   );
 
   return {
-    createTask,
+    createTask: baseMutation.mutation,
     createTaskCallback,
     createFollowUpTask,
-    isLoading: createTask.isPending,
+    isLoading: baseMutation.isLoading,
   };
 }

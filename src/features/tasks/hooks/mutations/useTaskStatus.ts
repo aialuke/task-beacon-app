@@ -1,10 +1,9 @@
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Task } from '@/types';
 import { TaskService } from '@/lib/api/tasks';
 import { useTaskOptimisticUpdates } from '../useTaskOptimisticUpdates';
 import { useCallback } from 'react';
-import { toast } from 'sonner';
+import { useBaseMutation } from './useBaseMutation';
 
 interface TaskMutationResult {
   success: boolean;
@@ -14,27 +13,22 @@ interface TaskMutationResult {
 }
 
 /**
- * Focused hook for task status mutations - Phase 2.4 Simplified
+ * Consolidated task status hook - Phase 3 Simplified
+ * Uses base mutation pattern to eliminate duplicate code
  */
 export function useTaskStatus() {
-  const queryClient = useQueryClient();
   const optimisticUpdates = useTaskOptimisticUpdates();
 
-  const toggleTaskComplete = useMutation({
-    mutationFn: async (task: Task): Promise<TaskMutationResult> => {
+  const baseMutation = useBaseMutation<Task, Task>({
+    mutationFn: async (task: Task) => {
       const newStatus = task.status === 'complete' ? 'pending' : 'complete';
-      // Use direct service access
       const result = await TaskService.status.updateStatus(task.id, newStatus);
       
       if (!result.success) {
         throw new Error(result.error?.message || 'Failed to update task status');
       }
       
-      return {
-        success: true,
-        message: `Task ${newStatus === 'complete' ? 'completed' : 'marked incomplete'} successfully`,
-        data: result.data,
-      };
+      return result.data as Task;
     },
     onMutate: async (task) => {
       const previousData = optimisticUpdates.getPreviousData();
@@ -44,24 +38,15 @@ export function useTaskStatus() {
       
       return { previousData };
     },
-    onError: (error, _, context) => {
-      if (context?.previousData) {
-        optimisticUpdates.rollbackToData(context.previousData);
-      }
-      toast.error(`Failed to update task: ${error.message}`);
-    },
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['tasks'] });
-      toast.success('Task updated successfully');
-    },
+    successMessage: 'Task updated successfully',
+    errorMessagePrefix: 'Failed to update task',
   });
 
   const toggleTaskCompleteCallback = useCallback(
-    async (task: Task) => {
-      const result = await toggleTaskComplete.mutateAsync(task);
-      return result;
+    async (task: Task): Promise<TaskMutationResult> => {
+      return await baseMutation.execute(task);
     },
-    [toggleTaskComplete]
+    [baseMutation]
   );
 
   // Backward compatibility methods
@@ -82,10 +67,10 @@ export function useTaskStatus() {
   );
 
   return {
-    toggleTaskComplete,
+    toggleTaskComplete: baseMutation.mutation,
     toggleTaskCompleteCallback,
     markAsComplete,
     markAsIncomplete,
-    isLoading: toggleTaskComplete.isPending,
+    isLoading: baseMutation.isLoading,
   };
 }
