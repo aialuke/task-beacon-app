@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useOptimizedMemo, useOptimizedCallback } from '@/hooks/performance';
 import { useTaskForm } from './useTaskForm';
@@ -33,14 +34,6 @@ export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions 
       format: 'auto' as const,
     },
   });
-
-  // Unified photo upload handling
-  const handlePhotoUpload = useOptimizedCallback(async (): Promise<string | null> => {
-    if (!photoUpload.photo) return null;
-    
-    const uploadResult = await photoUpload.uploadPhoto();
-    return uploadResult || null;
-  }, [photoUpload.photo, photoUpload.uploadPhoto], { name: 'handlePhotoUpload' });
 
   // Updated task data preparation using new validation system
   const prepareTaskData = useOptimizedCallback((photoUrl: string | null) => {
@@ -91,8 +84,8 @@ export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions 
       setLoading(true);
       
       try {
-        // Handle photo upload
-        const photoUrl = await handlePhotoUpload();
+        // Handle photo upload using the upload method from photo hook
+        const photoUrl = await photoUpload.uploadPhoto();
 
         // Prepare validated task data
         const taskData = prepareTaskData(photoUrl);
@@ -140,12 +133,13 @@ export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions 
       loading: combinedLoading,
       setLoading,
       
-      // Photo upload functionality
+      // Photo upload functionality - expose all needed methods
       photoPreview: photoUpload.photoPreview,
       handlePhotoChange: photoUpload.handlePhotoChange,
       handlePhotoRemove: photoUpload.handlePhotoRemove,
       photoLoading: photoUpload.photoLoading,
       processingResult: photoUpload.processingResult,
+      handlePhotoUpload: photoUpload.uploadPhoto, // Expose the upload method
       
       // Form actions
       handleSubmit,
