@@ -28,3 +28,4 @@ function TaskHeader({ task, isExpanded, toggleExpand }: TaskHeaderProps) {
 
 export default memo(TaskHeader);
 // CodeRabbit review
+// CodeRabbit review

@@ -16,3 +16,4 @@ function Badge({ className, variant, ...props }: BadgeProps) {
 
 export { Badge };
 // CodeRabbit review
+// CodeRabbit review

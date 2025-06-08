@@ -90,3 +90,4 @@ export function parseNumber(numberString: string): number {
   return parseFloat(numberString.replace(/[^0-9.-]+/g, ''));
 }
 // CodeRabbit review
+// CodeRabbit review

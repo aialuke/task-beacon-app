@@ -18,3 +18,4 @@ function ImageLoadingState({ message = 'Loading image...' }: ImageLoadingStatePr
 
 export default memo(ImageLoadingState);
 // CodeRabbit review
+// CodeRabbit review

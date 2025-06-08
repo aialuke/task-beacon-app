@@ -121,3 +121,4 @@ export const validateUsersAndTasksExist = async (
   // Use batch operations for optimal performance
   return DatabaseValidationOps.validateUsersAndTasks(validEmails, validTaskIds, context);
 }; // CodeRabbit review
+// CodeRabbit review

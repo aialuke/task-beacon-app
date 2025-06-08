@@ -124,3 +124,4 @@ export const OptimizedImage = memo(function OptimizedImage({
   );
 });
 // CodeRabbit review
+// CodeRabbit review

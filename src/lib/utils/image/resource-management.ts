@@ -219,3 +219,4 @@ export class ImagePreviewManager {
     return this.previews.size;
   }
 } // CodeRabbit review
+// CodeRabbit review

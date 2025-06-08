@@ -78,3 +78,4 @@ export const handleAuthError = (error: unknown, operation: string): Error => {
   authLogger.error(`Auth operation failed: ${operation}`, authError);
   return authError;
 }; // CodeRabbit review
+// CodeRabbit review

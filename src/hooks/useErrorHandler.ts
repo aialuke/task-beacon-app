@@ -91,3 +91,4 @@ export function useErrorHandler(options: UseErrorHandlerOptions = {}) {
   };
 }
 // CodeRabbit review
+// CodeRabbit review

@@ -264,3 +264,4 @@ export * as errorUtils from './error';
 // import { SimplePhotoUpload, SimplePhotoUploadModal } from '@/components/form';
 // Background processing functionality preserved via useFormPhotoUpload hook.
 // CodeRabbit review
+// CodeRabbit review

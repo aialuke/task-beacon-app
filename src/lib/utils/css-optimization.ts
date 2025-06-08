@@ -78,3 +78,4 @@ export function optimizeAnimations(): void {
   }
 }
 // CodeRabbit review
+// CodeRabbit review

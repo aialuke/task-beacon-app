@@ -97,3 +97,4 @@ export const QUALITY_PRESETS = {
   HIGH: 0.9,
   MAXIMUM: 0.95,
 } as const; // CodeRabbit review
+// CodeRabbit review

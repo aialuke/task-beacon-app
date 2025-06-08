@@ -132,3 +132,4 @@ export function SimpleNavbar({
   );
 }
 // CodeRabbit review
+// CodeRabbit review

@@ -36,3 +36,4 @@ export function AnimatedCharacterCount({
   );
 }
 // CodeRabbit review
+// CodeRabbit review

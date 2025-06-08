@@ -17,3 +17,4 @@ export function setupLazyLoading() {
   console.log('Lazy loading setup complete');
 }
 // CodeRabbit review
+// CodeRabbit review

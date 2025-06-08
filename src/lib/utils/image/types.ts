@@ -128,3 +128,4 @@ export interface DimensionResult {
   scale: number;
   aspectRatio: number;
 } // CodeRabbit review
+// CodeRabbit review

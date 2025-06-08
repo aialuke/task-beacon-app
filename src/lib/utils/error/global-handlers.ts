@@ -37,3 +37,4 @@ function handleGlobalError(error: Error, source: string) {
   });
 }
 // CodeRabbit review
+// CodeRabbit review

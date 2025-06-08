@@ -82,3 +82,4 @@ export function setupThemeObserver(callback: () => void): () => void {
   return () => { observer.disconnect(); };
 }
 // CodeRabbit review
+// CodeRabbit review
