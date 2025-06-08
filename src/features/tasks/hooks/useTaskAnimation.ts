@@ -1,3 +1,4 @@
+
 import { useSpring, SpringValue } from "@react-spring/web";
 import { useEffect, useRef, useState } from "react";
 
@@ -17,7 +18,7 @@ export function useTaskAnimation(contentRef: React.RefObject<HTMLDivElement>) {
   const [animationProps, setAnimationProps] = useSpring(() => ({
     height: 0,
     opacity: 0,
-    config: { tension: 280, friction: 60 },
+    config: { tension: 300, friction: 30 },
   }));
 
   const toggleExpanded = () => {
@@ -29,18 +30,22 @@ export function useTaskAnimation(contentRef: React.RefObject<HTMLDivElement>) {
 
   useEffect(() => {
     if (!contentRef.current) return;
+    
     const contentHeight = contentRef.current.scrollHeight;
     if (!initialHeightRef.current) {
       initialHeightRef.current = contentHeight;
     }
-    const height = isExpanded ? contentHeight : 0;
-    const opacity = isExpanded ? 1 : 0;
+    
+    const targetHeight = isExpanded ? contentHeight : 0;
+    const targetOpacity = isExpanded ? 1 : 0;
+    
     setAnimationProps.start({
-      height,
-      opacity,
+      height: targetHeight,
+      opacity: targetOpacity,
       immediate: false,
       onRest: () => {
         if (isExpanded && contentRef.current) {
+          // Allow natural height when fully expanded
           contentRef.current.style.height = "auto";
         }
       },

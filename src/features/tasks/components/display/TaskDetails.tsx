@@ -27,10 +27,8 @@ function TaskDetails({
         height: animationState.height,
         opacity: animationState.opacity,
         willChange: "height, opacity",
-        overflowY: "hidden",
+        overflow: "hidden",
         minHeight: 0,
-        zIndex: 2,
-        visibility: isExpanded ? "visible" : "hidden",
       }}
       className="mt-1 w-full"
     >
