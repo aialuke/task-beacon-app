@@ -25,13 +25,33 @@ export type {
   Enums,
 } from './database';
 
+// === PAGINATION (centralized) ===
+export type {
+  PaginationMeta,
+  PaginationParams,
+  PaginationState,
+  PaginationControls,
+  PaginationAPI,
+  PaginatedResponse,
+  PaginationConfig,
+  PaginationValidationResult,
+  PaginationRange,
+} from './pagination.types';
+
+export {
+  DEFAULT_PAGINATION_CONFIG,
+  isPaginationMeta,
+  isPaginationParams,
+  calculatePaginationMeta,
+  validatePaginationParams,
+  getPaginationRange,
+} from './pagination.types';
+
 // === API LAYER (single source of truth) ===
 export type {
   ApiResponse,
   ApiError,
   ServiceResult,
-  PaginatedResponse,
-  PaginationMeta,
   BaseQueryParams,
   ActionResult,
   DatabaseOperationResult,

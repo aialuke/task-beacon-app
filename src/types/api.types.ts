@@ -6,6 +6,9 @@
  * This is the authoritative source for all API response types.
  */
 
+// Import pagination types from centralized location
+import type { PaginationMeta, PaginatedResponse } from './pagination.types';
+
 // Standard API response interface - single source of truth
 export interface ApiResponse<T = unknown> {
   data: T | null;
@@ -32,23 +35,8 @@ export interface ServiceResult<T = void> {
   success: boolean;
 }
 
-// Pagination interface
-export interface PaginationMeta {
-  currentPage: number;
-  totalPages: number;
-  totalCount: number;
-  pageSize: number;
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-}
-
-export interface PaginatedResponse<T> {
-  data: T[];
-  pagination: PaginationMeta;
-  filters?: Record<string, unknown>;
-  sortBy?: string;
-  sortDirection?: 'asc' | 'desc';
-}
+// Re-export pagination types for backwards compatibility
+export type { PaginationMeta, PaginatedResponse };
 
 // Query parameters
 export interface BaseQueryParams {

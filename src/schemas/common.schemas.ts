@@ -7,6 +7,7 @@
 
 import { z } from 'zod';
 import { createTextSchema, VALIDATION_MESSAGES } from './validation';
+import { DEFAULT_PAGINATION_CONFIG } from '@/types/pagination.types';
 
 // === COMMON FIELD SCHEMAS ===
 
@@ -31,12 +32,27 @@ export const optionalStringSchema = z.string().optional().or(z.literal(''));
 export const timestampSchema = z.string().datetime('Invalid timestamp format');
 
 /**
- * Pagination schema
+ * Pagination schema - aligned with centralized types
  */
 export const paginationSchema = z.object({
   page: z.number().int().min(1, 'Page must be at least 1').default(1),
-  pageSize: z.number().int().min(1, 'Page size must be at least 1').max(100, 'Page size cannot exceed 100').default(10),
+  pageSize: z.number().int()
+    .min(DEFAULT_PAGINATION_CONFIG.minPageSize, `Page size must be at least ${DEFAULT_PAGINATION_CONFIG.minPageSize}`)
+    .max(DEFAULT_PAGINATION_CONFIG.maxPageSize, `Page size cannot exceed ${DEFAULT_PAGINATION_CONFIG.maxPageSize}`)
+    .default(DEFAULT_PAGINATION_CONFIG.defaultPageSize),
   total: z.number().int().min(0).optional(),
+});
+
+/**
+ * Pagination metadata schema - for API responses
+ */
+export const paginationMetaSchema = z.object({
+  currentPage: z.number().int().min(1),
+  totalPages: z.number().int().min(0),
+  totalCount: z.number().int().min(0),
+  pageSize: z.number().int().min(1),
+  hasNextPage: z.boolean(),
+  hasPreviousPage: z.boolean(),
 });
 
 /**
@@ -97,7 +113,7 @@ export const paginatedResponseSchema = <T extends z.ZodTypeAny>(itemSchema: T) =
   z.object({
     success: z.literal(true),
     data: z.array(itemSchema),
-    pagination: paginationSchema,
+    pagination: paginationMetaSchema,
     message: z.string().optional(),
   });
 
@@ -150,6 +166,7 @@ export const featureFlagSchema = z.object({
 // === TYPE EXPORTS ===
 
 export type PaginationInput = z.infer<typeof paginationSchema>;
+export type PaginationMetaInput = z.infer<typeof paginationMetaSchema>;
 export type SortingInput = z.infer<typeof sortingSchema>;
 export type SearchFormInput = z.infer<typeof searchFormSchema>;
 export type FileUploadInput = z.infer<typeof fileUploadSchema>;
@@ -163,6 +180,13 @@ export type FeatureFlag = z.infer<typeof featureFlagSchema>;
  */
 export function validatePagination(data: unknown) {
   return paginationSchema.safeParse(data);
+}
+
+/**
+ * Validates pagination metadata
+ */
+export function validatePaginationMeta(data: unknown) {
+  return paginationMetaSchema.safeParse(data);
 }
 
 /**
