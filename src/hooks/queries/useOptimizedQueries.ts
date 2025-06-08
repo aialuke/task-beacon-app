@@ -1,162 +1,133 @@
 
 /**
- * Optimized Query Patterns - Phase 2.2 Implementation
+ * Optimized Queries - Standardized Query Patterns
  * 
- * Standardized query patterns with enhanced caching, prefetching, and error recovery.
+ * Provides consistent query patterns with optimized caching and performance.
  */
 
-import { useQuery, useInfiniteQuery, UseQueryOptions, UseInfiniteQueryOptions } from '@tanstack/react-query';
-import { useCallback, useMemo } from 'react';
-
-// Standardized query configuration
-export interface OptimizedQueryConfig<T> {
-  staleTime?: number;
-  gcTime?: number;
-  refetchOnWindowFocus?: boolean;
-  retry?: number | ((failureCount: number, error: unknown) => boolean);
-  retryDelay?: number | ((retryAttempt: number) => number);
-  networkMode?: 'online' | 'always' | 'offlineFirst';
-}
-
-// Default configurations for different query types
-export const QUERY_DEFAULTS = {
-  // Fast-changing data (user interactions, real-time updates)
-  realtime: {
-    staleTime: 0,
-    gcTime: 5 * 60 * 1000, // 5 minutes
-    refetchOnWindowFocus: true,
-    retry: 1,
-    networkMode: 'online' as const,
-  },
-  
-  // Stable data (user profiles, system settings)
-  stable: {
-    staleTime: 15 * 60 * 1000, // 15 minutes
-    gcTime: 30 * 60 * 1000, // 30 minutes
-    refetchOnWindowFocus: false,
-    retry: 3,
-    networkMode: 'offlineFirst' as const,
-  },
-  
-  // Content data (tasks, posts, etc.)
-  content: {
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    refetchOnWindowFocus: false,
-    retry: 2,
-    networkMode: 'offlineFirst' as const,
-  },
-} as const;
+import { useQuery, useQueryClient, type UseQueryOptions, type QueryKey } from '@tanstack/react-query';
+import { useMemo } from 'react';
 
 /**
- * Smart retry logic that considers error types
+ * Query type configurations for different data patterns
  */
-export function createSmartRetryFn(maxRetries = 3) {
-  return (failureCount: number, error: unknown): boolean => {
-    if (failureCount >= maxRetries) return false;
-    
-    // Don't retry on specific error types
-    if (error instanceof Error) {
-      const message = error.message.toLowerCase();
-      if (message.includes('not found') || 
-          message.includes('unauthorized') || 
-          message.includes('forbidden')) {
-        return false;
-      }
-    }
-    
-    return true;
-  };
+export type QueryType = 'content' | 'metadata' | 'real-time' | 'static';
+
+export interface OptimizedQueryOptions<T> extends Omit<UseQueryOptions<T>, 'queryKey' | 'queryFn'> {
+  type?: QueryType;
 }
 
 /**
- * Exponential backoff retry delay
+ * Optimized query hook with standardized caching strategies
  */
-export function createRetryDelay(baseDelay = 1000) {
-  return (retryAttempt: number): number => {
-    return Math.min(baseDelay * Math.pow(2, retryAttempt), 30000); // Max 30 seconds
-  };
-}
-
-/**
- * Enhanced useQuery with optimized defaults
- */
-export function useOptimizedQuery<T>(
-  queryKey: unknown[],
+export function useOptimizedQuery<T = unknown>(
+  queryKey: QueryKey,
   queryFn: () => Promise<T>,
-  config: OptimizedQueryConfig<T> & {
-    type?: keyof typeof QUERY_DEFAULTS;
-    enabled?: boolean;
-  } = {}
+  options: OptimizedQueryOptions<T> = {}
 ) {
-  const { type = 'content', enabled = true, ...customConfig } = config;
+  const { type = 'content', ...queryOptions } = options;
   
-  const defaultConfig = QUERY_DEFAULTS[type];
+  // Standardized query configurations based on data type
+  const optimizedOptions = useMemo(() => {
+    const baseOptions = {
+      queryKey,
+      queryFn,
+      ...queryOptions,
+    };
+    
+    switch (type) {
+      case 'content':
+        return {
+          ...baseOptions,
+          staleTime: 5 * 60 * 1000, // 5 minutes
+          gcTime: 10 * 60 * 1000, // 10 minutes
+          refetchOnWindowFocus: false,
+        };
+        
+      case 'metadata':
+        return {
+          ...baseOptions,
+          staleTime: 15 * 60 * 1000, // 15 minutes
+          gcTime: 30 * 60 * 1000, // 30 minutes
+          refetchOnWindowFocus: false,
+        };
+        
+      case 'real-time':
+        return {
+          ...baseOptions,
+          staleTime: 30 * 1000, // 30 seconds
+          gcTime: 2 * 60 * 1000, // 2 minutes
+          refetchOnWindowFocus: true,
+          refetchInterval: 60 * 1000, // 1 minute
+        };
+        
+      case 'static':
+        return {
+          ...baseOptions,
+          staleTime: Infinity,
+          gcTime: Infinity,
+          refetchOnWindowFocus: false,
+          refetchOnMount: false,
+        };
+        
+      default:
+        return baseOptions;
+    }
+  }, [queryKey, queryFn, type, queryOptions]);
   
-  const optimizedConfig: UseQueryOptions<T> = useMemo(() => ({
-    queryKey,
-    queryFn,
-    enabled,
-    ...defaultConfig,
-    ...customConfig,
-    retry: customConfig.retry ?? createSmartRetryFn(defaultConfig.retry as number),
-    retryDelay: createRetryDelay(),
-  }), [queryKey, queryFn, enabled, defaultConfig, customConfig]);
-
-  return useQuery(optimizedConfig);
+  return useQuery(optimizedOptions);
 }
 
 /**
- * Enhanced useInfiniteQuery with cursor-based pagination
+ * Standardized query invalidation patterns
  */
-export function useOptimizedInfiniteQuery<T>(
-  queryKey: unknown[],
-  queryFn: ({ pageParam }: { pageParam: unknown }) => Promise<{
-    data: T[];
-    nextCursor?: unknown;
-    hasNextPage: boolean;
-  }>,
-  config: OptimizedQueryConfig<T> & {
-    type?: keyof typeof QUERY_DEFAULTS;
-    enabled?: boolean;
-    initialPageParam?: unknown;
-  } = {}
-) {
-  const { type = 'content', enabled = true, initialPageParam, ...customConfig } = config;
+export function useQueryInvalidation() {
+  const queryClient = useQueryClient();
   
-  const defaultConfig = QUERY_DEFAULTS[type];
-  
-  const optimizedConfig: UseInfiniteQueryOptions<{
-    data: T[];
-    nextCursor?: unknown;
-    hasNextPage: boolean;
-  }> = useMemo(() => ({
-    queryKey,
-    queryFn,
-    enabled,
-    initialPageParam: initialPageParam ?? null,
-    getNextPageParam: (lastPage) => lastPage.hasNextPage ? lastPage.nextCursor : undefined,
-    ...defaultConfig,
-    ...customConfig,
-    retry: customConfig.retry ?? createSmartRetryFn(defaultConfig.retry as number),
-    retryDelay: createRetryDelay(),
-  }), [queryKey, queryFn, enabled, initialPageParam, defaultConfig, customConfig]);
-
-  return useInfiniteQuery(optimizedConfig);
-}
-
-/**
- * Hook for prefetching related queries
- */
-export function usePrefetchQueries() {
-  const prefetchQuery = useCallback((
-    queryKey: unknown[],
-    queryFn: () => Promise<unknown>,
-    config: OptimizedQueryConfig<unknown> = {}
-  ) => {
-    // Implementation would go here - placeholder for now
-    console.log('Prefetching query:', queryKey);
-  }, []);
-
-  return { prefetchQuery };
+  return useMemo(() => ({
+    /**
+     * Invalidate queries by pattern
+     */
+    invalidateByPattern: (pattern: string[]) => {
+      return queryClient.invalidateQueries({ queryKey: pattern });
+    },
+    
+    /**
+     * Invalidate all queries of a specific type
+     */
+    invalidateByType: (type: string) => {
+      return queryClient.invalidateQueries({ 
+        predicate: (query) => {
+          const queryKey = query.queryKey as string[];
+          return queryKey.includes(type);
+        }
+      });
+    },
+    
+    /**
+     * Clear all cached data
+     */
+    clearAll: () => {
+      return queryClient.clear();
+    },
+    
+    /**
+     * Prefetch query with optimized configuration
+     */
+    prefetch: <T>(
+      queryKey: QueryKey,
+      queryFn: () => Promise<T>,
+      type: QueryType = 'content'
+    ) => {
+      const staleTime = type === 'static' ? Infinity : 
+                      type === 'metadata' ? 15 * 60 * 1000 :
+                      type === 'real-time' ? 30 * 1000 : 5 * 60 * 1000;
+      
+      return queryClient.prefetchQuery({
+        queryKey,
+        queryFn,
+        staleTime,
+      });
+    },
+  }), [queryClient]);
 }

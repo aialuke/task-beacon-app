@@ -1,171 +1,102 @@
 
 /**
- * Lazy Loading Utilities - Bundle Optimization
+ * Lazy Loading Utilities - Enhanced Performance Patterns
  * 
- * Provides utilities for lazy loading components and features to reduce initial bundle size.
+ * Provides standardized lazy loading with retry logic and performance tracking.
  */
 
-import { lazy, ComponentType } from 'react';
+import { lazy, type ComponentType } from 'react';
+
+export interface LazyLoadingOptions {
+  maxRetries?: number;
+  retryDelay?: number;
+  timeout?: number;
+}
+
+export interface LazyLoadingMetrics {
+  componentName: string;
+  loadTime: number;
+  retryCount: number;
+  success: boolean;
+}
 
 /**
- * Enhanced lazy loading with error handling and retries
+ * Enhanced lazy component factory with retry logic
  */
 export function createLazyComponent<T extends ComponentType<any>>(
   importFn: () => Promise<{ default: T }>,
-  options: {
-    maxRetries?: number;
-    retryDelay?: number;
-    fallback?: React.ComponentType;
-  } = {}
-): React.LazyExoticComponent<T> {
-  const { maxRetries = 3, retryDelay = 1000 } = options;
+  options: LazyLoadingOptions = {}
+): ComponentType<React.ComponentProps<T>> {
+  const { maxRetries = 3, retryDelay = 1000, timeout = 30000 } = options;
   
-  let retryCount = 0;
-  
-  const retryableImport = async (): Promise<{ default: T }> => {
-    try {
-      return await importFn();
-    } catch (error) {
-      if (retryCount < maxRetries) {
+  return lazy(() => {
+    let retryCount = 0;
+    
+    const attemptLoad = async (): Promise<{ default: T }> => {
+      try {
+        // Add timeout to the import
+        const timeoutPromise = new Promise<never>((_, reject) => {
+          setTimeout(() => reject(new Error('Import timeout')), timeout);
+        });
+        
+        const result = await Promise.race([importFn(), timeoutPromise]);
+        return result;
+      } catch (error) {
         retryCount++;
-        console.warn(`Lazy loading failed, retrying... (${retryCount}/${maxRetries})`);
-        await new Promise(resolve => setTimeout(resolve, retryDelay));
-        return retryableImport();
+        
+        if (retryCount <= maxRetries) {
+          // Wait before retrying
+          await new Promise(resolve => setTimeout(resolve, retryDelay * retryCount));
+          return attemptLoad();
+        }
+        
+        throw error;
       }
-      throw error;
-    }
-  };
-  
-  return lazy(retryableImport);
-}
-
-/**
- * Preload a lazy component to improve perceived performance
- */
-export function preloadComponent(importFn: () => Promise<any>): void {
-  // Only preload if the user is not on a slow connection
-  if ('connection' in navigator) {
-    const connection = (navigator as any).connection;
-    if (connection && (connection.effectiveType === 'slow-2g' || connection.effectiveType === '2g')) {
-      return;
-    }
-  }
-  
-  // Preload after a short delay to not block initial rendering
-  setTimeout(() => {
-    importFn().catch(() => {
-      // Silently fail preloading
-    });
-  }, 100);
-}
-
-/**
- * Create a lazy component with automatic preloading
- */
-export function createPreloadableLazyComponent<T extends ComponentType<any>>(
-  importFn: () => Promise<{ default: T }>,
-  preloadCondition: () => boolean = () => true
-): React.LazyExoticComponent<T> & { preload: () => void } {
-  const LazyComponent = createLazyComponent(importFn);
-  
-  const preload = () => {
-    if (preloadCondition()) {
-      preloadComponent(importFn);
-    }
-  };
-  
-  return Object.assign(LazyComponent, { preload });
-}
-
-/**
- * Lazy load utility functions to reduce initial bundle
- */
-export const lazyUtils = {
-  /**
-   * Lazy load validation utilities
-   */
-  loadValidationUtils: () => import('./validation').then(module => ({
-    validateFieldAsync: module.validateFieldAsync,
-    validateFormAsync: module.validateFormAsync,
-  })),
-  
-  /**
-   * Lazy load form utilities
-   */
-  loadFormUtils: () => import('@/hooks/dataValidationUtils'),
-  
-  /**
-   * Lazy load API utilities
-   */
-  loadApiUtils: () => import('@/lib/api'),
-};
-
-/**
- * Bundle analysis utilities
- */
-export const bundleUtils = {
-  /**
-   * Check if code splitting is supported
-   */
-  isCodeSplittingSupported: () => {
-    return typeof window !== 'undefined' && 'import' in window;
-  },
-  
-  /**
-   * Get connection quality for adaptive loading
-   */
-  getConnectionQuality: (): 'fast' | 'slow' | 'unknown' => {
-    if ('connection' in navigator) {
-      const connection = (navigator as any).connection;
-      if (connection) {
-        if (connection.effectiveType === '4g') return 'fast';
-        if (connection.effectiveType === 'slow-2g' || connection.effectiveType === '2g') return 'slow';
-      }
-    }
-    return 'unknown';
-  },
-  
-  /**
-   * Determine if feature should be lazy loaded based on device capabilities
-   */
-  shouldLazyLoad: (feature: string): boolean => {
-    const quality = bundleUtils.getConnectionQuality();
+    };
     
-    // Always lazy load on slow connections
-    if (quality === 'slow') return true;
-    
-    // Lazy load heavy features regardless of connection
-    const heavyFeatures = ['image-processing', 'virtualization', 'charts'];
-    return heavyFeatures.includes(feature);
-  },
-};
+    return attemptLoad();
+  });
+}
 
 /**
- * Performance monitoring for lazy loading
+ * Performance tracking for lazy loaded components
  */
 export const lazyLoadingMetrics = {
-  startTime: performance.now(),
+  metrics: new Map<string, LazyLoadingMetrics>(),
   
-  /**
-   * Track component load time
-   */
-  trackComponentLoad: (componentName: string, startTime: number): void => {
+  trackComponentLoad: (componentName: string, startTime: number) => {
     const loadTime = performance.now() - startTime;
-    console.debug(`Lazy component "${componentName}" loaded in ${loadTime.toFixed(2)}ms`);
     
-    // Report to analytics if available
-    if ('gtag' in window) {
-      (window as any).gtag('event', 'lazy_component_load', {
-        component_name: componentName,
-        load_time: loadTime,
-      });
+    const existing = lazyLoadingMetrics.metrics.get(componentName);
+    const metric: LazyLoadingMetrics = {
+      componentName,
+      loadTime,
+      retryCount: existing?.retryCount || 0,
+      success: true,
+    };
+    
+    lazyLoadingMetrics.metrics.set(componentName, metric);
+    
+    // Log performance in development
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[LazyLoad] ${componentName}: ${loadTime.toFixed(2)}ms`);
     }
   },
   
-  /**
-   * Track preload effectiveness
-   */
-  trackPreload: (componentName: string, wasPreloaded: boolean): void => {
-    console.debug(`Component "${componentName}" ${wasPreloaded ? 'was' : 'was not'} preloaded`);
-  },
+  getMetrics: () => Array.from(lazyLoadingMetrics.metrics.values()),
+  
+  clearMetrics: () => lazyLoadingMetrics.metrics.clear(),
 };
+
+/**
+ * Preload utility for lazy components
+ */
+export function preloadLazyComponent(
+  importFn: () => Promise<{ default: ComponentType<any> }>
+): Promise<void> {
+  return importFn().then(() => {
+    // Component is now preloaded
+  }).catch(error => {
+    console.warn('Failed to preload component:', error);
+  });
+}
