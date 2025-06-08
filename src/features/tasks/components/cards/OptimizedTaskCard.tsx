@@ -1,11 +1,11 @@
 
 /**
- * Optimized Task Card - Phase 2.1 Implementation
+ * Optimized Task Card - Phase 2.4.3 Simplified
  * 
- * Memoized task card component with optimized re-rendering
+ * Simplified task card component using standard React patterns
  */
 
-import { useMemoizedCallback, useMemoizedComputation, memoizeComponent, createShallowEqual } from '@/hooks/performance';
+import { memo, useMemo, useCallback } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -29,8 +29,8 @@ function OptimizedTaskCardComponent({
   isSelected = false,
   showActions = true,
 }: OptimizedTaskCardProps) {
-  // Memoized computed values
-  const statusBadgeVariant = useMemoizedComputation(() => {
+  // Standard React memoization for computed values
+  const statusBadgeVariant = useMemo(() => {
     switch (task.status) {
       case 'complete':
         return 'default';
@@ -41,31 +41,31 @@ function OptimizedTaskCardComponent({
     }
   }, [task.status]);
 
-  const formattedDate = useMemoizedComputation(() => {
+  const formattedDate = useMemo(() => {
     if (!task.due_date) return null;
     return formatDistanceToNow(new Date(task.due_date), { addSuffix: true });
   }, [task.due_date]);
 
-  const isOverdue = useMemoizedComputation(() => {
+  const isOverdue = useMemo(() => {
     if (!task.due_date) return false;
     return new Date(task.due_date) < new Date() && task.status !== 'complete';
   }, [task.due_date, task.status]);
 
-  // Memoized event handlers
-  const handleStatusToggle = useMemoizedCallback(() => {
+  // Standard React callbacks for event handlers
+  const handleStatusToggle = useCallback(() => {
     if (onStatusToggle) {
       const newStatus = task.status === 'complete' ? 'pending' : 'complete';
       onStatusToggle(task.id, newStatus);
     }
   }, [task.id, task.status, onStatusToggle]);
 
-  const handleEdit = useMemoizedCallback(() => {
+  const handleEdit = useCallback(() => {
     if (onEdit) {
       onEdit(task);
     }
   }, [task, onEdit]);
 
-  const handleDelete = useMemoizedCallback(() => {
+  const handleDelete = useCallback(() => {
     if (onDelete) {
       onDelete(task.id);
     }
@@ -174,8 +174,25 @@ function OptimizedTaskCardComponent({
   );
 }
 
-// Memoize with shallow equality check for props
-export const OptimizedTaskCard = memoizeComponent(
+// Use standard React memo with shallow equality check
+function shallowEqual<T extends Record<string, any>>(prevProps: T, nextProps: T): boolean {
+  const prevKeys = Object.keys(prevProps);
+  const nextKeys = Object.keys(nextProps);
+  
+  if (prevKeys.length !== nextKeys.length) {
+    return false;
+  }
+  
+  for (const key of prevKeys) {
+    if (prevProps[key] !== nextProps[key]) {
+      return false;
+    }
+  }
+  
+  return true;
+}
+
+export const OptimizedTaskCard = memo(
   OptimizedTaskCardComponent,
-  createShallowEqual<OptimizedTaskCardProps>()
+  shallowEqual
 );

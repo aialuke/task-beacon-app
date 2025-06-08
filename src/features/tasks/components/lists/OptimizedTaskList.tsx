@@ -1,11 +1,11 @@
 
 /**
- * Optimized Task List - Phase 2.1 Implementation
+ * Optimized Task List - Phase 2.4.3 Simplified
  * 
- * Performance-optimized task list with memoization and efficient rendering
+ * Performance-optimized task list using standard React patterns
  */
 
-import { useMemoizedComputation, useMemoizedCallback, memoizeComponent } from '@/hooks/performance';
+import { memo, useMemo, useCallback } from 'react';
 import UnifiedLoadingStates from '@/components/ui/loading/UnifiedLoadingStates';
 import { OptimizedTaskCard } from '../cards/OptimizedTaskCard';
 import { useTaskDataContext } from '@/features/tasks/context/TaskDataContext';
@@ -38,17 +38,17 @@ function OptimizedTaskListComponent({
 
   const { filter, isMobile } = useTaskUIContext();
 
-  // Memoized filtered tasks
+  // Standard memoization for filtered tasks
   const filteredTasks = useTasksFilter(tasks, filter);
 
-  // Memoized pagination check
-  const shouldShowPagination = useMemoizedComputation(
+  // Standard memoization for pagination check
+  const shouldShowPagination = useMemo(
     () => totalCount > pageSize,
     [totalCount, pageSize]
   );
 
-  // Memoized task rendering function
-  const renderTask = useMemoizedCallback((task: Task) => (
+  // Standard callback for task rendering
+  const renderTask = useCallback((task: Task) => (
     <OptimizedTaskCard
       key={task.id}
       task={task}
@@ -60,8 +60,8 @@ function OptimizedTaskListComponent({
     />
   ), [onTaskStatusToggle, onTaskEdit, onTaskDelete, selectedTaskIds, showActions]);
 
-  // Memoized task list content
-  const taskListContent = useMemoizedComputation(() => {
+  // Standard memoization for task list content
+  const taskListContent = useMemo(() => {
     if (filteredTasks.length === 0) {
       return (
         <div className="flex h-64 items-center justify-center">
@@ -116,5 +116,22 @@ function OptimizedTaskListComponent({
   );
 }
 
-// Memoize the entire component
-export const OptimizedTaskList = memoizeComponent(OptimizedTaskListComponent);
+// Standard React memo with shallow equality
+function shallowEqual<T extends Record<string, any>>(prevProps: T, nextProps: T): boolean {
+  const prevKeys = Object.keys(prevProps);
+  const nextKeys = Object.keys(nextProps);
+  
+  if (prevKeys.length !== nextKeys.length) {
+    return false;
+  }
+  
+  for (const key of prevKeys) {
+    if (prevProps[key] !== nextProps[key]) {
+      return false;
+    }
+  }
+  
+  return true;
+}
+
+export const OptimizedTaskList = memo(OptimizedTaskListComponent, shallowEqual);
