@@ -1,0 +1,79 @@
+
+/**
+ * Optimized Loading Components CSS - Phase 3 Performance Enhancement
+ * 
+ * GPU-accelerated animations with reduced motion support and performance optimizations.
+ */
+
+@layer components {
+  /* === PERFORMANCE-OPTIMIZED SPINNER === */
+  .loading-unified-spinner {
+    border: 2px solid currentcolor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: unified-spin 1s linear infinite;
+    
+    /* Performance optimizations */
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    
+    /* Ensure smooth animation on all devices */
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+  }
+  
+  /* === OPTIMIZED KEYFRAMES === */
+  @keyframes unified-spin {
+    0% {
+      transform: translateZ(0) rotate(0deg);
+    }
+    100% {
+      transform: translateZ(0) rotate(360deg);
+    }
+  }
+  
+  /* === SKELETON OPTIMIZATIONS === */
+  .skeleton-optimized {
+    background: linear-gradient(
+      90deg,
+      hsl(var(--muted)) 25%,
+      hsl(var(--muted) / 0.5) 50%,
+      hsl(var(--muted)) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 2s ease-in-out infinite;
+    
+    /* Performance optimizations */
+    will-change: background-position;
+    contain: layout style paint;
+  }
+  
+  @keyframes skeleton-shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+  
+  /* === REDUCED MOTION SUPPORT === */
+  @media (prefers-reduced-motion: reduce) {
+    .loading-unified-spinner {
+      animation: none;
+    }
+    
+    .skeleton-optimized {
+      animation: none;
+      background: hsl(var(--muted));
+    }
+  }
+  
+  /* === HIGH CONTRAST SUPPORT === */
+  @media (prefers-contrast: high) {
+    .loading-unified-spinner {
+      border-width: 3px;
+    }
+  }
+}

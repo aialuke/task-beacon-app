@@ -1,5 +1,11 @@
 
-import { lazy, Suspense, ComponentType, useEffect } from 'react';
+/**
+ * Lazy Component System - Phase 3 Optimization
+ * 
+ * Enhanced with performance monitoring, bundle optimization, and improved patterns.
+ */
+
+import { lazy, Suspense, ComponentType, useEffect, useCallback, memo } from 'react';
 import { LoadingSpinner } from './loading/UnifiedLoadingStates';
 import PageLoader from './loading/PageLoader';
 import CardLoader from './loading/CardLoader';
@@ -10,76 +16,87 @@ interface LazyComponentProps {
   error?: React.ReactNode;
 }
 
-/**
- * Simple metrics tracking for lazy loading performance
- */
+// === PERFORMANCE MONITORING (Optimized) ===
 const lazyLoadingMetrics = {
   trackComponentLoad: (componentName: string, startTime: number) => {
-    const loadTime = performance.now() - startTime;
-    console.debug(`[LazyLoading] ${componentName} loaded in ${loadTime.toFixed(2)}ms`);
+    if (process.env.NODE_ENV === 'development') {
+      const loadTime = performance.now() - startTime;
+      console.debug(`[LazyLoading] ${componentName} loaded in ${loadTime.toFixed(2)}ms`);
+      
+      // Performance thresholds
+      if (loadTime > 1000) {
+        console.warn(`[LazyLoading] Slow loading component: ${componentName} (${loadTime.toFixed(2)}ms)`);
+      }
+    }
+  },
+  
+  // Bundle size tracking (development only)
+  trackBundleSize: (componentName: string) => {
+    if (process.env.NODE_ENV === 'development' && 'memory' in performance) {
+      const memoryInfo = (performance as any).memory;
+      console.debug(`[LazyLoading] ${componentName} memory usage:`, {
+        used: Math.round(memoryInfo.usedJSHeapSize / 1024 / 1024),
+        total: Math.round(memoryInfo.totalJSHeapSize / 1024 / 1024),
+      });
+    }
   },
 };
 
-/**
- * Higher-order component for lazy loading with enhanced error handling and performance tracking
- */
+// === OPTIMIZED HIGHER-ORDER COMPONENT ===
 export function withLazyLoading<T extends Record<string, any> = Record<string, any>>(
   importFn: () => Promise<{ default: ComponentType<T> }>,
-  options: LazyComponentProps & { componentName?: string } = {}
+  options: LazyComponentProps & { 
+    componentName?: string;
+    preload?: boolean;
+  } = {}
 ) {
-  const { componentName = 'UnknownComponent' } = options;
+  const { componentName = 'UnknownComponent', preload = false } = options;
   
-  const LazyComponent = lazy(importFn);
-  
-  return function WrappedLazyComponent(props: T) {
-    const fallback = options.fallback ?? <LoadingSpinner size="md" />;
-    const loadStartTime = performance.now();
+  const LazyComponent = lazy(() => {
+    const startTime = performance.now();
     
-    // Track loading performance
+    return importFn().then(module => {
+      lazyLoadingMetrics.trackComponentLoad(componentName, startTime);
+      lazyLoadingMetrics.trackBundleSize(componentName);
+      return module;
+    });
+  });
+  
+  const WrappedComponent = memo(function WrappedLazyComponent(props: T) {
+    const fallback = options.fallback ?? <LoadingSpinner size="md" />;
+    
+    // Preload optimization
     useEffect(() => {
-      lazyLoadingMetrics.trackComponentLoad(componentName, loadStartTime);
-    }, [componentName, loadStartTime]);
+      if (preload) {
+        const timer = setTimeout(() => {
+          importFn().catch(() => {
+            // Silent fail for preloading
+          });
+        }, 100);
+        
+        return () => clearTimeout(timer);
+      }
+    }, []);
     
     return (
       <Suspense fallback={fallback}>
         <LazyComponent {...(props as any)} />
       </Suspense>
     );
-  };
+  });
+  
+  // Development display name
+  if (process.env.NODE_ENV === 'development') {
+    WrappedComponent.displayName = `LazyWrapper(${componentName})`;
+  }
+  
+  return WrappedComponent;
 }
 
-/**
- * Generic lazy wrapper component with performance optimization
- */
-export function LazyWrapper({ 
-  children, 
-  fallback = <LoadingSpinner size="md" />,
-  componentName = 'LazyWrapper'
-}: { 
-  children: React.ReactNode;
-  fallback?: React.ReactNode;
-  componentName?: string;
-}) {
-  const loadStartTime = performance.now();
-  
-  // Track loading performance
-  useEffect(() => {
-    lazyLoadingMetrics.trackComponentLoad(componentName, loadStartTime);
-  }, [componentName, loadStartTime]);
-  
-  return (
-    <Suspense fallback={fallback}>
-      {children}
-    </Suspense>
-  );
-}
-
-/**
- * Phase 2: Simplified lazy loading for specific component types
- */
+// === OPTIMIZED COMPONENT FACTORIES ===
 export const LazyComponents = {
   /**
-   * Create lazy-loaded form component
+   * Create optimized lazy-loaded form component
    */
   createLazyForm: <T extends ComponentType<any>>(
     importFn: () => Promise<{ default: T }>,
@@ -87,10 +104,11 @@ export const LazyComponents = {
   ) => withLazyLoading(importFn, {
     componentName: `LazyForm_${formName}`,
     fallback: <CardLoader count={1} />,
+    preload: false, // Forms are user-initiated
   }),
   
   /**
-   * Create lazy-loaded list component
+   * Create optimized lazy-loaded list component
    */
   createLazyList: <T extends ComponentType<any>>(
     importFn: () => Promise<{ default: T }>,
@@ -98,10 +116,11 @@ export const LazyComponents = {
   ) => withLazyLoading(importFn, {
     componentName: `LazyList_${listName}`,
     fallback: <InlineLoader message="Loading list..." />,
+    preload: true, // Lists are commonly accessed
   }),
   
   /**
-   * Create lazy-loaded modal component
+   * Create optimized lazy-loaded modal component
    */
   createLazyModal: <T extends ComponentType<any>>(
     importFn: () => Promise<{ default: T }>,
@@ -115,10 +134,11 @@ export const LazyComponents = {
         </div>
       </div>
     ),
+    preload: false, // Modals are user-initiated
   }),
   
   /**
-   * Create lazy-loaded page component
+   * Create optimized lazy-loaded page component
    */
   createLazyPage: <T extends ComponentType<any>>(
     importFn: () => Promise<{ default: T }>,
@@ -126,5 +146,13 @@ export const LazyComponents = {
   ) => withLazyLoading(importFn, {
     componentName: `LazyPage_${pageName}`,
     fallback: <PageLoader message={`Loading ${pageName}...`} />,
+    preload: true, // Pages benefit from preloading
   }),
 };
+
+// === BUNDLE SIZE OPTIMIZATION ===
+if (process.env.NODE_ENV === 'production') {
+  // Remove development-only code in production builds
+  delete (lazyLoadingMetrics as any).trackBundleSize;
+  (lazyLoadingMetrics as any).trackComponentLoad = () => {};
+}

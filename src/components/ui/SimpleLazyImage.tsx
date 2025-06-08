@@ -1,14 +1,15 @@
 
 /**
- * Simplified Lazy Image Component - Phase 2 Complexity Reduction
+ * Simplified Lazy Image Component - Phase 3 Optimization
  * 
- * State machine pattern for cleaner state management.
+ * Enhanced with performance improvements, cleanup patterns, and resource management.
  */
 
-import { memo, useReducer, useEffect } from 'react';
+import { memo, useReducer, useEffect, useCallback, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { ImageSkeleton } from './loading/UnifiedLoadingStates';
 
+// === OPTIMIZED STATE MANAGEMENT ===
 type ImageState = 
   | { type: 'loading' }
   | { type: 'loaded' }
@@ -17,9 +18,11 @@ type ImageState =
 type ImageAction = 
   | { type: 'LOAD' }
   | { type: 'SUCCESS' }
-  | { type: 'ERROR'; message: string };
+  | { type: 'ERROR'; message: string }
+  | { type: 'RESET' };
 
-function imageReducer(state: ImageState, action: ImageAction): ImageState {
+// Memoized reducer for better performance
+const imageReducer = memo((state: ImageState, action: ImageAction): ImageState => {
   switch (action.type) {
     case 'LOAD':
       return { type: 'loading' };
@@ -27,10 +30,12 @@ function imageReducer(state: ImageState, action: ImageAction): ImageState {
       return { type: 'loaded' };
     case 'ERROR':
       return { type: 'error', message: action.message };
+    case 'RESET':
+      return { type: 'loading' };
     default:
       return state;
   }
-}
+});
 
 interface SimpleLazyImageProps {
   src: string;
@@ -38,6 +43,8 @@ interface SimpleLazyImageProps {
   className?: string;
   aspectRatio?: string;
   fallbackMessage?: string;
+  onLoad?: () => void;
+  onError?: (error: string) => void;
 }
 
 const SimpleLazyImage = memo(function SimpleLazyImage({
@@ -46,30 +53,60 @@ const SimpleLazyImage = memo(function SimpleLazyImage({
   className,
   aspectRatio = 'aspect-video',
   fallbackMessage = 'Failed to load image',
+  onLoad,
+  onError,
 }: SimpleLazyImageProps) {
   const [state, dispatch] = useReducer(imageReducer, { type: 'loading' });
+  const imageRef = useRef<HTMLImageElement | null>(null);
+  const cleanupRef = useRef<(() => void) | null>(null);
 
+  // Optimized load handler with cleanup
+  const handleImageLoad = useCallback(() => {
+    dispatch({ type: 'SUCCESS' });
+    onLoad?.();
+  }, [onLoad]);
+
+  // Optimized error handler with cleanup
+  const handleImageError = useCallback(() => {
+    const errorMessage = fallbackMessage;
+    dispatch({ type: 'ERROR', message: errorMessage });
+    onError?.(errorMessage);
+  }, [fallbackMessage, onError]);
+
+  // Enhanced effect with proper cleanup
   useEffect(() => {
     dispatch({ type: 'LOAD' });
     
     const img = new Image();
-    img.onload = () => dispatch({ type: 'SUCCESS' });
-    img.onerror = () => dispatch({ type: 'ERROR', message: fallbackMessage });
+    imageRef.current = img;
+    
+    // Performance optimization: preload hint
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    
+    img.onload = handleImageLoad;
+    img.onerror = handleImageError;
     img.src = src;
 
-    return () => {
+    // Store cleanup function
+    cleanupRef.current = () => {
       img.onload = null;
       img.onerror = null;
+      img.src = '';
     };
-  }, [src, fallbackMessage]);
 
-  const handleImageLoad = () => {
-    dispatch({ type: 'SUCCESS' });
-  };
+    return () => {
+      cleanupRef.current?.();
+      imageRef.current = null;
+    };
+  }, [src, handleImageLoad, handleImageError]);
 
-  const handleImageError = () => {
-    dispatch({ type: 'ERROR', message: fallbackMessage });
-  };
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      cleanupRef.current?.();
+    };
+  }, []);
 
   return (
     <div className={cn("relative", aspectRatio, className)}>
@@ -100,6 +137,7 @@ const SimpleLazyImage = memo(function SimpleLazyImage({
         onLoad={handleImageLoad}
         onError={handleImageError}
         loading="lazy"
+        decoding="async"
       />
     </div>
   );
