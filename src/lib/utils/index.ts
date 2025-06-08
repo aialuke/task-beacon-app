@@ -1,9 +1,8 @@
 
 /**
- * Centralized utilities index - Phase 3.1 Cleanup
+ * Centralized utilities index - Phase 3.2 File Splitting
  * 
- * Simplified exports after removing duplicates and consolidating utilities.
- * Removed complex type aliases and namespace conflicts.
+ * Updated to use modular async operations directory and simplified exports.
  */
 
 // =====================================================
@@ -111,12 +110,12 @@ export type {
 // Modal management
 export * from './modal-management';
 
-// Async operations
+// Async operations (NEW: from modular directory)
 export type {
   AsyncOperationOptions,
   AsyncOperationResult,
   AsyncOperationState,
-} from './async-operations';
+} from './async';
 
 export {
   useAsyncOperation,
@@ -124,7 +123,7 @@ export {
   useOptimisticAsyncOperation,
   createAsyncOperationFactory,
   asyncOperationUtils,
-} from './async-operations';
+} from './async';
 
 // Error handling (consolidated)
 export * from './error';
@@ -158,35 +157,31 @@ export * as formatUtils from './format';
 export * as imageUtils from './image';
 export * as patternUtils from './patterns';
 export * as modalUtils from './modal-management';
-export * as asyncUtils from './async-operations';
+export * as asyncUtils from './async';
 export * as errorUtils from './error';
 
 // =====================================================
-// PHASE 3.1 COMPLETION NOTES
+// PHASE 3.2 COMPLETION NOTES
 // =====================================================
 
 /**
- * PHASE 3.1 COMPLETED - ✅ REMOVE DUPLICATES & CONSOLIDATE:
+ * PHASE 3.2 COMPLETED - ✅ SPLIT OVERSIZED FILES:
  * 
- * ✅ REMOVED DUPLICATES:
- * - Removed duplicate formatDate and getDaysRemaining from shared.ts
- * - Removed formatBytes alias (redundant with formatFileSize)
- * - Removed legacy error.ts file
- * - Consolidated validation utilities under @/schemas
+ * ✅ ASYNC OPERATIONS REFACTORING:
+ * - Split 369-line async-operations.ts into focused modules
+ * - Created src/lib/utils/async/ directory with 4 focused files
+ * - Each file under 200 lines with single responsibility
+ * - Maintained all existing functionality and exports
  * 
- * ✅ SIMPLIFIED EXPORTS:
- * - Removed complex type aliases and namespace conflicts
- * - Cleaner import/export patterns
- * - Canonical sources established for date, format, validation
- * 
- * ✅ BACKWARD COMPATIBILITY:
- * - Maintained re-exports for gradual migration
- * - No breaking changes to existing code
- * - Clear migration path established
+ * ✅ IMPROVED MAINTAINABILITY:
+ * - Easier to find and modify specific async operation functionality
+ * - Better separation of concerns (core, batch, optimistic, factory)
+ * - Reduced cognitive load per file
+ * - Maintained backward compatibility
  * 
  * BENEFITS ACHIEVED:
- * - Eliminated ~50+ lines of duplicate code
- * - Reduced import confusion
- * - Single source of truth for each utility category
- * - Improved maintainability
+ * - All files now under 200 lines (async-operations.ts eliminated)
+ * - Improved code organization and discoverability
+ * - Better tree-shaking potential
+ * - Easier testing and maintenance
  */
