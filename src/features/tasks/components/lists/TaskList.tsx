@@ -7,7 +7,7 @@ import UnifiedLoadingStates from "@/components/ui/loading/UnifiedLoadingStates";
 
 // === COMPONENTS ===
 import { TaskCard } from "../cards";
-import TaskListPagination from "../optimized/TaskListPagination";
+import TaskPagination from "../TaskPagination";
 
 // === HOOKS ===
 import { useTaskDataContext } from "@/features/tasks/context/TaskDataContext";
@@ -80,7 +80,7 @@ function TaskListComponent() {
       {/* Pagination Section */}
       {shouldShowPagination && (
         <div className="border-t border-border pt-6">
-          <TaskListPagination
+          <TaskPagination
             currentPage={currentPage}
             totalCount={totalCount}
             pageSize={pageSize}
@@ -90,7 +90,6 @@ function TaskListComponent() {
             goToPreviousPage={goToPreviousPage}
             isFetching={isFetching}
             isLoading={isLoading}
-            shouldShow={shouldShowPagination}
           />
         </div>
       )}
