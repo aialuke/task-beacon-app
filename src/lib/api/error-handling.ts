@@ -1,4 +1,3 @@
-
 /**
  * Consolidated API Error Handling - Phase 1 Consolidation
  * 
@@ -129,11 +128,11 @@ export const formatApiError = (error: unknown): ApiError => {
     };
   }
 
-  // Handle unknown errors
+  // Handle unknown errors - properly convert to string
   return {
     name: 'UnknownError',
     message: 'An unexpected error occurred',
-    details: error,
+    details: typeof error === 'object' && error !== null ? JSON.stringify(error) : String(error),
   };
 };
 
