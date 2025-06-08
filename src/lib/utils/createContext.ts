@@ -111,8 +111,7 @@ export function createStandardContext<T>(
 
     // Handle strict mode (default)
     if (strict && context === undefined) {
-      const message =
-        errorMessage ?? `use${name} must be used within a ${name}Provider`;
+      const message = errorMessage ?? `use${name} must be used within a ${name}Provider`;
       throw new Error(message);
     }
 

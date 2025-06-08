@@ -119,12 +119,12 @@ export const ComponentPatterns = {
   /**
    * Create a performance-optimized component with standard patterns
    */
-  createOptimizedComponent: <P extends object>(
+  createOptimizedComponent: function<P extends object>(
     Component: ComponentType<P>,
     options: MemoizationOptions<P> & {
       enableProfiling?: boolean;
     } = {}
-  ) => {
+  ): ComponentType<P> {
     const { enableProfiling = false, ...memoOptions } = options;
     
     let OptimizedComponent = memoizeComponent(Component, memoOptions);
@@ -152,14 +152,14 @@ export const ComponentPatterns = {
   /**
    * Standard loading state wrapper
    */
-  withLoadingState: <P extends object>(
+  withLoadingState: function<P extends object>(
     Component: ComponentType<P & { isLoading?: boolean }>
-  ) => {
+  ) {
     const ComponentWithLoading = (props: P & { isLoading?: boolean; loadingComponent?: React.ReactNode }) => {
       const { isLoading, loadingComponent, ...componentProps } = props;
       
       if (isLoading) {
-        return loadingComponent || <div className="animate-pulse">Loading...</div>;
+        return loadingComponent || React.createElement('div', { className: 'animate-pulse' }, 'Loading...');
       }
       
       return React.createElement(Component, componentProps as P & { isLoading?: boolean });
@@ -172,14 +172,14 @@ export const ComponentPatterns = {
   /**
    * Standard error boundary wrapper
    */
-  withErrorBoundary: <P extends object>(
+  withErrorBoundary: function<P extends object>(
     Component: ComponentType<P>,
     errorBoundaryProps?: Partial<StandardErrorBoundaryProps>
-  ) => {
+  ) {
     const ComponentWithErrorBoundary = (props: P) => {
       return React.createElement(
         React.Suspense,
-        { fallback: <div>Loading...</div> },
+        { fallback: React.createElement('div', null, 'Loading...') },
         React.createElement(Component, props)
       );
     };
