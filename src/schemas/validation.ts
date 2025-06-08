@@ -249,7 +249,7 @@ export function validateFormWithZod<T extends Record<string, any>>(
       errors[field] = fieldResult.errors;
       isValid = false;
     } else if (fieldResult.data !== undefined) {
-      validatedData[field] = fieldResult.data;
+      (validatedData as any)[field] = fieldResult.data;
     }
   }
 
