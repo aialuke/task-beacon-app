@@ -11,3 +11,4 @@ export { Popover, PopoverContent, PopoverTrigger } from './popover';
 export { Skeleton } from './skeleton';
 export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tooltip';
 export { LazyImage } from './LazyImage';
+export { default as GenericPagination } from './GenericPagination';

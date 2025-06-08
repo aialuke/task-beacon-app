@@ -43,6 +43,7 @@ export { DatabaseService } from './database.service';
 
 // === SPECIALIZED SERVICES ===
 export * from './users.service';
+export { PaginationService } from './pagination.service';
 
 // === ERROR HANDLING ===
 export { formatApiError, apiRequest } from './error-handling';
