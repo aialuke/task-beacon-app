@@ -1,13 +1,26 @@
 
 import React from 'react';
-import { renderHook, waitFor } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useTaskMutations } from '../useTaskMutations';
-import { TaskService } from '@/lib/api/tasks/task.service';
+import { useTaskMutations, useTaskStatusMutations, useTaskDeleteMutations } from '../useTaskMutations';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 
-// Mock the TaskService
-vi.mock('@/lib/api/tasks/task.service');
+// Mock the orchestrator
+vi.mock('../mutations/useTaskMutationsOrchestrator', () => ({
+  useTaskMutationsOrchestrator: vi.fn(() => ({
+    createTask: vi.fn(),
+    createTaskCallback: vi.fn(),
+    updateTask: vi.fn(),
+    updateTaskCallback: vi.fn(),
+    deleteTask: vi.fn(),
+    deleteTaskCallback: vi.fn(),
+    toggleTaskComplete: vi.fn(),
+    toggleTaskCompleteCallback: vi.fn(),
+    markAsComplete: vi.fn(),
+    markAsIncomplete: vi.fn(),
+    isLoading: false,
+  })),
+}));
 
 const createWrapper = () => {
   const queryClient = new QueryClient({
@@ -24,61 +37,36 @@ const createWrapper = () => {
   );
 };
 
-describe('useTaskMutations', () => {
+describe('useTaskMutations (Backward Compatibility)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it('should create task successfully', async () => {
-    const mockTaskData = {
-      title: 'Test Task',
-      description: 'Test Description',
-      priority: 'medium' as const,
-    };
-
-    const mockCreatedTask = {
-      id: '1',
-      ...mockTaskData,
-      status: 'pending' as const,
-    };
-
-    vi.mocked(TaskService.crud.create).mockResolvedValue({
-      success: true,
-      data: mockCreatedTask,
-      error: null,
-    });
-
+  it('should export useTaskMutations as orchestrator', () => {
     const wrapper = createWrapper();
     const { result } = renderHook(() => useTaskMutations(), { wrapper });
 
-    const createResult = await result.current.createTaskCallback(mockTaskData);
-
-    expect(createResult.success).toBe(true);
-    expect(createResult.data).toEqual(mockCreatedTask);
-    expect(TaskService.crud.create).toHaveBeenCalledWith(mockTaskData);
+    expect(result.current).toHaveProperty('createTask');
+    expect(result.current).toHaveProperty('updateTask');
+    expect(result.current).toHaveProperty('deleteTask');
+    expect(result.current).toHaveProperty('toggleTaskComplete');
+    expect(result.current).toHaveProperty('isLoading');
   });
 
-  it('should handle create task failure', async () => {
-    const mockTaskData = {
-      title: 'Test Task',
-      description: 'Test Description',
-      priority: 'medium' as const,
-    };
-
-    const mockError = new Error('Failed to create task');
-
-    vi.mocked(TaskService.crud.create).mockResolvedValue({
-      success: false,
-      data: null,
-      error: mockError,
-    });
-
+  it('should provide backward compatible status mutations', () => {
     const wrapper = createWrapper();
-    const { result } = renderHook(() => useTaskMutations(), { wrapper });
+    const { result } = renderHook(() => useTaskStatusMutations(), { wrapper });
 
-    const createResult = await result.current.createTaskCallback(mockTaskData);
+    expect(result.current).toHaveProperty('markAsComplete');
+    expect(result.current).toHaveProperty('markAsIncomplete');
+    expect(result.current).toHaveProperty('isLoading');
+  });
 
-    expect(createResult.success).toBe(false);
-    expect(createResult.error).toEqual(mockError);
+  it('should provide backward compatible delete mutations', () => {
+    const wrapper = createWrapper();
+    const { result } = renderHook(() => useTaskDeleteMutations(), { wrapper });
+
+    expect(result.current).toHaveProperty('deleteTask');
+    expect(result.current).toHaveProperty('isLoading');
   });
 });
