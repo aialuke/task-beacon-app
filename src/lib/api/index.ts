@@ -45,8 +45,18 @@ export { DatabaseService } from './database.service';
 export * from './users.service';
 export { PaginationService } from './pagination.service';
 
-// === ERROR HANDLING ===
-export { formatApiError, apiRequest } from './error-handling';
+// === CONSOLIDATED ERROR HANDLING ===
+export { 
+  formatApiError, 
+  apiRequest, 
+  handleApiError,
+  handleAuthError,
+  handleValidationError,
+  logApiError,
+  apiErrorPatterns,
+  type ErrorHandlingOptions,
+  type ProcessedError
+} from './error-handling';
 
 // === SUPABASE CLIENT ===
 export { supabase };

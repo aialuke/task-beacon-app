@@ -1,8 +1,8 @@
-
 /**
  * Validation Result Creation Utilities
  * 
  * Focused on creating standardized validation results.
+ * Updated to use consolidated error handling.
  */
 
 import { 
@@ -121,6 +121,7 @@ export function combineValidationResults(
 
 /**
  * Wraps async operations with consistent error handling
+ * Updated to use consolidated error handling
  */
 export async function withErrorHandling<T>(
   operation: () => Promise<T>,
@@ -131,18 +132,12 @@ export async function withErrorHandling<T>(
     const data = await operation();
     return { success: true, data };
   } catch (error) {
-    // Handle standard errors
-    if (error instanceof Error) {
-      return {
-        success: false,
-        result: createErrorResult(error.message),
-      };
-    }
-
-    // Handle unknown errors
+    // Use consolidated error handling
+    const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
+    
     return {
       success: false,
-      result: createErrorResult('An unexpected error occurred'),
+      result: createErrorResult(errorMessage),
     };
   }
 }

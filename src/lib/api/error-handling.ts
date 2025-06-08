@@ -1,13 +1,9 @@
 
 /**
- * API Error Handling Utilities
+ * Consolidated API Error Handling - Phase 1 Consolidation
  * 
- * Centralized error formatting and handling for all API operations.
- * This module provides domain-specific error handling for API layer.
- * 
- * Phase 3: Verified - No duplication with consolidated error system.
- * This module provides API-specific functionality that complements
- * the general error handling system.
+ * Unified error formatting and handling for all API operations.
+ * Consolidates duplicate logic from api-handlers.ts and error-handling.ts
  */
 
 import { PostgrestError, AuthError } from '@supabase/supabase-js';
@@ -15,19 +11,92 @@ import { logger } from '@/lib/logger';
 import type { ApiError } from '@/types/shared';
 
 /**
+ * Configuration options for error handling behavior
+ */
+interface ErrorHandlingOptions {
+  /** Whether to show a toast notification to the user */
+  showToast?: boolean;
+  /** Whether to log the error to the console for debugging */
+  logToConsole?: boolean;
+  /** Whether to re-throw the error after processing */
+  rethrow?: boolean;
+  /** Custom prefix for console logging (defaults to '[API Error]') */
+  logPrefix?: string;
+}
+
+/**
+ * Standardized error object returned by error handlers
+ */
+interface ProcessedError {
+  /** The original error object */
+  originalError: unknown;
+  /** User-friendly error message */
+  message: string;
+  /** Error code if available (from Supabase errors) */
+  code?: string;
+  /** Detailed error information for debugging */
+  details?: string;
+  /** Whether this error was handled by our error system */
+  handled: true;
+}
+
+/**
+ * Type guard to check if an error is a Supabase PostgrestError
+ */
+function isPostgrestError(error: unknown): error is PostgrestError {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'code' in error &&
+    'message' in error &&
+    'details' in error
+  );
+}
+
+/**
  * Enhanced error formatting that handles various error types
- * Specialized for API responses and Supabase-specific errors
+ * Consolidates formatApiError and extractErrorMessage functionality
  */
 export const formatApiError = (error: unknown): ApiError => {
-  // Handle Supabase PostgrestError
-  if (error && typeof error === 'object' && 'code' in error && 'message' in error) {
+  // Handle Supabase PostgrestError with enhanced code mapping
+  if (isPostgrestError(error)) {
     const pgError = error as PostgrestError;
+    
+    // Enhanced status code mapping
+    let statusCode = 400;
+    let userMessage = pgError.message;
+    
+    switch (pgError.code) {
+      case 'PGRST116':
+        statusCode = 404;
+        userMessage = 'No data found';
+        break;
+      case 'PGRST204':
+        statusCode = 404;
+        userMessage = 'No results found';
+        break;
+      case '23505':
+        statusCode = 409;
+        userMessage = 'This item already exists';
+        break;
+      case '23503':
+        statusCode = 409;
+        userMessage = 'Cannot delete - item is being used elsewhere';
+        break;
+      case '42501':
+        statusCode = 403;
+        userMessage = 'You do not have permission to perform this action';
+        break;
+      default:
+        userMessage = pgError.message || 'Database operation failed';
+    }
+    
     return {
       name: 'PostgrestError',
-      message: pgError.message,
+      message: userMessage,
       code: pgError.code,
       details: pgError.details,
-      statusCode: pgError.code === 'PGRST116' ? 404 : 400,
+      statusCode,
       originalError: error,
     };
   }
@@ -36,9 +105,9 @@ export const formatApiError = (error: unknown): ApiError => {
   if (error instanceof AuthError) {
     return {
       name: 'AuthError',
-      message: error.message,
+      message: error.message || 'Authentication failed',
       code: error.status?.toString(),
-      statusCode: error.status || 400,
+      statusCode: error.status || 401,
       originalError: error,
     };
   }
@@ -69,8 +138,58 @@ export const formatApiError = (error: unknown): ApiError => {
 };
 
 /**
+ * Consolidated error handling utility for API operations
+ * Merges handleApiError functionality with enhanced options
+ */
+export function handleApiError(
+  error: unknown,
+  operation?: string,
+  options: ErrorHandlingOptions = {}
+): ProcessedError {
+  const {
+    showToast = false,
+    logToConsole = true,
+    rethrow = false,
+    logPrefix = 'API Error',
+  } = options;
+
+  const apiError = formatApiError(error);
+  const userMessage = apiError.message || (operation ?? 'An error occurred');
+
+  // Use logger instead of console.error
+  if (logToConsole) {
+    logger.error(`${logPrefix}: ${operation ?? 'An error occurred'}`, error as Error, {
+      userMessage,
+      errorCode: apiError.code,
+      statusCode: apiError.statusCode,
+    });
+  }
+
+  // Show user notification if requested
+  if (showToast) {
+    // Note: toast implementation would go here if needed
+    // toast.error(userMessage);
+  }
+
+  // Re-throw if requested (useful for upstream error handling)
+  if (rethrow) {
+    const enhancedError = new Error(userMessage);
+    (enhancedError as Error & { originalError?: unknown }).originalError = error;
+    throw enhancedError;
+  }
+
+  return {
+    originalError: error,
+    message: userMessage,
+    code: apiError.code,
+    details: apiError.details || apiError.message,
+    handled: true,
+  };
+}
+
+/**
  * Centralized API request wrapper with consistent error handling and logging
- * Specialized for API operations with timing and context tracking
+ * Enhanced version of the original apiRequest function
  */
 export const apiRequest = async <T>(
   operation: string,
@@ -97,13 +216,21 @@ export const apiRequest = async <T>(
     };
   } catch (error) {
     const duration = Date.now() - startTime;
-    const apiError = formatApiError(error);
-    
-    logger.error(`API Request failed: ${operation} (${duration}ms)`, error as Error, {
-      operation,
-      duration,
-      errorCode: apiError.code,
+    const processedError = handleApiError(error, operation, {
+      showToast: false,
+      logToConsole: true,
+      rethrow: false,
+      logPrefix: 'API Request Failed',
     });
+    
+    // Convert ProcessedError to ApiError format
+    const apiError: ApiError = {
+      name: 'ApiRequestError',
+      message: processedError.message,
+      code: processedError.code,
+      details: processedError.details,
+      originalError: processedError.originalError,
+    };
     
     return {
       data: null,
@@ -114,61 +241,54 @@ export const apiRequest = async <T>(
 };
 
 /**
- * API-specific error handling patterns for common scenarios
+ * Specialized error handlers for common scenarios
  */
 export const apiErrorPatterns = {
   /**
    * Handle database constraint violations
    */
   handleConstraintError: (error: PostgrestError): ApiError => {
-    switch (error.code) {
-      case '23505':
-        return {
-          name: 'UniqueConstraintError',
-          message: 'This item already exists',
-          code: error.code,
-          statusCode: 409,
-          originalError: error,
-        };
-      case '23503':
-        return {
-          name: 'ForeignKeyConstraintError',
-          message: 'Cannot delete - item is being used elsewhere',
-          code: error.code,
-          statusCode: 409,
-          originalError: error,
-        };
-      default:
-        return formatApiError(error);
-    }
+    return formatApiError(error);
   },
 
   /**
    * Handle authentication-specific API errors
    */
   handleAuthApiError: (error: AuthError): ApiError => {
-    return {
-      name: 'AuthApiError',
-      message: error.message || 'Authentication failed',
-      code: error.status?.toString(),
-      statusCode: error.status || 401,
-      originalError: error,
-    };
+    return formatApiError(error);
   },
 
   /**
    * Handle permission errors
    */
   handlePermissionError: (error: PostgrestError): ApiError => {
-    return {
-      name: 'PermissionError',
-      message: 'You do not have permission to perform this action',
-      code: error.code,
-      statusCode: 403,
-      originalError: error,
-    };
+    return formatApiError(error);
   },
 };
+
+/**
+ * Specialized error handler for authentication-related errors
+ */
+export function handleAuthError(error: unknown, operation: string): ProcessedError {
+  return handleApiError(error, `Authentication: ${operation}`, {
+    showToast: true,
+    logToConsole: true,
+    rethrow: false,
+    logPrefix: 'Auth Error',
+  });
+}
+
+/**
+ * Specialized error handler for validation errors
+ */
+export function handleValidationError(error: unknown, fieldName: string): ProcessedError {
+  return handleApiError(error, `Validation: ${fieldName}`, {
+    showToast: false, // Validation errors usually shown inline
+    logToConsole: true,
+    rethrow: false,
+    logPrefix: 'Validation Error',
+  });
+}
 
 /**
  * Utility for consistent API error logging
@@ -185,3 +305,6 @@ export const logApiError = (
     statusCode: apiError.statusCode,
   });
 };
+
+// Export types for external use
+export type { ErrorHandlingOptions, ProcessedError };

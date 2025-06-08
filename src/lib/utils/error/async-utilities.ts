@@ -3,9 +3,10 @@
  * Async Error Handling Utilities
  * 
  * Higher-order functions for safe async operations.
+ * Updated to use consolidated error handling.
  */
 
-import { handleApiError, type ErrorHandlingOptions } from './api-handlers';
+import { handleApiError, type ErrorHandlingOptions } from '@/lib/api/error-handling';
 
 /**
  * Utility to safely execute async functions with standardized error handling
