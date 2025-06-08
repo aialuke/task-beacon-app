@@ -1,6 +1,6 @@
 
 /**
- * Legacy Validation Utilities - Phase 3.1 Cleanup
+ * Legacy Validation Utilities - Phase 1 Cleanup
  * 
  * This file now serves as a complete redirect to the centralized Zod validation system.
  * All validation logic has been migrated to @/schemas for consistency and type safety.
