@@ -5,7 +5,7 @@
  * Provides consistent patterns for component creation, memoization, and structure.
  */
 
-import { memo, forwardRef, type ComponentType, type ForwardRefExoticComponent, type RefAttributes } from 'react';
+import React, { memo, forwardRef, type ComponentType, type ForwardRefExoticComponent, type RefAttributes } from 'react';
 
 /**
  * Standardized memoization options
