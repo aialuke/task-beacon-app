@@ -1,3 +1,4 @@
+
 /**
  * Consolidated API Error Handling - Phase 1 Consolidation
  * 
@@ -53,6 +54,29 @@ function isPostgrestError(error: unknown): error is PostgrestError {
 }
 
 /**
+ * Safely converts unknown values to strings for logging/details
+ */
+function safeStringify(value: unknown): string {
+  if (typeof value === 'string') {
+    return value;
+  }
+  
+  if (value === null || value === undefined) {
+    return String(value);
+  }
+  
+  if (typeof value === 'object') {
+    try {
+      return JSON.stringify(value);
+    } catch {
+      return '[Object: cannot stringify]';
+    }
+  }
+  
+  return String(value);
+}
+
+/**
  * Enhanced error formatting that handles various error types
  * Consolidates formatApiError and extractErrorMessage functionality
  */
@@ -94,7 +118,7 @@ export const formatApiError = (error: unknown): ApiError => {
       name: 'PostgrestError',
       message: userMessage,
       code: pgError.code,
-      details: pgError.details,
+      details: safeStringify(pgError.details),
       statusCode,
       originalError: error,
     };
@@ -128,21 +152,11 @@ export const formatApiError = (error: unknown): ApiError => {
     };
   }
 
-  // Handle unknown errors - properly convert to string for details
-  const errorDetails = typeof error === 'object' && error !== null 
-    ? (() => {
-        try {
-          return JSON.stringify(error);
-        } catch {
-          return String(error);
-        }
-      })()
-    : String(error);
-
+  // Handle unknown errors - safely convert to string for details
   return {
     name: 'UnknownError',
     message: 'An unexpected error occurred',
-    details: errorDetails,
+    details: safeStringify(error),
   };
 };
 
@@ -171,8 +185,9 @@ export function handleApiError(
     const errorInstance = error instanceof Error ? error : new Error(apiError.message);
     logger.error(`${logPrefix}: ${operation ?? 'An error occurred'}`, errorInstance, {
       userMessage,
-      errorCode: apiError.code,
-      statusCode: apiError.statusCode,
+      errorCode: apiError.code || 'UNKNOWN',
+      statusCode: apiError.statusCode || 500,
+      errorDetails: apiError.details || 'No additional details',
     });
   }
 
@@ -313,10 +328,23 @@ export const logApiError = (
   // Convert unknown error to Error instance for logger
   const errorInstance = error instanceof Error ? error : new Error(apiError.message);
   
+  // Safely convert context values to strings for logging
+  const safeContext: Record<string, string | number | boolean> = {};
+  if (context) {
+    Object.entries(context).forEach(([key, value]) => {
+      if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+        safeContext[key] = value;
+      } else {
+        safeContext[key] = safeStringify(value);
+      }
+    });
+  }
+  
   logger.error(`API Error in ${operation}`, errorInstance, {
-    ...context,
-    errorCode: apiError.code,
-    statusCode: apiError.statusCode,
+    ...safeContext,
+    errorCode: apiError.code || 'UNKNOWN',
+    statusCode: apiError.statusCode || 500,
+    errorDetails: apiError.details || 'No additional details',
   });
 };
 
