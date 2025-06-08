@@ -1,3 +1,4 @@
+
 /**
  * Task Analytics Service - Handles statistics and search operations
  */
@@ -5,7 +6,7 @@
 import { apiRequest } from '../../error-handling';
 import { AuthService } from '../../auth.service';
 import { supabase } from '@/integrations/supabase/client';
-import { TaskQueryService, type TaskQueryOptions } from '../core/task-query.service';
+import { OptimizedTaskQueryService, type OptimizedTaskQueryOptions } from '../core/task-query-optimized.service';
 import type { Task, ApiResponse } from '@/types';
 
 export class TaskAnalyticsService {
@@ -47,9 +48,9 @@ export class TaskAnalyticsService {
   /**
    * Search tasks by title or description
    */
-  static async search(query: string, options: Omit<TaskQueryOptions, 'search'> = {}): Promise<ApiResponse<Task[]>> {
+  static async search(query: string, options: Omit<OptimizedTaskQueryOptions, 'search'> = {}): Promise<ApiResponse<Task[]>> {
     return apiRequest('tasks.search', async () => {
-      const response = await TaskQueryService.getMany({ ...options, search: query });
+      const response = await OptimizedTaskQueryService.getMany({ ...options, search: query });
       if (!response.success) {
         throw new Error(response.error?.message || 'Search failed');
       }
