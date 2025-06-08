@@ -13,6 +13,9 @@ export {
   type AsyncOperationResult,
 } from './useAsyncOperation';
 
+// Import for convenience export
+import { useAsyncOperation } from './useAsyncOperation';
+
 // Simple convenience export
 export const asyncOperationUtils = {
   useAsyncOperation: useAsyncOperation,
