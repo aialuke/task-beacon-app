@@ -1,8 +1,8 @@
 
 import { LazyComponents } from '@/components/ui/LazyComponent';
 
-// Simplified lazy loading without optimized component dependencies
+// Updated to use TaskList since EnhancedTaskList was removed during Phase 2 consolidation
 export const LazyEnhancedTaskList = LazyComponents.createLazyList(
-  () => import('../lists/EnhancedTaskList').then(module => ({ default: module.default })),
-  'EnhancedTaskList'
+  () => import('../lists/TaskList').then(module => ({ default: module.default })),
+  'TaskList'
 );
