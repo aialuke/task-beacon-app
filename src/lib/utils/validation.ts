@@ -37,24 +37,27 @@ export {
  * User name validation using centralized schema
  */
 export function isValidUserName(name: string): boolean {
-  const result = userNameSchema.safeParse(name);
-  return result.success;
+  const { userNameSchema, validateWithZod } = require('@/schemas');
+  const result = validateWithZod(userNameSchema, name);
+  return result.isValid;
 }
 
 /**
  * Task title validation using centralized schema
  */
 export function isValidTaskTitle(title: string): boolean {
-  const result = taskTitleSchema.safeParse(title);
-  return result.success;
+  const { taskTitleSchema, validateWithZod } = require('@/schemas');
+  const result = validateWithZod(taskTitleSchema, title);
+  return result.isValid;
 }
 
 /**
  * Task description validation using centralized schema
  */
 export function isValidTaskDescription(description: string): boolean {
-  const result = taskDescriptionSchema.safeParse(description);
-  return result.success;
+  const { taskDescriptionSchema, validateWithZod } = require('@/schemas');
+  const result = validateWithZod(taskDescriptionSchema, description);
+  return result.isValid;
 }
 
 /**
@@ -68,7 +71,17 @@ export function isValidText(text: string, minLength = 0, maxLength = 1000): bool
 /**
  * Field validation utility
  */
-export function validateField(fieldName: string, value: unknown): ValidationResult {
+export function validateField(fieldName: string, value: unknown): { isValid: boolean; errors: string[] } {
+  const { 
+    emailSchema, 
+    passwordSchema, 
+    taskTitleSchema, 
+    taskDescriptionSchema, 
+    urlSchema, 
+    userNameSchema,
+    validateWithZod 
+  } = require('@/schemas');
+
   switch (fieldName.toLowerCase()) {
     case 'email':
       return validateWithZod(emailSchema, value);
@@ -90,7 +103,17 @@ export function validateField(fieldName: string, value: unknown): ValidationResu
 /**
  * Form validation utility
  */
-export function validateForm(data: Record<string, unknown>): ValidationResult {
+export function validateForm(data: Record<string, unknown>): { isValid: boolean; errors: string[] } {
+  const { 
+    emailSchema, 
+    passwordSchema, 
+    taskTitleSchema, 
+    taskDescriptionSchema, 
+    urlSchema, 
+    userNameSchema,
+    validateFormWithZod 
+  } = require('@/schemas');
+
   const schemas: Record<string, any> = {};
   
   Object.keys(data).forEach(key => {
@@ -121,7 +144,7 @@ export function validateForm(data: Record<string, unknown>): ValidationResult {
   const errors: string[] = [];
   if (!result.isValid && result.errors) {
     Object.values(result.errors).forEach(fieldErrors => {
-      if (fieldErrors && fieldErrors.length > 0) {
+      if (Array.isArray(fieldErrors) && fieldErrors.length > 0) {
         errors.push(...fieldErrors);
       }
     });
