@@ -328,22 +328,16 @@ export const logApiError = (
   // Convert unknown error to Error instance for logger
   const errorInstance = error instanceof Error ? error : new Error(apiError.message);
   
-  // Create a safe context object with proper types for logger
-  const logContext: Record<string, string | number | boolean> = {
+  // Create context object that matches logger expectations
+  const logContext: Record<string, unknown> = {
     errorCode: apiError.code || 'UNKNOWN',
     statusCode: apiError.statusCode || 500,
     errorDetails: apiError.details || 'No additional details',
   };
   
-  // Add context values if provided, converting unknown types safely
+  // Add additional context if provided
   if (context) {
-    Object.entries(context).forEach(([key, value]) => {
-      if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
-        logContext[key] = value;
-      } else if (value !== null && value !== undefined) {
-        logContext[`${key}_stringified`] = safeStringify(value);
-      }
-    });
+    Object.assign(logContext, context);
   }
   
   logger.error(`API Error in ${operation}`, errorInstance, logContext);
