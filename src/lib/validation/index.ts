@@ -1,9 +1,9 @@
 
 /**
- * Validation Module - Streamlined Core Functions
+ * Validation Module - Consolidated Core Functions
  * 
- * Simplified to focus only on essential database and business validation.
- * Now integrates with the new modular validation utilities.
+ * Unified validation interface combining database, business, and format validation.
+ * Eliminates duplication between database validators and service validators.
  */
 
 // === TYPES ===
@@ -26,6 +26,11 @@ export {
 export {
   validateTaskOwnership,
 } from './business-validators';
+
+// === CONSOLIDATED ENTITY VALIDATORS ===
+export {
+  validateProfileData,
+} from './entity-validators';
 
 // === ERROR HANDLING UTILITIES ===
 export {
@@ -53,3 +58,11 @@ export {
   isValidTaskDescription,
   isDateInFuture,
 } from '@/lib/utils/validation';
+
+// === CONSOLIDATED DATABASE OPERATIONS ===
+// These replace the duplicate validation methods from database.service.ts
+export {
+  validateUsersByEmail,
+  validateBatchUserExistence,
+  validateEntityExistence,
+} from './database-operations';

@@ -3,6 +3,7 @@
  * Database Service - Optimized with new indexes
  * 
  * Provides general database utilities for common operations.
+ * Validation methods moved to consolidated validation module.
  */
 
 import { apiRequest } from './error-handling';
@@ -38,14 +39,12 @@ export class DatabaseService {
   ): Promise<ApiResponse<boolean>> {
     return apiRequest(`exists.${table}`, async () => {
       // Use optimized query that leverages our indexes
-      // For profiles table, this uses idx_profiles_email when column is 'email'
-      // For tasks table, this uses primary key or other relevant indexes
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data, error } = await (supabase as any)
         .from(table)
         .select('id')
         .eq(column, value)
-        .maybeSingle(); // Use maybeSingle instead of single to avoid errors when no data
+        .maybeSingle();
 
       if (error) throw error;
       return !!data;
@@ -129,63 +128,5 @@ export class DatabaseService {
       { id: taskId },
       { single: true }
     );
-  }
-
-  /**
-   * Batch check existence of multiple records with optimized queries
-   */
-  static async batchExists(
-    table: string,
-    column: string,
-    values: unknown[]
-  ): Promise<ApiResponse<{ value: unknown; exists: boolean }[]>> {
-    return apiRequest(`batch-exists.${table}`, async () => {
-      if (values.length === 0) return [];
-
-      // Use optimized batch query instead of individual checks
-      // For profiles.email, this leverages idx_profiles_email
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const { data, error } = await (supabase as any)
-        .from(table)
-        .select(column)
-        .in(column, values);
-
-      if (error) throw error;
-
-      const existingValues = new Set(data.map((row: unknown) => row[column]));
-      
-      return values.map(value => ({
-        value,
-        exists: existingValues.has(value)
-      }));
-    });
-  }
-
-  /**
-   * Optimized user validation using email index
-   */
-  static async validateUsersByEmail(emails: string[]): Promise<ApiResponse<{
-    validEmails: string[];
-    invalidEmails: string[];
-  }>> {
-    return apiRequest('database.validateUsersByEmail', async () => {
-      if (emails.length === 0) {
-        return { validEmails: [], invalidEmails: [] };
-      }
-
-      // Uses idx_profiles_email for efficient lookup
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('email')
-        .in('email', emails);
-
-      if (error) throw error;
-
-      const validEmails = data.map(profile => profile.email);
-      const validEmailSet = new Set(validEmails);
-      const invalidEmails = emails.filter(email => !validEmailSet.has(email));
-
-      return { validEmails, invalidEmails };
-    });
   }
 }
