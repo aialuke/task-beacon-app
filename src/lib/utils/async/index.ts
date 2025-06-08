@@ -8,7 +8,6 @@
 // Core async operation hook
 export {
   useAsyncOperation,
-  type AsyncOperationState,
   type AsyncOperationOptions,
   type AsyncOperationResult,
 } from './useAsyncOperation';
