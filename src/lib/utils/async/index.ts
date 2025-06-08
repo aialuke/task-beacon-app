@@ -15,5 +15,5 @@ export {
 
 // Simple convenience export
 export const asyncOperationUtils = {
-  useAsyncOperation,
+  useAsyncOperation: useAsyncOperation,
 };
