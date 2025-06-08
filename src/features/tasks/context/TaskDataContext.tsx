@@ -60,7 +60,10 @@ export function TaskDataContextProvider({
     isFetching: taskQueries.isFetching,
     error: taskQueries.error,
     totalCount: taskQueries.totalCount,
-    pagination: taskQueries.pagination,
+    pagination: {
+      ...taskQueries.pagination,
+      pageSize: taskQueries.pagination.pageSize,
+    },
     retry: taskQueries.refetch || (() => {}),
   };
 
