@@ -18,7 +18,7 @@ export { supabase };
 export { AuthService } from './auth.service';
 export { StorageService } from './storage.service';
 export { DatabaseService } from './database.service';
-export { TaskService } from './tasks/task.service';
+export { TaskService } from './tasks';
 export * from './users.service';
 
 // === ERROR HANDLING UTILITIES ===

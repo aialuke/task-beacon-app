@@ -1,6 +1,6 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { TaskService } from '@/lib/api/tasks/task.service';
+import { TaskService } from '@/lib/api/tasks';
 import { useTaskOptimisticUpdates } from './useTaskOptimisticUpdates';
 import { showSuccessMessage, showErrorMessage } from '@/lib/utils/notification';
 

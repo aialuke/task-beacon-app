@@ -2,7 +2,7 @@
 import { useMemo, useCallback } from 'react';
 import { usePhotoState } from './usePhotoState';
 import { usePhotoProcessing } from './usePhotoProcessing';
-import { TaskService } from '@/lib/api/tasks/task.service';
+import { TaskService } from '@/lib/api/tasks';
 import type { EnhancedImageProcessingOptions } from '@/lib/utils/image/types';
 
 /**

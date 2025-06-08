@@ -1,6 +1,6 @@
 
 import { useQuery } from '@tanstack/react-query';
-import { TaskService } from '@/lib/api/tasks/task.service';
+import { TaskService } from '@/lib/api/tasks';
 import { QueryKeys, createLoadingState } from '@/lib/api/standardized-api';
 import type { Task } from '@/types';
 

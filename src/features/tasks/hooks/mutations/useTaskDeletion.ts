@@ -1,6 +1,5 @@
-
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { TaskService } from '@/lib/api';
+import { TaskService } from '@/lib/api/tasks';
 import { useTaskOptimisticUpdates } from '../useTaskOptimisticUpdates';
 import { useCallback } from 'react';
 import { toast } from 'sonner';

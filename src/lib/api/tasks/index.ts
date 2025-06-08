@@ -8,22 +8,30 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import { apiRequest } from '@/lib/api/error-handling';
+import { AuthService } from '@/lib/api/auth.service';
 import type { Task, TaskCreateData, TaskUpdateData } from '@/types';
 
 // === TASK CRUD OPERATIONS ===
 
 export const createTask = async (taskData: TaskCreateData) => {
   return apiRequest('createTask', async () => {
+    // Get current user for owner_id
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      throw new Error('User must be authenticated to create tasks');
+    }
+
     const { data, error } = await supabase
       .from('tasks')
       .insert({
         title: taskData.title,
         description: taskData.description,
-        due_date: taskData.dueDate,
-        url_link: taskData.urlLink,
-        assignee_id: taskData.assigneeId,
-        parent_task_id: taskData.parentTaskId,
-        photo_url: taskData.photoUrl,
+        due_date: taskData.due_date,
+        url_link: taskData.url_link,
+        assignee_id: taskData.assignee_id,
+        parent_task_id: taskData.parent_task_id,
+        photo_url: taskData.photo_url,
+        owner_id: user.id,
       })
       .select()
       .single();
@@ -40,10 +48,10 @@ export const updateTask = async (taskId: string, updates: Partial<TaskUpdateData
       .update({
         title: updates.title,
         description: updates.description,
-        due_date: updates.dueDate,
-        url_link: updates.urlLink,
-        assignee_id: updates.assigneeId,
-        photo_url: updates.photoUrl,
+        due_date: updates.due_date,
+        url_link: updates.url_link,
+        assignee_id: updates.assignee_id,
+        photo_url: updates.photo_url,
         status: updates.status,
       })
       .eq('id', taskId)
@@ -145,6 +153,16 @@ export const updateTaskStatus = async (taskId: string, status: 'pending' | 'comp
   });
 };
 
+// === MEDIA OPERATIONS ===
+
+export const uploadPhoto = async (photo: File): Promise<{ data: string | null; error: null; success: boolean }> => {
+  return apiRequest('uploadPhoto', async () => {
+    // This is a placeholder - actual implementation would use Supabase Storage
+    // For now, return null to indicate no photo upload
+    return null;
+  });
+};
+
 // === BACKWARDS COMPATIBILITY ===
 // Simple object that matches the old interface but uses direct functions
 
@@ -153,6 +171,7 @@ export const TaskService = {
     create: createTask,
     update: updateTask,
     delete: deleteTask,
+    getById: getTaskById,
   },
   query: {
     getById: getTaskById,
@@ -160,6 +179,9 @@ export const TaskService = {
   },
   status: {
     updateStatus: updateTaskStatus,
+  },
+  media: {
+    uploadPhoto,
   },
 };
 
