@@ -112,7 +112,6 @@ export function UnifiedTaskForm({
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           label={titleLabel}
-          placeholder={titlePlaceholder}
           icon={<FileText className="h-4 w-4" />}
           maxLength={22}
           required
@@ -127,7 +126,6 @@ export function UnifiedTaskForm({
           placeholder={descriptionPlaceholder}
           label={descriptionLabel}
           icon={<Sparkles className="h-4 w-4" />}
-          disabled={disabled}
         />
 
         {/* Quick Action Bar */}
