@@ -203,7 +203,7 @@ export function handleApiError(
       userMessage,
       errorCode: apiError.code || 'UNKNOWN',
       statusCode: apiError.statusCode || 500,
-      errorDetails: apiError.details || 'No additional details',
+      errorDetails: safeStringify(apiError.details || 'No additional details'),
     };
     
     logger.error(`${logPrefix}: ${operation ?? 'An error occurred'}`, errorInstance, logContext);
@@ -226,7 +226,7 @@ export function handleApiError(
     originalError: error,
     message: userMessage,
     code: apiError.code,
-    details: apiError.details || apiError.message,
+    details: safeStringify(apiError.details || apiError.message),
     handled: true,
   };
 }
@@ -350,7 +350,7 @@ export const logApiError = (
   const logContext: Record<string, unknown> = {
     errorCode: apiError.code || 'UNKNOWN',
     statusCode: apiError.statusCode || 500,
-    errorDetails: apiError.details || 'No additional details',
+    errorDetails: safeStringify(apiError.details || 'No additional details'),
   };
   
   // Add additional context if provided
