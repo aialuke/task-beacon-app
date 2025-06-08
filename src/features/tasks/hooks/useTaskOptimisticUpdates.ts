@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Task } from '@/types';
-import { useOptimizedCallback } from '@/hooks/performance';
 
 // Define proper types for React Query data structures
 interface PaginatedTasksResponse {
@@ -47,12 +46,10 @@ function isInfiniteResponse(data: unknown): data is InfiniteTasksResponse {
 }
 
 /**
- * Focused hook for optimistic task updates
+ * Task Optimistic Updates Hook - Simplified Implementation
  * 
  * Provides utilities for optimistically updating task data in React Query cache
- * with rollback capabilities.
- * 
- * Used by other task mutation hooks to avoid code duplication.
+ * using standard React patterns for better maintainability.
  */
 export function useTaskOptimisticUpdates() {
   const queryClient = useQueryClient();
@@ -60,16 +57,15 @@ export function useTaskOptimisticUpdates() {
   /**
    * Get previous query data for rollback operations
    */
-  const getPreviousData = useOptimizedCallback(
+  const getPreviousData = useCallback(
     () => queryClient.getQueryData(['tasks', undefined, undefined]),
-    [queryClient],
-    { name: 'getPreviousData', trackDependencyChanges: false }
+    [queryClient]
   );
 
   /**
    * Optimistically update a single task in the cache
    */
-  const updateTaskOptimistically = useOptimizedCallback(
+  const updateTaskOptimistically = useCallback(
     (taskId: string, updates: Partial<Task>, fallbackData?: unknown) => {
       queryClient.setQueriesData({ queryKey: ['tasks'] }, (oldData: unknown) => {
         if (!oldData) return fallbackData || oldData;
@@ -104,14 +100,13 @@ export function useTaskOptimisticUpdates() {
         return oldData;
       });
     },
-    [queryClient],
-    { name: 'updateTaskOptimistically', trackDependencyChanges: false }
+    [queryClient]
   );
 
   /**
    * Optimistically remove a task from the cache
    */
-  const removeTaskOptimistically = useOptimizedCallback(
+  const removeTaskOptimistically = useCallback(
     (taskId: string, fallbackData?: unknown) => {
       queryClient.setQueriesData({ queryKey: ['tasks'] }, (oldData: unknown) => {
         if (!oldData) return fallbackData || oldData;
@@ -141,8 +136,7 @@ export function useTaskOptimisticUpdates() {
         return oldData;
       });
     },
-    [queryClient],
-    { name: 'removeTaskOptimistically', trackDependencyChanges: false }
+    [queryClient]
   );
 
   /**

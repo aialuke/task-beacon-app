@@ -1,8 +1,5 @@
+
 import { useCallback, useMemo } from "react";
-import {
-  useOptimizedMemo,
-  useOptimizedCallback,
-} from "@/hooks/performance";
 import type { Task } from "@/types";
 
 interface TaskCardOptimizationOptions {
@@ -12,13 +9,10 @@ interface TaskCardOptimizationOptions {
 }
 
 /**
- * Advanced Task Card Optimization Hook - Phase 4 Implementation
- *
- * Provides advanced performance optimizations for task cards including:
- * - Memory management for large lists
- * - Image prefetching for better UX
- * - Enhanced accessibility features
- * - Intersection observer for lazy loading
+ * Task Card Optimization Hook - Simplified Implementation
+ * 
+ * Simplified to use standard React patterns instead of over-optimization.
+ * Focuses on actual performance benefits while maintaining functionality.
  */
 export function useTaskCardOptimization(
   task: Task,
@@ -30,8 +24,8 @@ export function useTaskCardOptimization(
     enableAccessibility = true,
   } = options;
 
-  // Optimized task data extraction
-  const taskMetadata = useOptimizedMemo(
+  // Simplified task data extraction using standard useMemo
+  const taskMetadata = useMemo(
     () => ({
       id: task.id,
       title: task.title,
@@ -52,15 +46,11 @@ export function useTaskCardOptimization(
       task.photo_url,
       task.url_link,
       task.description,
-    ],
-    {
-      name: "task-metadata",
-      warnOnSlowComputation: false,
-    }
+    ]
   );
 
-  // Enhanced accessibility attributes with proper typing
-  const accessibilityProps = useOptimizedMemo(
+  // Accessibility attributes using standard useMemo
+  const accessibilityProps = useMemo(
     () => {
       if (!enableAccessibility) return {};
 
@@ -81,33 +71,29 @@ export function useTaskCardOptimization(
         tabIndex: 0,
       };
     },
-    [taskMetadata, task.id, task.title, enableAccessibility],
-    { name: "accessibility-props" }
+    [taskMetadata, task.id, task.title, enableAccessibility]
   );
 
-  // Image prefetching for better performance
-  const prefetchImage = useOptimizedCallback(
+  // Image prefetching using standard useCallback
+  const prefetchImage = useCallback(
     () => {
       if (!prefetchImages || !task.photo_url) return;
 
       const img = new Image();
       img.src = task.photo_url;
     },
-    [task.photo_url, prefetchImages],
-    { name: "prefetch-image" }
+    [task.photo_url, prefetchImages]
   );
 
-  // Memory-efficient event handlers
+  // Memory-efficient event handlers using standard useMemo
   const optimizedHandlers = useMemo(
     () => ({
       onFocus: () => {
-        // Prefetch image when card receives focus
         if (prefetchImages && task.photo_url) {
           prefetchImage();
         }
       },
       onMouseEnter: () => {
-        // Prefetch on hover for better UX
         if (prefetchImages && task.photo_url) {
           prefetchImage();
         }
@@ -116,25 +102,22 @@ export function useTaskCardOptimization(
     [prefetchImage, prefetchImages, task.photo_url]
   );
 
-  // Enhanced keyboard navigation
-  const keyboardHandlers = useOptimizedMemo(
+  // Keyboard navigation using standard useMemo
+  const keyboardHandlers = useMemo(
     () => {
       if (!enableAccessibility) return {};
 
       return {
         onKeyDown: (event: React.KeyboardEvent) => {
-          // Enhanced keyboard navigation
           if (event.key === "Enter" || event.key === " ") {
             event.preventDefault();
-            // Focus on first interactive element within card
             const firstButton = event.currentTarget.querySelector("button");
             firstButton?.focus();
           }
         },
       };
     },
-    [enableAccessibility],
-    { name: "keyboard-handlers" }
+    [enableAccessibility]
   );
 
   return {

@@ -1,6 +1,5 @@
 
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { useOptimizedMemo } from '@/hooks/performance';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import type { Task } from '@/types';
 
 interface VirtualizationConfig {
@@ -19,13 +18,10 @@ interface VirtualizedItem {
 }
 
 /**
- * Task List Virtualization Hook - Phase 4 Implementation
+ * Task List Virtualization Hook - Simplified Implementation
  * 
- * Implements virtual scrolling for large task lists to improve performance:
- * - Only renders visible items
- * - Maintains scroll position
- * - Handles dynamic item heights
- * - Optimizes memory usage
+ * Uses standard React patterns for virtual scrolling optimization.
+ * Simplified approach focusing on actual performance benefits.
  */
 export function useTaskListVirtualization(
   tasks: Task[],
@@ -44,8 +40,8 @@ export function useTaskListVirtualization(
   // Enable virtualization only for large lists
   const shouldVirtualize = tasks.length > threshold;
 
-  // Calculate visible range
-  const visibleRange = useOptimizedMemo(
+  // Calculate visible range using standard useMemo
+  const visibleRange = useMemo(
     () => {
       if (!shouldVirtualize) {
         return { start: 0, end: tasks.length - 1 };
@@ -62,12 +58,11 @@ export function useTaskListVirtualization(
         end: endIndex,
       };
     },
-    [scrollTop, itemHeight, containerHeight, overscan, tasks.length, shouldVirtualize],
-    { name: 'visible-range' }
+    [scrollTop, itemHeight, containerHeight, overscan, tasks.length, shouldVirtualize]
   );
 
-  // Create virtualized items
-  const virtualizedItems = useOptimizedMemo(
+  // Create virtualized items using standard useMemo
+  const virtualizedItems = useMemo(
     () => {
       if (!shouldVirtualize) {
         return tasks.map((task, index) => ({
@@ -87,25 +82,19 @@ export function useTaskListVirtualization(
         height: itemHeight,
       }));
     },
-    [tasks, visibleRange, itemHeight, shouldVirtualize],
-    { 
-      name: 'virtualized-items',
-      warnOnSlowComputation: true,
-    }
+    [tasks, visibleRange, itemHeight, shouldVirtualize]
   );
 
   // Get only visible items for rendering
-  const visibleItems = useOptimizedMemo(
+  const visibleItems = useMemo(
     () => virtualizedItems.filter(item => item.isVisible),
-    [virtualizedItems],
-    { name: 'visible-items' }
+    [virtualizedItems]
   );
 
   // Total height for scrollbar
-  const totalHeight = useOptimizedMemo(
+  const totalHeight = useMemo(
     () => tasks.length * itemHeight,
-    [tasks.length, itemHeight],
-    { name: 'total-height' }
+    [tasks.length, itemHeight]
   );
 
   // Scroll handler
@@ -120,7 +109,6 @@ export function useTaskListVirtualization(
 
     const observer = new IntersectionObserver(
       (entries) => {
-        // Additional optimization: pause rendering for non-visible containers
         entries.forEach(entry => {
           if (!entry.isIntersecting) {
             // Container is not visible, can pause updates
@@ -136,24 +124,22 @@ export function useTaskListVirtualization(
   }, [shouldVirtualize]);
 
   // Container styles for virtualization
-  const containerStyles = useOptimizedMemo(
+  const containerStyles = useMemo(
     () => ({
       height: containerHeight,
       overflowY: 'auto' as const,
       position: 'relative' as const,
     }),
-    [containerHeight],
-    { name: 'container-styles' }
+    [containerHeight]
   );
 
   // Spacer styles for maintaining scroll height
-  const spacerStyles = useOptimizedMemo(
+  const spacerStyles = useMemo(
     () => ({
       height: totalHeight,
       position: 'relative' as const,
     }),
-    [totalHeight],
-    { name: 'spacer-styles' }
+    [totalHeight]
   );
 
   return {

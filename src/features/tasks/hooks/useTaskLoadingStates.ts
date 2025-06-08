@@ -1,5 +1,5 @@
 
-import { useOptimizedMemo } from '@/hooks/performance';
+import { useMemo } from 'react';
 
 interface LoadingStateOptions {
   isLoading?: boolean;
@@ -34,10 +34,10 @@ interface TaskLoadingStates {
 }
 
 /**
- * Standardized Task Loading States Hook - Phase 3 Implementation
+ * Task Loading States Hook - Simplified Implementation
  * 
- * Provides consistent loading state management across task components.
- * Optimizes re-renders by memoizing computed states.
+ * Provides consistent loading state management using standard React patterns.
+ * Removed unnecessary optimization in favor of clarity and maintainability.
  */
 export function useTaskLoadingStates(options: LoadingStateOptions = {}): TaskLoadingStates {
   const {
@@ -49,8 +49,8 @@ export function useTaskLoadingStates(options: LoadingStateOptions = {}): TaskLoa
     error = null,
   } = options;
 
-  // Compute derived states with optimization
-  const loadingStates = useOptimizedMemo(() => {
+  // Compute derived states using standard useMemo
+  const loadingStates = useMemo(() => {
     const isBusy = isLoading || isFetching || isSubmitting || isDeleting || isUpdating;
     const hasError = !!error;
     const canInteract = !isBusy && !hasError;
@@ -105,10 +105,7 @@ export function useTaskLoadingStates(options: LoadingStateOptions = {}): TaskLoa
     isDeleting,
     isUpdating,
     error,
-  ], {
-    name: 'task-loading-states',
-    warnOnSlowComputation: false,
-  });
+  ]);
 
   return loadingStates;
 }
