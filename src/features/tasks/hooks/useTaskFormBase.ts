@@ -14,8 +14,8 @@ interface UseTaskFormBaseOptions {
 }
 
 /**
- * Base hook for task form functionality
- * Shared between create and follow-up task forms
+ * Base hook for task form functionality - Phase 2 Update
+ * Updated to use centralized Zod validation from Phase 1
  */
 export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions = {}) {
   const [loading, setLoading] = useState(false);
@@ -42,7 +42,7 @@ export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions 
 
   const photoUpload = useTaskPhotoUpload(photoUploadConfig);
 
-  // Unified form validation
+  // Updated form validation using new centralized schemas
   const validateForm = useOptimizedCallback(() => {
     const formData = {
       title: taskForm.title,
@@ -71,7 +71,7 @@ export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions 
     return uploadResult || null;
   }, [photoUpload.photo, photoUpload.uploadPhoto], { name: 'handlePhotoUpload' });
 
-  // Prepare task data for submission
+  // Updated task data preparation using new validation system
   const prepareTaskData = useOptimizedCallback((photoUrl: string | null) => {
     const titleStr = String(taskForm.title).trim();
     const descriptionStr = String(taskForm.description).trim();

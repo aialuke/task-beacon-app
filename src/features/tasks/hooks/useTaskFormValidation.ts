@@ -8,7 +8,11 @@ import {
   updateTaskSchema,
   taskTitleSchema,
   taskDescriptionSchema,
-} from '@/features/tasks/schemas/taskSchema';
+  validateTaskForm,
+  validateTaskCreation,
+  validateTaskUpdate,
+  transformFormToApiData,
+} from '@/schemas';
 
 interface FormDataWithExtras {
   title: string;
@@ -23,17 +27,17 @@ interface FormDataWithExtras {
 }
 
 /**
- * Enhanced task form validation hook - Phase 3
+ * Enhanced task form validation hook - Phase 2
  * 
- * Improved integration with form submission flow and better error handling
+ * Now uses centralized Zod schemas from Phase 1 implementation
  */
 export function useTaskFormValidation() {
   /**
    * Validate complete task form data with enhanced error handling
    */
-  const validateTaskForm = useCallback(
+  const validateTaskFormData = useCallback(
     (data: unknown): { isValid: boolean; errors: Record<string, string>; data?: unknown } => {
-      const result = taskFormSchema.safeParse(data);
+      const result = validateTaskForm(data);
       
       if (result.success) {
         return { isValid: true, errors: {}, data: result.data };
@@ -54,9 +58,9 @@ export function useTaskFormValidation() {
   /**
    * Validate data for creating a task with enhanced error reporting
    */
-  const validateCreateTask = useCallback(
+  const validateCreateTaskData = useCallback(
     (data: unknown): { isValid: boolean; errors: Record<string, string>; data?: any } => {
-      const result = createTaskSchema.safeParse(data);
+      const result = validateTaskCreation(data);
       
       if (result.success) {
         return { isValid: true, errors: {}, data: result.data };
@@ -77,9 +81,9 @@ export function useTaskFormValidation() {
   /**
    * Validate data for updating a task
    */
-  const validateUpdateTask = useCallback(
+  const validateUpdateTaskData = useCallback(
     (data: unknown): { isValid: boolean; errors: Record<string, string>; data?: any } => {
-      const result = updateTaskSchema.safeParse(data);
+      const result = validateTaskUpdate(data);
       
       if (result.success) {
         return { isValid: true, errors: {}, data: result.data };
@@ -185,35 +189,39 @@ export function useTaskFormValidation() {
   const prepareTaskData = useCallback((formData: FormDataWithExtras): unknown => {
     console.log('Preparing task data:', formData);
     
-    const validation = validateCreateTask(formData);
+    const validation = validateCreateTaskData(formData);
     
     if (!validation.isValid) {
       showValidationErrors(validation.errors);
       return null;
     }
     
-    // Transform validated data to API format (camelCase)
-    const validatedData = validation.data;
+    // Use the new transform utility from centralized schemas
+    const transformedData = transformFormToApiData({
+      title: formData.title,
+      description: formData.description || '',
+      priority: (formData.priority as any) || 'medium',
+      dueDate: formData.dueDate || '',
+      url: formData.url || '',
+      assigneeId: formData.assigneeId || '',
+    });
+    
+    // Add additional fields not handled by transform
     const taskData = {
-      title: validatedData.title?.trim(),
-      description: validatedData.description?.trim() || undefined,
-      dueDate: validatedData.dueDate || undefined,
-      photoUrl: formData.photoUrl || undefined,
-      urlLink: validatedData.url?.trim() || undefined,
-      assigneeId: validatedData.assigneeId || undefined,
-      parentTaskId: formData.parentTaskId || undefined,
-      priority: validatedData.priority || 'medium',
+      ...transformedData,
+      photo_url: formData.photoUrl || undefined,
+      parent_task_id: formData.parentTaskId || undefined,
     };
     
     console.log('Prepared task data for API:', taskData);
     return taskData;
-  }, [validateCreateTask, showValidationErrors]);
+  }, [validateCreateTaskData, showValidationErrors]);
 
   return {
-    // Validation functions
-    validateTaskForm,
-    validateCreateTask,
-    validateUpdateTask,
+    // Updated function names for clarity
+    validateTaskForm: validateTaskFormData,
+    validateCreateTask: validateCreateTaskData,
+    validateUpdateTask: validateUpdateTaskData,
     validateField,
     validateTitle,
     

@@ -14,8 +14,15 @@ export * from './user.schemas';
 export * from './task.schemas';
 
 // === LEGACY COMPATIBILITY ===
-// Re-export existing schemas for backward compatibility
-export * from '../features/tasks/schemas/taskSchema';
+// Re-export existing schemas for backward compatibility (avoiding conflicts)
+export { 
+  baseTaskSchema as legacyBaseTaskSchema,
+  createTaskSchema as legacyCreateTaskSchema,
+  updateTaskSchema as legacyUpdateTaskSchema,
+  taskFormSchema as legacyTaskFormSchema,
+  VALIDATION_MESSAGES as LEGACY_VALIDATION_MESSAGES
+} from '../features/tasks/schemas/taskSchema';
+
 export * from './commonValidation';
 
 // === UTILITY EXPORTS ===

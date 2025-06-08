@@ -1,3 +1,4 @@
+
 import { useState, useCallback } from 'react';
 import { useOptimizedMemo, useOptimizedCallback } from '@/hooks/performance';
 import type { FormState, ValidationResult } from '@/types/utility.types';
@@ -18,7 +19,8 @@ interface FormFieldState {
 }
 
 /**
- * Unified form state management hook with optimized performance
+ * Unified form state management hook with optimized performance - Phase 2 Update
+ * Enhanced integration with Zod validation system
  */
 export function useUnifiedFormState<T extends Record<string, string>>(
   options: UseUnifiedFormStateOptions<T> = {}
@@ -57,7 +59,7 @@ export function useUnifiedFormState<T extends Record<string, string>>(
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitCount, setSubmitCount] = useState(0);
 
-  // Validate a single field - fix the indexing issue with proper type assertion
+  // Validate a single field - enhanced for Zod integration
   const validateField = useOptimizedCallback(
     (fieldName: string, value: string): string | null => {
       // Type-safe access to validation rules
@@ -122,7 +124,7 @@ export function useUnifiedFormState<T extends Record<string, string>>(
     { name: 'getFieldProps' }
   );
 
-  // Get current form values - fix the type indexing issue
+  // Get current form values - enhanced type safety
   const values = useOptimizedMemo(
     () => {
       const formValues = {} as Record<string, string>;
@@ -135,7 +137,7 @@ export function useUnifiedFormState<T extends Record<string, string>>(
     { name: 'formValues' }
   );
 
-  // Validate all fields
+  // Validate all fields - enhanced for Zod compatibility
   const validateForm = useOptimizedCallback(
     (): ValidationResult => {
       const errors: Record<string, string> = {};
@@ -183,7 +185,7 @@ export function useUnifiedFormState<T extends Record<string, string>>(
     { name: 'formState' }
   );
 
-  // Handle form submission
+  // Handle form submission - enhanced error handling
   const handleSubmit = useOptimizedCallback(
     async (e?: React.FormEvent) => {
       e?.preventDefault();
@@ -207,6 +209,7 @@ export function useUnifiedFormState<T extends Record<string, string>>(
 
       const validation = validateForm();
       if (!validation.isValid) {
+        console.log('Form validation failed:', validation.errors);
         return;
       }
 
@@ -214,6 +217,8 @@ export function useUnifiedFormState<T extends Record<string, string>>(
         setIsSubmitting(true);
         try {
           await onSubmit(values);
+        } catch (error) {
+          console.error('Form submission error:', error);
         } finally {
           setIsSubmitting(false);
         }

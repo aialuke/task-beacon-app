@@ -8,6 +8,8 @@ import { useMemo, useCallback, DependencyList } from 'react';
 
 interface MemoOptions {
   name?: string;
+  warnOnSlowComputation?: boolean;
+  trackDependencyChanges?: boolean;
 }
 
 export function useOptimizedMemo<T>(
