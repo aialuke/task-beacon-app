@@ -1,11 +1,6 @@
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  useMemo,
-  ReactNode,
-} from "react";
+
+import { ReactNode, useState, useEffect } from "react";
+import { createStandardContext } from '@/lib/utils/createContext';
 import { TaskFilter } from "../types";
 
 // Define the shape of our UI context
@@ -22,17 +17,18 @@ interface TaskUIContextType {
   isMobile: boolean;
 }
 
-const TaskUIContext = createContext<TaskUIContextType | undefined>(undefined);
+// Create standardized context
+const { Provider: TaskUIProvider, useContext: useTaskUIContext } = createStandardContext<TaskUIContextType>({
+  name: 'TaskUI',
+  errorMessage: 'useTaskUIContext must be used within a TaskUIContextProvider'
+});
 
 /**
  * Provider component for task UI-related state
- *
- * Manages UI-only concerns like filters, expanded state, and mobile detection
- *
- * @param children - React components that will consume the context
+ * Updated to use standardized context creation pattern
  */
 export function TaskUIContextProvider({ children }: { children: ReactNode }) {
-  // UI States
+  // UI States - using standard React hooks
   const [filter, setFilter] = useState<TaskFilter>("all");
   const [expandedTaskId, setExpandedTaskId] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -49,34 +45,20 @@ export function TaskUIContextProvider({ children }: { children: ReactNode }) {
     return () => { window.removeEventListener("resize", checkIfMobile); };
   }, []);
 
-  const value = useMemo(
-    () => ({
-      filter,
-      setFilter,
-      expandedTaskId,
-      setExpandedTaskId,
-      isMobile,
-    }),
-    [filter, expandedTaskId, isMobile]
-  );
+  const contextValue: TaskUIContextType = {
+    filter,
+    setFilter,
+    expandedTaskId,
+    setExpandedTaskId,
+    isMobile,
+  };
 
   return (
-    <TaskUIContext.Provider value={value}>{children}</TaskUIContext.Provider>
+    <TaskUIProvider value={contextValue}>
+      {children}
+    </TaskUIProvider>
   );
 }
 
-/**
- * Custom hook for using the task UI context
- *
- * @returns The task UI context value
- * @throws Error if used outside of a TaskUIContextProvider
- */
-export function useTaskUIContext() {
-  const context = useContext(TaskUIContext);
-  if (context === undefined) {
-    throw new Error(
-      "useTaskUIContext must be used within a TaskUIContextProvider"
-    );
-  }
-  return context;
-}
+// Export the standardized hook
+export { useTaskUIContext };

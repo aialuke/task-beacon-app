@@ -1,25 +1,21 @@
 
 /**
- * Unified Component System - Step 2.4 Enhanced
+ * Simplified Component System - Step 2.4 Revised
  * 
- * Consolidates error handling, loading states, and common patterns
- * into a single, consistent system with unified state management.
+ * Removed complex unified abstractions.
+ * Using standard React patterns and existing utilities.
  */
 
 // === ERROR HANDLING ===
 export { default as UnifiedErrorHandler } from '../error/UnifiedErrorHandler';
 
 // === LOADING STATES ===
-export { default as UnifiedLoadingStates, LoadingSpinner, SkeletonBox, CardSkeleton, ImageSkeleton } from '../loading/UnifiedLoadingStates';
-
-// === UNIFIED HOOKS ===
 export { 
-  useUnifiedModal, 
-  useUnifiedModals,
-  useUnifiedFormState,
-  useUnifiedState,
-  useUnifiedAsyncState,
-  useUnifiedCollection,
-  createUnifiedContext,
-  withUnifiedContext
-} from '@/hooks/unified';
+  default as UnifiedLoadingStates, 
+  LoadingSpinner, 
+  SkeletonBox, 
+  CardSkeleton, 
+  ImageSkeleton 
+} from '../loading/UnifiedLoadingStates';
+
+// No unified hooks exports - using standard React patterns instead

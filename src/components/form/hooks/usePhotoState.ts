@@ -1,12 +1,10 @@
 
-import { useState } from 'react';
-import { useOptimizedCallback } from '@/hooks/performance';
+import { useState, useCallback } from 'react';
 import type { ProcessingResult } from '@/lib/utils/image/types';
 
 /**
- * Core photo state management hook - Phase 2.3 Hook Standardization
- * 
- * Focused hook for managing photo upload state
+ * Simplified photo state management hook - Phase 2.4 Revised
+ * Using standard React hooks instead of custom performance abstractions
  */
 export function usePhotoState() {
   const [photo, setPhoto] = useState<File | null>(null);
@@ -14,14 +12,14 @@ export function usePhotoState() {
   const [loading, setLoading] = useState(false);
   const [processingResult, setProcessingResult] = useState<ProcessingResult | null>(null);
 
-  const resetPhoto = useOptimizedCallback(() => {
+  const resetPhoto = useCallback(() => {
     if (photoPreview) {
       URL.revokeObjectURL(photoPreview);
     }
     setPhoto(null);
     setPhotoPreview(null);
     setProcessingResult(null);
-  }, [photoPreview], { name: 'resetPhoto' });
+  }, [photoPreview]);
 
   return {
     photo,

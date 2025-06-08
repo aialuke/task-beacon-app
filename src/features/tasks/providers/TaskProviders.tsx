@@ -15,15 +15,10 @@ interface TaskProvidersProps {
 }
 
 /**
- * Feature-specific provider composition for task management - Step 2.4 Unified
+ * Simplified task providers - Step 2.4 Revised
  * 
- * Provides both task data and UI state contexts in the correct order.
- * Should be used to wrap task-related routes or components that need
- * access to task state.
- * 
- * Provider order:
- * 1. TaskDataContext - Server state and data operations
- * 2. TaskUIContext - Client state and UI preferences
+ * Provides both task data and UI state contexts using standard patterns.
+ * Removed complex unified system in favor of proven React patterns.
  */
 export function TaskProviders({ children }: TaskProvidersProps) {
   return (

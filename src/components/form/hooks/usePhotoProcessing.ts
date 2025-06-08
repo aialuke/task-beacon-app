@@ -1,5 +1,5 @@
 
-import { useOptimizedCallback } from '@/hooks/performance';
+import { useCallback } from 'react';
 import { compressAndResizePhoto } from '@/lib/utils/image/convenience';
 import type { 
   ProcessingResult,
@@ -7,9 +7,8 @@ import type {
 } from '@/lib/utils/image/types';
 
 /**
- * Photo processing hook - Phase 2.3 Hook Standardization
- * 
- * Focused hook for handling photo file processing
+ * Simplified photo processing hook - Phase 2.4 Revised
+ * Using standard React hooks instead of custom performance abstractions
  */
 export function usePhotoProcessing(
   processingOptions: EnhancedImageProcessingOptions,
@@ -22,7 +21,7 @@ export function usePhotoProcessing(
 ) {
   const { setPhoto, setPhotoPreview, setLoading, setProcessingResult } = photoState;
 
-  const handlePhotoChange = useOptimizedCallback(
+  const handlePhotoChange = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (!file) return;
@@ -46,8 +45,7 @@ export function usePhotoProcessing(
         setLoading(false);
       }
     },
-    [processingOptions, setPhoto, setPhotoPreview, setLoading],
-    { name: 'handlePhotoChange' }
+    [processingOptions, setPhoto, setPhotoPreview, setLoading]
   );
 
   return {

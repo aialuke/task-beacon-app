@@ -1,6 +1,8 @@
 /**
- * Performance Hooks Index - Phase 2.1 Updated
- * Central exports for performance optimization hooks
+ * Performance Hooks Index - Phase 2.4 Revised
+ * 
+ * Simplified exports - use standard React hooks for most cases.
+ * Only use these for proven performance bottlenecks.
  */
 
 export { 
@@ -11,7 +13,8 @@ export {
   createDeepEqual,
 } from './memoization';
 
-// Keep backward compatibility
+// Keep backward compatibility but discourage overuse
+// Use standard useMemo/useCallback for simple operations
 export { 
   useOptimizedMemo,
   useOptimizedCallback 

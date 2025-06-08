@@ -1,7 +1,9 @@
 
 /**
- * Performance Optimization Utilities
- * Simplified approach focusing on actual performance benefits
+ * Performance Optimization Utilities - Phase 2.4 Revised
+ * 
+ * Simplified approach - use these ONLY for proven performance bottlenecks.
+ * For simple operations, prefer standard useMemo/useCallback.
  */
 
 import { useMemo, useCallback, DependencyList } from 'react';
@@ -11,7 +13,7 @@ interface MemoOptions {
 }
 
 /**
- * Use this only for computationally expensive operations or when profiling shows actual benefit
+ * Use this ONLY for computationally expensive operations or when profiling shows actual benefit
  * For simple operations, prefer standard useMemo
  */
 export function useOptimizedMemo<T>(
@@ -19,11 +21,12 @@ export function useOptimizedMemo<T>(
   deps: DependencyList,
   options: MemoOptions = {}
 ): T {
+  // Simplified - just use standard useMemo
   return useMemo(factory, deps);
 }
 
 /**
- * Use this only for callbacks passed to many child components or expensive operations
+ * Use this ONLY for callbacks passed to many child components or expensive operations
  * For simple event handlers, prefer standard useCallback
  */
 export function useOptimizedCallback<T extends (...args: any[]) => any>(
@@ -31,5 +34,6 @@ export function useOptimizedCallback<T extends (...args: any[]) => any>(
   deps: DependencyList,
   options: MemoOptions = {}
 ): T {
+  // Simplified - just use standard useCallback
   return useCallback(callback, deps);
 }

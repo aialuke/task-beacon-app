@@ -1,24 +1,10 @@
 
 /**
- * Unified Hook System - Step 2.4 Complete
+ * Simplified Hook System - Step 2.4 Revised
  * 
- * Centralized exports for all unified state management patterns.
- * Replaces scattered hook implementations with consistent, standardized patterns.
+ * Removed complex unified state management patterns.
+ * Using standard React patterns and existing utilities instead.
  */
 
-// === UNIFIED STATE MANAGEMENT ===
-export { 
-  useUnifiedState, 
-  useUnifiedAsyncState, 
-  useUnifiedCollection 
-} from './useUnifiedState';
-
-// === UNIFIED CONTEXT MANAGEMENT ===
-export { 
-  createUnifiedContext, 
-  withUnifiedContext 
-} from './useUnifiedContext';
-
-// === UNIFIED UI MANAGEMENT ===
-export { useUnifiedModal, useUnifiedModals } from './useUnifiedModal';
-export { useUnifiedFormState } from './useUnifiedFormState';
+// No exports - this directory will be removed as part of simplification
+// All functionality moved to standard React patterns

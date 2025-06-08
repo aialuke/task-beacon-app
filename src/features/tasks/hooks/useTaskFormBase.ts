@@ -1,6 +1,5 @@
 
-import { useState } from 'react';
-import { useOptimizedMemo, useOptimizedCallback } from '@/hooks/performance';
+import { useState, useMemo, useCallback } from 'react';
 import { useTaskForm } from './useTaskForm';
 import { useTaskFormValidation } from './useTaskFormValidation';
 import { useTaskPhotoUpload } from '@/components/form/hooks/useTaskPhotoUpload';
@@ -14,8 +13,8 @@ interface UseTaskFormBaseOptions {
 }
 
 /**
- * Base hook for task form functionality - Phase 2.3 Hook Standardization
- * Updated to use standardized photo upload patterns
+ * Simplified task form base hook - Phase 2.4 Revised
+ * Using standard React hooks instead of custom performance abstractions
  */
 export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions = {}) {
   const [loading, setLoading] = useState(false);
@@ -35,8 +34,8 @@ export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions 
     },
   });
 
-  // Updated task data preparation using new validation system
-  const prepareTaskData = useOptimizedCallback((photoUrl: string | null) => {
+  // Task data preparation using standard useCallback
+  const prepareTaskData = useCallback((photoUrl: string | null) => {
     const titleStr = String(taskForm.title).trim();
     const descriptionStr = String(taskForm.description).trim();
     const urlStr = String(taskForm.url).trim();
@@ -54,16 +53,16 @@ export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions 
     };
 
     return validation.prepareTaskData(rawTaskData);
-  }, [taskForm, parentTask, validation], { name: 'prepareTaskData' });
+  }, [taskForm, parentTask, validation]);
 
-  // Unified form reset
-  const resetForm = useOptimizedCallback(() => {
+  // Unified form reset using standard useCallback
+  const resetForm = useCallback(() => {
     taskForm.resetFormState();
     photoUpload.resetPhoto();
-  }, [taskForm, photoUpload], { name: 'resetForm' });
+  }, [taskForm, photoUpload]);
 
-  // Unified submit handler
-  const handleSubmit = useOptimizedCallback(
+  // Unified submit handler using standard useCallback
+  const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
 
@@ -114,19 +113,38 @@ export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions 
         setLoading(false);
       }
     },
-    [taskForm, photoUpload, validation, createTaskCallback, onClose, parentTask],
-    { name: 'handleSubmit' }
+    [taskForm, photoUpload, validation, createTaskCallback, onClose, parentTask, prepareTaskData, resetForm]
   );
 
-  // Combined loading state
-  const combinedLoading = useOptimizedMemo(
+  // Combined loading state using standard useMemo
+  const combinedLoading = useMemo(
     () => loading || photoUpload.photoLoading,
-    [loading, photoUpload.photoLoading],
-    { name: 'loading-state' }
+    [loading, photoUpload.photoLoading]
   );
 
-  // Standardized return object
-  return useOptimizedMemo(
+  // Form validation function using standard useCallback
+  const validateForm = useCallback(() => {
+    const formData = {
+      title: taskForm.title,
+      description: taskForm.description,
+      dueDate: taskForm.dueDate || '',
+      url: taskForm.url || '',
+      assigneeId: taskForm.assigneeId || '',
+      priority: 'medium' as const,
+    };
+
+    const validationResult = validation.validateTaskForm(formData);
+    
+    if (!validationResult.isValid) {
+      validation.showValidationErrors(validationResult.errors);
+      return { isValid: false, errors: validationResult.errors };
+    }
+    
+    return { isValid: true, errors: {} };
+  }, [taskForm, validation]);
+
+  // Standardized return object using standard useMemo
+  return useMemo(
     () => ({
       // Form state
       ...taskForm,
@@ -144,31 +162,9 @@ export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions 
       // Form actions
       handleSubmit,
       resetForm,
-      
-      // Validation
-      validateForm: useOptimizedCallback(() => {
-        const formData = {
-          title: taskForm.title,
-          description: taskForm.description,
-          dueDate: taskForm.dueDate || '',
-          url: taskForm.url || '',
-          assigneeId: taskForm.assigneeId || '',
-          priority: 'medium' as const,
-        };
-
-        const validationResult = validation.validateTaskForm(formData);
-        
-        if (!validationResult.isValid) {
-          validation.showValidationErrors(validationResult.errors);
-          return { isValid: false, errors: validationResult.errors };
-        }
-        
-        return { isValid: true, errors: {} };
-      }, [taskForm, validation], { name: 'validateForm' }),
-      
+      validateForm,
       showValidationErrors: validation.showValidationErrors,
     }),
-    [taskForm, loading, photoUpload, validation, createTaskCallback, onClose, parentTask],
-    { name: 'task-form-base-return' }
+    [taskForm, combinedLoading, photoUpload, handleSubmit, resetForm, validateForm, validation.showValidationErrors]
   );
 }

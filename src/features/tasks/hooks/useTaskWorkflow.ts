@@ -1,9 +1,9 @@
 
+import { useCallback } from 'react';
 import { useTaskFormBase } from './useTaskFormBase';
 import { useTaskMutations } from './useTaskMutations';
 import { useTaskBatchOperations } from './useTaskBatchOperations';
 import { useTaskWorkflowStatus } from './useTaskWorkflowStatus';
-import { useOptimizedCallback } from '@/hooks/performance';
 import { Task } from '@/types';
 
 interface UseTaskWorkflowOptions {
@@ -19,8 +19,8 @@ interface WorkflowResult {
 }
 
 /**
- * Simplified workflow orchestration hook
- * Now composed of smaller, focused hooks for better maintainability
+ * Simplified workflow orchestration hook - Phase 2.4 Revised
+ * Using standard React hooks instead of custom performance abstractions
  */
 export function useTaskWorkflow(options: UseTaskWorkflowOptions = {}) {
   const { onWorkflowComplete, onClose, parentTask } = options;
@@ -39,7 +39,7 @@ export function useTaskWorkflow(options: UseTaskWorkflowOptions = {}) {
   /**
    * Enhanced submit handler with workflow completion callback
    */
-  const handleSubmitWithWorkflow = useOptimizedCallback(
+  const handleSubmitWithWorkflow = useCallback(
     async (e: React.FormEvent) => {
       try {
         await formBase.handleSubmit(e);
@@ -48,14 +48,13 @@ export function useTaskWorkflow(options: UseTaskWorkflowOptions = {}) {
         onWorkflowComplete?.({ success: false });
       }
     },
-    [formBase.handleSubmit, onWorkflowComplete],
-    { name: 'handleSubmitWithWorkflow' }
+    [formBase.handleSubmit, onWorkflowComplete]
   );
 
   /**
    * Simplified task update workflow
    */
-  const updateTaskWithWorkflow = useOptimizedCallback(
+  const updateTaskWithWorkflow = useCallback(
     async (task: Task, updates: Partial<Task>): Promise<WorkflowResult> => {
       try {
         const result = await mutations.updateTaskCallback(task.id, updates);
@@ -73,8 +72,7 @@ export function useTaskWorkflow(options: UseTaskWorkflowOptions = {}) {
         return { success: false, error: errorMessage, taskId: task.id };
       }
     },
-    [mutations, onWorkflowComplete],
-    { name: 'updateTaskWithWorkflow' }
+    [mutations, onWorkflowComplete]
   );
 
   return {

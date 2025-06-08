@@ -43,9 +43,9 @@ interface UseAuthFormStateReturn {
 }
 
 /**
- * Enhanced auth form state hook - Phase 2 Update
+ * Simplified auth form state hook - Phase 2.4 Revised
  * 
- * Now uses centralized Zod validation from Phase 1 implementation
+ * Using standard React hooks instead of custom performance abstractions
  */
 export function useAuthFormState(): UseAuthFormStateReturn {
   const [mode, setMode] = useState<AuthMode>('signin');
@@ -64,7 +64,7 @@ export function useAuthFormState(): UseAuthFormStateReturn {
   const emailInputRef = useRef<HTMLInputElement>(null);
   const { handleError } = useErrorHandler({ showToast: false });
 
-  // Enhanced validation using centralized Zod schemas
+  // Using standard useCallback for validation functions
   const validateEmail = useCallback((value: string) => {
     if (!value) return 'Email is required';
     const result = emailSchema.safeParse(value);
