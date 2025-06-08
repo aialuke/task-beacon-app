@@ -128,7 +128,7 @@ export const formatApiError = (error: unknown): ApiError => {
     };
   }
 
-  // Handle unknown errors - properly convert to unknown type for details
+  // Handle unknown errors - properly convert to string for details
   const errorDetails = typeof error === 'object' && error !== null 
     ? (() => {
         try {
@@ -167,7 +167,9 @@ export function handleApiError(
 
   // Use logger instead of console.error
   if (logToConsole) {
-    logger.error(`${logPrefix}: ${operation ?? 'An error occurred'}`, error as Error, {
+    // Convert unknown error to Error instance for logger
+    const errorInstance = error instanceof Error ? error : new Error(apiError.message);
+    logger.error(`${logPrefix}: ${operation ?? 'An error occurred'}`, errorInstance, {
       userMessage,
       errorCode: apiError.code,
       statusCode: apiError.statusCode,
