@@ -37,6 +37,17 @@ export type {
   DatabaseOperationResult,
 } from './api.types';
 
+// === ASYNC STATES (Phase 1 consolidation) ===
+export type {
+  BaseAsyncState,
+  AsyncOperationState,
+  BatchAsyncOperationState,
+  OptimisticAsyncOperationState,
+  StandardLoadingState,
+  FormSubmissionState,
+  QueryState,
+} from './async-state.types';
+
 // === FORMS & VALIDATION ===
 export type {
   FormState,
@@ -47,7 +58,6 @@ export type {
   SelectFieldProps,
   ValidationRule,
   FieldValidationState,
-  FormSubmissionState,
   BaseFieldProps,
   FormConfig,
 } from './form.types';

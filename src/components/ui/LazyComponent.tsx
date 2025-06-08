@@ -1,6 +1,6 @@
 
 import { lazy, Suspense, ComponentType, useEffect } from 'react';
-import UnifiedLoadingStates from './loading/UnifiedLoadingStates';
+import { LoadingSpinner } from './loading/UnifiedLoadingStates';
 
 interface LazyComponentProps {
   fallback?: React.ReactNode;
@@ -29,7 +29,7 @@ export function withLazyLoading<T extends Record<string, any> = Record<string, a
   const LazyComponent = lazy(importFn);
   
   return function WrappedLazyComponent(props: T) {
-    const fallback = options.fallback ?? <UnifiedLoadingStates variant="spinner" />;
+    const fallback = options.fallback ?? <LoadingSpinner size="md" />;
     const loadStartTime = performance.now();
     
     // Track loading performance
@@ -50,7 +50,7 @@ export function withLazyLoading<T extends Record<string, any> = Record<string, a
  */
 export function LazyWrapper({ 
   children, 
-  fallback = <UnifiedLoadingStates variant="spinner" />,
+  fallback = <LoadingSpinner size="md" />,
   componentName = 'LazyWrapper'
 }: { 
   children: React.ReactNode;
@@ -103,7 +103,7 @@ export const LazyComponents = {
     listName: string
   ) => withLazyLoading(importFn, {
     componentName: `LazyList_${listName}`,
-    fallback: <UnifiedLoadingStates variant="skeleton" message={`Loading ${listName}...`} />,
+    fallback: <LoadingSpinner size="md" />,
   }),
   
   /**
@@ -117,7 +117,7 @@ export const LazyComponents = {
     fallback: (
       <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm">
         <div className="fixed left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]">
-          <UnifiedLoadingStates variant="spinner" message={`Loading ${modalName}...`} />
+          <LoadingSpinner size="xl" />
         </div>
       </div>
     ),

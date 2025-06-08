@@ -1,13 +1,14 @@
 
 /**
- * Simplified Loading States Component - Step 2.4.6.2c
+ * Simplified Loading States Component - Phase 1 Consolidation
  * 
- * Simplified from over-engineered unified system to basic loading patterns.
- * Uses standard React patterns instead of complex abstractions.
+ * Standardized loading spinner and removed duplicate skeleton implementation.
+ * Uses shadcn Skeleton component for consistency.
  */
 
 import React, { memo } from 'react';
 import { cn } from '@/lib/utils';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface LoadingSpinnerProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
@@ -23,7 +24,7 @@ interface UnifiedLoadingProps {
 }
 
 /**
- * Basic spinner component
+ * Standardized spinner component - Phase 1 consolidation
  */
 export const LoadingSpinner = memo(function LoadingSpinner({ 
   size = 'md', 
@@ -42,47 +43,32 @@ export const LoadingSpinner = memo(function LoadingSpinner({
 });
 
 /**
- * Basic skeleton component
- */
-export const SkeletonBox = memo(function SkeletonBox({ 
-  className,
-  height = 'h-4',
-}: { 
-  className?: string;
-  height?: string;
-}) {
-  return (
-    <div className={cn("animate-pulse bg-muted rounded", height, className)} />
-  );
-});
-
-/**
- * Basic card skeleton
+ * Card skeleton using standardized Skeleton component
  */
 export const CardSkeleton = memo(function CardSkeleton() {
   return (
     <div className="p-6 border rounded-xl bg-card space-y-4">
       <div className="flex items-start justify-between">
         <div className="space-y-2 flex-1">
-          <SkeletonBox className="w-3/4 h-6" />
-          <SkeletonBox className="w-1/2 h-4" />
+          <Skeleton className="w-3/4 h-6" />
+          <Skeleton className="w-1/2 h-4" />
         </div>
-        <SkeletonBox className="w-6 h-6 rounded-full" />
+        <Skeleton className="w-6 h-6 rounded-full" />
       </div>
       <div className="space-y-2">
-        <SkeletonBox className="w-full h-4" />
-        <SkeletonBox className="w-2/3 h-4" />
+        <Skeleton className="w-full h-4" />
+        <Skeleton className="w-2/3 h-4" />
       </div>
       <div className="flex items-center justify-between">
-        <SkeletonBox className="w-20 h-6 rounded-full" />
-        <SkeletonBox className="w-16 h-4" />
+        <Skeleton className="w-20 h-6 rounded-full" />
+        <Skeleton className="w-16 h-4" />
       </div>
     </div>
   );
 });
 
 /**
- * Basic image skeleton
+ * Image skeleton using standardized Skeleton component
  */
 export const ImageSkeleton = memo(function ImageSkeleton({ 
   aspectRatio = 'aspect-video',
@@ -92,11 +78,11 @@ export const ImageSkeleton = memo(function ImageSkeleton({
   className?: string;
 }) {
   return (
-    <div className={cn("animate-pulse bg-muted rounded-lg flex items-center justify-center", aspectRatio, className)}>
+    <Skeleton className={cn("rounded-lg flex items-center justify-center", aspectRatio, className)}>
       <svg className="w-8 h-8 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
       </svg>
-    </div>
+    </Skeleton>
   );
 });
 
@@ -123,7 +109,7 @@ const UnifiedLoadingStates = memo(function UnifiedLoadingStates({
     return (
       <div className={cn("space-y-2", className)}>
         {Array.from({ length: count }, (_, i) => (
-          <SkeletonBox key={i} className="w-full" />
+          <Skeleton key={i} className="w-full h-4" />
         ))}
       </div>
     );

@@ -1,23 +1,13 @@
 
 /**
- * Core Async Operation Hook
+ * Core Async Operation Hook - Phase 1 Consolidation
  * 
- * Provides basic async operation handling with loading states, 
- * error handling, and retry functionality.
+ * Updated to use unified BaseAsyncState interface for consistency.
  */
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { useErrorHandler } from '@/hooks/core';
-
-/**
- * Async operation state interface
- */
-export interface AsyncOperationState<T = unknown> {
-  data: T | null;
-  loading: boolean;
-  error: Error | null;
-  lastUpdated: number | null;
-}
+import type { BaseAsyncState } from '@/types/async-state.types';
 
 /**
  * Async operation options
@@ -38,9 +28,9 @@ export interface AsyncOperationOptions {
 }
 
 /**
- * Async operation result
+ * Async operation result extending base state
  */
-export interface AsyncOperationResult<T> extends AsyncOperationState<T> {
+export interface AsyncOperationResult<T> extends BaseAsyncState<T> {
   execute: (...args: unknown[]) => Promise<T | null>;
   retry: () => Promise<T | null>;
   reset: () => void;
@@ -48,7 +38,7 @@ export interface AsyncOperationResult<T> extends AsyncOperationState<T> {
 }
 
 /**
- * Hook for managing async operations with comprehensive error handling
+ * Hook for managing async operations with unified state interface
  */
 export function useAsyncOperation<T = unknown, TArgs extends any[] = any[]>(
   asyncFn: (...args: TArgs) => Promise<T>,
@@ -63,7 +53,7 @@ export function useAsyncOperation<T = unknown, TArgs extends any[] = any[]>(
     optimistic = false,
   } = options;
 
-  const [state, setState] = useState<AsyncOperationState<T>>({
+  const [state, setState] = useState<BaseAsyncState<T>>({
     data: null,
     loading: false,
     error: null,
