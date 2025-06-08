@@ -55,13 +55,22 @@ function isPostgrestError(error: unknown): error is PostgrestError {
 
 /**
  * Safely converts unknown values to strings for logging/details
+ * Always returns a string, never throws
  */
 function safeStringify(value: unknown): string {
   if (typeof value === 'string') {
     return value;
   }
   
-  if (value === null || value === undefined) {
+  if (value === null) {
+    return 'null';
+  }
+  
+  if (value === undefined) {
+    return 'undefined';
+  }
+  
+  if (typeof value === 'number' || typeof value === 'boolean') {
     return String(value);
   }
   
@@ -73,7 +82,12 @@ function safeStringify(value: unknown): string {
     }
   }
   
-  return String(value);
+  // Fallback for any other type
+  try {
+    return String(value);
+  } catch {
+    return '[Value: cannot convert to string]';
+  }
 }
 
 /**
