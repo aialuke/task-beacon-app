@@ -1,12 +1,65 @@
-# To get started with Dependabot version updates, you'll need to specify which
-# package ecosystems to update and where the package manifests are located.
-# Please see the documentation for all configuration options:
-# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+# Dependabot configuration file
+# See: https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
 
 version: 2
 updates:
+  # NPM dependencies
   - package-ecosystem: "npm"
-    directory: "/" # Location of package.json and package-lock.json
+    directory: "/"
     schedule:
-      interval: "weekly" # Check for updates weekly
-    open-pull-requests-limit: 10 # Limit to 10 open PRs
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 10
+    target-branch: "main"
+    labels:
+      - "dependencies"
+      - "npm"
+    groups:
+      # Group React ecosystem updates together
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "react-router-dom"
+          - "@types/react*"
+      # Group Radix UI updates together
+      radix:
+        patterns:
+          - "@radix-ui/*"
+      # Group testing libraries together
+      testing:
+        patterns:
+          - "@testing-library/*"
+          - "vitest"
+          - "@vitest/*"
+      # Group TypeScript-related updates together
+      typescript:
+        patterns:
+          - "typescript"
+          - "@types/*"
+          - "typescript-eslint"
+    ignore:
+      # Ignore major version updates for these packages
+      - dependency-name: "@testing-library/*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "github-actions"
+    groups:
+      actions:
+        patterns:
+          - "actions/*" 
