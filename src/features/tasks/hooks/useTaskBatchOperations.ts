@@ -1,5 +1,5 @@
 
-import { useOptimizedCallback } from '@/hooks/performance';
+import { useCallback } from 'react';
 import { useTaskMutations } from './useTaskMutations';
 import { Task } from '@/types';
 
@@ -22,7 +22,7 @@ interface BatchOperationResult {
 export function useTaskBatchOperations() {
   const mutations = useTaskMutations();
 
-  const executeBatchOperations = useOptimizedCallback(
+  const executeBatchOperations = useCallback(
     async (operations: BatchOperation[]): Promise<{
       results: BatchOperationResult[];
       successCount: number;
@@ -63,8 +63,7 @@ export function useTaskBatchOperations() {
       const successCount = results.filter(r => r.success).length;
       return { results, successCount, totalCount: results.length };
     },
-    [mutations],
-    { name: 'execute-batch-operations' }
+    [mutations]
   );
 
   return {

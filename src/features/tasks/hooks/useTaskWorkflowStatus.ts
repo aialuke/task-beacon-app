@@ -1,5 +1,5 @@
 
-import { useOptimizedMemo } from '@/hooks/performance';
+import { useMemo } from 'react';
 
 interface WorkflowStatusOptions {
   canSubmit: boolean;
@@ -16,14 +16,13 @@ export function useTaskWorkflowStatus({
   isSubmitting,
   isLoading,
 }: WorkflowStatusOptions) {
-  const workflowStatus = useOptimizedMemo(
+  const workflowStatus = useMemo(
     () => ({
       isReady: canSubmit,
       isBusy: isSubmitting || isLoading,
       canSubmit,
     }),
-    [canSubmit, isSubmitting, isLoading],
-    { name: 'workflow-status' }
+    [canSubmit, isSubmitting, isLoading]
   );
 
   return { workflowStatus };

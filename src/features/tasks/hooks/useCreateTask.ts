@@ -1,7 +1,7 @@
 
 import { useTaskFormBase } from './useTaskFormBase';
 import { useTasksNavigate } from './useTasksNavigate';
-import { useOptimizedMemo } from '@/hooks/performance';
+import { useMemo } from 'react';
 
 interface UseCreateTaskProps {
   onClose?: () => void;
@@ -20,11 +20,10 @@ export function useCreateTask({ onClose }: UseCreateTaskProps = {}) {
   });
 
   // Return the same interface as before - no breaking changes
-  return useOptimizedMemo(
+  return useMemo(
     () => ({
       ...baseHook,
     }),
-    [baseHook],
-    { name: 'create-task-return' }
+    [baseHook]
   );
 }

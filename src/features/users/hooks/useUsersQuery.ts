@@ -1,5 +1,6 @@
+
 import { useQuery } from '@tanstack/react-query';
-import { useOptimizedMemo } from '@/hooks/performance';
+import { useMemo } from 'react';
 import { UserService } from '@/lib/api/users.service';
 import type { User } from '@/types';
 
@@ -18,7 +19,7 @@ interface UseUsersQueryReturn {
  */
 export function useUsersQuery(enabled = true): UseUsersQueryReturn {
   // Memoize query configuration
-  const queryConfig = useOptimizedMemo(
+  const queryConfig = useMemo(
     () => ({
       queryKey: ['users'],
       queryFn: async () => {
@@ -33,8 +34,7 @@ export function useUsersQuery(enabled = true): UseUsersQueryReturn {
       retry: 2,
       retryDelay: (attemptIndex: number) => Math.min(1000 * 2 ** attemptIndex, 5000),
     }),
-    [enabled],
-    { name: 'users-query-config' }
+    [enabled]
   );
 
   const {
@@ -45,14 +45,13 @@ export function useUsersQuery(enabled = true): UseUsersQueryReturn {
   } = useQuery(queryConfig);
 
   // Memoize return object for stable references
-  return useOptimizedMemo(
+  return useMemo(
     () => ({
       users: response || [],
       isLoading,
       error: error ? (error).message : null,
       refetch,
     }),
-    [response, isLoading, error, refetch],
-    { name: 'users-query-return' }
+    [response, isLoading, error, refetch]
   );
 }

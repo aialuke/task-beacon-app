@@ -1,10 +1,9 @@
 
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTaskFormBase } from './useTaskFormBase';
 import { useTaskMutations } from './useTaskMutations';
-import { useOptimizedMemo, useOptimizedCallback } from '@/hooks/performance';
 import type { Task } from '@/types';
 import {
   showBrowserNotification,
@@ -38,7 +37,7 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
   const { createTaskCallback } = useTaskMutations();
 
   // Enhanced submit handler with follow-up specific logic
-  const handleSubmit = useOptimizedCallback(
+  const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
 
@@ -151,7 +150,7 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
   );
 
   // Return interface compatible with existing usage
-  return useOptimizedMemo(
+  return useMemo(
     () => ({
       ...baseHook,
       // Follow-up specific additions
@@ -169,7 +168,6 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskProps) {
       setAssigneeId,
       handleSubmit,
       error,
-    ],
-    { name: 'follow-up-task-return' }
+    ]
   );
 }
