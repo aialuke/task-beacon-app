@@ -23,9 +23,9 @@ export function useCreateTask({ onClose }: UseCreateTaskOptions = {}) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate form using taskForm
-    const validation = taskForm.validateForm();
-    if (!validation.isValid) {
+    // Validate form using taskForm - validateForm returns boolean
+    const isValidForm = taskForm.validateForm();
+    if (!isValidForm) {
       return;
     }
 

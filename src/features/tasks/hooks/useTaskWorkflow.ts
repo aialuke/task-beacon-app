@@ -1,5 +1,6 @@
 
 import { useCallback } from 'react';
+import { useTaskForm } from './useTaskForm';
 import { useTaskFormBase } from './useTaskFormBase';
 import { useTaskMutations } from './useTaskMutations';
 import { useTaskBatchOperations } from './useTaskBatchOperations';
@@ -25,13 +26,14 @@ interface WorkflowResult {
 export function useTaskWorkflow(options: UseTaskWorkflowOptions = {}) {
   const { onWorkflowComplete, onClose, parentTask } = options;
 
-  // Use the base form hook for form functionality
+  // Use consolidated form hooks
+  const taskForm = useTaskForm({ onClose });
   const formBase = useTaskFormBase({ onClose, parentTask });
   
   const mutations = useTaskMutations();
   const { executeBatchOperations } = useTaskBatchOperations();
   const { workflowStatus } = useTaskWorkflowStatus({
-    canSubmit: formBase.isValid,
+    canSubmit: taskForm.isValid,
     isSubmitting: formBase.loading,
     isLoading: mutations.isLoading,
   });
@@ -41,14 +43,23 @@ export function useTaskWorkflow(options: UseTaskWorkflowOptions = {}) {
    */
   const handleSubmitWithWorkflow = useCallback(
     async (e: React.FormEvent) => {
+      e.preventDefault();
+      
       try {
-        await formBase.handleSubmit(e);
+        // Validate form
+        const isValidForm = taskForm.validateForm();
+        if (!isValidForm) {
+          return;
+        }
+
+        // Create task with photo integration
+        await formBase.createTaskWithPhoto(taskForm.values);
         onWorkflowComplete?.({ success: true });
       } catch (error) {
         onWorkflowComplete?.({ success: false });
       }
     },
-    [formBase.handleSubmit, onWorkflowComplete]
+    [taskForm, formBase, onWorkflowComplete]
   );
 
   /**
@@ -76,10 +87,32 @@ export function useTaskWorkflow(options: UseTaskWorkflowOptions = {}) {
   );
 
   return {
-    // Delegate form functionality to form base
-    ...formBase,
+    // Form state from taskForm
+    title: taskForm.title,
+    setTitle: taskForm.setTitle,
+    description: taskForm.description,
+    setDescription: taskForm.setDescription,
+    dueDate: taskForm.dueDate,
+    setDueDate: taskForm.setDueDate,
+    url: taskForm.url,
+    setUrl: taskForm.setUrl,
+    assigneeId: taskForm.assigneeId,
+    setAssigneeId: taskForm.setAssigneeId,
     
-    // Override submit with workflow callback
+    // Form validation and state
+    isValid: taskForm.isValid,
+    errors: taskForm.errors,
+    values: taskForm.values,
+    
+    // Photo upload from formBase
+    photoPreview: formBase.photoPreview,
+    handlePhotoChange: formBase.handlePhotoChange,
+    handlePhotoRemove: formBase.handlePhotoRemove,
+    photoLoading: formBase.photoLoading,
+    processingResult: formBase.processingResult,
+    
+    // Combined loading state and actions
+    loading: formBase.loading,
     handleSubmit: handleSubmitWithWorkflow,
     
     // Workflow-specific actions
