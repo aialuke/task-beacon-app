@@ -22,10 +22,16 @@ export { useOptimisticAsyncOperation } from './useOptimisticAsyncOperation';
 // Factory utilities
 export { createAsyncOperationFactory } from './factory';
 
+// Import for convenience namespace
+import { useAsyncOperation } from './useAsyncOperation';
+import { useBatchAsyncOperation } from './useBatchAsyncOperation';
+import { useOptimisticAsyncOperation } from './useOptimisticAsyncOperation';
+import { createAsyncOperationFactory } from './factory';
+
 // Convenience namespace export
 export const asyncOperationUtils = {
-  useAsyncOperation,
-  useBatchAsyncOperation,
-  useOptimisticAsyncOperation,
-  createAsyncOperationFactory,
+  useAsyncOperation: useAsyncOperation,
+  useBatchAsyncOperation: useBatchAsyncOperation,
+  useOptimisticAsyncOperation: useOptimisticAsyncOperation,
+  createAsyncOperationFactory: createAsyncOperationFactory,
 };
