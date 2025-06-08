@@ -5,10 +5,6 @@
  * These validators combine multiple validation rules to provide complete
  * validation for entities like user profiles.
  */
-import {
-  validateEmail,
-  validateUserName,
-} from './format-validators';
 import { 
   BasicValidationResult,
   ValidationContext 
@@ -17,6 +13,41 @@ import {
   combineValidationResults,
   createSuccessResult 
 } from './error-handling';
+import { 
+  emailSchema,
+  userNameSchema,
+  validateWithZod 
+} from '@/schemas';
+
+/**
+ * Email validation using centralized schema
+ */
+const validateEmail = (
+  email: string,
+  context?: ValidationContext
+): BasicValidationResult => {
+  const result = validateWithZod(emailSchema, email);
+  return {
+    isValid: result.isValid,
+    errors: result.errors,
+    warnings: [],
+  };
+};
+
+/**
+ * User name validation using centralized schema
+ */
+const validateUserName = (
+  name: string,
+  context?: ValidationContext
+): BasicValidationResult => {
+  const result = validateWithZod(userNameSchema, name);
+  return {
+    isValid: result.isValid,
+    errors: result.errors,
+    warnings: [],
+  };
+};
 
 /**
  * Comprehensive profile validation

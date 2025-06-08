@@ -5,12 +5,10 @@
  * Updated to use the unified type system and remove duplication.
  */
 
-// Import the comprehensive ValidationResult from unified utility types
-export type { 
-  ValidationResult, 
-  ValidationDetail,
-  ValidationOptions 
-} from '@/types/utility/validation.types';
+// Import from main type system instead of deleted validation types
+export type {
+  ValidationResult as EnhancedValidationResult,
+} from '@/types';
 
 // Import standardized API error types from unified system
 export type {
@@ -152,3 +150,8 @@ export type AsyncValidationResult = Promise<StandardValidationResult>;
  */
 export type SyncValidator<T = unknown> = (value: T, context?: ValidationContext) => BasicValidationResult;
 export type AsyncValidator<T = unknown> = (value: T, context?: ValidationContext, config?: AsyncValidationConfig) => AsyncValidationResult;
+
+// Export ValidationResult and ValidationDetail for compatibility
+export type ValidationResult = BasicValidationResult;
+export type ValidationDetail = StandardValidationDetail;
+export type ValidationOptions = AsyncValidationConfig;
