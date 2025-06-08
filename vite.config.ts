@@ -1,3 +1,4 @@
+
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
@@ -69,20 +70,19 @@ export default defineConfig(({ mode }) => ({
     },
     testTimeout: 10000,
     hookTimeout: 10000,
-    pool: "forks",
+    pool: "threads",
     poolOptions: {
-      forks: {
-        isolate: true,
-        minForks: 1,
-        maxForks: 1,
+      threads: {
+        isolate: false,
+        minThreads: 1,
+        maxThreads: 4,
       },
     },
-    maxConcurrency: 1,
     server: {
       deps: {
-        inline: true,
+        inline: false,
       },
     },
-    sourcemap: false,
+    sourcemap: true,
   },
 }));
