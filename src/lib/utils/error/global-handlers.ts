@@ -2,37 +2,41 @@
 /**
  * Global Error Handling Setup
  * 
- * Handles unhandled errors and promise rejections at the application level.
+ * Consolidates error handling configuration for the entire application.
  */
 
 import { logger } from '@/lib/logger';
 
 /**
- * Global error handler for unhandled errors and promise rejections
- * This integrates with our ErrorBoundary for consistent error handling
+ * Setup global error handlers for unhandled errors
  */
-export function setupGlobalErrorHandlers() {
-  // Handle unhandled errors
-  window.addEventListener('error', (event) => {
-    const error = event.error || new Error(event.message);
-    handleGlobalError(error, 'Unhandled Error');
-  });
-
+export function setupGlobalErrorHandlers(): void {
   // Handle unhandled promise rejections
   window.addEventListener('unhandledrejection', (event) => {
-    const error = event.reason instanceof Error 
-      ? event.reason 
-      : new Error(String(event.reason));
-    handleGlobalError(error, 'Unhandled Promise Rejection');
+    logger.error('Unhandled promise rejection:', event.reason as Error);
+    
+    // Prevent the default browser behavior
+    event.preventDefault();
   });
-}
 
-/**
- * Handle global errors that aren't caught by ErrorBoundary
- */
-function handleGlobalError(error: Error, source: string) {
-  logger.error(`Global error - ${source}`, error, {
-    userAgent: navigator.userAgent,
-    url: window.location.href,
+  // Handle uncaught errors
+  window.addEventListener('error', (event) => {
+    logger.error('Uncaught error:', event.error as Error, {
+      filename: event.filename,
+      lineno: event.lineno,
+      colno: event.colno,
+    });
   });
+
+  // Handle React error boundary errors (if needed)
+  if (typeof window !== 'undefined') {
+    const originalConsoleError = console.error;
+    console.error = (...args: unknown[]) => {
+      // Check if this is a React error boundary error
+      if (args[0] && typeof args[0] === 'string' && args[0].includes('React')) {
+        logger.error('React Error:', args[0] as string, { additionalInfo: args.slice(1) });
+      }
+      originalConsoleError.apply(console, args);
+    };
+  }
 }

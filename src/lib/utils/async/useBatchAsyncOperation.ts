@@ -1,120 +1,181 @@
 
 /**
- * Batch Async Operations Hook
+ * Batch Async Operation Hook
  * 
- * Handles multiple async operations with batch processing and tracking.
+ * Handles multiple async operations with unified state management.
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useErrorHandler } from '@/hooks/core';
-import type { AsyncOperationState, AsyncOperationOptions } from './useAsyncOperation';
 
 /**
- * Hook for batch async operations
+ * Batch operation state interface
+ */
+export interface BatchAsyncOperationState<T = unknown> {
+  data: T[];
+  loading: boolean;
+  error: Error | null;
+  progress: number;
+  completed: number;
+  total: number;
+}
+
+/**
+ * Batch operation options
+ */
+export interface BatchAsyncOperationOptions {
+  concurrency?: number;
+  showErrorToast?: boolean;
+  logErrors?: boolean;
+  stopOnFirstError?: boolean;
+}
+
+/**
+ * Hook for managing batch async operations
  */
 export function useBatchAsyncOperation<T = unknown, TArgs extends any[] = any[]>(
   asyncFn: (...args: TArgs) => Promise<T>,
-  options: AsyncOperationOptions = {}
+  options: BatchAsyncOperationOptions = {}
 ) {
-  const [operations, setOperations] = useState<Array<{
-    id: string;
-    args: TArgs;
-    state: AsyncOperationState<T>;
-  }>>([]);
+  const {
+    concurrency = 3,
+    showErrorToast = true,
+    logErrors = true,
+    stopOnFirstError = false,
+  } = options;
 
-  const { handleError } = useErrorHandler({
-    showToast: options.showErrorToast,
-    logToConsole: options.logErrors,
+  const [state, setState] = useState<BatchAsyncOperationState<T>>({
+    data: [],
+    loading: false,
+    error: null,
+    progress: 0,
+    completed: 0,
+    total: 0,
   });
 
-  const executeBatch = useCallback(async (
-    operationsData: { id: string; args: TArgs }[]
-  ): Promise<{ id: string; result: T | null; error: Error | null }[]> => {
-    // Initialize operations
-    setOperations(operationsData.map(op => ({
-      ...op,
-      state: {
-        data: null,
-        loading: true,
-        error: null,
-        lastUpdated: null,
-      },
-    })));
+  const { handleError } = useErrorHandler({
+    showToast: showErrorToast,
+    logToConsole: logErrors,
+  });
 
-    const results = await Promise.allSettled(
-      operationsData.map(async ({ id, args }) => {
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  const executeBatch = useCallback(async (argsList: TArgs[]): Promise<T[]> => {
+    // Cancel any ongoing operation
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    abortControllerRef.current = new AbortController();
+    const total = argsList.length;
+
+    setState({
+      data: [],
+      loading: true,
+      error: null,
+      progress: 0,
+      completed: 0,
+      total,
+    });
+
+    const results: T[] = [];
+    const errors: Error[] = [];
+    let completed = 0;
+
+    // Process in batches with controlled concurrency
+    for (let i = 0; i < argsList.length; i += concurrency) {
+      if (abortControllerRef.current.signal.aborted) {
+        break;
+      }
+
+      const batch = argsList.slice(i, i + concurrency);
+      const batchPromises = batch.map(async (args, index) => {
         try {
           const result = await asyncFn(...args);
+          completed++;
           
-          setOperations(prev => prev.map(op => 
-            op.id === id 
-              ? {
-                  ...op,
-                  state: {
-                    data: result,
-                    loading: false,
-                    error: null,
-                    lastUpdated: Date.now(),
-                  },
-                }
-              : op
-          ));
-
-          return { id, result, error: null };
+          setState(prev => ({
+            ...prev,
+            completed,
+            progress: (completed / total) * 100,
+          }));
+          
+          return { success: true, result, index: i + index };
         } catch (error) {
           const processedError = error instanceof Error ? error : new Error(String(error));
+          errors.push(processedError);
+          completed++;
           
-          setOperations(prev => prev.map(op => 
-            op.id === id 
-              ? {
-                  ...op,
-                  state: {
-                    data: null,
-                    loading: false,
-                    error: processedError,
-                    lastUpdated: null,
-                  },
-                }
-              : op
-          ));
-
-          handleError(processedError, `Batch operation ${id}`);
-          return { id, result: null, error: processedError };
+          setState(prev => ({
+            ...prev,
+            completed,
+            progress: (completed / total) * 100,
+          }));
+          
+          if (stopOnFirstError) {
+            handleError(processedError, 'Batch operation');
+            throw processedError;
+          }
+          
+          return { success: false, error: processedError, index: i + index };
         }
-      })
-    );
+      });
 
-    return results.map((result, index) => {
-      const { id } = operationsData[index];
-      if (result.status === 'fulfilled') {
-        return result.value;
-      } else {
-        return { id, result: null, error: result.reason };
+      const batchResults = await Promise.all(batchPromises);
+      
+      // Collect successful results
+      batchResults.forEach(result => {
+        if (result.success) {
+          results[result.index] = result.result;
+        }
+      });
+
+      if (stopOnFirstError && errors.length > 0) {
+        break;
       }
-    });
-  }, [asyncFn, handleError]);
+    }
 
-  const getOperationState = useCallback((id: string) => {
-    return operations.find(op => op.id === id)?.state ?? {
-      data: null,
+    const finalError = errors.length > 0 ? errors[0] : null;
+    
+    setState(prev => ({
+      ...prev,
+      data: results.filter(r => r !== undefined),
+      loading: false,
+      error: finalError,
+    }));
+
+    if (finalError && !stopOnFirstError) {
+      handleError(finalError, `Batch operation (${errors.length}/${total} failed)`);
+    }
+
+    return results.filter(r => r !== undefined);
+  }, [asyncFn, concurrency, stopOnFirstError, handleError]);
+
+  const cancel = useCallback(() => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    setState(prev => ({ ...prev, loading: false }));
+  }, []);
+
+  const reset = useCallback(() => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    setState({
+      data: [],
       loading: false,
       error: null,
-      lastUpdated: null,
-    };
-  }, [operations]);
-
-  const resetBatch = useCallback(() => {
-    setOperations([]);
+      progress: 0,
+      completed: 0,
+      total: 0,
+    });
   }, []);
 
   return {
-    operations,
+    ...state,
     executeBatch,
-    getOperationState,
-    resetBatch,
-    totalOperations: operations.length,
-    completedOperations: operations.filter(op => !op.state.loading).length,
-    successfulOperations: operations.filter(op => op.state.data !== null).length,
-    failedOperations: operations.filter(op => op.state.error !== null).length,
+    cancel,
+    reset,
   };
 }
