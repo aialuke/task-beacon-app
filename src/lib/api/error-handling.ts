@@ -197,12 +197,16 @@ export function handleApiError(
   if (logToConsole) {
     // Convert unknown error to Error instance for logger
     const errorInstance = error instanceof Error ? error : new Error(apiError.message);
-    logger.error(`${logPrefix}: ${operation ?? 'An error occurred'}`, errorInstance, {
+    
+    // Create safe context object - ensure all values are properly typed
+    const logContext: Record<string, unknown> = {
       userMessage,
       errorCode: apiError.code || 'UNKNOWN',
       statusCode: apiError.statusCode || 500,
       errorDetails: apiError.details || 'No additional details',
-    });
+    };
+    
+    logger.error(`${logPrefix}: ${operation ?? 'An error occurred'}`, errorInstance, logContext);
   }
 
   // Show user notification if requested
