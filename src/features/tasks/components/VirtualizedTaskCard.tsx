@@ -2,7 +2,6 @@
 import { memo, forwardRef } from "react";
 import { Task } from "@/types";
 import { useTaskCard } from "../hooks/useTaskCard";
-import { useTaskCardOptimization } from "../hooks/useTaskCardOptimization";
 import { TaskErrorBoundary } from "./TaskErrorBoundary";
 import TaskCardHeader from "./TaskCardHeader";
 import TaskCardContent from "./TaskCardContent";
@@ -25,16 +24,21 @@ const VirtualizedTaskCard = memo(
         toggleExpand,
       } = useTaskCard(task);
 
-      const {
-        taskMetadata,
-        accessibilityProps,
-        optimizedHandlers,
-        keyboardHandlers,
-      } = useTaskCardOptimization(task, {
-        enableVirtualization: true,
-        prefetchImages: true,
-        enableAccessibility: true,
-      });
+      // Simple optimization props (replacing the deleted hook)
+      const accessibilityProps = {
+        role: "article",
+        "aria-label": `Task: ${task.title}`,
+        tabIndex: 0,
+      };
+
+      const keyboardHandlers = {
+        onKeyDown: (e: React.KeyboardEvent) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggleExpand();
+          }
+        },
+      };
 
       const statusClass = `status-${task.status.toLowerCase()}`;
       const animationClass =
@@ -57,11 +61,11 @@ const VirtualizedTaskCard = memo(
       };
 
       const combinedProps = {
-        ...optimizedHandlers,
         ...keyboardHandlers,
         ...accessibilityProps,
         "data-index": index,
         "data-task-id": task.id,
+        onClick: toggleExpand,
       };
 
       return (

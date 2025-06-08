@@ -1,6 +1,6 @@
 
 // === EXTERNAL LIBRARIES ===
-import { memo, useMemo, useCallback } from 'react';
+import { memo, useMemo, useCallback, useRef, useState, useEffect } from 'react';
 
 // === INTERNAL UTILITIES ===
 import UnifiedLoadingStates from '@/components/ui/loading/UnifiedLoadingStates';
@@ -12,7 +12,6 @@ import VirtualizedTaskCard from './VirtualizedTaskCard';
 import { useTaskDataContext } from '@/features/tasks/context/TaskDataContext';
 import { useTaskUIContext } from '@/features/tasks/context/TaskUIContext';
 import { useTasksFilter } from '@/features/tasks/hooks/useTasksFilter';
-import { useTaskListVirtualization } from '@/features/tasks/hooks/useTaskListVirtualization';
 
 // === TYPES ===
 import type { Task } from '@/types';
@@ -23,13 +22,45 @@ interface EnhancedTaskListProps {
   overscan?: number;
 }
 
+// Simple virtualization logic (replacing the deleted hook)
+const useSimpleVirtualization = (
+  items: Task[],
+  config: { enabled: boolean; itemHeight: number; overscan: number; containerHeight: number }
+) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [scrollTop, setScrollTop] = useState(0);
+
+  const visibleItems = useMemo(() => {
+    if (!config.enabled) return [];
+    
+    const startIndex = Math.floor(scrollTop / config.itemHeight);
+    const endIndex = Math.min(
+      startIndex + Math.ceil(config.containerHeight / config.itemHeight) + config.overscan,
+      items.length
+    );
+
+    return items.slice(Math.max(0, startIndex - config.overscan), endIndex).map((task, index) => ({
+      index: startIndex + index,
+      top: (startIndex + index) * config.itemHeight,
+      height: config.itemHeight,
+      task
+    }));
+  }, [items, scrollTop, config]);
+
+  const handleScroll = useCallback((e: React.UIEvent) => {
+    setScrollTop(e.currentTarget.scrollTop);
+  }, []);
+
+  return { containerRef, visibleItems, handleScroll };
+};
+
 function EnhancedTaskListComponent({
   enableVirtualization = true,
   itemHeight = 120,
   overscan = 5,
 }: EnhancedTaskListProps) {
   const { tasks, isLoading, error } = useTaskDataContext();
-  const { filter, expandedTaskId, isMobile } = useTaskUIContext();
+  const { filter, isMobile } = useTaskUIContext();
   
   // Filter tasks based on current filter
   const filteredTasks = useTasksFilter(tasks, filter);
@@ -42,7 +73,7 @@ function EnhancedTaskListComponent({
     containerHeight: 600,
   }), [enableVirtualization, filteredTasks.length, itemHeight, overscan]);
   
-  const { containerRef, visibleItems } = useTaskListVirtualization(
+  const { containerRef, visibleItems, handleScroll } = useSimpleVirtualization(
     filteredTasks,
     virtualizationConfig
   );
@@ -87,8 +118,9 @@ function EnhancedTaskListComponent({
         ref={containerRef}
         className={`h-full overflow-auto ${isMobile ? 'pb-20' : ''}`}
         style={{ height: virtualizationConfig.containerHeight }}
+        onScroll={handleScroll}
       >
-        <div style={{ position: 'relative' }}>
+        <div style={{ position: 'relative', height: filteredTasks.length * itemHeight }}>
           {visibleItems.map((item) => {
             const task = filteredTasks[item.index];
             return renderTaskItem(task, item.index, {
