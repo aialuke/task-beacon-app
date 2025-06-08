@@ -7,7 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 
 // === TYPES (direct imports from unified system) ===
 import type { ApiResponse, ServiceResult, ApiError } from '@/types/api.types';
-import type { SignInCredentials, SignUpCredentials, AuthResponse } from '@/types/shared/auth.types';
+import type { SignInCredentials, SignUpCredentials, AuthResponse } from '@/types';
 
 // === HELPER FUNCTIONS ===
 function createApiError(message: string, code?: string): ApiError {

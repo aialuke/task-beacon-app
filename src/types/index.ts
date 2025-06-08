@@ -69,8 +69,6 @@ export type {
   TaskCreateData,
   TaskUpdateData,
   TaskQueryOptions,
-  TaskSearchFilters,
-  TaskListResponse,
 } from './feature-types';
 
 // === USER FEATURES ===

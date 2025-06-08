@@ -7,7 +7,7 @@ import { ReactNode } from 'react';
 import { useAuth, AuthProvider } from '@/contexts/AuthContext';
 import { setupIntegrationTest } from '@/test/integration/setup';
 import { AuthService } from '@/lib/api';
-import type { User, Session, AuthResponse } from '@/types/shared';
+import type { AuthUser, Session, AuthResponse } from '@/types';
 import type { ApiResponse } from '@/types/api.types';
 
 /**
@@ -46,7 +46,7 @@ describe('Auth Flow Integration Tests', () => {
 
   describe('Sign In Workflow', () => {
     it('should handle successful sign in', async () => {
-      const mockUser: User = {
+      const mockUser: AuthUser = {
         id: 'test-user-id',
         email: 'test@example.com',
         role: 'user',
@@ -129,7 +129,7 @@ describe('Auth Flow Integration Tests', () => {
 
   describe('Sign Up Workflow', () => {
     it('should handle successful sign up', async () => {
-      const mockUser: User = {
+      const mockUser: AuthUser = {
         id: 'new-user-id',
         email: 'new@example.com',
         role: 'user',
@@ -166,7 +166,7 @@ describe('Auth Flow Integration Tests', () => {
 
   describe('Session Management', () => {
     it('should handle session refresh', async () => {
-      const mockUser: User = {
+      const mockUser: AuthUser = {
         id: 'test-user-id',
         email: 'test@example.com',
         role: 'user',
@@ -191,7 +191,7 @@ describe('Auth Flow Integration Tests', () => {
         success: true,
         data: { user: mockUser, session: mockSession },
         error: null,
-      } as ApiResponse<{ user: User; session: Session }>);
+      } as ApiResponse<{ user: AuthUser; session: Session }>);
 
       const { result } = renderHook(() => useAuth(), { wrapper });
 
