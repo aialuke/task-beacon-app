@@ -137,3 +137,66 @@ export async function validateTaskOwnershipData(taskId: string): Promise<ApiResp
     return data;
   });
 }
+
+/**
+ * Database validation operations object for backward compatibility
+ */
+export const DatabaseValidationOps = {
+  validateUserExists: async (email: string, context?: ValidationContext): Promise<BasicValidationResult> => {
+    const result = await validateUsersByEmail([email]);
+    if (!result.success) {
+      return createErrorResult('Failed to validate user', [result.error?.message || 'Unknown error']);
+    }
+    
+    const { invalidEmails } = result.data;
+    if (invalidEmails.length > 0) {
+      return createErrorResult('User not found', [`User with email ${email} does not exist`]);
+    }
+    
+    return createSuccessResult();
+  },
+
+  validateTaskExists: async (taskId: string, context?: ValidationContext): Promise<BasicValidationResult> => {
+    return validateEntityExistence('tasks', 'id', taskId, context);
+  },
+
+  validateUsersAndTasks: async (
+    emails: string[],
+    taskIds: string[],
+    context?: ValidationContext
+  ): Promise<{
+    usersResult: BasicValidationResult;
+    tasksResult: BasicValidationResult;
+    combinedResult: BasicValidationResult;
+  }> => {
+    // Validate users
+    const usersResult = emails.length > 0 
+      ? await validateBatchUserExistence(emails, context)
+      : createSuccessResult();
+
+    // Validate tasks
+    const tasksResult = taskIds.length > 0
+      ? await Promise.all(taskIds.map(taskId => validateEntityExistence('tasks', 'id', taskId, context)))
+        .then(results => {
+          const failures = results.filter(r => !r.isValid);
+          if (failures.length > 0) {
+            return createErrorResult(
+              'Some tasks not found',
+              failures.flatMap(f => f.errors || [])
+            );
+          }
+          return createSuccessResult();
+        })
+      : createSuccessResult();
+
+    // Combined result
+    const combinedResult = usersResult.isValid && tasksResult.isValid
+      ? createSuccessResult()
+      : createErrorResult(
+          'Validation failed',
+          [...(usersResult.errors || []), ...(tasksResult.errors || [])]
+        );
+
+    return { usersResult, tasksResult, combinedResult };
+  }
+};
