@@ -34,7 +34,10 @@ export function setupGlobalErrorHandlers(): void {
     console.error = (...args: unknown[]) => {
       // Check if this is a React error boundary error
       if (args[0] && typeof args[0] === 'string' && args[0].includes('React')) {
-        logger.error('React Error:', args[0] as string, { additionalInfo: args.slice(1) });
+        // Create an Error object from the string message
+        const errorMessage = args[0] as string;
+        const reactError = new Error(errorMessage);
+        logger.error('React Error:', reactError, { additionalInfo: args.slice(1) });
       }
       originalConsoleError.apply(console, args);
     };
