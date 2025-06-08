@@ -1,9 +1,9 @@
 
 /**
- * Standardized API Layer - Phase 2 Implementation
+ * Standardized API Layer - Phase 3 Implementation
  * 
- * This module provides a unified interface for all API operations,
- * standardizing error handling, response patterns, and loading states.
+ * Simplified to use single response pattern with apiRequest.
+ * Removed duplicate apiCall function to eliminate confusion.
  */
 
 import type { QueryClient } from '@tanstack/react-query';
@@ -52,21 +52,6 @@ export function createErrorResponse<T = null>(error: ApiError): ApiResponse<T> {
     error,
     success: false,
   };
-}
-
-/**
- * Wrapper for API calls with standardized error handling
- */
-export async function apiCall<T>(
-  operation: () => Promise<T>
-): Promise<ApiResponse<T>> {
-  try {
-    const data = await operation();
-    return createSuccessResponse(data);
-  } catch (error) {
-    const apiError = transformApiError(error);
-    return createErrorResponse(apiError);
-  }
 }
 
 /**

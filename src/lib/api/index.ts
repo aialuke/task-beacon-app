@@ -29,7 +29,6 @@ export type {
 // === CORE API UTILITIES ===
 export { 
   QueryKeys, 
-  apiCall, 
   transformApiError, 
   createSuccessResponse, 
   createErrorResponse 
