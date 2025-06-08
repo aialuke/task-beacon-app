@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { User, ImageUp, Link, FileCheck } from 'lucide-react';
 import { DatePickerButton } from './components/DatePickerButton';
@@ -5,7 +6,7 @@ import { ActionButton } from './components/ActionButton';
 import { SubmitButton } from './components/SubmitButton';
 import { UrlInputModal } from './UrlInputModal';
 import { UserSearchModal } from './UserSearchModal';
-import { SimplePhotoUploadModal } from './SimplePhotoUploadModal';
+import SimplePhotoUploadModal from './SimplePhotoUploadModal';
 import type { ProcessingResult } from '@/lib/utils/image/types';
 
 interface QuickActionBarProps {

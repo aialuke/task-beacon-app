@@ -1,23 +1,13 @@
 
 import { LazyComponents } from '@/components/ui/LazyComponent';
-import { preloadLazyComponent } from '@/lib/utils/lazy-loading';
 
-// Lazy load photo upload components with optimized loading and preloading
+// Lazy load photo upload components using the proven LazyComponents pattern
 export const LazySimplePhotoUpload = LazyComponents.createLazyForm(
-  () => import('../SimplePhotoUpload').then(module => ({ default: module.SimplePhotoUpload })),
+  () => import('../SimplePhotoUpload'),
   'SimplePhotoUpload'
 );
 
 export const LazySimplePhotoUploadModal = LazyComponents.createLazyModal(
-  () => import('../SimplePhotoUploadModal').then(module => ({ default: module.SimplePhotoUploadModal })),
+  () => import('../SimplePhotoUploadModal'),
   'SimplePhotoUploadModal'
 );
-
-// Preload photo upload components when user hovers over trigger elements
-export const preloadPhotoUploadComponents = () => {
-  preloadLazyComponent(() => import('../SimplePhotoUpload'));
-  preloadLazyComponent(() => import('../SimplePhotoUploadModal'));
-};
-
-// Export preload function for use in parent components
-export { preloadPhotoUploadComponents as preloadPhotoComponents };

@@ -14,7 +14,7 @@ interface SimplePhotoUploadProps {
   loading?: boolean;
 }
 
-export function SimplePhotoUpload({
+export default function SimplePhotoUpload({
   photoPreview,
   onPhotoChange,
   onPhotoRemove,
@@ -140,3 +140,6 @@ export function SimplePhotoUpload({
     </div>
   );
 }
+
+// Named export for backward compatibility
+export { SimplePhotoUpload };

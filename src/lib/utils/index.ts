@@ -30,9 +30,6 @@ export * from './validation';
 // LAZY-LOADED UTILITIES (Loaded on demand)
 // =====================================================
 
-// Bundle optimization utilities
-export * from './lazy-loading';
-
 // Pattern utilities (lazy loaded)
 export const patternUtils = {
   async executeAsync() {
@@ -170,27 +167,3 @@ export const bundleInfo = {
   ],
   estimatedSavings: '25-30% initial bundle size reduction',
 };
-
-/**
- * PHASE 2.2 CONSOLIDATION NOTES:
- * 
- * ✅ COMPLETED CONSOLIDATIONS:
- * - Removed conflicting createContext and component-patterns utilities
- * - Leveraged existing memoization patterns in hooks/performance/memoization.ts
- * - Enhanced existing modal management system instead of creating new context utilities
- * - Used existing lazy loading and query optimization patterns
- * - Maintained all functionality while eliminating TypeScript compilation conflicts
- * 
- * ✅ EXISTING PATTERNS UTILIZED:
- * - Modal management: src/lib/utils/modal-management.ts
- * - Memoization: src/hooks/performance/memoization.ts
- * - Query optimization: src/hooks/queries/useOptimizedQueries.ts
- * - Lazy loading: src/lib/utils/lazy-loading.ts
- * 
- * ✅ BENEFITS ACHIEVED:
- * - Eliminated TypeScript build errors
- * - Maintained component pattern consistency
- * - Preserved performance optimizations
- * - Reduced codebase complexity by leveraging existing utilities
- * - Improved maintainability through consolidation
- */

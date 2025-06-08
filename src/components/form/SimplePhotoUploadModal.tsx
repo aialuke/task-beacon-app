@@ -1,7 +1,7 @@
 
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
-import { SimplePhotoUpload } from './SimplePhotoUpload';
+import SimplePhotoUpload from './SimplePhotoUpload';
 import type { ProcessingResult } from '@/lib/utils/image/types';
 
 interface SimplePhotoUploadModalProps {
@@ -16,7 +16,7 @@ interface SimplePhotoUploadModalProps {
   title?: string;
 }
 
-export function SimplePhotoUploadModal({
+export default function SimplePhotoUploadModal({
   isOpen,
   onClose,
   photoPreview,
@@ -53,3 +53,6 @@ export function SimplePhotoUploadModal({
     </Dialog>
   );
 }
+
+// Named export for backward compatibility
+export { SimplePhotoUploadModal };

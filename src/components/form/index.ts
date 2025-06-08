@@ -25,8 +25,13 @@ export { UserSearchModal } from './UserSearchModal';
 export { AutocompleteUserInput } from './AutocompleteUserInput';
 
 // === PHOTO UPLOAD COMPONENTS ===
-export { SimplePhotoUpload } from './SimplePhotoUpload';
-export { SimplePhotoUploadModal } from './SimplePhotoUploadModal';
+// Default exports for lazy loading compatibility
+export { default as SimplePhotoUpload } from './SimplePhotoUpload';
+export { default as SimplePhotoUploadModal } from './SimplePhotoUploadModal';
+
+// Named exports for backward compatibility
+export { SimplePhotoUpload as SimplePhotoUploadNamed } from './SimplePhotoUpload';
+export { SimplePhotoUploadModal as SimplePhotoUploadModalNamed } from './SimplePhotoUploadModal';
 
 // === REFERENCE COMPONENTS ===
 export { ParentTaskReference } from './ParentTaskReference';

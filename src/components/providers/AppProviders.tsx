@@ -1,3 +1,4 @@
+
 // External libraries
 import React from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -6,7 +7,6 @@ import { BrowserRouter } from 'react-router-dom';
 // Internal utilities
 import { queryClient } from '@/lib/query-client';
 import { isFeatureEnabled } from '@/lib/config/app';
-import { bundleUtils } from '@/lib/utils/lazy-loading';
 
 // Components
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -69,18 +69,18 @@ class AppErrorBoundary extends React.Component<
 }
 
 /**
- * Performance optimization wrapper - Phase 1.4 Optimized
+ * Performance optimization wrapper - Simplified
  */
 function PerformanceOptimizations({ children }: { children: React.ReactNode }) {
-  // Essential optimizations only - heavy optimizations are lazy loaded
+  // Basic performance monitoring only
   React.useEffect(() => {
-    // Basic performance monitoring
-    const connectionQuality = bundleUtils.getConnectionQuality();
+    // Simple connection quality check
+    const connection = (navigator as any).connection;
+    const connectionQuality = connection?.effectiveType === '4g' || connection?.effectiveType === '3g' ? 'fast' : 'slow';
     console.debug('Connection quality:', connectionQuality);
     
-    // Preload critical resources based on connection
+    // Preload critical components on fast connections only
     if (connectionQuality === 'fast') {
-      // Preload commonly used lazy components on fast connections
       setTimeout(() => {
         import('@/features/tasks/components/lazy').catch(() => {
           // Silently fail preloading
@@ -97,7 +97,7 @@ interface AppProvidersProps {
 }
 
 /**
- * Centralized provider composition with optimized loading - Phase 1.4
+ * Centralized provider composition with simplified performance optimizations
  * 
  * Hierarchy (outer to inner):
  * 1. Error handling
