@@ -6,8 +6,8 @@
  */
 
 // === EXTERNAL LIBRARIES ===
+import React, { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { StrictMode } from 'react';
 
 // === COMPONENTS ===
 import App from './App.tsx';
@@ -34,7 +34,16 @@ if (!rootElement) {
 
 console.log('Root element found, creating React app...');
 
-createRoot(rootElement).render(
+// Ensure React is properly available
+if (!React) {
+  throw new Error('React is not available');
+}
+
+console.log('React version:', React.version);
+
+const root = createRoot(rootElement);
+
+root.render(
   <StrictMode>
     <ErrorBoundary>
       <App />
