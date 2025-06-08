@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { lazy, Suspense } from 'react';
 import { TaskService } from '@/lib/api/tasks/task.service';
-import UnifiedLoadingStates from '@/components/ui/loading/UnifiedLoadingStates';
+import PageLoader from '@/components/ui/loading/PageLoader';
 
 // Lazy load the form component for additional code splitting
 const FollowUpTaskForm = lazy(() => import('@/features/tasks/forms/FollowUpTaskForm'));
@@ -35,7 +35,7 @@ export default function FollowUpTaskPage() {
   };
 
   if (isLoading) {
-    return <UnifiedLoadingStates variant="page" message="Loading parent task data..." />;
+    return <PageLoader message="Loading parent task data..." />;
   }
 
   if (error ?? !parentTask) {
@@ -85,7 +85,7 @@ export default function FollowUpTaskPage() {
         </div>
 
         <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
-          <Suspense fallback={<UnifiedLoadingStates variant="page" message="Loading follow-up form..." />}>
+          <Suspense fallback={<PageLoader message="Loading follow-up form..." />}>
             <FollowUpTaskForm parentTask={parentTask} onClose={handleClose} />
           </Suspense>
         </div>

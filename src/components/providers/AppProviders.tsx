@@ -10,7 +10,7 @@ import { isFeatureEnabled } from '@/lib/config/app';
 
 // Components
 import { TooltipProvider } from '@/components/ui/tooltip';
-import UnifiedLoadingStates from '@/components/ui/loading/UnifiedLoadingStates';
+import PageLoader from '@/components/ui/loading/PageLoader';
 
 // Contexts
 import { AuthProvider } from '@/contexts/AuthContext';
@@ -117,7 +117,7 @@ export function AppProviders({ children }: AppProvidersProps) {
             <AuthProvider>
               <TooltipProvider>
                 <BrowserRouter>
-                  <React.Suspense fallback={<UnifiedLoadingStates variant="page" message="Loading application..." />}>
+                  <React.Suspense fallback={<PageLoader message="Loading application..." />}>
                     {children}
                   </React.Suspense>
                 </BrowserRouter>

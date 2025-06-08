@@ -6,7 +6,7 @@
  */
 
 import { memo, useMemo, useCallback } from 'react';
-import UnifiedLoadingStates from '@/components/ui/loading/UnifiedLoadingStates';
+import CardLoader from '@/components/ui/loading/CardLoader';
 import { OptimizedTaskCard } from '../cards/OptimizedTaskCard';
 import { useTaskDataContext } from '@/features/tasks/context/TaskDataContext';
 import { useTaskUIContext } from '@/features/tasks/context/TaskUIContext';
@@ -87,7 +87,7 @@ function OptimizedTaskListComponent({
 
   if (isLoading) {
     return (
-      <UnifiedLoadingStates variant="card" count={3} message="Loading tasks..." />
+      <CardLoader count={3} />
     );
   }
 

@@ -3,7 +3,7 @@
 import { memo, useMemo } from "react";
 
 // === INTERNAL UTILITIES ===
-import UnifiedLoadingStates from "@/components/ui/loading/UnifiedLoadingStates";
+import CardLoader from "@/components/ui/loading/CardLoader";
 
 // === COMPONENTS ===
 import { TaskCard } from "../cards";
@@ -45,7 +45,7 @@ function TaskListComponent() {
 
   if (isLoading) {
     return (
-      <UnifiedLoadingStates variant="skeleton" message="Loading tasks..." />
+      <CardLoader count={3} />
     );
   }
 

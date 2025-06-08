@@ -3,7 +3,7 @@
 import { memo, useMemo, useCallback, useRef, useState, useEffect } from 'react';
 
 // === INTERNAL UTILITIES ===
-import UnifiedLoadingStates from '@/components/ui/loading/UnifiedLoadingStates';
+import CardLoader from '@/components/ui/loading/CardLoader';
 
 // === COMPONENTS ===
 import { VirtualizedTaskCard } from '../cards';
@@ -89,7 +89,7 @@ function EnhancedTaskListComponent({
   ), []);
 
   if (isLoading) {
-    return <UnifiedLoadingStates variant="skeleton" message="Loading enhanced task list..." />;
+    return <CardLoader count={3} />;
   }
 
   if (error) {

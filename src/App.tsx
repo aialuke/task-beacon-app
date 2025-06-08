@@ -2,7 +2,7 @@
 import { Routes, Route } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import { AppProviders } from './components/providers/AppProviders';
-import UnifiedLoadingStates from './components/ui/loading/UnifiedLoadingStates';
+import PageLoader from './components/ui/loading/PageLoader';
 
 // Lazy load all major pages for optimal code splitting
 const AuthPage = lazy(() => import('./pages/AuthPage'));
@@ -13,7 +13,7 @@ const FollowUpTaskPage = lazy(() => import('./pages/FollowUpTaskPage'));
 
 const App = () => (
   <AppProviders>
-    <Suspense fallback={<UnifiedLoadingStates variant="page" message="Loading application..." />}>
+    <Suspense fallback={<PageLoader message="Loading application..." />}>
       <Routes>
         <Route path="/" element={<AuthPage />} />
         <Route path="/create-task" element={<CreateTaskPage />} />

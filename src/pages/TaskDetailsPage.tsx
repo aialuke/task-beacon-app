@@ -5,7 +5,9 @@ import { ArrowLeft, Calendar1, ExternalLink } from "lucide-react";
 import { formatDate } from "@/lib/utils/shared";
 import { lazy, Suspense } from "react";
 import { getTaskStatus } from "@/features/tasks/utils/taskUiUtils";
-import UnifiedLoadingStates from "@/components/ui/loading/UnifiedLoadingStates";
+import PageLoader from "@/components/ui/loading/PageLoader";
+import CardLoader from "@/components/ui/loading/CardLoader";
+import { LoadingSpinner } from "@/components/ui/loading/UnifiedLoadingStates";
 import { useTaskQuery } from "@/features/tasks/hooks/useTaskQuery";
 
 // Lazy load heavy components for better performance
@@ -23,7 +25,7 @@ const TaskDetailsPage = () => {
 
   if (loading) {
     return (
-      <UnifiedLoadingStates variant="page" message="Loading task details..." />
+      <PageLoader message="Loading task details..." />
     );
   }
 
@@ -62,7 +64,7 @@ const TaskDetailsPage = () => {
         <div className="flex items-start gap-4">
           <div className="shrink-0">
             <Suspense
-              fallback={<UnifiedLoadingStates variant="spinner" size="lg" />}
+              fallback={<LoadingSpinner size="lg" />}
             >
               <CountdownTimer dueDate={task.due_date} status={status} />
             </Suspense>
@@ -134,7 +136,7 @@ const TaskDetailsPage = () => {
 
         <div className="border-t pt-4">
           <Suspense
-            fallback={<UnifiedLoadingStates variant="skeleton" count={2} />}
+            fallback={<CardLoader count={1} />}
           >
             <TaskActions task={task} onView={() => { navigate(`/tasks/${task.id}`); }} />
           </Suspense>
