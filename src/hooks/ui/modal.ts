@@ -40,4 +40,4 @@ export function useModalState(options: UseModalStateOptions = {}) {
     close,
     toggle,
   };
-}
+} 

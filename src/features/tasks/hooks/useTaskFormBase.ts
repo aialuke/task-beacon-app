@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { useOptimizedMemo, useOptimizedCallback } from '@/hooks/useOptimizedMemo';
+import { useOptimizedMemo, useOptimizedCallback } from '@/hooks/performance';
 import { useTaskForm } from './useTaskForm';
 import { useTaskFormValidation } from './useTaskFormValidation';
 import { useTaskPhotoUpload } from '@/components/form/hooks/useFormPhotoUpload';

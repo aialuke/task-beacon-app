@@ -9,7 +9,7 @@ import { useState, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { TaskService } from '@/lib/api/tasks/task.service';
 import { QueryKeys } from '@/lib/api/standardized-api';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/hooks/core';
 import { useOptimizedQuery } from '@/hooks/queries/useOptimizedQueries';
 import { useStandardizedLoading } from '@/hooks/queries/useStandardizedLoading';
 import { useEnhancedErrorHandling } from '@/hooks/queries/useEnhancedErrorHandling';

@@ -1,4 +1,4 @@
-import { useOptimizedMemo } from '@/hooks/useOptimizedMemo';
+import { useOptimizedMemo } from '@/hooks/performance';
 import type { User } from '@/types';
 
 /**

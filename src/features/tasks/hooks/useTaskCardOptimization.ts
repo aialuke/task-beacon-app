@@ -2,7 +2,7 @@ import { useCallback, useMemo } from "react";
 import {
   useOptimizedMemo,
   useOptimizedCallback,
-} from "@/hooks/useOptimizedMemo";
+} from "@/hooks/performance";
 import type { Task } from "@/types";
 
 interface TaskCardOptimizationOptions {

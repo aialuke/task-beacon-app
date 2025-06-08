@@ -1,5 +1,3 @@
-
-
 import { useMemo, useCallback, useRef } from 'react';
 
 interface OptimizationOptions {
@@ -68,4 +66,4 @@ export function useOptimizedCallback<T extends (...args: any[]) => any>(
     
     return result;
   }, deps) as T;
-}
+} 

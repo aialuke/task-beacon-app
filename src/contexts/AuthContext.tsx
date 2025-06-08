@@ -1,6 +1,6 @@
 import { createContext, useContext, ReactNode } from 'react';
 import type { AuthContextType } from '@/types/shared/auth.types';
-import { useAuth as useAuthHook } from '@/hooks/auth/useAuth';
+import { useAuth as useAuthHook } from '@/hooks/core';
 
 interface AuthProviderProps {
   children: ReactNode;

@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { useOptimizedCallback, useOptimizedMemo } from '@/hooks/useOptimizedMemo';
+import { useOptimizedCallback, useOptimizedMemo } from '@/hooks/performance';
 import { compressAndResizePhoto } from '@/lib/utils/image/convenience';
 import type { 
   ProcessingResult,

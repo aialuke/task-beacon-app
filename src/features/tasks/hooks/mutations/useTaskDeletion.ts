@@ -2,7 +2,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { TaskService } from '@/lib/api';
 import { useTaskOptimisticUpdates } from '../useTaskOptimisticUpdates';
-import { useOptimizedCallback } from '@/hooks/useOptimizedMemo';
+import { useOptimizedCallback } from '@/hooks/performance';
 import { toast } from 'sonner';
 
 interface TaskMutationResult {

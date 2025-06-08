@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { useOptimizedMemo, useOptimizedCallback } from '@/hooks/useOptimizedMemo';
+import { useOptimizedMemo, useOptimizedCallback } from '@/hooks/performance';
 import type { FormState, ValidationResult } from '@/types/utility.types';
 
 interface UseUnifiedFormStateOptions<T extends Record<string, string>> {

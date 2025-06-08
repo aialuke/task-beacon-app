@@ -1,7 +1,7 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { TaskService } from '@/lib/api';
-import { useOptimizedCallback } from '@/hooks/useOptimizedMemo';
+import { useOptimizedCallback } from '@/hooks/performance';
 import { toast } from 'sonner';
 import type { Task } from '@/types';
 

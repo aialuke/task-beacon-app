@@ -1,5 +1,5 @@
 
-import { useOptimizedMemo } from '@/hooks/useOptimizedMemo';
+import { useOptimizedMemo } from '@/hooks/performance';
 
 interface WorkflowStatusOptions {
   canSubmit: boolean;

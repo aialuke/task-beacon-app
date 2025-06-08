@@ -3,7 +3,7 @@ import { useState, useCallback } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { TaskService } from '@/lib/api/tasks/task.service';
 import { QueryKeys, createLoadingState } from '@/lib/api/standardized-api';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/hooks/core';
 import type { Task } from '@/types';
 
 interface UseTasksQueryReturn {

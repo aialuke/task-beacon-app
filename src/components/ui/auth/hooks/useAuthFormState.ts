@@ -2,7 +2,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { AuthService } from '@/lib/api';
 import { isValidEmail, isValidPassword, isValidUserName } from '@/lib/utils/validation';
-import { useErrorHandler } from '@/hooks/useErrorHandler';
+import { useErrorHandler } from '@/hooks/core';
 
 type AuthMode = 'signin' | 'signup';
 

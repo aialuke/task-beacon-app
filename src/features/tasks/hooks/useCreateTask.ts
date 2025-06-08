@@ -1,7 +1,7 @@
 
 import { useTaskFormBase } from './useTaskFormBase';
 import { useTasksNavigate } from './useTasksNavigate';
-import { useOptimizedMemo } from '@/hooks/useOptimizedMemo';
+import { useOptimizedMemo } from '@/hooks/performance';
 
 interface UseCreateTaskProps {
   onClose?: () => void;

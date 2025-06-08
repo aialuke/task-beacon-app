@@ -89,4 +89,4 @@ export function useErrorHandler(options: UseErrorHandlerOptions = {}) {
     clearError,
     withErrorHandling,
   };
-}
+} 

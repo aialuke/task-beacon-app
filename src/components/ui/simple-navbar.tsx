@@ -2,7 +2,7 @@
 import { animated } from '@react-spring/web';
 import { LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useNavbar } from '@/hooks/useNavbar';
+import { useNavbar } from '@/hooks/ui';
 
 interface NavItem {
   name: string;

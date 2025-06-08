@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useOptimizedMemo } from '@/hooks/useOptimizedMemo';
+import { useOptimizedMemo } from '@/hooks/performance';
 import { UserService } from '@/lib/api/users.service';
 import type { User } from '@/types';
 

@@ -188,4 +188,4 @@ export function useNavbar({ items, activeItem, onItemChange }: UseNavbarOptions)
     buttonBackgroundSpring,
     glowSpring,
   };
-}
+} 

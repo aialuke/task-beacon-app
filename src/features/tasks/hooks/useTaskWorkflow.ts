@@ -3,7 +3,7 @@ import { useTaskFormBase } from './useTaskFormBase';
 import { useTaskMutations } from './useTaskMutations';
 import { useTaskBatchOperations } from './useTaskBatchOperations';
 import { useTaskWorkflowStatus } from './useTaskWorkflowStatus';
-import { useOptimizedCallback } from '@/hooks/useOptimizedMemo';
+import { useOptimizedCallback } from '@/hooks/performance';
 import { Task } from '@/types';
 
 interface UseTaskWorkflowOptions {

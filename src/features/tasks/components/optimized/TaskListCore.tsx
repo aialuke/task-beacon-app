@@ -1,6 +1,6 @@
 
 import { memo, useMemo } from 'react';
-import { useOptimizedMemo } from '@/hooks/useOptimizedMemo';
+import { useOptimizedMemo } from '@/hooks/performance';
 import type { Task } from '@/types';
 
 interface TaskListCoreProps {

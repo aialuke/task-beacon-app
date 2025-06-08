@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTaskFormBase } from './useTaskFormBase';
 import { useTaskMutations } from './useTaskMutations';
-import { useOptimizedMemo, useOptimizedCallback } from '@/hooks/useOptimizedMemo';
+import { useOptimizedMemo, useOptimizedCallback } from '@/hooks/performance';
 import type { Task } from '@/types';
 import {
   showBrowserNotification,

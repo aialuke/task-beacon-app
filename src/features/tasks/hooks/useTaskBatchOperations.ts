@@ -1,5 +1,5 @@
 
-import { useOptimizedCallback } from '@/hooks/useOptimizedMemo';
+import { useOptimizedCallback } from '@/hooks/performance';
 import { useTaskMutations } from './useTaskMutations';
 import { Task } from '@/types';
 

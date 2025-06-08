@@ -10,7 +10,7 @@
 import { useState, useCallback, useEffect } from 'react';
 
 // === INTERNAL UTILITIES ===
-import { useOptimizedCallback, useOptimizedMemo } from '@/hooks/useOptimizedMemo';
+import { useOptimizedCallback, useOptimizedMemo } from '@/hooks/performance';
 
 // === TYPES ===
 interface ModalState {

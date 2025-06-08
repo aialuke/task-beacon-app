@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Task } from '@/types';
-import { useOptimizedCallback } from '@/hooks/useOptimizedMemo';
+import { useOptimizedCallback } from '@/hooks/performance';
 
 // Define proper types for React Query data structures
 interface PaginatedTasksResponse {

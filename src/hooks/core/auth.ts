@@ -1,4 +1,3 @@
-
 /**
  * Simplified Auth Hook - Enhanced with Mobile Error Handling
  * 
@@ -221,4 +220,4 @@ export function useAuth(): UseAuthReturn {
     signOut,
     refreshSession,
   };
-}
+} 
