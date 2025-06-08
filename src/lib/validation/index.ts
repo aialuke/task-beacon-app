@@ -1,64 +1,12 @@
 
 /**
- * Centralized validation module - Optimized Exports
+ * Simplified Validation Module - Phase 4 Cleanup
  * 
- * Provides comprehensive validation utilities for the application.
- * Includes synchronous format validators, async database validators,
- * and business logic validators.
+ * Streamlined to focus on essential database and business validation.
+ * Format validation has been moved to the centralized Zod system.
  */
 
-// === EXTERNAL LIBRARIES ===
-// (none currently used directly)
-
-// === INTERNAL UTILITIES ===
-// (validation utilities are self-contained)
-
-// === TYPES AND CONSTANTS ===
-export * from './types';
-
-// === ERROR HANDLING UTILITIES ===
-export {
-  createSuccessResult,
-  createErrorResult,
-  createStandardResult,
-  createValidationDetail,
-  combineValidationResults,
-} from './result-creators';
-
-export {
-  getStandardMessage,
-} from './message-constants';
-
-export {
-  withErrorHandling,
-} from './async-wrapper';
-
-// === DATABASE VALIDATORS (ASYNC) ===
-export {
-  validateUserExists,
-  validateTaskExists,
-  validateMultipleUsersExist,
-  validateMultipleTasksExist,
-} from './database-validators';
-
-// === BUSINESS VALIDATORS (ASYNC) ===
-export {
-  validateTaskOwnership,
-} from './business-validators';
-
-// === FORMAT VALIDATORS (PURE FUNCTIONS) ===
-export {
-  validateEmail,
-  validateUserName,
-  validateDueDate,
-} from './format-validators';
-
-// === ENTITY VALIDATORS (COMPOSITE) ===
-export {
-  validateProfileData,
-} from './entity-validators';
-
-// === RE-EXPORT COMMONLY USED TYPES ===
+// === TYPES ===
 export type {
   BasicValidationResult as ValidationResult,
   StandardValidationResult as DetailedValidationResult,
@@ -66,3 +14,39 @@ export type {
   ValidationErrorCode,
   ValidationWarningCode,
 } from './types';
+
+// === ESSENTIAL DATABASE VALIDATORS ===
+export {
+  validateUserExists,
+  validateTaskExists,
+  validateMultipleUsersExist,
+  validateMultipleTasksExist,
+} from './database-validators';
+
+// === BUSINESS LOGIC VALIDATORS ===
+export {
+  validateTaskOwnership,
+} from './business-validators';
+
+// === ERROR HANDLING UTILITIES ===
+export {
+  createSuccessResult,
+  createErrorResult,
+  withErrorHandling,
+} from './result-creators';
+
+// === SIMPLIFIED MESSAGE HANDLING ===
+export {
+  getStandardMessage,
+} from './message-constants';
+
+// === REMOVED COMPLEX UTILITIES ===
+// The following have been simplified or moved to centralized Zod system:
+// - Format validators (moved to @/schemas)
+// - Complex entity validators (simplified)
+// - Over-engineered result creators (streamlined)
+// - Redundant validation patterns (consolidated)
+
+// === MIGRATION NOTICE ===
+// For format validation (email, password, etc.), use the centralized Zod system:
+// import { emailSchema, passwordSchema, validateWithZod } from '@/schemas';

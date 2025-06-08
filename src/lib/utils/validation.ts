@@ -1,36 +1,78 @@
 
 /**
- * Legacy Validation Utilities - Deprecated
+ * Legacy Validation Utilities - Phase 4 Cleanup
  * 
- * This file is maintained for backward compatibility.
- * All new code should use the consolidated validation system in shared.ts
+ * This file now serves as a complete redirect to the centralized Zod validation system.
+ * All validation logic has been migrated to @/schemas for consistency and type safety.
  */
 
-// Re-export from the consolidated shared utilities
+// === COMPLETE MIGRATION TO ZOD SYSTEM ===
+// All validation functions now use the centralized Zod validation system
+
 export {
+  // Core validation functions
   isValidEmail,
   isValidPassword,
+  isValidUrl,
   isDateInFuture,
-  isValidUserName,
-  isValidTaskTitle,
-  isValidTaskDescription,
-  isValidText,
-  validateField,
-  validateForm,
-  formatFileSize,
-  type ValidationResult,
-} from './shared';
-
-// Legacy alias for backward compatibility
-export const isValidUrl = (url: string): boolean => {
-  if (!url || typeof url !== 'string') return true; // Allow empty URLs
-  const trimmed = url.trim();
-  if (!trimmed) return true;
   
-  try {
-    new URL(trimmed);
-    return true;
-  } catch {
+  // Validation schemas
+  emailSchema,
+  passwordSchema,
+  userNameSchema,
+  taskTitleSchema,
+  taskDescriptionSchema,
+  urlSchema,
+  futureDateSchema,
+  
+  // Validation utilities
+  validateWithZod,
+  validateFormWithZod,
+  
+  // Types
+  type ValidationResult,
+} from '@/schemas';
+
+// === LEGACY COMPATIBILITY ===
+// These aliases maintain backward compatibility for existing code
+export const isValidUserName = (name: string): boolean => {
+  const result = userNameSchema.safeParse(name);
+  return result.success;
+};
+
+export const isValidTaskTitle = (title: string): boolean => {
+  const result = taskTitleSchema.safeParse(title);
+  return result.success;
+};
+
+export const isValidTaskDescription = (description: string): boolean => {
+  const result = taskDescriptionSchema.safeParse(description);
+  return result.success;
+};
+
+export const isValidText = (
+  text: string,
+  options: {
+    minLength?: number;
+    maxLength?: number;
+    required?: boolean;
+  } = {}
+): boolean => {
+  const { minLength = 0, maxLength = 1000, required = false } = options;
+  
+  if (!text || typeof text !== 'string') {
+    return !required;
+  }
+  
+  const trimmed = text.trim();
+  
+  if (required && trimmed.length === 0) {
     return false;
   }
+  
+  return trimmed.length >= minLength && trimmed.length <= maxLength;
 };
+
+// Redirect complex validation to new system
+export const validateField = validateWithZod;
+export const validateForm = validateFormWithZod;
