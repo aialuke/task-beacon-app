@@ -1,20 +1,28 @@
 
-import { useState, useCallback } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { TaskService } from '@/lib/api/tasks/task.service';
 import { QueryKeys, createLoadingState } from '@/lib/api/standardized-api';
 import { useAuth } from '@/hooks/core';
+import { usePagination } from '@/hooks/usePagination';
 import type { Task } from '@/types';
+
+interface UseTasksQueryOptions {
+  pageSize?: number;
+  onPageChange?: (page: number) => void;
+}
 
 interface UseTasksQueryReturn {
   tasks: Task[];
   totalCount: number;
-  currentPage: number;
-  pageSize: number;
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-  goToNextPage: () => void;
-  goToPreviousPage: () => void;
+  pagination: {
+    currentPage: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+    goToNextPage: () => void;
+    goToPreviousPage: () => void;
+    goToPage: (page: number) => void;
+  };
   isLoading: boolean;
   isFetching: boolean;
   error: string | null;
@@ -22,26 +30,25 @@ interface UseTasksQueryReturn {
 }
 
 /**
- * Optimized hook for paginated task queries - Phase 2 Implementation
+ * Optimized hook for paginated task queries - Phase 3 Refactored
  * 
- * Enhanced with improved caching, memoization, and performance optimizations.
+ * Now uses the centralized usePagination hook for state management.
+ * Eliminates scattered pagination logic and provides clean abstraction.
  */
-export function useTasksQuery(pageSize = 10): UseTasksQueryReturn {
-  const [currentPage, setCurrentPage] = useState(1);
+export function useTasksQuery(options: UseTasksQueryOptions = {}): UseTasksQueryReturn {
+  const { pageSize = 10, onPageChange } = options;
   const queryClient = useQueryClient();
   const { user, session } = useAuth();
 
+  // Use centralized pagination hook
+  const pagination = usePagination({
+    initialPage: 1,
+    initialPageSize: pageSize,
+    onPageChange,
+  });
+
   // Optimized query key structure
-  const queryKey = [...QueryKeys.tasks, 'paginated', currentPage, pageSize, user?.id];
-
-  // Memoized navigation functions to prevent unnecessary re-renders
-  const goToNextPage = useCallback(() => {
-    setCurrentPage((old) => old + 1);
-  }, []);
-
-  const goToPreviousPage = useCallback(() => {
-    setCurrentPage((old) => Math.max(1, old - 1));
-  }, []);
+  const queryKey = [...QueryKeys.tasks, 'paginated', pagination.currentPage, pagination.pageSize, user?.id];
 
   // Fetch tasks with enhanced caching and error handling
   const {
@@ -54,8 +61,8 @@ export function useTasksQuery(pageSize = 10): UseTasksQueryReturn {
     queryKey,
     queryFn: async () => {
       const response = await TaskService.query.getMany({
-        page: currentPage,
-        pageSize: pageSize,
+        page: pagination.currentPage,
+        pageSize: pagination.pageSize,
         assignedToMe: false,
       });
       
@@ -66,7 +73,6 @@ export function useTasksQuery(pageSize = 10): UseTasksQueryReturn {
       return {
         data: response.data.data,
         totalCount: response.data.pagination.totalCount,
-        hasNextPage: response.data.pagination.hasNextPage,
       };
     },
     staleTime: 5 * 60 * 1000, // 5 minutes for better UX
@@ -83,14 +89,16 @@ export function useTasksQuery(pageSize = 10): UseTasksQueryReturn {
     networkMode: 'offlineFirst',
   });
 
-  // Determine if we have a next page
-  const hasNextPage = response?.hasNextPage || false;
+  // Update pagination total count when data changes
+  if (response?.totalCount && response.totalCount !== pagination.totalCount) {
+    pagination.setTotalCount(response.totalCount);
+  }
 
   // Intelligent prefetching - only when beneficial
-  const shouldPrefetch = hasNextPage && !isLoading && response?.data.length === pageSize;
+  const shouldPrefetch = pagination.hasNextPage && !isLoading && response?.data.length === pagination.pageSize;
   
   if (shouldPrefetch && user && session) {
-    const nextPageKey = [...QueryKeys.tasks, 'paginated', currentPage + 1, pageSize, user.id];
+    const nextPageKey = [...QueryKeys.tasks, 'paginated', pagination.currentPage + 1, pagination.pageSize, user.id];
     
     // Check if next page is already cached
     const existingData = queryClient.getQueryData(nextPageKey);
@@ -100,8 +108,8 @@ export function useTasksQuery(pageSize = 10): UseTasksQueryReturn {
         queryKey: nextPageKey,
         queryFn: async () => {
           const response = await TaskService.query.getMany({
-            page: currentPage + 1,
-            pageSize: pageSize,
+            page: pagination.currentPage + 1,
+            pageSize: pagination.pageSize,
             assignedToMe: false,
           });
           
@@ -112,7 +120,6 @@ export function useTasksQuery(pageSize = 10): UseTasksQueryReturn {
           return {
             data: response.data.data,
             totalCount: response.data.pagination.totalCount,
-            hasNextPage: response.data.pagination.hasNextPage,
           };
         },
         staleTime: 5 * 60 * 1000,
@@ -126,12 +133,15 @@ export function useTasksQuery(pageSize = 10): UseTasksQueryReturn {
   return {
     tasks: response?.data || [],
     totalCount: response?.totalCount || 0,
-    currentPage,
-    pageSize,
-    hasNextPage,
-    hasPreviousPage: currentPage > 1,
-    goToNextPage,
-    goToPreviousPage,
+    pagination: {
+      currentPage: pagination.currentPage,
+      totalPages: pagination.totalPages,
+      hasNextPage: pagination.hasNextPage,
+      hasPreviousPage: pagination.hasPreviousPage,
+      goToNextPage: pagination.goToNextPage,
+      goToPreviousPage: pagination.goToPreviousPage,
+      goToPage: pagination.goToPage,
+    },
     isLoading: loadingState.isLoading,
     isFetching: loadingState.isFetching,
     error: loadingState.error,

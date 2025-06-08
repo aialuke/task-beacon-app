@@ -1,12 +1,14 @@
 
 /**
- * Simplified Task List - Step 2.4.6.2c
+ * Simplified Task List - Phase 3 Refactored
  * 
- * Converted from over-engineered optimized patterns to standard React patterns
+ * Updated to use centralized pagination abstractions.
+ * Eliminated complex prop threading and improved maintainability.
  */
 
 import { memo, useMemo, useCallback } from 'react';
 import CardLoader from '@/components/ui/loading/CardLoader';
+import { GenericPagination } from '@/components/ui';
 import { OptimizedTaskCard } from '../cards/OptimizedTaskCard';
 import { useTaskDataContext } from '@/features/tasks/context/TaskDataContext';
 import { useTaskUIContext } from '@/features/tasks/context/TaskUIContext';
@@ -32,8 +34,9 @@ function OptimizedTaskListComponent({
     tasks,
     isLoading,
     error,
+    pagination,
     totalCount,
-    pageSize,
+    isFetching,
   } = useTaskDataContext();
 
   const { filter, isMobile } = useTaskUIContext();
@@ -43,8 +46,8 @@ function OptimizedTaskListComponent({
 
   // Standard memoization for pagination check
   const shouldShowPagination = useMemo(
-    () => totalCount > pageSize,
-    [totalCount, pageSize]
+    () => totalCount > pagination.pageSize,
+    [totalCount, pagination.pageSize]
   );
 
   // Standard callback for task rendering
@@ -106,10 +109,18 @@ function OptimizedTaskListComponent({
     <div className="space-y-6">
       {taskListContent}
       
-      {/* Pagination would go here if shouldShowPagination is true */}
+      {/* Pagination using centralized component */}
       {shouldShowPagination && (
         <div className="border-t border-border pt-6">
-          {/* Pagination component would be rendered here */}
+          <GenericPagination
+            pagination={pagination}
+            totalCount={totalCount}
+            pageSize={pagination.pageSize}
+            showInfo={true}
+            showPageNumbers={true}
+            isFetching={isFetching}
+            isLoading={isLoading}
+          />
         </div>
       )}
     </div>

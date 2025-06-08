@@ -1,74 +1,38 @@
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationNext,
-  PaginationPrevious,
-} from '@/components/ui/pagination';
+
+import { GenericPagination } from '@/components/ui';
+import type { PaginationAPI } from '@/types/pagination.types';
 
 interface TaskPaginationProps {
-  currentPage: number;
+  pagination: Pick<PaginationAPI, 'currentPage' | 'totalPages' | 'hasNextPage' | 'hasPreviousPage' | 'goToNextPage' | 'goToPreviousPage' | 'goToPage'>;
   totalCount: number;
   pageSize: number;
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-  goToNextPage: () => void;
-  goToPreviousPage: () => void;
   isFetching: boolean;
   isLoading: boolean;
 }
 
+/**
+ * Task-specific pagination component - Phase 3 Refactored
+ * 
+ * Now uses the generic pagination component, eliminating complex prop threading.
+ * Reduced from 8 props to a clean pagination object.
+ */
 export default function TaskPagination({
-  currentPage,
+  pagination,
   totalCount,
   pageSize,
-  hasNextPage,
-  hasPreviousPage,
-  goToNextPage,
-  goToPreviousPage,
   isFetching,
   isLoading,
 }: TaskPaginationProps) {
-  if (totalCount <= pageSize) {
-    return null;
-  }
-
   return (
-    <>
-      <div className="mt-8">
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious
-                onClick={() => hasPreviousPage && goToPreviousPage()}
-                className={
-                  !hasPreviousPage ? 'pointer-events-none opacity-50' : ''
-                }
-              />
-            </PaginationItem>
-
-            <PaginationItem>
-              <span className="flex items-center justify-center px-4">
-                Page {currentPage} of {Math.ceil(totalCount / pageSize)}
-              </span>
-            </PaginationItem>
-
-            <PaginationItem>
-              <PaginationNext
-                onClick={() => hasNextPage && goToNextPage()}
-                className={!hasNextPage ? 'pointer-events-none opacity-50' : ''}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      </div>
-
-      {/* Loading indicator for pagination */}
-      {isFetching && !isLoading && (
-        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 transform rounded-full bg-primary/20 px-4 py-1 text-sm text-primary">
-          Updating...
-        </div>
-      )}
-    </>
+    <GenericPagination
+      pagination={pagination}
+      totalCount={totalCount}
+      pageSize={pageSize}
+      showInfo={true}
+      showPageNumbers={false}
+      isFetching={isFetching}
+      isLoading={isLoading}
+      className="mt-8"
+    />
   );
 }

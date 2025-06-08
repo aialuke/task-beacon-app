@@ -22,13 +22,9 @@ function TaskListComponent() {
     tasks,
     isLoading,
     error,
-    currentPage,
+    // Updated to use pagination object from refactored hook
+    pagination,
     totalCount,
-    pageSize,
-    hasNextPage,
-    hasPreviousPage,
-    goToNextPage,
-    goToPreviousPage,
     isFetching,
   } = useTaskDataContext();
 
@@ -39,8 +35,8 @@ function TaskListComponent() {
 
   // Show pagination if there are multiple pages
   const shouldShowPagination = useMemo(
-    () => totalCount > pageSize,
-    [totalCount, pageSize]
+    () => totalCount > pagination.pageSize,
+    [totalCount, pagination.pageSize]
   );
 
   if (isLoading) {
@@ -77,17 +73,13 @@ function TaskListComponent() {
         )}
       </div>
 
-      {/* Pagination Section */}
+      {/* Pagination Section - Now uses refactored component */}
       {shouldShowPagination && (
         <div className="border-t border-border pt-6">
           <TaskPagination
-            currentPage={currentPage}
+            pagination={pagination}
             totalCount={totalCount}
-            pageSize={pageSize}
-            hasNextPage={hasNextPage}
-            hasPreviousPage={hasPreviousPage}
-            goToNextPage={goToNextPage}
-            goToPreviousPage={goToPreviousPage}
+            pageSize={pagination.pageSize}
             isFetching={isFetching}
             isLoading={isLoading}
           />
