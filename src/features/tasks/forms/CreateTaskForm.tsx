@@ -1,5 +1,6 @@
+
 import { useCreateTask } from '@/features/tasks/hooks/useCreateTask';
-import { BaseTaskForm } from '@/components/form/BaseTaskForm';
+import { UnifiedTaskForm } from '@/components/form/UnifiedTaskForm';
 
 export default function CreateTaskForm({ onClose }: { onClose?: () => void }) {
   const {
@@ -23,7 +24,7 @@ export default function CreateTaskForm({ onClose }: { onClose?: () => void }) {
   } = useCreateTask({ onClose });
 
   return (
-    <BaseTaskForm
+    <UnifiedTaskForm
       title={title}
       setTitle={setTitle}
       description={description}
@@ -35,15 +36,15 @@ export default function CreateTaskForm({ onClose }: { onClose?: () => void }) {
       photoPreview={photoPreview}
       assigneeId={assigneeId}
       setAssigneeId={setAssigneeId}
-      loading={loading}
-      handlePhotoChange={handlePhotoChange}
-      handleSubmit={handleSubmit}
-      headerTitle="Create your task"
-      headerSubtitle="For every minute spent organising, an hour is earnt. ✨"
-      submitLabel="Share Task"
+      onSubmit={handleSubmit}
+      isSubmitting={loading}
+      onPhotoChange={handlePhotoChange}
       onPhotoRemove={handlePhotoRemove}
       photoLoading={photoLoading}
       processingResult={processingResult}
+      headerTitle="Create your task"
+      headerSubtitle="For every minute spent organising, an hour is earnt. ✨"
+      submitLabel="Share Task"
     />
   );
 }

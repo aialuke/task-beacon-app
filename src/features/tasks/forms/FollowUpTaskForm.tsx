@@ -1,7 +1,7 @@
 
 import type { Task } from '@/types';
 import { useFollowUpTask } from '@/features/tasks/hooks/useFollowUpTask';
-import { BaseTaskForm } from '@/components/form/BaseTaskForm';
+import { UnifiedTaskForm } from '@/components/form/UnifiedTaskForm';
 import { ParentTaskReference } from '@/components/form/ParentTaskReference';
 
 interface FollowUpTaskFormProps {
@@ -30,11 +30,11 @@ export default function FollowUpTaskForm({
     handleSubmit,
     handlePhotoRemove,
     photoLoading,
-    processingResult, // Now available from standardized photo upload
+    processingResult,
   } = useFollowUpTask({ parentTask, onClose });
 
   return (
-    <BaseTaskForm
+    <UnifiedTaskForm
       title={title}
       setTitle={setTitle}
       description={description}
@@ -46,23 +46,23 @@ export default function FollowUpTaskForm({
       photoPreview={photoPreview}
       assigneeId={assigneeId}
       setAssigneeId={setAssigneeId}
-      loading={loading}
-      handlePhotoChange={handlePhotoChange}
-      handleSubmit={handleSubmit}
+      onSubmit={handleSubmit}
+      isSubmitting={loading}
+      onPhotoChange={handlePhotoChange}
+      onPhotoRemove={handlePhotoRemove}
+      photoLoading={photoLoading}
+      processingResult={processingResult}
       headerTitle="Create Follow-up Task"
       headerSubtitle="Alone we can do so little; together we can do so much.✨"
       submitLabel="Create Follow-up"
       titlePlaceholder="Enter follow-up task title"
       titleLabel="Follow-up Title"
       descriptionPlaceholder="Describe your follow-up task..."
-      onPhotoRemove={handlePhotoRemove}
-      photoLoading={photoLoading}
-      processingResult={processingResult}
     >
-      {/* Parent Task Reference moved to bottom */}
+      {/* Parent Task Reference */}
       <div className="mt-8 border-t border-border/20 pt-6">
         <ParentTaskReference parentTask={parentTask} />
       </div>
-    </BaseTaskForm>
+    </UnifiedTaskForm>
   );
 }

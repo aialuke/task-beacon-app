@@ -2,25 +2,52 @@
 import { FileText, Sparkles } from 'lucide-react';
 import { FloatingInput } from '@/components/ui/form/FloatingInput';
 import { FloatingTextarea } from '@/components/ui/form/FloatingTextarea';
-import { QuickActionBarDecoupled } from '@/components/form/QuickActionBarDecoupled';
-import type { PhotoUploadInterface, FormSubmissionInterface, FormStateInterface } from './interfaces/PhotoUploadInterface';
+import { QuickActionBar } from '@/components/form/QuickActionBar';
+import type { ProcessingResult } from '@/lib/utils/image/types';
 
-interface BaseTaskFormGenericProps extends FormStateInterface, PhotoUploadInterface, FormSubmissionInterface {
+interface UnifiedTaskFormProps {
+  // Form state
+  title: string;
+  setTitle: (value: string) => void;
+  description: string;
+  setDescription: (value: string) => void;
+  dueDate: string;
+  setDueDate: (value: string) => void;
+  url: string;
+  setUrl: (value: string) => void;
+  assigneeId: string;
+  setAssigneeId: (value: string) => void;
+
+  // Form submission
+  onSubmit: (e: React.FormEvent) => void;
+  isSubmitting: boolean;
+  submitLabel: string;
+
+  // Photo upload
+  photoPreview: string | null;
+  onPhotoChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onPhotoRemove?: () => void;
+  photoLoading?: boolean;
+  processingResult?: ProcessingResult | null;
+
+  // Presentation
   headerTitle: string;
   headerSubtitle: string;
-  titlePlaceholder?: string;
   titleLabel?: string;
-  descriptionPlaceholder?: string;
   descriptionLabel?: string;
-  children?: React.ReactNode;
+  titlePlaceholder?: string;
+  descriptionPlaceholder?: string;
   disabled?: boolean;
+  children?: React.ReactNode;
 }
 
 /**
- * Generic task form component decoupled from specific hook implementations
- * Uses dependency injection pattern for better testability and reusability
+ * Unified Task Form Component - Phase 1 Consolidation
+ * 
+ * Combines BaseTaskForm and BaseTaskFormGeneric into single component.
+ * Eliminates duplication while maintaining all functionality.
  */
-export function BaseTaskFormGeneric({
+export function UnifiedTaskForm({
   // Form state
   title,
   setTitle,
@@ -33,6 +60,11 @@ export function BaseTaskFormGeneric({
   assigneeId,
   setAssigneeId,
   
+  // Form submission
+  onSubmit,
+  isSubmitting,
+  submitLabel,
+  
   // Photo upload
   photoPreview,
   onPhotoChange,
@@ -40,20 +72,16 @@ export function BaseTaskFormGeneric({
   photoLoading = false,
   processingResult,
   
-  // Form submission
-  onSubmit,
-  isSubmitting,
-  submitLabel,
-  
   // Presentation
   headerTitle,
   headerSubtitle,
   titleLabel = 'Task Title',
   descriptionLabel = 'Description',
+  titlePlaceholder,
   descriptionPlaceholder = 'Describe your task...',
-  children,
   disabled = false,
-}: BaseTaskFormGenericProps) {
+  children,
+}: UnifiedTaskFormProps) {
   const handleUrlChange = (newUrl: string) => {
     setUrl(newUrl);
   };
@@ -82,26 +110,29 @@ export function BaseTaskFormGeneric({
         <FloatingInput
           id="title"
           value={title}
-          onChange={(e) => { setTitle(e.target.value); }}
+          onChange={(e) => setTitle(e.target.value)}
           label={titleLabel}
+          placeholder={titlePlaceholder}
           icon={<FileText className="h-4 w-4" />}
           maxLength={22}
           required
+          disabled={disabled}
         />
 
         {/* Description Field */}
         <FloatingTextarea
           id="description"
           value={description}
-          onChange={(e) => { setDescription(e.target.value); }}
+          onChange={(e) => setDescription(e.target.value)}
           placeholder={descriptionPlaceholder}
           label={descriptionLabel}
           icon={<Sparkles className="h-4 w-4" />}
+          disabled={disabled}
         />
 
-        {/* Decoupled Quick Action Bar */}
+        {/* Quick Action Bar */}
         <div className="w-full">
-          <QuickActionBarDecoupled
+          <QuickActionBar
             dueDate={dueDate}
             onDueDateChange={handleDueDateChange}
             assigneeId={assigneeId}

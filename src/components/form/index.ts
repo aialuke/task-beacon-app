@@ -1,18 +1,18 @@
 
 /**
- * Form Components - Standardized Export Organization
+ * Form Components - Consolidated Export Organization
  * 
- * Centralized exports with consistent import patterns.
+ * Phase 1: Form System Consolidation - Updated exports
  */
 
-// === EXTERNAL LIBRARIES ===
-// (none required for exports)
+// === UNIFIED FORM COMPONENT ===
+export { UnifiedTaskForm } from './UnifiedTaskForm';
 
-// === MAIN FORM COMPONENTS ===
+// === LEGACY COMPONENTS (Deprecated - Use UnifiedTaskForm) ===
 export { BaseTaskForm } from './BaseTaskForm';
-export { QuickActionBar } from './QuickActionBar';
 
 // === QUICK ACTION BAR COMPONENTS ===
+export { QuickActionBar } from './QuickActionBar';
 export { DatePickerButton } from './components/DatePickerButton';
 export { ActionButton } from './components/ActionButton';
 export { SubmitButton } from './components/SubmitButton';
@@ -25,11 +25,8 @@ export { UserSearchModal } from './UserSearchModal';
 export { AutocompleteUserInput } from './AutocompleteUserInput';
 
 // === PHOTO UPLOAD COMPONENTS ===
-// Default exports for lazy loading compatibility
 export { default as SimplePhotoUpload } from './SimplePhotoUpload';
 export { default as SimplePhotoUploadModal } from './SimplePhotoUploadModal';
-
-// Named exports for backward compatibility
 export { SimplePhotoUpload as SimplePhotoUploadNamed } from './SimplePhotoUpload';
 export { SimplePhotoUploadModal as SimplePhotoUploadModalNamed } from './SimplePhotoUploadModal';
 
