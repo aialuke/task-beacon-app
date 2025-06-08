@@ -3,7 +3,6 @@ import type {
   PaginationParams,
   PaginatedResponse,
   PaginationMeta,
-  BaseQueryParams,
 } from '@/types/pagination.types';
 import { 
   calculatePaginationMeta,
@@ -51,32 +50,32 @@ export class PaginationService {
       const { page, pageSize } = validation.sanitized;
       const { table, select = '*', filters = {}, orderBy } = options;
 
-      // Build the base query
-      const baseQuery = supabase
-        .from(table)
-        .select(select, { count: 'exact' });
+      // Build query step by step to avoid type complexity
+      const queryBuilder = supabase.from(table);
+      
+      // Add select with count
+      const selectQuery = queryBuilder.select(select, { count: 'exact' });
 
-      // Apply filters
-      let filteredQuery = baseQuery;
+      // Apply filters using any to avoid type complexity
+      let currentQuery: any = selectQuery;
       Object.entries(filters).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
-          filteredQuery = filteredQuery.eq(key, value);
+          currentQuery = currentQuery.eq(key, value);
         }
       });
 
       // Apply ordering
-      let orderedQuery = filteredQuery;
       if (orderBy) {
-        orderedQuery = orderedQuery.order(orderBy.column, { ascending: orderBy.ascending ?? true });
+        currentQuery = currentQuery.order(orderBy.column, { ascending: orderBy.ascending ?? true });
       }
 
       // Apply pagination
       const from = (page - 1) * pageSize;
       const to = from + pageSize - 1;
-      const finalQuery = orderedQuery.range(from, to);
+      currentQuery = currentQuery.range(from, to);
 
       // Execute query
-      const { data, error, count } = await finalQuery;
+      const { data, error, count } = await currentQuery;
 
       if (error) {
         return {
@@ -127,19 +126,19 @@ export class PaginationService {
     filters: Record<string, unknown> = {}
   ): Promise<ApiResponse<number>> {
     try {
-      const baseQuery = supabase
+      // Use any to avoid type complexity
+      let currentQuery: any = supabase
         .from(table)
         .select('*', { count: 'exact', head: true });
 
       // Apply filters
-      let filteredQuery = baseQuery;
       Object.entries(filters).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
-          filteredQuery = filteredQuery.eq(key, value);
+          currentQuery = currentQuery.eq(key, value);
         }
       });
 
-      const { count, error } = await filteredQuery;
+      const { count, error } = await currentQuery;
 
       if (error) {
         return {
