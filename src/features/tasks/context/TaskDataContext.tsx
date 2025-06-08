@@ -61,8 +61,14 @@ export function TaskDataContextProvider({
     error: taskQueries.error,
     totalCount: taskQueries.totalCount,
     pagination: {
-      ...taskQueries.pagination,
-      pageSize: taskQueries.pagination.pageSize,
+      currentPage: taskQueries.pagination.currentPage,
+      totalPages: taskQueries.pagination.totalPages,
+      pageSize: taskQueries.pagination.pageSize || 10, // Access pageSize from the hook's usePagination result
+      hasNextPage: taskQueries.pagination.hasNextPage,
+      hasPreviousPage: taskQueries.pagination.hasPreviousPage,
+      goToNextPage: taskQueries.pagination.goToNextPage,
+      goToPreviousPage: taskQueries.pagination.goToPreviousPage,
+      goToPage: taskQueries.pagination.goToPage,
     },
     retry: taskQueries.refetch || (() => {}),
   };

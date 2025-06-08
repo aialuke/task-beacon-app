@@ -17,6 +17,7 @@ interface UseTasksQueryReturn {
   pagination: {
     currentPage: number;
     totalPages: number;
+    pageSize: number;
     hasNextPage: boolean;
     hasPreviousPage: boolean;
     goToNextPage: () => void;
@@ -136,6 +137,7 @@ export function useTasksQuery(options: UseTasksQueryOptions = {}): UseTasksQuery
     pagination: {
       currentPage: pagination.currentPage,
       totalPages: pagination.totalPages,
+      pageSize: pagination.pageSize,
       hasNextPage: pagination.hasNextPage,
       hasPreviousPage: pagination.hasPreviousPage,
       goToNextPage: pagination.goToNextPage,
