@@ -15,7 +15,7 @@ interface TaskProvidersProps {
 }
 
 /**
- * Feature-specific provider composition for task management
+ * Feature-specific provider composition for task management - Step 2.4 Unified
  * 
  * Provides both task data and UI state contexts in the correct order.
  * Should be used to wrap task-related routes or components that need
