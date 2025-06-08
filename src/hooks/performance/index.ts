@@ -1,21 +1,19 @@
+
 /**
- * Performance Hooks Index - Phase 2.4 Revised
+ * Performance Hooks Index - Phase 2.4.6 Final Cleanup
  * 
- * Simplified exports - use standard React hooks for most cases.
- * Only use these for proven performance bottlenecks.
+ * All unnecessary abstractions have been removed.
+ * Use standard React hooks (useMemo, useCallback, memo) for performance optimizations.
+ * 
+ * This file is kept for any future performance utilities that provide actual value
+ * beyond standard React patterns.
  */
 
-export { 
-  memoizeComponent,
-  useMemoizedComputation,
-  useMemoizedCallback,
-  createShallowEqual,
-  createDeepEqual,
-} from './memoization';
+// Note: All performance hook abstractions have been removed.
+// Use standard React hooks directly:
+// - useMemo() instead of useOptimizedMemo()
+// - useCallback() instead of useOptimizedCallback()
+// - memo() instead of memoizeComponent()
 
-// Keep backward compatibility but discourage overuse
-// Use standard useMemo/useCallback for simple operations
-export { 
-  useOptimizedMemo,
-  useOptimizedCallback 
-} from './memo';
+// This index file is maintained for potential future performance utilities
+// that provide genuine value beyond standard React patterns.
