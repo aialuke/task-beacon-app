@@ -18,7 +18,7 @@ export function useTaskAnimation(contentRef: React.RefObject<HTMLDivElement>) {
   const [animationProps, setAnimationProps] = useSpring(() => ({
     height: 0,
     opacity: 0,
-    config: { tension: 300, friction: 30 },
+    config: { tension: 240, friction: 36 },
   }));
 
   const toggleExpanded = () => {
