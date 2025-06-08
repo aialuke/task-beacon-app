@@ -6,7 +6,6 @@ import { BrowserRouter } from 'react-router-dom';
 
 // Internal utilities
 import { queryClient } from '@/lib/query-client';
-import { useBundleOptimization } from '@/hooks/useBundleOptimization';
 import { isFeatureEnabled } from '@/lib/config/app';
 
 // Components
@@ -73,11 +72,8 @@ class AppErrorBoundary extends React.Component<
  * Performance optimization wrapper
  */
 function PerformanceOptimizations({ children }: { children: React.ReactNode }) {
-  // Apply bundle optimizations if enabled
-  if (isFeatureEnabled('enableBundleOptimization')) {
-    useBundleOptimization();
-  }
-  
+  // Note: Bundle optimizations removed in Phase 3.3 cleanup
+  // Essential optimizations are now handled in core utilities
   return <>{children}</>;
 }
 
