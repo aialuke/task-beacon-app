@@ -1,7 +1,7 @@
 
 import { LazyComponents } from '@/components/ui/LazyComponent';
 
-// Lazy load the EnhancedTaskList component with optimized virtualization loading
+// Simplified lazy loading without optimized component dependencies
 export const LazyEnhancedTaskList = LazyComponents.createLazyList(
   () => import('../lists/EnhancedTaskList').then(module => ({ default: module.default })),
   'EnhancedTaskList'

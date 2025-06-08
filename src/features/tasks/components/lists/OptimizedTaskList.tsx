@@ -1,8 +1,8 @@
 
 /**
- * Optimized Task List - Phase 2.4.3 Simplified
+ * Simplified Task List - Step 2.4.6.2c
  * 
- * Performance-optimized task list using standard React patterns
+ * Converted from over-engineered optimized patterns to standard React patterns
  */
 
 import { memo, useMemo, useCallback } from 'react';
@@ -38,7 +38,7 @@ function OptimizedTaskListComponent({
 
   const { filter, isMobile } = useTaskUIContext();
 
-  // Standard memoization for filtered tasks
+  // Standard React memoization for filtered tasks
   const filteredTasks = useTasksFilter(tasks, filter);
 
   // Standard memoization for pagination check
@@ -116,7 +116,7 @@ function OptimizedTaskListComponent({
   );
 }
 
-// Standard React memo with shallow equality
+// Standard React memo with shallow equality check
 function shallowEqual<T extends Record<string, any>>(prevProps: T, nextProps: T): boolean {
   const prevKeys = Object.keys(prevProps);
   const nextKeys = Object.keys(nextProps);

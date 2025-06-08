@@ -1,20 +1,21 @@
 
 /**
- * Unified Loading States Component
+ * Simplified Loading States Component - Step 2.4.6.2c
  * 
- * Consolidates TaskLoadingStates, LoadingSpinner, and ImageLoadingState
- * into a single, consistent loading system.
+ * Simplified from over-engineered unified system to basic loading patterns.
+ * Uses standard React patterns instead of complex abstractions.
  */
 
-// === EXTERNAL LIBRARIES ===
 import React, { memo } from 'react';
-
-// === INTERNAL UTILITIES ===
 import { cn } from '@/lib/utils';
 
-// === TYPES ===
+interface LoadingSpinnerProps {
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  className?: string;
+}
+
 interface UnifiedLoadingProps {
-  variant?: 'spinner' | 'skeleton' | 'card' | 'page' | 'image' | 'grid';
+  variant?: 'spinner' | 'skeleton' | 'card' | 'page';
   size?: 'sm' | 'md' | 'lg' | 'xl';
   count?: number;
   message?: string;
@@ -22,15 +23,12 @@ interface UnifiedLoadingProps {
 }
 
 /**
- * Spinner component for basic loading states
+ * Basic spinner component
  */
-const LoadingSpinner = memo(function LoadingSpinner({ 
+export const LoadingSpinner = memo(function LoadingSpinner({ 
   size = 'md', 
   className 
-}: { 
-  size?: 'sm' | 'md' | 'lg' | 'xl'; 
-  className?: string; 
-}) {
+}: LoadingSpinnerProps) {
   const sizeClasses = {
     sm: 'w-4 h-4',
     md: 'w-6 h-6',
@@ -44,9 +42,9 @@ const LoadingSpinner = memo(function LoadingSpinner({
 });
 
 /**
- * Skeleton component for content loading
+ * Basic skeleton component
  */
-const SkeletonBox = memo(function SkeletonBox({ 
+export const SkeletonBox = memo(function SkeletonBox({ 
   className,
   height = 'h-4',
 }: { 
@@ -59,9 +57,9 @@ const SkeletonBox = memo(function SkeletonBox({
 });
 
 /**
- * Card skeleton for task-like content
+ * Basic card skeleton
  */
-const CardSkeleton = memo(function CardSkeleton() {
+export const CardSkeleton = memo(function CardSkeleton() {
   return (
     <div className="p-6 border rounded-xl bg-card space-y-4">
       <div className="flex items-start justify-between">
@@ -84,9 +82,9 @@ const CardSkeleton = memo(function CardSkeleton() {
 });
 
 /**
- * Image skeleton for image loading states
+ * Basic image skeleton
  */
-const ImageSkeleton = memo(function ImageSkeleton({ 
+export const ImageSkeleton = memo(function ImageSkeleton({ 
   aspectRatio = 'aspect-video',
   className,
 }: { 
@@ -103,7 +101,7 @@ const ImageSkeleton = memo(function ImageSkeleton({
 });
 
 /**
- * Main unified loading component
+ * Simplified main loading component using standard React patterns
  */
 const UnifiedLoadingStates = memo(function UnifiedLoadingStates({
   variant = 'spinner',
@@ -112,69 +110,48 @@ const UnifiedLoadingStates = memo(function UnifiedLoadingStates({
   message,
   className,
 }: UnifiedLoadingProps) {
-  const renderContent = () => {
-    switch (variant) {
-      case 'spinner':
-        return (
-          <div className={cn("flex flex-col items-center justify-center space-y-3", className)}>
-            <LoadingSpinner size={size} />
-            {message && <p className="text-sm text-muted-foreground">{message}</p>}
-          </div>
-        );
+  if (variant === 'spinner') {
+    return (
+      <div className={cn("flex flex-col items-center justify-center space-y-3", className)}>
+        <LoadingSpinner size={size} />
+        {message && <p className="text-sm text-muted-foreground">{message}</p>}
+      </div>
+    );
+  }
 
-      case 'skeleton':
-        return (
-          <div className={cn("space-y-2", className)}>
-            {Array.from({ length: count }, (_, i) => (
-              <SkeletonBox key={i} className="w-full" />
-            ))}
-          </div>
-        );
+  if (variant === 'skeleton') {
+    return (
+      <div className={cn("space-y-2", className)}>
+        {Array.from({ length: count }, (_, i) => (
+          <SkeletonBox key={i} className="w-full" />
+        ))}
+      </div>
+    );
+  }
 
-      case 'card':
-        return (
-          <div className={cn("space-y-6", className)}>
-            {Array.from({ length: count }, (_, i) => (
-              <CardSkeleton key={i} />
-            ))}
-          </div>
-        );
+  if (variant === 'card') {
+    return (
+      <div className={cn("space-y-6", className)}>
+        {Array.from({ length: count }, (_, i) => (
+          <CardSkeleton key={i} />
+        ))}
+      </div>
+    );
+  }
 
-      case 'grid':
-        return (
-          <div className={cn("grid gap-6 md:grid-cols-2 lg:grid-cols-3", className)}>
-            {Array.from({ length: count }, (_, i) => (
-              <CardSkeleton key={i} />
-            ))}
-          </div>
-        );
+  if (variant === 'page') {
+    return (
+      <div className={cn("flex flex-col items-center justify-center min-h-[400px] space-y-4", className)}>
+        <LoadingSpinner size="xl" />
+        <div className="text-center space-y-2">
+          <h3 className="text-lg font-semibold">Loading</h3>
+          {message && <p className="text-muted-foreground">{message}</p>}
+        </div>
+      </div>
+    );
+  }
 
-      case 'image':
-        return <ImageSkeleton className={className} />;
-
-      case 'page':
-        return (
-          <div className={cn("flex flex-col items-center justify-center min-h-[400px] space-y-4", className)}>
-            <LoadingSpinner size="xl" />
-            <div className="text-center space-y-2">
-              <h3 className="text-lg font-semibold">Loading</h3>
-              {message && <p className="text-muted-foreground">{message}</p>}
-            </div>
-          </div>
-        );
-
-      default:
-        return <LoadingSpinner size={size} className={className} />;
-    }
-  };
-
-  return (
-    <div role="status" aria-label={message ?? "Loading content"}>
-      {renderContent()}
-    </div>
-  );
+  return <LoadingSpinner size={size} className={className} />;
 });
 
-// Export individual components for backward compatibility
-export { LoadingSpinner, SkeletonBox, CardSkeleton, ImageSkeleton };
 export default UnifiedLoadingStates;

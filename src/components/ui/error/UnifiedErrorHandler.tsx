@@ -1,29 +1,25 @@
 
 /**
- * Unified Error Handler Component
+ * Simplified Error Handler Component - Step 2.4.6.2c
  * 
- * Consolidates multiple error handling patterns into a single, reusable component.
- * Replaces scattered error boundary implementations with consistent behavior.
+ * Simplified from over-engineered unified system to basic error patterns.
+ * Uses standard React patterns instead of complex abstractions.
  */
 
-// === EXTERNAL LIBRARIES ===
 import React, { memo } from 'react';
-
-// === INTERNAL UTILITIES ===
 import { cn } from '@/lib/utils';
 
-// === TYPES ===
 interface UnifiedErrorHandlerProps {
   error?: Error | string | null;
   fallback?: React.ReactNode;
   onRetry?: () => void;
-  variant?: 'card' | 'inline' | 'page' | 'modal';
+  variant?: 'card' | 'inline' | 'page';
   title?: string;
   className?: string;
 }
 
 /**
- * Unified error display component that consolidates various error patterns
+ * Simplified error display component using standard React patterns
  */
 const UnifiedErrorHandler = memo(function UnifiedErrorHandler({
   error,
@@ -48,21 +44,15 @@ const UnifiedErrorHandler = memo(function UnifiedErrorHandler({
     card: "p-6 rounded-xl border border-destructive/20 bg-destructive/5",
     inline: "p-4 rounded-lg border border-destructive/20 bg-destructive/5",
     page: "min-h-[400px] p-8",
-    modal: "p-6",
   };
 
-  const iconClasses = {
-    card: "w-12 h-12",
-    inline: "w-8 h-8", 
-    page: "w-16 h-16",
-    modal: "w-10 h-10",
-  };
+  const iconSize = variant === 'page' ? "w-16 h-16" : "w-12 h-12";
 
   return (
     <div className={cn(baseClasses, variantClasses[variant], className)}>
-      <div className={cn("rounded-full bg-destructive/10 flex items-center justify-center", iconClasses[variant])}>
+      <div className={cn("rounded-full bg-destructive/10 flex items-center justify-center", iconSize)}>
         <svg 
-          className={cn("text-destructive", variant === 'page' ? "w-8 h-8" : "w-5 h-5")} 
+          className={cn("text-destructive", variant === 'page' ? "w-8 h-8" : "w-6 h-6")} 
           fill="none" 
           stroke="currentColor" 
           viewBox="0 0 24 24"

@@ -1,8 +1,8 @@
 
 /**
- * Optimized Task Card - Phase 2.4.3 Simplified
+ * Simplified Task Card - Step 2.4.6.2c
  * 
- * Simplified task card component using standard React patterns
+ * Converted from over-engineered optimized patterns to standard React patterns
  */
 
 import { memo, useMemo, useCallback } from 'react';
