@@ -1,17 +1,11 @@
+
 /**
- * Shared Utility Functions - Phase 3.1 Cleanup
+ * Shared Utility Functions - Cleaned Up
  * 
- * Removed duplicate functions that now have canonical sources:
- * - Date functions moved to @/lib/utils/date
- * - Format functions moved to @/lib/utils/format
- * - Validation functions moved to @/schemas
+ * Only essential shared utilities remain. Legacy compatibility layers removed.
  */
 
-// === EXTERNAL LIBRARIES ===
-// (None for this file)
-
 // === INTERNAL UTILITIES ===
-// Import from centralized systems for backward compatibility during transition
 export {
   formatDate,
   getDaysRemaining,
@@ -27,16 +21,6 @@ export {
   formatPrice,
   formatNumber,
 } from './format';
-
-export {
-  isValidEmail,
-  isValidPassword,
-  isValidUrl,
-  isDateInFuture,
-  validateWithZod as validateField,
-  validateFormWithZod as validateForm,
-  type ValidationResult,
-} from '@/schemas';
 
 // === URL UTILITIES ===
 export const truncateUrl = (url: string, maxLength = 30): string => {

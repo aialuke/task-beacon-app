@@ -1,11 +1,11 @@
 
 /**
- * Utility Types Barrel File - Updated
+ * Utility Types - Streamlined Exports
  * 
- * Now imports from the streamlined type system to eliminate duplication.
+ * Simplified to essential utility types without legacy compatibility layers.
  */
 
-// Import from streamlined system
+// Core utility types from streamlined system
 export type {
   DeepPartial,
   DeepRequired,
@@ -22,7 +22,7 @@ export type {
   AsyncEventHandler,
 } from '../utility.types';
 
-// Re-export form utilities from the main form types
+// Form utilities from main form types
 export type {
   FormState,
   ValidationRule,
@@ -36,13 +36,3 @@ export type {
   SelectFieldProps,
   FormConfig,
 } from '../form.types';
-
-// Legacy validation types (kept for backward compatibility)
-export type {
-  ValidationResult as UtilityValidationResult,
-  ValidationDetail,
-  ValidationOptions,
-  ValidationRule as UtilityValidationRule,
-  AsyncValidationRule,
-  ConditionalValidationRule,
-} from './validation.types';

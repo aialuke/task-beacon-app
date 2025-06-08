@@ -1,8 +1,8 @@
+
 /**
- * Shared Types Barrel File - Unified Imports
+ * Shared Types - Cleaned Legacy Exports
  * 
- * Updated to import from the unified type system and reduce duplication.
- * This file will be phased out as we complete the type consolidation.
+ * Simplified imports from unified type system with legacy compatibility removed.
  */
 
 // Import from unified type system
@@ -44,34 +44,7 @@ export type {
   ModalState,
 } from '@/types';
 
-// Legacy compatibility exports (will be removed in next phase)
-export type {
-  BaseComponentProps as ContainerProps,
-  BaseComponentProps as ComponentVariants,
-  BaseComponentProps as FormFieldProps,
-  BaseComponentProps as SkeletonProps,
-} from '@/types';
-
-// Database types that remain here temporarily
-export type {
-  DatabaseOperation,
-  TableRow,
-  QueryFilter,
-  QueryOptions,
-  TransactionOptions,
-  DatabaseConfig,
-  ColumnDefinition,
-  TableSchema,
-  Migration,
-  DatabaseHealth,
-  AuditLog,
-  DatabaseError,
-  QueryMetrics,
-  BackupConfig,
-  BackupInfo,
-} from './database.types';
-
-// Drag and drop types (keep here temporarily as they're app-wide)
+// Simplified interfaces without legacy compatibility
 export interface DragItem {
   id: string;
   type: string;

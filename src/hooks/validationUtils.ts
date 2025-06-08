@@ -1,9 +1,8 @@
 
 /**
- * Validation Utilities Hook - Phase 2 Update
+ * Validation Utilities Hook - Simplified
  * 
- * Enhanced to use centralized Zod validation system from Phase 1.
- * Provides backward-compatible interface while leveraging new validation infrastructure.
+ * Streamlined to use centralized Zod validation system without legacy compatibility.
  */
 
 // === EXTERNAL LIBRARIES ===
@@ -32,7 +31,7 @@ export interface ValidationOptions {
 }
 
 /**
- * Enhanced object validation using centralized Zod schemas
+ * Object validation using centralized Zod schemas
  */
 export function validateObject<T>(
   schema: z.ZodSchema<T>,
@@ -62,7 +61,7 @@ export function validateObject<T>(
 }
 
 /**
- * Enhanced field validation using centralized schemas
+ * Field validation using centralized schemas
  */
 export function validateFieldValue(field: string, value: string): ValidationResult {
   let schema: z.ZodSchema<any>;
@@ -84,7 +83,6 @@ export function validateFieldValue(field: string, value: string): ValidationResu
       schema = urlSchema;
       break;
     default:
-      // For unknown fields, create a basic string schema
       schema = z.string().optional();
   }
   
@@ -98,10 +96,9 @@ export function validateFieldValue(field: string, value: string): ValidationResu
 }
 
 /**
- * Enhanced form validation using centralized Zod system
+ * Form validation using centralized Zod system
  */
 export function validateFormData(data: Record<string, unknown>): ValidationResult {
-  // Create dynamic schema based on field names
   const schemas: Record<string, z.ZodSchema<any>> = {};
   
   Object.keys(data).forEach(key => {
@@ -142,14 +139,4 @@ export function validateFormData(data: Record<string, unknown>): ValidationResul
     errors,
     firstError: Object.values(errors)[0],
   };
-}
-
-/**
- * Backward compatibility function for validation with error
- */
-export function validateWithError<T>(
-  schema: z.ZodSchema<T>,
-  data: unknown
-): ValidationResult {
-  return validateObject(schema, data, { stopOnFirstError: true });
 }

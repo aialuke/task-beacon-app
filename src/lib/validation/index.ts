@@ -1,15 +1,14 @@
 
 /**
- * Simplified Validation Module - Phase 4 Cleanup
+ * Validation Module - Streamlined Core Functions
  * 
- * Streamlined to focus on essential database and business validation.
- * Format validation has been moved to the centralized Zod system.
+ * Simplified to focus only on essential database and business validation.
+ * Legacy compatibility layers and over-engineered utilities removed.
  */
 
 // === TYPES ===
 export type {
   BasicValidationResult as ValidationResult,
-  StandardValidationResult as DetailedValidationResult,
   ValidationContext,
   ValidationErrorCode,
   ValidationWarningCode,
@@ -35,18 +34,7 @@ export {
   withErrorHandling,
 } from './result-creators';
 
-// === SIMPLIFIED MESSAGE HANDLING ===
+// === MESSAGE HANDLING ===
 export {
   getStandardMessage,
 } from './message-constants';
-
-// === REMOVED COMPLEX UTILITIES ===
-// The following have been simplified or moved to centralized Zod system:
-// - Format validators (moved to @/schemas)
-// - Complex entity validators (simplified)
-// - Over-engineered result creators (streamlined)
-// - Redundant validation patterns (consolidated)
-
-// === MIGRATION NOTICE ===
-// For format validation (email, password, etc.), use the centralized Zod system:
-// import { emailSchema, passwordSchema, validateWithZod } from '@/schemas';

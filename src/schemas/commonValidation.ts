@@ -1,12 +1,11 @@
 
 /**
- * Common Validation - Legacy Compatibility Layer
+ * Common Validation - Cleaned Legacy Compatibility
  * 
- * Re-exports from the new centralized validation system for backward compatibility.
- * This file provides the same interface as before while using the new Zod-based system.
+ * Simplified re-exports from the centralized validation system.
  */
 
-// Re-export core validation functions for backward compatibility
+// Re-export core validation functions
 export {
   isValidEmail,
   isValidPassword,
@@ -19,7 +18,6 @@ export {
   taskDescriptionSchema,
   urlSchema,
   futureDateSchema,
-  createTextSchema,
   validateWithZod,
   validateFormWithZod,
   VALIDATION_MESSAGES,

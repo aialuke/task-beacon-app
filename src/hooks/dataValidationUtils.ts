@@ -1,9 +1,8 @@
 
 /**
- * Data Validation Utilities - Phase 3 Update
+ * Data Validation Utilities - Simplified
  * 
- * Updated to use centralized Zod validation system from Phase 1.
- * Provides enhanced validation utilities with better type safety.
+ * Streamlined to use centralized Zod validation system.
  */
 
 import { 
@@ -18,7 +17,7 @@ import {
 } from '@/schemas';
 
 /**
- * Enhanced validation error display with better UX
+ * Validation error display utility
  */
 export function showValidationErrors(errors: Record<string, string[]> | string[]) {
   if (Array.isArray(errors)) {
@@ -42,10 +41,9 @@ export function showValidationErrors(errors: Record<string, string[]> | string[]
 }
 
 /**
- * Enhanced data validation using centralized Zod schemas
+ * Data validation using centralized Zod schemas
  */
 export function validateAndShowErrors(data: Record<string, unknown>) {
-  // Create dynamic schema based on field names
   const schemas: Record<string, any> = {};
   
   Object.keys(data).forEach(key => {
@@ -66,7 +64,6 @@ export function validateAndShowErrors(data: Record<string, unknown>) {
         schemas[key] = urlSchema;
         break;
       default:
-        // For unknown fields, allow any string
         schemas[key] = emailSchema.optional();
     }
   });
@@ -81,7 +78,7 @@ export function validateAndShowErrors(data: Record<string, unknown>) {
 }
 
 /**
- * Validate individual field with enhanced error handling
+ * Single field validation
  */
 export function validateSingleField(fieldName: string, value: unknown): ValidationResult {
   let schema: any;
@@ -103,7 +100,6 @@ export function validateSingleField(fieldName: string, value: unknown): Validati
       schema = urlSchema;
       break;
     default:
-      // For unknown fields, create a basic validation
       schema = emailSchema.optional();
   }
   
@@ -117,7 +113,7 @@ export function validateSingleField(fieldName: string, value: unknown): Validati
 }
 
 /**
- * Batch validate multiple fields
+ * Multiple field validation
  */
 export function validateMultipleFields(fields: Record<string, unknown>): ValidationResult {
   const errors: string[] = [];
