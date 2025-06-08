@@ -1,36 +1,19 @@
 
 /**
- * Async Operations Utilities - Modular Entry Point
+ * Async Operations Utilities - Simplified Entry Point
  * 
- * Split from oversized async-operations.ts for better maintainability.
+ * Removed over-engineered patterns: batch operations, optimistic updates, factory utilities.
+ * Focus on core async operation hook only.
  */
 
-// Core async operation hook
+// Core async operation hook only
 export {
   useAsyncOperation,
   type AsyncOperationOptions,
   type AsyncOperationResult,
 } from './useAsyncOperation';
 
-// Batch operations
-export { useBatchAsyncOperation } from './useBatchAsyncOperation';
-
-// Optimistic updates
-export { useOptimisticAsyncOperation } from './useOptimisticAsyncOperation';
-
-// Factory utilities
-export { createAsyncOperationFactory } from './factory';
-
-// Import for convenience namespace
-import { useAsyncOperation } from './useAsyncOperation';
-import { useBatchAsyncOperation } from './useBatchAsyncOperation';
-import { useOptimisticAsyncOperation } from './useOptimisticAsyncOperation';
-import { createAsyncOperationFactory } from './factory';
-
-// Convenience namespace export
+// Simple convenience export
 export const asyncOperationUtils = {
-  useAsyncOperation: useAsyncOperation,
-  useBatchAsyncOperation: useBatchAsyncOperation,
-  useOptimisticAsyncOperation: useOptimisticAsyncOperation,
-  createAsyncOperationFactory: createAsyncOperationFactory,
+  useAsyncOperation,
 };

@@ -1,44 +1,35 @@
 
 /**
- * Core Async Operation Hook - Phase 1 Consolidation
+ * Core Async Operation Hook - Simplified Implementation
  * 
- * Updated to use unified BaseAsyncState interface for consistency.
+ * Removed unnecessary complexity: retry logic, timeouts, abort controllers for simple operations.
+ * Focus on essential async operation patterns.
  */
 
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { useErrorHandler } from '@/hooks/core';
 import type { BaseAsyncState } from '@/types/async-state.types';
 
 /**
- * Async operation options
+ * Simplified async operation options
  */
 export interface AsyncOperationOptions {
   /** Whether to show error toasts */
   showErrorToast?: boolean;
   /** Whether to log errors to console */
   logErrors?: boolean;
-  /** Retry attempts on failure */
-  retryAttempts?: number;
-  /** Delay between retry attempts (ms) */
-  retryDelay?: number;
-  /** Timeout for the operation (ms) */
-  timeout?: number;
-  /** Whether to use optimistic updates */
-  optimistic?: boolean;
 }
 
 /**
- * Async operation result extending base state
+ * Simplified async operation result
  */
 export interface AsyncOperationResult<T> extends BaseAsyncState<T> {
   execute: (...args: unknown[]) => Promise<T | null>;
-  retry: () => Promise<T | null>;
   reset: () => void;
-  cancel: () => void;
 }
 
 /**
- * Hook for managing async operations with unified state interface
+ * Simplified hook for managing async operations
  */
 export function useAsyncOperation<T = unknown, TArgs extends any[] = any[]>(
   asyncFn: (...args: TArgs) => Promise<T>,
@@ -47,10 +38,6 @@ export function useAsyncOperation<T = unknown, TArgs extends any[] = any[]>(
   const {
     showErrorToast = true,
     logErrors = true,
-    retryAttempts = 0,
-    retryDelay = 1000,
-    timeout = 30000,
-    optimistic = false,
   } = options;
 
   const [state, setState] = useState<BaseAsyncState<T>>({
@@ -65,20 +52,7 @@ export function useAsyncOperation<T = unknown, TArgs extends any[] = any[]>(
     logToConsole: logErrors,
   });
 
-  const abortControllerRef = useRef<AbortController | null>(null);
-  const lastArgsRef = useRef<TArgs | null>(null);
-  const retryCountRef = useRef(0);
-
-  const executeWithRetry = useCallback(async (...args: TArgs): Promise<T | null> => {
-    // Cancel any ongoing operation
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
-
-    // Create new abort controller
-    abortControllerRef.current = new AbortController();
-    lastArgsRef.current = args;
-
+  const execute = useCallback(async (...args: TArgs): Promise<T | null> => {
     setState(prev => ({ 
       ...prev, 
       loading: true, 
@@ -86,44 +60,20 @@ export function useAsyncOperation<T = unknown, TArgs extends any[] = any[]>(
     }));
 
     try {
-      // Set up timeout
-      const timeoutId = setTimeout(() => {
-        abortControllerRef.current?.abort();
-      }, timeout);
-
       const result = await asyncFn(...args);
       
-      clearTimeout(timeoutId);
-
-      if (!abortControllerRef.current.signal.aborted) {
-        setState({
-          data: result,
-          loading: false,
-          error: null,
-          lastUpdated: Date.now(),
-        });
-        retryCountRef.current = 0;
-        return result;
-      }
+      setState({
+        data: result,
+        loading: false,
+        error: null,
+        lastUpdated: Date.now(),
+      });
+      
+      return result;
     } catch (error) {
-      if (abortControllerRef.current.signal.aborted) {
-        return null; // Operation was cancelled
-      }
-
       const processedError = error instanceof Error ? error : new Error(String(error));
-
-      // Retry logic
-      if (retryCountRef.current < retryAttempts) {
-        retryCountRef.current++;
-        
-        // Wait before retrying
-        await new Promise(resolve => setTimeout(resolve, retryDelay));
-        
-        return executeWithRetry(...args);
-      }
-
-      // Handle error after all retries failed
-      handleError(processedError, `Async operation (attempts: ${retryCountRef.current + 1})`);
+      
+      handleError(processedError, 'Async operation');
       
       setState(prev => ({
         ...prev,
@@ -131,59 +81,22 @@ export function useAsyncOperation<T = unknown, TArgs extends any[] = any[]>(
         error: processedError,
       }));
       
-      retryCountRef.current = 0;
       return null;
     }
-
-    return null;
-  }, [asyncFn, handleError, retryAttempts, retryDelay, timeout]);
-
-  const execute = useCallback(async (...args: TArgs): Promise<T | null> => {
-    return executeWithRetry(...args);
-  }, [executeWithRetry]);
-
-  const retry = useCallback(async (): Promise<T | null> => {
-    if (lastArgsRef.current) {
-      return executeWithRetry(...lastArgsRef.current);
-    }
-    return null;
-  }, [executeWithRetry]);
+  }, [asyncFn, handleError]);
 
   const reset = useCallback(() => {
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
     setState({
       data: null,
       loading: false,
       error: null,
       lastUpdated: null,
     });
-    retryCountRef.current = 0;
-    lastArgsRef.current = null;
-  }, []);
-
-  const cancel = useCallback(() => {
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
-    setState(prev => ({ ...prev, loading: false }));
-  }, []);
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
-    };
   }, []);
 
   return {
     ...state,
     execute,
-    retry,
     reset,
-    cancel,
   };
 }
