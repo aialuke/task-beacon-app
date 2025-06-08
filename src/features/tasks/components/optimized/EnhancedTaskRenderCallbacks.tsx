@@ -1,11 +1,10 @@
-
 import { lazy, Suspense, useMemo } from 'react';
 import UnifiedLoadingStates from '@/components/ui/loading/UnifiedLoadingStates';
 import type { Task } from '@/types';
 
 // Lazy load components
-const VirtualizedTaskCard = lazy(() => import('../VirtualizedTaskCard'));
-const TaskCard = lazy(() => import('../TaskCard'));
+const VirtualizedTaskCard = lazy(() => import('../cards/VirtualizedTaskCard'));
+const TaskCard = lazy(() => import('../cards/TaskCard'));
 
 // Define proper types for virtualized items
 interface VirtualizedItem {

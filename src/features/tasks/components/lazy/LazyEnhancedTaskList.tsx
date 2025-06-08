@@ -4,7 +4,7 @@ import UnifiedLoadingStates from '@/components/ui/loading/UnifiedLoadingStates';
 
 // Lazy load the EnhancedTaskList component for heavy virtualization
 export const LazyEnhancedTaskList = withLazyLoading(
-  () => import('../EnhancedTaskList').then(module => ({ default: module.default })),
+  () => import('../lists/EnhancedTaskList').then(module => ({ default: module.default })),
   {
     fallback: <UnifiedLoadingStates variant="skeleton" message="Loading enhanced task list..." />
   }

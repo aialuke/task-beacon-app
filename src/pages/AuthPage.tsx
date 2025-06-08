@@ -1,10 +1,9 @@
-
 import { ModernAuthForm } from '@/components/ui/auth';
 import { AuthenticatedApp } from '@/components/layout/AuthenticatedApp';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { TaskProviders } from '@/features/tasks/providers/TaskProviders';
 import UnifiedLoadingStates from '@/components/ui/loading/UnifiedLoadingStates';
-import TaskDashboard from '@/features/tasks/components/TaskDashboard';
+import TaskDashboard from '@/features/tasks/components/lists/TaskDashboard';
 
 const AuthPage = () => {
   return (

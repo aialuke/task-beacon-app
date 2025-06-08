@@ -1,10 +1,9 @@
-
 import { memo, lazy, Suspense, useCallback } from 'react';
 import UnifiedLoadingStates from '@/components/ui/loading/UnifiedLoadingStates';
 import type { Task } from '@/types';
 
 // Lazy load TaskCard for better performance
-const TaskCard = lazy(() => import('../TaskCard'));
+const TaskCard = lazy(() => import('../cards/TaskCard'));
 
 // Optimized skeleton grid
 const LoadingSkeletonGrid = memo(({ count }: { count: number }) => {

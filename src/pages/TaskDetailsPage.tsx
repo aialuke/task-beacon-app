@@ -13,7 +13,7 @@ const CountdownTimer = lazy(
   () => import("@/features/tasks/components/CountdownTimer")
 );
 const TaskActions = lazy(
-  () => import("@/features/tasks/components/TaskActions")
+  () => import("@/features/tasks/components/actions/TaskActions")
 );
 
 const TaskDetailsPage = () => {
