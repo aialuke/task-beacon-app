@@ -7,6 +7,7 @@ import { BrowserRouter } from 'react-router-dom';
 // Internal utilities
 import { queryClient } from '@/lib/query-client';
 import { isFeatureEnabled } from '@/lib/config/app';
+import { bundleUtils } from '@/lib/utils/lazy-loading';
 
 // Components
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -69,11 +70,26 @@ class AppErrorBoundary extends React.Component<
 }
 
 /**
- * Performance optimization wrapper
+ * Performance optimization wrapper - Phase 1.4 Optimized
  */
 function PerformanceOptimizations({ children }: { children: React.ReactNode }) {
-  // Note: Bundle optimizations removed in Phase 3.3 cleanup
-  // Essential optimizations are now handled in core utilities
+  // Essential optimizations only - heavy optimizations are lazy loaded
+  React.useEffect(() => {
+    // Basic performance monitoring
+    const connectionQuality = bundleUtils.getConnectionQuality();
+    console.debug('Connection quality:', connectionQuality);
+    
+    // Preload critical resources based on connection
+    if (connectionQuality === 'fast') {
+      // Preload commonly used lazy components on fast connections
+      setTimeout(() => {
+        import('@/features/tasks/components/lazy').catch(() => {
+          // Silently fail preloading
+        });
+      }, 2000);
+    }
+  }, []);
+
   return <>{children}</>;
 }
 
@@ -82,7 +98,7 @@ interface AppProvidersProps {
 }
 
 /**
- * Centralized provider composition following the recommended hierarchy
+ * Centralized provider composition with optimized loading - Phase 1.4
  * 
  * Hierarchy (outer to inner):
  * 1. Error handling
