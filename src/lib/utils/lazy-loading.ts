@@ -17,7 +17,7 @@ export function createLazyComponent<T extends ComponentType<any>>(
     retryDelay?: number;
     fallback?: React.ComponentType;
   } = {}
-): T {
+): React.LazyExoticComponent<T> {
   const { maxRetries = 3, retryDelay = 1000 } = options;
   
   let retryCount = 0;
@@ -65,7 +65,7 @@ export function preloadComponent(importFn: () => Promise<any>): void {
 export function createPreloadableLazyComponent<T extends ComponentType<any>>(
   importFn: () => Promise<{ default: T }>,
   preloadCondition: () => boolean = () => true
-): T & { preload: () => void } {
+): React.LazyExoticComponent<T> & { preload: () => void } {
   const LazyComponent = createLazyComponent(importFn);
   
   const preload = () => {
@@ -81,11 +81,6 @@ export function createPreloadableLazyComponent<T extends ComponentType<any>>(
  * Lazy load utility functions to reduce initial bundle
  */
 export const lazyUtils = {
-  /**
-   * Lazy load image processing utilities
-   */
-  loadImageUtils: () => import('../image/lazy-loader'),
-  
   /**
    * Lazy load validation utilities
    */
@@ -154,7 +149,7 @@ export const lazyLoadingMetrics = {
   /**
    * Track component load time
    */
-  trackComponentLoad: (componentName: string, startTime: number) => {
+  trackComponentLoad: (componentName: string, startTime: number): void => {
     const loadTime = performance.now() - startTime;
     console.debug(`Lazy component "${componentName}" loaded in ${loadTime.toFixed(2)}ms`);
     
@@ -170,7 +165,7 @@ export const lazyLoadingMetrics = {
   /**
    * Track preload effectiveness
    */
-  trackPreload: (componentName: string, wasPreloaded: boolean) => {
+  trackPreload: (componentName: string, wasPreloaded: boolean): void => {
     console.debug(`Component "${componentName}" ${wasPreloaded ? 'was' : 'was not'} preloaded`);
   },
 };

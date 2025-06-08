@@ -16,7 +16,6 @@ export function withLazyLoading<T extends Record<string, any> = Record<string, a
   options: LazyComponentProps & { componentName?: string } = {}
 ) {
   const { componentName = 'UnknownComponent' } = options;
-  const loadStartTime = performance.now();
   
   const LazyComponent = createLazyComponent(importFn, {
     maxRetries: 3,
@@ -25,17 +24,15 @@ export function withLazyLoading<T extends Record<string, any> = Record<string, a
   
   return function WrappedLazyComponent(props: T) {
     const fallback = options.fallback ?? <UnifiedLoadingStates variant="spinner" />;
+    const loadStartTime = performance.now();
+    
+    // Track loading but don't render the result
+    React.useEffect(() => {
+      lazyLoadingMetrics.trackComponentLoad(componentName, loadStartTime);
+    }, [componentName, loadStartTime]);
     
     return (
-      <Suspense 
-        fallback={
-          <div>
-            {fallback}
-            {/* Track loading start */}
-            {lazyLoadingMetrics.trackComponentLoad(componentName, loadStartTime) && null}
-          </div>
-        }
-      >
+      <Suspense fallback={fallback}>
         <LazyComponent {...(props as any)} />
       </Suspense>
     );
@@ -56,15 +53,13 @@ export function LazyWrapper({
 }) {
   const loadStartTime = performance.now();
   
+  // Track loading but don't render the result
+  React.useEffect(() => {
+    lazyLoadingMetrics.trackComponentLoad(componentName, loadStartTime);
+  }, [componentName, loadStartTime]);
+  
   return (
-    <Suspense 
-      fallback={
-        <div>
-          {fallback}
-          {lazyLoadingMetrics.trackComponentLoad(componentName, loadStartTime) && null}
-        </div>
-      }
-    >
+    <Suspense fallback={fallback}>
       {children}
     </Suspense>
   );

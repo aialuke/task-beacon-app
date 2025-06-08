@@ -69,7 +69,7 @@ export function isValidTaskTitle(title: string): boolean {
 export function isValidTaskDescription(description: string): boolean {
   // Use dynamic import for better tree shaking
   import('@/schemas').then(({ taskDescriptionSchema, validateWithZod }) => {
-    const result = validateWithZod(taskDescriptionSchema, value);
+    const result = validateWithZod(taskDescriptionSchema, description);
     return result.isValid;
   });
   

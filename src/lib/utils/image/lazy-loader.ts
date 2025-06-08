@@ -8,31 +8,37 @@
 
 // Lazy loading utilities for image processing
 export const loadImageProcessing = async () => {
-  const { processImageEnhanced, validateImageEnhanced } = await import('./index');
-  return { processImageEnhanced, validateImageEnhanced };
+  const module = await import('./index');
+  return { 
+    processImageEnhanced: module.processImageEnhanced, 
+    validateImageEnhanced: module.validateImageEnhanced 
+  };
 };
 
 export const loadImageMetadata = async () => {
-  const { extractImageMetadataEnhanced, extractImageDimensions } = await import('./index');
-  return { extractImageMetadataEnhanced, extractImageDimensions };
+  const module = await import('./index');
+  return { 
+    extractImageMetadataEnhanced: module.extractImageMetadataEnhanced, 
+    extractImageDimensions: module.extractImageDimensions 
+  };
 };
 
 export const loadImageConvenience = async () => {
-  const { 
-    compressAndResizePhoto, 
-    generateThumbnailEnhanced, 
-    convertToWebPWithFallback 
-  } = await import('./index');
-  return { compressAndResizePhoto, generateThumbnailEnhanced, convertToWebPWithFallback };
+  const module = await import('./index');
+  return { 
+    compressAndResizePhoto: module.compressAndResizePhoto, 
+    generateThumbnailEnhanced: module.generateThumbnailEnhanced, 
+    convertToWebPWithFallback: module.convertToWebPWithFallback 
+  };
 };
 
 export const loadImageResources = async () => {
-  const { 
-    createImagePreviewEnhanced, 
-    cleanupObjectURLs, 
-    ImagePreviewManager 
-  } = await import('./index');
-  return { createImagePreviewEnhanced, cleanupObjectURLs, ImagePreviewManager };
+  const module = await import('./index');
+  return { 
+    createImagePreviewEnhanced: module.createImagePreviewEnhanced, 
+    cleanupObjectURLs: module.cleanupObjectURLs, 
+    ImagePreviewManager: module.ImagePreviewManager 
+  };
 };
 
 /**
