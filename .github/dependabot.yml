@@ -13,8 +13,6 @@ updates:
       timezone: "UTC"
     open-pull-requests-limit: 10
     target-branch: "main"
-    labels:
-      - "dependency-update"
     groups:
       # Group React ecosystem updates together
       react:
@@ -55,8 +53,6 @@ updates:
       time: "09:00"
       timezone: "UTC"
     open-pull-requests-limit: 5
-    labels:
-      - "dependency-update"
     groups:
       actions:
         patterns:
