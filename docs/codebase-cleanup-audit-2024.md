@@ -2,14 +2,14 @@
 # Codebase Organization Audit & Restructuring Plan
 
 **Date**: December 2024  
-**Status**: Phase 1 ✅ COMPLETED, Phase 2 ✅ COMPLETED, Phase 3.1 ✅ COMPLETED, Phase 3.2 ✅ COMPLETED, Phase 3.3 ✅ COMPLETED, Phase 3.4 ✅ COMPLETED, Phase 2.4 ⚠️ REVISED  
+**Status**: Phase 1 ✅ COMPLETED, Phase 2 ✅ COMPLETED, Phase 3.1 ✅ COMPLETED, Phase 3.2 ✅ COMPLETED, Phase 3.3 ✅ COMPLETED, Phase 3.4 ✅ COMPLETED, Phase 2.4 🔄 **REVISED & EXPANDED**  
 **Priority**: High - Maintainability & Navigation Improvement
 
 ## Executive Summary
 
 This audit identifies significant organizational issues in the codebase including documentation bloat, scattered utilities, and over-complex feature structures. The proposed phased approach will improve maintainability while minimizing disruption.
 
-**⚠️ CRITICAL UPDATE - Phase 2.4 Revision**: Initial unified state management approach introduced unnecessary complexity and duplication. Revised to use existing proven patterns instead of custom abstractions.
+**⚠️ CRITICAL UPDATE - Phase 2.4 Comprehensive Revision**: After a thorough codebase audit, we've identified extensive over-engineering in state management and performance optimization hooks throughout the application. The scope of Phase 2.4 has been expanded to address all instances of unnecessary complexity.
 
 ## 🔍 Current State Analysis
 
@@ -20,7 +20,7 @@ This audit identifies significant organizational issues in the codebase includin
 - **Utility Files**: 35+ → 25+ → 24+ → 21+ → 27+ (All phases ✅ COMPLETED)
 - **Empty/Minimal Files**: Cleaned up in Phase 1 ✅
 - **Redundant Files**: Removed in Phases 1 & 3.1 ✅
-- **State Management**: ⚠️ NEEDS REVISION - Over-engineered solution detected
+- **State Management**: 🔄 **NEEDS COMPREHENSIVE REVISION** - Over-engineering detected across multiple files
 
 ### Critical Issues Identified
 
@@ -39,126 +39,142 @@ This audit identifies significant organizational issues in the codebase includin
 - ✅ Created modular structure with focused modules
 - ✅ Achieved optimal file sizes (all under 200 lines)
 
-#### 4. ⚠️ **NEW CRITICAL ISSUE**: State Management Over-Engineering
+#### 4. 🚨 **EXPANDED CRITICAL ISSUE**: Widespread State Management & Performance Over-Engineering
 
-**Problem Identified**: Step 2.4 initial implementation introduced significant complexity and duplication:
+**🔍 Comprehensive Audit Findings**:
 
-**Complexity Issues**:
-1. **Duplicate Context Creation**: 
-   - Existing: `createStandardContext` (proven, working)
-   - New: `createUnifiedContext` (complex, duplicative)
-   - Result: Two different patterns for same functionality
+**A. Build-Breaking Import Errors** (Immediate Priority):
+1. `src/features/tasks/hooks/useTaskForm.ts` - imports deleted `useUnifiedFormState`
+2. `src/hooks/ui/index.ts` - incorrect default exports for motion/navbar/viewport hooks
 
-2. **Over-Engineered State Hooks**:
-   - `useUnifiedState` with history, callbacks, undo/redo (307 lines)
-   - `useUnifiedAsyncState` with complex reducer patterns
-   - `useUnifiedCollection` for arrays - unnecessary abstraction
-   - Most components only need simple useState
+**B. Performance Hook Overuse** (8+ files affected):
+1. **`src/components/form/hooks/useTaskPhotoUpload.ts`**:
+   - `useOptimizedMemo` for simple processing options object
+   - `useOptimizedCallback` for basic async functions
+   - Should use standard `useMemo`/`useCallback`
 
-3. **Performance Hook Overuse**:
-   - `useOptimizedMemo` and `useOptimizedCallback` used everywhere
-   - Performance optimizations applied without profiling bottlenecks
-   - Standard React hooks sufficient for most use cases
+2. **Task Mutation Hooks** (4 files):
+   - `src/features/tasks/hooks/mutations/useTaskDeletion.ts`
+   - `src/features/tasks/hooks/mutations/useTaskUpdates.ts`
+   - `src/features/tasks/hooks/mutations/useTaskCreation.ts`
+   - `src/features/tasks/hooks/mutations/useTaskStatus.ts`
+   - All use `useOptimizedCallback` for simple wrapper functions
+   - Should use standard `useCallback`
 
-4. **Conflicting Patterns**:
-   - Multiple ways to create contexts
-   - Multiple ways to manage state
-   - Inconsistent patterns across features
+3. **`src/features/tasks/components/cards/OptimizedTaskCard.tsx`**:
+   - Uses `useMemoizedCallback`, `useMemoizedComputation`, `memoizeComponent`
+   - Over-engineered for simple task card component
+   - Should use standard `memo`, `useMemo`, `useCallback`
 
-**Build Errors Root Cause**: Syntax errors in `useUnifiedContext.ts` are symptoms of rushed over-engineering that doesn't align with existing codebase patterns.
+**C. Form State Management Issues**:
+1. **`src/features/tasks/hooks/useTaskForm.ts`**:
+   - References deleted `useUnifiedFormState`
+   - Needs complete rewrite using standard React hooks
+   - Should use `useState`, `useCallback` for form management
 
-## 📋 REVISED Reorganization Plan
+**D. UI Hook Export Mismatches**:
+1. **`src/hooks/ui/motion.ts`, `navbar.ts`, `viewport.ts`**:
+   - Export named functions but index expects default exports
+   - Causing build errors
+
+## 📋 REVISED & EXPANDED Reorganization Plan
 
 ### ✅ Phases 1-3: COMPLETED Successfully
 All previous phases achieved their goals with significant improvements to codebase organization.
 
-### 🔄 Phase 2.4 REVISED: Simplified State Management Standardization
+### 🔄 Phase 2.4 COMPREHENSIVE REVISION: Complete State Management & Performance Standardization
 
-**New Approach**: Use existing proven patterns instead of custom abstractions.
+**Expanded Scope**: Address all instances of over-engineering across the codebase.
 
-#### Step 2.4.1: Remove Over-Engineered Unified System
-**Target**: Eliminate complex custom state management system
+#### Step 2.4.1: Fix Critical Build Errors ⚡ **IMMEDIATE**
+**Target**: Restore build functionality
 **Actions**:
-- Delete `src/hooks/unified/useUnifiedState.ts` (307 lines of unnecessary complexity)
-- Delete `src/hooks/unified/useUnifiedContext.ts` (syntax errors, duplicates existing functionality)
-- Delete `src/hooks/unified/useUnifiedModal.ts` (conflicts with existing modal patterns)
-- Remove unified exports from `src/hooks/unified/index.ts`
-- Remove unified exports from `src/components/ui/unified/index.ts`
+- Fix `useTaskForm.ts` import error by rewriting to use standard React hooks
+- Fix UI hook export mismatches in `src/hooks/ui/index.ts`
+- Verify all imports resolve correctly
 
-#### Step 2.4.2: Standardize Context Creation
-**Target**: Use existing `createStandardContext` consistently
+#### Step 2.4.2: Eliminate Performance Hook Overuse 🎯 **HIGH PRIORITY**
+**Target**: Replace unnecessary performance optimizations with standard React hooks
+**Affected Files**:
+- `src/components/form/hooks/useTaskPhotoUpload.ts`
+- `src/features/tasks/hooks/mutations/useTaskDeletion.ts`
+- `src/features/tasks/hooks/mutations/useTaskUpdates.ts`
+- `src/features/tasks/hooks/mutations/useTaskCreation.ts`
+- `src/features/tasks/hooks/mutations/useTaskStatus.ts`
+
 **Actions**:
-- Convert `TaskUIContext` to use `createStandardContext` pattern
-- Ensure `TaskDataContext` follows standardized pattern (already using it)
-- Remove any remaining custom context creation patterns
-- Update context providers to use consistent error handling
+- Replace `useOptimizedMemo` with standard `useMemo` for simple operations
+- Replace `useOptimizedCallback` with standard `useCallback` for basic functions
+- Keep performance hooks only for proven bottlenecks (none identified)
 
-#### Step 2.4.3: Simplify Performance Optimizations
-**Target**: Remove unnecessary performance abstractions
+#### Step 2.4.3: Simplify Over-Engineered Components 🔧 **MEDIUM PRIORITY**
+**Target**: Replace complex memoization patterns with standard React patterns
 **Actions**:
-- Replace `useOptimizedMemo` with standard `useMemo` where simple
-- Replace `useOptimizedCallback` with standard `useCallback` where simple
-- Keep performance hooks only for proven bottlenecks (profiling data required)
-- Use standard React patterns for most state management
+- Simplify `OptimizedTaskCard.tsx` to use standard `memo`, `useMemo`, `useCallback`
+- Remove `useMemoizedCallback`, `useMemoizedComputation`, `memoizeComponent` usage
+- Maintain exact same functionality with simpler patterns
 
-#### Step 2.4.4: Clean State Management Patterns
-**Target**: Ensure consistent, simple state patterns
+#### Step 2.4.4: Rewrite Form State Management 📝 **HIGH PRIORITY**
+**Target**: Replace custom form state system with standard React patterns
 **Actions**:
-- Use standard `useState` for simple local state
-- Use `useReducer` only for complex state with multiple actions
-- Use `createStandardContext` for shared state
-- Use TanStack Query for server state (already implemented)
-- Remove any remaining over-engineered state abstractions
+- Completely rewrite `useTaskForm.ts` using standard `useState` and `useCallback`
+- Remove dependency on deleted `useUnifiedFormState`
+- Maintain exact same API and functionality
+- Ensure backward compatibility for existing form components
 
-#### Step 2.4.5: Update Documentation and Exports
-**Target**: Reflect simplified approach
+#### Step 2.4.5: Establish Performance Guidelines 📋 **DOCUMENTATION**
+**Target**: Prevent future over-engineering
 **Actions**:
-- Update `TaskProviders.tsx` to use simplified patterns
-- Remove complex unified exports
-- Update this documentation to reflect completed standardization
-- Ensure all imports point to correct, simplified sources
+- Update performance guidelines with clear criteria for optimization
+- Document when to use standard vs. optimized hooks
+- Require profiling data before performance optimizations
+- Establish code review guidelines for hook usage
 
-### Benefits of Revised Approach
+### Benefits of Comprehensive Revision
 
-#### ✅ Eliminated Complexity
-- No custom state management abstractions
-- Single pattern for context creation
-- Standard React hooks for most use cases
-- Clear, predictable patterns
+#### ✅ Build Stability
+- Eliminates all import errors and build failures
+- Ensures consistent hook export patterns
+- Verifies all imports resolve correctly
 
-#### ✅ Improved Maintainability
+#### ✅ Massive Complexity Reduction
+- Removes 8+ instances of unnecessary performance optimization
+- Eliminates custom abstractions where standard React patterns suffice
+- Reduces cognitive load for developers across multiple files
+
+#### ✅ Improved Performance
+- Removes unnecessary memoization overhead
+- Smaller bundle size without complex abstractions
+- Standard React optimizations where actually needed
+
+#### ✅ Enhanced Maintainability
 - Familiar React patterns for all developers
 - No learning curve for custom abstractions
-- Easier debugging and testing
-- Consistent patterns across features
+- Easier debugging and testing across all affected files
+- Consistent patterns across entire codebase
 
-#### ✅ Better Performance
-- No unnecessary performance optimizations
-- Standard React optimizations where needed
-- Smaller bundle size without complex abstractions
-- Faster development with proven patterns
-
-#### ✅ Reduced Risk
-- Using proven React patterns
-- No custom abstractions to maintain
+#### ✅ Future-Proof Architecture
+- Standard React patterns work with React DevTools
 - Easier to upgrade React versions
-- Standard patterns work with React DevTools
+- No custom abstractions to maintain
+- Clear guidelines prevent regression
 
-## 📊 Success Metrics - Revised Phase 2.4
+## 📊 Success Metrics - Comprehensive Phase 2.4
 
-### 🎯 Revised Targets
-- ✅ **Pattern Simplification**: Use existing proven patterns instead of custom abstractions
-- ✅ **Context Standardization**: Single pattern for all context creation
-- ✅ **Performance Optimization**: Remove unnecessary performance abstractions  
-- ✅ **Code Consistency**: Standard React patterns across all features
-- ✅ **Maintainability**: Familiar patterns for all developers
+### 🎯 Expanded Targets
+- ✅ **Build Fixes**: Zero build errors, all imports resolve
+- ✅ **Performance Simplification**: Remove 15+ unnecessary performance optimizations
+- ✅ **Hook Standardization**: Single pattern for all state management
+- ✅ **Component Simplification**: Standard React patterns for all components
+- ✅ **Form Management**: Standard hooks for form state across all forms
+- ✅ **Code Consistency**: Uniform hook usage patterns across 10+ files
 
 ### Expected Improvements
-- **Code Reduction**: Remove 500+ lines of unnecessary abstraction code
-- **Pattern Unification**: Single context creation pattern instead of multiple approaches
-- **Performance**: Remove unnecessary optimizations, keep only proven bottlenecks
-- **Developer Experience**: Standard React patterns, no learning curve for custom abstractions
-- **Bundle Size**: Smaller bundle without complex state management abstractions
+- **Code Reduction**: Remove 800+ lines of unnecessary abstraction code across multiple files
+- **Performance**: Remove unnecessary optimizations, keep standard React patterns
+- **Developer Experience**: Standard React patterns eliminate learning curve
+- **Bundle Size**: Significantly smaller without complex performance abstractions
+- **Maintainability**: Consistent, predictable patterns across entire codebase
 
 ## Implementation Status
 
@@ -167,39 +183,42 @@ All previous phases achieved their goals with significant improvements to codeba
 - **Phase 2**: Tasks feature restructuring - remains valid and beneficial  
 - **Phase 3.1-3.4**: Utils reorganization - remains valid and beneficial
 
-### 🔄 Phase 2.4: In Progress - Simplified Approach
-- **Status**: Requires revision due to over-engineering
-- **Current Issues**: Build errors, complexity, duplication
-- **Next Steps**: Implement simplified plan above
+### 🔄 Phase 2.4: COMPREHENSIVE REVISION IN PROGRESS
+- **Status**: Expanded scope due to comprehensive audit findings
+- **Current Issues**: Build errors, widespread over-engineering, inconsistent patterns
+- **Files Affected**: 10+ files need simplification
+- **Next Steps**: Implement comprehensive simplification plan above
 
 ## Key Lessons Learned
 
-### ❌ Phase 2.4 Initial Approach Failures
-- **Custom Abstractions**: Creating custom state management when React patterns sufficient
-- **Performance Premature Optimization**: Adding optimizations without profiling bottlenecks
-- **Complexity Creep**: Solving simple problems with complex solutions
-- **Pattern Proliferation**: Multiple ways to do the same thing
+### ❌ Phase 2.4 Comprehensive Issues Identified
+- **Premature Optimization**: Performance hooks used without profiling bottlenecks
+- **Custom Abstractions**: Complex solutions for simple state management problems
+- **Pattern Inconsistency**: Multiple ways to handle similar functionality
+- **Over-Engineering Scale**: Problem extends beyond initial state management to components and mutations
+- **Import Management**: Poor export/import patterns causing build failures
 
-### ✅ Revised Approach Principles
-- **Use Existing Patterns**: Leverage proven React patterns before creating custom solutions
-- **Simplicity First**: Simple solutions for simple problems
-- **Performance When Needed**: Optimize only proven bottlenecks
-- **Single Responsibility**: One pattern for one purpose
-- **Standard React**: Follow React best practices and conventions
+### ✅ Comprehensive Revision Principles
+- **Audit First**: Always perform comprehensive audit before making changes
+- **Standard First**: Use React built-ins before creating custom solutions
+- **Profile Before Optimize**: Require performance data before optimization
+- **Consistency Above All**: Single pattern for single purpose across entire codebase
+- **Build Stability**: Fix blocking issues first, then optimize
 
 ## Next Steps
 
-### 🚧 Immediate Priority: Complete Phase 2.4 Revision
-1. Remove over-engineered unified system
-2. Standardize context creation with existing patterns
-3. Simplify performance optimizations  
-4. Clean state management patterns
-5. Update documentation
+### 🚧 Immediate Priority: Complete Comprehensive Phase 2.4 Revision
+1. **Fix build errors** (blocking development)
+2. **Eliminate performance hook overuse** across 8+ files
+3. **Simplify over-engineered components** with standard patterns
+4. **Rewrite form state management** using standard React hooks
+5. **Establish clear guidelines** to prevent regression
+6. **Verify all functionality preserved** across affected files
 
 ### 🚧 Phase 3: PLANNED - Performance Optimization (After 2.4 Complete)
 - Bundle splitting and lazy loading optimization
 - Caching strategies and data persistence  
-- Component virtualization for large datasets
+- Component virtualization for large datasets (if profiling shows need)
 - Image optimization and progressive loading
 
 ### Future Phases
@@ -208,28 +227,31 @@ All previous phases achieved their goals with significant improvements to codeba
 
 ## Conclusion
 
-The initial Phase 2.4 approach introduced unnecessary complexity by creating custom abstractions for problems already solved by standard React patterns. The revised approach focuses on simplification and standardization using existing, proven patterns.
+The comprehensive audit revealed that the over-engineering problem extends far beyond the initial state management system. We have 10+ files using unnecessary performance optimizations and custom abstractions where standard React patterns would suffice.
 
-This revision will result in:
-- Cleaner, more maintainable code
-- Standard React patterns familiar to all developers
-- Improved performance through simplicity
-- Reduced bundle size and complexity
-- Better long-term maintainability
+This comprehensive revision will result in:
+- **Stable Build**: All import errors resolved
+- **Massive Simplification**: 800+ lines of unnecessary abstraction removed
+- **Standard Patterns**: Familiar React hooks throughout the application
+- **Better Performance**: Removing unnecessary memoization overhead
+- **Future Maintainability**: Clear, consistent patterns that scale
+
+The scope expansion is necessary to address the full extent of over-engineering and establish a solid foundation for future development.
 
 ---
 
-**Last Updated**: Phase 2.4 revision - December 2024  
-**Next Review**: After Phase 2.4 simplified approach completion  
-**Status**: 🔄 **PHASE 2.4 IN REVISION** - Simplifying over-engineered state management
+**Last Updated**: Comprehensive Phase 2.4 revision scope expansion - December 2024  
+**Next Review**: After comprehensive Phase 2.4 completion  
+**Status**: 🔄 **PHASE 2.4 COMPREHENSIVE REVISION** - Addressing widespread over-engineering
 
 **📊 Current Achievement Summary:**
 - **Documentation**: ✅ 70% reduction achieved
 - **Components**: ✅ Logical categorization implemented  
 - **Utilities**: ✅ Complete modular organization achieved
-- **State Management**: 🔄 Simplification in progress
-- **Code Quality**: 🔄 Removing unnecessary complexity
-- **Performance**: 🔄 Optimizing through simplification
-- **Maintainability**: 🔄 Improving with standard patterns
+- **State Management**: 🔄 Comprehensive simplification in progress
+- **Performance Patterns**: 🔄 Removing unnecessary optimizations across 10+ files
+- **Build Stability**: 🔄 Fixing critical import errors
+- **Code Consistency**: 🔄 Establishing uniform patterns across codebase
 
-**🎯 REVISED GOAL: Achieve standardization through simplification, not over-engineering.**
+**🎯 REVISED GOAL: Achieve comprehensive standardization through systematic simplification across the entire codebase.**
+
