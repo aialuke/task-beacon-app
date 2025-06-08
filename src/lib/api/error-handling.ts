@@ -1,3 +1,4 @@
+
 /**
  * Consolidated API Error Handling - Phase 1 Consolidation
  * 
@@ -298,7 +299,10 @@ export const logApiError = (
   context?: Record<string, unknown>
 ) => {
   const apiError = formatApiError(error);
-  logger.error(`API Error in ${operation}`, error as Error, {
+  // Convert unknown error to Error instance for logger
+  const errorInstance = error instanceof Error ? error : new Error(apiError.message);
+  
+  logger.error(`API Error in ${operation}`, errorInstance, {
     ...context,
     errorCode: apiError.code,
     statusCode: apiError.statusCode,
