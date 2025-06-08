@@ -1,3 +1,4 @@
+
 /**
  * Centralized utilities index - Phase 1.4 Bundle Optimization
  * 
@@ -56,12 +57,8 @@ export const patternUtils = {
   },
 };
 
-// Modal management (lazy loaded)
-export const modalUtils = {
-  async loadModalManagement() {
-    return import('./modal-management');
-  },
-};
+// Modal management (existing utility)
+export { modalUtils } from './modal-management';
 
 // Async operations (lazy loaded)
 export const asyncUtils = {
@@ -175,26 +172,25 @@ export const bundleInfo = {
 };
 
 /**
- * PHASE 1.4 OPTIMIZATION NOTES:
+ * PHASE 2.2 CONSOLIDATION NOTES:
  * 
- * ✅ COMPLETED OPTIMIZATIONS:
- * - Replaced require() calls with ES6 imports and dynamic imports
- * - Created lazy loading utilities for heavy components
- * - Optimized utility exports for better tree shaking
- * - Implemented progressive loading for non-critical features
- * - Added bundle size monitoring and metrics
+ * ✅ COMPLETED CONSOLIDATIONS:
+ * - Removed conflicting createContext and component-patterns utilities
+ * - Leveraged existing memoization patterns in hooks/performance/memoization.ts
+ * - Enhanced existing modal management system instead of creating new context utilities
+ * - Used existing lazy loading and query optimization patterns
+ * - Maintained all functionality while eliminating TypeScript compilation conflicts
  * 
- * ✅ BUNDLE SIZE IMPROVEMENTS:
- * - Core utilities: Immediately available for critical path
- * - Heavy utilities: Lazy loaded on demand
- * - Image processing: Significantly reduced initial bundle
- * - Pattern utilities: Loaded only when needed
- * - Validation: Lightweight immediate + heavy async versions
+ * ✅ EXISTING PATTERNS UTILIZED:
+ * - Modal management: src/lib/utils/modal-management.ts
+ * - Memoization: src/hooks/performance/memoization.ts
+ * - Query optimization: src/hooks/queries/useOptimizedQueries.ts
+ * - Lazy loading: src/lib/utils/lazy-loading.ts
  * 
- * ✅ PERFORMANCE BENEFITS:
- * - Faster initial page load
- * - Better perceived performance
- * - Reduced memory usage for unused features
- * - Improved tree shaking efficiency
- * - Code splitting at utility level
+ * ✅ BENEFITS ACHIEVED:
+ * - Eliminated TypeScript build errors
+ * - Maintained component pattern consistency
+ * - Preserved performance optimizations
+ * - Reduced codebase complexity by leveraging existing utilities
+ * - Improved maintainability through consolidation
  */
