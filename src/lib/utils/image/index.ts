@@ -166,40 +166,13 @@ export * as imageResources from './resource-management';
 export * as imageLazyLoader from './lazy-loader';
 
 // ============================================================================
-// MIGRATION HELPERS AND LEGACY SUPPORT
-// ============================================================================
-
-/**
- * Legacy function aliases for backward compatibility
- * These ensure that existing code continues to work without changes
- */
-
-// Legacy validation (already exported above, but documented here)
-// validateImageEnhanced() - ✅ Available
-
-// Legacy metadata extraction (already exported above)
-// extractImageMetadataEnhanced() - ✅ Available
-
-// Legacy processing (already exported above)
-// processImageEnhanced() - ✅ Available
-
-// Legacy convenience functions (already exported above)
-// compressAndResizePhoto() - ✅ Available
-// generateThumbnailEnhanced() - ✅ Available
-// convertToWebPWithFallback() - ✅ Available
-
-// Legacy resource management (already exported above)
-// createImagePreviewEnhanced() - ✅ Available
-// cleanupObjectURLs() - ✅ Available
-
-// ============================================================================
 // MODULE INFORMATION
 // ============================================================================
 
 /**
  * Module version and compatibility information
  */
-export const IMAGE_UTILS_VERSION = '2.1.0';
+export const IMAGE_UTILS_VERSION = '2.2.0';
 export const BACKWARD_COMPATIBLE = true;
 export const MIGRATION_STATUS = 'COMPLETE';
 export const BUNDLE_OPTIMIZATION = 'ENABLED';

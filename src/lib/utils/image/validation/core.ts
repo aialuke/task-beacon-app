@@ -1,15 +1,15 @@
+
 /**
- * Image Validation Utilities
+ * Core Image Validation Functions
  * 
- * Comprehensive image validation with detailed feedback and error reporting.
- * This module provides robust validation for file uploads and image processing.
+ * Primary validation logic for individual image files.
  */
 
-import { logger } from '../../logger';
-import { formatFileSize } from '../shared';
-import type { EnhancedImageValidationOptions, ValidationResult } from './types';
-import { DEFAULT_ENHANCED_VALIDATION } from './constants';
-import { extractImageMetadataEnhanced } from './metadata';
+import { logger } from '../../../logger';
+import { formatFileSize } from '../../shared';
+import type { EnhancedImageValidationOptions, ValidationResult } from '../types';
+import { DEFAULT_ENHANCED_VALIDATION } from '../constants';
+import { extractImageMetadataEnhanced } from '../metadata';
 
 /**
  * Enhanced image validation with detailed feedback
@@ -182,40 +182,3 @@ export function validateImageQuick(
     },
   };
 }
-
-/**
- * Validate multiple files at once
- */
-export async function validateImagesEnhanced(
-  files: File[],
-  options: EnhancedImageValidationOptions = {}
-): Promise<ValidationResult[]> {
-  return Promise.all(
-    files.map(file => validateImageEnhanced(file, options))
-  );
-}
-
-/**
- * Check if all validation results are valid
- */
-export function areAllValidationResultsValid(results: ValidationResult[]): boolean {
-  return results.every(result => result.valid);
-}
-
-/**
- * Get all validation errors from results
- */
-export function getValidationErrors(results: ValidationResult[]): string[] {
-  return results
-    .filter(result => !result.valid && result.error)
-    .map(result => result.error!);
-}
-
-/**
- * Get all validation warnings from results
- */
-export function getValidationWarnings(results: ValidationResult[]): string[] {
-  return results
-    .filter(result => result.warnings && result.warnings.length > 0)
-    .flatMap(result => result.warnings!);
-} 
