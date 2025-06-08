@@ -10,6 +10,3 @@ updates:
     schedule:
       interval: "weekly" # Check for updates weekly
     open-pull-requests-limit: 10 # Limit to 10 open PRs
-    labels:
-      - "dependencies"
-      - "npm"
