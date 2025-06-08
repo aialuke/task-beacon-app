@@ -11,7 +11,7 @@ interface UseTaskQueryReturn {
 }
 
 /**
- * Standardized hook for querying a single task by ID - Phase 2 Implementation
+ * Standardized hook for querying a single task by ID - Updated to use optimized service
  * 
  * Uses standardized query keys, error handling, and loading state patterns.
  */
@@ -27,7 +27,7 @@ export function useTaskQuery(taskId: string | undefined): UseTaskQueryReturn {
         throw new Error('Task ID is required');
       }
 
-      const response = await TaskService.crud.getById(taskId);
+      const response = await TaskService.query.getById(taskId);
       
       if (!response.success) {
         throw new Error(response.error?.message || 'Failed to fetch task');
