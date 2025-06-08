@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Task } from '@/types';
 import { TaskService } from '@/lib/api';
 import { useTaskOptimisticUpdates } from '../useTaskOptimisticUpdates';
-import { useOptimizedCallback } from '@/hooks/performance';
+import { useCallback } from 'react';
 import { toast } from 'sonner';
 
 interface TaskMutationResult {
@@ -14,7 +14,7 @@ interface TaskMutationResult {
 }
 
 /**
- * Focused hook for task update mutations
+ * Focused hook for task update mutations - Phase 2.4 Simplified
  */
 export function useTaskUpdates() {
   const queryClient = useQueryClient();
@@ -52,13 +52,12 @@ export function useTaskUpdates() {
     },
   });
 
-  const updateTaskCallback = useOptimizedCallback(
+  const updateTaskCallback = useCallback(
     async (taskId: string, updates: Partial<Task>) => {
       const result = await updateTask.mutateAsync({ taskId, updates });
       return result;
     },
-    [updateTask],
-    { name: 'updateTask' }
+    [updateTask]
   );
 
   return {

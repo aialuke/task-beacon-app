@@ -2,7 +2,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { TaskService } from '@/lib/api';
 import { useTaskOptimisticUpdates } from '../useTaskOptimisticUpdates';
-import { useOptimizedCallback } from '@/hooks/performance';
+import { useCallback } from 'react';
 import { toast } from 'sonner';
 
 interface TaskMutationResult {
@@ -12,7 +12,7 @@ interface TaskMutationResult {
 }
 
 /**
- * Focused hook for task deletion mutations
+ * Focused hook for task deletion mutations - Phase 2.4 Simplified
  */
 export function useTaskDeletion() {
   const queryClient = useQueryClient();
@@ -49,13 +49,12 @@ export function useTaskDeletion() {
     },
   });
 
-  const deleteTaskCallback = useOptimizedCallback(
+  const deleteTaskCallback = useCallback(
     async (taskId: string) => {
       const result = await deleteTask.mutateAsync(taskId);
       return result;
     },
-    [deleteTask],
-    { name: 'deleteTask' }
+    [deleteTask]
   );
 
   return {

@@ -3,12 +3,12 @@ import { useTaskCreation } from './mutations/useTaskCreation';
 import { useTaskUpdates } from './mutations/useTaskUpdates';
 import { useTaskDeletion } from './mutations/useTaskDeletion';
 import { useTaskStatus } from './mutations/useTaskStatus';
-import { useOptimizedMemo } from '@/hooks/performance';
+import { useMemo } from 'react';
 
 /**
- * Standardized task mutations hook - Phase 2.3 Hook Pattern Standardization
+ * Standardized task mutations hook - Phase 2.4 Simplified
  * 
- * Simplified to directly use focused mutation hooks without orchestrator complexity
+ * Using standard React hooks instead of performance abstractions
  */
 export function useTaskMutations() {
   const creation = useTaskCreation();
@@ -16,8 +16,8 @@ export function useTaskMutations() {
   const deletion = useTaskDeletion();
   const status = useTaskStatus();
 
-  // Memoize the combined interface for stable references
-  return useOptimizedMemo(
+  // Use standard useMemo for the combined interface
+  return useMemo(
     () => ({
       // Creation operations
       createTask: creation.createTaskCallback,
@@ -42,8 +42,7 @@ export function useTaskMutations() {
       // Combined loading state
       isLoading: creation.isLoading || updates.isLoading || deletion.isLoading || status.isLoading,
     }),
-    [creation, updates, deletion, status],
-    { name: 'task-mutations-return' }
+    [creation, updates, deletion, status]
   );
 }
 

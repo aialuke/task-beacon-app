@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Task } from '@/types';
 import { TaskService } from '@/lib/api';
 import { useTaskOptimisticUpdates } from '../useTaskOptimisticUpdates';
-import { useOptimizedCallback } from '@/hooks/performance';
+import { useCallback } from 'react';
 import { toast } from 'sonner';
 
 interface TaskMutationResult {
@@ -14,7 +14,7 @@ interface TaskMutationResult {
 }
 
 /**
- * Focused hook for task status mutations
+ * Focused hook for task status mutations - Phase 2.4 Simplified
  */
 export function useTaskStatus() {
   const queryClient = useQueryClient();
@@ -56,32 +56,29 @@ export function useTaskStatus() {
     },
   });
 
-  const toggleTaskCompleteCallback = useOptimizedCallback(
+  const toggleTaskCompleteCallback = useCallback(
     async (task: Task) => {
       const result = await toggleTaskComplete.mutateAsync(task);
       return result;
     },
-    [toggleTaskComplete],
-    { name: 'toggleTaskComplete' }
+    [toggleTaskComplete]
   );
 
   // Backward compatibility methods
-  const markAsComplete = useOptimizedCallback(
+  const markAsComplete = useCallback(
     async (taskId: string) => {
       console.log('markAsComplete called with taskId:', taskId);
       return { success: false, error: 'Task object required for completion toggle' };
     },
-    [],
-    { name: 'markAsComplete' }
+    []
   );
 
-  const markAsIncomplete = useOptimizedCallback(
+  const markAsIncomplete = useCallback(
     async (taskId: string) => {
       console.log('markAsIncomplete called with taskId:', taskId);
       return { success: false, error: 'Task object required for completion toggle' };
     },
-    [],
-    { name: 'markAsIncomplete' }
+    []
   );
 
   return {

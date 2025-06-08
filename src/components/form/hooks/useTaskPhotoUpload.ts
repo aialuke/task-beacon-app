@@ -1,20 +1,20 @@
 
-import { useOptimizedMemo, useOptimizedCallback } from '@/hooks/performance';
+import { useMemo, useCallback } from 'react';
 import { usePhotoState } from './usePhotoState';
 import { usePhotoProcessing } from './usePhotoProcessing';
 import { TaskService } from '@/lib/api/tasks/task.service';
 import type { EnhancedImageProcessingOptions } from '@/lib/utils/image/types';
 
 /**
- * Task-specific photo upload hook - Phase 2.3 Hook Standardization
+ * Task-specific photo upload hook - Phase 2.4 Simplified
  * 
- * Standardized hook following consistent patterns for task photo uploads
+ * Using standard React hooks instead of performance abstractions
  */
 export function useTaskPhotoUpload(options?: {
   processingOptions?: EnhancedImageProcessingOptions;
 }) {
-  // Memoize processing options
-  const processingOptions = useOptimizedMemo(
+  // Use standard useMemo for processing options
+  const processingOptions = useMemo(
     () => ({
       maxWidth: 1920,
       maxHeight: 1080,
@@ -22,16 +22,15 @@ export function useTaskPhotoUpload(options?: {
       format: 'auto' as const,
       ...options?.processingOptions,
     }),
-    [options?.processingOptions],
-    { name: 'processing-options' }
+    [options?.processingOptions]
   );
 
   // Use focused state and processing hooks
   const photoState = usePhotoState();
   const photoProcessing = usePhotoProcessing(processingOptions, photoState);
 
-  // Upload functionality
-  const uploadPhoto = useOptimizedCallback(
+  // Upload functionality using standard useCallback
+  const uploadPhoto = useCallback(
     async (): Promise<string | null> => {
       if (!photoState.photo) {
         return null;
@@ -49,21 +48,19 @@ export function useTaskPhotoUpload(options?: {
         return null;
       }
     },
-    [photoState.photo],
-    { name: 'uploadPhoto' }
+    [photoState.photo]
   );
 
-  // Handle photo upload wrapper for backward compatibility
-  const handlePhotoUpload = useOptimizedCallback(
+  // Handle photo upload wrapper for backward compatibility using standard useCallback
+  const handlePhotoUpload = useCallback(
     async (): Promise<string | null> => {
       return await uploadPhoto();
     },
-    [uploadPhoto],
-    { name: 'handlePhotoUpload' }
+    [uploadPhoto]
   );
 
-  // Memoize return object for stable references
-  return useOptimizedMemo(
+  // Use standard useMemo for return object
+  return useMemo(
     () => ({
       // Core photo interface
       photo: photoState.photo,
@@ -91,7 +88,6 @@ export function useTaskPhotoUpload(options?: {
       uploadPhoto,
       handlePhotoUpload,
       processingOptions,
-    ],
-    { name: 'task-photo-upload' }
+    ]
   );
 }

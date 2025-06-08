@@ -1,7 +1,7 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { TaskService } from '@/lib/api';
-import { useOptimizedCallback } from '@/hooks/performance';
+import { useCallback } from 'react';
 import { toast } from 'sonner';
 import type { Task } from '@/types';
 
@@ -23,7 +23,7 @@ interface TaskMutationResult {
 }
 
 /**
- * Focused hook for task creation mutations
+ * Focused hook for task creation mutations - Phase 2.4 Simplified
  */
 export function useTaskCreation() {
   const queryClient = useQueryClient();
@@ -52,16 +52,15 @@ export function useTaskCreation() {
     },
   });
 
-  const createTaskCallback = useOptimizedCallback(
+  const createTaskCallback = useCallback(
     async (taskData: TaskCreationData) => {
       const result = await createTask.mutateAsync(taskData);
       return result;
     },
-    [createTask],
-    { name: 'createTask' }
+    [createTask]
   );
 
-  const createFollowUpTask = useOptimizedCallback(
+  const createFollowUpTask = useCallback(
     async (parentTask: Task, taskData: { title: string; description?: string }): Promise<TaskMutationResult> => {
       const followUpData = {
         ...taskData,
@@ -75,8 +74,7 @@ export function useTaskCreation() {
         data: result.data,
       };
     },
-    [createTask],
-    { name: 'createFollowUpTask' }
+    [createTask]
   );
 
   return {
