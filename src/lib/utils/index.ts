@@ -110,32 +110,19 @@ export type { ValidationResult as ImageValidationResult } from './image';
 // STANDARDIZED PATTERNS & OPERATIONS
 // =====================================================
 
-// Common React patterns and HOCs
+// Common async patterns and utilities
 export {
-  withErrorBoundary,
-  withLoading,
-  ConditionalRender,
-  DataRenderer,
-  createPortalRenderer,
-  createCompoundComponent,
-  memo,
-  createStateManager,
-  useEventCallback,
-  useDebouncedCallback,
-  usePrevious,
-  useForceUpdate,
-  useMount,
-  useUnmount,
-  reactPatterns,
+  executeAsync,
+  retryAsync,
+  createAsyncHandler,
+  debounce,
+  throttle,
 } from './patterns';
 
 // Pattern-specific types
 export type {
-  AsyncOperationState as PatternAsyncOperationState,
+  AsyncFunc,
 } from './patterns';
-
-// Pattern async operation with alias to avoid conflict
-export { useAsyncOperation as usePatternAsyncOperation } from './patterns';
 
 // Consolidated modal management
 export * from './modal-management';
@@ -218,18 +205,16 @@ export * as errorUtils from './error';
 /**
  * PHASE 4 COMPLETION - ✅ STANDARDIZED PATTERNS & OPERATIONS:
  * 
- * ✅ CREATED: Common React patterns utility (src/lib/utils/patterns.ts)
+ * ✅ CREATED: Common async patterns utility (src/lib/utils/patterns.ts)
  * ✅ CREATED: Consolidated modal management (src/lib/utils/modal-management.ts)  
  * ✅ CREATED: Standardized async operations (src/lib/utils/async-operations.ts)
  * ✅ ENHANCED: Main utilities index with new patterns
  * 
  * NEW UTILITIES AVAILABLE:
  * 
- * REACT PATTERNS:
- * - withErrorBoundary, withLoading HOCs
- * - ConditionalRender, DataRenderer components
- * - useEventCallback, useDebouncedCallback hooks
- * - usePatternAsyncOperation, useMount, useUnmount lifecycle hooks
+ * ASYNC PATTERNS:
+ * - executeAsync, retryAsync, createAsyncHandler
+ * - debounce, throttle utility functions
  * 
  * MODAL MANAGEMENT:
  * - ModalManagerProvider for centralized modal state
@@ -245,9 +230,9 @@ export * as errorUtils from './error';
  * 
  * USAGE EXAMPLES:
  * 
- * React Patterns:
+ * Async Patterns:
  * import { patternUtils } from '@/lib/utils';
- * import { withErrorBoundary, usePatternAsyncOperation } from '@/lib/utils';
+ * import { executeAsync, debounce } from '@/lib/utils';
  * 
  * Modal Management:
  * import { modalUtils } from '@/lib/utils';
@@ -271,7 +256,7 @@ export * as errorUtils from './error';
  * ✅ PHASE 1: Created comprehensive shared utilities
  * ✅ PHASE 2: Consolidated duplicates (validation, modal state, error handling)
  * ✅ PHASE 3: Standardized hook naming conventions
- * ✅ PHASE 4: Expanded shared utilities with React patterns
+ * ✅ PHASE 4: Expanded shared utilities with async patterns
  * ✅ CLEANUP: Removed unused batch processing and enhanced photo upload
  */
 
