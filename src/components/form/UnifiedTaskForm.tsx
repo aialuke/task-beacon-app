@@ -115,7 +115,6 @@ export function UnifiedTaskForm({
           icon={<FileText className="h-4 w-4" />}
           maxLength={22}
           required
-          disabled={disabled}
         />
 
         {/* Description Field */}
