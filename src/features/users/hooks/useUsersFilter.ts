@@ -43,7 +43,7 @@ export function useUsersFilter(
     if (!users) return [];
     const roles = users
       .map(user => user.role)
-      .filter((role): role is string => Boolean(role) && typeof role === 'string');
+      .filter((role): role is string => Boolean(role));
     return Array.from(new Set(roles));
   }, [users]);
 

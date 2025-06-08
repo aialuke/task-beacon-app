@@ -76,6 +76,7 @@ export const isValidText = (
   return trimmed.length >= minLength && trimmed.length <= maxLength;
 };
 
-// Redirect complex validation to new system
+// Redirect complex validation to new system - with proper imports
+import { validateWithZod, validateFormWithZod } from '@/schemas';
 export const validateField = validateWithZod;
 export const validateForm = validateFormWithZod;
