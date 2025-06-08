@@ -1,6 +1,5 @@
 
-import { useCallback } from 'react';
-import { useUnifiedFormState } from '@/hooks/unified/useUnifiedFormState';
+import { useState, useCallback } from 'react';
 import type { TaskCreateData } from '@/types';
 
 export interface UseTaskFormOptions {
@@ -13,7 +12,7 @@ export interface UseTaskFormOptions {
   onClose?: () => void;
 }
 
-export interface TaskFormValues extends Record<string, string> {
+export interface TaskFormValues {
   title: string;
   description: string;
   dueDate: string;
@@ -24,8 +23,7 @@ export interface TaskFormValues extends Record<string, string> {
 /**
  * Task form hook with validation and state management
  * 
- * This hook provides form state management and validation for task creation.
- * It uses the unified form state hook internally for consistent form behavior.
+ * Rewritten to use standard React hooks instead of complex unified form state
  */
 export function useTaskForm(options: UseTaskFormOptions = {}) {
   const {
@@ -38,70 +36,65 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     onClose,
   } = options;
 
-  // Create initial form state - ensure all values are strings
-  const initialValues: TaskFormValues = {
-    title: initialTitle,
-    description: initialDescription,
-    dueDate: initialDueDate ?? '',
-    url: initialUrl ?? '',
-    assigneeId: initialAssigneeId ?? '',
-  };
+  // Form field states using standard useState
+  const [title, setTitle] = useState(initialTitle);
+  const [description, setDescription] = useState(initialDescription);
+  const [dueDate, setDueDate] = useState(initialDueDate ?? '');
+  const [url, setUrl] = useState(initialUrl ?? '');
+  const [assigneeId, setAssigneeId] = useState(initialAssigneeId ?? '');
+  
+  // Form submission state
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState<Partial<Record<keyof TaskFormValues, string>>>({});
 
-  // Create validation rules - return string errors, not boolean
-  const validationRules = useCallback(() => {
-    return {
-      title: (value: string) => {
-        if (!value.trim()) return 'Title is required';
-        return null;
-      },
-      url: (value: string) => {
-        if (value?.trim()) {
-          try {
-            new URL(value);
-            return null;
-          } catch {
-            return 'Please enter a valid URL';
-          }
-        }
-        return null;
-      },
-    } as Record<keyof TaskFormValues, (value: string) => string | null>;
-  }, []);
+  // Validation logic
+  const validateForm = useCallback(() => {
+    const newErrors: Partial<Record<keyof TaskFormValues, string>> = {};
+    
+    if (!title.trim()) {
+      newErrors.title = 'Title is required';
+    }
+    
+    if (url?.trim()) {
+      try {
+        new URL(url);
+      } catch {
+        newErrors.url = 'Please enter a valid URL';
+      }
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }, [title, url]);
 
-  // Use unified form state with proper destructuring
-  const formState = useUnifiedFormState<TaskFormValues>({
-    initialValues,
-    validationRules: validationRules(),
-    onSubmit: onSubmit as ((values: Record<string, string>) => Promise<void> | void) | undefined,
-  });
-
-  // Extract current field values for convenience
-  const title = formState.values.title || '';
-  const description = formState.values.description || '';
-  const dueDate = formState.values.dueDate || '';
-  const url = formState.values.url || '';
-  const assigneeId = formState.values.assigneeId || '';
-
-  // Convenience setters
-  const setTitle = useCallback((value: string) => {
-    formState.setFieldValue('title', value);
-  }, [formState]);
-
-  const setDescription = useCallback((value: string) => {
-    formState.setFieldValue('description', value);
-  }, [formState]);
-
-  const setDueDate = useCallback((value: string) => {
-    formState.setFieldValue('dueDate', value);
-  }, [formState]);
-
-  const setUrl = useCallback((value: string) => {
-    formState.setFieldValue('url', value);
-  }, [formState]);
-
-  const setAssigneeId = useCallback((value: string) => {
-    formState.setFieldValue('assigneeId', value);
-  }, [formState]);
+  // Form submission handler
+  const handleSubmit = useCallback(async (e?: React.FormEvent) => {
+    if (e) {
+      e.preventDefault();
+    }
+    
+    if (!validateForm()) {
+      return;
+    }
+    
+    setIsSubmitting(true);
+    try {
+      if (onSubmit) {
+        const values: TaskFormValues = {
+          title: title.trim(),
+          description: description.trim(),
+          dueDate: dueDate || '',
+          url: url.trim(),
+          assigneeId: assigneeId || '',
+        };
+        await onSubmit(values);
+      }
+    } catch (error) {
+      console.error('Form submission error:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [title, description, dueDate, url, assigneeId, onSubmit, validateForm]);
 
   // Create task data formatter
   const getTaskData = useCallback((): TaskCreateData => {
@@ -115,16 +108,49 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     };
   }, [title, description, dueDate, url, assigneeId]);
 
-  // Manual validation trigger
-  const validateForm = useCallback(() => {
-    return formState.validateForm();
-  }, [formState]);
-
-  // Reset form state including calling onClose
+  // Reset form state
   const resetFormState = useCallback(() => {
-    formState.resetForm();
+    setTitle(initialTitle);
+    setDescription(initialDescription);
+    setDueDate(initialDueDate ?? '');
+    setUrl(initialUrl ?? '');
+    setAssigneeId(initialAssigneeId ?? '');
+    setErrors({});
+    setIsSubmitting(false);
     if (onClose) onClose();
-  }, [formState, onClose]);
+  }, [initialTitle, initialDescription, initialDueDate, initialUrl, initialAssigneeId, onClose]);
+
+  // Field value setters
+  const setFieldValue = useCallback((field: keyof TaskFormValues, value: string) => {
+    switch (field) {
+      case 'title':
+        setTitle(value);
+        break;
+      case 'description':
+        setDescription(value);
+        break;
+      case 'dueDate':
+        setDueDate(value);
+        break;
+      case 'url':
+        setUrl(value);
+        break;
+      case 'assigneeId':
+        setAssigneeId(value);
+        break;
+    }
+    
+    // Clear field error when user starts typing
+    if (errors[field]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[field];
+        return newErrors;
+      });
+    }
+  }, [errors]);
+
+  const isValid = Object.keys(errors).length === 0 && title.trim().length > 0;
 
   return {
     // Current field values
@@ -135,24 +161,31 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     assigneeId,
 
     // Individual field setters
-    setTitle,
-    setDescription,
-    setDueDate,
-    setUrl,
-    setAssigneeId,
+    setTitle: (value: string) => setFieldValue('title', value),
+    setDescription: (value: string) => setFieldValue('description', value),
+    setDueDate: (value: string) => setFieldValue('dueDate', value),
+    setUrl: (value: string) => setFieldValue('url', value),
+    setAssigneeId: (value: string) => setFieldValue('assigneeId', value),
 
-    // Form state - maintain compatibility
-    isValid: formState.isValid,
-    errors: formState.errors,
-    isSubmitting: formState.isSubmitting,
+    // Form state
+    isValid,
+    errors,
+    isSubmitting,
 
     // Form actions
-    handleSubmit: formState.handleSubmit,
+    handleSubmit,
     resetFormState,
     validateForm,
     getTaskData,
+    setFieldValue,
 
-    // Direct access to form state for advanced usage
-    formState,
+    // Computed values object for compatibility
+    values: {
+      title,
+      description,
+      dueDate,
+      url,
+      assigneeId,
+    },
   };
 }
