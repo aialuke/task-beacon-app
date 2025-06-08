@@ -1,0 +1,50 @@
+inputs:
+  ignore_draft_pr: false
+  release_notes: true
+  enable_beta_features: true
+  system_language: "en-US"
+  path_filters:
+    - "src/**"
+    - "vite.config.ts"
+    - "eslint.config.js"
+    - "tsconfig*.json"
+    - ".stylelintrc.json"
+    - "postcss.config.js"
+    - "tailwind.config.ts"
+    - "knip.config.ts"
+    - "supabase/config.toml"
+    - "!dist/**"
+    - "!node_modules/**"
+    - "!coverage/**"
+    - "!purged.css"
+    - "!stylelint-report.txt"
+    - "!postcss.purge.js"
+    - "!bun.lockb"
+    - "!.env*"
+    - "!.vite/**"
+    - "!.DS_Store"
+    - "!.cursor/**"
+    - "!public/**"
+    - "!docs/**"
+    - "!*.min.*"
+
+tools:
+  eslint:
+    enabled: true
+    config_file: eslint.config.js
+  stylelint:
+    enabled: true
+    config_file: .stylelintrc.json
+
+reviews:
+  tone: constructive
+  max_files: 40
+  file_comments: true
+  summary: true
+  walkthrough: true
+  focus:
+    - security
+    - performance
+    - readability
+    - testability
+    - accessibility
