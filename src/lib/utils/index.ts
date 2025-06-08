@@ -1,4 +1,3 @@
-
 /**
  * Centralized utilities index - Phase 1.4 Bundle Optimization
  * 
@@ -23,30 +22,8 @@ export * from './data';
 export * from './date';
 export * from './format';
 
-// =====================================================
-// OPTIMIZED VALIDATION (Lightweight version)
-// =====================================================
-
-// Basic validation - heavy schemas are lazy loaded
-export {
-  isValidEmail,
-  isValidPassword,
-  isValidUrl,
-  isDateInFuture,
-  isValidUserName,
-  isValidTaskTitle,
-  isValidTaskDescription,
-  isValidText,
-  validateField,
-  validateForm,
-  // Async versions for heavy validation
-  validateFieldAsync,
-  validateFormAsync,
-} from './validation';
-
-export type {
-  ValidationResult,
-} from './validation';
+// === VALIDATION UTILITIES ===
+export * from './validation';
 
 // =====================================================
 // LAZY-LOADED UTILITIES (Loaded on demand)

@@ -1,8 +1,8 @@
 
 /**
- * Validation Utilities Hook - Simplified
+ * Validation Utilities Hook - Updated for Modular System
  * 
- * Streamlined to use centralized Zod validation system without legacy compatibility.
+ * Streamlined to use the new modular validation system.
  */
 
 // === EXTERNAL LIBRARIES ===
@@ -19,13 +19,13 @@ import {
   urlSchema,
 } from '@/schemas';
 
-// === TYPES ===
-export interface ValidationResult {
-  isValid: boolean;
-  errors: Record<string, string>;
-  firstError?: string;
-}
+import {
+  validateField,
+  validateForm,
+  type ValidationResult,
+} from '@/lib/utils/validation';
 
+// === TYPES ===
 export interface ValidationOptions {
   stopOnFirstError?: boolean;
 }
@@ -38,105 +38,28 @@ export function validateObject<T>(
   data: unknown,
   options: ValidationOptions = {}
 ): ValidationResult {
-  const { stopOnFirstError = false } = options;
-  
   const result = validateWithZod(schema, data);
   
   if (result.isValid) {
-    return { isValid: true, errors: {} };
+    return { isValid: true, errors: [] };
   }
-  
-  const errors: Record<string, string> = {};
-  result.errors.forEach((error, index) => {
-    const key = `field_${index}`;
-    errors[key] = error;
-    if (stopOnFirstError) return;
-  });
   
   return {
     isValid: false,
-    errors,
-    firstError: result.errors[0],
+    errors: result.errors,
   };
 }
 
 /**
- * Field validation using centralized schemas
+ * Field validation using the new modular system
  */
 export function validateFieldValue(field: string, value: string): ValidationResult {
-  let schema: z.ZodSchema<any>;
-  
-  switch (field.toLowerCase()) {
-    case 'email':
-      schema = emailSchema;
-      break;
-    case 'password':
-      schema = passwordSchema;
-      break;
-    case 'title':
-      schema = taskTitleSchema;
-      break;
-    case 'description':
-      schema = taskDescriptionSchema;
-      break;
-    case 'url':
-      schema = urlSchema;
-      break;
-    default:
-      schema = z.string().optional();
-  }
-  
-  const result = validateWithZod(schema, value);
-  
-  return {
-    isValid: result.isValid,
-    errors: result.isValid ? {} : { [field]: result.errors[0] || 'Validation failed' },
-    firstError: result.isValid ? undefined : result.errors[0],
-  };
+  return validateField(field, value);
 }
 
 /**
- * Form validation using centralized Zod system
+ * Form validation using the new modular system
  */
 export function validateFormData(data: Record<string, unknown>): ValidationResult {
-  const schemas: Record<string, z.ZodSchema<any>> = {};
-  
-  Object.keys(data).forEach(key => {
-    switch (key.toLowerCase()) {
-      case 'email':
-        schemas[key] = emailSchema;
-        break;
-      case 'password':
-        schemas[key] = passwordSchema;
-        break;
-      case 'title':
-        schemas[key] = taskTitleSchema;
-        break;
-      case 'description':
-        schemas[key] = taskDescriptionSchema;
-        break;
-      case 'url':
-        schemas[key] = urlSchema;
-        break;
-      default:
-        schemas[key] = z.string().optional();
-    }
-  });
-  
-  const formResult = validateFormWithZod(data, schemas);
-  
-  const errors: Record<string, string> = {};
-  if (!formResult.isValid && formResult.errors) {
-    Object.entries(formResult.errors).forEach(([field, fieldErrors]) => {
-      if (fieldErrors && fieldErrors.length > 0) {
-        errors[field] = fieldErrors[0];
-      }
-    });
-  }
-  
-  return {
-    isValid: formResult.isValid,
-    errors,
-    firstError: Object.values(errors)[0],
-  };
+  return validateForm(data);
 }

@@ -3,7 +3,7 @@
  * Validation Module - Streamlined Core Functions
  * 
  * Simplified to focus only on essential database and business validation.
- * Legacy compatibility layers and over-engineered utilities removed.
+ * Now integrates with the new modular validation utilities.
  */
 
 // === TYPES ===
@@ -38,3 +38,18 @@ export {
 export {
   getStandardMessage,
 } from './message-constants';
+
+// === INTEGRATION WITH NEW VALIDATION UTILS ===
+export {
+  validateField,
+  validateForm,
+  validateFieldAsync,
+  validateFormAsync,
+  isValidEmail,
+  isValidPassword,
+  isValidUrl,
+  isValidUserName,
+  isValidTaskTitle,
+  isValidTaskDescription,
+  isDateInFuture,
+} from '@/lib/utils/validation';
