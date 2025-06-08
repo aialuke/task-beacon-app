@@ -1,10 +1,15 @@
 
 /**
- * Task List Components
+ * Task List Components - Phase 2 Consolidated
  * 
- * Components for displaying collections of tasks
+ * Simplified exports after removing duplicate implementations.
  */
 
+// Main task list implementation
 export { default as TaskList } from './TaskList';
-export { default as EnhancedTaskList } from './EnhancedTaskList';
+
+// Simplified optimized version (now just extends TaskList)
+export { default as OptimizedTaskList } from './OptimizedTaskList';
+
+// Dashboard view (specialized layout)
 export { default as TaskDashboard } from './TaskDashboard';
