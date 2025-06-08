@@ -1,4 +1,3 @@
-
 /**
  * Legacy Validation Utilities - Phase 1 Cleanup
  * 
@@ -6,9 +5,16 @@
  * All validation logic has been migrated to @/schemas for consistency and type safety.
  */
 
-// === COMPLETE MIGRATION TO ZOD SYSTEM ===
+// === EXTERNAL LIBRARIES ===
+// (None for this file)
+
+// === INTERNAL UTILITIES ===
 // All validation functions now use the centralized Zod validation system
 
+// === TYPES ===
+import type { ValidationResult } from '@/types';
+
+// === CORE VALIDATION EXPORTS ===
 export {
   // Core validation functions
   isValidEmail,

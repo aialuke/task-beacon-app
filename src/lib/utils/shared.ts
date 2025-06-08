@@ -1,4 +1,3 @@
-
 /**
  * Shared Utility Functions - Phase 3.1 Cleanup
  * 
@@ -8,29 +7,10 @@
  * - Validation functions moved to @/schemas
  */
 
-// === URL UTILITIES ===
-export const truncateUrl = (url: string, maxLength = 30): string => {
-  if (!url || typeof url !== 'string') return '';
-  
-  if (url.length <= maxLength) return url;
-  
-  try {
-    const urlObj = new URL(url);
-    const domain = urlObj.hostname;
-    
-    if (domain.length <= maxLength) return domain;
-    
-    return domain.length > maxLength 
-      ? `${domain.substring(0, maxLength - 3)}...`
-      : domain;
-  } catch {
-    return url.length > maxLength 
-      ? `${url.substring(0, maxLength - 3)}...`
-      : url;
-  }
-};
+// === EXTERNAL LIBRARIES ===
+// (None for this file)
 
-// === RE-EXPORT FROM CANONICAL SOURCES ===
+// === INTERNAL UTILITIES ===
 // Import from centralized systems for backward compatibility during transition
 export {
   formatDate,
@@ -57,3 +37,25 @@ export {
   validateFormWithZod as validateForm,
   type ValidationResult,
 } from '@/schemas';
+
+// === URL UTILITIES ===
+export const truncateUrl = (url: string, maxLength = 30): string => {
+  if (!url || typeof url !== 'string') return '';
+  
+  if (url.length <= maxLength) return url;
+  
+  try {
+    const urlObj = new URL(url);
+    const domain = urlObj.hostname;
+    
+    if (domain.length <= maxLength) return domain;
+    
+    return domain.length > maxLength 
+      ? `${domain.substring(0, maxLength - 3)}...`
+      : domain;
+  } catch {
+    return url.length > maxLength 
+      ? `${url.substring(0, maxLength - 3)}...`
+      : url;
+  }
+};

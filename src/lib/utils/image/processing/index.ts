@@ -1,8 +1,5 @@
 
-/**
- * Image Processing Module Entry Point
- */
-
+// === INTERNAL UTILITIES ===
 export {
   getOptimalImageFormatAdvanced,
   calculateOptimalDimensions,

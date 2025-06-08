@@ -1,14 +1,16 @@
-
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { renderHook, act } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactNode } from 'react';
+
+// === INTERNAL UTILITIES ===
 import { useAuth, AuthProvider } from '@/contexts/AuthContext';
 import { setupIntegrationTest } from '@/test/integration/setup';
 import { AuthService } from '@/lib/api';
-import type { AuthUser, Session, AuthResponse } from '@/types';
-import type { ApiResponse } from '@/types/api.types';
+
+// === TYPES ===
+import type { AuthUser, Session, AuthResponse, ApiResponse } from '@/types';
 
 /**
  * Authentication Flow Integration Tests

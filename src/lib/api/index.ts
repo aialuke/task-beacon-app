@@ -1,10 +1,4 @@
 
-/**
- * API Layer - Unified Type System Integration
- * 
- * Standardized import patterns and optimized exports.
- */
-
 // === EXTERNAL LIBRARIES ===
 // (Supabase client is imported from integration layer)
 

@@ -5,9 +5,15 @@ import type { User, Session } from '@supabase/supabase-js';
 // === INTERNAL UTILITIES ===
 import { supabase } from '@/integrations/supabase/client';
 
-// === TYPES (direct imports from unified system) ===
-import type { ApiResponse, ServiceResult, ApiError } from '@/types/api.types';
-import type { SignInCredentials, SignUpCredentials, AuthResponse } from '@/types';
+// === TYPES ===
+import type { 
+  ApiResponse, 
+  ServiceResult, 
+  ApiError,
+  SignInCredentials, 
+  SignUpCredentials, 
+  AuthResponse 
+} from '@/types';
 
 // === HELPER FUNCTIONS ===
 function createApiError(message: string, code?: string): ApiError {

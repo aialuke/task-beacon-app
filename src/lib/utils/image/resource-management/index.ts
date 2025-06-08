@@ -1,8 +1,5 @@
 
-/**
- * Resource Management Module Entry Point
- */
-
+// === INTERNAL UTILITIES ===
 export {
   createImagePreviewEnhanced,
   createImagePreviews,
