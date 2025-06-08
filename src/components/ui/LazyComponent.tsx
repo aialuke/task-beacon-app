@@ -1,12 +1,21 @@
 
 import { lazy, Suspense, ComponentType, useEffect } from 'react';
 import UnifiedLoadingStates from './loading/UnifiedLoadingStates';
-import { createLazyComponent, lazyLoadingMetrics } from '@/lib/utils/lazy-loading';
 
 interface LazyComponentProps {
   fallback?: React.ReactNode;
   error?: React.ReactNode;
 }
+
+/**
+ * Simple metrics tracking for lazy loading performance
+ */
+const lazyLoadingMetrics = {
+  trackComponentLoad: (componentName: string, startTime: number) => {
+    const loadTime = performance.now() - startTime;
+    console.debug(`[LazyLoading] ${componentName} loaded in ${loadTime.toFixed(2)}ms`);
+  },
+};
 
 /**
  * Higher-order component for lazy loading with enhanced error handling and performance tracking
@@ -17,10 +26,7 @@ export function withLazyLoading<T extends Record<string, any> = Record<string, a
 ) {
   const { componentName = 'UnknownComponent' } = options;
   
-  const LazyComponent = createLazyComponent(importFn, {
-    maxRetries: 3,
-    retryDelay: 1000,
-  });
+  const LazyComponent = lazy(importFn);
   
   return function WrappedLazyComponent(props: T) {
     const fallback = options.fallback ?? <UnifiedLoadingStates variant="spinner" />;
