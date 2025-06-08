@@ -1,3 +1,4 @@
+
 /**
  * Core utility functions that don't fit into specific domains
  */
@@ -53,4 +54,17 @@ export function throttle<T extends (...args: unknown[]) => unknown>(
       }, limit);
     }
   };
+}
+
+/**
+ * Optimize CSS animations for performance (essential function from css-optimization)
+ */
+export function optimizeAnimations(): void {
+  // Respect user's motion preferences
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  
+  if (prefersReducedMotion) {
+    document.documentElement.style.setProperty('--animation-duration', '0ms');
+    document.documentElement.style.setProperty('--transition-duration', '0ms');
+  }
 }

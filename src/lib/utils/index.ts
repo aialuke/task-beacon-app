@@ -1,15 +1,15 @@
 
 /**
- * Centralized utilities index - Phase 3.2 File Splitting
+ * Centralized utilities index - Phase 3.3 File Splitting
  * 
- * Updated to use modular async operations directory and simplified exports.
+ * Updated to remove minimal usage utilities and consolidate essential functions.
  */
 
 // =====================================================
 // CORE UTILITIES
 // =====================================================
 
-// Essential utilities (className merging, etc.)
+// Essential utilities (className merging, optimizations, etc.)
 export * from './core';
 
 // UI utilities (variants, styling, etc.)
@@ -110,7 +110,7 @@ export type {
 // Modal management
 export * from './modal-management';
 
-// Async operations (NEW: from modular directory)
+// Async operations (from modular directory)
 export type {
   AsyncOperationOptions,
   AsyncOperationResult,
@@ -161,27 +161,28 @@ export * as asyncUtils from './async';
 export * as errorUtils from './error';
 
 // =====================================================
-// PHASE 3.2 COMPLETION NOTES
+// PHASE 3.3 COMPLETION NOTES
 // =====================================================
 
 /**
- * PHASE 3.2 COMPLETED - ✅ SPLIT OVERSIZED FILES:
+ * PHASE 3.3 COMPLETED - ✅ REMOVE MINIMAL USAGE UTILITIES:
  * 
- * ✅ ASYNC OPERATIONS REFACTORING:
- * - Split 369-line async-operations.ts into focused modules
- * - Created src/lib/utils/async/ directory with 4 focused files
- * - Each file under 200 lines with single responsibility
- * - Maintained all existing functionality and exports
+ * ✅ CLEANUP ACHIEVEMENTS:
+ * - Removed css-optimization.ts (minimal usage, 5 functions)
+ * - Removed asset-optimization.ts (minimal usage, 2 placeholder functions)
+ * - Removed useBundleOptimization.ts hook (redundant)
+ * - Removed hooks/performance/bundle.ts (placeholder)
+ * - Consolidated essential optimizeAnimations function into core.ts
  * 
  * ✅ IMPROVED MAINTAINABILITY:
- * - Easier to find and modify specific async operation functionality
- * - Better separation of concerns (core, batch, optimistic, factory)
- * - Reduced cognitive load per file
- * - Maintained backward compatibility
+ * - Eliminated 4 underutilized files
+ * - Reduced utility file count from 25+ to 21
+ * - Preserved essential optimization functionality
+ * - Maintained backward compatibility for essential functions
  * 
  * BENEFITS ACHIEVED:
- * - All files now under 200 lines (async-operations.ts eliminated)
- * - Improved code organization and discoverability
- * - Better tree-shaking potential
- * - Easier testing and maintenance
+ * - Cleaner codebase with focused utilities
+ * - Reduced cognitive overhead
+ * - Better organization of essential vs. optional features
+ * - Easier navigation and maintenance
  */
