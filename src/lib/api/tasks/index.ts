@@ -81,8 +81,8 @@ export const getTaskById = async (taskId: string) => {
       .from('tasks')
       .select(`
         *,
-        assignee:profiles!tasks_assignee_id_fkey(id, name, email),
-        owner:profiles!tasks_owner_id_fkey(id, name, email)
+        assignee:profiles!tasks_assignee_id_fkey(id, name, email, avatar_url),
+        owner:profiles!tasks_owner_id_fkey(id, name, email, avatar_url)
       `)
       .eq('id', taskId)
       .single();
@@ -108,8 +108,8 @@ export const getTasks = async (options: {
       .from('tasks')
       .select(`
         *,
-        assignee:profiles!tasks_assignee_id_fkey(id, name, email),
-        owner:profiles!tasks_owner_id_fkey(id, name, email)
+        assignee:profiles!tasks_assignee_id_fkey(id, name, email, avatar_url),
+        owner:profiles!tasks_owner_id_fkey(id, name, email, avatar_url)
       `, { count: 'exact' });
 
     if (assignedToMe) {
@@ -155,7 +155,7 @@ export const updateTaskStatus = async (taskId: string, status: 'pending' | 'comp
 
 // === MEDIA OPERATIONS ===
 
-export const uploadPhoto = async (photo: File): Promise<{ data: string | null; error: null; success: boolean }> => {
+export const uploadPhoto = async (photo: File) => {
   return apiRequest('uploadPhoto', async () => {
     // This is a placeholder - actual implementation would use Supabase Storage
     // For now, return null to indicate no photo upload

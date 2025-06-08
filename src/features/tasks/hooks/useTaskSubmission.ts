@@ -68,10 +68,10 @@ export function useTaskSubmission() {
       const serviceData = {
         title: taskData.title.trim(),
         description: taskData.description || undefined,
-        dueDate: taskData.dueDate ? new Date(taskData.dueDate).toISOString() : undefined,
-        photoUrl: taskData.photoUrl,
-        urlLink: taskData.url || undefined,
-        assigneeId: finalAssigneeId,
+        due_date: taskData.dueDate ? new Date(taskData.dueDate).toISOString() : undefined,
+        photo_url: taskData.photoUrl,
+        url_link: taskData.url || undefined,
+        assignee_id: finalAssigneeId,
       };
 
       // Submit to API
@@ -111,10 +111,10 @@ export function useTaskSubmission() {
       const response = await TaskService.crud.update(taskId, {
         title: updates.title,
         description: updates.description,
-        dueDate: updates.dueDate,
-        photoUrl: updates.photoUrl,
-        urlLink: updates.url,
-        assigneeId: updates.assigneeId,
+        due_date: updates.dueDate,
+        photo_url: updates.photoUrl,
+        url_link: updates.url,
+        assignee_id: updates.assigneeId,
       });
 
       if (!response.success) {
