@@ -26,7 +26,7 @@ export interface LazyLoadingMetrics {
 export function createLazyComponent<T extends ComponentType<any>>(
   importFn: () => Promise<{ default: T }>,
   options: LazyLoadingOptions = {}
-): ComponentType<React.ComponentProps<T>> {
+): T {
   const { maxRetries = 3, retryDelay = 1000, timeout = 30000 } = options;
   
   return lazy(() => {
@@ -55,7 +55,7 @@ export function createLazyComponent<T extends ComponentType<any>>(
     };
     
     return attemptLoad();
-  });
+  }) as T;
 }
 
 /**
@@ -100,3 +100,23 @@ export function preloadLazyComponent(
     console.warn('Failed to preload component:', error);
   });
 }
+
+/**
+ * Bundle utilities for performance optimization
+ */
+export const bundleUtils = {
+  getConnectionQuality: (): 'slow' | 'fast' => {
+    if (typeof navigator !== 'undefined' && 'connection' in navigator) {
+      const connection = (navigator as any).connection;
+      if (connection) {
+        const effectiveType = connection.effectiveType;
+        return effectiveType === '4g' || effectiveType === '3g' ? 'fast' : 'slow';
+      }
+    }
+    return 'fast'; // Default to fast if can't determine
+  },
+  
+  shouldPreload: (connectionQuality: 'slow' | 'fast'): boolean => {
+    return connectionQuality === 'fast';
+  },
+};
