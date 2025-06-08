@@ -1,21 +1,27 @@
 
 /**
- * Simplified Component System - Phase 1 Loading States Consolidation
+ * Simplified Component System - Phase 2 Complexity Reduction
  * 
- * Updated exports after removing duplicate skeleton implementations.
+ * Updated exports with focused loading components.
  */
 
 // === ERROR HANDLING ===
 export { default as UnifiedErrorHandler } from '../error/UnifiedErrorHandler';
 
-// === LOADING STATES ===
+// === LOADING STATES - Phase 2 Focused Components ===
 export { 
-  default as UnifiedLoadingStates, 
   LoadingSpinner, 
   CardSkeleton, 
   ImageSkeleton 
 } from '../loading/UnifiedLoadingStates';
 
-// Note: SkeletonBox removed - use Skeleton from '@/components/ui/skeleton' instead
+// Phase 2: Focused loading components
+export { default as PageLoader } from '../loading/PageLoader';
+export { default as CardLoader } from '../loading/CardLoader';
+export { default as InlineLoader } from '../loading/InlineLoader';
 
-// Using standard React patterns instead of complex unified hooks
+// Phase 2: Simplified image component
+export { default as SimpleLazyImage } from '../SimpleLazyImage';
+
+// Legacy export for backward compatibility
+export { default as UnifiedLoadingStates } from '../loading/UnifiedLoadingStates';

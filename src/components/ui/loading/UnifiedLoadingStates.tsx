@@ -1,9 +1,8 @@
 
 /**
- * Simplified Loading States Component - Phase 1 Consolidation
+ * Simplified Loading States Component - Phase 2 Complexity Reduction
  * 
- * Standardized loading spinner and removed duplicate skeleton implementation.
- * Uses shadcn Skeleton component for consistency.
+ * Removed variant switching logic, now exports focused components.
  */
 
 import React, { memo } from 'react';
@@ -15,16 +14,8 @@ interface LoadingSpinnerProps {
   className?: string;
 }
 
-interface UnifiedLoadingProps {
-  variant?: 'spinner' | 'skeleton' | 'card' | 'page';
-  size?: 'sm' | 'md' | 'lg' | 'xl';
-  count?: number;
-  message?: string;
-  className?: string;
-}
-
 /**
- * Standardized spinner component - Phase 1 consolidation
+ * Standardized spinner component
  */
 export const LoadingSpinner = memo(function LoadingSpinner({ 
   size = 'md', 
@@ -86,58 +77,7 @@ export const ImageSkeleton = memo(function ImageSkeleton({
   );
 });
 
-/**
- * Simplified main loading component using standard React patterns
- */
-const UnifiedLoadingStates = memo(function UnifiedLoadingStates({
-  variant = 'spinner',
-  size = 'md',
-  count = 1,
-  message,
-  className,
-}: UnifiedLoadingProps) {
-  if (variant === 'spinner') {
-    return (
-      <div className={cn("flex flex-col items-center justify-center space-y-3", className)}>
-        <LoadingSpinner size={size} />
-        {message && <p className="text-sm text-muted-foreground">{message}</p>}
-      </div>
-    );
-  }
-
-  if (variant === 'skeleton') {
-    return (
-      <div className={cn("space-y-2", className)}>
-        {Array.from({ length: count }, (_, i) => (
-          <Skeleton key={i} className="w-full h-4" />
-        ))}
-      </div>
-    );
-  }
-
-  if (variant === 'card') {
-    return (
-      <div className={cn("space-y-6", className)}>
-        {Array.from({ length: count }, (_, i) => (
-          <CardSkeleton key={i} />
-        ))}
-      </div>
-    );
-  }
-
-  if (variant === 'page') {
-    return (
-      <div className={cn("flex flex-col items-center justify-center min-h-[400px] space-y-4", className)}>
-        <LoadingSpinner size="xl" />
-        <div className="text-center space-y-2">
-          <h3 className="text-lg font-semibold">Loading</h3>
-          {message && <p className="text-muted-foreground">{message}</p>}
-        </div>
-      </div>
-    );
-  }
-
-  return <LoadingSpinner size={size} className={className} />;
-});
+// Legacy default export for backward compatibility - simplified implementation
+const UnifiedLoadingStates = LoadingSpinner;
 
 export default UnifiedLoadingStates;

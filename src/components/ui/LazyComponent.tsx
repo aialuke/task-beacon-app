@@ -1,6 +1,9 @@
 
 import { lazy, Suspense, ComponentType, useEffect } from 'react';
 import { LoadingSpinner } from './loading/UnifiedLoadingStates';
+import PageLoader from './loading/PageLoader';
+import CardLoader from './loading/CardLoader';
+import InlineLoader from './loading/InlineLoader';
 
 interface LazyComponentProps {
   fallback?: React.ReactNode;
@@ -72,7 +75,7 @@ export function LazyWrapper({
 }
 
 /**
- * Optimized lazy loading for specific component types
+ * Phase 2: Simplified lazy loading for specific component types
  */
 export const LazyComponents = {
   /**
@@ -83,16 +86,7 @@ export const LazyComponents = {
     formName: string
   ) => withLazyLoading(importFn, {
     componentName: `LazyForm_${formName}`,
-    fallback: (
-      <div className="p-6 rounded-xl border border-border bg-card animate-pulse">
-        <div className="space-y-4">
-          <div className="h-4 bg-muted rounded w-1/4"></div>
-          <div className="h-10 bg-muted rounded"></div>
-          <div className="h-20 bg-muted rounded"></div>
-          <div className="h-10 bg-muted rounded w-1/3"></div>
-        </div>
-      </div>
-    ),
+    fallback: <CardLoader count={1} />,
   }),
   
   /**
@@ -103,7 +97,7 @@ export const LazyComponents = {
     listName: string
   ) => withLazyLoading(importFn, {
     componentName: `LazyList_${listName}`,
-    fallback: <LoadingSpinner size="md" />,
+    fallback: <InlineLoader message="Loading list..." />,
   }),
   
   /**
@@ -121,5 +115,16 @@ export const LazyComponents = {
         </div>
       </div>
     ),
+  }),
+  
+  /**
+   * Create lazy-loaded page component
+   */
+  createLazyPage: <T extends ComponentType<any>>(
+    importFn: () => Promise<{ default: T }>,
+    pageName: string
+  ) => withLazyLoading(importFn, {
+    componentName: `LazyPage_${pageName}`,
+    fallback: <PageLoader message={`Loading ${pageName}...`} />,
   }),
 };
