@@ -1,6 +1,5 @@
 
 import { useState, useMemo } from 'react';
-import { useOptimizedMemo } from '@/hooks/performance';
 import type { User } from '@/types';
 import type { UserRoleEnum } from '@/types/database';
 
@@ -18,8 +17,8 @@ export function useUsersFilter(
   const [searchTerm, setSearchTerm] = useState(initialSearch);
   const [roleFilter, setRoleFilter] = useState(initialRole);
 
-  // Filter users based on search and role
-  const filteredUsers = useOptimizedMemo(
+  // Filter users based on search and role - using standard useMemo for simple filtering
+  const filteredUsers = useMemo(
     () => {
       if (!users) return [];
       
@@ -33,10 +32,7 @@ export function useUsersFilter(
         return matchesSearch && matchesRole;
       });
     },
-    [users, searchTerm, roleFilter],
-    { 
-      name: 'filtered-users'
-    }
+    [users, searchTerm, roleFilter]
   );
 
   // Get unique roles for filter options

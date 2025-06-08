@@ -1,5 +1,5 @@
 
-import { memo, lazy, Suspense } from 'react';
+import { memo, lazy, Suspense, useCallback } from 'react';
 import UnifiedLoadingStates from '@/components/ui/loading/UnifiedLoadingStates';
 import type { Task } from '@/types';
 
@@ -58,26 +58,26 @@ const ErrorState = memo(({ error, onRetry }: { error: string; onRetry?: () => vo
 ErrorState.displayName = 'ErrorState';
 
 /**
- * Task Render Callbacks - Phase 2 Optimization
+ * Task Render Callbacks - Simplified Performance Optimization
  * 
- * Provides optimized render functions for task list components.
- * All functions are memoized to prevent unnecessary re-renders.
+ * Provides render functions for task list components using standard React patterns.
+ * Removed unnecessary optimizations in favor of cleaner, more maintainable code.
  */
 export const useTaskRenderCallbacks = () => {
-  // Memoized render functions to prevent child re-renders
-  const renderTask = (task: Task) => (
+  // Standard memoized render functions - using useCallback for actual event handlers only
+  const renderTask = useCallback((task: Task) => (
     <Suspense key={task.id} fallback={<UnifiedLoadingStates variant="card" count={1} />}>
       <TaskCard task={task} />
     </Suspense>
-  );
+  ), []);
 
-  const renderLoading = (count: number) => <LoadingSkeletonGrid count={count} />;
+  const renderLoading = useCallback((count: number) => <LoadingSkeletonGrid count={count} />, []);
 
-  const renderEmpty = () => <EmptyState />;
+  const renderEmpty = useCallback(() => <EmptyState />, []);
 
-  const renderError = (error: string, onRetry?: () => void) => (
+  const renderError = useCallback((error: string, onRetry?: () => void) => (
     <ErrorState error={error} onRetry={onRetry} />
-  );
+  ), []);
 
   return {
     renderTask,

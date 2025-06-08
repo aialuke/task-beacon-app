@@ -1,6 +1,5 @@
 
 import { memo, useMemo } from 'react';
-import { useOptimizedMemo } from '@/hooks/performance';
 import type { Task } from '@/types';
 
 interface TaskListCoreProps {
@@ -16,10 +15,10 @@ interface TaskListCoreProps {
 }
 
 /**
- * Core Task List Component - Phase 2 Optimization
+ * Core Task List Component - Simplified Performance Optimization
  * 
  * Focused component for rendering task lists with minimal re-renders.
- * Uses React.memo and optimized rendering patterns.
+ * Uses React.memo and standard React patterns for better maintainability.
  */
 const TaskListCore = memo(function TaskListCore({
   tasks,
@@ -32,14 +31,10 @@ const TaskListCore = memo(function TaskListCore({
   renderError,
   pageSize,
 }: TaskListCoreProps) {
-  // Memoize task elements to prevent unnecessary re-renders
-  const taskElements = useOptimizedMemo(
+  // Memoize task elements using standard useMemo - sufficient for this use case
+  const taskElements = useMemo(
     () => tasks.map(renderTask),
-    [tasks, renderTask],
-    { 
-      name: 'task-list-core-elements',
-      warnOnSlowComputation: true,
-    }
+    [tasks, renderTask]
   );
 
   // Determine content based on state
