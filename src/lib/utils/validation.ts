@@ -36,16 +36,19 @@ export {
 // === LEGACY COMPATIBILITY ===
 // These aliases maintain backward compatibility for existing code
 export const isValidUserName = (name: string): boolean => {
+  const { userNameSchema } = require('@/schemas');
   const result = userNameSchema.safeParse(name);
   return result.success;
 };
 
 export const isValidTaskTitle = (title: string): boolean => {
+  const { taskTitleSchema } = require('@/schemas');
   const result = taskTitleSchema.safeParse(title);
   return result.success;
 };
 
 export const isValidTaskDescription = (description: string): boolean => {
+  const { taskDescriptionSchema } = require('@/schemas');
   const result = taskDescriptionSchema.safeParse(description);
   return result.success;
 };

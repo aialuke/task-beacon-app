@@ -1,4 +1,3 @@
-
 /**
  * Centralized Zod Validation Schemas - Phase 1 Implementation
  * 
@@ -7,6 +6,14 @@
  */
 
 import { z } from 'zod';
+
+// === VALIDATION RESULT TYPE ===
+export interface ValidationResult {
+  isValid: boolean;
+  errors: string[];
+  warnings?: string[];
+  data?: unknown;
+}
 
 // === VALIDATION MESSAGES ===
 export const VALIDATION_MESSAGES = {
@@ -213,7 +220,7 @@ export const createTextSchema = (
 export function validateWithZod<T>(
   schema: z.ZodSchema<T>,
   data: unknown
-): { isValid: boolean; errors: string[]; data?: T } {
+): ValidationResult {
   const result = schema.safeParse(data);
   
   if (result.success) {

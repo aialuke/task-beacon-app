@@ -118,3 +118,31 @@ export function combineValidationResults(
     warnings: allWarnings,
   };
 }
+
+/**
+ * Wraps async operations with consistent error handling
+ */
+export async function withErrorHandling<T>(
+  operation: () => Promise<T>,
+  context: ValidationContext,
+  fallbackErrorCode: ValidationErrorCode = ValidationErrorCode.UNKNOWN_ERROR
+): Promise<{ success: true; data: T } | { success: false; result: BasicValidationResult }> {
+  try {
+    const data = await operation();
+    return { success: true, data };
+  } catch (error) {
+    // Handle standard errors
+    if (error instanceof Error) {
+      return {
+        success: false,
+        result: createErrorResult(error.message),
+      };
+    }
+
+    // Handle unknown errors
+    return {
+      success: false,
+      result: createErrorResult('An unexpected error occurred'),
+    };
+  }
+}
