@@ -22,7 +22,6 @@ function TaskListComponent() {
     tasks,
     isLoading,
     error,
-    // Updated to use pagination object from refactored hook
     pagination,
     totalCount,
     isFetching,

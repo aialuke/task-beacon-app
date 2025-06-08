@@ -12,14 +12,20 @@ interface TaskDataContextValue {
   isFetching: boolean;
   error: string | null;
   
-  // Pagination state and controls
+  // Pagination object (complete pagination API)
+  pagination: {
+    currentPage: number;
+    totalPages: number;
+    pageSize: number;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+    goToNextPage: () => void;
+    goToPreviousPage: () => void;
+    goToPage: (page: number) => void;
+  };
+  
+  // Pagination metadata
   totalCount: number;
-  currentPage: number;
-  pageSize: number;
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-  goToNextPage: () => void;
-  goToPreviousPage: () => void;
   
   // Error recovery
   retry: () => void;
@@ -54,12 +60,7 @@ export function TaskDataContextProvider({
     isFetching: taskQueries.isFetching,
     error: taskQueries.error,
     totalCount: taskQueries.totalCount,
-    currentPage: taskQueries.currentPage,
-    pageSize: taskQueries.pageSize,
-    hasNextPage: taskQueries.hasNextPage,
-    hasPreviousPage: taskQueries.hasPreviousPage,
-    goToNextPage: taskQueries.goToNextPage,
-    goToPreviousPage: taskQueries.goToPreviousPage,
+    pagination: taskQueries.pagination,
     retry: taskQueries.refetch || (() => {}),
   };
 
