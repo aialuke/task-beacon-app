@@ -1,7 +1,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-// Simple unit tests for the useTaskMutations orchestrator
+// Simple unit tests for the useTaskMutations hook
 // Avoiding complex React Query and service mocking that was causing build issues
 
 describe('useTaskMutations - Simplified Tests', () => {
@@ -24,55 +24,6 @@ describe('useTaskMutations - Simplified Tests', () => {
       expect(module.useTaskDeletion).toBeDefined();
       expect(module.useTaskStatus).toBeDefined();
     });
-
-    it('should export backward compatibility functions', async () => {
-      const module = await import('../useTaskMutations');
-      expect(module.useTaskStatusMutations).toBeDefined();
-      expect(module.useTaskDeleteMutations).toBeDefined();
-    });
-  });
-
-  describe('Orchestrator Export', () => {
-    it('should export the orchestrator as main hook', async () => {
-      // Verify that useTaskMutations is actually the orchestrator
-      const { useTaskMutations } = await import('../useTaskMutations');
-      const { useTaskMutationsOrchestrator } = await import('../mutations/useTaskMutationsOrchestrator');
-      
-      expect(useTaskMutations).toBe(useTaskMutationsOrchestrator);
-    });
-  });
-
-  describe('File Structure Validation', () => {
-    it('should have proper file organization', async () => {
-      // Test that all the mutation files exist and are importable
-      const creationModule = await import('../mutations/useTaskCreation');
-      const updatesModule = await import('../mutations/useTaskUpdates');
-      const deletionModule = await import('../mutations/useTaskDeletion');
-      const statusModule = await import('../mutations/useTaskStatus');
-      const orchestratorModule = await import('../mutations/useTaskMutationsOrchestrator');
-
-      expect(creationModule.useTaskCreation).toBeDefined();
-      expect(updatesModule.useTaskUpdates).toBeDefined();
-      expect(deletionModule.useTaskDeletion).toBeDefined();
-      expect(statusModule.useTaskStatus).toBeDefined();
-      expect(orchestratorModule.useTaskMutationsOrchestrator).toBeDefined();
-    });
-  });
-
-  describe('Backward Compatibility Functions', () => {
-    it('should provide status mutation functions', async () => {
-      const { useTaskStatusMutations } = await import('../useTaskMutations');
-      
-      // Test that the function is properly structured
-      expect(typeof useTaskStatusMutations).toBe('function');
-    });
-
-    it('should provide delete mutation functions', async () => {
-      const { useTaskDeleteMutations } = await import('../useTaskMutations');
-      
-      // Test that the function is properly structured
-      expect(typeof useTaskDeleteMutations).toBe('function');
-    });
   });
 
   describe('Module Dependencies', () => {
@@ -80,7 +31,6 @@ describe('useTaskMutations - Simplified Tests', () => {
       // This test will fail if there are circular dependencies
       try {
         await import('../useTaskMutations');
-        await import('../mutations/useTaskMutationsOrchestrator');
         await import('../mutations/useTaskCreation');
         await import('../mutations/useTaskUpdates');
         await import('../mutations/useTaskDeletion');

@@ -53,6 +53,15 @@ export function useTaskPhotoUpload(options?: {
     { name: 'uploadPhoto' }
   );
 
+  // Handle photo upload wrapper for backward compatibility
+  const handlePhotoUpload = useOptimizedCallback(
+    async (): Promise<string | null> => {
+      return await uploadPhoto();
+    },
+    [uploadPhoto],
+    { name: 'handlePhotoUpload' }
+  );
+
   // Memoize return object for stable references
   return useOptimizedMemo(
     () => ({
@@ -65,6 +74,7 @@ export function useTaskPhotoUpload(options?: {
       // Actions
       handlePhotoChange: photoProcessing.handlePhotoChange,
       uploadPhoto,
+      handlePhotoUpload, // Added for backward compatibility
       resetPhoto: photoState.resetPhoto,
       handlePhotoRemove: photoState.resetPhoto,
 
@@ -79,6 +89,7 @@ export function useTaskPhotoUpload(options?: {
       photoState.resetPhoto,
       photoProcessing.handlePhotoChange,
       uploadPhoto,
+      handlePhotoUpload,
       processingOptions,
     ],
     { name: 'task-photo-upload' }

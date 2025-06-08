@@ -52,3 +52,23 @@ export { useTaskCreation } from './mutations/useTaskCreation';
 export { useTaskUpdates } from './mutations/useTaskUpdates';
 export { useTaskDeletion } from './mutations/useTaskDeletion';
 export { useTaskStatus } from './mutations/useTaskStatus';
+
+// Backward compatibility functions for removed hooks
+export function useTaskStatusMutations() {
+  const status = useTaskStatus();
+  return {
+    markAsComplete: status.markAsComplete,
+    markAsIncomplete: status.markAsIncomplete,
+    toggleTaskComplete: status.toggleTaskCompleteCallback,
+    isLoading: status.isLoading,
+  };
+}
+
+export function useTaskDeleteMutations() {
+  const deletion = useTaskDeletion();
+  return {
+    deleteTask: deletion.deleteTaskCallback,
+    deleteTaskById: deletion.deleteTaskCallback,
+    isLoading: deletion.isLoading,
+  };
+}
