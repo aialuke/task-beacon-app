@@ -201,7 +201,7 @@ export function handleApiError(
       userMessage,
       errorCode: apiError.code || 'UNKNOWN',
       statusCode: apiError.statusCode || 500,
-      errorDetails: apiError.details || 'No additional details',
+      errorDetails: safeStringify(apiError.details) || 'No additional details',
     });
   }
 
@@ -346,7 +346,7 @@ export const logApiError = (
   const logContext: Record<string, unknown> = {
     errorCode: apiError.code || 'UNKNOWN',
     statusCode: apiError.statusCode || 500,
-    errorDetails: apiError.details || 'No additional details',
+    errorDetails: safeStringify(apiError.details) || 'No additional details',
   };
   
   // Add additional context if provided
