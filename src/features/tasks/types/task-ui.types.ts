@@ -44,3 +44,4 @@ export interface TaskUIContextType {
   // Mobile detection
   isMobile: boolean;
 }
+// CodeRabbit review

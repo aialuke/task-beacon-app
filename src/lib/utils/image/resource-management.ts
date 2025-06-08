@@ -218,4 +218,4 @@ export class ImagePreviewManager {
   getActiveCount(): number {
     return this.previews.size;
   }
-} 
+} // CodeRabbit review

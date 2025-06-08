@@ -77,4 +77,4 @@ export const handleAuthError = (error: unknown, operation: string): Error => {
   const authError = error instanceof Error ? error : new Error(`${operation} failed`);
   authLogger.error(`Auth operation failed: ${operation}`, authError);
   return authError;
-}; 
+}; // CodeRabbit review

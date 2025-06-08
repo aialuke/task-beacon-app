@@ -169,4 +169,4 @@ describe('Logger', () => {
       consoleSpy.mockRestore();
     });
   });
-}); 
+}); // CodeRabbit review

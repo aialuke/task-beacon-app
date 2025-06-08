@@ -38,3 +38,4 @@ class MockResizeObserver implements ResizeObserver {
   unobserve(): void {}
 }
 global.ResizeObserver = MockResizeObserver;
+// CodeRabbit review

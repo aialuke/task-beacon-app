@@ -47,3 +47,4 @@ export interface ProfileWithRelations extends ProfileTable {
   assigned_tasks?: TaskTable[];
   owned_tasks?: TaskTable[];
 }
+// CodeRabbit review

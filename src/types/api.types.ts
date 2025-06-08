@@ -82,3 +82,4 @@ export interface TablesResponse<T> {
   data: T | null;
   error: ApiError | null;
 }
+// CodeRabbit review

@@ -90,3 +90,4 @@ export function useErrorHandler(options: UseErrorHandlerOptions = {}) {
     withErrorHandling,
   };
 }
+// CodeRabbit review

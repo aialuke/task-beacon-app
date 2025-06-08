@@ -131,3 +131,4 @@ export function SimpleNavbar({
     </div>
   );
 }
+// CodeRabbit review

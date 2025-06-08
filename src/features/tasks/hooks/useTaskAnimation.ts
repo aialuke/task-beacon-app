@@ -57,3 +57,4 @@ export function useTaskAnimation(contentRef: React.RefObject<HTMLDivElement>) {
     animationPhase,
   };
 }
+// CodeRabbit review

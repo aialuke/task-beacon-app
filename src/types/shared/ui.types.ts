@@ -195,4 +195,4 @@ export interface DropTarget {
   onDrop: (item: DragItem) => void;
   onDragOver?: (item: DragItem) => void;
   onDragLeave?: () => void;
-} 
+} // CodeRabbit review

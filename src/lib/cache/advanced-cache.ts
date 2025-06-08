@@ -224,3 +224,4 @@ export function useCachedData<T>(
 
   return { data, loading, error };
 }
+// CodeRabbit review

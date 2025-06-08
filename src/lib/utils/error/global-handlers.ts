@@ -36,3 +36,4 @@ function handleGlobalError(error: Error, source: string) {
     url: window.location.href,
   });
 }
+// CodeRabbit review

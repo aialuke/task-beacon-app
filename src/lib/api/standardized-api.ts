@@ -118,3 +118,4 @@ export function createLoadingState(
     error: error ? (error instanceof Error ? error.message : String(error)) : null,
   };
 }
+// CodeRabbit review

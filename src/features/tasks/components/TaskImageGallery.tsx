@@ -79,3 +79,4 @@ function TaskImageGallery({ task, className }: TaskImageGalleryProps) {
 
 TaskImageGallery.displayName = 'TaskImageGallery';
 export { TaskImageGallery };
+// CodeRabbit review

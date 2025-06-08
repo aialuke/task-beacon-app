@@ -27,3 +27,4 @@ export const AuthModeToggle = memo(function AuthModeToggle({
     </div>
   );
 });
+// CodeRabbit review

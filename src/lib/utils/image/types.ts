@@ -127,4 +127,4 @@ export interface DimensionResult {
   height: number;
   scale: number;
   aspectRatio: number;
-} 
+} // CodeRabbit review

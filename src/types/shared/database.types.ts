@@ -165,3 +165,4 @@ export interface BackupInfo {
   status: 'pending' | 'completed' | 'failed';
   checksum?: string;
 }
+// CodeRabbit review

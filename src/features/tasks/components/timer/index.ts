@@ -17,3 +17,4 @@ export { default as TimerTooltip } from '../TimerTooltip';
 // === TYPES ===
 export type { TimerDisplayProps } from './TimerDisplay';
 export type { TimerRingProps } from './TimerRing';
+// CodeRabbit review

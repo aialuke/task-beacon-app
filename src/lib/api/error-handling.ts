@@ -185,3 +185,4 @@ export const logApiError = (
     statusCode: apiError.statusCode,
   });
 };
+// CodeRabbit review

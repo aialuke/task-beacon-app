@@ -32,3 +32,4 @@ export const AuthSubmitButton = memo(function AuthSubmitButton({
     </Button>
   );
 });
+// CodeRabbit review

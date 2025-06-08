@@ -23,3 +23,4 @@ const AuthPage = () => {
 };
 
 export default AuthPage;
+// CodeRabbit review

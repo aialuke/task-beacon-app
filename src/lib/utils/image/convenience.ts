@@ -209,4 +209,4 @@ export async function createImageSizes(
   );
 
   return results;
-} 
+} // CodeRabbit review

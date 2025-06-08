@@ -157,3 +157,4 @@ export function useTasksQueryOptimized(pageSize = 10): UseTasksQueryOptimizedRet
     prefetchNextPage,
   };
 }
+// CodeRabbit review

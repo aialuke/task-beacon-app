@@ -101,3 +101,4 @@ export { useTaskDataContextOptimized };
 // Backward compatibility - alias to original name
 export const useTaskDataContext = useTaskDataContextOptimized;
 export const TaskDataContextProvider = TaskDataContextOptimizedProvider;
+// CodeRabbit review

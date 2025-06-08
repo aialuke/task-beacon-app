@@ -14,3 +14,4 @@ export function setupGlobalErrorHandlers() {
     console.error('Unhandled promise rejection:', event.reason);
   });
 }
+// CodeRabbit review

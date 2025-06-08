@@ -222,3 +222,4 @@ export function useAuth(): UseAuthReturn {
     refreshSession,
   };
 }
+// CodeRabbit review

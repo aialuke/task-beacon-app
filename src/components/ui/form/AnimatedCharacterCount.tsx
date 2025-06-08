@@ -35,3 +35,4 @@ export function AnimatedCharacterCount({
     </div>
   );
 }
+// CodeRabbit review

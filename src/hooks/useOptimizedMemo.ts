@@ -69,3 +69,4 @@ export function useOptimizedCallback<T extends (...args: any[]) => any>(
     return result;
   }, deps) as T;
 }
+// CodeRabbit review

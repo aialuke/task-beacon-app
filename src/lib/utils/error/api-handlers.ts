@@ -171,3 +171,4 @@ export function handleValidationError(error: unknown, fieldName: string): Proces
 
 // Re-export types
 export type { ErrorHandlingOptions, ProcessedError };
+// CodeRabbit review

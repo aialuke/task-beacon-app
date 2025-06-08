@@ -18,4 +18,4 @@ describe('useProfileValidation', () => {
     expect(validation.isValid).toBe(false);
     expect(validation.errors.length).toBeGreaterThan(0);
   });
-}); 
+}); // CodeRabbit review

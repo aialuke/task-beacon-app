@@ -148,3 +148,4 @@ export function QuickActionBar({
     </div>
   );
 }
+// CodeRabbit review

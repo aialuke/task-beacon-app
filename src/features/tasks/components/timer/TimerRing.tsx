@@ -121,3 +121,4 @@ export default memo(TimerRing, (prevProps, nextProps) => {
         prevProps.strokeDashoffset === nextProps.strokeDashoffset))
   );
 });
+// CodeRabbit review

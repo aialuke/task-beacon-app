@@ -90,3 +90,4 @@ export interface ApiState<T = unknown, E = string> {
   success: boolean;
   lastFetch?: Date;
 };
+// CodeRabbit review

@@ -194,3 +194,4 @@ export default {
   plugins: [animate],
 } satisfies Config;
 
+// CodeRabbit review

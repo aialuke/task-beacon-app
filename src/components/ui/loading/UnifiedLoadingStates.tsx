@@ -178,3 +178,4 @@ const UnifiedLoadingStates = memo(function UnifiedLoadingStates({
 // Export individual components for backward compatibility
 export { LoadingSpinner, SkeletonBox, CardSkeleton, ImageSkeleton };
 export default UnifiedLoadingStates;
+// CodeRabbit review

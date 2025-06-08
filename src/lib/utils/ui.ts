@@ -34,3 +34,4 @@ export function isDarkMode(): boolean {
     window.matchMedia('(prefers-color-scheme: dark)').matches
   );
 }
+// CodeRabbit review

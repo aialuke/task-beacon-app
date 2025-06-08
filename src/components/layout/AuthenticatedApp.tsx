@@ -51,3 +51,4 @@ export function AuthenticatedApp({
   // Show unauthenticated fallback for guests
   return <>{unauthenticatedFallback}</>;
 } 
+// CodeRabbit review

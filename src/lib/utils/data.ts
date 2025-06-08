@@ -124,3 +124,4 @@ export function safeJsonParse<T>(jsonString: string, defaultValue: T): T {
     return defaultValue;
   }
 }
+// CodeRabbit review

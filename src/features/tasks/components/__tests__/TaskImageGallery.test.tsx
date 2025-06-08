@@ -54,3 +54,4 @@ describe('TaskImageGallery', () => {
     expect(button).toHaveAttribute('aria-label', 'View task image');
   });
 });
+// CodeRabbit review

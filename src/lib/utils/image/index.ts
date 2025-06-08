@@ -210,3 +210,4 @@ import * as imageUtils from '@/lib/utils/image';
 const validation = await imageUtils.imageValidation.validateImageEnhanced(file);
   `,
 } as const;
+// CodeRabbit review

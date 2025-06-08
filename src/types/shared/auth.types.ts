@@ -83,4 +83,4 @@ export interface AuthOperationResult {
   session?: Session;
   error?: string;
   requiresEmailConfirmation?: boolean;
-} 
+} // CodeRabbit review

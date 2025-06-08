@@ -23,3 +23,4 @@ export * from './users.service';
 
 // === ERROR HANDLING UTILITIES ===
 export { formatApiError, apiRequest } from './error-handling';
+// CodeRabbit review

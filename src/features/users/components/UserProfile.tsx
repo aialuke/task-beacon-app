@@ -79,3 +79,4 @@ function UserProfile({
 }
 
 export default memo(UserProfile);
+// CodeRabbit review

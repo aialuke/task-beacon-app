@@ -134,3 +134,4 @@ const arePropsEqual = (
 };
 
 export default memo(VirtualizedTaskCard, arePropsEqual);
+// CodeRabbit review

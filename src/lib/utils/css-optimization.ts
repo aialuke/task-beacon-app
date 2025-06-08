@@ -77,3 +77,4 @@ export function optimizeAnimations(): void {
     document.documentElement.style.setProperty('--transition-duration', '0ms');
   }
 }
+// CodeRabbit review

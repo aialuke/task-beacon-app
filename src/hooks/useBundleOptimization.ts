@@ -6,3 +6,4 @@ export function useBundleOptimization() {
   // Placeholder for bundle optimization
   console.log('Bundle optimization applied');
 }
+// CodeRabbit review

@@ -145,3 +145,4 @@ export function useTaskCardOptimization(
     prefetchImage,
   };
 }
+// CodeRabbit review

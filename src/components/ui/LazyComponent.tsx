@@ -43,3 +43,4 @@ export function LazyWrapper({
     </Suspense>
   );
 }
+// CodeRabbit review

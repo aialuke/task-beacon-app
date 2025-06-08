@@ -31,3 +31,4 @@ export { SimplePhotoUploadModal } from './SimplePhotoUploadModal';
 // === REFERENCE COMPONENTS ===
 export { ParentTaskReference } from './ParentTaskReference';
 export { ReferenceCard } from './ReferenceCard';
+// CodeRabbit review

@@ -123,3 +123,4 @@ export const OptimizedImage = memo(function OptimizedImage({
     </div>
   );
 });
+// CodeRabbit review

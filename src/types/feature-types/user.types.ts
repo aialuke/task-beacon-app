@@ -53,3 +53,4 @@ export interface UserQueryOptions {
 // Export convenience type aliases
 export type UserId = ID;
 export type UserTimestamp = Timestamp;
+// CodeRabbit review

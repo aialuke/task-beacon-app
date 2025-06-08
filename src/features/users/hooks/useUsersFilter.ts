@@ -36,3 +36,4 @@ export function useUsersFilter(users: User[], searchTerm: string, limitResults =
     slowComputationThreshold: 5,
   });
 }
+// CodeRabbit review

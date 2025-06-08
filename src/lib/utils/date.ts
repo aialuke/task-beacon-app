@@ -169,3 +169,4 @@ export function getUpdateInterval(
   // Far in the future - check once a day
   return 24 * 60 * 60 * 1000;
 }
+// CodeRabbit review

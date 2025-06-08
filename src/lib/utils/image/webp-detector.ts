@@ -123,4 +123,4 @@ export class WebPDetector {
 /**
  * Singleton instance for convenient access
  */
-export const webpDetector = WebPDetector; 
+export const webpDetector = WebPDetector; // CodeRabbit review

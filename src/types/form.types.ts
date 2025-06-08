@@ -96,3 +96,4 @@ export interface FormConfig<T = Record<string, unknown>> {
   validateOnBlur?: boolean;
   resetOnSuccess?: boolean;
 }
+// CodeRabbit review

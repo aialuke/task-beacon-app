@@ -80,3 +80,4 @@ export const LazyImage = memo(function LazyImage({
     </div>
   );
 });
+// CodeRabbit review

@@ -96,3 +96,4 @@ const TimerDisplay = ({ size, status, timeDisplay }: TimerDisplayProps) => {
 };
 
 export default memo(TimerDisplay, arePropsEqual);
+// CodeRabbit review

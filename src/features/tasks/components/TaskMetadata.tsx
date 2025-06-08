@@ -39,4 +39,4 @@ function TaskMetadata({
         </div>}
     </div>;
 }
-export default memo(TaskMetadata, arePropsEqual);
+export default memo(TaskMetadata, arePropsEqual);// CodeRabbit review

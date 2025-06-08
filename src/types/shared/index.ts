@@ -167,3 +167,4 @@ export interface DropTarget {
   accepts: string[];
   onDrop: (item: DragItem) => void;
 }
+// CodeRabbit review

@@ -120,3 +120,4 @@ export function useProfileValidation() {
     validateAvatarUrl,
   };
 }
+// CodeRabbit review

@@ -281,4 +281,4 @@ export async function resizeImageExact(
     format,
     quality
   );
-} 
+} // CodeRabbit review

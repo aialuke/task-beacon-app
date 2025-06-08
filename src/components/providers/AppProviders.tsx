@@ -118,3 +118,4 @@ export function AppProviders({ children }: AppProvidersProps) {
     </AppErrorBoundary>
   );
 }
+// CodeRabbit review

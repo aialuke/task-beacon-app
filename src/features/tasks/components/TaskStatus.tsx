@@ -27,3 +27,4 @@ function TaskStatus({ task }: TaskStatusProps) {
 }
 
 export default memo(TaskStatus, arePropsEqual);
+// CodeRabbit review

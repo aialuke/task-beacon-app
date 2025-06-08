@@ -162,4 +162,4 @@ export async function checkNotificationSupport(): Promise<boolean> {
   }
 
   return true;
-} 
+} // CodeRabbit review

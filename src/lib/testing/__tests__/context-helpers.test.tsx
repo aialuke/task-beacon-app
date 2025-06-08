@@ -177,3 +177,4 @@ describe('Context Performance', () => {
     expect(renderCount).toBe(2); // Expected due to rerender call
   });
 });
+// CodeRabbit review

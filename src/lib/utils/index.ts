@@ -263,3 +263,4 @@ export * as errorUtils from './error';
 // NOTE: Simple Photo Upload components are now directly imported:
 // import { SimplePhotoUpload, SimplePhotoUploadModal } from '@/components/form';
 // Background processing functionality preserved via useFormPhotoUpload hook.
+// CodeRabbit review

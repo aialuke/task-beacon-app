@@ -55,3 +55,4 @@ export { formatApiError, apiRequest } from './error-handling';
 
 // === SUPABASE CLIENT ===
 export { supabase };
+// CodeRabbit review

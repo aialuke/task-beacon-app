@@ -52,3 +52,4 @@ root.render(
 );
 
 console.log('React app created and rendered');
+// CodeRabbit review

@@ -189,3 +189,4 @@ export function useNavbar({ items, activeItem, onItemChange }: UseNavbarOptions)
     glowSpring,
   };
 }
+// CodeRabbit review

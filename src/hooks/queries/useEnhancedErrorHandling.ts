@@ -36,3 +36,4 @@ export function useErrorBoundaryIntegration() {
     reportError,
   };
 }
+// CodeRabbit review

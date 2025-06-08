@@ -90,3 +90,4 @@ const FloatingInput = forwardRef<HTMLInputElement, FloatingInputProps>(
 FloatingInput.displayName = 'FloatingInput';
 
 export { FloatingInput };
+// CodeRabbit review

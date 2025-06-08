@@ -154,4 +154,4 @@ export const animationUtils = {
   pulseElement,
   prefersReducedMotion,
   getSpringConfig,
-}; 
+}; // CodeRabbit review
