@@ -1,3 +1,4 @@
+
 /**
  * Image Utilities - Main Entry Point
  * 
@@ -12,6 +13,9 @@
  * 
  * // New modular imports available
  * import { imageValidation, imageProcessing } from '@/lib/utils/image';
+ * 
+ * // Lazy loading for bundle optimization
+ * import { loadImageProcessing } from '@/lib/utils/image/lazy-loader';
  * ```
  */
 
@@ -116,6 +120,17 @@ export {
 } from './resource-management';
 
 // ============================================================================
+// LAZY LOADING UTILITIES - NEW
+// ============================================================================
+export {
+  loadImageProcessing,
+  loadImageMetadata,
+  loadImageConvenience,
+  loadImageResources,
+  loadAllImageUtils,
+} from './lazy-loader';
+
+// ============================================================================
 // ORGANIZED NAMESPACE EXPORTS
 // ============================================================================
 
@@ -146,6 +161,9 @@ export * as imageConvenience from './convenience';
 
 // Resource management utilities
 export * as imageResources from './resource-management';
+
+// Lazy loading utilities
+export * as imageLazyLoader from './lazy-loader';
 
 // ============================================================================
 // MIGRATION HELPERS AND LEGACY SUPPORT
@@ -181,9 +199,10 @@ export * as imageResources from './resource-management';
 /**
  * Module version and compatibility information
  */
-export const IMAGE_UTILS_VERSION = '2.0.0';
+export const IMAGE_UTILS_VERSION = '2.1.0';
 export const BACKWARD_COMPATIBLE = true;
 export const MIGRATION_STATUS = 'COMPLETE';
+export const BUNDLE_OPTIMIZATION = 'ENABLED';
 
 /**
  * Usage examples and migration guide
@@ -196,6 +215,12 @@ const result = await validateImageEnhanced(file);
   
   basicProcessing: `
 import { processImageEnhanced } from '@/lib/utils/image';
+const result = await processImageEnhanced(file, { maxWidth: 800 });
+  `,
+  
+  lazyLoading: `
+import { loadImageProcessing } from '@/lib/utils/image';
+const { processImageEnhanced } = await loadImageProcessing();
 const result = await processImageEnhanced(file, { maxWidth: 800 });
   `,
   
