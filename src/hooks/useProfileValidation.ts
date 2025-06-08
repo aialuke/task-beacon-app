@@ -1,122 +1,105 @@
 
-// === EXTERNAL LIBRARIES ===
 import { useCallback } from 'react';
-
-// === INTERNAL UTILITIES (unified validation system) ===
+import { z } from 'zod';
 import { 
-  validateEmail, 
-  validateUserName,
-  type ValidationResult 
-} from '@/lib/validation';
-
-// === TYPES ===
-interface ProfileData {
-  name?: string;
-  email?: string;
-  avatar_url?: string;
-}
+  validateProfileUpdate,
+  profileUpdateSchema,
+  type ProfileUpdateInput 
+} from '@/schemas';
 
 interface ProfileValidationResult {
   isValid: boolean;
   errors: Record<string, string>;
-  fieldErrors: {
-    name?: string;
-    email?: string;
-    avatar_url?: string;
-  };
+  data?: ProfileUpdateInput;
 }
 
 /**
- * Profile Validation Hook - Updated to use unified validation system
+ * Profile validation hook - Phase 3 Update
  * 
- * Now leverages the consolidated validation utilities and patterns.
+ * Migrated to use centralized Zod validation from Phase 1 implementation
  */
 export function useProfileValidation() {
   /**
-   * Validate individual profile field
+   * Validate complete profile data using centralized schema
    */
-  const validateProfileField = useCallback((
-    field: keyof ProfileData,
-    value: string
-  ): ValidationResult => {
-    switch (field) {
-      case 'name':
-        return validateUserName(value);
-      case 'email':
-        return validateEmail(value);
-      case 'avatar_url':
-        // Avatar URL is optional, so it's always valid
-        return { isValid: true, errors: [], warnings: [] };
-      default:
-        return { isValid: false, errors: ['Unknown field'], warnings: [] };
-    }
-  }, []);
+  const validateProfile = useCallback(
+    (data: unknown): ProfileValidationResult => {
+      const result = validateProfileUpdate(data);
+      
+      if (result.success) {
+        return { 
+          isValid: true, 
+          errors: {}, 
+          data: result.data 
+        };
+      }
+      
+      const errors: Record<string, string> = {};
+      result.error.errors.forEach((err) => {
+        const field = err.path.join('.');
+        errors[field] = err.message;
+      });
+      
+      return { isValid: false, errors };
+    },
+    []
+  );
 
   /**
-   * Validate complete profile data
+   * Validate individual profile field
    */
-  const validateProfile = useCallback((
-    profileData: ProfileData
-  ): ProfileValidationResult => {
-    const errors: Record<string, string> = {};
-    
-    // Validate each field
-    if (profileData.name !== undefined) {
-      const nameResult = validateUserName(profileData.name);
-      if (!nameResult.isValid && nameResult.errors.length > 0) {
-        errors.name = nameResult.errors[0];
+  const validateProfileField = useCallback(
+    (fieldName: keyof ProfileUpdateInput, value: unknown): { isValid: boolean; error?: string } => {
+      const fieldSchema = profileUpdateSchema.shape[fieldName];
+      if (!fieldSchema) {
+        return { isValid: true };
       }
-    }
-    
-    if (profileData.email !== undefined) {
-      const emailResult = validateEmail(profileData.email);
-      if (!emailResult.isValid && emailResult.errors.length > 0) {
-        errors.email = emailResult.errors[0];
-      }
-    }
-    
-    if (profileData.avatar_url !== undefined) {
-      // Avatar URL validation is optional
-      // Could add URL validation here if needed
-    }
-
-    return {
-      isValid: Object.keys(errors).length === 0,
-      errors,
-      fieldErrors: {
-        name: errors.name,
-        email: errors.email,
-        avatar_url: errors.avatar_url,
-      },
-    };
-  }, []);
+      
+      const result = fieldSchema.safeParse(value);
+      
+      return {
+        isValid: result.success,
+        error: result.success ? undefined : result.error.errors[0]?.message,
+      };
+    },
+    []
+  );
 
   /**
    * Validate profile name
    */
-  const validateName = useCallback((name: string): ValidationResult => {
-    return validateProfileField('name', name);
-  }, [validateProfileField]);
+  const validateName = useCallback((name: string): boolean => {
+    const result = profileUpdateSchema.shape.name.safeParse(name);
+    return result.success;
+  }, []);
 
   /**
    * Validate profile email
    */
-  const validateEmailField = useCallback((email: string): ValidationResult => {
-    return validateProfileField('email', email);
-  }, [validateProfileField]);
+  const validateEmail = useCallback((email: string): boolean => {
+    const result = profileUpdateSchema.shape.email.safeParse(email);
+    return result.success;
+  }, []);
 
   /**
    * Validate avatar URL
    */
-  const validateAvatarUrl = useCallback((url: string): ValidationResult => {
-    return validateProfileField('avatar_url', url);
-  }, [validateProfileField]);
+  const validateAvatarUrl = useCallback((url: string): boolean => {
+    const result = profileUpdateSchema.shape.avatar_url.safeParse(url);
+    return result.success;
+  }, []);
 
   return {
     validateProfile,
     validateProfileField,
     validateName,
-    validateEmail: validateEmailField,
+    validateEmail,
     validateAvatarUrl,
+    
+    // Export schema for convenience
+    schema: profileUpdateSchema,
   };
 }
+
+// Backward compatibility exports
+export const useProfileValidationHook = useProfileValidation;

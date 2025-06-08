@@ -1,38 +1,74 @@
+
+import { useState, useMemo } from 'react';
 import { useOptimizedMemo } from '@/hooks/performance';
 import type { User } from '@/types';
 
-/**
- * Standardized user filtering hook
- * 
- * Follows naming pattern: use[Feature][Entity][Action]
- * Feature: Users, Entity: -, Action: Filter
- */
-export function useUsersFilter(users: User[], searchTerm: string, limitResults = 10) {
-  return useOptimizedMemo(() => {
-    // Early return for empty search
-    if (!searchTerm.trim()) {
-      return users.slice(0, limitResults);
-    }
+interface UseUsersFilterOptions {
+  initialSearch?: string;
+  initialRole?: string;
+}
 
-    const term = searchTerm.toLowerCase();
-    
-    // Optimized filtering with early termination
-    const filtered: User[] = [];
-    for (let i = 0; i < users.length && filtered.length < limitResults; i++) {
-      const user = users[i];
-      const displayName = user.name || user.email.split('@')[0];
-      const email = user.email;
+export function useUsersFilter(
+  users: User[] = [],
+  options: UseUsersFilterOptions = {}
+) {
+  const { initialSearch = '', initialRole = '' } = options;
+  
+  const [searchTerm, setSearchTerm] = useState(initialSearch);
+  const [roleFilter, setRoleFilter] = useState(initialRole);
+
+  // Filter users based on search and role
+  const filteredUsers = useOptimizedMemo(
+    () => {
+      if (!users) return [];
       
-      if (displayName.toLowerCase().includes(term) || 
-          email.toLowerCase().includes(term)) {
-        filtered.push(user);
-      }
+      return users.filter(user => {
+        const matchesSearch = !searchTerm || 
+          user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.email?.toLowerCase().includes(searchTerm.toLowerCase());
+        
+        const matchesRole = !roleFilter || user.role === roleFilter;
+        
+        return matchesSearch && matchesRole;
+      });
+    },
+    [users, searchTerm, roleFilter],
+    { 
+      name: 'filtered-users'
     }
+  );
+
+  // Get unique roles for filter options
+  const availableRoles = useMemo(() => {
+    if (!users) return [];
+    const roles = users
+      .map(user => user.role)
+      .filter((role): role is string => Boolean(role));
+    return Array.from(new Set(roles));
+  }, [users]);
+
+  const clearFilters = () => {
+    setSearchTerm('');
+    setRoleFilter('');
+  };
+
+  return {
+    // Filter state
+    searchTerm,
+    roleFilter,
     
-    return filtered;
-  }, [users, searchTerm, limitResults], {
-    name: 'users-filter',
-    warnOnSlowComputation: true,
-    slowComputationThreshold: 5,
-  });
+    // Filter actions
+    setSearchTerm,
+    setRoleFilter,
+    clearFilters,
+    
+    // Filtered data
+    filteredUsers,
+    availableRoles,
+    
+    // Computed state
+    hasActiveFilters: Boolean(searchTerm || roleFilter),
+    resultCount: filteredUsers.length,
+    totalCount: users?.length || 0,
+  };
 }

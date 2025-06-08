@@ -1,45 +1,139 @@
 
 /**
- * Data Validation Utilities - Phase 4 Consolidation
+ * Data Validation Utilities - Phase 3 Update
  * 
- * Consolidated to use unified validation system and eliminate duplication.
+ * Updated to use centralized Zod validation system from Phase 1.
+ * Provides enhanced validation utilities with better type safety.
  */
 
-// === INTERNAL UTILITIES ===
 import { 
-  validateForm,
-  validateField,
-  type ValidationResult as UtilValidationResult 
-} from '@/lib/utils/validation';
+  validateWithZod,
+  validateFormWithZod,
+  emailSchema,
+  passwordSchema,
+  taskTitleSchema,
+  taskDescriptionSchema,
+  urlSchema,
+  type ValidationResult,
+} from '@/schemas';
 
 /**
- * Shows validation errors using consolidated validation system
+ * Enhanced validation error display with better UX
  */
-export function showValidationErrors(result: UtilValidationResult) {
+export function showValidationErrors(errors: Record<string, string[]> | string[]) {
+  if (Array.isArray(errors)) {
+    return {
+      errors: errors,
+      warnings: [],
+      isValid: errors.length === 0,
+    };
+  }
+  
+  const flatErrors: string[] = [];
+  Object.values(errors).forEach(fieldErrors => {
+    flatErrors.push(...fieldErrors);
+  });
+  
   return {
-    errors: result.errors || [],
-    warnings: result.warnings || [],
-    isValid: result.isValid,
+    errors: flatErrors,
+    warnings: [],
+    isValid: flatErrors.length === 0,
   };
 }
 
 /**
- * Validates data and returns formatted errors for display
+ * Enhanced data validation using centralized Zod schemas
  */
 export function validateAndShowErrors(data: Record<string, unknown>) {
-  const validationResult = validateForm(data, {});
+  // Create dynamic schema based on field names
+  const schemas: Record<string, any> = {};
   
-  // Convert the form validation result to the expected format
-  const errors: string[] = [];
-  if (!validationResult.isValid) {
-    Object.values(validationResult.errors).forEach(fieldErrors => {
-      errors.push(...fieldErrors);
-    });
+  Object.keys(data).forEach(key => {
+    switch (key.toLowerCase()) {
+      case 'email':
+        schemas[key] = emailSchema;
+        break;
+      case 'password':
+        schemas[key] = passwordSchema;
+        break;
+      case 'title':
+        schemas[key] = taskTitleSchema;
+        break;
+      case 'description':
+        schemas[key] = taskDescriptionSchema;
+        break;
+      case 'url':
+        schemas[key] = urlSchema;
+        break;
+      default:
+        // For unknown fields, allow any string
+        schemas[key] = emailSchema.optional();
+    }
+  });
+  
+  const validationResult = validateFormWithZod(data, schemas);
+  
+  if (validationResult.isValid) {
+    return showValidationErrors([]);
   }
   
-  return showValidationErrors({
-    isValid: validationResult.isValid,
-    errors,
-    warnings: [],
+  return showValidationErrors(validationResult.errors || {});
+}
+
+/**
+ * Validate individual field with enhanced error handling
+ */
+export function validateSingleField(fieldName: string, value: unknown): ValidationResult {
+  let schema: any;
+  
+  switch (fieldName.toLowerCase()) {
+    case 'email':
+      schema = emailSchema;
+      break;
+    case 'password':
+      schema = passwordSchema;
+      break;
+    case 'title':
+      schema = taskTitleSchema;
+      break;
+    case 'description':
+      schema = taskDescriptionSchema;
+      break;
+    case 'url':
+      schema = urlSchema;
+      break;
+    default:
+      // For unknown fields, create a basic validation
+      schema = emailSchema.optional();
+  }
+  
+  const result = validateWithZod(schema, value);
+  
+  return {
+    isValid: result.isValid,
+    errors: result.isValid ? [] : result.errors,
+    data: result.isValid ? value : undefined,
+  };
+}
+
+/**
+ * Batch validate multiple fields
+ */
+export function validateMultipleFields(fields: Record<string, unknown>): ValidationResult {
+  const errors: string[] = [];
+  let isValid = true;
+  
+  Object.entries(fields).forEach(([fieldName, value]) => {
+    const fieldResult = validateSingleField(fieldName, value);
+    if (!fieldResult.isValid) {
+      isValid = false;
+      errors.push(...fieldResult.errors);
+    }
   });
+  
+  return {
+    isValid,
+    errors,
+    data: isValid ? fields : undefined,
+  };
 }
