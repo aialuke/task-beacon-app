@@ -42,13 +42,6 @@ export function formatFileSize(bytes: number, decimals = 2): string {
 }
 
 /**
- * Formats bytes with alias to formatFileSize for backward compatibility
- */
-export function formatBytes(bytes: number, decimals = 2): string {
-  return formatFileSize(bytes, decimals);
-}
-
-/**
  * Formats a number as a percentage
  */
 export function formatPercentage(value: number, decimals = 0): string {

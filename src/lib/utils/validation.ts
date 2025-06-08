@@ -1,6 +1,6 @@
 
 /**
- * Legacy Validation Utilities - Phase 4 Cleanup
+ * Legacy Validation Utilities - Phase 3.1 Cleanup
  * 
  * This file now serves as a complete redirect to the centralized Zod validation system.
  * All validation logic has been migrated to @/schemas for consistency and type safety.
@@ -33,8 +33,8 @@ export {
   type ValidationResult,
 } from '@/schemas';
 
-// === LEGACY COMPATIBILITY ===
-// These aliases maintain backward compatibility for existing code
+// === BACKWARD COMPATIBILITY ===
+// Simple functions that use the Zod schemas internally
 export const isValidUserName = (name: string): boolean => {
   const { userNameSchema } = require('@/schemas');
   const result = userNameSchema.safeParse(name);
@@ -76,7 +76,7 @@ export const isValidText = (
   return trimmed.length >= minLength && trimmed.length <= maxLength;
 };
 
-// Redirect complex validation to new system - with proper imports
+// Redirect complex validation to new system
 import { validateWithZod, validateFormWithZod } from '@/schemas';
 export const validateField = validateWithZod;
 export const validateForm = validateFormWithZod;
