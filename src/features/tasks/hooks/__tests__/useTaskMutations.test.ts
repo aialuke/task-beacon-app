@@ -17,12 +17,16 @@ describe('useTaskMutations - Simplified Tests', () => {
       expect(typeof useTaskMutations).toBe('function');
     });
 
-    it('should export specialized hooks', async () => {
-      const module = await import('../useTaskMutations');
-      expect(module.useTaskCreation).toBeDefined();
-      expect(module.useTaskUpdates).toBeDefined();
-      expect(module.useTaskDeletion).toBeDefined();
-      expect(module.useTaskStatus).toBeDefined();
+    it('should export specialized hooks from mutations folder', async () => {
+      const { useTaskCreation } = await import('../mutations/useTaskCreation');
+      const { useTaskUpdates } = await import('../mutations/useTaskUpdates');
+      const { useTaskDeletion } = await import('../mutations/useTaskDeletion');
+      const { useTaskStatus } = await import('../mutations/useTaskStatus');
+      
+      expect(useTaskCreation).toBeDefined();
+      expect(useTaskUpdates).toBeDefined();
+      expect(useTaskDeletion).toBeDefined();
+      expect(useTaskStatus).toBeDefined();
     });
   });
 
