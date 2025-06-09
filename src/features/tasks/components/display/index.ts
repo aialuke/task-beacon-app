@@ -1,8 +1,8 @@
 
 /**
- * Task Display Components
+ * Task Display Components - Phase 4.2 Cleaned
  * 
- * Components for displaying task information
+ * Simplified exports for task display components
  */
 
 export { default as TaskHeader } from './TaskHeader';

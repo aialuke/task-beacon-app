@@ -1,14 +1,14 @@
 
 /**
- * Task List Components - Phase 2 Consolidated
+ * Task List Components - Phase 4.2 Consolidated
  * 
- * Simplified exports after removing duplicate implementations.
+ * Simplified exports after consolidation - removed duplicate implementations.
  */
 
 // Main task list implementation
 export { default as TaskList } from './TaskList';
 
-// Simplified optimized version (now just extends TaskList)
+// Legacy alias (now points to main implementation)
 export { default as OptimizedTaskList } from './OptimizedTaskList';
 
 // Dashboard view (specialized layout)

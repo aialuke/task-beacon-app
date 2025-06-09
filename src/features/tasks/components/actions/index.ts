@@ -1,8 +1,8 @@
 
 /**
- * Task Action Components
+ * Task Action Components - Phase 4.2 Cleaned
  * 
- * Components for task actions and interactions
+ * Simplified exports for task action components
  */
 
 export { default as TaskActions } from './TaskActions';

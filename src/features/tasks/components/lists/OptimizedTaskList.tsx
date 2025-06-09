@@ -1,17 +1,9 @@
 
-import { memo } from 'react';
-import TaskList from './TaskList';
-
 /**
- * Optimized Task List - Phase 2 Simplified
+ * OptimizedTaskList - Phase 4.2 Simplified
  * 
- * Now extends the main TaskList component instead of duplicating logic.
- * Removed duplicate filtering and optimization logic.
+ * Now just re-exports the main TaskList since all optimizations 
+ * have been consolidated into the main implementation.
  */
-function OptimizedTaskList() {
-  // Simply render the main TaskList component
-  // All optimization and filtering is handled by TaskList itself
-  return <TaskList />;
-}
 
-export default memo(OptimizedTaskList);
+export { default } from './TaskList';

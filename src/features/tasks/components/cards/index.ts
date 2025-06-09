@@ -1,13 +1,14 @@
+
 /**
- * Task Card Components - Phase 2 Consolidated
+ * Task Card Components - Phase 4.2 Consolidated
  * 
- * Simplified exports after removing duplicate implementations.
+ * Simplified exports after consolidation - removed duplicate implementations.
  */
 
 // Main task card implementation
 export { default as TaskCard } from './TaskCard';
 
-// Simplified optimized version (now just extends TaskCard)
+// Legacy aliases (now point to main implementation)
 export { default as OptimizedTaskCard } from './OptimizedTaskCard';
 
 // Specialized virtualized version (keeps virtualization features)
