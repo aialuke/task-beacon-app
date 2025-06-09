@@ -10,4 +10,4 @@ export { useUsersQuery, useUsersFilter } from './hooks';
 export type { UserFilterOptions, UseUsersFilterReturn } from './hooks';
 
 // === COMPONENTS ===
-export { UserProfile } from './components/UserProfile';
+export { default as UserProfile } from './components/UserProfile';
