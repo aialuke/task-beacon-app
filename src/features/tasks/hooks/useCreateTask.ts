@@ -1,4 +1,3 @@
-
 import { useTaskForm } from './useTaskForm';
 import { useUnifiedPhotoUpload } from '@/components/form/hooks/useUnifiedPhotoUpload';
 import { useTaskMutations } from './useTaskMutations';
@@ -10,12 +9,42 @@ interface UseCreateTaskOptions {
   onClose?: () => void;
 }
 
+interface UseCreateTaskReturn {
+  // Form state
+  title: string;
+  setTitle: (value: string) => void;
+  description: string;
+  setDescription: (value: string) => void;
+  dueDate: string;
+  setDueDate: (value: string) => void;
+  url: string;
+  setUrl: (value: string) => void;
+  assigneeId: string;
+  setAssigneeId: (value: string) => void;
+  
+  // Form validation and state
+  isValid: boolean;
+  errors: Record<string, string | undefined>;
+  loading: boolean;
+  
+  // Photo upload
+  photoPreview: string | null;
+  handlePhotoChange: (e: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
+  handlePhotoRemove: () => void;
+  photoLoading: boolean;
+  processingResult: any;
+  
+  // Actions
+  handleSubmit: (e: React.FormEvent) => Promise<void>;
+  values: Record<string, unknown>;
+}
+
 /**
  * Create task hook - Simplified and consolidated
  * 
  * Combines form state, photo upload, and task creation without redundant layers.
  */
-export function useCreateTask({ onClose }: UseCreateTaskOptions = {}) {
+export function useCreateTask({ onClose }: UseCreateTaskOptions = {}): UseCreateTaskReturn {
   // Form state management
   const taskForm = useTaskForm({ onClose });
   

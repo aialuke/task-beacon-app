@@ -4,6 +4,7 @@ import { useUnifiedPhotoUpload } from '@/components/form/hooks/useUnifiedPhotoUp
 import { useTaskMutations } from './useTaskMutations';
 import { useTaskFormValidation } from './useTaskFormValidation';
 import { toast } from 'sonner';
+import { logger } from '@/lib/logger';
 import type { Task } from '@/types';
 
 interface UseFollowUpTaskOptions {
@@ -83,7 +84,7 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskOptions)
         toast.error(result.error || 'Failed to create follow-up task');
       }
     } catch (error) {
-      console.error('Follow-up task creation error:', error);
+      logger.error('Follow-up task creation error', error instanceof Error ? error : new Error(String(error)));
       const errorMessage = error instanceof Error ? error.message : 'Failed to create follow-up task';
       toast.error(errorMessage);
     } finally {

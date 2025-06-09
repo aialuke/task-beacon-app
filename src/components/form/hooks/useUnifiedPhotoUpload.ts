@@ -1,8 +1,8 @@
-
 import { useState, useCallback, useMemo } from 'react';
 import { TaskService } from '@/lib/api/tasks';
 import { compressAndResizePhoto } from '@/lib/utils/image/convenience';
 import { extractImageMetadataEnhanced } from '@/lib/utils/image/metadata';
+import { logger } from '@/lib/logger';
 import type { 
   ProcessingResult,
   EnhancedImageProcessingOptions 
@@ -13,13 +13,31 @@ interface UnifiedPhotoUploadOptions {
   autoUpload?: boolean;
 }
 
+interface UnifiedPhotoUploadReturn {
+  // State
+  photo: File | null;
+  photoPreview: string | null;
+  loading: boolean;
+  processingResult: ProcessingResult | null;
+  uploadedUrl: string | null;
+  
+  // Actions
+  handlePhotoChange: (e: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
+  uploadPhoto: (fileToUpload?: File) => Promise<string | null>;
+  resetPhoto: () => void;
+  handlePhotoRemove: () => void;
+  
+  // Configuration
+  processingOptions: EnhancedImageProcessingOptions;
+}
+
 /**
  * Unified Photo Upload Hook - Phase 3 Consolidation
  * 
  * Consolidates all photo upload logic into a single, reusable hook.
  * Eliminates duplication between usePhotoState, usePhotoProcessing, and useTaskPhotoUpload.
  */
-export function useUnifiedPhotoUpload(options: UnifiedPhotoUploadOptions = {}) {
+export function useUnifiedPhotoUpload(options: UnifiedPhotoUploadOptions = {}): UnifiedPhotoUploadReturn {
   const {
     processingOptions = {
       maxWidth: 1920,
@@ -88,7 +106,7 @@ export function useUnifiedPhotoUpload(options: UnifiedPhotoUploadOptions = {}) {
           await uploadPhoto(processedFile);
         }
       } catch (error) {
-        console.error('Photo processing error:', error);
+        logger.error('Photo processing error', error instanceof Error ? error : new Error(String(error)));
         setProcessingResult(null);
       } finally {
         setLoading(false);
@@ -116,7 +134,7 @@ export function useUnifiedPhotoUpload(options: UnifiedPhotoUploadOptions = {}) {
         setUploadedUrl(url);
         return url;
       } catch (error) {
-        console.error('Photo upload error:', error);
+        logger.error('Photo upload error', error instanceof Error ? error : new Error(String(error)));
         return null;
       } finally {
         setLoading(false);

@@ -12,6 +12,7 @@ import type { Database } from '@/integrations/supabase/types';
 
 // Clean imports from organized type system
 import type { User, UserRole, ApiResponse } from '@/types';
+import type { UserSearchOptions, UserUpdateData } from '@/types/feature-types/user.types';
 
 // Type-safe database references
 type ProfileRow = Database['public']['Tables']['profiles']['Row'];
@@ -32,7 +33,6 @@ const profileRowToUser = (profile: ProfileRow): User => {
 };
 
 // User types moved to @/types/feature-types/user.types.ts to eliminate duplication
-export type { UserSearchOptions, UserUpdateData } from '@/types/feature-types/user.types';
 
 /**
  * User Service provides all user-related operations with clean abstraction
@@ -45,7 +45,7 @@ export class UserService {
     return apiRequest('users.getById', async () => {
       const { data, error } = await supabase
         .from('profiles')
-        .select('*')
+        .select('id, email, name, role, avatar_url, created_at, updated_at')
         .eq('id', userId)
         .single();
 
@@ -65,7 +65,7 @@ export class UserService {
 
       let queryBuilder = supabase
         .from('profiles')
-        .select('*')
+        .select('id, email, name, role, avatar_url, created_at, updated_at')
         .limit(limit);
 
       // Apply filters
@@ -113,7 +113,7 @@ export class UserService {
 
       const { data, error } = await supabase
         .from('profiles')
-        .select('*')
+        .select('id, email, name, role, avatar_url, created_at, updated_at')
         .eq('id', authResponse.data.id)
         .single();
 

@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { useUnifiedForm } from '@/hooks/core';
+import { logger } from '@/lib/logger';
 import type { TaskCreateData } from '@/types';
 import type { FormErrors } from '@/types/form.types';
 
@@ -13,7 +14,7 @@ export interface UseTaskFormOptions {
   onClose?: () => void;
 }
 
-export interface TaskFormValues {
+export interface TaskFormValues extends Record<string, unknown> {
   title: string;
   description: string;
   dueDate: string;
@@ -120,7 +121,7 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     isSubmitting: form.isSubmitting,
     setIsSubmitting: (submitting: boolean) => {
       // Legacy compatibility - unified form handles this internally
-      console.warn('setIsSubmitting is deprecated - form handles submission state automatically');
+      logger.warn('setIsSubmitting is deprecated - form handles submission state automatically');
     },
 
     // Form actions (backward compatibility)

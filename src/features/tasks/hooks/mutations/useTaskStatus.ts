@@ -1,9 +1,9 @@
-
 import { Task } from '@/types';
 import { TaskService } from '@/lib/api/tasks';
 import { useTaskOptimisticUpdates } from '../useTaskOptimisticUpdates';
 import { useCallback } from 'react';
 import { useBaseMutation } from './useBaseMutation';
+import { logger } from '@/lib/logger';
 
 interface TaskMutationResult {
   success: boolean;
@@ -12,11 +12,19 @@ interface TaskMutationResult {
   data?: Task;
 }
 
+interface UseTaskStatusReturn {
+  toggleTaskComplete: any; // From baseMutation.mutation
+  toggleTaskCompleteCallback: (task: Task) => Promise<TaskMutationResult>;
+  markAsComplete: (taskId: string) => Promise<{ success: boolean; error: string }>;
+  markAsIncomplete: (taskId: string) => Promise<{ success: boolean; error: string }>;
+  isLoading: boolean;
+}
+
 /**
  * Consolidated task status hook - Phase 3 Simplified
  * Uses base mutation pattern to eliminate duplicate code
  */
-export function useTaskStatus() {
+export function useTaskStatus(): UseTaskStatusReturn {
   const optimisticUpdates = useTaskOptimisticUpdates();
 
   const baseMutation = useBaseMutation<Task, Task>({
@@ -52,7 +60,7 @@ export function useTaskStatus() {
   // Backward compatibility methods
   const markAsComplete = useCallback(
     async (taskId: string) => {
-      console.log('markAsComplete called with taskId:', taskId);
+      logger.debug('markAsComplete called with taskId', { taskId });
       return { success: false, error: 'Task object required for completion toggle' };
     },
     []
@@ -60,7 +68,7 @@ export function useTaskStatus() {
 
   const markAsIncomplete = useCallback(
     async (taskId: string) => {
-      console.log('markAsIncomplete called with taskId:', taskId);
+      logger.debug('markAsIncomplete called with taskId', { taskId });
       return { success: false, error: 'Task object required for completion toggle' };
     },
     []

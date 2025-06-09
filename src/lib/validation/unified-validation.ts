@@ -195,7 +195,7 @@ export function validateWithUnifiedSchema<T>(
 export function validateUnifiedField(
   fieldName: string,
   value: unknown
-): UnifiedValidationResult {
+): UnifiedValidationResult<unknown> {
   let schema: z.ZodSchema<unknown>;
 
   switch (fieldName.toLowerCase()) {
@@ -263,7 +263,28 @@ export function validateUnifiedForm<T extends Record<string, unknown>>(
 /**
  * Unified validation hook that replaces all scattered validation patterns
  */
-export function useUnifiedValidation() {
+export function useUnifiedValidation(): {
+  validateField: (fieldName: string, value: unknown) => UnifiedValidationResult<unknown>;
+  validateForm: <T extends Record<string, unknown>>(
+    data: T,
+    schemas: Partial<Record<keyof T, z.ZodSchema<unknown>>>
+  ) => UnifiedValidationResult<Partial<T>>;
+  validateWithSchema: typeof validateWithUnifiedSchema;
+  validateEmail: (email: string) => UnifiedValidationResult<string>;
+  validatePassword: (password: string) => UnifiedValidationResult<string>;
+  validateUserName: (name: string) => UnifiedValidationResult<string>;
+  validateTaskTitle: (title: string) => UnifiedValidationResult<string>;
+  validateTaskDescription: (description: string) => UnifiedValidationResult<string>;
+  validateUrl: (url: string) => UnifiedValidationResult<string>;
+  schemas: {
+    email: z.ZodString;
+    password: z.ZodString;
+    userName: z.ZodString;
+    taskTitle: z.ZodString;
+    taskDescription: z.ZodString;
+    url: z.ZodString;
+  };
+} {
   const validateField = useCallback((fieldName: string, value: unknown) => {
     return validateUnifiedField(fieldName, value);
   }, []);
