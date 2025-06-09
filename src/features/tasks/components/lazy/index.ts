@@ -6,6 +6,4 @@
  * and improve performance for the main application.
  */
 
-export { LazyCreateTaskForm } from './LazyCreateTaskForm';
-export { LazyFollowUpTaskForm } from './LazyFollowUpTaskForm';
-export { LazyEnhancedTaskList } from './LazyEnhancedTaskList';
+// Note: All lazy component exports removed as unused

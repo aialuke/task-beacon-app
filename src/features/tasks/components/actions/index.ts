@@ -5,5 +5,5 @@
  * Simplified exports for task action components
  */
 
-export { default as TaskActions } from './TaskActions';
 export { FabButton } from './FabButton';
+// Note: TaskActions export removed as unused

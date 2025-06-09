@@ -26,47 +26,11 @@ export type {
   ProfileWithRelations,
 } from '@/types/database';
 
-// === CORE API UTILITIES ===
-export { 
-  QueryKeys, 
-  transformApiError, 
-  createSuccessResponse, 
-  createErrorResponse,
-  createLoadingState,
-} from './standardized-api';
-
-// === SIMPLIFIED TASK OPERATIONS ===
-export { 
-  TaskService,
-  createTask,
-  updateTask,
-  deleteTask,
-  getTaskById,
-  getTasks,
-  updateTaskStatus,
-} from './tasks';
-
-// === USER OPERATIONS ===
-export { UserService } from './users.service';
-
-// === OTHER SERVICES ===
+// === USED SERVICES ===
 export { AuthService } from './auth.service';
-export { StorageService } from './storage.service';
-export { DatabaseService } from './database.service';
-export { PaginationService } from './pagination.service';
 
-// === CONSOLIDATED ERROR HANDLING ===
-export { 
-  formatApiError, 
-  apiRequest, 
-  handleApiError,
-  handleAuthError,
-  handleValidationError,
-  logApiError,
-  apiErrorPatterns,
-  type ErrorHandlingOptions,
-  type ProcessedError
-} from './error-handling';
+// === NOTE: Most other API re-exports removed as unused ===
+// Individual services still available for direct import
 
 // === SUPABASE CLIENT ===
 export { supabase };

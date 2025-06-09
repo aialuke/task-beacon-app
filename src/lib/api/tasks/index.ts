@@ -13,7 +13,7 @@ import type { Task, TaskCreateData, TaskUpdateData } from '@/types';
 
 // === TASK CRUD OPERATIONS ===
 
-export const createTask = async (taskData: TaskCreateData) => {
+const createTask = async (taskData: TaskCreateData) => {
   return apiRequest('createTask', async () => {
     // Get current user for owner_id
     const { data: { user } } = await supabase.auth.getUser();
@@ -41,7 +41,7 @@ export const createTask = async (taskData: TaskCreateData) => {
   });
 };
 
-export const updateTask = async (taskId: string, updates: Partial<TaskUpdateData>) => {
+const updateTask = async (taskId: string, updates: Partial<TaskUpdateData>) => {
   return apiRequest('updateTask', async () => {
     const { data, error } = await supabase
       .from('tasks')
@@ -63,7 +63,7 @@ export const updateTask = async (taskId: string, updates: Partial<TaskUpdateData
   });
 };
 
-export const deleteTask = async (taskId: string) => {
+const deleteTask = async (taskId: string) => {
   return apiRequest('deleteTask', async () => {
     const { error } = await supabase
       .from('tasks')
@@ -75,7 +75,7 @@ export const deleteTask = async (taskId: string) => {
   });
 };
 
-export const getTaskById = async (taskId: string) => {
+const getTaskById = async (taskId: string) => {
   return apiRequest('getTaskById', async () => {
     const { data, error } = await supabase
       .from('tasks')
@@ -92,9 +92,7 @@ export const getTaskById = async (taskId: string) => {
   });
 };
 
-// === TASK QUERIES ===
-
-export const getTasks = async (options: {
+const getTasks = async (options: {
   page?: number;
   pageSize?: number;
   assignedToMe?: boolean;
@@ -137,9 +135,7 @@ export const getTasks = async (options: {
   });
 };
 
-// === TASK STATUS OPERATIONS ===
-
-export const updateTaskStatus = async (taskId: string, status: 'pending' | 'complete' | 'overdue') => {
+const updateTaskStatus = async (taskId: string, status: 'pending' | 'complete' | 'overdue') => {
   return apiRequest('updateTaskStatus', async () => {
     const { data, error } = await supabase
       .from('tasks')
@@ -153,9 +149,7 @@ export const updateTaskStatus = async (taskId: string, status: 'pending' | 'comp
   });
 };
 
-// === MEDIA OPERATIONS ===
-
-export const uploadPhoto = async (photo: File) => {
+const uploadPhoto = async (photo: File) => {
   return apiRequest('uploadPhoto', async () => {
     // This is a placeholder - actual implementation would use Supabase Storage
     // For now, return null to indicate no photo upload
@@ -185,12 +179,5 @@ export const TaskService = {
   },
 };
 
-// Export individual functions for direct usage
-export {
-  createTask as create,
-  updateTask as update,
-  deleteTask as remove,
-  getTaskById as getById,
-  getTasks as getMany,
-  updateTaskStatus as updateStatus,
-};
+// NOTE: Individual function exports removed as they were unused
+// Functions are still available through TaskService object
