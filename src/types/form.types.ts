@@ -1,15 +1,11 @@
 /**
- * Form Types - Comprehensive Form System
+ * Form Types
  * 
- * Unified form types eliminating duplication across form components.
+ * All form-related type definitions including validation, state, and field types.
  */
 
-// Form utility types
-export type FormErrors<T> = Partial<Record<keyof T, string>>;
-export type FormTouched<T> = Partial<Record<keyof T, boolean>>;
-
-// Core form state interface
-export interface FormState<T = Record<string, unknown>> {
+// === FORM STATE TYPES ===
+export interface FormState<T extends Record<string, unknown> = Record<string, unknown>> {
   values: T;
   errors: FormErrors<T>;
   touched: FormTouched<T>;
@@ -18,54 +14,50 @@ export interface FormState<T = Record<string, unknown>> {
   isDirty: boolean;
 }
 
-// Validation types
-export interface ValidationRule<T = unknown> {
-  required?: boolean;
-  minLength?: number;
-  maxLength?: number;
-  min?: number;
-  max?: number;
-  pattern?: RegExp;
-  message?: string;
-  custom?: (value: T) => string | null;
-}
+export type FormErrors<T extends Record<string, unknown>> = {
+  [K in keyof T]?: string;
+};
 
+export type FormTouched<T extends Record<string, unknown>> = {
+  [K in keyof T]?: boolean;
+};
+
+// === VALIDATION TYPES ===
 export interface ValidationResult {
   isValid: boolean;
   errors: Record<string, string>;
-  warnings?: Record<string, string>;
+  data?: unknown;
+}
+
+export interface ValidationRule {
+  required?: boolean;
+  minLength?: number;
+  maxLength?: number;
+  pattern?: RegExp;
+  custom?: (value: unknown) => string | null;
 }
 
 export interface FieldValidationState {
-  value: unknown;
-  error: string | null;
-  touched: boolean;
-  dirty: boolean;
+  isValid: boolean;
+  error?: string;
+  isTouched: boolean;
+  isDirty: boolean;
 }
 
-// Form submission interfaces
+// === FORM SUBMISSION TYPES ===
+export interface FormSubmissionResult<T = unknown> {
+  success: boolean;
+  data?: T;
+  errors?: Record<string, string>;
+}
+
 export interface FormSubmissionState {
   isSubmitting: boolean;
   isSuccess: boolean;
   error: string | null;
-  submittedAt: Date | null;
 }
 
-export interface FormSubmissionResult<T = unknown> {
-  success: boolean;
-  data?: T;
-  error?: string;
-  validationErrors?: Record<string, string>;
-}
-
-// Form field component props - Using standardized definitions from component.types.ts
-export type { 
-  InputFieldProps, 
-  TextareaFieldProps, 
-  SelectFieldProps 
-} from './component.types';
-
-// Basic field props base (for custom field components)
+// === FORM FIELD TYPES ===
 export interface BaseFieldProps {
   name: string;
   label?: string;
@@ -74,15 +66,40 @@ export interface BaseFieldProps {
   disabled?: boolean;
   error?: string;
   touched?: boolean;
-  className?: string;
 }
 
-// Form configuration
-export interface FormConfig<T = Record<string, unknown>> {
+export interface InputFieldProps extends BaseFieldProps {
+  type?: 'text' | 'email' | 'password' | 'number' | 'tel' | 'url';
+  value: string;
+  onChange: (value: string) => void;
+  onBlur?: () => void;
+}
+
+export interface TextareaFieldProps extends BaseFieldProps {
+  value: string;
+  onChange: (value: string) => void;
+  onBlur?: () => void;
+  rows?: number;
+}
+
+export interface SelectFieldProps<T = string> extends BaseFieldProps {
+  value: T;
+  onChange: (value: T) => void;
+  onBlur?: () => void;
+  options: Array<{
+    value: T;
+    label: string;
+    disabled?: boolean;
+  }>;
+}
+
+// === FORM CONFIGURATION ===
+export interface FormConfig<T extends Record<string, unknown> = Record<string, unknown>> {
   initialValues: T;
-  validationSchema?: Record<keyof T, ValidationRule>;
-  onSubmit: (values: T) => Promise<FormSubmissionResult> | FormSubmissionResult;
+  validationRules?: {
+    [K in keyof T]?: ValidationRule;
+  };
+  onSubmit: (values: T) => Promise<void> | void;
   validateOnChange?: boolean;
   validateOnBlur?: boolean;
-  resetOnSuccess?: boolean;
 }

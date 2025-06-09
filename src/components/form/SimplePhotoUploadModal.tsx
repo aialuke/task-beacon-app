@@ -2,7 +2,7 @@
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import SimplePhotoUpload from './SimplePhotoUpload';
-import type { ProcessingResult } from '@/lib/utils/image/types';
+import type { ProcessingResult } from '@/lib/utils/image';
 
 interface SimplePhotoUploadModalProps {
   isOpen: boolean;

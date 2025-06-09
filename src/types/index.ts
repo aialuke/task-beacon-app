@@ -1,15 +1,11 @@
-
 /**
- * Main Types Index - Unified and Streamlined
+ * Types Index - Domain-Specific Organization
  * 
- * Single source of truth for all type definitions across the application.
- * This consolidates all scattered type definitions into one organized system.
+ * Streamlined index that imports from domain-specific type files.
+ * This provides better tree-shaking and clearer type organization.
  */
 
-// === AUTHENTICATION IMPORTS (must come first) ===
-import type { User, Session } from '@supabase/supabase-js';
-
-// === CORE ENTITIES (from database types) ===
+// === DATABASE TYPES ===
 export type {
   TaskWithRelations as Task,
   ProfileTable as User,
@@ -25,7 +21,67 @@ export type {
   Enums,
 } from './database';
 
-// === PAGINATION (centralized) ===
+// === DOMAIN-SPECIFIC TYPE EXPORTS ===
+
+// Authentication types
+export type {
+  AuthUser,
+  Session,
+  AuthResponse,
+  AuthContextType,
+  AuthState,
+  SignInCredentials,
+  SignUpCredentials,
+  SignUpOptions,
+} from './auth.types';
+
+// API types
+export type {
+  ApiResponse,
+  ApiError,
+  ServiceResult,
+  BaseQueryParams,
+  ActionResult,
+  DatabaseOperationResult,
+  ApiState,
+} from './api.types';
+
+// UI component types
+export type {
+  Size,
+  Variant,
+  ColorScheme,
+  BaseComponentProps,
+  ButtonProps,
+  ModalProps,
+  CardProps,
+  LoadingProps,
+  SelectOption,
+  FilterOptions,
+  ModalState,
+  NotificationType,
+  Notification,
+  NotificationAction,
+} from './ui.types';
+
+// Form types
+export type {
+  FormState,
+  FormErrors,
+  FormTouched,
+  ValidationResult,
+  ValidationRule,
+  FieldValidationState,
+  FormSubmissionResult,
+  FormSubmissionState,
+  BaseFieldProps,
+  InputFieldProps,
+  TextareaFieldProps,
+  SelectFieldProps,
+  FormConfig,
+} from './form.types';
+
+// Pagination types
 export type {
   PaginationMeta,
   PaginationParams,
@@ -36,65 +92,21 @@ export type {
   PaginationConfig,
   PaginationValidationResult,
   PaginationRange,
+  BaseQueryParams as PaginationQueryParams,
 } from './pagination.types';
 
-export {
-  DEFAULT_PAGINATION_CONFIG,
-  isPaginationMeta,
-  isPaginationParams,
-  calculatePaginationMeta,
-  validatePaginationParams,
-  getPaginationRange,
-} from './pagination.types';
-
-// === API LAYER (single source of truth) ===
-export type {
-  ApiResponse,
-  ApiError,
-  ServiceResult,
-  BaseQueryParams,
-  ActionResult,
-  DatabaseOperationResult,
-} from './api.types';
-
-// === ASYNC STATES (Phase 1 consolidation) ===
+// Async state types
 export type {
   BaseAsyncState,
   AsyncOperationState,
   BatchAsyncOperationState,
   OptimisticAsyncOperationState,
   StandardLoadingState,
-  FormSubmissionState,
+  FormSubmissionState as AsyncFormSubmissionState,
   QueryState,
 } from './async-state.types';
 
-// === FORMS & VALIDATION ===
-export type {
-  FormState,
-  ValidationResult,
-  FormSubmissionResult,
-  InputFieldProps,
-  TextareaFieldProps,
-  SelectFieldProps,
-  ValidationRule,
-  FieldValidationState,
-  BaseFieldProps,
-  FormConfig,
-} from './form.types';
-
-// === UI COMPONENTS ===
-export type {
-  BaseComponentProps,
-  ButtonProps,
-  ModalProps,
-  CardProps,
-  LoadingProps,
-  Size,
-  Variant,
-  ColorScheme,
-} from './component.types';
-
-// === TASK FEATURES ===
+// Feature-specific types
 export type {
   TaskFilter,
   TaskPriority,
@@ -102,10 +114,6 @@ export type {
   TaskCreateData,
   TaskUpdateData,
   TaskQueryOptions,
-} from './feature-types';
-
-// === USER FEATURES ===
-export type {
   UserPreferences,
   NotificationPreferences,
   UserCreateData,
@@ -113,53 +121,7 @@ export type {
   UserQueryOptions,
 } from './feature-types';
 
-// === AUTHENTICATION (consolidated from shared) ===
-export type { User as AuthUser, Session } from '@supabase/supabase-js';
-
-export interface AuthResponse {
-  user: User;
-  session: Session | null;
-  emailConfirmed: boolean;
-}
-
-export interface SignUpOptions {
-  data?: {
-    full_name?: string;
-    name?: string;
-    [key: string]: unknown;
-  };
-  redirectTo?: string;
-}
-
-export interface AuthContextType {
-  user: User | null;
-  session: Session | null;
-  loading: boolean;
-  error: Error | null;
-  signOut: () => Promise<void>;
-  refreshSession: () => Promise<void>;
-  signIn: (email: string, password: string) => Promise<void>;
-}
-
-export interface AuthState {
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  user: User | null;
-  session: Session | null;
-  error: string | null;
-}
-
-export interface SignInCredentials {
-  email: string;
-  password: string;
-}
-
-export interface SignUpCredentials extends SignInCredentials {
-  name?: string;
-  confirmPassword?: string;
-}
-
-// === UTILITIES ===
+// Utility types
 export type {
   DeepPartial,
   DeepRequired,
@@ -175,49 +137,3 @@ export type {
   EventHandler,
   AsyncEventHandler,
 } from './utility.types';
-
-// === NOTIFICATION TYPES (consolidated from shared) ===
-export type NotificationType = 'info' | 'success' | 'warning' | 'error';
-
-export interface Notification {
-  id: string;
-  type: NotificationType;
-  title: string;
-  message: string;
-  timestamp: string;
-  read: boolean;
-  actions?: NotificationAction[];
-}
-
-export interface NotificationAction {
-  label: string;
-  action: () => void;
-  variant?: 'primary' | 'secondary' | 'destructive';
-}
-
-// === COMMON UTILITY INTERFACES ===
-export interface SelectOption<T = string> {
-  value: T;
-  label: string;
-  disabled?: boolean;
-}
-
-export interface FilterOptions<T = string> {
-  value: T;
-  label: string;
-  count?: number;
-}
-
-export interface ModalState {
-  isOpen: boolean;
-  data?: unknown;
-}
-
-// Convenience type aliases - unified definitions
-export interface ApiState<T = unknown, E = string> {
-  data: T | null;
-  loading: boolean;
-  error: E | null;
-  success: boolean;
-  lastFetch?: Date;
-}

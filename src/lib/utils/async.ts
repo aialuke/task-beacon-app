@@ -1,0 +1,150 @@
+/**
+ * Consolidated Async Utilities
+ * 
+ * Essential async operation patterns and utilities.
+ * Simplified from nested directory structure.
+ */
+
+import { useState, useCallback } from 'react';
+import { logger } from '../logger';
+
+// ============================================================================
+// TYPES
+// ============================================================================
+
+export interface AsyncOperationOptions<T> {
+  onSuccess?: (result: T) => void;
+  onError?: (error: Error) => void;
+  retries?: number;
+  retryDelay?: number;
+}
+
+export interface AsyncOperationResult<T> {
+  data: T | null;
+  error: Error | null;
+  isLoading: boolean;
+  execute: () => Promise<void>;
+  reset: () => void;
+}
+
+// ============================================================================
+// ASYNC OPERATION HOOK
+// ============================================================================
+
+/**
+ * Hook for managing async operations with loading states and error handling
+ */
+export function useAsyncOperation<T>(
+  operation: () => Promise<T>,
+  options: AsyncOperationOptions<T> = {}
+): AsyncOperationResult<T> {
+  const [data, setData] = useState<T | null>(null);
+  const [error, setError] = useState<Error | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const execute = useCallback(async () => {
+    const { onSuccess, onError, retries = 0, retryDelay = 1000 } = options;
+    
+    setIsLoading(true);
+    setError(null);
+
+    let lastError: Error | null = null;
+    
+    for (let attempt = 0; attempt <= retries; attempt++) {
+      try {
+        const result = await operation();
+        setData(result);
+        setIsLoading(false);
+        onSuccess?.(result);
+        return;
+      } catch (err) {
+        lastError = err instanceof Error ? err : new Error(String(err));
+        logger.warn('Async operation attempt failed', { 
+          attempt: attempt + 1, 
+          error: lastError.message 
+        });
+        
+        if (attempt < retries) {
+          await new Promise(resolve => setTimeout(resolve, retryDelay));
+        }
+      }
+    }
+
+    setError(lastError);
+    setIsLoading(false);
+    onError?.(lastError!);
+  }, [operation, options]);
+
+  const reset = useCallback(() => {
+    setData(null);
+    setError(null);
+    setIsLoading(false);
+  }, []);
+
+  return { data, error, isLoading, execute, reset };
+}
+
+// ============================================================================
+// UTILITY FUNCTIONS
+// ============================================================================
+
+/**
+ * Simple retry wrapper for async functions
+ */
+export async function withRetry<T>(
+  operation: () => Promise<T>,
+  retries: number = 3,
+  delay: number = 1000
+): Promise<T> {
+  let lastError: Error;
+  
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      return await operation();
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(String(error));
+      
+      if (attempt < retries) {
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+  }
+  
+  throw lastError!;
+}
+
+/**
+ * Execute multiple async operations in sequence
+ */
+export async function executeInSequence<T>(
+  operations: Array<() => Promise<T>>
+): Promise<T[]> {
+  const results: T[] = [];
+  
+  for (const operation of operations) {
+    const result = await operation();
+    results.push(result);
+  }
+  
+  return results;
+}
+
+/**
+ * Execute multiple async operations with limited concurrency
+ */
+export async function executeWithConcurrency<T>(
+  operations: Array<() => Promise<T>>,
+  concurrency: number = 3
+): Promise<T[]> {
+  const results: T[] = [];
+  
+  for (let i = 0; i < operations.length; i += concurrency) {
+    const batch = operations.slice(i, i + concurrency);
+    const batchResults = await Promise.all(batch.map(op => op()));
+    results.push(...batchResults);
+  }
+  
+  return results;
+}
+
+// Note: debounce and throttle utilities are available from core utilities 

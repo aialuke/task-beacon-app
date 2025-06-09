@@ -3,8 +3,8 @@ import { memo } from 'react';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useImagePreview } from '../hooks/useImagePreview';
-import ImageLoadingState from './ImageLoadingState';
-import ImageErrorFallback from './ImageErrorFallback';
+import ImageLoadingState from '@/components/ui/ImageLoadingState';
+import ImageErrorFallback from '@/components/ui/ImageErrorFallback';
 
 interface ImagePreviewModalProps {
   isOpen: boolean;

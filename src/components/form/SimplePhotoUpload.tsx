@@ -2,7 +2,7 @@
 import { ImageUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useRef } from 'react';
-import type { ProcessingResult } from '@/lib/utils/image/types';
+import type { ProcessingResult } from '@/lib/utils/image';
 import { useImageLoadingState } from '@/hooks/core';
 
 interface SimplePhotoUploadProps {

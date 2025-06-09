@@ -3,7 +3,7 @@
 import React from "react";
 
 // === COMPONENTS ===
-import TaskDashboardHeader from "../TaskDashboardHeader";
+import TaskDashboardHeader from "@/components/layout/TaskDashboardHeader";
 import TaskFilterNavbar from "../TaskFilterNavbar";
 import TaskList from "./TaskList";
 import { FabButton } from "../actions";

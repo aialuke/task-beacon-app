@@ -4,7 +4,7 @@ import {
   useUnifiedValidation,
   validateUnifiedTask,
   type UnifiedValidationResult
-} from '@/lib/validation/unified-validation';
+} from '@/lib/validation';
 
 interface TaskFormData {
   title: string;

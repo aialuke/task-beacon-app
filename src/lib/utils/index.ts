@@ -1,51 +1,40 @@
-
 /**
- * Centralized utilities index - Phase 1.4 Bundle Optimization
+ * Simplified Utilities Index
  * 
- * Optimized for tree shaking and reduced initial bundle size.
- * Heavy utilities are now lazy-loaded to improve performance.
+ * Direct exports without over-engineered lazy loading patterns.
+ * Consolidated from nested directory structure for better maintainability.
  */
 
-// =====================================================
-// ESSENTIAL UTILITIES (Always loaded)
-// =====================================================
+// ============================================================================
+// CORE UTILITIES (Always loaded)
+// ============================================================================
 
-// Core utilities that are needed immediately
 export * from './core';
 export * from './ui';
 export * from './data';
-
-// =====================================================
-// FREQUENTLY USED UTILITIES
-// =====================================================
-
-// Date and time utilities (commonly used)
 export * from './date';
 export * from './format';
+export * from './shared';
 
-// === VALIDATION UTILITIES ===
-// NOTE: Validation utilities removed - use unified validation system directly
+// ============================================================================
+// SPECIALIZED UTILITIES
+// ============================================================================
 
-// =====================================================
-// LAZY-LOADED UTILITIES (Loaded on demand)
-// =====================================================
+export * from './pagination';
+export * from './image';
+export * from './async';
 
-// NOTE: Lazy-loaded utility exports removed as unused
+// ============================================================================
+// NAVBAR UTILITIES (Specific to UI components)
+// ============================================================================
 
-// =====================================================
-// HEAVY UTILITIES (Lazy loaded)
-// =====================================================
+export * from './navbarColors';
+export * from './navbarGeometry';
 
-// NOTE: Image utilities exports removed as unused
+// ============================================================================
+// OTHER UTILITIES
+// ============================================================================
 
-// =====================================================
-// NAMESPACE EXPORTS (Optimized)
-// =====================================================
-
-// Essential namespaces (immediately available)
-export * as dateUtils from './date';
-export * as uiUtils from './ui';
-export * as dataUtils from './data';
-export * as formatUtils from './format';
-
-// NOTE: Lazy namespace loaders and bundle info removed as unused
+export * from './patterns';
+export * from './animation';
+export * from './createContext';

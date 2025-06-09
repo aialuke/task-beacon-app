@@ -1,12 +1,12 @@
 import { useState, useCallback, useMemo } from 'react';
 import { TaskService } from '@/lib/api/tasks';
-import { compressAndResizePhoto } from '@/lib/utils/image/convenience';
-import { extractImageMetadataEnhanced } from '@/lib/utils/image/metadata';
 import { logger } from '@/lib/logger';
-import type { 
+import { 
+  compressAndResizePhoto,
+  extractImageMetadataEnhanced,
   ProcessingResult,
   EnhancedImageProcessingOptions 
-} from '@/lib/utils/image/types';
+} from '@/lib/utils/image';
 
 interface UnifiedPhotoUploadOptions {
   processingOptions?: EnhancedImageProcessingOptions;

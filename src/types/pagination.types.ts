@@ -1,12 +1,11 @@
-
 /**
- * Pagination Types - Single Source of Truth
+ * Pagination Types
  * 
- * Centralized pagination type definitions to eliminate duplication
- * and provide consistent pagination interfaces across the application.
+ * Type definitions for pagination interfaces.
+ * Implementation functions moved to @/lib/utils/pagination.ts
  */
 
-// === CORE PAGINATION INTERFACE ===
+// === CORE PAGINATION INTERFACES ===
 
 /**
  * Standard pagination metadata interface
@@ -108,18 +107,6 @@ export interface PaginationConfig {
   maxVisiblePages: number;
 }
 
-/**
- * Default pagination configuration
- */
-export const DEFAULT_PAGINATION_CONFIG: PaginationConfig = {
-  defaultPageSize: 10,
-  maxPageSize: 100,
-  minPageSize: 1,
-  showPreviousNext: true,
-  showPageNumbers: true,
-  maxVisiblePages: 5,
-} as const;
-
 // === UTILITY TYPES ===
 
 /**
@@ -138,102 +125,4 @@ export interface PaginationRange {
   start: number;
   end: number;
   total: number;
-}
-
-// === TYPE GUARDS ===
-
-/**
- * Type guard to check if an object is a valid PaginationMeta
- */
-export function isPaginationMeta(obj: unknown): obj is PaginationMeta {
-  return (
-    typeof obj === 'object' &&
-    obj !== null &&
-    typeof (obj as PaginationMeta).currentPage === 'number' &&
-    typeof (obj as PaginationMeta).totalPages === 'number' &&
-    typeof (obj as PaginationMeta).totalCount === 'number' &&
-    typeof (obj as PaginationMeta).pageSize === 'number' &&
-    typeof (obj as PaginationMeta).hasNextPage === 'boolean' &&
-    typeof (obj as PaginationMeta).hasPreviousPage === 'boolean'
-  );
-}
-
-/**
- * Type guard to check if an object is valid PaginationParams
- */
-export function isPaginationParams(obj: unknown): obj is PaginationParams {
-  return (
-    typeof obj === 'object' &&
-    obj !== null &&
-    typeof (obj as PaginationParams).page === 'number' &&
-    typeof (obj as PaginationParams).pageSize === 'number' &&
-    (obj as PaginationParams).page >= 1 &&
-    (obj as PaginationParams).pageSize >= 1
-  );
-}
-
-// === UTILITY FUNCTIONS ===
-
-/**
- * Calculate pagination metadata from parameters
- */
-export function calculatePaginationMeta(
-  page: number,
-  pageSize: number,
-  totalCount: number
-): PaginationMeta {
-  const totalPages = Math.ceil(totalCount / pageSize);
-  
-  return {
-    currentPage: page,
-    totalPages,
-    totalCount,
-    pageSize,
-    hasNextPage: page < totalPages,
-    hasPreviousPage: page > 1,
-  };
-}
-
-/**
- * Validate and sanitize pagination parameters
- */
-export function validatePaginationParams(
-  params: Partial<PaginationParams>,
-  config: PaginationConfig = DEFAULT_PAGINATION_CONFIG
-): PaginationValidationResult {
-  const errors: string[] = [];
-  
-  const page = Math.max(1, Math.floor(params.page || 1));
-  const pageSize = Math.max(
-    config.minPageSize,
-    Math.min(config.maxPageSize, Math.floor(params.pageSize || config.defaultPageSize))
-  );
-  
-  if (params.page && params.page < 1) {
-    errors.push('Page must be at least 1');
-  }
-  
-  if (params.pageSize && (params.pageSize < config.minPageSize || params.pageSize > config.maxPageSize)) {
-    errors.push(`Page size must be between ${config.minPageSize} and ${config.maxPageSize}`);
-  }
-  
-  return {
-    isValid: errors.length === 0,
-    errors,
-    sanitized: { page, pageSize },
-  };
-}
-
-/**
- * Get pagination range information (e.g., "1-10 of 50")
- */
-export function getPaginationRange(pagination: PaginationMeta): PaginationRange {
-  const start = (pagination.currentPage - 1) * pagination.pageSize + 1;
-  const end = Math.min(start + pagination.pageSize - 1, pagination.totalCount);
-  
-  return {
-    start,
-    end,
-    total: pagination.totalCount,
-  };
 }

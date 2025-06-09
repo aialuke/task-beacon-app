@@ -8,7 +8,7 @@ import {
   calculatePaginationMeta,
   validatePaginationParams,
   DEFAULT_PAGINATION_CONFIG,
-} from '@/types/pagination.types';
+} from '@/lib/utils/pagination';
 import { supabase } from '@/integrations/supabase/client';
 import type { ApiResponse } from '@/types/api.types';
 

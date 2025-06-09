@@ -1,44 +1,43 @@
-
 /**
- * API Response Types - Single Source of Truth
+ * API Types
  * 
- * Unified API response patterns with improved type safety and consistency.
- * This is the authoritative source for all API response types.
+ * All API-related type definitions including responses, errors, and service results.
  */
 
-// Import pagination types from centralized location
-import type { PaginationMeta, PaginatedResponse } from './pagination.types';
-
-// Standard API response interface - single source of truth
+// === API RESPONSE TYPES ===
 export interface ApiResponse<T = unknown> {
+  data: T | null;
+  error: string | null;
+  success: boolean;
+  message?: string;
+}
+
+export interface ApiError {
+  message: string;
+  status?: number;
+  code?: string;
+  details?: unknown;
+}
+
+export interface ServiceResult<T = unknown> {
   data: T | null;
   error: ApiError | null;
   success: boolean;
 }
 
-// Enhanced API error with comprehensive context
-export interface ApiError {
-  message: string;
-  name: string;
-  code?: string;
-  statusCode?: number;
-  details?: unknown;
-  hint?: string;
-  timestamp?: string;
-  originalError?: unknown;
+export interface ActionResult<T = unknown> {
+  success: boolean;
+  data?: T;
+  error?: string;
 }
 
-// Service operation result pattern
-export interface ServiceResult<T = void> {
+export interface DatabaseOperationResult<T = unknown> {
   data: T | null;
   error: string | null;
-  success: boolean;
+  count?: number;
 }
 
-// Re-export pagination types for backwards compatibility
-export type { PaginationMeta, PaginatedResponse };
-
-// Query parameters
+// === QUERY PARAMETERS ===
 export interface BaseQueryParams {
   page?: number;
   pageSize?: number;
@@ -47,26 +46,12 @@ export interface BaseQueryParams {
   search?: string;
 }
 
-// Action result pattern for mutations
-export interface ActionResult<T = void> {
+// === GENERIC API STATE ===
+export interface ApiState<T = unknown, E = string> {
   data: T | null;
-  error: ApiError | null;
-  isSuccess: boolean;
-}
-
-// Database operation result types
-export interface DatabaseOperationResult<T = void> {
-  data: T | null;
-  error: {
-    message: string;
-    code: string;
-    details?: unknown;
-  } | null;
+  loading: boolean;
+  error: E | null;
   success: boolean;
+  lastFetch?: Date;
 }
 
-// Legacy compatibility types (will be phased out)
-export interface TablesResponse<T> {
-  data: T | null;
-  error: ApiError | null;
-}

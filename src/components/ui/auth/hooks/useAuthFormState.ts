@@ -7,7 +7,7 @@ import {
   useUnifiedValidation,
   validateUnifiedSignIn,
   validateUnifiedSignUp
-} from '@/lib/validation/unified-validation';
+} from '@/lib/validation';
 
 type AuthMode = 'signin' | 'signup';
 

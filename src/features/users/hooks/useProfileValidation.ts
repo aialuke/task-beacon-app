@@ -5,7 +5,7 @@ import {
   validateProfileUpdate,
   profileUpdateSchema,
   type ProfileUpdateInput 
-} from '@/schemas';
+} from '@/lib/validation';
 
 interface ProfileValidationResult {
   isValid: boolean;

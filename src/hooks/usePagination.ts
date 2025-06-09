@@ -11,7 +11,7 @@ import {
   DEFAULT_PAGINATION_CONFIG,
   validatePaginationParams,
   calculatePaginationMeta,
-} from '@/types/pagination.types';
+} from '@/lib/utils/pagination';
 
 interface UsePaginationOptions {
   initialPage?: number;
