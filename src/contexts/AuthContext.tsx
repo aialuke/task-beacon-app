@@ -6,7 +6,8 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+// Note: AuthContext export removed as unused
 
 export function AuthProvider({ children }: AuthProviderProps) {
   // Use the simplified auth hook

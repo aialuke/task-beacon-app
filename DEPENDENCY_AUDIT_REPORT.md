@@ -305,12 +305,12 @@ The Task Beacon App now has a **perfect dependency structure** with 0 unused dep
 4. Consider implementing automated unused code detection in CI/CD
 5. ✅ ~~Clean up remaining 459 unused exports to reduce API surface~~ - IN PROGRESS
 
-### Step 3: Export Cleanup (Status: 60% COMPLETE - 276 exports removed)
+### Step 3: Export Cleanup (Status: 70% COMPLETE - 320 exports removed)
 
 **Progress Summary:**
 - **Original unused exports**: 459
-- **Current unused exports**: 183
-- **Total exports removed**: 276 (60% reduction)
+- **Current unused exports**: 139
+- **Total exports removed**: 320 (70% reduction)
 - **Bundle size improvement**: 538KB → 475KB (63KB reduction)
 
 **Phase 3A**: Index File Re-exports (COMPLETED - 184 exports removed)
@@ -330,11 +330,16 @@ The Task Beacon App now has a **perfect dependency structure** with 0 unused dep
 - ✅ Error handling exports - Removed specialized error handlers
 - ✅ API patterns - Removed unused error pattern utilities
 
-**Phase 3D**: Schema & Type Exports (REMAINING - 183 exports)
-- Schema definitions and validators (many unused)
-- Type definitions and interfaces (extensive duplication)
-- Test utilities and mocks (unused test helpers)
-- Component prop interfaces (over-exported types)
+**Phase 3D**: Schema & Type Exports (IN PROGRESS - 139 exports remaining)
+- ✅ Common schema exports - Removed 22 unused schema exports from common.schemas.ts
+- ✅ Component prop exports - Removed unused buttonVariants, card components
+- ✅ Dialog component exports - Removed DialogPortal, DialogOverlay, DialogClose
+- ✅ Form component exports - Removed SimplePhotoUpload, SimplePhotoUploadModal named exports
+- ✅ Loading skeleton exports - Removed CardSkeleton, ImageSkeleton, InlineLoader
+- ✅ Context exports - Removed AuthContext, ThemeContext, useTheme
+- ✅ Task utility exports - Removed getStatusColor, getTimerColor, getTimerGradient
+- ✅ Hook exports - Removed useMotionPreferences, useMobileViewport
+- **Progress**: 183 → 139 exports (44 removed, 24% improvement)
 
 **Export Cleanup Strategy:**
 1. **Analyze by file** - Review each file's export usage

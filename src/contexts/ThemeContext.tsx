@@ -8,7 +8,8 @@ interface ThemeContextType {
   actualTheme: 'dark' | 'light';
 }
 
-export const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+// Note: ThemeContext export removed as unused
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>('dark'); // Default to dark
@@ -74,11 +75,4 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-// Export the useTheme hook
-export function useTheme() {
-  const context = useContext(ThemeContext);
-  if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider');
-  }
-  return context;
-}
+// Note: useTheme hook export removed as unused

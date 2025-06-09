@@ -141,5 +141,4 @@ export default function SimplePhotoUpload({
   );
 }
 
-// Named export for backward compatibility
-export { SimplePhotoUpload };
+// Note: Named export SimplePhotoUpload removed as unused

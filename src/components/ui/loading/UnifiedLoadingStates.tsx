@@ -51,8 +51,8 @@ export const LoadingSpinner = memo(function LoadingSpinner({
   );
 });
 
-// === OPTIMIZED CARD SKELETON ===
-export const CardSkeleton = memo(function CardSkeleton({ 
+// === CARD SKELETON (Internal use) ===
+const CardSkeleton = memo(function CardSkeleton({ 
   className 
 }: SkeletonProps) {
   return (
@@ -76,21 +76,7 @@ export const CardSkeleton = memo(function CardSkeleton({
   );
 });
 
-// === OPTIMIZED IMAGE SKELETON ===
-export const ImageSkeleton = memo(function ImageSkeleton({ 
-  className, 
-  aspectRatio = 'aspect-video' 
-}: SkeletonProps) {
-  return (
-    <Skeleton 
-      className={cn(
-        'w-full rounded-lg',
-        aspectRatio,
-        className
-      )} 
-    />
-  );
-});
+// === NOTE: ImageSkeleton and InlineLoader exports removed as unused ===
 
 // === PAGE LOADER ===
 export const PageLoader = memo(function PageLoader({
@@ -128,31 +114,13 @@ export const CardLoader = memo(function CardLoader({
   );
 });
 
-// === INLINE LOADER ===
-export const InlineLoader = memo(function InlineLoader({
-  message,
-  size = 'md',
-  className,
-}: {
-  message?: string;
-  size?: 'sm' | 'md' | 'lg' | 'xl';
-  className?: string;
-}) {
-  return (
-    <div className={cn("flex flex-col items-center justify-center space-y-3", className)}>
-      <LoadingSpinner size={size} />
-      {message && <p className="text-sm text-muted-foreground">{message}</p>}
-    </div>
-  );
-});
+// === NOTE: InlineLoader export removed as unused ===
 
 // === PERFORMANCE METRICS (Development only) ===
 if (process.env.NODE_ENV === 'development') {
   // Track component render performance
   (LoadingSpinner as any).displayName = 'LoadingSpinner';
   (CardSkeleton as any).displayName = 'CardSkeleton';
-  (ImageSkeleton as any).displayName = 'ImageSkeleton';
   (PageLoader as any).displayName = 'PageLoader';
   (CardLoader as any).displayName = 'CardLoader';
-  (InlineLoader as any).displayName = 'InlineLoader';
 }

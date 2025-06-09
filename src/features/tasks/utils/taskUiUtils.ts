@@ -15,41 +15,7 @@ export function getTaskStatus(task: Task): TaskStatus {
   return "pending";
 }
 
-export function getStatusColor(status: TaskStatus): string {
-  switch (status) {
-    case "complete":
-      return "bg-success";
-    case "overdue":
-      return "bg-destructive";
-    case "pending":
-    default:
-      return "bg-accent";
-  }
-}
-
-export function getTimerColor(status: TaskStatus): string {
-  switch (status) {
-    case "complete":
-      return "var(--status-complete)";
-    case "overdue":
-      return "var(--status-overdue)";
-    case "pending":
-    default:
-      return "var(--status-pending)";
-  }
-}
-
-export function getTimerGradient(status: TaskStatus): string {
-  switch (status) {
-    case "complete":
-      return "url(#gradientComplete)";
-    case "overdue":
-      return "url(#gradientOverdue)";
-    case "pending":
-    default:
-      return "url(#gradientPending)";
-  }
-}
+// Note: getStatusColor, getTimerColor, getTimerGradient exports removed as unused
 
 export function getStatusTooltipClass(status: TaskStatus): string {
   if (status === "overdue") return "bg-destructive text-destructive-foreground";

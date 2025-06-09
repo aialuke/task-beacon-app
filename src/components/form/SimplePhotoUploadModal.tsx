@@ -54,5 +54,4 @@ export default function SimplePhotoUploadModal({
   );
 }
 
-// Named export for backward compatibility
-export { SimplePhotoUploadModal };
+// Note: Named export SimplePhotoUploadModal removed as unused
