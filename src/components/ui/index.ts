@@ -42,10 +42,10 @@ export { AnimatedCharacterCount } from './form/AnimatedCharacterCount';
 
 // === AUTHENTICATION ===
 export { default as ModernAuthForm } from './auth/ModernAuthForm';
-export { default as PasswordStrengthIndicator } from './auth/PasswordStrengthIndicator';
+export { PasswordStrengthIndicator } from './auth/PasswordStrengthIndicator';
 
 // === NAVIGATION ===
-export { default as SimpleNavbar } from './simple-navbar';
+export { SimpleNavbar } from './simple-navbar';
 
 // === PAGINATION ===
 export { default as GenericPagination } from './GenericPagination';
