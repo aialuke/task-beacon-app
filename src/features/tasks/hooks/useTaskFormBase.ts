@@ -1,6 +1,6 @@
 
 import { useState, useMemo, useCallback } from 'react';
-import { useTaskPhotoUpload } from '@/components/form/hooks/useTaskPhotoUpload';
+import { useUnifiedPhotoUpload } from '@/components/form/hooks/useUnifiedPhotoUpload';
 import { useTaskMutations } from './useTaskMutations';
 import { useTaskFormValidation } from './useTaskFormValidation';
 import { toast } from 'sonner';
@@ -12,18 +12,17 @@ interface UseTaskFormBaseOptions {
 }
 
 /**
- * Streamlined task form base hook - Phase 2.4.6.2d
+ * Streamlined task form base hook - Phase 3 Simplified
  * 
- * Focused solely on photo upload integration and task creation coordination.
- * Form state management is handled by useTaskForm hook.
+ * Now uses unified photo upload system
  */
 export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions = {}) {
   const [loading, setLoading] = useState(false);
   const validation = useTaskFormValidation();
   const { createTaskCallback } = useTaskMutations();
 
-  // Standardized photo upload hook
-  const photoUpload = useTaskPhotoUpload({
+  // Unified photo upload hook
+  const photoUpload = useUnifiedPhotoUpload({
     processingOptions: {
       maxWidth: 1920,
       maxHeight: 1080,
@@ -92,8 +91,8 @@ export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions 
 
   // Combined loading state
   const combinedLoading = useMemo(
-    () => loading || photoUpload.photoLoading,
-    [loading, photoUpload.photoLoading]
+    () => loading || photoUpload.loading,
+    [loading, photoUpload.loading]
   );
 
   return useMemo(
@@ -102,7 +101,7 @@ export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions 
       photoPreview: photoUpload.photoPreview,
       handlePhotoChange: photoUpload.handlePhotoChange,
       handlePhotoRemove: photoUpload.handlePhotoRemove,
-      photoLoading: photoUpload.photoLoading,
+      photoLoading: photoUpload.loading,
       processingResult: photoUpload.processingResult,
       
       // Task creation with photo integration
@@ -116,7 +115,7 @@ export function useTaskFormBase({ onClose, parentTask }: UseTaskFormBaseOptions 
       photoUpload.photoPreview,
       photoUpload.handlePhotoChange,
       photoUpload.handlePhotoRemove,
-      photoUpload.photoLoading,
+      photoUpload.loading,
       photoUpload.processingResult,
       createTaskWithPhoto,
       combinedLoading,

@@ -1,35 +1,24 @@
 
-import { useState, useCallback } from 'react';
-import type { ProcessingResult } from '@/lib/utils/image/types';
+import { useUnifiedPhotoUpload } from './useUnifiedPhotoUpload';
 
 /**
- * Simplified photo state management hook - Phase 2.4 Revised
- * Using standard React hooks instead of custom performance abstractions
+ * Photo state management hook - Phase 3 Deprecated
+ * 
+ * Use useUnifiedPhotoUpload instead. This is kept for backward compatibility.
+ * @deprecated Use useUnifiedPhotoUpload instead
  */
 export function usePhotoState() {
-  const [photo, setPhoto] = useState<File | null>(null);
-  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [processingResult, setProcessingResult] = useState<ProcessingResult | null>(null);
-
-  const resetPhoto = useCallback(() => {
-    if (photoPreview) {
-      URL.revokeObjectURL(photoPreview);
-    }
-    setPhoto(null);
-    setPhotoPreview(null);
-    setProcessingResult(null);
-  }, [photoPreview]);
-
+  const unified = useUnifiedPhotoUpload();
+  
   return {
-    photo,
-    setPhoto,
-    photoPreview,
-    setPhotoPreview,
-    loading,
-    setLoading,
-    processingResult,
-    setProcessingResult,
-    resetPhoto,
+    photo: unified.photo,
+    setPhoto: () => {}, // No-op for compatibility
+    photoPreview: unified.photoPreview,
+    setPhotoPreview: () => {}, // No-op for compatibility
+    loading: unified.loading,
+    setLoading: () => {}, // No-op for compatibility
+    processingResult: unified.processingResult,
+    setProcessingResult: () => {}, // No-op for compatibility
+    resetPhoto: unified.resetPhoto,
   };
 }
