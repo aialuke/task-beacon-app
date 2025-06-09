@@ -14,6 +14,7 @@ interface FloatingInputProps {
   maxLength?: number;
   required?: boolean;
   autoFocus?: boolean;
+  disabled?: boolean;
   className?: string;
 }
 
@@ -27,6 +28,7 @@ export function FloatingInput({
   maxLength,
   required = false,
   autoFocus = false,
+  disabled = false,
   className,
 }: FloatingInputProps) {
   const [isFocused, setIsFocused] = useState(false);
@@ -41,7 +43,8 @@ export function FloatingInput({
           <div
             className={cn(
               "absolute left-3 top-1/2 z-10 -translate-y-1/2 transform transition-all duration-300",
-              isFloating ? "scale-95 text-primary" : "text-muted-foreground"
+              isFloating ? "scale-95 text-primary" : "text-muted-foreground",
+              disabled && "opacity-50"
             )}
           >
             {icon}
@@ -59,10 +62,12 @@ export function FloatingInput({
           maxLength={maxLength}
           required={required}
           autoFocus={autoFocus}
+          disabled={disabled}
           className={cn(
             "peer h-14 bg-background/60 pb-2 pt-6 backdrop-blur-sm transition-all duration-300 hover:bg-background/70 focus:bg-background/80 focus:shadow-lg focus:shadow-primary/10",
             icon ? "pl-11" : "pl-4",
-            maxLength ? "pr-16" : "pr-4"
+            maxLength ? "pr-16" : "pr-4",
+            disabled && "cursor-not-allowed opacity-50"
           )}
         />
 
@@ -73,7 +78,8 @@ export function FloatingInput({
             icon ? "left-11" : "left-4",
             isFloating
               ? "top-2 text-xs text-primary"
-              : "top-1/2 -translate-y-1/2 text-sm text-muted-foreground"
+              : "top-1/2 -translate-y-1/2 text-sm text-muted-foreground",
+            disabled && "opacity-50"
           )}
         >
           {label}
