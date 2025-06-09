@@ -13,18 +13,21 @@ import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import UnifiedErrorBoundary from './components/ui/UnifiedErrorBoundary';
 
+// === UTILITIES ===
+import { logger } from '@/lib/logger';
+
 // === STYLES ===
 import './index.css';
 
-console.log('Starting application...');
+logger.info('Starting application...');
 
 // Setup basic error handlers
 window.addEventListener('error', (event) => {
-  console.error('Global error:', event.error);
+  logger.error('Global error', event.error);
 });
 
 window.addEventListener('unhandledrejection', (event) => {
-  console.error('Unhandled promise rejection:', event.reason);
+  logger.error('Unhandled promise rejection', new Error(String(event.reason)));
 });
 
 const rootElement = document.getElementById('root');
@@ -32,14 +35,14 @@ if (!rootElement) {
   throw new Error("Root element with ID 'root' not found in the document.");
 }
 
-console.log('Root element found, creating React app...');
+logger.info('Root element found, creating React app...');
 
 // Ensure React is properly available
 if (!React) {
   throw new Error('React is not available');
 }
 
-console.log('React version:', React.version);
+logger.info('React version', { version: React.version });
 
 const root = createRoot(rootElement);
 
@@ -51,4 +54,4 @@ root.render(
   </StrictMode>
 );
 
-console.log('React app created and rendered');
+logger.info('React app created and rendered');

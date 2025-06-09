@@ -11,7 +11,7 @@ import type { FormState, FormErrors, FormTouched } from '@/types/form.types';
 
 // === CORE INTERFACES ===
 
-export interface UnifiedFormConfig<T extends Record<string, any>> {
+export interface UnifiedFormConfig<T extends Record<string, unknown>> {
   /** Initial form values */
   initialValues: T;
   /** Custom validation function */
@@ -26,7 +26,7 @@ export interface UnifiedFormConfig<T extends Record<string, any>> {
   validateOnBlur?: boolean;
 }
 
-export interface UnifiedFormActions<T extends Record<string, any>> {
+export interface UnifiedFormActions<T extends Record<string, unknown>> {
   /** Set a specific field value */
   setFieldValue: (field: keyof T, value: T[keyof T]) => void;
   /** Set multiple field values */
@@ -49,7 +49,7 @@ export interface UnifiedFormActions<T extends Record<string, any>> {
   validateField: (field: keyof T) => boolean;
 }
 
-export interface UnifiedFormReturn<T extends Record<string, any>> 
+export interface UnifiedFormReturn<T extends Record<string, unknown>> 
   extends FormState<T>, UnifiedFormActions<T> {
   /** Helper to check if field has error */
   getFieldError: (field: keyof T) => string | undefined;
@@ -74,7 +74,7 @@ export interface UnifiedFormReturn<T extends Record<string, any>>
 /**
  * Generic form hook with comprehensive state management
  */
-export function useUnifiedForm<T extends Record<string, any>>(
+export function useUnifiedForm<T extends Record<string, unknown>>(
   config: UnifiedFormConfig<T>
 ): UnifiedFormReturn<T> {
   const {
@@ -274,7 +274,7 @@ export function useUnifiedForm<T extends Record<string, any>>(
 /**
  * Simple form hook for basic forms without complex validation
  */
-export function useSimpleForm<T extends Record<string, any>>(
+export function useSimpleForm<T extends Record<string, unknown>>(
   initialValues: T,
   onSubmit?: (values: T) => Promise<void> | void
 ) {

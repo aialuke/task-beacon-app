@@ -4,6 +4,8 @@
  * Handles button positioning and bounds calculations
  */
 
+import { logger } from '@/lib/logger';
+
 interface ButtonBounds {
   x: number;
   width: number;
@@ -23,7 +25,7 @@ export function calculateActiveButtonBounds(
   const activeButton = buttonRefs[activeIndex];
 
   if (!activeButton || !container) {
-    console.log('Missing activeButton or container');
+    logger.debug('Missing activeButton or container');
     return { x: 0, width: 0, centerX: 0 };
   }
 
@@ -36,7 +38,7 @@ export function calculateActiveButtonBounds(
   const width = buttonRect.width;
   const centerX = x + width / 2;
 
-  console.log('Button bounds:', { x, width, centerX, containerPadding });
+  logger.debug('Button bounds calculated', { x, width, centerX, containerPadding });
 
   return {
     x,
@@ -54,7 +56,7 @@ export function calculateIndicatorPosition(
   indicatorWidth = 24
 ): { x: number; width: number } {
   const x = centerX - indicatorWidth / 2;
-  console.log('Indicator position:', { centerX, indicatorWidth, x });
+  logger.debug('Indicator position calculated', { centerX, indicatorWidth, x });
   
   return {
     x,
@@ -73,7 +75,7 @@ export function calculateGlowPosition(
   const glowWidth = bounds.width + glowPadding * 2;
   const x = bounds.centerX - glowWidth / 2;
   
-  console.log('Glow position:', { bounds, glowPadding, glowWidth, x });
+  logger.debug('Glow position calculated', { bounds, glowPadding, glowWidth, x });
   
   return {
     x,

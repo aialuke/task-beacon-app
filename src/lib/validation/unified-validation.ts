@@ -196,7 +196,7 @@ export function validateUnifiedField(
   fieldName: string,
   value: unknown
 ): UnifiedValidationResult {
-  let schema: z.ZodSchema<any>;
+  let schema: z.ZodSchema<unknown>;
 
   switch (fieldName.toLowerCase()) {
     case 'email':
@@ -229,16 +229,16 @@ export function validateUnifiedField(
 /**
  * Validate form data with unified schemas
  */
-export function validateUnifiedForm<T extends Record<string, any>>(
+export function validateUnifiedForm<T extends Record<string, unknown>>(
   data: T,
-  schemas: Partial<Record<keyof T, z.ZodSchema<any>>>
+  schemas: Partial<Record<keyof T, z.ZodSchema<unknown>>>
 ): UnifiedValidationResult<Partial<T>> {
   const errors: string[] = [];
   const fieldErrors: Record<string, string> = {};
   const validatedData: Partial<T> = {};
   let isValid = true;
 
-  for (const [field, schema] of Object.entries(schemas) as [keyof T, z.ZodSchema<any>][]) {
+  for (const [field, schema] of Object.entries(schemas) as [keyof T, z.ZodSchema<unknown>][]) {
     const fieldResult = validateWithUnifiedSchema(schema, data[field]);
     
     if (!fieldResult.isValid) {
@@ -246,7 +246,7 @@ export function validateUnifiedForm<T extends Record<string, any>>(
       fieldErrors[field as string] = fieldResult.errors[0] || 'Validation failed';
       isValid = false;
     } else if (fieldResult.data !== undefined) {
-      (validatedData as any)[field] = fieldResult.data;
+      validatedData[field] = fieldResult.data as T[keyof T];
     }
   }
 
@@ -268,9 +268,9 @@ export function useUnifiedValidation() {
     return validateUnifiedField(fieldName, value);
   }, []);
 
-  const validateForm = useCallback(<T extends Record<string, any>>(
+  const validateForm = useCallback(<T extends Record<string, unknown>>(
     data: T,
-    schemas: Partial<Record<keyof T, z.ZodSchema<any>>>
+    schemas: Partial<Record<keyof T, z.ZodSchema<unknown>>>
   ) => {
     return validateUnifiedForm(data, schemas);
   }, []);

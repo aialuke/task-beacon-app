@@ -11,6 +11,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { AuthService } from '@/lib/api/AuthService';
 import type { ApiError } from '@/types/shared';
 import { cleanupAuthState } from '@/lib/auth-utils';
+import { logger } from '@/lib/logger';
 
 export interface UseAuthReturn {
   user: User | null;
@@ -33,7 +34,7 @@ export function useAuth(): UseAuthReturn {
 
   // Enhanced logging for mobile debugging
   const logMobileDebug = useCallback((message: string, data?: Record<string, unknown>) => {
-    console.log(`[useAuth Mobile Debug] ${message}`, {
+    logger.auth(`Mobile Debug: ${message}`, {
       timestamp: new Date().toISOString(),
       isMobile: /Mobi|Android/i.test(navigator.userAgent),
       userAgent: navigator.userAgent,

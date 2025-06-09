@@ -2,6 +2,8 @@
  * Common patterns and utilities
  */
 
+import { logger } from '@/lib/logger';
+
 export type AsyncFunc<T> = (...args: any[]) => Promise<T>;
 
 export const executeAsync = async <T>(
@@ -12,7 +14,7 @@ export const executeAsync = async <T>(
     const result = await asyncFn(...args);
     return result;
   } catch (error) {
-    console.error("Async function execution failed:", error);
+    logger.error("Async function execution failed", error instanceof Error ? error : new Error(String(error)));
     return null;
   }
 };
@@ -28,7 +30,7 @@ export const retryAsync = async <T>(
       return await asyncFn();
     } catch (error) {
       attempt++;
-      console.warn(`Attempt ${attempt} failed. Retrying in ${delay}ms...`);
+      logger.warn(`Attempt ${attempt} failed. Retrying in ${delay}ms...`);
       await new Promise((resolve) => setTimeout(resolve, delay));
     }
   }
@@ -43,7 +45,7 @@ export function createAsyncHandler<T = void>(
     try {
       return await handler();
     } catch (error) {
-      console.error(errorMessage, error);
+      logger.error(errorMessage, error instanceof Error ? error : new Error(String(error)));
       throw error;
     }
   };

@@ -4,6 +4,7 @@ import { useUnifiedPhotoUpload } from '@/components/form/hooks/useUnifiedPhotoUp
 import { useTaskMutations } from './useTaskMutations';
 import { useTaskFormValidation } from './useTaskFormValidation';
 import { toast } from 'sonner';
+import { logger } from '@/lib/logger';
 
 interface UseCreateTaskOptions {
   onClose?: () => void;
@@ -77,7 +78,7 @@ export function useCreateTask({ onClose }: UseCreateTaskOptions = {}) {
         toast.error(result.error || 'Failed to create task');
       }
     } catch (error) {
-      console.error('Task creation error:', error);
+      logger.error('Task creation error', error instanceof Error ? error : new Error(String(error)));
       const errorMessage = error instanceof Error ? error.message : 'Failed to create task';
       toast.error(errorMessage);
     } finally {

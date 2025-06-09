@@ -1,4 +1,3 @@
-
 /**
  * Database Service - Optimized with new indexes
  * 
@@ -22,10 +21,9 @@ export class DatabaseService {
     params?: Record<string, unknown>
   ): Promise<ApiResponse<T>> {
     return apiRequest(`rpc.${functionName}`, async () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const { data, error } = await (supabase as any).rpc(functionName, params);
+      const { data, error } = await supabase.rpc(functionName as never, params as never);
       if (error) throw error;
-      return data;
+      return data as T;
     });
   }
 
@@ -39,13 +37,13 @@ export class DatabaseService {
   ): Promise<ApiResponse<boolean>> {
     return apiRequest(`exists.${table}`, async () => {
       // Use optimized query that leverages our indexes
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const { data, error } = await (supabase as any)
-        .from(table)
+      const query = supabase
+        .from(table as never)
         .select('id')
         .eq(column, value)
         .maybeSingle();
-
+      
+      const { data, error } = await query;
       if (error) throw error;
       return !!data;
     });
@@ -59,8 +57,7 @@ export class DatabaseService {
     filters?: Record<string, unknown>
   ): Promise<ApiResponse<number>> {
     return apiRequest(`count.${table}`, async () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let query = (supabase as any).from(table).select('*', { count: 'exact', head: true });
+      let query = supabase.from(table as never).select('*', { count: 'exact', head: true });
       
       if (filters) {
         Object.entries(filters).forEach(([key, value]) => {
@@ -87,8 +84,7 @@ export class DatabaseService {
     }
   ): Promise<ApiResponse<T>> {
     return apiRequest(`select.${table}`, async () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let query = (supabase as any).from(table).select(fields);
+      let query = supabase.from(table as never).select(fields);
       
       // Apply filters in optimal order for index usage
       Object.entries(filters).forEach(([key, value]) => {
@@ -106,11 +102,11 @@ export class DatabaseService {
       if (options?.single) {
         const { data, error } = await query.maybeSingle();
         if (error) throw error;
-        return data;
+        return data as T;
       } else {
         const { data, error } = await query;
         if (error) throw error;
-        return data;
+        return data as T;
       }
     });
   }
