@@ -1,4 +1,3 @@
-
 // External libraries
 import React from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -10,7 +9,7 @@ import { isFeatureEnabled } from '@/lib/config/app';
 
 // Components
 import { TooltipProvider } from '@/components/ui/tooltip';
-import PageLoader from '@/components/ui/loading/PageLoader';
+import { PageLoader } from '@/components/ui/loading/UnifiedLoadingStates';
 
 // Contexts
 import { AuthProvider } from '@/contexts/AuthContext';

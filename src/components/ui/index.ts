@@ -36,9 +36,9 @@ export { default as UnifiedErrorHandler } from './error/UnifiedErrorHandler';
 export { withLazyLoading, LazyComponents } from './LazyComponent';
 
 // === FORM COMPONENTS ===
-export { default as FloatingInput } from './form/FloatingInput';
-export { default as FloatingTextarea } from './form/FloatingTextarea';
-export { default as AnimatedCharacterCount } from './form/AnimatedCharacterCount';
+export { FloatingInput } from './form/FloatingInput';
+export { FloatingTextarea } from './form/FloatingTextarea';
+export { AnimatedCharacterCount } from './form/AnimatedCharacterCount';
 
 // === AUTHENTICATION ===
 export { default as ModernAuthForm } from './auth/ModernAuthForm';
@@ -48,4 +48,4 @@ export { default as PasswordStrengthIndicator } from './auth/PasswordStrengthInd
 export { default as SimpleNavbar } from './simple-navbar';
 
 // === PAGINATION ===
-export { GenericPagination } from './GenericPagination';
+export { default as GenericPagination } from './GenericPagination';

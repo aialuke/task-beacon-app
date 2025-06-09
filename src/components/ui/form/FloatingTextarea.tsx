@@ -1,4 +1,3 @@
-
 import { Textarea } from '@/components/ui/textarea';
 import { useState, useRef, useEffect, ReactNode } from 'react';
 import { cn } from '@/lib/utils';
@@ -81,3 +80,5 @@ export function FloatingTextarea({
     </div>
   );
 }
+
+export default FloatingTextarea;

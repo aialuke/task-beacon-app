@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { lazy, Suspense } from 'react';
 import { TaskService } from '@/lib/api/tasks';
-import PageLoader from '@/components/ui/loading/PageLoader';
+import { PageLoader } from '@/components/ui/loading/UnifiedLoadingStates';
 
 // Lazy load the form component for additional code splitting
 const FollowUpTaskForm = lazy(() => import('@/features/tasks/forms/FollowUpTaskForm'));

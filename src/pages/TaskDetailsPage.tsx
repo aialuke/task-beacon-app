@@ -5,9 +5,7 @@ import { ArrowLeft, Calendar1, ExternalLink } from "lucide-react";
 import { formatDate } from "@/lib/utils/shared";
 import { lazy, Suspense } from "react";
 import { getTaskStatus } from "@/features/tasks/utils/taskUiUtils";
-import PageLoader from "@/components/ui/loading/PageLoader";
-import CardLoader from "@/components/ui/loading/CardLoader";
-import { LoadingSpinner } from "@/components/ui/loading/UnifiedLoadingStates";
+import { PageLoader, CardLoader, LoadingSpinner } from "@/components/ui/loading/UnifiedLoadingStates";
 import { useTaskQuery } from "@/features/tasks/hooks/useTaskQuery";
 
 // Lazy load heavy components for better performance

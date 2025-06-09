@@ -35,3 +35,5 @@ export function AnimatedCharacterCount({
     </div>
   );
 }
+
+export default AnimatedCharacterCount;

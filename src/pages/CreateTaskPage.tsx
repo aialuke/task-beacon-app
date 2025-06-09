@@ -3,7 +3,7 @@ import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
-import PageLoader from '@/components/ui/loading/PageLoader';
+import { PageLoader } from '@/components/ui/loading/UnifiedLoadingStates';
 
 // Lazy load the form component for additional code splitting
 const CreateTaskForm = lazy(() => import('@/features/tasks/forms/CreateTaskForm'));

@@ -1,3 +1,4 @@
+
 /**
  * Lazy Component System - Phase 4 Consolidation
  * 
@@ -6,6 +7,12 @@
 
 import { lazy, Suspense, ComponentType, useEffect, useCallback, memo } from 'react';
 import { LoadingSpinner, PageLoader, CardLoader, InlineLoader } from './loading/UnifiedLoadingStates';
+
+// === INTERFACE DEFINITIONS ===
+interface LazyComponentProps {
+  fallback?: React.ReactNode;
+  className?: string;
+}
 
 // === PERFORMANCE MONITORING (Optimized) ===
 const lazyLoadingMetrics = {

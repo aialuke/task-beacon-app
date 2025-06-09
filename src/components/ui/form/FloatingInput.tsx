@@ -89,3 +89,5 @@ export function FloatingInput({
     </div>
   );
 }
+
+export default FloatingInput;

@@ -2,7 +2,7 @@
 import { Routes, Route } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import { AppProviders } from './components/providers/AppProviders';
-import PageLoader from './components/ui/loading/PageLoader';
+import { PageLoader } from './components/ui/loading/UnifiedLoadingStates';
 
 // Lazy load all major pages for optimal code splitting
 const AuthPage = lazy(() => import('./pages/AuthPage'));
