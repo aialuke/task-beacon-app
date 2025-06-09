@@ -1,4 +1,3 @@
-
 /**
  * Component Types - UI Component Interfaces
  * 
@@ -7,6 +6,13 @@
 
 import type { ReactNode } from 'react';
 
+// === COMPONENT PROP UTILITIES ===
+
+// Component prop utilities
+export type PropsWithClassName<P = Record<string, never>> = P & { className?: string };
+export type PropsWithChildren<P = Record<string, never>> = P & { children?: ReactNode };
+export type PropsWithTestId<P = Record<string, never>> = P & { testId?: string };
+
 // Base component props
 export interface BaseComponentProps {
   className?: string;
@@ -14,9 +20,11 @@ export interface BaseComponentProps {
   testId?: string;
 }
 
-// Size and variant types
+// === UI COMPONENT INTERFACES ===
+
+// Basic UI types
 export type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-export type Variant = 'default' | 'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive';
+export type Variant = 'default' | 'primary' | 'secondary' | 'destructive' | 'outline' | 'ghost';
 export type ColorScheme = 'light' | 'dark' | 'auto';
 
 // Layout props
@@ -48,9 +56,8 @@ export interface ModalProps extends BaseComponentProps {
 
 export interface DialogAction {
   label: string;
-  action: () => void;
+  onClick: () => void;
   variant?: Variant;
-  disabled?: boolean;
 }
 
 // Card component props
@@ -63,29 +70,29 @@ export interface CardProps extends BaseComponentProps {
   shadow?: boolean;
 }
 
-// Navigation types
+// Navigation props
 export interface NavItem {
+  id: string;
   label: string;
-  href: string;
+  href?: string;
+  onClick?: () => void;
   icon?: ReactNode;
-  active?: boolean;
   disabled?: boolean;
 }
 
-export interface BreadcrumbItem {
-  label: string;
-  href?: string;
-  current?: boolean;
+export interface NavProps extends BaseComponentProps {
+  items: NavItem[];
+  activeItem?: string;
+  onItemClick?: (item: NavItem) => void;
 }
 
 // Table component types
 export interface TableColumn<T = unknown> {
-  key: string;
-  title: string;
-  render?: (value: unknown, record: T) => ReactNode;
+  key: keyof T;
+  label: string;
   sortable?: boolean;
-  width?: number | string;
-  align?: 'left' | 'center' | 'right';
+  width?: string;
+  render?: (value: T[keyof T], row: T) => ReactNode;
 }
 
 export interface TableProps<T = unknown> extends BaseComponentProps {
@@ -122,17 +129,12 @@ export interface AnimationProps {
   disabled?: boolean;
 }
 
-// Responsive design types
-export type Breakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-
-export interface ResponsiveValue<T> {
-  base?: T;
-  xs?: T;
-  sm?: T;
-  md?: T;
-  lg?: T;
-  xl?: T;
-  '2xl'?: T;
+export interface InteractionProps {
+  onClick?: () => void;
+  onHover?: () => void;
+  onFocus?: () => void;
+  onBlur?: () => void;
+  disabled?: boolean;
 }
 
 // Form field component props

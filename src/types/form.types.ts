@@ -1,21 +1,24 @@
-
 /**
  * Form Types - Comprehensive Form System
  * 
  * Unified form types eliminating duplication across form components.
  */
 
+// Form utility types
+export type FormErrors<T> = Partial<Record<keyof T, string>>;
+export type FormTouched<T> = Partial<Record<keyof T, boolean>>;
+
 // Core form state interface
 export interface FormState<T = Record<string, unknown>> {
   values: T;
-  errors: Partial<Record<keyof T, string>>;
-  touched: Partial<Record<keyof T, boolean>>;
+  errors: FormErrors<T>;
+  touched: FormTouched<T>;
   isSubmitting: boolean;
   isValid: boolean;
   isDirty: boolean;
 }
 
-// Form validation interfaces
+// Validation types
 export interface ValidationRule<T = unknown> {
   required?: boolean;
   minLength?: number;
@@ -23,6 +26,7 @@ export interface ValidationRule<T = unknown> {
   min?: number;
   max?: number;
   pattern?: RegExp;
+  message?: string;
   custom?: (value: T) => string | null;
 }
 
@@ -54,7 +58,14 @@ export interface FormSubmissionResult<T = unknown> {
   validationErrors?: Record<string, string>;
 }
 
-// Field component props
+// Form field component props - Using standardized definitions from component.types.ts
+export type { 
+  InputFieldProps, 
+  TextareaFieldProps, 
+  SelectFieldProps 
+} from './component.types';
+
+// Basic field props base (for custom field components)
 export interface BaseFieldProps {
   name: string;
   label?: string;
@@ -64,27 +75,6 @@ export interface BaseFieldProps {
   error?: string;
   touched?: boolean;
   className?: string;
-}
-
-export interface InputFieldProps extends BaseFieldProps {
-  type?: 'text' | 'email' | 'password' | 'url' | 'tel' | 'number';
-  value: string;
-  onChange: (value: string) => void;
-  onBlur?: () => void;
-}
-
-export interface TextareaFieldProps extends BaseFieldProps {
-  value: string;
-  onChange: (value: string) => void;
-  onBlur?: () => void;
-  rows?: number;
-  maxLength?: number;
-}
-
-export interface SelectFieldProps extends BaseFieldProps {
-  value: string;
-  onChange: (value: string) => void;
-  options: { value: string; label: string; disabled?: boolean }[];
 }
 
 // Form configuration

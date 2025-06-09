@@ -1,142 +1,211 @@
+/**
+ * Task Submission Hook - Phase 2 Simplified
+ * 
+ * Unified hook for all task submission operations with standardized error handling
+ * and optimistic updates. Eliminates duplicate submission patterns.
+ */
 
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import { useCallback } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { TaskService } from '@/lib/api/tasks';
-import { AuthService } from '@/lib/api/base';
-import { useTaskFormValidation } from './useTaskFormValidation';
+import { QueryKeys } from '@/lib/api/standardized-api';
+import { useTaskOptimisticUpdates } from './useTaskOptimisticUpdates';
+import type { Task, TaskCreateData, TaskUpdateData } from '@/types';
 
-interface SubmitTaskData {
-  title: string;
-  description: string;
-  dueDate: string;
-  url: string;
-  assigneeId: string;
-  photoUrl?: string | null;
-  priority?: 'low' | 'medium' | 'high' | 'urgent';
-}
+// === TASK SUBMISSION RESULT TYPES ===
 
-interface SubmissionResult {
+interface TaskSubmissionResult {
   success: boolean;
-  taskId?: string;
+  message: string;
+  task?: Task;
   error?: string;
 }
 
+interface UseTaskSubmissionReturn {
+  createTask: (data: TaskCreateData) => Promise<TaskSubmissionResult>;
+  updateTask: (id: string, data: TaskUpdateData) => Promise<TaskSubmissionResult>;
+  deleteTask: (id: string) => Promise<TaskSubmissionResult>;
+  isSubmitting: boolean;
+}
+
+// === TASK SUBMISSION HOOK ===
+
 /**
- * Focused hook for task submission logic
- * 
- * Handles only the API submission and related concerns.
- * Does not manage form state or UI side effects.
+ * Unified task submission hook with optimistic updates and error handling
  */
-export function useTaskSubmission() {
+export function useTaskSubmission(): UseTaskSubmissionReturn {
   const queryClient = useQueryClient();
-  const { validateCreateTask, showValidationErrors } = useTaskFormValidation();
+  const navigate = useNavigate();
+  const optimisticUpdates = useTaskOptimisticUpdates();
 
-  /**
-   * Submit a new task to the API
-   */
-  const submitTask = useCallback(async (
-    taskData: SubmitTaskData
-  ): Promise<SubmissionResult> => {
-    try {
-      // Validate task data
-      const validationResult = validateCreateTask({
-        title: taskData.title,
-        description: taskData.description || undefined,
-        url: taskData.url || undefined,
-        dueDate: taskData.dueDate || undefined,
-        assigneeId: taskData.assigneeId || undefined,
-        priority: taskData.priority ?? 'medium',
-      });
-
-      if (!validationResult.isValid) {
-        showValidationErrors(validationResult.errors);
-        return { success: false, error: 'Validation failed' };
-      }
-
-      // Get current user if no assignee specified
-      let finalAssigneeId = taskData.assigneeId;
-      if (!finalAssigneeId) {
-        const userResponse = await AuthService.getCurrentUserId();
-        if (!userResponse.success || !userResponse.data) {
-          return { success: false, error: 'Failed to get current user' };
-        }
-        finalAssigneeId = userResponse.data;
-      }
-
-      // Prepare service data
-      const serviceData = {
-        title: taskData.title.trim(),
-        description: taskData.description || undefined,
-        due_date: taskData.dueDate ? new Date(taskData.dueDate).toISOString() : undefined,
-        photo_url: taskData.photoUrl,
-        url_link: taskData.url || undefined,
-        assignee_id: finalAssigneeId,
-      };
-
-      // Submit to API
-      const response = await TaskService.crud.create(serviceData);
-
+  // Create task mutation
+  const createMutation = useMutation({
+    mutationFn: async (data: TaskCreateData): Promise<Task> => {
+      const response = await TaskService.crud.create(data);
+      
       if (!response.success) {
-        console.error('Task creation failed:', response.error);
         throw new Error(response.error?.message || 'Failed to create task');
       }
+      
+      return response.data;
+    },
+    onError: (error: Error) => {
+      toast.error(`Failed to create task: ${error.message}`);
+    },
+    onSuccess: (task: Task) => {
+      // Invalidate and refetch tasks list
+      queryClient.invalidateQueries({ queryKey: QueryKeys.tasks });
+      toast.success('Task created successfully!');
+      
+      // Navigate to task details
+      navigate(`/tasks/${task.id}`);
+    },
+  });
 
-      // Invalidate queries to refresh task lists
-      await queryClient.invalidateQueries({ queryKey: ['tasks'] });
-
-      // Show success message
-      toast.success('Task created successfully');
-
-      return { 
-        success: true, 
-        taskId: response.data?.id 
-      };
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to create task';
-      console.error('Task submission error:', error);
-      toast.error(errorMessage);
-      return { success: false, error: errorMessage };
-    }
-  }, [queryClient, validateCreateTask, showValidationErrors]);
-
-  /**
-   * Update an existing task
-   */
-  const updateTask = useCallback(async (
-    taskId: string,
-    updates: Partial<SubmitTaskData>
-  ): Promise<SubmissionResult> => {
-    try {
-      const response = await TaskService.crud.update(taskId, {
-        title: updates.title,
-        description: updates.description,
-        due_date: updates.dueDate,
-        photo_url: updates.photoUrl,
-        url_link: updates.url,
-        assignee_id: updates.assigneeId,
-      });
-
+  // Update task mutation
+  const updateMutation = useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: TaskUpdateData }): Promise<Task> => {
+      const response = await TaskService.crud.update(id, data);
+      
       if (!response.success) {
         throw new Error(response.error?.message || 'Failed to update task');
       }
+      
+      return response.data;
+    },
+    onMutate: async ({ id, data }) => {
+      // Cancel outgoing refetches
+      await queryClient.cancelQueries({ queryKey: QueryKeys.task(id) });
+      
+      // Snapshot previous value
+      const previousTask = queryClient.getQueryData(QueryKeys.task(id));
+      
+      // Optimistically update
+      optimisticUpdates.updateTaskOptimistically(id, data, previousTask);
+      
+      return { previousTask };
+    },
+    onError: (error: Error, _, context) => {
+      // Rollback on error
+      if (context?.previousTask) {
+        optimisticUpdates.rollbackToData(context.previousTask);
+      }
+      toast.error(`Failed to update task: ${error.message}`);
+    },
+    onSuccess: () => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries({ queryKey: QueryKeys.tasks });
+      toast.success('Task updated successfully!');
+    },
+  });
 
-      // Invalidate queries
-      await queryClient.invalidateQueries({ queryKey: ['tasks'] });
-      await queryClient.invalidateQueries({ queryKey: ['task', taskId] });
+  // Delete task mutation
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string): Promise<void> => {
+      const response = await TaskService.crud.delete(id);
+      
+      if (!response.success) {
+        throw new Error(response.error?.message || 'Failed to delete task');
+      }
+    },
+    onMutate: async (id: string) => {
+      // Cancel outgoing refetches
+      await queryClient.cancelQueries({ queryKey: QueryKeys.task(id) });
+      
+      // Snapshot previous value
+      const previousData = optimisticUpdates.getPreviousData();
+      
+      // Optimistically remove task
+      optimisticUpdates.removeTaskOptimistically(id, previousData);
+      
+      return { previousData };
+    },
+    onError: (error: Error, _, context) => {
+      // Rollback on error
+      if (context?.previousData) {
+        optimisticUpdates.rollbackToData(context.previousData);
+      }
+      toast.error(`Failed to delete task: ${error.message}`);
+    },
+    onSuccess: () => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries({ queryKey: QueryKeys.tasks });
+      toast.success('Task deleted successfully!');
+      
+      // Navigate back to tasks list
+      navigate('/');
+    },
+  });
 
-      toast.success('Task updated successfully');
+  // === PUBLIC API ===
 
-      return { success: true, taskId };
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to update task';
-      toast.error(errorMessage);
-      return { success: false, error: errorMessage };
-    }
-  }, [queryClient]);
+  const createTask = useCallback(
+    async (data: TaskCreateData): Promise<TaskSubmissionResult> => {
+      try {
+        const task = await createMutation.mutateAsync(data);
+        return {
+          success: true,
+          message: 'Task created successfully!',
+          task,
+        };
+      } catch (error) {
+        return {
+          success: false,
+          error: error instanceof Error ? error.message : 'Unknown error',
+          message: 'Failed to create task',
+        };
+      }
+    },
+    [createMutation]
+  );
+
+  const updateTask = useCallback(
+    async (id: string, data: TaskUpdateData): Promise<TaskSubmissionResult> => {
+      try {
+        const task = await updateMutation.mutateAsync({ id, data });
+        return {
+          success: true,
+          message: 'Task updated successfully!',
+          task,
+        };
+      } catch (error) {
+        return {
+          success: false,
+          error: error instanceof Error ? error.message : 'Unknown error',
+          message: 'Failed to update task',
+        };
+      }
+    },
+    [updateMutation]
+  );
+
+  const deleteTask = useCallback(
+    async (id: string): Promise<TaskSubmissionResult> => {
+      try {
+        await deleteMutation.mutateAsync(id);
+        return {
+          success: true,
+          message: 'Task deleted successfully!',
+        };
+      } catch (error) {
+        return {
+          success: false,
+          error: error instanceof Error ? error.message : 'Unknown error',
+          message: 'Failed to delete task',
+        };
+      }
+    },
+    [deleteMutation]
+  );
+
+  const isSubmitting = createMutation.isPending || updateMutation.isPending || deleteMutation.isPending;
 
   return {
-    submitTask,
+    createTask,
     updateTask,
+    deleteTask,
+    isSubmitting,
   };
 } 

@@ -15,57 +15,7 @@ import { PageLoader } from '@/components/ui/loading/UnifiedLoadingStates';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 
-interface ErrorBoundaryState {
-  hasError: boolean;
-  error?: Error;
-}
-
-/**
- * Error boundary component using React class component pattern
- */
-class AppErrorBoundary extends React.Component<
-  { children: React.ReactNode },
-  ErrorBoundaryState
-> {
-  constructor(props: { children: React.ReactNode }) {
-    super(props);
-    this.state = { hasError: false };
-  }
-
-  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    return { hasError: true, error };
-  }
-
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('App Error Boundary:', error, errorInfo);
-    // Add error reporting here (e.g., Sentry)
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div className="flex h-screen items-center justify-center">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold text-red-600 mb-4">
-              Something went wrong
-            </h1>
-            <p className="text-gray-600 mb-4">
-              Please refresh the page or try again later.
-            </p>
-            <button
-              onClick={() => { window.location.reload(); }}
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-            >
-              Reload Page
-            </button>
-          </div>
-        </div>
-      );
-    }
-
-    return this.props.children;
-  }
-}
+import UnifiedErrorBoundary from '@/components/ui/UnifiedErrorBoundary';
 
 /**
  * Performance optimization wrapper - Simplified
@@ -109,7 +59,7 @@ interface AppProvidersProps {
  */
 export function AppProviders({ children }: AppProvidersProps) {
   return (
-    <AppErrorBoundary>
+    <UnifiedErrorBoundary variant="page" title="Application Error">
       <PerformanceOptimizations>
         <ThemeProvider>
           <QueryClientProvider client={queryClient}>
@@ -125,6 +75,6 @@ export function AppProviders({ children }: AppProvidersProps) {
           </QueryClientProvider>
         </ThemeProvider>
       </PerformanceOptimizations>
-    </AppErrorBoundary>
+    </UnifiedErrorBoundary>
   );
 }

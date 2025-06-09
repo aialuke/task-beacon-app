@@ -1,6 +1,6 @@
 
 import { memo } from "react";
-import { TaskErrorBoundary } from "../TaskErrorBoundary";
+import UnifiedErrorBoundary from '@/components/ui/UnifiedErrorBoundary';
 import TaskCardHeader from "./TaskCardHeader";
 import TaskCardContent from "./TaskCardContent";
 import { useTaskCard } from "../../hooks/useTaskCard";
@@ -47,7 +47,8 @@ function TaskCard({ task }: TaskCardProps) {
   };
 
   return (
-    <TaskErrorBoundary
+    <UnifiedErrorBoundary
+      variant="inline"
       fallback={
         <div className="p-4 rounded-xl border border-destructive/20 bg-destructive/5">
           <p className="text-sm text-destructive">
@@ -81,7 +82,7 @@ function TaskCard({ task }: TaskCardProps) {
           contentRef={contentRef}
         />
       </article>
-    </TaskErrorBoundary>
+    </UnifiedErrorBoundary>
   );
 }
 

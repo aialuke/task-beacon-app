@@ -1,4 +1,3 @@
-
 /**
  * Text and data formatting utilities
  */
@@ -12,18 +11,22 @@ export function truncateText(text: string, maxLength = 100): string {
 }
 
 /**
- * Truncates a URL to a specified length, removing protocol
+ * Capitalizes the first letter of a string
  */
-export function truncateUrl(url: string, maxLength = 30): string {
-  // Remove protocol and www
-  let cleanUrl = url.replace(/^(https?:\/\/)?(www\.)?/, '');
+export function capitalizeFirst(text: string): string {
+  if (!text) return '';
+  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+}
 
-  // Truncate if still too long
-  if (cleanUrl.length > maxLength) {
-    cleanUrl = cleanUrl.substring(0, maxLength - 3) + '...';
-  }
-
-  return cleanUrl;
+/**
+ * Converts a string to title case
+ */
+export function toTitleCase(text: string): string {
+  return text
+    .toLowerCase()
+    .split(' ')
+    .map(word => capitalizeFirst(word))
+    .join(' ');
 }
 
 /**
@@ -42,38 +45,35 @@ export function formatFileSize(bytes: number, decimals = 2): string {
 }
 
 /**
- * Formats a number as a percentage
+ * Formats a percentage value with optional decimal places
  */
-export function formatPercentage(value: number, decimals = 0): string {
-  return `${(value * 100).toFixed(decimals)}%`;
+export function formatPercentage(value: number, decimals = 1): string {
+  return `${value.toFixed(decimals)}%`;
 }
 
 /**
- * Formats a price/currency value
+ * Formats a price value with currency symbol
  */
-export function formatPrice(value: number, currency = '$'): string {
-  return `${currency}${value.toFixed(2)}`;
+export function formatPrice(
+  amount: number,
+  currency = 'USD',
+  locale = 'en-US'
+): string {
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency,
+  }).format(amount);
 }
 
 /**
- * Formats a currency value (alias to formatPrice)
+ * Formats a number with thousands separators
  */
-export function formatCurrency(value: number, currency = '$'): string {
-  return formatPrice(value, currency);
-}
-
-/**
- * Formats a number with thousand separators
- */
-export function formatNumber(value: number, locale = 'en-US'): string {
-  return new Intl.NumberFormat(locale).format(value);
-}
-
-/**
- * Parses a price string to number
- */
-export function parsePrice(priceString: string): number {
-  return parseFloat(priceString.replace(/[^0-9.-]+/g, ''));
+export function formatNumber(
+  value: number,
+  locale = 'en-US',
+  options: Intl.NumberFormatOptions = {}
+): string {
+  return new Intl.NumberFormat(locale, options).format(value);
 }
 
 /**
@@ -81,4 +81,28 @@ export function parsePrice(priceString: string): number {
  */
 export function parseNumber(numberString: string): number {
   return parseFloat(numberString.replace(/[^0-9.-]+/g, ''));
+}
+
+/**
+ * Truncates a URL to a more readable format
+ */
+export function truncateUrl(url: string, maxLength = 30): string {
+  if (!url || typeof url !== 'string') return '';
+  
+  if (url.length <= maxLength) return url;
+  
+  try {
+    const urlObj = new URL(url);
+    const domain = urlObj.hostname;
+    
+    if (domain.length <= maxLength) return domain;
+    
+    return domain.length > maxLength 
+      ? `${domain.substring(0, maxLength - 3)}...`
+      : domain;
+  } catch {
+    return url.length > maxLength 
+      ? `${url.substring(0, maxLength - 3)}...`
+      : url;
+  }
 }

@@ -1,45 +1,43 @@
-
 /**
- * Shared Utility Functions - Cleaned Up
+ * Shared Utility Functions - Phase 2 Consolidated
  * 
- * Only essential shared utilities remain. Legacy compatibility layers removed.
+ * Centralized re-exports of utility functions to eliminate duplication.
+ * Single source of truth for commonly used utilities.
  */
 
-// === INTERNAL UTILITIES ===
+// === DATE UTILITIES ===
 export {
   formatDate,
   getDaysRemaining,
   getTimeUntilDue,
   isDatePast,
   getDueDateTooltip,
+  formatTimeDisplay,
+  getTooltipContent,
 } from './date';
 
+// === FORMAT UTILITIES ===
 export {
   formatFileSize,
   truncateText,
   formatPercentage,
   formatPrice,
   formatNumber,
+  truncateUrl,
+  capitalizeFirst,
+  toTitleCase,
 } from './format';
 
-// === URL UTILITIES ===
-export const truncateUrl = (url: string, maxLength = 30): string => {
-  if (!url || typeof url !== 'string') return '';
-  
-  if (url.length <= maxLength) return url;
-  
-  try {
-    const urlObj = new URL(url);
-    const domain = urlObj.hostname;
-    
-    if (domain.length <= maxLength) return domain;
-    
-    return domain.length > maxLength 
-      ? `${domain.substring(0, maxLength - 3)}...`
-      : domain;
-  } catch {
-    return url.length > maxLength 
-      ? `${url.substring(0, maxLength - 3)}...`
-      : url;
-  }
-};
+// === DATA UTILITIES ===
+export {
+  sortByProperty,
+  searchByTerm,
+  groupBy,
+  uniqueBy,
+  paginateArray,
+  isEmpty,
+  safeJsonParse,
+} from './data';
+
+// === UI UTILITIES ===
+export { cn } from './ui';

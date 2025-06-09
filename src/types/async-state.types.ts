@@ -68,3 +68,19 @@ export interface QueryState<T = unknown> extends BaseAsyncState<T> {
   isStale: boolean;
   refetch: () => Promise<void>;
 }
+
+/**
+ * Creates a standard loading state object
+ */
+export function createLoadingState(
+  isLoading: boolean,
+  isFetching: boolean,
+  error: unknown = null
+): StandardLoadingState {
+  return {
+    isLoading,
+    isFetching,
+    isError: !!error,
+    error: error ? (error instanceof Error ? error.message : String(error)) : null,
+  };
+}

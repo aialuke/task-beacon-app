@@ -83,28 +83,6 @@ export const QueryKeys = {
   },
 } as const;
 
-/**
- * Standard loading state patterns
- */
-export interface StandardLoadingState {
-  isLoading: boolean;
-  isFetching: boolean;
-  isError: boolean;
-  error: string | null;
-}
-
-/**
- * Creates a standard loading state object
- */
-export function createLoadingState(
-  isLoading: boolean,
-  isFetching: boolean,
-  error: unknown = null
-): StandardLoadingState {
-  return {
-    isLoading,
-    isFetching,
-    isError: !!error,
-    error: error ? (error instanceof Error ? error.message : String(error)) : null,
-  };
-}
+// Loading state utilities moved to @/types/async-state.types.ts to eliminate duplication
+export type { StandardLoadingState } from '@/types/async-state.types';
+export { createLoadingState } from '@/types/async-state.types';

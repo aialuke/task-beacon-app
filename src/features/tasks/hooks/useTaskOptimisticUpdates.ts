@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import { QueryKeys } from '@/lib/api/standardized-api';
 import { Task } from '@/types';
 
 // Define proper types for React Query data structures
@@ -21,27 +22,25 @@ interface InfiniteTasksResponse {
   pageParams: unknown[];
 }
 
-/**
- * Type guard to check if data is paginated response
- */
+// Type guards for React Query data structures
 function isPaginatedResponse(data: unknown): data is PaginatedTasksResponse {
   return (
     typeof data === 'object' &&
     data !== null &&
     'data' in data &&
-    typeof (data as Record<string, unknown>).data === 'object'
+    typeof (data as PaginatedTasksResponse).data === 'object' &&
+    (data as PaginatedTasksResponse).data !== null &&
+    'data' in (data as PaginatedTasksResponse).data &&
+    Array.isArray((data as PaginatedTasksResponse).data.data)
   );
 }
 
-/**
- * Type guard to check if data is infinite response
- */
 function isInfiniteResponse(data: unknown): data is InfiniteTasksResponse {
   return (
     typeof data === 'object' &&
     data !== null &&
     'pages' in data &&
-    Array.isArray((data as Record<string, unknown>).pages)
+    Array.isArray((data as InfiniteTasksResponse).pages)
   );
 }
 
@@ -58,7 +57,7 @@ export function useTaskOptimisticUpdates() {
    * Get previous query data for rollback operations
    */
   const getPreviousData = useCallback(
-    () => queryClient.getQueryData(['tasks', undefined, undefined]),
+    () => queryClient.getQueryData(QueryKeys.tasks),
     [queryClient]
   );
 
@@ -67,7 +66,7 @@ export function useTaskOptimisticUpdates() {
    */
   const updateTaskOptimistically = useCallback(
     (taskId: string, updates: Partial<Task>, fallbackData?: unknown) => {
-      queryClient.setQueriesData({ queryKey: ['tasks'] }, (oldData: unknown) => {
+      queryClient.setQueriesData({ queryKey: QueryKeys.tasks }, (oldData: unknown) => {
         if (!oldData) return fallbackData || oldData;
 
         // Handle infinite query structure (pages)
@@ -108,7 +107,7 @@ export function useTaskOptimisticUpdates() {
    */
   const removeTaskOptimistically = useCallback(
     (taskId: string, fallbackData?: unknown) => {
-      queryClient.setQueriesData({ queryKey: ['tasks'] }, (oldData: unknown) => {
+      queryClient.setQueriesData({ queryKey: QueryKeys.tasks }, (oldData: unknown) => {
         if (!oldData) return fallbackData || oldData;
 
         if (isInfiniteResponse(oldData)) {
@@ -144,7 +143,7 @@ export function useTaskOptimisticUpdates() {
    */
   const rollbackToData = useCallback(
     (previousData: unknown) => {
-      queryClient.setQueryData(['tasks', undefined, undefined], previousData);
+      queryClient.setQueryData(QueryKeys.tasks, previousData);
     },
     [queryClient]
   );

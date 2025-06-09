@@ -2,7 +2,7 @@
 import { memo, forwardRef } from "react";
 import { Task } from "@/types";
 import { useTaskCard } from "../../hooks/useTaskCard";
-import { TaskErrorBoundary } from "../TaskErrorBoundary";
+import UnifiedErrorBoundary from '@/components/ui/UnifiedErrorBoundary';
 import TaskCardHeader from "./TaskCardHeader";
 import TaskCardContent from "./TaskCardContent";
 
@@ -69,7 +69,7 @@ const VirtualizedTaskCard = memo(
       };
 
       return (
-        <TaskErrorBoundary
+        <UnifiedErrorBoundary variant="inline"
           fallback={
             <div
               style={style}
@@ -105,7 +105,7 @@ const VirtualizedTaskCard = memo(
               contentRef={contentRef}
             />
           </article>
-        </TaskErrorBoundary>
+        </UnifiedErrorBoundary>
       );
     }
   )

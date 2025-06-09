@@ -1,7 +1,7 @@
 
-import { useQuery } from '@tanstack/react-query';
 import { TaskService } from '@/lib/api/tasks';
-import { QueryKeys, createLoadingState } from '@/lib/api/standardized-api';
+import { QueryKeys } from '@/lib/api/standardized-api';
+import { useEntityByIdQuery } from '@/hooks/core';
 import type { Task } from '@/types';
 
 interface UseTaskQueryReturn {
@@ -11,51 +11,28 @@ interface UseTaskQueryReturn {
 }
 
 /**
- * Standardized hook for querying a single task by ID - Updated to use optimized service
+ * Standardized hook for querying a single task by ID - Phase 2 Refactored
  * 
- * Uses standardized query keys, error handling, and loading state patterns.
+ * Now uses the generic useEntityByIdQuery to eliminate duplicate React Query patterns.
  */
 export function useTaskQuery(taskId: string | undefined): UseTaskQueryReturn {
   const {
     data: task,
-    isLoading,
-    error: queryError,
-  } = useQuery({
-    queryKey: QueryKeys.task(taskId ?? ''),
-    queryFn: async () => {
-      if (!taskId) {
-        throw new Error('Task ID is required');
-      }
-
-      const response = await TaskService.query.getById(taskId);
-      
-      if (!response.success) {
-        throw new Error(response.error?.message || 'Failed to fetch task');
-      }
-
-      return response.data;
-    },
-    enabled: !!taskId,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    retry: (failureCount, error) => {
-      // Don't retry on 404 errors
-      if (error instanceof Error && error.message.includes('not found')) {
-        return false;
-      }
-      return failureCount < 3;
-    },
-    meta: {
-      errorMessage: 'Failed to load task details',
-    },
-  });
-
-  // Standardized loading state
-  const loadingState = createLoadingState(isLoading, false, queryError);
+    isLoading: loading,
+    error,
+  } = useEntityByIdQuery<Task>(
+    'tasks',
+    taskId,
+    (id: string) => TaskService.query.getById(id),
+    {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      errorContext: 'task details',
+    }
+  );
 
   return {
-    task: task || null,
-    loading: loadingState.isLoading,
-    error: loadingState.error,
+    task,
+    loading,
+    error,
   };
 }

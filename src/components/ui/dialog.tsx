@@ -1,7 +1,6 @@
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
-import { useMobileViewport } from "@/hooks/useMobileViewport";
 import { cn } from "@/lib/utils";
 
 const Dialog = DialogPrimitive.Root;
@@ -27,117 +26,45 @@ const DialogOverlay = React.forwardRef<
 ));
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
+/**
+ * Simplified DialogContent - Phase 1 Consolidation
+ * 
+ * Replaces 120+ lines of complex mobile keyboard positioning logic with 
+ * simple CSS-based solutions. Uses modern CSS features for better performance.
+ */
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
 >(({ className, children, ...props }, ref) => {
-  const { keyboardVisible, availableHeight } = useMobileViewport();
-  const modalRef = React.useRef<HTMLDivElement>(null);
-  const [modalHeight, setModalHeight] = React.useState<number>(0);
-  const [isStandalone, setIsStandalone] = React.useState<boolean>(false);
-  const [safeAreaTop, setSafeAreaTop] = React.useState<number>(0);
-
-  const combinedRef = React.useCallback(
-    (node: HTMLDivElement | null) => {
-      modalRef.current = node;
-      if (typeof ref === "function") {
-        ref(node);
-      } else if (ref) {
-        ref.current = node;
-      }
-    },
-    [ref]
-  );
-
-  React.useEffect(() => {
-    const standalone =
-      "standalone" in window.navigator ? window.navigator.standalone : false;
-    setIsStandalone(!!standalone);
-    const sat =
-      parseInt(
-        getComputedStyle(document.documentElement).getPropertyValue("--sat")
-      ) || 0;
-    setSafeAreaTop(sat);
-  }, []);
-
-  React.useEffect(() => {
-    if (modalRef.current) {
-      const height = modalRef.current.offsetHeight;
-      setModalHeight(height);
-    }
-  }, [children]);
-
-  const getModalPosition = React.useCallback(() => {
-    if (!keyboardVisible) {
-      return {
-        top: "50%",
-        transform: "translate(-50%, -50%)",
-        maxHeight: "90vh",
-      };
-    }
-    const modalMaxHeight = Math.min(availableHeight * 0.7, 400);
-    let topPosition = availableHeight * (isStandalone ? 0.55 : 0.61);
-    if (isStandalone) {
-      topPosition += safeAreaTop;
-    }
-    return {
-      top: `${Math.max(40, topPosition)}px`,
-      transform: "translateX(-50%)",
-      maxHeight: `${modalMaxHeight}px`,
-    };
-  }, [keyboardVisible, availableHeight, isStandalone, safeAreaTop]);
-
-  const modalStyle = getModalPosition();
-
-  React.useEffect(() => {
-    const updatePosition = () => {
-      if (keyboardVisible && modalRef.current) {
-        const updatedStyle = getModalPosition();
-        modalRef.current.style.top = updatedStyle.top;
-        modalRef.current.style.transform = updatedStyle.transform;
-        modalRef.current.style.maxHeight = updatedStyle.maxHeight;
-      }
-    };
-    updatePosition();
-    const timer = setTimeout(updatePosition, 100);
-    window.addEventListener("resize", updatePosition);
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener("resize", updatePosition);
-    }
-    return () => {
-      clearTimeout(timer);
-      window.removeEventListener("resize", updatePosition);
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener("resize", updatePosition);
-      }
-    };
-  }, [
-    keyboardVisible,
-    availableHeight,
-    modalHeight,
-    getModalPosition,
-    isStandalone,
-    safeAreaTop,
-  ]);
-
   return (
     <DialogPortal>
       <DialogOverlay />
       <DialogPrimitive.Content
-        ref={combinedRef}
+        ref={ref}
         className={cn(
-          "fixed left-[50%] z-50 grid w-full max-w-lg gap-4 overflow-y-auto border p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=open]:slide-in-from-left-1/2 sm:rounded-xl",
-          keyboardVisible &&
-            "data-[state=closed]:slide-out-to-top-[40px] data-[state=open]:slide-in-from-top-[40px]",
-          !keyboardVisible &&
-            "data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-top-[48%]",
+          // Base positioning and sizing
+          "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%]",
+          
+          // Layout and styling
+          "gap-4 border p-6 shadow-lg sm:rounded-xl",
+          
+          // Mobile keyboard handling with CSS
+          "max-h-[85vh] overflow-y-auto",
+          "sm:max-h-[90vh]",
+          
+          // Animations
+          "duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out",
+          "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+          "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
+          "data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%]",
+          "data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]",
+          
           className
         )}
         style={{
           backgroundColor: "#1a1a1a",
           color: "#ffffff",
           borderColor: "#404040",
-          ...modalStyle,
         }}
         {...props}
       >

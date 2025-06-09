@@ -1,14 +1,14 @@
 
 import { ModernAuthForm } from '@/components/ui/auth';
 import { AuthenticatedApp } from '@/components/layout/AuthenticatedApp';
-import { ErrorBoundary } from '@/components/ErrorBoundary';
+import UnifiedErrorBoundary from '@/components/ui/UnifiedErrorBoundary';
 import { TaskProviders } from '@/features/tasks/providers/TaskProviders';
 import { PageLoader } from '@/components/ui/loading/UnifiedLoadingStates';
 import TaskDashboard from '@/features/tasks/components/lists/TaskDashboard';
 
 const AuthPage = () => {
   return (
-    <ErrorBoundary>
+    <UnifiedErrorBoundary variant="page">
       <AuthenticatedApp
         loadingComponent={<PageLoader message="Checking authentication..." />}
         authenticatedComponent={
@@ -18,7 +18,7 @@ const AuthPage = () => {
         }
         unauthenticatedFallback={<ModernAuthForm />}
       />
-    </ErrorBoundary>
+    </UnifiedErrorBoundary>
   );
 };
 

@@ -1,4 +1,3 @@
-
 /**
  * Utility Types - TypeScript Helpers
  * 
@@ -53,50 +52,29 @@ export type Uncapitalize<S extends string> = S extends `${infer F}${infer R}`
   ? `${Lowercase<F>}${R}` 
   : S;
 
-// Component prop utilities
-export type PropsWithClassName<P = Record<string, never>> = P & { className?: string };
-export type PropsWithChildren<P = Record<string, never>> = P & { children?: React.ReactNode };
+// Component prop utilities moved to @/types/component.types.ts to eliminate duplication
+export type { 
+  PropsWithClassName, 
+  PropsWithChildren, 
+  BaseComponentProps 
+} from './component.types';
+
+// Additional prop utilities
 export type PropsWithTestId<P = Record<string, never>> = P & { testId?: string };
 
-// Base component props
-export interface BaseComponentProps {
-  className?: string;
-  children?: React.ReactNode;
-  testId?: string;
-}
-
-// State management utilities
-export interface AsyncState<T, E = string> {
-  data: T | null;
-  loading: boolean;
-  error: E | null;
-};
-
-export interface LoadingState {
-  isLoading: boolean;
-  isSubmitting?: boolean;
-  isValidating?: boolean;
-};
+// State management utilities moved to @/types/async-state.types.ts to eliminate duplication
+import type { BaseAsyncState } from './async-state.types';
+export type { BaseAsyncState as AsyncState } from './async-state.types';
+export type { LoadingState } from '@/hooks/core/useLoadingState';
 
 // API utilities
-export type ApiState<T> = AsyncState<T> & {
+export type ApiState<T> = BaseAsyncState<T> & {
   success: boolean;
   lastFetch?: Date;
 };
 
-// Form utilities
-export type FormErrors<T> = Partial<Record<keyof T, string>>;
-export type FormTouched<T> = Partial<Record<keyof T, boolean>>;
-
-// Form state interface
-export interface FormState<T = Record<string, unknown>> {
-  values: T;
-  errors: Partial<Record<keyof T, string>>;
-  touched: Partial<Record<keyof T, boolean>>;
-  isSubmitting: boolean;
-  isValid: boolean;
-  isDirty: boolean;
-}
+// Form utilities moved to @/types/form.types.ts to eliminate duplication
+export type { FormErrors, FormTouched, FormState } from './form.types';
 
 // Validation interfaces
 export interface ValidationRule<T = unknown> {
@@ -125,8 +103,5 @@ export type Timestamp = string; // ISO 8601 format
 
 // Status utilities
 export type Status = 'idle' | 'loading' | 'success' | 'error';
-export interface AsyncOperationState {
-  status: Status;
-  error?: string;
-  data?: unknown;
-};
+// AsyncOperationState moved to @/types/async-state.types.ts to eliminate duplication
+export type { AsyncOperationState } from './async-state.types';

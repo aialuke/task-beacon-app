@@ -11,7 +11,7 @@ import { createRoot } from 'react-dom/client';
 
 // === COMPONENTS ===
 import App from './App.tsx';
-import { ErrorBoundary } from './components/ErrorBoundary';
+import UnifiedErrorBoundary from './components/ui/UnifiedErrorBoundary';
 
 // === STYLES ===
 import './index.css';
@@ -45,9 +45,9 @@ const root = createRoot(rootElement);
 
 root.render(
   <StrictMode>
-    <ErrorBoundary>
+    <UnifiedErrorBoundary variant="page" title="Application Error">
       <App />
-    </ErrorBoundary>
+    </UnifiedErrorBoundary>
   </StrictMode>
 );
 

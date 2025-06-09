@@ -1,7 +1,7 @@
 
 import { ReactNode } from 'react';
 import { createStandardContext } from '@/lib/utils/createContext';
-import { TaskErrorBoundary } from '../components/TaskErrorBoundary';
+import UnifiedErrorBoundary from '@/components/ui/UnifiedErrorBoundary';
 import type { Task } from '@/types';
 import { useTasksQuery } from '@/features/tasks/hooks/useTasksQuery';
 
@@ -74,7 +74,8 @@ export function TaskDataContextProvider({
   };
 
   return (
-    <TaskErrorBoundary
+    <UnifiedErrorBoundary
+      variant="section"
       onError={(error, errorInfo) => {
         console.error('TaskDataContext Error:', error, errorInfo);
         // Could integrate with error reporting service here
@@ -83,7 +84,7 @@ export function TaskDataContextProvider({
       <TaskDataProvider value={contextValue}>
         {children}
       </TaskDataProvider>
-    </TaskErrorBoundary>
+    </UnifiedErrorBoundary>
   );
 }
 

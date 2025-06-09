@@ -1,6 +1,6 @@
-
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTaskOptimisticUpdates } from '../useTaskOptimisticUpdates';
+import { QueryKeys } from '@/lib/api/standardized-api';
 import { useCallback } from 'react';
 import { toast } from 'sonner';
 
@@ -12,11 +12,11 @@ interface BaseMutationOptions<TData, TVariables> {
   queryKeys?: string[][];
 }
 
-interface BaseMutationResult<TData> {
+export interface BaseMutationResult<TData> {
   success: boolean;
-  message?: string;
-  error?: string;
+  message: string;
   data?: TData;
+  error?: string;
 }
 
 /**
@@ -42,8 +42,8 @@ export function useBaseMutation<TData, TVariables>(
       toast.error(`${options.errorMessagePrefix}: ${error.message}`);
     },
     onSuccess: () => {
-      // Invalidate standard task queries
-      void queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      // Invalidate standard task queries using centralized QueryKeys
+      void queryClient.invalidateQueries({ queryKey: QueryKeys.tasks });
       
       // Invalidate additional query keys if provided
       if (options.queryKeys) {
@@ -68,6 +68,7 @@ export function useBaseMutation<TData, TVariables>(
       } catch (error) {
         return {
           success: false,
+          message: `${options.errorMessagePrefix}: ${error instanceof Error ? error.message : 'Unknown error'}`,
           error: error instanceof Error ? error.message : 'Unknown error',
         };
       }

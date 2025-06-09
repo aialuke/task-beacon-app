@@ -31,18 +31,8 @@ const profileRowToUser = (profile: ProfileRow): User => {
   };
 };
 
-export interface UserSearchOptions {
-  query?: string;
-  role?: UserRole;
-  limit?: number;
-  excludeCurrentUser?: boolean;
-}
-
-export interface UserUpdateData {
-  name?: string;
-  email?: string;
-  role?: UserRole;
-}
+// User types moved to @/types/feature-types/user.types.ts to eliminate duplication
+export type { UserSearchOptions, UserUpdateData } from '@/types/feature-types/user.types';
 
 /**
  * User Service provides all user-related operations with clean abstraction
