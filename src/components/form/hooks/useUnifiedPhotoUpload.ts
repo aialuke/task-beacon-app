@@ -2,6 +2,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import { TaskService } from '@/lib/api/tasks';
 import { compressAndResizePhoto } from '@/lib/utils/image/convenience';
+import { extractImageMetadataEnhanced } from '@/lib/utils/image/metadata';
 import type { 
   ProcessingResult,
   EnhancedImageProcessingOptions 
@@ -65,14 +66,21 @@ export function useUnifiedPhotoUpload(options: UnifiedPhotoUploadOptions = {}) {
           processingOptions.quality
         );
 
+        // Extract full metadata for the processed file
+        const metadata = await extractImageMetadataEnhanced(processedFile);
+
         setPhoto(processedFile);
         setProcessingResult({
-          success: true,
-          metadata: {
-            name: processedFile.name,
-            size: processedFile.size,
-            type: processedFile.type,
+          blob: processedFile,
+          metadata,
+          compressionStats: {
+            originalSize: file.size,
+            compressedSize: processedFile.size,
+            compressionRatio: processedFile.size / file.size,
+            sizeSavedBytes: file.size - processedFile.size,
+            sizeSavedPercent: ((file.size - processedFile.size) / file.size) * 100,
           },
+          processingTime: 0, // Could be measured if needed
         });
 
         // Auto-upload if enabled
@@ -81,10 +89,7 @@ export function useUnifiedPhotoUpload(options: UnifiedPhotoUploadOptions = {}) {
         }
       } catch (error) {
         console.error('Photo processing error:', error);
-        setProcessingResult({
-          success: false,
-          error: error instanceof Error ? error.message : 'Photo processing failed',
-        });
+        setProcessingResult(null);
       } finally {
         setLoading(false);
       }
