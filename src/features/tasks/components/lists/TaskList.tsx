@@ -3,7 +3,7 @@
 import { memo, useMemo } from "react";
 
 // === INTERNAL UTILITIES ===
-import CardLoader from "@/components/ui/loading/CardLoader";
+import { CardLoader } from "@/components/ui/loading/UnifiedLoadingStates";
 
 // === COMPONENTS ===
 import { TaskCard } from "../cards";

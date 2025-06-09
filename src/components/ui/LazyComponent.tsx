@@ -1,20 +1,11 @@
-
 /**
- * Lazy Component System - Phase 3 Optimization
+ * Lazy Component System - Phase 4 Consolidation
  * 
- * Enhanced with performance monitoring, bundle optimization, and improved patterns.
+ * Updated to use unified loading states from single source.
  */
 
 import { lazy, Suspense, ComponentType, useEffect, useCallback, memo } from 'react';
-import { LoadingSpinner } from './loading/UnifiedLoadingStates';
-import PageLoader from './loading/PageLoader';
-import CardLoader from './loading/CardLoader';
-import InlineLoader from './loading/InlineLoader';
-
-interface LazyComponentProps {
-  fallback?: React.ReactNode;
-  error?: React.ReactNode;
-}
+import { LoadingSpinner, PageLoader, CardLoader, InlineLoader } from './loading/UnifiedLoadingStates';
 
 // === PERFORMANCE MONITORING (Optimized) ===
 const lazyLoadingMetrics = {

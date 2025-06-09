@@ -1,24 +1,22 @@
 
 /**
- * Optimized Component System - Phase 3 Performance Enhancement
+ * Optimized Component System - Phase 4 Consolidation
  * 
- * Tree-shakable exports with bundle optimization and performance improvements.
+ * Tree-shakable exports with all loading states unified.
  */
 
 // === ERROR HANDLING ===
 export { default as UnifiedErrorHandler } from '../error/UnifiedErrorHandler';
 
-// === OPTIMIZED LOADING STATES ===
+// === UNIFIED LOADING STATES (All-in-One) ===
 export { 
   LoadingSpinner, 
   CardSkeleton, 
-  ImageSkeleton 
+  ImageSkeleton,
+  PageLoader,
+  CardLoader,
+  InlineLoader
 } from '../loading/UnifiedLoadingStates';
-
-// === FOCUSED LOADING COMPONENTS ===
-export { default as PageLoader } from '../loading/PageLoader';
-export { default as CardLoader } from '../loading/CardLoader';
-export { default as InlineLoader } from '../loading/InlineLoader';
 
 // === OPTIMIZED IMAGE COMPONENTS ===
 export { default as SimpleLazyImage } from '../SimpleLazyImage';

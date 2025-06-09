@@ -1,8 +1,8 @@
 
 /**
- * Unified Loading States - Phase 3 Optimization
+ * Unified Loading States - Phase 4 Consolidation
  * 
- * Optimized with performance improvements, state comparison, and cleanup patterns.
+ * Single source of truth for all loading components with optimized performance.
  */
 
 import { memo, useMemo } from 'react';
@@ -92,10 +92,67 @@ export const ImageSkeleton = memo(function ImageSkeleton({
   );
 });
 
+// === PAGE LOADER ===
+export const PageLoader = memo(function PageLoader({
+  message,
+  className,
+}: {
+  message?: string;
+  className?: string;
+}) {
+  return (
+    <div className={cn("flex flex-col items-center justify-center min-h-[400px] space-y-4", className)}>
+      <LoadingSpinner size="xl" />
+      <div className="text-center space-y-2">
+        <h3 className="text-lg font-semibold">Loading</h3>
+        {message && <p className="text-muted-foreground">{message}</p>}
+      </div>
+    </div>
+  );
+});
+
+// === CARD LOADER ===
+export const CardLoader = memo(function CardLoader({
+  count = 1,
+  className,
+}: {
+  count?: number;
+  className?: string;
+}) {
+  return (
+    <div className={cn("space-y-6", className)}>
+      {Array.from({ length: count }, (_, i) => (
+        <CardSkeleton key={i} />
+      ))}
+    </div>
+  );
+});
+
+// === INLINE LOADER ===
+export const InlineLoader = memo(function InlineLoader({
+  message,
+  size = 'md',
+  className,
+}: {
+  message?: string;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  className?: string;
+}) {
+  return (
+    <div className={cn("flex flex-col items-center justify-center space-y-3", className)}>
+      <LoadingSpinner size={size} />
+      {message && <p className="text-sm text-muted-foreground">{message}</p>}
+    </div>
+  );
+});
+
 // === PERFORMANCE METRICS (Development only) ===
 if (process.env.NODE_ENV === 'development') {
   // Track component render performance
   (LoadingSpinner as any).displayName = 'LoadingSpinner';
   (CardSkeleton as any).displayName = 'CardSkeleton';
   (ImageSkeleton as any).displayName = 'ImageSkeleton';
+  (PageLoader as any).displayName = 'PageLoader';
+  (CardLoader as any).displayName = 'CardLoader';
+  (InlineLoader as any).displayName = 'InlineLoader';
 }
