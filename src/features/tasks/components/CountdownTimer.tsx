@@ -32,17 +32,14 @@ function CountdownTimer({
   const { shouldReduceMotion, getAnimationConfig } = useMotionPreferences();
 
   const { dynamicSize, radius, circumference } = useMemo(() => {
-    const dynamicSize = isMobile
-      ? priority === "high"
-        ? size * 1.1
-        : priority === "low"
-        ? size * 0.7
-        : size * 0.9
-      : priority === "high"
-      ? size * 1.2
-      : priority === "low"
-      ? size * 0.8
-      : size;
+    // Replace complex nested ternaries with lookup table
+    const SIZE_MULTIPLIERS = {
+      mobile: { high: 1.1, medium: 0.9, low: 0.7 },
+      desktop: { high: 1.2, medium: 1.0, low: 0.8 }
+    } as const;
+    
+    const deviceType = isMobile ? 'mobile' : 'desktop';
+    const dynamicSize = size * SIZE_MULTIPLIERS[deviceType][priority];
     const radius = dynamicSize / 2 - 4;
     const circumference = 2 * Math.PI * radius;
     return { dynamicSize, radius, circumference };

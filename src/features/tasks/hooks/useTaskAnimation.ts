@@ -1,64 +1,30 @@
-
-import { useSpring, SpringValue } from "@react-spring/web";
-import { useEffect, useRef, useState } from "react";
+import { useSpring, SpringValue, config } from "@react-spring/web";
+import { useState } from "react";
 
 export interface TaskAnimationState {
   height: SpringValue<number>;
   opacity: SpringValue<number>;
-  animationPhase: "enter" | "exit" | "";
 }
 
-export function useTaskAnimation(contentRef: React.RefObject<HTMLDivElement>) {
+export function useTaskAnimation() {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [animationPhase, setAnimationPhase] = useState<"enter" | "exit" | "">(
-    "enter"
-  );
-  const initialHeightRef = useRef<number | null>(null);
 
-  const [animationProps, setAnimationProps] = useSpring(() => ({
-    height: 0,
-    opacity: 0,
-    config: { tension: 180, friction: 43 },
-  }));
+  const animationProps = useSpring({
+    height: isExpanded ? 'auto' : 0,
+    opacity: isExpanded ? 1 : 0,
+    config: config.gentle, // Use React Spring's built-in gentle config
+    immediate: false,
+  });
 
   const toggleExpanded = () => {
-    setIsExpanded((prev) => {
-      setAnimationPhase(prev ? "exit" : "enter");
-      return !prev;
-    });
+    setIsExpanded(prev => !prev);
   };
-
-  useEffect(() => {
-    if (!contentRef.current) return;
-    
-    const contentHeight = contentRef.current.scrollHeight;
-    if (!initialHeightRef.current) {
-      initialHeightRef.current = contentHeight;
-    }
-    
-    const targetHeight = isExpanded ? contentHeight : 0;
-    const targetOpacity = isExpanded ? 1 : 0;
-    
-    setAnimationProps.start({
-      height: targetHeight,
-      opacity: targetOpacity,
-      immediate: false,
-      onRest: () => {
-        if (isExpanded && contentRef.current) {
-          // Allow natural height when fully expanded
-          contentRef.current.style.height = "auto";
-        }
-      },
-    });
-  }, [isExpanded, contentRef, setAnimationProps]);
 
   return {
     isExpanded,
     toggleExpanded,
-    animationState: {
-      ...animationProps,
-      animationPhase,
-    },
-    animationPhase,
+    animationState: animationProps,
+    // Derived state instead of separate tracking
+    animationPhase: isExpanded ? "enter" : "exit",
   };
 }

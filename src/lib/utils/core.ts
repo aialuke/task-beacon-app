@@ -60,10 +60,10 @@ export function throttle<T extends (...args: unknown[]) => unknown>(
  * Optimize CSS animations for performance (essential function from css-optimization)
  */
 export function optimizeAnimations(): void {
-  // Respect user's motion preferences
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Import here to avoid circular dependencies
+  const { prefersReducedMotion } = require('./animation');
   
-  if (prefersReducedMotion) {
+  if (prefersReducedMotion()) {
     document.documentElement.style.setProperty('--animation-duration', '0ms');
     document.documentElement.style.setProperty('--transition-duration', '0ms');
   }

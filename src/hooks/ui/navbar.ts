@@ -135,34 +135,22 @@ export function useNavbar({ items, activeItem, onItemChange }: UseNavbarOptions)
   const indicatorPosition = calculateIndicatorPosition(activeButtonBounds.centerX, 24);
   const glowPosition = calculateGlowPosition(activeButtonBounds, 8);
 
-  // Spring animations with centered positioning
-  const indicatorLineSpring = useSpring({
-    transform: `translateX(${indicatorPosition.x}px)`,
-    width: indicatorPosition.width,
+  // Unified spring animation for all navbar elements
+  const navbarAnimation = useSpring({
+    // Indicator line position
+    indicatorX: indicatorPosition.x,
+    indicatorWidth: indicatorPosition.width,
+    // Button background position
+    backgroundX: activeButtonBounds.x,
+    backgroundWidth: activeButtonBounds.width,
+    // Glow effect position  
+    glowX: glowPosition.x,
+    glowWidth: glowPosition.width,
+    // Common opacity
     opacity: isInitialized ? 1 : 0,
     config: {
       tension: 300,
       friction: 30,
-    },
-  });
-
-  const buttonBackgroundSpring = useSpring({
-    transform: `translateX(${activeButtonBounds.x}px)`,
-    width: activeButtonBounds.width,
-    opacity: isInitialized ? 1 : 0,
-    config: {
-      tension: 300,
-      friction: 30,
-    },
-  });
-
-  const glowSpring = useSpring({
-    transform: `translateX(${glowPosition.x}px)`,
-    width: glowPosition.width,
-    opacity: isInitialized ? 1 : 0,
-    config: {
-      tension: 250,
-      friction: 35,
     },
   });
 
@@ -183,9 +171,21 @@ export function useNavbar({ items, activeItem, onItemChange }: UseNavbarOptions)
     // Event handlers
     handleKeyDown,
     
-    // Animations
-    indicatorLineSpring,
-    buttonBackgroundSpring,
-    glowSpring,
+    // Animations - derived from unified spring
+    indicatorLineSpring: {
+      transform: navbarAnimation.indicatorX.to(x => `translateX(${x}px)`),
+      width: navbarAnimation.indicatorWidth,
+      opacity: navbarAnimation.opacity,
+    },
+    buttonBackgroundSpring: {
+      transform: navbarAnimation.backgroundX.to(x => `translateX(${x}px)`),
+      width: navbarAnimation.backgroundWidth,
+      opacity: navbarAnimation.opacity,
+    },
+    glowSpring: {
+      transform: navbarAnimation.glowX.to(x => `translateX(${x}px)`),
+      width: navbarAnimation.glowWidth,
+      opacity: navbarAnimation.opacity,
+    },
   };
 } 
