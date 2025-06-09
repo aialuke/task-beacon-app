@@ -1,151 +1,93 @@
-
 import { useCallback } from 'react';
-import { z } from 'zod';
 import { toast } from 'sonner';
 import {
-  taskFormSchema,
-  createTaskSchema,
-  updateTaskSchema,
-  taskTitleSchema,
-  taskDescriptionSchema,
-  validateTaskForm,
-  validateTaskCreation,
-  validateTaskUpdate,
-  transformFormToApiData,
-} from '@/schemas';
+  useUnifiedValidation,
+  validateUnifiedTask,
+  type UnifiedValidationResult
+} from '@/lib/validation/unified-validation';
 
-interface FormDataWithExtras {
+interface TaskFormData {
   title: string;
   description?: string;
-  dueDate?: string;
   url?: string;
+  dueDate?: string;
   assigneeId?: string;
   priority?: string;
   photoUrl?: string;
-  urlLink?: string;
   parentTaskId?: string;
 }
 
 /**
- * Enhanced task form validation hook - Phase 2
+ * Simplified Task Form Validation Hook - Phase 1 Consolidation
  * 
- * Now uses centralized Zod schemas from Phase 1 implementation
+ * Uses unified validation system to replace scattered validation patterns.
  */
 export function useTaskFormValidation() {
+  const { validateTaskTitle, validateTaskDescription, validateUrl, validateField } = useUnifiedValidation();
+
   /**
-   * Validate complete task form data with enhanced error handling
+   * Validate complete task form data
    */
   const validateTaskFormData = useCallback(
-    (data: unknown): { isValid: boolean; errors: Record<string, string>; data?: unknown } => {
-      const result = validateTaskForm(data);
+    (data: unknown): { isValid: boolean; errors: Record<string, string>; data?: TaskFormData } => {
+      const result = validateUnifiedTask(data);
       
-      if (result.success) {
-        return { isValid: true, errors: {}, data: result.data };
+      if (result.isValid && result.data) {
+        return { isValid: true, errors: {}, data: result.data as TaskFormData };
       }
       
       const errors: Record<string, string> = {};
-      result.error.errors.forEach((err) => {
-        const field = err.path.join('.');
-        errors[field] = err.message;
-      });
+      if (result.fieldErrors) {
+        Object.assign(errors, result.fieldErrors);
+      }
       
-      console.log('Form validation errors:', errors);
       return { isValid: false, errors };
     },
     []
   );
 
   /**
-   * Validate data for creating a task with enhanced error reporting
+   * Validate data for creating a task
    */
   const validateCreateTaskData = useCallback(
-    (data: unknown): { isValid: boolean; errors: Record<string, string>; data?: any } => {
-      const result = validateTaskCreation(data);
-      
-      if (result.success) {
-        return { isValid: true, errors: {}, data: result.data };
-      }
-      
-      const errors: Record<string, string> = {};
-      result.error.errors.forEach((err) => {
-        const field = err.path.join('.');
-        errors[field] = err.message;
-      });
-      
-      console.log('Create task validation errors:', errors);
-      return { isValid: false, errors };
+    (data: unknown): { isValid: boolean; errors: Record<string, string>; data?: TaskFormData } => {
+      return validateTaskFormData(data);
     },
-    []
+    [validateTaskFormData]
   );
 
   /**
    * Validate data for updating a task
    */
   const validateUpdateTaskData = useCallback(
-    (data: unknown): { isValid: boolean; errors: Record<string, string>; data?: any } => {
-      const result = validateTaskUpdate(data);
-      
-      if (result.success) {
-        return { isValid: true, errors: {}, data: result.data };
-      }
-      
-      const errors: Record<string, string> = {};
-      result.error.errors.forEach((err) => {
-        const field = err.path.join('.');
-        errors[field] = err.message;
-      });
-      
-      return { isValid: false, errors };
+    (data: unknown): { isValid: boolean; errors: Record<string, string>; data?: TaskFormData } => {
+      return validateTaskFormData(data);
     },
-    []
+    [validateTaskFormData]
   );
 
   /**
-   * Validate individual fields with enhanced error handling
+   * Validate individual fields
    */
-  const validateField = useCallback(
+  const validateFormField = useCallback(
     (fieldName: string, value: unknown): { isValid: boolean; error?: string } => {
-      let result: z.SafeParseReturnType<unknown, any>;
-      
-      switch (fieldName) {
-        case 'title':
-          result = taskTitleSchema.safeParse(value);
-          break;
-        case 'description':
-          result = taskDescriptionSchema.safeParse(value);
-          break;
-        default:
-          // For other fields, use the form schema
-          const fieldSchema = taskFormSchema.shape[fieldName as keyof typeof taskFormSchema.shape];
-          if (fieldSchema) {
-            result = fieldSchema.safeParse(value);
-          } else {
-            return { isValid: true };
-          }
-      }
-      
-      if (!result.success) {
-        console.log(`Field '${fieldName}' validation failed:`, result.error.errors[0]?.message);
-      }
+      const result = validateField(fieldName, value);
       
       return {
-        isValid: result.success,
-        error: result.success ? undefined : result.error.errors[0]?.message,
+        isValid: result.isValid,
+        error: result.isValid ? undefined : result.errors[0],
       };
     },
-    []
+    [validateField]
   );
 
   /**
    * Validate title with character limit
    */
   const validateTitle = useCallback((value: string): boolean => {
-    const result = taskTitleSchema.safeParse(value);
-    if (!result.success) {
-      console.log('Title validation failed:', result.error.errors[0]?.message);
-    }
-    return result.success;
-  }, []);
+    const result = validateTaskTitle(value);
+    return result.isValid;
+  }, [validateTaskTitle]);
 
   /**
    * Create a title setter with validation and character limit enforcement
@@ -160,7 +102,7 @@ export function useTaskFormValidation() {
   }, []);
 
   /**
-   * Enhanced validation error display with better UX
+   * Show validation errors with better UX
    */
   const showValidationErrors = useCallback((errors: Record<string, string>) => {
     const errorEntries = Object.entries(errors);
@@ -178,17 +120,12 @@ export function useTaskFormValidation() {
         description: `${errorEntries.length} validation errors found. Please check all fields.`,
       });
     }
-    
-    // Log all errors for debugging
-    console.log('All validation errors:', errors);
   }, []);
 
   /**
-   * Enhanced task data preparation with validation
+   * Prepare task data with validation
    */
-  const prepareTaskData = useCallback((formData: FormDataWithExtras): unknown => {
-    console.log('Preparing task data:', formData);
-    
+  const prepareTaskData = useCallback((formData: TaskFormData): TaskFormData | null => {
     const validation = validateCreateTaskData(formData);
     
     if (!validation.isValid) {
@@ -196,45 +133,17 @@ export function useTaskFormValidation() {
       return null;
     }
     
-    // Use the new transform utility from centralized schemas
-    const transformedData = transformFormToApiData({
-      title: formData.title,
-      description: formData.description || '',
-      priority: (formData.priority as any) || 'medium',
-      dueDate: formData.dueDate || '',
-      url: formData.url || '',
-      assigneeId: formData.assigneeId || '',
-    });
-    
-    // Add additional fields not handled by transform
-    const taskData = {
-      ...transformedData,
-      photo_url: formData.photoUrl || undefined,
-      parent_task_id: formData.parentTaskId || undefined,
-    };
-    
-    console.log('Prepared task data for API:', taskData);
-    return taskData;
+    return validation.data || null;
   }, [validateCreateTaskData, showValidationErrors]);
 
   return {
-    // Updated function names for clarity
-    validateTaskForm: validateTaskFormData,
-    validateCreateTask: validateCreateTaskData,
-    validateUpdateTask: validateUpdateTaskData,
-    validateField,
+    validateTaskFormData,
+    validateCreateTaskData,
+    validateUpdateTaskData,
+    validateField: validateFormField,
     validateTitle,
-    
-    // Utility functions
     createTitleSetter,
     showValidationErrors,
     prepareTaskData,
-    
-    // Re-export schema types for convenience
-    schemas: {
-      taskFormSchema,
-      createTaskSchema,
-      updateTaskSchema,
-    },
   };
 }

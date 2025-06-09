@@ -1,6 +1,6 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { AuthService } from './auth.service';
+import { AuthService } from './AuthService';
 import { supabase } from '@/integrations/supabase/client';
 import type { User, Session, AuthError } from '@supabase/supabase-js';
 

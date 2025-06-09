@@ -1,21 +1,17 @@
 
 import { useState } from 'react';
+import { useImageLoadingState } from '@/hooks/core';
 
 export function useImagePreview() {
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [imageError, setImageError] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
-
-  const handleImageLoad = () => {
-    setImageLoaded(true);
-    setImageError(false);
-  };
-
-  const handleImageError = () => {
-    setImageError(true);
-    setImageLoaded(false);
-  };
+  const { 
+    imageLoaded, 
+    imageError, 
+    handleImageLoad, 
+    handleImageError, 
+    resetImageState 
+  } = useImageLoadingState();
 
   const openPreview = (imageUrl: string) => {
     setPreviewImageUrl(imageUrl);
@@ -28,8 +24,7 @@ export function useImagePreview() {
   };
 
   const resetState = () => {
-    setImageLoaded(false);
-    setImageError(false);
+    resetImageState();
     setIsPreviewOpen(false);
     setPreviewImageUrl(null);
   };

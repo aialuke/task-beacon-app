@@ -6,7 +6,7 @@
  */
 
 import { apiRequest } from './error-handling';
-import { AuthService } from './auth.service';
+import { AuthService } from './AuthService';
 import { supabase } from '@/integrations/supabase/client';
 import type { Database } from '@/integrations/supabase/types';
 

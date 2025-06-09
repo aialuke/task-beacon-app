@@ -1,7 +1,8 @@
 
-import { useState, memo } from 'react';
+import { memo } from 'react';
 import { cn } from '@/lib/utils';
 import { OptimizedImage } from './OptimizedImage';
+import { useImageLoadingState } from '@/hooks/core';
 
 interface LazyImageProps {
   src: string;
@@ -30,18 +31,20 @@ export const LazyImage = memo(function LazyImage({
   errorFallback,
   priority = false,
 }: LazyImageProps) {
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [imageError, setImageError] = useState(false);
+  const { 
+    imageLoaded, 
+    imageError, 
+    handleImageLoad: baseHandleImageLoad, 
+    handleImageError: baseHandleImageError 
+  } = useImageLoadingState();
 
   const handleImageLoad = () => {
-    setImageLoaded(true);
-    setImageError(false);
+    baseHandleImageLoad();
     onLoad?.();
   };
 
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
-    setImageError(true);
-    setImageLoaded(false);
+    baseHandleImageError();
     onError?.(e);
   };
 

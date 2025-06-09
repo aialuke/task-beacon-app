@@ -1,14 +1,13 @@
 
 import { useState, useRef, useCallback } from 'react';
-import { AuthService } from '@/lib/api';
-import { 
-  validateSignIn, 
-  validateSignUp, 
-  emailSchema, 
-  passwordSchema, 
-  userNameSchema 
-} from '@/schemas';
+import { AuthService } from '@/lib/api/AuthService';
 import { useErrorHandler } from '@/hooks/core';
+import { useSubmissionState } from '@/hooks/core';
+import { 
+  useUnifiedValidation,
+  validateUnifiedSignIn,
+  validateUnifiedSignUp
+} from '@/lib/validation/unified-validation';
 
 type AuthMode = 'signin' | 'signup';
 
@@ -53,7 +52,6 @@ export function useAuthFormState(): UseAuthFormStateReturn {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{
     email?: string;
     password?: string;
@@ -63,25 +61,27 @@ export function useAuthFormState(): UseAuthFormStateReturn {
   const nameInputRef = useRef<HTMLInputElement>(null);
   const emailInputRef = useRef<HTMLInputElement>(null);
   const { handleError } = useErrorHandler({ showToast: false });
+  const { isSubmitting, startSubmitting, stopSubmitting } = useSubmissionState();
+  const { validateEmail: validateEmailUnified, validatePassword: validatePasswordUnified, validateUserName } = useUnifiedValidation();
 
-  // Using standard useCallback for validation functions
+  // Using unified validation functions
   const validateEmail = useCallback((value: string) => {
     if (!value) return 'Email is required';
-    const result = emailSchema.safeParse(value);
-    return result.success ? '' : result.error.errors[0]?.message || 'Invalid email';
-  }, []);
+    const result = validateEmailUnified(value);
+    return result.isValid ? '' : result.errors[0] || 'Invalid email';
+  }, [validateEmailUnified]);
 
   const validatePassword = useCallback((value: string) => {
     if (!value) return 'Password is required';
-    const result = passwordSchema.safeParse(value);
-    return result.success ? '' : result.error.errors[0]?.message || 'Invalid password';
-  }, []);
+    const result = validatePasswordUnified(value);
+    return result.isValid ? '' : result.errors[0] || 'Invalid password';
+  }, [validatePasswordUnified]);
 
   const validateName = useCallback((value: string) => {
     if (!value) return 'Name is required';
-    const result = userNameSchema.safeParse(value);
-    return result.success ? '' : result.error.errors[0]?.message || 'Invalid name';
-  }, []);
+    const result = validateUserName(value);
+    return result.isValid ? '' : result.errors[0] || 'Invalid name';
+  }, [validateUserName]);
 
   const validateForm = useCallback(() => {
     const emailError = validateEmail(email);
@@ -141,7 +141,7 @@ export function useAuthFormState(): UseAuthFormStateReturn {
       return;
     }
 
-    setLoading(true);
+    startSubmitting();
     try {
       // Clean up existing state before any auth operation
       cleanupAuthState();
@@ -154,9 +154,9 @@ export function useAuthFormState(): UseAuthFormStateReturn {
       }
 
       if (mode === 'signin') {
-        // Validate with centralized schema
-        const validationResult = validateSignIn({ email, password });
-        if (!validationResult.success) {
+        // Validate with unified schema
+        const validationResult = validateUnifiedSignIn({ email, password });
+        if (!validationResult.isValid) {
           throw new Error('Invalid sign-in data');
         }
 
@@ -169,9 +169,9 @@ export function useAuthFormState(): UseAuthFormStateReturn {
           window.location.href = '/';
         }, 1000);
       } else {
-        // Validate with centralized schema
-        const validationResult = validateSignUp({ email, password, name });
-        if (!validationResult.success) {
+        // Validate with unified schema
+        const validationResult = validateUnifiedSignUp({ email, password, name });
+        if (!validationResult.isValid) {
           throw new Error('Invalid sign-up data');
         }
 
@@ -213,7 +213,7 @@ export function useAuthFormState(): UseAuthFormStateReturn {
         setErrors({ email: 'An unexpected error occurred' });
       }
     } finally {
-      setLoading(false);
+      stopSubmitting();
     }
   }, [mode, email, password, name, handleError, validateForm, cleanupAuthState]);
 
@@ -232,7 +232,7 @@ export function useAuthFormState(): UseAuthFormStateReturn {
     password,
     name,
     showPassword,
-    loading,
+    loading: isSubmitting,
     errors,
     nameInputRef,
     emailInputRef,

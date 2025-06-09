@@ -27,7 +27,7 @@ export type {
 } from '@/types/database';
 
 // === USED SERVICES ===
-export { AuthService } from './auth.service';
+export { AuthService } from './AuthService';
 
 // === NOTE: Most other API re-exports removed as unused ===
 // Individual services still available for direct import

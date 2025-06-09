@@ -1,8 +1,9 @@
 
 import { ImageUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import type { ProcessingResult } from '@/lib/utils/image/types';
+import { useImageLoadingState } from '@/hooks/core';
 
 interface SimplePhotoUploadProps {
   photoPreview: string | null;
@@ -24,8 +25,7 @@ export default function SimplePhotoUpload({
   loading = false,
 }: SimplePhotoUploadProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [imageError, setImageError] = useState(false);
+  const { imageLoaded, imageError, handleImageLoad, handleImageError } = useImageLoadingState();
 
   const handleButtonClick = () => {
     if (photoPreview && onSubmit) {
@@ -33,16 +33,6 @@ export default function SimplePhotoUpload({
     } else {
       fileInputRef.current?.click();
     }
-  };
-
-  const handleImageLoad = () => {
-    setImageLoaded(true);
-    setImageError(false);
-  };
-
-  const handleImageError = () => {
-    setImageError(true);
-    setImageLoaded(false);
   };
 
   const fileName = processingResult?.metadata?.name || 'Uploaded image';

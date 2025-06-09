@@ -8,7 +8,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
-import { AuthService } from '@/lib/api/auth.service';
+import { AuthService } from '@/lib/api/AuthService';
 import type { ApiError } from '@/types/shared';
 import { cleanupAuthState } from '@/lib/auth-utils';
 

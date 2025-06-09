@@ -8,7 +8,7 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import { apiRequest } from '@/lib/api/error-handling';
-import { AuthService } from '@/lib/api/auth.service';
+import { AuthService } from '@/lib/api/AuthService';
 import type { Task, TaskCreateData, TaskUpdateData } from '@/types';
 
 // === TASK CRUD OPERATIONS ===
