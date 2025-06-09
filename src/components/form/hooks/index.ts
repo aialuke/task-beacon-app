@@ -1,16 +1,12 @@
 
 /**
- * Form Hooks - Consolidated Export Organization
+ * Form Hooks - Consolidated Exports
  * 
- * Phase 3: Photo Upload Consolidation - Updated exports
+ * Simplified exports after hook consolidation
  */
 
-// === UNIFIED PHOTO UPLOAD SYSTEM ===
+// === UNIFIED PHOTO UPLOAD ===
 export { useUnifiedPhotoUpload } from './useUnifiedPhotoUpload';
 
 // === TASK-SPECIFIC HOOKS ===
 export { useTaskPhotoUpload } from './useTaskPhotoUpload';
-
-// === LEGACY HOOKS (Deprecated - Use useUnifiedPhotoUpload) ===
-export { usePhotoState } from './usePhotoState';
-export { usePhotoProcessing } from './usePhotoProcessing';

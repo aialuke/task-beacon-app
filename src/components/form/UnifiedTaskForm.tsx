@@ -42,10 +42,9 @@ interface UnifiedTaskFormProps {
 }
 
 /**
- * Unified Task Form Component - Phase 1 Consolidation
+ * Unified Task Form Component - Consolidated Form Interface
  * 
- * Combines BaseTaskForm and BaseTaskFormGeneric into single component.
- * Eliminates duplication while maintaining all functionality.
+ * Single component for all task form variations with consistent interface.
  */
 export function UnifiedTaskForm({
   // Form state
@@ -115,6 +114,7 @@ export function UnifiedTaskForm({
           icon={<FileText className="h-4 w-4" />}
           maxLength={22}
           required
+          disabled={disabled}
         />
 
         {/* Description Field */}

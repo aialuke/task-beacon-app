@@ -1,40 +1,92 @@
 
 import { useTaskForm } from './useTaskForm';
-import { useTaskFormBase } from './useTaskFormBase';
+import { useUnifiedPhotoUpload } from '@/components/form/hooks/useUnifiedPhotoUpload';
+import { useTaskMutations } from './useTaskMutations';
+import { useTaskFormValidation } from './useTaskFormValidation';
+import { toast } from 'sonner';
 
 interface UseCreateTaskOptions {
   onClose?: () => void;
 }
 
 /**
- * Create task hook - Phase 2.4.6.2d Streamlined
+ * Create task hook - Simplified and consolidated
  * 
- * Combines form state management with photo upload and task creation.
- * Uses consolidated hook architecture without redundant layers.
+ * Combines form state, photo upload, and task creation without redundant layers.
  */
 export function useCreateTask({ onClose }: UseCreateTaskOptions = {}) {
   // Form state management
   const taskForm = useTaskForm({ onClose });
   
-  // Photo upload and task creation coordination
-  const formBase = useTaskFormBase({ onClose });
+  // Photo upload functionality
+  const photoUpload = useUnifiedPhotoUpload({
+    processingOptions: {
+      maxWidth: 1920,
+      maxHeight: 1080,
+      quality: 0.85,
+      format: 'auto' as const,
+    },
+  });
+
+  // Task mutations
+  const { createTaskCallback } = useTaskMutations();
+  const validation = useTaskFormValidation();
 
   // Integrated submit handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate form using taskForm - validateForm returns boolean
+    // Validate form
     const isValidForm = taskForm.validateForm();
     if (!isValidForm) {
       return;
     }
 
-    // Create task with photo integration
-    await formBase.createTaskWithPhoto(taskForm.values);
+    taskForm.setIsSubmitting(true);
+    
+    try {
+      // Handle photo upload
+      const photoUrl = await photoUpload.uploadPhoto();
+
+      // Prepare task data
+      const rawTaskData = {
+        title: taskForm.title.trim(),
+        description: taskForm.description.trim() || undefined,
+        dueDate: taskForm.dueDate,
+        url: taskForm.url.trim(),
+        assigneeId: taskForm.assigneeId,
+        priority: 'medium' as const,
+        photoUrl: photoUrl ?? undefined,
+        urlLink: taskForm.url.trim() || undefined,
+      };
+
+      const taskData = validation.prepareTaskData(rawTaskData);
+      if (!taskData) {
+        toast.error('Validation failed');
+        return;
+      }
+
+      // Create task
+      const result = await createTaskCallback(taskData as any);
+
+      if (result.success) {
+        toast.success('Task created successfully');
+        photoUpload.resetPhoto();
+        onClose?.();
+      } else {
+        toast.error(result.error || 'Failed to create task');
+      }
+    } catch (error) {
+      console.error('Task creation error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to create task';
+      toast.error(errorMessage);
+    } finally {
+      taskForm.setIsSubmitting(false);
+    }
   };
 
   return {
-    // Form state from taskForm
+    // Form state
     title: taskForm.title,
     setTitle: taskForm.setTitle,
     description: taskForm.description,
@@ -49,19 +101,17 @@ export function useCreateTask({ onClose }: UseCreateTaskOptions = {}) {
     // Form validation and state
     isValid: taskForm.isValid,
     errors: taskForm.errors,
+    loading: taskForm.isSubmitting || photoUpload.loading,
     
-    // Photo upload from formBase
-    photoPreview: formBase.photoPreview,
-    handlePhotoChange: formBase.handlePhotoChange,
-    handlePhotoRemove: formBase.handlePhotoRemove,
-    photoLoading: formBase.photoLoading,
-    processingResult: formBase.processingResult,
+    // Photo upload
+    photoPreview: photoUpload.photoPreview,
+    handlePhotoChange: photoUpload.handlePhotoChange,
+    handlePhotoRemove: photoUpload.handlePhotoRemove,
+    photoLoading: photoUpload.loading,
+    processingResult: photoUpload.processingResult,
     
-    // Combined loading state and actions
-    loading: formBase.loading,
+    // Actions
     handleSubmit,
-    
-    // Form utilities
     values: taskForm.values,
   };
 }

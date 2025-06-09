@@ -2,14 +2,11 @@
 /**
  * Form Components - Consolidated Export Organization
  * 
- * Phase 1: Form System Consolidation - Updated exports
+ * Simplified exports after form system consolidation
  */
 
 // === UNIFIED FORM COMPONENT ===
 export { UnifiedTaskForm } from './UnifiedTaskForm';
-
-// === LEGACY COMPONENTS (Deprecated - Use UnifiedTaskForm) ===
-export { BaseTaskForm } from './BaseTaskForm';
 
 // === QUICK ACTION BAR COMPONENTS ===
 export { QuickActionBar } from './QuickActionBar';

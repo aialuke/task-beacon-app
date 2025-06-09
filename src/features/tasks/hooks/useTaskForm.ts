@@ -21,9 +21,9 @@ export interface TaskFormValues {
 }
 
 /**
- * Task form hook with validation and state management
+ * Task form hook - Simplified state management
  * 
- * Rewritten to use standard React hooks instead of complex unified form state
+ * Core form state management without redundant abstractions
  */
 export function useTaskForm(options: UseTaskFormOptions = {}) {
   const {
@@ -36,7 +36,7 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     onClose,
   } = options;
 
-  // Form field states using standard useState
+  // Form field states
   const [title, setTitle] = useState(initialTitle);
   const [description, setDescription] = useState(initialDescription);
   const [dueDate, setDueDate] = useState(initialDueDate ?? '');
@@ -120,7 +120,7 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     if (onClose) onClose();
   }, [initialTitle, initialDescription, initialDueDate, initialUrl, initialAssigneeId, onClose]);
 
-  // Field value setters
+  // Field value setters with error clearing
   const setFieldValue = useCallback((field: keyof TaskFormValues, value: string) => {
     switch (field) {
       case 'title':
@@ -171,6 +171,7 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     isValid,
     errors,
     isSubmitting,
+    setIsSubmitting,
 
     // Form actions
     handleSubmit,
