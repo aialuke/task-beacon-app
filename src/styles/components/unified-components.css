@@ -1,11 +1,4 @@
 
 @layer components {
-  .loading-unified-spinner {
-    width: 20px;
-    height: 20px;
-    border: 2px solid currentcolor;
-    border-top-color: transparent;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-  }
+  /* Spinner implementation moved to optimized-loading.css for better performance */
 }

@@ -1,14 +1,10 @@
-/* Import CSS variables and tokens FIRST */
+/* === CSS LAYER ARCHITECTURE === */
+/* Establish systematic layer order for predictable cascade */
+@layer reset, tokens, base, utilities, components, overrides;
+
+/* Import consolidated architecture and base styles */
 @import "./styles/architecture/css-variables.css";
-@import "./styles/tokens/colors.css";
-@import "./styles/tokens/design-tokens.css";
 @import "./styles/base.css";
-@import "./styles/components/unified-components.css";
-@import "./styles/components/task-cards.css";
-@import "./styles/components/virtualized-tasks.css";
-@import "./styles/components/avatars.css";
-@import "./styles/components/timer.css";
-@import "./styles/utilities.css";
 
 /* Tailwind directives */
 @tailwind base;
@@ -42,46 +38,25 @@
   }
 }
 
-/* Custom styles */
-:root {
-  color-scheme: dark;
-}
-svg {
-  fill: none;
-  transition: stroke 0.2s ease, fill 0.2s ease;
-}
-.backdrop-blur-fix {
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  transform: translateZ(0);
-}
-.gpu-accelerated {
-  transform: translateZ(0);
-  will-change: transform;
-}
-.optimize-animations {
-  animation-fill-mode: both;
-  animation-timing-function: ease-out;
-}
-.loading-spinner {
-  width: 20px;
-  height: 20px;
-  border: 2px solid currentcolor;
-  border-top-color: transparent;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
+/* Application overrides */
+@layer overrides {
+  :root {
+    color-scheme: dark;
+  }
+  svg {
+    fill: none;
+    transition: stroke var(--duration-normal) var(--ease-out), fill var(--duration-normal) var(--ease-out);
+  }
+  .backdrop-blur-fix {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transform: translateZ(0);
+  }
+
+  .optimize-animations {
+    animation-fill-mode: both;
+    animation-timing-function: ease-out;
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
+
+

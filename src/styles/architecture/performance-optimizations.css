@@ -16,15 +16,7 @@
     scroll-behavior: smooth;
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .scroll-smooth {
-      scroll-behavior: auto;
-    }
-
-    .gpu-accelerated {
-      transform: none;
-    }
-  }
+  /* Reduced motion handled by accessibility.css */
 
   @media (prefers-contrast: more) {
     .optimize-rendering {

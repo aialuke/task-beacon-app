@@ -19,14 +19,41 @@
   }
 }
 
-/* Respect user's motion preferences */
+/* === STANDARDIZED REDUCED MOTION === */
+/* Comprehensive approach respecting user's motion preferences */
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms;
-    animation-iteration-count: 1;
-    transition-duration: 0.01ms;
-    scroll-behavior: auto;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Disable transforms for interactive elements */
+  .interactive:hover,
+  .timer-container:hover,
+  .gpu-accelerated {
+    transform: none !important;
+  }
+
+  /* Disable specific animations */
+  .loading-unified-spinner,
+  .skeleton-optimized,
+  .timer-container[data-status="overdue"] {
+    animation: none !important;
+  }
+
+  /* Disable smooth scrolling */
+  .scroll-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  /* Preserve essential transitions with minimal duration */
+  .timer-progress {
+    transition: stroke-dashoffset 0.01ms linear !important;
   }
 }
 

@@ -125,11 +125,5 @@
     backface-visibility: var(--backface-visibility);
   }
 
-  .will-change-transform {
-    will-change: transform;
-  }
-
-  .will-change-auto {
-    will-change: auto;
-  }
+  
 }

@@ -1,4 +1,3 @@
-
 /* src/styles/utilities.css - Clean unified utilities */
 @layer utilities {
   /* ===== UNIFIED UTILITIES ===== */
@@ -6,25 +5,80 @@
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   }
 
-  .shadow-unified-sm {
+  .shadow-sm {
     box-shadow: var(--shadow-sm);
   }
 
-  .shadow-unified-md {
+  .shadow-md {
     box-shadow: var(--shadow-md);
   }
 
-  .shadow-unified-lg {
+  .shadow-lg {
     box-shadow: var(--shadow-lg);
   }
 
-  .shadow-unified-focus {
+  .shadow-focus {
     box-shadow: var(--shadow-focus);
   }
 
+  /* ===== ANIMATION UTILITIES ===== */
+  .animate-smooth {
+    animation-timing-function: var(--ease-out);
+  }
 
+  .backface-hidden {
+    backface-visibility: var(--backface-visibility);
+  }
 
+  .transform-gpu {
+    transform: var(--transform-gpu);
+  }
 
+  /* ===== INTERACTIVE UTILITIES ===== */
+  .interactive {
+    transition: all var(--duration-normal) var(--ease-out);
+    cursor: pointer;
+  }
+
+  .interactive:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .interactive:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* ===== SCROLL UTILITIES ===== */
+  .scroll-smooth {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .scroll-area {
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted-foreground)) transparent;
+  }
+
+  .scroll-area::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scroll-area::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scroll-area::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground));
+    border-radius: var(--radius-full);
+  }
+
+  .scroll-area::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 80%);
+  }
 
   /* ===== RESPONSIVE UTILITIES ===== */
   @media (width <= 480px) {
@@ -87,24 +141,7 @@
   }
 
   /* ===== ACCESSIBILITY UTILITIES ===== */
-  @media (forced-colors: active) {
-    .timer-ring {
-      stroke: CanvasText;
-    }
-
-    button,
-    a[role='button'],
-    .btn-primary,
-    .btn-secondary {
-      border: 1px solid CanvasText;
-    }
-
-    svg {
-      forced-color-adjust: auto;
-    }
-  }
-
-
+  /* Forced colors handled by accessibility.css - no duplicates needed */
 
   /* ===== LAYOUT UTILITIES ===== */
   /* Use Tailwind classes in components instead of custom utilities */

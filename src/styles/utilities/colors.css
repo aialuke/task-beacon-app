@@ -101,12 +101,12 @@
 
   .hover-accent:hover {
     color: hsl(var(--accent-blue));
-    transition: color 0.2s ease-in-out;
+    transition: color var(--duration-normal) var(--ease-in-out);
   }
 
   .hover-primary:hover {
     color: hsl(var(--primary));
-    transition: color 0.2s ease-in-out;
+    transition: color var(--duration-normal) var(--ease-in-out);
   }
 
   /* Focus ring colors */
@@ -122,18 +122,4 @@
   }
 }
 
-/* CSS Variables for warning color fallback */
-
-:root {
-  --warning: 38 92% 50%; /* Orange/amber color */
-  --success: 152 76% 36%; /* Green color */
-  --accent-blue: 225 77% 60%; /* Blue color */
-  --accent-green: 152 76% 50%; /* Green color */
-}
-
-[data-theme='dark'] {
-  --warning: 38 92% 50%;
-  --success: 152 76% 50%;
-  --accent-blue: 225 77% 70%;
-  --accent-green: 152 76% 60%;
-}
+/* Color variables consolidated in tokens/colors.css */

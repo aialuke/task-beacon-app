@@ -1,6 +1,0 @@
----
-description: 
-globs: 
-alwaysApply: true
----
-When adding new features, build upon the existing architecture rather than introducing completely new paradigms. Identify extension points in the current design and leverage them for new functionality. Implement changes that align with the established patterns and principles of the codebase. Focus on backward compatibility to ensure existing features continue to work as expected. Document how new additions integrate with and extend the existing system.

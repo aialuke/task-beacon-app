@@ -45,6 +45,11 @@
   --surface-foreground: 240 10% 3.9%; /* Nearly black #0A0A0B */
   --brand-light: 225 77% 95%; /* Very light blue #F0F4FF */
 
+  /* Extended color palette - consolidated from utilities */
+  --warning: 38 92% 50%; /* Orange/amber color #F59E0B */
+  --accent-blue: 225 77% 60%; /* Blue color #4C6DE1 */
+  --accent-green: 152 76% 50%; /* Green color #10B981 */
+
   /* Task status colors - light mode */
   --status-pending: #f59e0b; /* Amber #F59E0B - 4.5:1 contrast */
   --status-overdue: #dc2626; /* Red #DC2626 - 4.5:1 contrast */
@@ -94,6 +99,11 @@
   --surface-foreground: 0 0% 100%; /* Pure white #FFFFFF */
   --brand-light: 225 77% 15%; /* Dark brand light #1A2332 */
 
+  /* Extended color palette - dark mode */
+  --warning: 38 92% 50%; /* Orange/amber color */
+  --accent-blue: 225 77% 70%; /* Brighter blue for dark mode */
+  --accent-green: 152 76% 60%; /* Brighter green for dark mode */
+
   /* Task status colors for dark mode - enhanced visibility */
   --status-pending: #fcd34d; /* Enhanced yellow #FCD34D */
   --status-overdue: #f87171; /* Softer red #F87171 */
@@ -129,6 +139,9 @@
   --success-foreground: 0 0% 98%;
   --accent-yellow: 51 100% 50%;
   --brand-light: 225 77% 95%;
+  --warning: 38 92% 50%;
+  --accent-blue: 225 77% 60%;
+  --accent-green: 152 76% 50%;
   --status-pending: #f59e0b;
   --status-overdue: #dc2626;
   --status-complete: #059669;

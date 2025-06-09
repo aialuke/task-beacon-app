@@ -8,6 +8,8 @@
 @layer components {
   /* === PERFORMANCE-OPTIMIZED SPINNER === */
   .loading-unified-spinner {
+    width: 1.25rem;
+    height: 1.25rem;
     border: 2px solid currentcolor;
     border-top-color: transparent;
     border-radius: 50%;
@@ -59,16 +61,7 @@
   }
   
   /* === REDUCED MOTION SUPPORT === */
-  @media (prefers-reduced-motion: reduce) {
-    .loading-unified-spinner {
-      animation: none;
-    }
-    
-    .skeleton-optimized {
-      animation: none;
-      background: hsl(var(--muted));
-    }
-  }
+  /* Handled by accessibility.css */
   
   /* === HIGH CONTRAST SUPPORT === */
   @media (prefers-contrast: high) {
