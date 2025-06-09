@@ -14,6 +14,12 @@ interface UserSearchModalProps {
   onChange: (value: string) => void;
 }
 
+/**
+ * User Search Modal - Phase 2.2 Simplified
+ * 
+ * Delegates all user state management to AutocompleteUserInput.
+ * No local state duplication.
+ */
 export function UserSearchModal({
   isOpen,
   onClose,
@@ -22,11 +28,9 @@ export function UserSearchModal({
 }: UserSearchModalProps) {
   const handleUserSelect = (selectedValue: string) => {
     onChange(selectedValue);
-    // Don't auto-close here - let the component handle the two-step process
   };
 
   const handleSubmit = () => {
-    // Only close modal when user actually submits (second Enter press)
     onClose();
   };
 

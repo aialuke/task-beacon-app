@@ -1,4 +1,3 @@
-
 /**
  * Standardized API Layer - Phase 3 Implementation
  * 
@@ -58,15 +57,21 @@ export function createErrorResponse<T = null>(error: ApiError): ApiResponse<T> {
  * Query key management utilities
  */
 export const QueryKeys = {
-  // Task-related query keys
+  // Task queries
   tasks: ['tasks'] as const,
   task: (id: string) => ['tasks', id] as const,
-  taskSubtasks: (parentId: string) => ['tasks', parentId, 'subtasks'] as const,
+  tasksByAssignee: (assigneeId: string) => ['tasks', 'assignee', assigneeId] as const,
+  tasksByStatus: (status: string) => ['tasks', 'status', status] as const,
   
-  // User-related query keys
+  // User queries - Enhanced for Phase 2.2
   users: ['users'] as const,
   user: (id: string) => ['users', id] as const,
-  userProfile: (id: string) => ['users', id, 'profile'] as const,
+  usersByRole: (role: string) => ['users', 'role', role] as const,
+  userSearch: (query: string) => ['users', 'search', query] as const,
+  
+  // Auth queries
+  currentUser: ['auth', 'current-user'] as const,
+  session: ['auth', 'session'] as const,
   
   // Utility for invalidating related queries
   invalidateTaskQueries: (queryClient: QueryClient) => {

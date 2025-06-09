@@ -31,7 +31,8 @@ export {
   QueryKeys, 
   transformApiError, 
   createSuccessResponse, 
-  createErrorResponse 
+  createErrorResponse,
+  createLoadingState,
 } from './standardized-api';
 
 // === SIMPLIFIED TASK OPERATIONS ===
@@ -45,13 +46,13 @@ export {
   updateTaskStatus,
 } from './tasks';
 
+// === USER OPERATIONS ===
+export { UserService } from './users.service';
+
 // === OTHER SERVICES ===
 export { AuthService } from './auth.service';
 export { StorageService } from './storage.service';
 export { DatabaseService } from './database.service';
-
-// === SPECIALIZED SERVICES ===
-export * from './users.service';
 export { PaginationService } from './pagination.service';
 
 // === CONSOLIDATED ERROR HANDLING ===
