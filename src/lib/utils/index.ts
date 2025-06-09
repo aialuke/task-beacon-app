@@ -24,7 +24,7 @@ export * from './date';
 export * from './format';
 
 // === VALIDATION UTILITIES ===
-export * from './validation';
+// NOTE: Validation utilities removed - use unified validation system directly
 
 // =====================================================
 // LAZY-LOADED UTILITIES (Loaded on demand)

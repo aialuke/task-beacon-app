@@ -30,11 +30,7 @@ function PerformanceOptimizations({ children }: { children: React.ReactNode }) {
     
     // Preload critical components on fast connections only
     if (connectionQuality === 'fast') {
-      setTimeout(() => {
-        import('@/features/tasks/components/lazy').catch(() => {
-          // Silently fail preloading
-        });
-      }, 2000);
+      // Note: Lazy component preloading removed - components are now directly imported
     }
   }, []);
 

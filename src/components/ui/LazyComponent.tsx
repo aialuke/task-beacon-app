@@ -29,23 +29,7 @@ export function createLazyComponent<T>(
 }
 
 // === BACKWARD COMPATIBILITY EXPORTS ===
-
-/**
- * @deprecated Use createLazyComponent with CardLoader fallback instead
- */
-export const LazyComponents = {
-  createLazyForm: function<T>(importFn: () => Promise<{ default: React.ComponentType<T> }>) {
-    return createLazyComponent(importFn, <CardLoader count={1} />);
-  },
-    
-  createLazyList: function<T>(importFn: () => Promise<{ default: React.ComponentType<T> }>) {
-    return createLazyComponent(importFn, <LoadingSpinner size="md" />);
-  },
-    
-  createLazyPage: function<T>(importFn: () => Promise<{ default: React.ComponentType<T> }>) {
-    return createLazyComponent(importFn, <PageLoader message="Loading..." />);
-  }
-};
+// LazyComponents API removed - no longer used anywhere in codebase
 
 // === COMMON LAZY COMPONENT PATTERNS ===
 
