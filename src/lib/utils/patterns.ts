@@ -4,11 +4,11 @@
 
 import { logger } from '@/lib/logger';
 
-export type AsyncFunc<T> = (...args: any[]) => Promise<T>;
+export type AsyncFunc<T> = (...args: unknown[]) => Promise<T>;
 
 export const executeAsync = async <T>(
   asyncFn: AsyncFunc<T>,
-  ...args: any[]
+  ...args: unknown[]
 ): Promise<T | null> => {
   try {
     const result = await asyncFn(...args);
@@ -21,14 +21,14 @@ export const executeAsync = async <T>(
 
 export const retryAsync = async <T>(
   asyncFn: () => Promise<T>,
-  maxRetries: number = 3,
-  delay: number = 1000
+  maxRetries = 3,
+  delay = 1000
 ): Promise<T> => {
   let attempt = 0;
   while (attempt < maxRetries) {
     try {
       return await asyncFn();
-    } catch (error) {
+    } catch (_error) {
       attempt++;
       logger.warn(`Attempt ${attempt} failed. Retrying in ${delay}ms...`);
       await new Promise((resolve) => setTimeout(resolve, delay));
@@ -51,9 +51,9 @@ export function createAsyncHandler<T = void>(
   };
 }
 
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: unknown[]) => unknown>(
   func: T,
-  wait: number = 300
+  wait = 300
 ): (...args: Parameters<T>) => void {
   let timeout: NodeJS.Timeout;
   
@@ -63,9 +63,9 @@ export function debounce<T extends (...args: any[]) => any>(
   };
 }
 
-export function throttle<T extends (...args: any[]) => any>(
+export function throttle<T extends (...args: unknown[]) => unknown>(
   func: T,
-  limit: number = 300
+  limit = 300
 ): (...args: Parameters<T>) => void {
   let inThrottle: boolean;
   

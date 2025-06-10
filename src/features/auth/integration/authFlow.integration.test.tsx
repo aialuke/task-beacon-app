@@ -1,15 +1,11 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { renderHook, act } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { waitFor, renderHook, act } from '@testing-library/react';
 import { ReactNode } from 'react';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
-// === INTERNAL UTILITIES ===
 import { useAuth, AuthProvider } from '@/contexts/AuthContext';
+import { AuthService } from '@/lib/api/AuthService';
 import { setupIntegrationTest } from '@/test/integration/setup';
-import { AuthService } from '@/lib/api';
-
-// === TYPES ===
 import type { AuthUser, Session, AuthResponse, ApiResponse } from '@/types';
 
 /**
@@ -98,13 +94,13 @@ describe('Auth Flow Integration Tests', () => {
 
     it('should handle sign in validation failures', async () => {
       // Act: Attempt sign in with invalid data
-      let error: unknown = null;
+      let _error: unknown = null;
       const { result } = renderHook(() => useAuth(), { wrapper });
       await act(async () => {
         try {
           await result.current.signIn('', '');
         } catch (e) {
-          error = e;
+          _error = e;
         }
       });
       // Assert: Sign in should fail validation

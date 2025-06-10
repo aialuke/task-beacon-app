@@ -5,13 +5,14 @@
  * Replaces the complex multi-hook architecture with a simpler approach.
  */
 
-import { useState, useEffect, useCallback } from 'react';
 import { User, Session } from '@supabase/supabase-js';
+import { useState, useEffect, useCallback } from 'react';
+
 import { supabase } from '@/integrations/supabase/client';
 import { AuthService } from '@/lib/api/AuthService';
-import type { ApiError } from '@/types/shared';
 import { cleanupAuthState } from '@/lib/auth-utils';
 import { logger } from '@/lib/logger';
+import type { ApiError } from '@/types/shared';
 
 export interface UseAuthReturn {
   user: User | null;

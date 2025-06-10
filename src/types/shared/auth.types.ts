@@ -7,8 +7,11 @@
 
 import type { User, Session } from '@supabase/supabase-js';
 
+import type { ApiError } from '@/types/api.types';
+
 // Re-export Supabase auth types for convenience
 export type { User, Session };
+export type { User as AuthUser } from '@supabase/supabase-js';
 
 // Authentication response types
 export interface AuthResponse {
@@ -43,7 +46,7 @@ export interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
-  error: Error | null;
+  error: ApiError | null;
   signOut: () => Promise<void>;
   refreshSession: () => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;

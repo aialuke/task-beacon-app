@@ -1,8 +1,10 @@
 
 import { memo } from 'react';
-import { cn } from '@/lib/utils';
-import { OptimizedImage } from './OptimizedImage';
+
 import { useImageLoadingState } from '@/hooks/core';
+import { cn } from '@/lib/utils';
+
+import { OptimizedImage } from './OptimizedImage';
 
 interface LazyImageProps {
   src: string;
@@ -57,8 +59,8 @@ export const LazyImage = memo(function LazyImage({
       {!imageLoaded && !imageError && (
         <div className="absolute inset-0">
           {placeholder ?? (
-            <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
-              <div className="h-4 w-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+              <div className="border-primary size-4 animate-spin rounded-full border-2 border-t-transparent" />
             </div>
           )}
         </div>
@@ -74,7 +76,7 @@ export const LazyImage = memo(function LazyImage({
         width={width}
         height={height}
         sizes={sizes}
-        className="w-full h-full object-cover"
+        className="size-full object-cover"
         priority={priority}
         onLoad={handleImageLoad}
         onError={handleImageError}

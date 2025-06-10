@@ -1,14 +1,15 @@
 
-import { useState, useRef } from 'react';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { Link, ArrowRight } from 'lucide-react';
+import { useState, useRef } from 'react';
+
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 interface UrlInputModalProps {
@@ -87,15 +88,15 @@ export function UrlInputModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="fixed top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 sm:max-w-md">
+      <DialogContent className="fixed left-1/2 top-[40%] -translate-x-1/2 -translate-y-1/2 sm:max-w-md">
         <VisuallyHidden>
           <DialogTitle>Enter URL</DialogTitle>
         </VisuallyHidden>
         <div className="space-y-4">
-          <div className="relative flex h-12 items-center p-2 rounded-2xl border border-border bg-background/60 backdrop-blur-sm hover:bg-background/70">
-            <Link className={cn('h-4 w-4 ml-1', getIconColor())} />
+          <div className="border-border bg-background/60 hover:bg-background/70 relative flex h-12 items-center rounded-2xl border p-2 backdrop-blur-sm">
+            <Link className={cn('ml-1 size-4', getIconColor())} />
 
-            <div className="flex-1 min-w-0 ml-3 flex items-center">
+            <div className="ml-3 flex min-w-0 flex-1 items-center">
               <Input
                 ref={inputRef}
                 type="text"
@@ -116,13 +117,13 @@ export function UrlInputModal({
               type="button"
               variant="ghost"
               size="sm"
-              className="ml-2 h-8 w-8 p-0 transition-colors"
+              className="ml-2 size-8 p-0 transition-colors"
               onClick={handleSubmit}
               disabled={!isValid}
             >
               <ArrowRight 
                 className={cn(
-                  "h-4 w-4 transition-colors",
+                  "size-4 transition-colors",
                   isValid ? "text-blue-500" : "text-muted-foreground"
                 )} 
               />

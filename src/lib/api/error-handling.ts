@@ -1,4 +1,3 @@
-
 /**
  * Consolidated API Error Handling - Phase 1 Consolidation
  * 
@@ -7,6 +6,7 @@
  */
 
 import { PostgrestError, AuthError } from '@supabase/supabase-js';
+
 import { logger } from '@/lib/logger';
 import type { ApiError } from '@/types/shared';
 
@@ -129,46 +129,38 @@ export const formatApiError = (error: unknown): ApiError => {
     }
     
     return {
-      name: 'PostgrestError',
       message: userMessage,
       code: pgError.code,
       details: safeStringify(pgError.details),
-      statusCode,
-      originalError: error,
+      status: statusCode,
     };
   }
 
   // Handle Supabase AuthError
   if (error instanceof AuthError) {
     return {
-      name: 'AuthError',
       message: error.message || 'Authentication failed',
       code: error.status?.toString(),
-      statusCode: error.status || 401,
-      originalError: error,
+      status: error.status || 401,
     };
   }
 
   // Handle JavaScript Error objects
   if (error instanceof Error) {
     return {
-      name: error.name,
       message: error.message,
-      originalError: error,
     };
   }
 
   // Handle string errors
   if (typeof error === 'string') {
     return {
-      name: 'StringError',
       message: error,
     };
   }
 
   // Handle unknown errors - safely convert to string for details
   return {
-    name: 'UnknownError',
     message: 'An unexpected error occurred',
     details: safeStringify(error),
   };
@@ -202,7 +194,7 @@ export function handleApiError(
     const logContext: Record<string, unknown> = {
       userMessage,
       errorCode: apiError.code || 'UNKNOWN',
-      statusCode: apiError.statusCode || 500,
+      statusCode: apiError.status || 500,
       errorDetails: safeStringify(apiError.details || 'No additional details'),
     };
     
@@ -249,9 +241,9 @@ export const apiRequest = async <T>(
     logger.debug(`API Request started: ${operation}`);
     
     const data = await requestFn();
-    const duration = Date.now() - startTime;
+    const _duration = Date.now() - startTime;
     
-    logger.debug(`API Request completed: ${operation} (${duration}ms)`);
+    logger.debug(`API Request completed: ${operation} (${_duration}ms)`);
     
     return {
       data,
@@ -259,7 +251,7 @@ export const apiRequest = async <T>(
       success: true,
     };
   } catch (error) {
-    const duration = Date.now() - startTime;
+    const _duration = Date.now() - startTime;
     const processedError = handleApiError(error, operation, {
       showToast: false,
       logToConsole: true,
@@ -269,11 +261,9 @@ export const apiRequest = async <T>(
     
     // Convert ProcessedError to ApiError format
     const apiError: ApiError = {
-      name: 'ApiRequestError',
       message: processedError.message,
       code: processedError.code,
       details: processedError.details,
-      originalError: processedError.originalError,
     };
     
     return {

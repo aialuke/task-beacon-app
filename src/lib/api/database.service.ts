@@ -5,9 +5,10 @@
  * Validation methods moved to consolidated validation module.
  */
 
-import { apiRequest } from './error-handling';
 import { supabase } from '@/integrations/supabase/client';
 import type { ApiResponse } from '@/types/shared';
+
+import { apiRequest } from './error-handling';
 
 /**
  * Database utilities for common operations leveraging new indexes

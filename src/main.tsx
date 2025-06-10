@@ -10,11 +10,12 @@ import React, { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
 // === COMPONENTS ===
+import { logger } from '@/lib/logger';
+
 import App from './App.tsx';
 import UnifiedErrorBoundary from './components/ui/UnifiedErrorBoundary';
 
 // === UTILITIES ===
-import { logger } from '@/lib/logger';
 
 // === STYLES ===
 import './index.css';

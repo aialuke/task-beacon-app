@@ -1,8 +1,11 @@
 
-import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import TaskDetailsContent from '../display/TaskDetailsContent';
+import { describe, it, expect } from 'vitest';
+
 import type { Task } from '@/types';
+
+import TaskDetailsContent from '../display/TaskDetailsContent';
+
 
 describe('TaskDetailsContent', () => {
   const mockTask: Task = {

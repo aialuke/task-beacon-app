@@ -1,5 +1,6 @@
 
 import { useState, useRef, useEffect, memo } from 'react';
+
 import { cn } from '@/lib/utils';
 
 interface OptimizedImageProps {
@@ -77,17 +78,17 @@ export const OptimizedImage = memo(function OptimizedImage({
     <div className={cn('relative overflow-hidden', className)} ref={imgRef}>
       {/* Placeholder/Blur */}
       {!isLoaded && !hasError && (
-        <div className="absolute inset-0 bg-gray-200 animate-pulse">
+        <div className="absolute inset-0 animate-pulse bg-gray-200">
           {blurDataURL && (
             <img
               src={blurDataURL}
               alt=""
-              className="w-full h-full object-cover filter blur-sm"
+              className="size-full object-cover blur-sm filter"
               aria-hidden="true"
             />
           )}
           {placeholder && !blurDataURL && (
-            <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-xs">
+            <div className="absolute inset-0 flex items-center justify-center text-xs text-gray-400">
               {placeholder}
             </div>
           )}
@@ -96,7 +97,7 @@ export const OptimizedImage = memo(function OptimizedImage({
 
       {/* Error State */}
       {hasError && (
-        <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
           <span className="text-xs text-gray-500">Failed to load image</span>
         </div>
       )}
@@ -112,7 +113,7 @@ export const OptimizedImage = memo(function OptimizedImage({
           className={cn(
             'transition-opacity duration-300',
             isLoaded ? 'opacity-100' : 'opacity-0',
-            'w-full h-full object-cover'
+            'size-full object-cover'
           )}
           loading={priority ? 'eager' : 'lazy'}
           decoding="async"

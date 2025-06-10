@@ -6,6 +6,7 @@
  */
 
 import { useState, useCallback } from 'react';
+
 import { logger } from '../logger';
 
 // ============================================================================
@@ -93,8 +94,8 @@ export function useAsyncOperation<T>(
  */
 export async function withRetry<T>(
   operation: () => Promise<T>,
-  retries: number = 3,
-  delay: number = 1000
+  retries = 3,
+  delay = 1000
 ): Promise<T> {
   let lastError: Error;
   
@@ -117,7 +118,7 @@ export async function withRetry<T>(
  * Execute multiple async operations in sequence
  */
 export async function executeInSequence<T>(
-  operations: Array<() => Promise<T>>
+  operations: (() => Promise<T>)[]
 ): Promise<T[]> {
   const results: T[] = [];
   
@@ -133,8 +134,8 @@ export async function executeInSequence<T>(
  * Execute multiple async operations with limited concurrency
  */
 export async function executeWithConcurrency<T>(
-  operations: Array<() => Promise<T>>,
-  concurrency: number = 3
+  operations: (() => Promise<T>)[],
+  concurrency = 3
 ): Promise<T[]> {
   const results: T[] = [];
   

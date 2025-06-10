@@ -1,9 +1,9 @@
 import { useCallback } from 'react';
 import { toast } from 'sonner';
+
 import {
   useUnifiedValidation,
   validateUnifiedTask,
-  type UnifiedValidationResult
 } from '@/lib/validation';
 
 interface TaskFormData {
@@ -23,7 +23,7 @@ interface TaskFormData {
  * Uses unified validation system to replace scattered validation patterns.
  */
 export function useTaskFormValidation() {
-  const { validateTaskTitle, validateTaskDescription, validateUrl, validateField } = useUnifiedValidation();
+  const { validateTaskTitle, validateTaskDescription: _validateTaskDescription, validateUrl: _validateUrl, validateField } = useUnifiedValidation();
 
   /**
    * Validate complete task form data

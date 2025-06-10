@@ -1,6 +1,6 @@
 
-import { UserService } from '@/lib/api/users.service';
 import { useEntityListQuery } from '@/hooks/core';
+import { UserService } from '@/lib/api/users.service';
 import type { User, UserQueryOptions } from '@/types';
 
 interface UseUsersQueryOptions extends UserQueryOptions {

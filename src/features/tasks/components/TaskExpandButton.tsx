@@ -1,4 +1,5 @@
 import { memo } from "react";
+
 import { Button } from "@/components/ui/button";
 
 interface TaskExpandButtonProps {
@@ -11,7 +12,7 @@ function TaskExpandButton({ isExpanded, onClick }: TaskExpandButtonProps) {
     <Button
       variant="ghost"
       size="icon"
-      className="h-8 w-8 shrink-0 hover:bg-accent hover:text-accent-foreground"
+      className="hover:bg-accent hover:text-accent-foreground size-8 shrink-0"
       onClick={onClick}
     >
       <svg
@@ -19,7 +20,7 @@ function TaskExpandButton({ isExpanded, onClick }: TaskExpandButtonProps) {
         height="16"
         viewBox="0 0 24 24"
         xmlns="http://www.w3.org/2000/svg"
-        className={`transform text-foreground transition-transform ${
+        className={`text-foreground transform transition-transform ${
           isExpanded ? "rotate-180" : ""
         }`}
       >

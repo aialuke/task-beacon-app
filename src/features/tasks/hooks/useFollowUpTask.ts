@@ -1,11 +1,12 @@
-
-import { useTaskForm } from './useTaskForm';
-import { useUnifiedPhotoUpload } from '@/components/form/hooks/useUnifiedPhotoUpload';
-import { useTaskMutations } from './useTaskMutations';
-import { useTaskFormValidation } from './useTaskFormValidation';
 import { toast } from 'sonner';
+
+import { useUnifiedPhotoUpload } from '@/components/form/hooks/useUnifiedPhotoUpload';
 import { logger } from '@/lib/logger';
 import type { Task } from '@/types';
+
+import { useTaskForm } from './useTaskForm';
+import { useTaskFormValidation } from './useTaskFormValidation';
+import { useTaskMutations } from './useTaskMutations';
 
 interface UseFollowUpTaskOptions {
   parentTask: Task;
@@ -74,7 +75,7 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskOptions)
       }
 
       // Create follow-up task
-      const result = await createTaskCallback(taskData as any);
+      const result = await createTaskCallback(taskData);
 
       if (result.success) {
         toast.success('Follow-up task created successfully');

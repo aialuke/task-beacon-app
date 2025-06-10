@@ -1,12 +1,15 @@
-
 import { Calendar1, ExternalLink } from "lucide-react";
-import { formatDate } from "@/lib/utils/shared";
-import { TaskImageGallery } from "./TaskImageGallery";
-import { ParentTaskReference } from "@/components/form/ParentTaskReference";
-import TaskActions from "../actions/TaskActions";
-import { getTaskStatus } from "../../utils/taskUiUtils";
 import { useNavigate } from "react-router-dom";
+
+import { ParentTaskReference } from "@/components/form/ParentTaskReference";
+import { formatDate } from "@/lib/utils/shared";
 import type { Task } from "@/types";
+
+import TaskActions from "../actions/TaskActions";
+
+import { TaskImageGallery } from "./TaskImageGallery";
+
+
 
 interface TaskDetailsContentProps {
   task: Task;
@@ -15,14 +18,13 @@ interface TaskDetailsContentProps {
 
 export default function TaskDetailsContent({ task, isExpanded = false }: TaskDetailsContentProps) {
   const navigate = useNavigate();
-  const status = getTaskStatus(task);
 
   return (
     <div className="space-y-4">
       {/* Task Description */}
       {task.description && (
         <div>
-          <p className="text-sm text-muted-foreground">{task.description}</p>
+          <p className="text-muted-foreground text-sm">{task.description}</p>
         </div>
       )}
 
@@ -34,8 +36,8 @@ export default function TaskDetailsContent({ task, isExpanded = false }: TaskDet
         <div className="space-y-3">
           {task.due_date && (
             <div className="flex items-center gap-3">
-              <Calendar1 className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm text-muted-foreground">
+              <Calendar1 className="text-muted-foreground size-4" />
+              <span className="text-muted-foreground text-sm">
                 {formatDate(task.due_date)}
               </span>
             </div>
@@ -43,12 +45,12 @@ export default function TaskDetailsContent({ task, isExpanded = false }: TaskDet
 
           {task.url_link && (
             <div className="flex items-center gap-2">
-              <ExternalLink className="h-4 w-4 text-primary" />
+              <ExternalLink className="text-primary size-4" />
               <a
                 href={task.url_link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1 text-sm text-primary hover:underline"
+                className="text-primary flex items-center gap-1 text-sm hover:underline"
               >
                 {task.url_link}
               </a>

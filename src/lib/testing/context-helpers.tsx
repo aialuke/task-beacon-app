@@ -1,25 +1,11 @@
-
-import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, RenderOptions, RenderResult } from '@testing-library/react';
+import React from 'react';
 
-/**
- * Creates a test query client with optimized settings for testing
- */
-export function createTestQueryClient(): QueryClient {
-  return new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-        staleTime: 0,
-        gcTime: 0,
-      },
-      mutations: {
-        retry: false,
-      },
-    },
-  });
-}
+import { createTestQueryClient } from './test-context-utils';
+
+// Re-export for convenience
+export { createTestQueryClient } from './test-context-utils';
 
 /**
  * Creates a wrapper component with providers for testing

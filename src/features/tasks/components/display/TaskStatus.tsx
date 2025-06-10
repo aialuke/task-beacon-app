@@ -1,7 +1,9 @@
 
 import { memo } from "react";
-import type { Task } from "@/types";
+
 import { getTaskStatus } from "@/features/tasks/utils/taskUiUtils";
+import type { Task } from "@/types";
+
 import CountdownTimer from "../CountdownTimer";
 
 interface TaskStatusProps {

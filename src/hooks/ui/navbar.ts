@@ -1,6 +1,7 @@
-import { useRef, useEffect, useState, useCallback } from 'react';
 import { useSpring } from '@react-spring/web';
 import { LucideIcon } from 'lucide-react';
+import { useRef, useEffect, useState, useCallback } from 'react';
+
 import {
   computeNavbarColors,
   setupThemeObserver,

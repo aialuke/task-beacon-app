@@ -1,5 +1,6 @@
 
 import { useRef, useEffect, forwardRef } from 'react';
+
 import { cn } from '@/lib/utils';
 
 interface FloatingInputProps {
@@ -48,12 +49,12 @@ const FloatingInput = forwardRef<HTMLInputElement, FloatingInputProps>(
           <label
             htmlFor={id}
             className={cn(
-              'pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm font-medium text-muted-foreground transition-opacity duration-200', // Added transition for smooth disappearance
+              'text-muted-foreground pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm font-medium transition-opacity duration-200', // Added transition for smooth disappearance
               error && 'text-destructive'
             )}
           >
             {label}
-            {required && <span className="ml-1 text-destructive">*</span>}
+            {required && <span className="text-destructive ml-1">*</span>}
           </label>
         )}
         <input
@@ -66,9 +67,9 @@ const FloatingInput = forwardRef<HTMLInputElement, FloatingInputProps>(
           disabled={disabled}
           required={required}
           className={cn(
-            'peer h-10 w-full rounded-xl border bg-input/20 px-3 py-2 outline-none transition-all duration-300', // Removed explicit border-border to use default
-            'focus:border-primary focus:bg-input/30 focus:ring-2 focus:ring-primary/20',
-            'focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2', // Added focus-visible styles
+            'bg-input/20 peer h-10 w-full rounded-xl border px-3 py-2 outline-none transition-all duration-300', // Removed explicit border-border to use default
+            'focus:border-primary focus:bg-input/30 focus:ring-primary/20 focus:ring-2',
+            'focus-visible:ring-primary focus-visible:ring-2 focus-visible:ring-offset-2', // Added focus-visible styles
             error
               ? 'border-destructive focus:border-destructive focus:ring-destructive/20 focus-visible:ring-destructive focus-visible:ring-offset-2'
               : 'hover:border-primary/50',
@@ -78,7 +79,7 @@ const FloatingInput = forwardRef<HTMLInputElement, FloatingInputProps>(
         />
 
         {error && (
-          <p className="mt-1 animate-fade-in text-xs text-destructive">
+          <p className="animate-fade-in text-destructive mt-1 text-xs">
             {error}
           </p>
         )}

@@ -1,10 +1,13 @@
 
 import { memo, forwardRef } from "react";
-import { Task } from "@/types";
-import { useTaskCard } from "../../hooks/useTaskCard";
+
 import UnifiedErrorBoundary from '@/components/ui/UnifiedErrorBoundary';
-import TaskCardHeader from "./TaskCardHeader";
+import { Task } from "@/types";
+
+import { useTaskCard } from "../../hooks/useTaskCard";
+
 import TaskCardContent from "./TaskCardContent";
+import TaskCardHeader from "./TaskCardHeader";
 
 interface VirtualizedTaskCardProps {
   task: Task;
@@ -73,9 +76,9 @@ const VirtualizedTaskCard = memo(
           fallback={
             <div
               style={style}
-              className="p-4 rounded-xl border border-destructive/20 bg-destructive/5"
+              className="border-destructive/20 bg-destructive/5 rounded-xl border p-4"
             >
-              <p className="text-sm text-destructive">
+              <p className="text-destructive text-sm">
                 Failed to load task: {task.title}
               </p>
             </div>
@@ -83,7 +86,7 @@ const VirtualizedTaskCard = memo(
         >
           <article
             ref={ref ?? cardRef}
-            className={`virtualized-task-card bg-card text-card-foreground border border-border shadow-task-card transition-all duration-200 hover:shadow-md cursor-pointer mb-4 w-full rounded-xl p-4 box-border max-w-full ${statusClass} ${animationClass} ${expandedClass} ${
+            className={`virtualized-task-card bg-card text-card-foreground border-border shadow-task-card mb-4 box-border w-full max-w-full cursor-pointer rounded-xl border p-4 transition-all duration-200 hover:shadow-md ${statusClass} ${animationClass} ${expandedClass} ${
               task.status === "complete"
                 ? "bg-muted"
                 : task.status === "overdue"

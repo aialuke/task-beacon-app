@@ -6,7 +6,9 @@
  */
 
 import { memo, useReducer, useEffect, useCallback, useRef } from 'react';
+
 import { cn } from '@/lib/utils';
+
 import { ImageSkeleton } from './loading/UnifiedLoadingStates';
 
 // === OPTIMIZED STATE MANAGEMENT ===
@@ -115,14 +117,14 @@ const SimpleLazyImage = memo(function SimpleLazyImage({
       )}
       
       {state.type === 'error' && (
-        <div className="absolute inset-0 flex items-center justify-center bg-muted rounded-lg">
-          <div className="text-center p-4">
+        <div className="bg-muted absolute inset-0 flex items-center justify-center rounded-lg">
+          <div className="p-4 text-center">
             <div className="text-destructive mb-2">
-              <svg className="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="mx-auto size-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
               </svg>
             </div>
-            <p className="text-sm text-muted-foreground">{state.message}</p>
+            <p className="text-muted-foreground text-sm">{state.message}</p>
           </div>
         </div>
       )}
@@ -131,7 +133,7 @@ const SimpleLazyImage = memo(function SimpleLazyImage({
         src={src}
         alt={alt}
         className={cn(
-          "w-full h-full object-cover rounded-lg transition-opacity duration-300",
+          "size-full rounded-lg object-cover transition-opacity duration-300",
           state.type === 'loaded' ? 'opacity-100' : 'opacity-0'
         )}
         onLoad={handleImageLoad}

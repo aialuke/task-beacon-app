@@ -4,18 +4,15 @@ import { memo, useMemo } from "react";
 
 // === INTERNAL UTILITIES ===
 import { CardLoader } from "@/components/ui/loading/UnifiedLoadingStates";
-
 // === COMPONENTS ===
-import { TaskCard } from "../cards";
-import TaskPagination from "../TaskPagination";
-
 // === HOOKS ===
-import { useTaskDataContext } from "@/features/tasks/context/TaskDataContext";
-import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
+import { useTaskDataContext, useTaskUIContext } from "@/features/tasks/context";
 import { useTasksFilter } from "@/features/tasks/hooks/useTasksFilter";
-
 // === TYPES ===
 import type { Task } from "@/types";
+
+import { TaskCard } from "../cards";
+import TaskPagination from "../TaskPagination";
 
 function TaskListComponent() {
   const {
@@ -49,7 +46,7 @@ function TaskListComponent() {
       <div className="flex h-64 items-center justify-center">
         <div className="text-center">
           <p className="text-muted-foreground">Failed to load tasks</p>
-          <p className="text-sm text-muted-foreground">{error}</p>
+          <p className="text-muted-foreground text-sm">{error}</p>
         </div>
       </div>
     );
@@ -74,7 +71,7 @@ function TaskListComponent() {
 
       {/* Pagination Section - Now uses refactored component */}
       {shouldShowPagination && (
-        <div className="border-t border-border pt-6">
+        <div className="border-border border-t pt-6">
           <TaskPagination
             pagination={pagination}
             totalCount={totalCount}

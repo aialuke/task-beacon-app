@@ -346,7 +346,7 @@ export async function resizeImage(
   file: File,
   maxWidth: number,
   maxHeight: number = maxWidth,
-  quality: number = 0.85
+  quality = 0.85
 ): Promise<Blob> {
   const result = await processImageEnhanced(file, {
     maxWidth,
@@ -364,7 +364,7 @@ export async function resizeImage(
  */
 export async function convertToWebPWithFallback(
   file: File,
-  quality: number = 0.85
+  quality = 0.85
 ): Promise<ConversionResult> {
   const supportsWebP = await WebPDetector.supportsWebP();
   

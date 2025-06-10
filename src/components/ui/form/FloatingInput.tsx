@@ -1,7 +1,8 @@
+import { useState, ReactNode } from "react";
 
 import { Input } from "@/components/ui/input";
-import { useState, ReactNode } from "react";
 import { cn } from "@/lib/utils";
+
 import { AnimatedCharacterCount } from "./AnimatedCharacterCount";
 
 interface FloatingInputProps {
@@ -13,7 +14,6 @@ interface FloatingInputProps {
   icon?: ReactNode;
   maxLength?: number;
   required?: boolean;
-  autoFocus?: boolean;
   disabled?: boolean;
   className?: string;
 }
@@ -27,7 +27,6 @@ export function FloatingInput({
   icon,
   maxLength,
   required = false,
-  autoFocus = false,
   disabled = false,
   className,
 }: FloatingInputProps) {
@@ -43,7 +42,7 @@ export function FloatingInput({
           <div
             className={cn(
               "absolute left-3 top-1/2 z-10 -translate-y-1/2 transform transition-all duration-300",
-              isFloating ? "scale-95 text-primary" : "text-muted-foreground",
+              isFloating ? "text-primary scale-95" : "text-muted-foreground",
               disabled && "opacity-50"
             )}
           >
@@ -61,10 +60,9 @@ export function FloatingInput({
           placeholder=""
           maxLength={maxLength}
           required={required}
-          autoFocus={autoFocus}
           disabled={disabled}
           className={cn(
-            "peer h-14 bg-background/60 pb-2 pt-6 backdrop-blur-sm transition-all duration-300 hover:bg-background/70 focus:bg-background/80 focus:shadow-lg focus:shadow-primary/10",
+            "bg-background/60 hover:bg-background/70 focus:bg-background/80 focus:shadow-primary/10 peer h-14 pb-2 pt-6 backdrop-blur-sm transition-all duration-300 focus:shadow-lg",
             icon ? "pl-11" : "pl-4",
             maxLength ? "pr-16" : "pr-4",
             disabled && "cursor-not-allowed opacity-50"
@@ -77,8 +75,8 @@ export function FloatingInput({
             "pointer-events-none absolute select-none font-medium transition-all duration-300",
             icon ? "left-11" : "left-4",
             isFloating
-              ? "top-2 text-xs text-primary"
-              : "top-1/2 -translate-y-1/2 text-sm text-muted-foreground",
+              ? "text-primary top-2 text-xs"
+              : "text-muted-foreground top-1/2 -translate-y-1/2 text-sm",
             disabled && "opacity-50"
           )}
         >

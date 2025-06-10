@@ -6,9 +6,10 @@
  */
 
 import { toast } from 'sonner';
+
+import { formatApiError } from '@/lib/api/error-handling';
 import { logger } from '@/lib/logger';
 import type { ApiError } from '@/types/shared';
-import { formatApiError } from '@/lib/api/error-handling';
 
 // === CORE ERROR INTERFACES ===
 

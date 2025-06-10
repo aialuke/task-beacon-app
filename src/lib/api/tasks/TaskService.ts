@@ -147,7 +147,7 @@ const updateTaskStatus = async (taskId: string, status: 'pending' | 'complete' |
   });
 };
 
-const uploadPhoto = async (photo: File) => {
+const uploadPhoto = async (_photo: File) => {
   return apiRequest('uploadPhoto', async () => {
     // This is a placeholder - actual implementation would use Supabase Storage
     // For now, return null to indicate no photo upload

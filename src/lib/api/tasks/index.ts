@@ -1,4 +1,3 @@
-
 /**
  * Task API - Simplified Direct Implementation
  * 
@@ -8,8 +7,7 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import { apiRequest } from '@/lib/api/error-handling';
-import { AuthService } from '@/lib/api/AuthService';
-import type { Task, TaskCreateData, TaskUpdateData } from '@/types';
+import type { TaskCreateData, TaskUpdateData } from '@/types';
 
 // === TASK CRUD OPERATIONS ===
 
@@ -149,7 +147,7 @@ const updateTaskStatus = async (taskId: string, status: 'pending' | 'complete' |
   });
 };
 
-const uploadPhoto = async (photo: File) => {
+const uploadPhoto = async (_photo: File) => {
   return apiRequest('uploadPhoto', async () => {
     // This is a placeholder - actual implementation would use Supabase Storage
     // For now, return null to indicate no photo upload

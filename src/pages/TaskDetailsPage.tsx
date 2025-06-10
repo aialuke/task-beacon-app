@@ -1,12 +1,13 @@
 
-import { useParams, useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import { ArrowLeft, Calendar1, ExternalLink } from "lucide-react";
-import { formatDate } from "@/lib/utils/shared";
 import { lazy, Suspense } from "react";
-import { getTaskStatus } from "@/features/tasks/utils/taskUiUtils";
+import { useParams, useNavigate } from "react-router-dom";
+
+import { Button } from "@/components/ui/button";
 import { PageLoader, CardLoader, LoadingSpinner } from "@/components/ui/loading/UnifiedLoadingStates";
 import { useTaskQuery } from "@/features/tasks/hooks/useTaskQuery";
+import { getTaskStatus } from "@/features/tasks/utils/taskUiUtils";
+import { formatDate } from "@/lib/utils/shared";
 
 // Lazy load heavy components for better performance
 const CountdownTimer = lazy(
@@ -90,7 +91,7 @@ const TaskDetailsPage = () => {
                 href={task.url_link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1 text-primary hover:underline"
+                className="text-primary flex items-center gap-1 hover:underline"
               >
                 {task.url_link}
               </a>

@@ -19,19 +19,19 @@ import {
   paginationSchema,
   sortingSchema,
   fileUploadSchema,
-  type SignInInput,
-  type SignUpInput,
-  type PasswordResetInput,
-  type PasswordChangeInput,
-  type ProfileUpdateInput,
-  type ProfileCreateInput,
+  type SignInInput as _SignInInput,
+  type SignUpInput as _SignUpInput,
+  type PasswordResetInput as _PasswordResetInput,
+  type PasswordChangeInput as _PasswordChangeInput,
+  type ProfileUpdateInput as _ProfileUpdateInput,
+  type ProfileCreateInput as _ProfileCreateInput,
   type CreateTaskInput,
-  type UpdateTaskInput,
+  type UpdateTaskInput as _UpdateTaskInput,
   type TaskFormInput,
-  type TaskFilterInput,
-  type PaginationInput,
-  type SortingInput,
-  type FileUploadInput
+  type TaskFilterInput as _TaskFilterInput,
+  type PaginationInput as _PaginationInput,
+  type SortingInput as _SortingInput,
+  type FileUploadInput as _FileUploadInput
 } from './schemas';
 
 // ============================================================================
@@ -217,7 +217,7 @@ export function isValidUrl(url: string): boolean {
     new URL(url);
     return true;
   } catch {
-    const domainPattern = /^(www\.)?[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
+    const domainPattern = /^(www\.)?[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
     return domainPattern.test(url.trim());
   }
 }

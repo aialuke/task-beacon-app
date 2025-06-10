@@ -1,7 +1,9 @@
 
-import { memo } from "react";
-import { Task } from "@/types";
 import { animated, SpringValue } from "@react-spring/web";
+import { memo } from "react";
+
+import { Task } from "@/types";
+
 import TaskDetailsContent from "./TaskDetailsContent";
 
 interface TaskDetailsProps {

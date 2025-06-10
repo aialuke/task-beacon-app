@@ -1,7 +1,9 @@
 
-import { memo } from "react";
-import { Task } from "@/types";
 import { SpringValue } from "@react-spring/web";
+import { memo } from "react";
+
+import { Task } from "@/types";
+
 import TaskDetails from "../display/TaskDetails";
 
 interface TaskCardContentProps {

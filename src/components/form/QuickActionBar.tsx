@@ -1,13 +1,16 @@
 
-import { useState } from 'react';
 import { User, ImageUp, Link, FileCheck } from 'lucide-react';
-import { DatePickerButton } from './components/DatePickerButton';
+import { useState } from 'react';
+
+import type { ProcessingResult } from '@/lib/utils/image';
+
 import { ActionButton } from './components/ActionButton';
+import { DatePickerButton } from './components/DatePickerButton';
 import { SubmitButton } from './components/SubmitButton';
+import SimplePhotoUploadModal from './SimplePhotoUploadModal';
 import { UrlInputModal } from './UrlInputModal';
 import { UserSearchModal } from './UserSearchModal';
-import SimplePhotoUploadModal from './SimplePhotoUploadModal';
-import type { ProcessingResult } from '@/lib/utils/image';
+
 
 interface QuickActionBarProps {
   // Date picker props
@@ -73,7 +76,7 @@ export function QuickActionBar({
   };
 
   return (
-    <div className="flex items-center justify-center gap-4 rounded-xl bg-background/30 px-4 py-1.5 backdrop-blur-sm">
+    <div className="bg-background/30 flex items-center justify-center gap-4 rounded-xl px-4 py-1.5 backdrop-blur-sm">
       {/* Action buttons container */}
       <div className="flex items-center gap-3">
         {/* Date Picker Button */}

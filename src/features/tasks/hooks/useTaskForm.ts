@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+
 import { useUnifiedForm } from '@/hooks/core';
 import { logger } from '@/lib/logger';
 import type { TaskCreateData } from '@/types';
@@ -119,7 +120,7 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     isValid,
     errors: form.errors,
     isSubmitting: form.isSubmitting,
-    setIsSubmitting: (submitting: boolean) => {
+    setIsSubmitting: (_submitting: boolean) => {
       // Legacy compatibility - unified form handles this internally
       logger.warn('setIsSubmitting is deprecated - form handles submission state automatically');
     },

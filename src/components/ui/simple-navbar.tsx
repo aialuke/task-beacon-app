@@ -1,8 +1,8 @@
-
 import { animated } from '@react-spring/web';
 import { LucideIcon } from 'lucide-react';
-import { cn } from '@/lib/utils';
+
 import { useNavbar } from '@/hooks/ui';
+import { cn } from '@/lib/utils';
 
 interface NavItem {
   name: string;
@@ -46,8 +46,9 @@ export function SimpleNavbar({
         role="tablist"
         aria-orientation="horizontal"
         aria-label="Navigation"
+        tabIndex={0}
         onKeyDown={handleKeyDown}
-        className="relative z-[100] flex items-center gap-1 rounded-full border border-border bg-card/80 p-2 shadow-lg backdrop-blur-md"
+        className="border-border bg-card/80 relative z-[100] flex items-center gap-1 rounded-full border p-2 shadow-lg backdrop-blur-md"
       >
         {/* Active indicator line above button */}
         <animated.div
@@ -115,7 +116,7 @@ export function SimpleNavbar({
               tabIndex={isActive ? 0 : -1}
               onClick={() => { onItemChange(item.value); }}
               className={cn(
-                'relative z-[120] flex h-10 min-w-[2.5rem] items-center justify-center rounded-full px-3 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
+                'relative z-[120] flex h-10 min-w-10 items-center justify-center rounded-full px-3 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
                 isActive
                   ? 'text-foreground'
                   : 'text-foreground/70 hover:text-foreground'

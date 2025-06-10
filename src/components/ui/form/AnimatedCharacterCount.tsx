@@ -23,7 +23,7 @@ export function AnimatedCharacterCount({
         className={cn(
           'text-xs font-medium transition-all duration-300',
           isOverLimit
-            ? 'animate-pulse text-destructive'
+            ? 'text-destructive animate-pulse'
             : isNearLimit
               ? 'text-warning animate-pulse'
               : 'text-muted-foreground',

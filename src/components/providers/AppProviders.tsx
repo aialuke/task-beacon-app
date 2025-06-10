@@ -1,21 +1,17 @@
 // External libraries
-import React from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
+import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
-// Internal utilities
-import { queryClient } from '@/lib/query-client';
-import { isFeatureEnabled } from '@/lib/config/app';
-
 // Components
-import { TooltipProvider } from '@/components/ui/tooltip';
 import { PageLoader } from '@/components/ui/loading/UnifiedLoadingStates';
-
+import { TooltipProvider } from '@/components/ui/tooltip';
+import UnifiedErrorBoundary from '@/components/ui/UnifiedErrorBoundary';
 // Contexts
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
-
-import UnifiedErrorBoundary from '@/components/ui/UnifiedErrorBoundary';
+// Utilities
+import { queryClient } from '@/lib/query-client';
 
 /**
  * Performance optimization wrapper - Simplified

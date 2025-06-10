@@ -20,21 +20,21 @@ export function ReferenceCard({
 }: ReferenceCardProps) {
   return (
     <div
-      className={`rounded-xl border border-accent/40 bg-accent/30 p-4 shadow-sm backdrop-blur-sm ${className}`}
+      className={`border-accent/40 bg-accent/30 rounded-xl border p-4 shadow-sm backdrop-blur-sm ${className}`}
     >
       <div className="flex items-start gap-3">
-        <div className="mt-0.5 rounded-xl bg-accent/50 p-2">
-          {icon ?? <Link className="h-4 w-4 text-accent-foreground" />}
+        <div className="bg-accent/50 mt-0.5 rounded-xl p-2">
+          {icon ?? <Link className="text-accent-foreground size-4" />}
         </div>
         <div className="flex-1 space-y-1">
-          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+          <p className="text-muted-foreground text-xs font-medium uppercase tracking-wide">
             {label}
           </p>
-          <h4 className="text-sm font-semibold leading-relaxed text-foreground">
+          <h4 className="text-foreground text-sm font-semibold leading-relaxed">
             {title}
           </h4>
           {description && (
-            <p className="line-clamp-2 text-xs text-muted-foreground/80">
+            <p className="text-muted-foreground/80 line-clamp-2 text-xs">
               {description}
             </p>
           )}
@@ -44,9 +44,9 @@ export function ReferenceCard({
                 href={url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs text-primary transition-colors hover:text-primary/80"
+                className="text-primary hover:text-primary/80 inline-flex items-center gap-1.5 text-xs transition-colors"
               >
-                <ExternalLink className="h-3 w-3" />
+                <ExternalLink className="size-3" />
                 <span className="max-w-[200px] truncate">{url}</span>
               </a>
             </div>

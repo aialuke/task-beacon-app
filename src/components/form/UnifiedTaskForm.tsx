@@ -1,8 +1,9 @@
 
 import { FileText, Sparkles } from 'lucide-react';
+
+import { QuickActionBar } from '@/components/form/QuickActionBar';
 import { FloatingInput } from '@/components/ui/form/FloatingInput';
 import { FloatingTextarea } from '@/components/ui/form/FloatingTextarea';
-import { QuickActionBar } from '@/components/form/QuickActionBar';
 import type { ProcessingResult } from '@/lib/utils/image';
 
 interface UnifiedTaskFormProps {
@@ -76,7 +77,7 @@ export function UnifiedTaskForm({
   headerSubtitle,
   titleLabel = 'Task Title',
   descriptionLabel = 'Description',
-  titlePlaceholder,
+  titlePlaceholder: _titlePlaceholder,
   descriptionPlaceholder = 'Describe your task...',
   disabled = false,
   children,
@@ -90,16 +91,16 @@ export function UnifiedTaskForm({
   };
 
   return (
-    <div className="w-full rounded-3xl border border-border bg-card/40 p-8 text-card-foreground shadow-2xl shadow-black/5 backdrop-blur-xl">
+    <div className="border-border bg-card/40 text-card-foreground w-full rounded-3xl border p-8 shadow-2xl shadow-black/5 backdrop-blur-xl">
       {/* Header */}
       <header className="mb-4 text-center">
         <div className="relative inline-block">
-          <h1 className="mb-2 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-2xl font-bold text-foreground">
+          <h1 className="from-foreground to-foreground/80 text-foreground mb-2 bg-gradient-to-r bg-clip-text text-2xl font-bold">
             {headerTitle}
           </h1>
-          <div className="absolute -bottom-1 left-1/2 h-0.5 w-16 -translate-x-1/2 rounded-full bg-gradient-to-r from-primary/50 to-primary" />
+          <div className="from-primary/50 to-primary absolute -bottom-1 left-1/2 h-0.5 w-16 -translate-x-1/2 rounded-full bg-gradient-to-r" />
         </div>
-        <p className="mt-3 text-sm font-medium text-muted-foreground">
+        <p className="text-muted-foreground mt-3 text-sm font-medium">
           {headerSubtitle}
         </p>
       </header>
@@ -111,7 +112,7 @@ export function UnifiedTaskForm({
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           label={titleLabel}
-          icon={<FileText className="h-4 w-4" />}
+          icon={<FileText className="size-4" />}
           maxLength={22}
           required
           disabled={disabled}
@@ -124,7 +125,7 @@ export function UnifiedTaskForm({
           onChange={(e) => setDescription(e.target.value)}
           placeholder={descriptionPlaceholder}
           label={descriptionLabel}
-          icon={<Sparkles className="h-4 w-4" />}
+          icon={<Sparkles className="size-4" />}
         />
 
         {/* Quick Action Bar */}

@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
+
 import { TaskService } from '@/lib/api/tasks';
 import { logger } from '@/lib/logger';
 import { 
@@ -66,6 +67,34 @@ export function useUnifiedPhotoUpload(options: UnifiedPhotoUploadOptions = {}): 
     setUploadedUrl(null);
   }, [photoPreview]);
 
+  // Upload functionality
+  const uploadPhoto = useCallback(
+    async (fileToUpload?: File): Promise<string | null> => {
+      const targetFile = fileToUpload || photo;
+      if (!targetFile) {
+        return null;
+      }
+
+      try {
+        setLoading(true);
+        const response = await TaskService.media.uploadPhoto(targetFile);
+        if (!response.success) {
+          throw new Error(response.error?.message || 'Photo upload failed');
+        }
+        
+        const url = response.data || null;
+        setUploadedUrl(url);
+        return url;
+      } catch (error) {
+        logger.error('Photo upload error', error instanceof Error ? error : new Error(String(error)));
+        return null;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [photo]
+  );
+
   // Photo processing and handling
   const handlePhotoChange = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -112,35 +141,7 @@ export function useUnifiedPhotoUpload(options: UnifiedPhotoUploadOptions = {}): 
         setLoading(false);
       }
     },
-    [processingOptions, autoUpload]
-  );
-
-  // Upload functionality
-  const uploadPhoto = useCallback(
-    async (fileToUpload?: File): Promise<string | null> => {
-      const targetFile = fileToUpload || photo;
-      if (!targetFile) {
-        return null;
-      }
-
-      try {
-        setLoading(true);
-        const response = await TaskService.media.uploadPhoto(targetFile);
-        if (!response.success) {
-          throw new Error(response.error?.message || 'Photo upload failed');
-        }
-        
-        const url = response.data || null;
-        setUploadedUrl(url);
-        return url;
-      } catch (error) {
-        logger.error('Photo upload error', error instanceof Error ? error : new Error(String(error)));
-        return null;
-      } finally {
-        setLoading(false);
-      }
-    },
-    [photo]
+    [processingOptions, autoUpload, uploadPhoto]
   );
 
   // Return memoized object to prevent unnecessary re-renders

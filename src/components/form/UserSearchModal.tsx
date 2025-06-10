@@ -1,10 +1,12 @@
 
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
+
 import {
   Dialog,
   DialogContent,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
+
 import { AutocompleteUserInput } from './AutocompleteUserInput';
 
 interface UserSearchModalProps {
@@ -36,7 +38,7 @@ export function UserSearchModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="fixed top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 sm:max-w-md">
+      <DialogContent className="fixed left-1/2 top-[40%] -translate-x-1/2 -translate-y-1/2 sm:max-w-md">
         <VisuallyHidden>
           <DialogTitle>Search Users</DialogTitle>
         </VisuallyHidden>

@@ -1,7 +1,10 @@
-import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { TaskImageGallery } from '../display/TaskImageGallery';
+import { describe, it, expect, vi } from 'vitest';
+
 import type { Task } from '@/types';
+
+import { TaskImageGallery } from '../display/TaskImageGallery';
+
 
 // Mock the image preview hook
 vi.mock('../hooks/useImagePreview', () => ({

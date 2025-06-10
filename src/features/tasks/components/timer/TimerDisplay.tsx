@@ -1,4 +1,5 @@
 import { memo } from "react";
+
 import { TaskStatus } from "@/types";
 
 export interface TimerDisplayProps {

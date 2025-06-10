@@ -1,11 +1,10 @@
-
 import { useCallback } from 'react';
-import { z } from 'zod';
+
 import { 
   validateProfileUpdate,
   profileUpdateSchema,
   type ProfileUpdateInput 
-} from '@/lib/validation';
+} from '../../../lib/validation';
 
 interface ProfileValidationResult {
   isValid: boolean;
@@ -14,9 +13,10 @@ interface ProfileValidationResult {
 }
 
 /**
- * Profile validation hook - Phase 3 Update
+ * Profile validation hook - Optimized Implementation
  * 
- * Migrated to use centralized Zod validation from Phase 1 implementation
+ * Provides comprehensive profile validation using centralized Zod schemas.
+ * Supports both full profile validation and individual field validation.
  */
 export function useProfileValidation() {
   /**
@@ -66,28 +66,25 @@ export function useProfileValidation() {
   );
 
   /**
-   * Validate profile name
+   * Validate profile name with detailed result
    */
-  const validateName = useCallback((name: string): boolean => {
-    const result = profileUpdateSchema.shape.name.safeParse(name);
-    return result.success;
-  }, []);
+  const validateName = useCallback((name: string): { isValid: boolean; error?: string } => {
+    return validateProfileField('name', name);
+  }, [validateProfileField]);
 
   /**
-   * Validate profile email
+   * Validate profile email with detailed result
    */
-  const validateEmail = useCallback((email: string): boolean => {
-    const result = profileUpdateSchema.shape.email.safeParse(email);
-    return result.success;
-  }, []);
+  const validateEmail = useCallback((email: string): { isValid: boolean; error?: string } => {
+    return validateProfileField('email', email);
+  }, [validateProfileField]);
 
   /**
-   * Validate avatar URL
+   * Validate avatar URL with detailed result
    */
-  const validateAvatarUrl = useCallback((url: string): boolean => {
-    const result = profileUpdateSchema.shape.avatar_url.safeParse(url);
-    return result.success;
-  }, []);
+  const validateAvatarUrl = useCallback((url: string): { isValid: boolean; error?: string } => {
+    return validateProfileField('avatar_url', url);
+  }, [validateProfileField]);
 
   return {
     validateProfile,
@@ -100,6 +97,3 @@ export function useProfileValidation() {
     schema: profileUpdateSchema,
   };
 }
-
-// Backward compatibility exports
-export const useProfileValidationHook = useProfileValidation;

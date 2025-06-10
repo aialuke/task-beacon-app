@@ -1,17 +1,20 @@
-import { useMemo } from "react";
 import { useSpring, animated } from "@react-spring/web";
-import { TaskStatus } from "@/types";
-import TimerRing from "./timer/TimerRing";
-import TimerDisplay from "./timer/TimerDisplay";
-import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
+import { useMemo } from "react";
+
+
 import {
   Tooltip,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import TimerTooltip from "@/features/tasks/components/TimerTooltip";
+import { useTaskUIContext } from "@/features/tasks/context";
 import { useCountdown } from "@/features/tasks/hooks/useCountdown";
 import { useMotionPreferences } from "@/hooks/useMotionPreferences";
+import { TaskStatus } from "@/types";
+
+import TimerDisplay from "./timer/TimerDisplay";
+import TimerRing from "./timer/TimerRing";
 
 interface CountdownTimerProps {
   dueDate: string | null;
@@ -84,7 +87,7 @@ function CountdownTimer({
             role="timer"
             tabIndex={0}
             aria-label={ariaLabel}
-            className={`timer-container relative flex items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 transition-all ${
+            className={`timer-container focus-visible:ring-primary relative flex items-center justify-center rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
               status === "pending" &&
               Number(timeDisplay) === 0 &&
               !shouldReduceMotion

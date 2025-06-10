@@ -1,8 +1,11 @@
 
 import { memo } from "react";
+
 import type { Task } from "@/types";
-import TaskStatus from "./TaskStatus";
+
 import TaskExpandButton from "../TaskExpandButton";
+
+import TaskStatus from "./TaskStatus";
 
 interface TaskHeaderProps {
   task: Task;
@@ -16,7 +19,7 @@ function TaskHeader({ task, isExpanded, toggleExpand }: TaskHeaderProps) {
       <TaskStatus task={task} />
       <div className="flex min-w-0 flex-1 items-center">
         <h3
-          className="mb-0 text-base text-card-foreground sm:text-lg"
+          className="text-card-foreground mb-0 text-base sm:text-lg"
           title={task.title}
         >
           {task.title}

@@ -1,8 +1,7 @@
-
 import { useState, useRef, useCallback } from 'react';
+
+import { useErrorHandler , useSubmissionState } from '@/hooks/core';
 import { AuthService } from '@/lib/api/AuthService';
-import { useErrorHandler } from '@/hooks/core';
-import { useSubmissionState } from '@/hooks/core';
 import { 
   useUnifiedValidation,
   validateUnifiedSignIn,
@@ -149,7 +148,7 @@ export function useAuthFormState(): UseAuthFormStateReturn {
       // Attempt global sign out first using AuthService
       try {
         await AuthService.signOut();
-      } catch (err) {
+      } catch (_err) {
         // Pre-auth cleanup failed, continue with sign-in
       }
 
@@ -215,7 +214,7 @@ export function useAuthFormState(): UseAuthFormStateReturn {
     } finally {
       stopSubmitting();
     }
-  }, [mode, email, password, name, handleError, validateForm, cleanupAuthState]);
+  }, [mode, email, password, name, handleError, validateForm, cleanupAuthState, startSubmitting, stopSubmitting]);
 
   const toggleMode = useCallback(() => {
     setMode(prevMode => prevMode === 'signin' ? 'signup' : 'signin');

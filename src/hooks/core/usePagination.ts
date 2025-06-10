@@ -1,4 +1,3 @@
-
 import { useState, useCallback, useMemo } from 'react';
 
 import { 
@@ -7,8 +6,8 @@ import {
   calculatePaginationMeta,
 } from '@/lib/utils/pagination';
 import type {
-  PaginationState,
-  PaginationControls,
+  PaginationState as _PaginationState,
+  PaginationControls as _PaginationControls,
   PaginationAPI,
   PaginationParams,
   PaginationConfig,

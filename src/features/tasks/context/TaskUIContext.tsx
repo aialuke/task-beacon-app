@@ -1,27 +1,9 @@
 
 import { ReactNode, useState, useEffect } from "react";
-import { createStandardContext } from '@/lib/utils/createContext';
+
 import { TaskFilter } from "../types";
 
-// Define the shape of our UI context
-interface TaskUIContextType {
-  // UI filters
-  filter: TaskFilter;
-  setFilter: (filter: TaskFilter) => void;
-
-  // Expanded state
-  expandedTaskId: string | null;
-  setExpandedTaskId: (id: string | null) => void;
-
-  // Mobile detection
-  isMobile: boolean;
-}
-
-// Create standardized context
-const { Provider: TaskUIProvider, useContext: useTaskUIContext } = createStandardContext<TaskUIContextType>({
-  name: 'TaskUI',
-  errorMessage: 'useTaskUIContext must be used within a TaskUIContextProvider'
-});
+import { TaskUIProvider, type TaskUIContextType } from './task-ui-utils';
 
 /**
  * Provider component for task UI-related state
@@ -60,5 +42,4 @@ export function TaskUIContextProvider({ children }: { children: ReactNode }) {
   );
 }
 
-// Export the standardized hook
-export { useTaskUIContext };
+

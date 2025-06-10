@@ -1,10 +1,9 @@
-
-// External libraries
+// === EXTERNAL LIBRARIES ===
+import { Trash2 } from "lucide-react";
 import { useCallback, memo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Trash2 } from "lucide-react";
 
-// Components
+// === INTERNAL COMPONENTS ===
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -15,11 +14,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
-// Hooks
+// === HOOKS ===
 import { useTaskMutations } from "@/features/tasks/hooks/useTaskMutations";
-
-// Types
+// === TYPES ===
 import type { Task } from "@/types";
 
 interface TaskActionsProps {
@@ -57,7 +54,7 @@ function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
       } else if (result.error) {
         // toast.error(result.message);
       }
-    } catch (error) {
+    } catch (_error) {
       // toast.error('Failed to delete task');
     } finally {
       setIsDeleting(false);
@@ -97,7 +94,7 @@ function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 text-muted-foreground hover:bg-muted hover:text-foreground"
+              className="text-muted-foreground hover:bg-muted hover:text-foreground size-8"
               disabled={isDeleting}
             >
               <Trash2 size={16} />
@@ -107,7 +104,7 @@ function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
             <DialogHeader>
               <DialogTitle>Delete Task</DialogTitle>
               <DialogDescription>
-                Are you sure you want to delete "{task.title}"? This action
+                Are you sure you want to delete &quot;{task.title}&quot;? This action
                 cannot be undone.
               </DialogDescription>
             </DialogHeader>

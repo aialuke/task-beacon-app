@@ -1,9 +1,10 @@
 
 import { ImageUp } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { useRef } from 'react';
-import type { ProcessingResult } from '@/lib/utils/image';
+
+import { Button } from '@/components/ui/button';
 import { useImageLoadingState } from '@/hooks/core';
+import type { ProcessingResult } from '@/lib/utils/image';
 
 interface SimplePhotoUploadProps {
   photoPreview: string | null;
@@ -50,12 +51,12 @@ export default function SimplePhotoUpload({
           {photoPreview ? (
             <div className="relative size-full">
               {!imageLoaded && !imageError && (
-                <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
-                  <div className="w-3 h-3 border border-primary border-t-transparent rounded-full animate-spin" />
+                <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+                  <div className="border-primary size-3 animate-spin rounded-full border border-t-transparent" />
                 </div>
               )}
               {imageError && (
-                <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
+                <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
                   <ImageUp className="opacity-40" size={12} />
                 </div>
               )}
@@ -80,8 +81,8 @@ export default function SimplePhotoUpload({
             </div>
           )}
           {loading && (
-            <div className="absolute inset-0 bg-background/80 flex items-center justify-center">
-              <div className="w-3 h-3 border border-primary border-t-transparent rounded-full animate-spin" />
+            <div className="bg-background/80 absolute inset-0 flex items-center justify-center">
+              <div className="border-primary size-3 animate-spin rounded-full border border-t-transparent" />
             </div>
           )}
         </div>
@@ -112,7 +113,7 @@ export default function SimplePhotoUpload({
       {/* File info and remove option */}
       {photoPreview && fileName && (
         <div className="inline-flex gap-2 text-xs">
-          <p className="text-muted-foreground truncate max-w-32" aria-live="polite">
+          <p className="text-muted-foreground max-w-32 truncate" aria-live="polite">
             {fileName}
           </p>
           {onPhotoRemove && (

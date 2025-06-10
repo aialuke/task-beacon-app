@@ -5,9 +5,10 @@
  * Provides file storage operations abstracted from Supabase.
  */
 
-import { apiRequest } from './error-handling';
 import { supabase } from '@/integrations/supabase/client';
 import type { ApiResponse } from '@/types/shared';
+
+import { apiRequest } from './error-handling';
 
 /**
  * Storage utilities abstracted from Supabase

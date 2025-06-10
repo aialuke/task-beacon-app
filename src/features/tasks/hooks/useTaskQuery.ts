@@ -1,7 +1,7 @@
+import { useQuery as _useQuery } from '@tanstack/react-query';
 
-import { TaskService } from '@/lib/api/tasks';
-import { QueryKeys } from '@/lib/api/standardized-api';
 import { useEntityByIdQuery } from '@/hooks/core';
+import { TaskService } from '@/lib/api/tasks';
 import type { Task } from '@/types';
 
 interface UseTaskQueryReturn {

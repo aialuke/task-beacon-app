@@ -1,4 +1,3 @@
-
 /**
  * Unified Loading States - Phase 4 Consolidation
  * 
@@ -6,8 +5,9 @@
  */
 
 import { memo, useMemo } from 'react';
-import { cn } from '@/lib/utils';
+
 import { Skeleton } from '@/components/ui/skeleton';
+import { cn } from '@/lib/utils';
 
 // === PERFORMANCE OPTIMIZED INTERFACES ===
 
@@ -58,7 +58,7 @@ const CardSkeleton = memo(function CardSkeleton({
   return (
     <div className={cn('space-y-4 rounded-lg border p-6', className)}>
       <div className="flex items-start gap-4">
-        <Skeleton className="h-12 w-12 rounded-full" />
+        <Skeleton className="size-12 rounded-full" />
         <div className="flex-1 space-y-2">
           <Skeleton className="h-4 w-3/4" />
           <Skeleton className="h-3 w-1/2" />
@@ -87,9 +87,9 @@ export const PageLoader = memo(function PageLoader({
   className?: string;
 }) {
   return (
-    <div className={cn("flex flex-col items-center justify-center min-h-[400px] space-y-4", className)}>
+    <div className={cn("flex min-h-[400px] flex-col items-center justify-center space-y-4", className)}>
       <LoadingSpinner size="xl" />
-      <div className="text-center space-y-2">
+      <div className="space-y-2 text-center">
         <h3 className="text-lg font-semibold">Loading</h3>
         {message && <p className="text-muted-foreground">{message}</p>}
       </div>
@@ -119,8 +119,8 @@ export const CardLoader = memo(function CardLoader({
 // === PERFORMANCE METRICS (Development only) ===
 if (process.env.NODE_ENV === 'development') {
   // Track component render performance
-  (LoadingSpinner as any).displayName = 'LoadingSpinner';
-  (CardSkeleton as any).displayName = 'CardSkeleton';
-  (PageLoader as any).displayName = 'PageLoader';
-  (CardLoader as any).displayName = 'CardLoader';
+  (LoadingSpinner as typeof LoadingSpinner & { displayName: string }).displayName = 'LoadingSpinner';
+  (CardSkeleton as typeof CardSkeleton & { displayName: string }).displayName = 'CardSkeleton';  
+  (PageLoader as typeof PageLoader & { displayName: string }).displayName = 'PageLoader';
+  (CardLoader as typeof CardLoader & { displayName: string }).displayName = 'CardLoader';
 }

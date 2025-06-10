@@ -1,9 +1,10 @@
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { TaskService } from '@/lib/api/tasks';
-import { QueryKeys, createLoadingState } from '@/lib/api/standardized-api';
+
 import { useAuth } from '@/hooks/core';
 import { usePagination } from '@/hooks/usePagination';
+import { QueryKeys, createLoadingState } from '@/lib/api/standardized-api';
+import { TaskService } from '@/lib/api/tasks';
 import type { Task } from '@/types';
 
 interface UseTasksQueryOptions {

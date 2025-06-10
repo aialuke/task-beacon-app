@@ -5,14 +5,14 @@
  * providing a consistent API that can be easily tested and modified.
  */
 
-import { apiRequest } from './error-handling';
-import { AuthService } from './AuthService';
 import { supabase } from '@/integrations/supabase/client';
 import type { Database } from '@/integrations/supabase/types';
-
 // Clean imports from organized type system
-import type { User, UserRole, ApiResponse } from '@/types';
+import type { User, UserRole, ApiResponse, ApiError } from '@/types';
 import type { UserSearchOptions, UserUpdateData } from '@/types/feature-types/user.types';
+
+import { AuthService } from './AuthService';
+import { apiRequest } from './error-handling';
 
 // Type-safe database references
 type ProfileRow = Database['public']['Tables']['profiles']['Row'];
@@ -153,10 +153,7 @@ export class UserService {
     if (!userResponse.success || !userResponse.data) {
       return {
         data: null,
-        error: { 
-          name: 'AuthenticationError',
-          message: 'User not authenticated' 
-        },
+        error: createApiError('User not authenticated', 'AUTH_ERROR'),
         success: false,
       };
     }
@@ -256,4 +253,12 @@ export class UserService {
       return profileRowToUser(data);
     });
   }
+}
+
+// === HELPER FUNCTIONS ===
+function createApiError(message: string, code?: string): ApiError {
+  return {
+    message,
+    code: code ?? 'USER_ERROR',
+  };
 }

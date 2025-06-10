@@ -6,6 +6,9 @@
  */
 
 import { z } from 'zod';
+
+import { DEFAULT_PAGINATION_CONFIG } from '@/lib/utils/pagination';
+
 import { 
   unifiedEmailSchema, 
   unifiedPasswordSchema, 
@@ -13,9 +16,7 @@ import {
   unifiedTaskTitleSchema,
   unifiedTaskDescriptionSchema,
   unifiedUrlSchema,
-  UNIFIED_VALIDATION_MESSAGES 
 } from './unified-validation';
-import { DEFAULT_PAGINATION_CONFIG } from '@/lib/utils/pagination';
 
 // ============================================================================
 // COMMON SCHEMAS
@@ -156,7 +157,7 @@ export const taskFormSchema = z.object({
         new URL(url);
         return true;
       } catch {
-        const domainPattern = /^(www\.)?[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
+        const domainPattern = /^(www\.)?[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
         return domainPattern.test(url.trim());
       }
     },

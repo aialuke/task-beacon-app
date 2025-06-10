@@ -1,16 +1,16 @@
 
-import type {
-  PaginationParams,
-  PaginatedResponse,
-  PaginationMeta,
-} from '@/types/pagination.types';
+import { supabase } from '@/integrations/supabase/client';
 import { 
   calculatePaginationMeta,
   validatePaginationParams,
   DEFAULT_PAGINATION_CONFIG,
 } from '@/lib/utils/pagination';
-import { supabase } from '@/integrations/supabase/client';
 import type { ApiResponse } from '@/types/api.types';
+import type {
+  PaginationParams,
+  PaginatedResponse,
+  PaginationMeta,
+} from '@/types/pagination.types';
 
 interface PaginationServiceOptions {
   table: 'profiles' | 'tasks';

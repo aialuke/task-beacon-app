@@ -1,10 +1,14 @@
 
 import { memo } from "react";
+
 import UnifiedErrorBoundary from '@/components/ui/UnifiedErrorBoundary';
-import TaskCardHeader from "./TaskCardHeader";
-import TaskCardContent from "./TaskCardContent";
-import { useTaskCard } from "../../hooks/useTaskCard";
 import type { Task } from "@/types";
+
+import { useTaskCard } from "../../hooks/useTaskCard";
+
+import TaskCardContent from "./TaskCardContent";
+import TaskCardHeader from "./TaskCardHeader";
+
 
 interface TaskCardProps {
   task: Task;
@@ -50,8 +54,8 @@ function TaskCard({ task }: TaskCardProps) {
     <UnifiedErrorBoundary
       variant="inline"
       fallback={
-        <div className="p-4 rounded-xl border border-destructive/20 bg-destructive/5">
-          <p className="text-sm text-destructive">
+        <div className="border-destructive/20 bg-destructive/5 rounded-xl border p-4">
+          <p className="text-destructive text-sm">
             Failed to load task: {task.title}
           </p>
         </div>
@@ -59,7 +63,7 @@ function TaskCard({ task }: TaskCardProps) {
     >
       <article
         ref={cardRef}
-        className={`bg-card text-card-foreground border border-border shadow-task-card transition-all duration-200 hover:shadow-md cursor-pointer mb-4 w-full max-w-2xl mx-auto rounded-xl p-5 box-border ${statusClass} ${expandedClass} ${
+        className={`bg-card text-card-foreground border-border shadow-task-card mx-auto mb-4 box-border w-full max-w-2xl cursor-pointer rounded-xl border p-5 transition-all duration-200 hover:shadow-md ${statusClass} ${expandedClass} ${
           task.status === "complete"
             ? "bg-muted"
             : task.status === "overdue"

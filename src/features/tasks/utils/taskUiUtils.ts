@@ -1,5 +1,5 @@
-import { Task, TaskStatus } from "@/types";
 import { getDaysRemaining } from "@/lib/utils/shared";
+import { Task, TaskStatus } from "@/types";
 
 export function getTaskStatus(task: Task): TaskStatus {
   if (task.status === "complete") {

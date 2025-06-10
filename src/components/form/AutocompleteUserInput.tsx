@@ -1,10 +1,11 @@
 
-import { useState, useRef, useMemo, useEffect } from 'react';
 import { User as UserIcon, ArrowRight, X } from 'lucide-react';
-import { Input } from '@/components/ui/input';
+import { useState, useRef, useMemo, useEffect } from 'react';
+
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { Input } from '@/components/ui/input';
 import { useUsersQuery } from '@/features/users/hooks/useUsersQuery';
+import { cn } from '@/lib/utils';
 
 interface AutocompleteUserInputProps {
   value: string; // user ID when selected, empty when not
@@ -29,7 +30,7 @@ export function AutocompleteUserInput({
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   
-  const { users, isLoading } = useUsersQuery();
+  const { users, isLoading: _isLoading } = useUsersQuery();
   
   // Find selected user
   const selectedUser = useMemo(() => 
@@ -173,10 +174,10 @@ export function AutocompleteUserInput({
   };
 
   const getStatusIcon = () => {
-    if (selectedUser) return <UserIcon className="h-4 w-4 text-green-500" />;
+    if (selectedUser) return <UserIcon className="size-4 text-green-500" />;
     switch (validationState) {
-      case 'invalid': return <UserIcon className="h-4 w-4 text-red-500" />;
-      default: return <UserIcon className="h-4 w-4 text-muted-foreground" />;
+      case 'invalid': return <UserIcon className="size-4 text-red-500" />;
+      default: return <UserIcon className="text-muted-foreground size-4" />;
     }
   };
 
@@ -188,7 +189,7 @@ export function AutocompleteUserInput({
       <div className="group relative">
         <div
           className={cn(
-            'flex h-12 items-center rounded-2xl border bg-background/60 p-2 backdrop-blur-sm transition-all duration-300',
+            'bg-background/60 flex h-12 items-center rounded-2xl border p-2 backdrop-blur-sm transition-all duration-300',
             'hover:border-border/60 hover:bg-background/70',
             isFocused && 'bg-background/80',
             getBorderColor(),
@@ -197,31 +198,31 @@ export function AutocompleteUserInput({
         >
           {getStatusIcon()}
 
-          <div className="flex-1 min-w-0 ml-3 flex items-center gap-2">
+          <div className="ml-3 flex min-w-0 flex-1 items-center gap-2">
             {/* User tag - displayed inline for selected user */}
             {selectedUser && (
-              <div className="flex items-center bg-primary/10 text-primary px-2 py-1 text-sm">
+              <div className="bg-primary/10 text-primary flex items-center px-2 py-1 text-sm">
                 <span>{selectedUser.name || selectedUser.email.split('@')[0]}</span>
                 <button
                   type="button"
-                  className="ml-1 text-primary/70 hover:text-primary"
+                  className="text-primary/70 hover:text-primary ml-1"
                   onClick={handleClearUser}
                   disabled={disabled}
                 >
-                  <X className="h-3 w-3" />
+                  <X className="size-3" />
                 </button>
               </div>
             )}
 
             {/* Input container with ghost text */}
-            <div className="relative flex-1 min-w-0">
+            <div className="relative min-w-0 flex-1">
               {/* Ghost text overlay */}
               {ghostText && isFocused && !selectedUser && (
-                <div className="absolute inset-0 pointer-events-none flex items-center">
-                  <span className="text-sm text-foreground font-semibold select-none">
+                <div className="pointer-events-none absolute inset-0 flex items-center">
+                  <span className="text-foreground select-none text-sm font-semibold">
                     {inputValue}
                   </span>
-                  <span className="text-sm text-muted-foreground/70 select-none">
+                  <span className="text-muted-foreground/70 select-none text-sm">
                     {ghostText}
                   </span>
                 </div>
@@ -237,7 +238,7 @@ export function AutocompleteUserInput({
                 onKeyDown={handleKeyDown}
                 onFocus={() => { setIsFocused(true); }}
                 onBlur={() => { setIsFocused(false); }}
-                className="h-auto border-none bg-transparent p-0 py-3 pl-0 pr-0 text-sm text-foreground font-semibold focus:ring-0 focus-visible:ring-0 relative z-10"
+                className="text-foreground relative z-10 h-auto border-none bg-transparent p-0 py-3 text-sm font-semibold focus:ring-0 focus-visible:ring-0"
                 disabled={disabled}
               />
             </div>
@@ -248,13 +249,13 @@ export function AutocompleteUserInput({
             type="button"
             variant="ghost"
             size="sm"
-            className="ml-2 h-8 w-8 p-0 transition-colors"
+            className="ml-2 size-8 p-0 transition-colors"
             onClick={selectedUser ? onSubmit : handleAcceptSuggestion}
             disabled={disabled || (!ghostSuggestion && !selectedUser)}
           >
             <ArrowRight 
               className={cn(
-                "h-4 w-4 transition-colors",
+                "size-4 transition-colors",
                 selectedUser ? "text-primary" : "text-muted-foreground"
               )} 
             />
@@ -264,7 +265,7 @@ export function AutocompleteUserInput({
         {/* Placeholder */}
         {showPlaceholder && (
           <label
-            className="pointer-events-none absolute left-11 top-1/2 -translate-y-1/2 select-none text-sm text-muted-foreground"
+            className="text-muted-foreground pointer-events-none absolute left-11 top-1/2 -translate-y-1/2 select-none text-sm"
           >
             {placeholder}
           </label>

@@ -1,17 +1,17 @@
-
 import { useState, useCallback, useMemo } from 'react';
-import type {
-  PaginationState,
-  PaginationControls,
-  PaginationAPI,
-  PaginationParams,
-  PaginationConfig,
-} from '@/types/pagination.types';
+
 import { 
   DEFAULT_PAGINATION_CONFIG,
   validatePaginationParams,
   calculatePaginationMeta,
 } from '@/lib/utils/pagination';
+import type {
+  PaginationState as _PaginationState,
+  PaginationControls as _PaginationControls,
+  PaginationAPI,
+  PaginationParams,
+  PaginationConfig,
+} from '@/types/pagination.types';
 
 interface UsePaginationOptions {
   initialPage?: number;
