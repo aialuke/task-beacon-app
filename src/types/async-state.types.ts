@@ -29,7 +29,7 @@ export interface AsyncOperationState<T = unknown> extends BaseAsyncState<T> {
 export interface BatchAsyncOperationState<T = unknown> extends BaseAsyncState<T[]> {
   completedCount: number;
   totalCount: number;
-  failedItems: Array<{ index: number; error: Error }>;
+  failedItems: { index: number; error: Error }[];
 }
 
 /**

@@ -30,6 +30,7 @@ export const ImagePreviewModal = memo(function ImagePreviewModal({
   };
 
   return (
+    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
     <div 
       className="fixed inset-0 bg-black/90 flex items-center justify-center p-4"
       style={{ 
@@ -50,6 +51,7 @@ export const ImagePreviewModal = memo(function ImagePreviewModal({
       </Button>
 
       {/* Modal Window */}
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
       <div 
         className="relative bg-white rounded-2xl shadow-2xl max-w-[90vw] max-h-[90vh] overflow-hidden"
         onClick={(e) => { e.stopPropagation(); }}

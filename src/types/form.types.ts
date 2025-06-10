@@ -86,11 +86,11 @@ export interface SelectFieldProps<T = string> extends BaseFieldProps {
   value: T;
   onChange: (value: T) => void;
   onBlur?: () => void;
-  options: Array<{
+  options: {
     value: T;
     label: string;
     disabled?: boolean;
-  }>;
+  }[];
 }
 
 // === FORM CONFIGURATION ===

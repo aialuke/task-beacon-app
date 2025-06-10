@@ -67,7 +67,6 @@ function TaskCard({ task }: TaskCardProps) {
             : ""
         }`}
         style={statusStyles}
-        role="article"
         aria-label={`Task: ${task.title}`}
       >
         <TaskCardHeader

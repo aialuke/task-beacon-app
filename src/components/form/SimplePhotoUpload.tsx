@@ -64,7 +64,7 @@ export default function SimplePhotoUpload({
                   imageLoaded ? 'opacity-100' : 'opacity-0'
                 }`}
                 src={photoPreview}
-                alt="Preview of uploaded image"
+                alt="Preview of uploaded file"
                 width={64}
                 height={64}
                 loading="lazy"
