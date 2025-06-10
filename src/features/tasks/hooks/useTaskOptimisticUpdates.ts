@@ -14,11 +14,11 @@ interface PaginatedTasksResponse {
 }
 
 interface InfiniteTasksResponse {
-  pages: Array<{
+  pages: {
     data: Task[];
     totalCount: number;
     hasNextPage: boolean;
-  }>;
+  }[];
   pageParams: unknown[];
 }
 

@@ -164,7 +164,7 @@ export function useCountdown(
       ariaLabel,
       daysRemaining: timeLeft.days,
     };
-  }, [state.timeLeft, dueDate, status, circumference]);
+  }, [state, dueDate, status, circumference]);
 
   return computedValues;
 }

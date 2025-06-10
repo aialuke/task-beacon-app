@@ -73,7 +73,7 @@ export function useBaseMutation<TData, TVariables>(
         };
       }
     },
-    [mutation, options.successMessage]
+    [mutation, options.successMessage, options.errorMessagePrefix]
   );
 
   return {
