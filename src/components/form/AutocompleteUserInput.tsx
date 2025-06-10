@@ -1,4 +1,3 @@
-
 import { User as UserIcon, ArrowRight, X } from 'lucide-react';
 import { useState, useRef, useMemo, useEffect, useCallback } from 'react';
 
@@ -37,8 +36,11 @@ export function AutocompleteUserInput({
   
   // Debounced search to improve performance
   const debouncedSetSearchTerm = useCallback(
-    debounce((term: string) => setSearchTerm(term), 300),
-    []
+    (term: string) => {
+      const debouncedFn = debounce((searchTerm: string) => setSearchTerm(searchTerm), 300);
+      debouncedFn(term);
+    },
+    [setSearchTerm]
   );
   
   // Find selected user

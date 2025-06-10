@@ -1,5 +1,5 @@
-import { getDaysRemaining } from "@/lib/utils/shared";
 import { toTitleCase } from "@/lib/utils/format";
+import { getDaysRemaining } from "@/lib/utils/shared";
 import { Task, TaskStatus } from "@/types";
 
 export function getTaskStatus(task: Task): TaskStatus {

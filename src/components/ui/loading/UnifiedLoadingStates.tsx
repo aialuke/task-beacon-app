@@ -46,13 +46,17 @@ export const LoadingSpinner = memo(function LoadingSpinner({
   useEffect(() => {
     const enhancedAnimationsEnabled = isFeatureEnabled('enableBundleOptimization');
     if (enablePulse && enhancedAnimationsEnabled && spinnerRef.current) {
-      const pulseAnimation = () => {
-        pulseElement(spinnerRef.current, 1500).then(() => {
+      const pulseAnimation = async () => {
+        try {
+          await pulseElement(spinnerRef.current, 1500);
           // Continue pulsing while component is mounted
           if (spinnerRef.current) {
             setTimeout(pulseAnimation, 500);
           }
-        });
+        } catch (error) {
+          // Handle pulse animation errors gracefully
+          console.warn('Pulse animation error:', error);
+        }
       };
       pulseAnimation();
     }

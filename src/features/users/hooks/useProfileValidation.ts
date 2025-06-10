@@ -1,10 +1,10 @@
 import { useCallback } from 'react';
 
+import { profileUpdateSchema, type ProfileUpdateInput } from '../../../lib/validation/schemas';
+import { validateUnifiedProfile } from '../../../lib/validation/unified-validation';
 import { 
   validateProfileCreate
 } from '../../../lib/validation/validators';
-import { validateUnifiedProfile } from '../../../lib/validation/unified-validation';
-import { profileUpdateSchema, type ProfileUpdateInput } from '../../../lib/validation/schemas';
 
 interface ProfileValidationResult {
   isValid: boolean;

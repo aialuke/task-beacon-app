@@ -49,7 +49,7 @@ const createTask = async (taskData: TaskCreateData) => {
       }, 3, 1000);
     });
 
-    return result.success ? createSuccessResponse(result.data) : createErrorResponse(result.error!);
+    return result.success ? createSuccessResponse(result.data) : createErrorResponse(result.error || new Error('Unknown error occurred'));
   } catch (error) {
     return createErrorResponse(transformApiError(error));
   }

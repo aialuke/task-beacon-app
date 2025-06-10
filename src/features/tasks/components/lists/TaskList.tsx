@@ -4,11 +4,11 @@ import { memo, useMemo } from "react";
 
 // === INTERNAL UTILITIES ===
 import { CardLoader } from "@/components/ui/loading/UnifiedLoadingStates";
-import { getStaggeredDelay } from "@/lib/utils/animation";
 // === COMPONENTS ===
 // === HOOKS ===
 import { useTaskDataContext, useTaskUIContext } from "@/features/tasks/context";
 import { useTasksFilter } from "@/features/tasks/hooks/useTasksFilter";
+import { getStaggeredDelay } from "@/lib/utils/animation";
 // === TYPES ===
 import type { Task } from "@/types";
 

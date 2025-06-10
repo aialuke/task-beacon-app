@@ -7,6 +7,9 @@
 
 import { useState, useCallback } from 'react';
 
+import type { StandardLoadingState } from '@/types/async-state.types';
+import { createLoadingState } from '@/types/async-state.types';
+
 import { logger } from '../logger';
 
 // ============================================================================
@@ -20,10 +23,8 @@ export interface AsyncOperationOptions<T> {
   retryDelay?: number;
 }
 
-export interface AsyncOperationResult<T> {
+export interface AsyncOperationResult<T> extends StandardLoadingState {
   data: T | null;
-  error: Error | null;
-  isLoading: boolean;
   execute: () => Promise<void>;
   reset: () => void;
 }
@@ -33,21 +34,21 @@ export interface AsyncOperationResult<T> {
 // ============================================================================
 
 /**
- * Hook for managing async operations with loading states and error handling
+ * Hook for managing async operations with standardized loading states and error handling
  */
 export function useAsyncOperation<T>(
   operation: () => Promise<T>,
   options: AsyncOperationOptions<T> = {}
 ): AsyncOperationResult<T> {
   const [data, setData] = useState<T | null>(null);
-  const [error, setError] = useState<Error | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [loadingState, setLoadingState] = useState<StandardLoadingState>(
+    createLoadingState(false, false)
+  );
 
   const execute = useCallback(async () => {
     const { onSuccess, onError, retries = 0, retryDelay = 1000 } = options;
     
-    setIsLoading(true);
-    setError(null);
+    setLoadingState(createLoadingState(true, true));
 
     let lastError: Error | null = null;
     
@@ -55,7 +56,7 @@ export function useAsyncOperation<T>(
       try {
         const result = await operation();
         setData(result);
-        setIsLoading(false);
+        setLoadingState(createLoadingState(false, false));
         onSuccess?.(result);
         return;
       } catch (err) {
@@ -66,23 +67,29 @@ export function useAsyncOperation<T>(
         });
         
         if (attempt < retries) {
+          setLoadingState(createLoadingState(true, true, lastError));
           await new Promise(resolve => setTimeout(resolve, retryDelay));
         }
       }
     }
 
-    setError(lastError);
-    setIsLoading(false);
-    onError?.(lastError!);
+    setLoadingState(createLoadingState(false, false, lastError));
+    if (lastError) {
+      onError?.(lastError);
+    }
   }, [operation, options]);
 
   const reset = useCallback(() => {
     setData(null);
-    setError(null);
-    setIsLoading(false);
+    setLoadingState(createLoadingState(false, false));
   }, []);
 
-  return { data, error, isLoading, execute, reset };
+  return { 
+    data, 
+    execute, 
+    reset,
+    ...loadingState
+  };
 }
 
 // ============================================================================
@@ -97,7 +104,7 @@ export async function withRetry<T>(
   retries = 3,
   delay = 1000
 ): Promise<T> {
-  let lastError: Error;
+  let lastError: Error | null = null;
   
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
@@ -111,7 +118,12 @@ export async function withRetry<T>(
     }
   }
   
-  throw lastError!;
+  if (lastError) {
+    throw lastError;
+  }
+  
+  // This should never happen, but provides a fallback
+  throw new Error('Operation failed without error details');
 }
 
 /**

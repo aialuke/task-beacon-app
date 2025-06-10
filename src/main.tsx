@@ -10,14 +10,14 @@ import React, { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
 // === COMPONENTS ===
-import { logger } from '@/lib/logger';
 import { ErrorHandler } from '@/lib/core/ErrorHandler';
+import { logger } from '@/lib/logger';
+import { optimizeAnimations } from '@/lib/utils/core';
 
 import App from './App.tsx';
 import { UnifiedErrorBoundary } from './components/ui/UnifiedErrorBoundary';
 
 // === UTILITIES ===
-import { optimizeAnimations } from '@/lib/utils/core';
 
 // === STYLES ===
 import './index.css';

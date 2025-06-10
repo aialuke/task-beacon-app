@@ -31,7 +31,7 @@ function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
   const navigate = useNavigate();
   const { toggleTaskCompleteCallback, deleteTaskCallback } = useTaskMutations();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const { handleError, withErrorHandling } = useUnifiedError({ context: 'TaskActions' });
+  const { handleError, withErrorHandling: _withErrorHandling } = useUnifiedError({ context: 'TaskActions' });
   
   // Async operations using useAsyncOperation for reliable state management
   const {

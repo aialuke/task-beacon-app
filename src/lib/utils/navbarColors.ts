@@ -1,4 +1,3 @@
-
 /**
  * Navbar color computation utilities
  * Handles theme-aware color calculations for navbar components
@@ -69,12 +68,15 @@ export function computeNavbarColors(): NavbarColors {
  * Sets up a theme change observer for color updates
  */
 export function setupThemeObserver(callback: () => void): () => void {
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
+  const observer = new MutationObserver(async (mutations) => {
+    for (const mutation of mutations) {
       if (mutation.attributeName === 'class') {
-        setTimeout(callback, 50); // Small delay to ensure CSS is applied
+        // Small delay to ensure CSS is applied
+        await new Promise(resolve => setTimeout(resolve, 50));
+        callback();
+        break; // Only call callback once per batch of mutations
       }
-    });
+    }
   });
 
   observer.observe(document.documentElement, { attributes: true });

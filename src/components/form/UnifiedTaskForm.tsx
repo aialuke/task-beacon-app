@@ -5,9 +5,9 @@ import { useState, useCallback } from 'react';
 import { QuickActionBar } from '@/components/form/QuickActionBar';
 import { FloatingInput } from '@/components/ui/form/FloatingInput';
 import { FloatingTextarea } from '@/components/ui/form/FloatingTextarea';
-import { validateTaskCreation, isValidUrl } from '@/lib/validation/validators';
 import { isDatePast } from '@/lib/utils/date';
 import type { ProcessingResult } from '@/lib/utils/image';
+import { validateTaskCreation, isValidUrl } from '@/lib/validation/validators';
 
 interface UnifiedTaskFormProps {
   // Form state

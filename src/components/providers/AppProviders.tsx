@@ -13,6 +13,17 @@ import { ThemeProvider } from '@/contexts/ThemeContext';
 // Utilities
 import { queryClient } from '@/lib/query-client';
 
+// Type definition for Navigator connection property
+interface NetworkInformation {
+  effectiveType?: '2g' | '3g' | '4g' | 'slow-2g';
+  downlink?: number;
+  rtt?: number;
+}
+
+interface ExtendedNavigator extends Navigator {
+  connection?: NetworkInformation;
+}
+
 /**
  * Performance optimization wrapper - Simplified
  */
@@ -20,7 +31,7 @@ function PerformanceOptimizations({ children }: { children: React.ReactNode }) {
   // Basic performance monitoring only
   React.useEffect(() => {
     // Simple connection quality check
-    const connection = (navigator as any).connection;
+    const connection = (navigator as ExtendedNavigator).connection;
     const connectionQuality = connection?.effectiveType === '4g' || connection?.effectiveType === '3g' ? 'fast' : 'slow';
     console.debug('Connection quality:', connectionQuality);
     

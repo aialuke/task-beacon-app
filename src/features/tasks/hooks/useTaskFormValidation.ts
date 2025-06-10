@@ -1,11 +1,11 @@
 import { useCallback } from 'react';
 import { toast } from 'sonner';
 
+import { generateUUID } from '@/lib/utils/core';
 import {
   useUnifiedValidation,
   validateUnifiedTask,
 } from '@/lib/validation';
-import { generateUUID } from '@/lib/utils/core';
 
 interface TaskFormData {
   title: string;

@@ -58,7 +58,7 @@ function CountdownTimer({
         { tension: 120, friction: 14 },
         { tension: 300, friction: 30 }
       ),
-    [shouldReduceMotion]
+    []
   );
 
   const { strokeDashoffset } = useSpring({

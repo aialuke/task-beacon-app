@@ -1,13 +1,13 @@
-
 import { useCallback, useState } from 'react';
+
+import { useQueryClient } from '@/lib/query-client';
+import { executeInSequence } from '@/lib/utils/async';
+import { uniqueBy } from '@/lib/utils/data';
 
 import { useTaskCreation } from './mutations/useTaskCreation';
 import { useTaskDeletion } from './mutations/useTaskDeletion';
 import { useTaskStatus } from './mutations/useTaskStatus';
 import { useTaskUpdates } from './mutations/useTaskUpdates';
-import { executeInSequence } from '@/lib/utils/async';
-import { uniqueBy } from '@/lib/utils/data';
-import { useQueryClient } from '@/lib/query-client';
 
 /**
  * Unified Task Mutations Hook - Phase 3 Consolidated
@@ -48,7 +48,7 @@ export function useTaskMutations() {
     } finally {
       setIsBatchProcessing(false);
     }
-  }, [status.markAsComplete]);
+  }, [status, queryClient]);
   
   const batchDeleteTasks = useCallback(async (taskIds: string[]) => {
     setIsBatchProcessing(true);
@@ -72,7 +72,7 @@ export function useTaskMutations() {
     } finally {
       setIsBatchProcessing(false);
     }
-  }, [deletion.deleteTaskById]);
+  }, [deletion, queryClient]);
 
   return {
     // Creation operations

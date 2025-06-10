@@ -5,10 +5,10 @@ import { useParams, useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { PageLoader, CardLoader, LoadingSpinner } from "@/components/ui/loading/UnifiedLoadingStates";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useTaskQuery } from "@/features/tasks/hooks/useTaskQuery";
 import { getTaskStatus } from "@/features/tasks/utils/taskUiUtils";
 import { formatDate, getTooltipContent } from "@/lib/utils/shared";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 // Lazy load heavy components for better performance
 const CountdownTimer = lazy(

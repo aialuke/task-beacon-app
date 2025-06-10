@@ -3,13 +3,13 @@ import { useState, useRef, useCallback } from 'react';
 import { useErrorHandler , useSubmissionState } from '@/hooks/core';
 import { AuthService } from '@/lib/api/AuthService';
 import { 
-  isValidEmail,
-  isValidPassword
-} from '@/lib/validation/validators';
-import { 
   validateUnifiedSignIn,
   validateUnifiedSignUp
 } from '@/lib/validation/unified-validation';
+import { 
+  isValidEmail,
+  isValidPassword
+} from '@/lib/validation/validators';
 
 type AuthMode = 'signin' | 'signup';
 

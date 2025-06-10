@@ -44,7 +44,7 @@ export function usePagination(options: UsePaginationOptions = {}): UsePagination
     onPageSizeChange,
   } = options;
 
-  const finalConfig = { ...DEFAULT_PAGINATION_CONFIG, ...config };
+  const finalConfig = useMemo(() => ({ ...DEFAULT_PAGINATION_CONFIG, ...config }), [config]);
 
   // Core pagination state
   const [page, setPage] = useState(initialPage);

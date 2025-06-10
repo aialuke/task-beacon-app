@@ -3,8 +3,8 @@ import { memo as _memo, useCallback } from 'react';
 
 // === INTERNAL UTILITIES ===
 import { LazyImage } from '@/components/ui/LazyImage';
-import { cn } from '@/lib/utils';
 import { safeAsync } from '@/lib/core/ErrorHandler';
+import { cn } from '@/lib/utils';
 // === INTERNAL COMPONENTS ===
 import type { Task } from '@/types';
 
@@ -42,11 +42,7 @@ interface TaskImageGalleryProps {
 function TaskImageGallery({ task, className }: TaskImageGalleryProps) {
   const { isPreviewOpen, previewImageUrl, openPreview, closePreview } = useImagePreview();
 
-  // Early return if no photo
-  if (!task.photo_url) {
-    return null;
-  }
-
+  // Define handleImageClick before any early returns to follow React Hook rules
   const handleImageClick = useCallback(() => {
     // Use safeAsync for safe image preview operations
     safeAsync(
@@ -68,6 +64,11 @@ function TaskImageGallery({ task, className }: TaskImageGalleryProps) {
       }
     );
   }, [task.photo_url, openPreview]);
+
+  // Early return if no photo
+  if (!task.photo_url) {
+    return null;
+  }
 
   return (
     <>

@@ -1,4 +1,3 @@
-
 import { useQuery } from '@tanstack/react-query';
 import { ArrowLeft } from 'lucide-react';
 import { lazy, Suspense } from 'react';
@@ -22,7 +21,10 @@ export default function FollowUpTaskPage() {
   } = useQuery({
     queryKey: ['task', parentTaskId],
     queryFn: async () => {
-      const response = await TaskService.crud.getById(parentTaskId!);
+      if (!parentTaskId) {
+        throw new Error('Parent task ID is required');
+      }
+      const response = await TaskService.crud.getById(parentTaskId);
       if (!response.success) {
         throw new Error(response.error?.message || 'Failed to load parent task');
       }

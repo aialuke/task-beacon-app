@@ -2,6 +2,7 @@ import { useState, useCallback, useMemo } from 'react';
 
 import { TaskService } from '@/lib/api/tasks';
 import { logger } from '@/lib/logger';
+import { withRetry } from '@/lib/utils/async';
 import { 
   compressAndResizePhoto,
   extractImageMetadata,
@@ -9,7 +10,6 @@ import {
   ProcessingResult,
   EnhancedImageProcessingOptions 
 } from '@/lib/utils/image';
-import { withRetry } from '@/lib/utils/async';
 import { validateFileUpload } from '@/lib/validation/validators';
 
 interface UnifiedPhotoUploadOptions {

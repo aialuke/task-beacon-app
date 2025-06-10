@@ -3,8 +3,8 @@ import { memo, useEffect, useState } from "react";
 
 import { UnifiedErrorBoundary } from '@/components/ui/UnifiedErrorBoundary';
 import { componentLogger } from '@/lib/logger';
-import { isElementInViewport } from '@/lib/utils/ui';
 import { animationUtils } from '@/lib/utils/animation';
+import { isElementInViewport } from '@/lib/utils/ui';
 import type { Task } from "@/types";
 
 import { useTaskCard } from "../../hooks/useTaskCard";
