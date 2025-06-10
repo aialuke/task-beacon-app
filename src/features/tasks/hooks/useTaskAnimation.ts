@@ -1,8 +1,7 @@
 import { useSpring, SpringValue } from "@react-spring/web";
 import { useState, useRef, useLayoutEffect } from "react";
 
-import { useTaskCardAnimation } from "@/animations";
-import { useMotionPreferenceContext } from "@/contexts/MotionPreferenceContext";
+import { useTaskCardAnimation, prefersReducedMotion } from "@/animations";
 
 export interface TaskAnimationState {
   height: SpringValue<number>;
@@ -15,10 +14,12 @@ export function useTaskAnimation() {
   const measureRef = useRef<HTMLDivElement>(null);
   
   const { expandConfig } = useTaskCardAnimation();
-  const { getAnimationConfig } = useMotionPreferenceContext();
   
   // Get animation config with motion preference support
-  const animationConfig = getAnimationConfig(expandConfig);
+  const shouldReduceMotion = prefersReducedMotion();
+  const animationConfig = shouldReduceMotion 
+    ? { tension: 500, friction: 50 } 
+    : expandConfig;
 
   // Measure content height when expanded state changes
   useLayoutEffect(() => {

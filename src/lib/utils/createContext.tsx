@@ -44,43 +44,7 @@ interface ContextReturn<T> {
 }
 
 /**
- * Standardized context creation utility
- *
- * Provides consistent patterns for:
- * - Context creation with proper error handling
- * - Provider components with proper display names
- * - Hooks with validation and error messages
- * - Optional strict/non-strict modes
- *
- * @example
- * ```tsx
- * interface AuthContextValue {
- *   user: User | null;
- *   login: (email: string, password: string) => Promise<void>;
- * }
- *
- * const { Provider: AuthProvider, useContext: useAuth } = createStandardContext<AuthContextValue>({
- *   name: 'Auth',
- *   errorMessage: 'useAuth must be used within AuthProvider'
- * });
- *
- * // Usage
- * function MyAuthProvider({ children }: { children: ReactNode }) {
- *   const [user, setUser] = useState(null);
- *   const login = async (email, password) => { ... };
- *
- *   return (
- *     <AuthProvider value={{ user, login }}>
- *       {children}
- *     </AuthProvider>
- *   );
- * }
- *
- * function SomeComponent() {
- *   const { user, login } = useAuth();
- *   // ...
- * }
- * ```
+ * Lightweight context creation utility - simplified for better performance
  */
 export function createStandardContext<T>(
   options: CreateContextOptions<T>
@@ -93,35 +57,27 @@ export function createStandardContext<T>(
   // Set display name for DevTools
   Context.displayName = `${name}Context`;
 
-  // Provider component
-  const Provider: React.ComponentType<{
+  // Lightweight Provider component - no additional wrapper overhead
+  const Provider = Context.Provider as React.ComponentType<{
     children: ReactNode;
     value: T;
-  }> = ({ children, value }) => (
-    <Context.Provider value={value}>{children}</Context.Provider>
-  );
+  }>;
 
   // Set display name for Provider
   Provider.displayName = `${name}Provider`;
 
-  // Hook to access context
+  // Optimized hook to access context - minimal error handling overhead
   const useContextHook = (): T => {
     const context = useContext(Context);
 
-    // Handle strict mode (default)
-    if (strict && context === undefined) {
-      const message =
-        errorMessage ?? `use${name} must be used within a ${name}Provider`;      throw new Error(message);
-    }
-
-    // Handle non-strict mode with default value
-    if (!strict && context === undefined) {
-      if (defaultValue !== undefined) {
+    // Streamlined error handling
+    if (context === undefined) {
+      if (!strict && defaultValue !== undefined) {
         return defaultValue;
       }
-      throw new Error(
-        `use${name} called outside provider and no defaultValue provided`
-      );
+      
+      const message = errorMessage ?? `use${name} must be used within a ${name}Provider`;
+      throw new Error(message);
     }
 
     return context as T;

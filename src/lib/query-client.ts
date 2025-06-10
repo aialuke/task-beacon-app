@@ -1,18 +1,19 @@
 import { QueryClient } from '@tanstack/react-query';
 
-import { getCacheConfig, getApiConfig } from '@/lib/config/app';
-
-// Create optimized query client using centralized configuration
-const cacheConfig = getCacheConfig();
-const apiConfig = getApiConfig();
+// Static configuration for better performance (no dynamic imports)
+const QUERY_CONFIG = {
+  staleTime: 5 * 60 * 1000, // 5 minutes
+  refetchInterval: false,
+  retryAttempts: 3,
+} as const;
 
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: apiConfig.retryAttempts,
-      staleTime: cacheConfig.staleTime,
+      retry: QUERY_CONFIG.retryAttempts,
+      staleTime: QUERY_CONFIG.staleTime,
       refetchOnWindowFocus: true,
-      refetchInterval: cacheConfig.refetchInterval,
+      refetchInterval: QUERY_CONFIG.refetchInterval,
     },
   },
 });

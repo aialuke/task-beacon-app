@@ -9,7 +9,6 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { UnifiedErrorBoundary } from '@/components/ui/UnifiedErrorBoundary';
 // Contexts
 import { AuthProvider } from '@/contexts/AuthContext';
-import { MotionPreferenceProvider } from '@/contexts/MotionPreferenceContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 // Utilities
 import { queryClient } from '@/lib/query-client';
@@ -50,38 +49,32 @@ interface AppProvidersProps {
 }
 
 /**
- * Centralized provider composition with simplified performance optimizations
+ * Simplified provider composition - Flattened for better performance
  * 
  * Hierarchy (outer to inner):
  * 1. Error handling
- * 2. Performance optimizations
- * 3. Theme/styling
- * 4. Motion preferences (accessibility)
- * 5. Data/caching
- * 6. Authentication
- * 7. UI infrastructure
- * 8. Routing
+ * 2. Theme/styling
+ * 3. Data/caching
+ * 4. Authentication
+ * 5. UI infrastructure
+ * 6. Routing
  */
 export function AppProviders({ children }: AppProvidersProps) {
   return (
     <UnifiedErrorBoundary variant="page" title="Application Error">
-      <PerformanceOptimizations>
-        <ThemeProvider>
-          <MotionPreferenceProvider>
-            <QueryClientProvider client={queryClient}>
-              <AuthProvider>
-                <TooltipProvider>
-                  <BrowserRouter>
-                    <React.Suspense fallback={<PageLoader message="Loading application..." />}>
-                      {children}
-                    </React.Suspense>
-                  </BrowserRouter>
-                </TooltipProvider>
-              </AuthProvider>
-            </QueryClientProvider>
-          </MotionPreferenceProvider>
-        </ThemeProvider>
-      </PerformanceOptimizations>
+      <ThemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <TooltipProvider>
+              <BrowserRouter>
+                <React.Suspense fallback={<PageLoader message="Loading application..." />}>
+                  {children}
+                </React.Suspense>
+              </BrowserRouter>
+            </TooltipProvider>
+          </AuthProvider>
+        </QueryClientProvider>
+      </ThemeProvider>
     </UnifiedErrorBoundary>
   );
 }
