@@ -5,9 +5,8 @@
  * TaskErrorBoundary.tsx, and AppErrorBoundary with unified behavior.
  */
 
-import { AlertTriangle, RefreshCw } from 'lucide-react';
 import React, { Component, ReactNode } from 'react';
-
+import { AlertTriangle, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { handleError } from '@/lib/core/ErrorHandler';
 import { cn } from '@/lib/utils';
@@ -160,12 +159,12 @@ function UnifiedErrorUI({
   return (
     <div className={cn(variantStyles[variant], className)}>
       <div className={cn('text-center', contentStyles[variant])}>
-        <div className={cn('bg-destructive/10 mx-auto flex items-center justify-center rounded-full', iconSize[variant])}>
-          <AlertTriangle className={cn('text-destructive', variant === 'page' ? 'size-8' : variant === 'section' ? 'size-6' : 'size-4')} />
+        <div className={cn('mx-auto rounded-full bg-destructive/10 flex items-center justify-center', iconSize[variant])}>
+          <AlertTriangle className={cn('text-destructive', variant === 'page' ? 'w-8 h-8' : variant === 'section' ? 'w-6 h-6' : 'w-4 h-4')} />
         </div>
         
         <div className="space-y-2">
-          <h2 className={cn('text-destructive font-semibold', variant === 'page' ? 'text-2xl' : variant === 'section' ? 'text-lg' : 'text-base')}>
+          <h2 className={cn('font-semibold text-destructive', variant === 'page' ? 'text-2xl' : variant === 'section' ? 'text-lg' : 'text-base')}>
             {title || defaultTitle[variant]}
           </h2>
           <p className={cn('text-muted-foreground', variant === 'page' ? 'text-base' : 'text-sm')}>
@@ -173,14 +172,14 @@ function UnifiedErrorUI({
           </p>
         </div>
 
-        <div className={cn('flex justify-center gap-3', variant === 'inline' ? 'flex-col' : 'flex-row')}>
+        <div className={cn('flex gap-3 justify-center', variant === 'inline' ? 'flex-col' : 'flex-row')}>
           <Button
             onClick={onRetry}
             variant="default"
             size={variant === 'page' ? 'default' : 'sm'}
             className="flex items-center gap-2"
           >
-            <RefreshCw className="size-4" />
+            <RefreshCw className="w-4 h-4" />
             Try Again
           </Button>
           
@@ -198,10 +197,10 @@ function UnifiedErrorUI({
         {/* Development error details */}
         {showDetails && error && (
           <details className="mt-4 text-left">
-            <summary className="text-muted-foreground hover:text-foreground cursor-pointer text-sm font-medium">
+            <summary className="cursor-pointer text-sm font-medium text-muted-foreground hover:text-foreground">
               Error Details (Development)
             </summary>
-            <div className="bg-muted text-muted-foreground mt-2 max-h-40 overflow-auto whitespace-pre-wrap break-all rounded-md p-3 font-mono text-xs">
+            <div className="mt-2 p-3 bg-muted rounded-md text-xs font-mono text-muted-foreground whitespace-pre-wrap break-all max-h-40 overflow-auto">
               <div className="mb-2">
                 <strong>Error:</strong> {error.message}
               </div>
@@ -222,4 +221,31 @@ function UnifiedErrorUI({
   );
 }
 
-// === EXPORTS === 
+// === HIGHER-ORDER COMPONENT ===
+
+/**
+ * HOC for wrapping components with error boundary
+ */
+export function withErrorBoundary<T extends object>(
+  Component: React.ComponentType<T>,
+  options?: {
+    variant?: 'page' | 'section' | 'inline';
+    title?: string;
+    fallback?: ReactNode;
+    onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
+  }
+) {
+  const WrappedComponent = (props: T) => (
+    <UnifiedErrorBoundary {...options}>
+      <Component {...props} />
+    </UnifiedErrorBoundary>
+  );
+
+  WrappedComponent.displayName = `withErrorBoundary(${Component.displayName || Component.name})`;
+  
+  return WrappedComponent;
+}
+
+// === EXPORTS ===
+
+export default UnifiedErrorBoundary; 

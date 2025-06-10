@@ -1,6 +1,5 @@
-import { useState, useRef, useEffect, ReactNode } from 'react';
-
 import { Textarea } from '@/components/ui/textarea';
+import { useState, useRef, useEffect, ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
 interface FloatingTextareaProps {
@@ -17,7 +16,7 @@ export function FloatingTextarea({
   id,
   value,
   onChange,
-  placeholder: _placeholder,
+  placeholder,
   label,
   icon,
   className,
@@ -42,7 +41,7 @@ export function FloatingTextarea({
           <div
             className={cn(
               'absolute left-3 top-3 z-10 transition-all duration-300', // Changed from top-6 to top-3
-              isFloating ? 'text-primary scale-95' : 'text-muted-foreground'
+              isFloating ? 'scale-95 text-primary' : 'text-muted-foreground'
             )}
           >
             {icon}
@@ -59,7 +58,7 @@ export function FloatingTextarea({
           placeholder=""
           rows={1}
           className={cn(
-            'bg-background/60 hover:bg-background/70 focus:bg-background/80 focus:shadow-primary/10 peer min-h-28 resize-none overflow-hidden pb-2 pt-6 backdrop-blur-sm transition-all duration-300 focus:shadow-lg',
+            'peer min-h-28 resize-none overflow-hidden bg-background/60 pb-2 pt-6 backdrop-blur-sm transition-all duration-300 hover:bg-background/70 focus:bg-background/80 focus:shadow-lg focus:shadow-primary/10',
             icon ? 'pl-11' : 'pl-4',
             'pr-4'
           )}
@@ -71,8 +70,8 @@ export function FloatingTextarea({
             'pointer-events-none absolute select-none font-medium transition-all duration-300',
             icon ? 'left-11' : 'left-4',
             isFloating
-              ? 'text-primary top-2 text-xs' // Keeps the floated label at top-2
-              : 'text-muted-foreground top-3 text-sm' // Changed from top-6 to top-3 for better alignment
+              ? 'top-2 text-xs text-primary' // Keeps the floated label at top-2
+              : 'top-3 text-sm text-muted-foreground' // Changed from top-6 to top-3 for better alignment
           )}
         >
           {label}
@@ -81,3 +80,5 @@ export function FloatingTextarea({
     </div>
   );
 }
+
+export default FloatingTextarea;

@@ -1,10 +1,11 @@
-import { useCallback } from 'react';
 
-import { profileUpdateSchema, type ProfileUpdateInput } from '../../../lib/validation/schemas';
-import { validateUnifiedProfile } from '../../../lib/validation/unified-validation';
+import { useCallback } from 'react';
+import { z } from 'zod';
 import { 
-  validateProfileCreate
-} from '../../../lib/validation/validators';
+  validateProfileUpdate,
+  profileUpdateSchema,
+  type ProfileUpdateInput 
+} from '@/lib/validation';
 
 interface ProfileValidationResult {
   isValid: boolean;
@@ -13,48 +14,23 @@ interface ProfileValidationResult {
 }
 
 /**
- * Profile validation hook - Optimized Implementation
+ * Profile validation hook - Phase 3 Update
  * 
- * Provides comprehensive profile validation using centralized Zod schemas.
- * Supports both full profile validation and individual field validation.
+ * Migrated to use centralized Zod validation from Phase 1 implementation
  */
 export function useProfileValidation() {
   /**
-   * Validate complete profile data using unified validation for enhanced validation
+   * Validate complete profile data using centralized schema
    */
   const validateProfile = useCallback(
     (data: unknown): ProfileValidationResult => {
-      // Use unified validation for enhanced validation
-      const unifiedResult = validateUnifiedProfile(data);
-      
-      if (unifiedResult.isValid) {
-        return { 
-          isValid: true, 
-          errors: {}, 
-          data: unifiedResult.data as ProfileUpdateInput
-        };
-      }
-      
-      return { 
-        isValid: false, 
-        errors: unifiedResult.fieldErrors || {}
-      };
-    },
-    []
-  );
-
-  /**
-   * Validate profile data for creation using centralized schema
-   */
-  const validateNewProfile = useCallback(
-    (data: unknown): ProfileValidationResult => {
-      const result = validateProfileCreate(data);
+      const result = validateProfileUpdate(data);
       
       if (result.success) {
         return { 
           isValid: true, 
           errors: {}, 
-          data: result.data as ProfileUpdateInput
+          data: result.data 
         };
       }
       
@@ -90,29 +66,31 @@ export function useProfileValidation() {
   );
 
   /**
-   * Validate profile name with detailed result
+   * Validate profile name
    */
-  const validateName = useCallback((name: string): { isValid: boolean; error?: string } => {
-    return validateProfileField('name', name);
-  }, [validateProfileField]);
+  const validateName = useCallback((name: string): boolean => {
+    const result = profileUpdateSchema.shape.name.safeParse(name);
+    return result.success;
+  }, []);
 
   /**
-   * Validate profile email with detailed result
+   * Validate profile email
    */
-  const validateEmail = useCallback((email: string): { isValid: boolean; error?: string } => {
-    return validateProfileField('email', email);
-  }, [validateProfileField]);
+  const validateEmail = useCallback((email: string): boolean => {
+    const result = profileUpdateSchema.shape.email.safeParse(email);
+    return result.success;
+  }, []);
 
   /**
-   * Validate avatar URL with detailed result
+   * Validate avatar URL
    */
-  const validateAvatarUrl = useCallback((url: string): { isValid: boolean; error?: string } => {
-    return validateProfileField('avatar_url', url);
-  }, [validateProfileField]);
+  const validateAvatarUrl = useCallback((url: string): boolean => {
+    const result = profileUpdateSchema.shape.avatar_url.safeParse(url);
+    return result.success;
+  }, []);
 
   return {
     validateProfile,
-    validateNewProfile,
     validateProfileField,
     validateName,
     validateEmail,
@@ -122,3 +100,6 @@ export function useProfileValidation() {
     schema: profileUpdateSchema,
   };
 }
+
+// Backward compatibility exports
+export const useProfileValidationHook = useProfileValidation;

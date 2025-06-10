@@ -1,8 +1,8 @@
-import path from "path";
 
-import react from "@vitejs/plugin-react-swc";
-import { componentTagger } from "lovable-tagger";
 import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react-swc";
+import path from "path";
+import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -18,32 +18,6 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  build: {
-    // Simplified build configuration
-    sourcemap: mode === "development",
-    target: 'esnext',
-    minify: 'esbuild',
-    chunkSizeWarningLimit: 1000,
-    rollupOptions: {
-      output: {
-        // Simple chunking strategy - only vendor separation
-        manualChunks: {
-          // React ecosystem
-          'react-vendor': ['react', 'react-dom'],
-          // UI components
-          'ui-vendor': ['@radix-ui/react-avatar', '@radix-ui/react-dialog', '@radix-ui/react-popover', '@radix-ui/react-slot', '@radix-ui/react-tooltip', '@radix-ui/react-visually-hidden', 'lucide-react'],
-          // Data management
-          'data-vendor': ['@tanstack/react-query', '@supabase/supabase-js'],
-          // Other utilities
-          'utils-vendor': ['react-router-dom', 'zod', 'clsx', 'class-variance-authority', 'tailwind-merge'],
-        }
-      },
-    },
-  },
-  // Remove console logs in production
-  esbuild: {
-    drop: mode === 'production' ? ['console', 'debugger'] : [],
-  },
   test: {
     globals: true,
     environment: "jsdom",
@@ -53,7 +27,7 @@ export default defineConfig(({ mode }) => ({
     exclude: ["node_modules", "dist", ".git", ".cache", "**/e2e/**"],
     coverage: {
       provider: "v8",
-      reporter: ["text", "html"],
+      reporter: ["text", "html", "clover", "json"],
       reportsDirectory: "./coverage",
       exclude: [
         "node_modules",
@@ -68,10 +42,29 @@ export default defineConfig(({ mode }) => ({
       ],
       thresholds: {
         global: {
-          statements: 70,
-          branches: 65,
-          functions: 70,
-          lines: 70,
+          statements: 80,
+          branches: 75,
+          functions: 80,
+          lines: 80,
+        },
+        // Critical modules should have higher coverage
+        "src/lib/api/**": {
+          statements: 90,
+          branches: 85,
+          functions: 90,
+          lines: 90,
+        },
+        "src/hooks/**": {
+          statements: 85,
+          branches: 80,
+          functions: 85,
+          lines: 85,
+        },
+        "src/features/**/hooks/**": {
+          statements: 85,
+          branches: 80,
+          functions: 85,
+          lines: 85,
         },
       },
     },
@@ -82,7 +75,12 @@ export default defineConfig(({ mode }) => ({
       threads: {
         isolate: false,
         minThreads: 1,
-        maxThreads: 2, // Reduced for stability
+        maxThreads: 4,
+      },
+    },
+    server: {
+      deps: {
+        inline: false,
       },
     },
     sourcemap: true,

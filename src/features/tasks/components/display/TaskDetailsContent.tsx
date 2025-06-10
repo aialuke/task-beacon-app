@@ -1,17 +1,12 @@
+
 import { Calendar1, ExternalLink } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-
-import { ParentTaskReference } from "@/components/form/ParentTaskReference";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { truncateText, truncateUrl } from "@/lib/utils/format";
-import { formatDate, getTooltipContent } from "@/lib/utils/shared";
-import type { Task } from "@/types";
-
-import TaskActions from "../actions/TaskActions";
-
+import { formatDate } from "@/lib/utils/shared";
 import { TaskImageGallery } from "./TaskImageGallery";
-
-
+import { ParentTaskReference } from "@/components/form/ParentTaskReference";
+import TaskActions from "../actions/TaskActions";
+import { getTaskStatus } from "../../utils/taskUiUtils";
+import { useNavigate } from "react-router-dom";
+import type { Task } from "@/types";
 
 interface TaskDetailsContentProps {
   task: Task;
@@ -20,15 +15,14 @@ interface TaskDetailsContentProps {
 
 export default function TaskDetailsContent({ task, isExpanded = false }: TaskDetailsContentProps) {
   const navigate = useNavigate();
+  const status = getTaskStatus(task);
 
   return (
     <div className="space-y-4">
       {/* Task Description */}
       {task.description && (
         <div>
-          <p className="text-muted-foreground text-sm">
-            {isExpanded ? task.description : truncateText(task.description, 150)}
-          </p>
+          <p className="text-sm text-muted-foreground">{task.description}</p>
         </div>
       )}
 
@@ -40,33 +34,23 @@ export default function TaskDetailsContent({ task, isExpanded = false }: TaskDet
         <div className="space-y-3">
           {task.due_date && (
             <div className="flex items-center gap-3">
-              <Calendar1 className="text-muted-foreground size-4" />
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <span className="text-muted-foreground cursor-help text-sm">
-                      {formatDate(task.due_date)}
-                    </span>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    {getTooltipContent(task.due_date)}
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <Calendar1 className="h-4 w-4 text-muted-foreground" />
+              <span className="text-sm text-muted-foreground">
+                {formatDate(task.due_date)}
+              </span>
             </div>
           )}
 
           {task.url_link && (
             <div className="flex items-center gap-2">
-              <ExternalLink className="text-primary size-4" />
+              <ExternalLink className="h-4 w-4 text-primary" />
               <a
                 href={task.url_link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-primary flex items-center gap-1 text-sm hover:underline"
-                title={task.url_link}
+                className="flex items-center gap-1 text-sm text-primary hover:underline"
               >
-                {truncateUrl(task.url_link, 40)}
+                {task.url_link}
               </a>
             </div>
           )}

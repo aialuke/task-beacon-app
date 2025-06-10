@@ -13,12 +13,12 @@ export const AuthModeToggle = memo(function AuthModeToggle({
 }: AuthModeToggleProps) {
   return (
     <div className="mt-8 text-center">
-      <p className="text-muted-foreground text-sm">
+      <p className="text-sm text-muted-foreground">
         {mode === 'signin' ? "Don't have an account? " : 'Already have an account? '}
         <button
           type="button"
           onClick={onToggle}
-          className="text-primary hover:text-primary/80 font-medium transition-colors focus:underline focus:outline-none"
+          className="font-medium text-primary transition-colors hover:text-primary/80 focus:outline-none focus:underline"
           disabled={loading}
         >
           {mode === 'signin' ? 'Sign up' : 'Sign in'}

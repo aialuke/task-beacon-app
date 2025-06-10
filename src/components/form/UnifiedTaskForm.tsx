@@ -1,13 +1,9 @@
 
 import { FileText, Sparkles } from 'lucide-react';
-import { useState, useCallback } from 'react';
-
-import { QuickActionBar } from '@/components/form/QuickActionBar';
 import { FloatingInput } from '@/components/ui/form/FloatingInput';
 import { FloatingTextarea } from '@/components/ui/form/FloatingTextarea';
-import { isDatePast } from '@/lib/utils/date';
+import { QuickActionBar } from '@/components/form/QuickActionBar';
 import type { ProcessingResult } from '@/lib/utils/image';
-import { validateTaskCreation, isValidUrl } from '@/lib/validation/validators';
 
 interface UnifiedTaskFormProps {
   // Form state
@@ -80,135 +76,56 @@ export function UnifiedTaskForm({
   headerSubtitle,
   titleLabel = 'Task Title',
   descriptionLabel = 'Description',
-  titlePlaceholder: _titlePlaceholder,
+  titlePlaceholder,
   descriptionPlaceholder = 'Describe your task...',
   disabled = false,
   children,
 }: UnifiedTaskFormProps) {
-  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
-
-  const validateForm = useCallback(() => {
-    const formData = {
-      title,
-      description,
-      dueDate: dueDate || undefined,
-      url: url || undefined,
-      assigneeId: assigneeId || undefined,
-    };
-
-    // Use enhanced task creation validation
-    const result = validateTaskCreation(formData);
-    const errors: Record<string, string> = {};
-
-    if (!result.success) {
-      result.error.errors.forEach(error => {
-        const field = error.path.join('.');
-        if (field) {
-          errors[field] = error.message;
-        }
-      });
-    }
-
-    // Additional URL validation using isValidUrl
-    if (url && !isValidUrl(url)) {
-      errors.url = 'Please enter a valid URL';
-    }
-
-    // Additional date validation using isDatePast
-    if (dueDate && isDatePast(dueDate)) {
-      errors.dueDate = 'Due date must be in the future';
-    }
-
-    setValidationErrors(errors);
-    return Object.keys(errors).length === 0;
-  }, [title, description, dueDate, url, assigneeId]);
-
   const handleUrlChange = (newUrl: string) => {
     setUrl(newUrl);
-    // Clear URL validation error when user starts typing
-    if (validationErrors.url) {
-      setValidationErrors(prev => ({ ...prev, url: '' }));
-    }
   };
 
   const handleDueDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDueDate(e.target.value);
-    // Clear date validation error when user changes date
-    if (validationErrors.dueDate) {
-      setValidationErrors(prev => ({ ...prev, dueDate: '' }));
-    }
-  };
-
-  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
-    // Clear title validation error when user starts typing
-    if (validationErrors.title) {
-      setValidationErrors(prev => ({ ...prev, title: '' }));
-    }
-  };
-
-  const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setDescription(e.target.value);
-    // Clear description validation error when user starts typing
-    if (validationErrors.description) {
-      setValidationErrors(prev => ({ ...prev, description: '' }));
-    }
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (validateForm()) {
-      onSubmit(e);
-    }
   };
 
   return (
-    <div className="border-border bg-card/40 text-card-foreground w-full rounded-3xl border p-8 shadow-2xl shadow-black/5 backdrop-blur-xl">
+    <div className="w-full rounded-3xl border border-border bg-card/40 p-8 text-card-foreground shadow-2xl shadow-black/5 backdrop-blur-xl">
       {/* Header */}
       <header className="mb-4 text-center">
         <div className="relative inline-block">
-          <h1 className="from-foreground to-foreground/80 text-foreground mb-2 bg-gradient-to-r bg-clip-text text-2xl font-bold">
+          <h1 className="mb-2 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-2xl font-bold text-foreground">
             {headerTitle}
           </h1>
-          <div className="from-primary/50 to-primary absolute -bottom-1 left-1/2 h-0.5 w-16 -translate-x-1/2 rounded-full bg-gradient-to-r" />
+          <div className="absolute -bottom-1 left-1/2 h-0.5 w-16 -translate-x-1/2 rounded-full bg-gradient-to-r from-primary/50 to-primary" />
         </div>
-        <p className="text-muted-foreground mt-3 text-sm font-medium">
+        <p className="mt-3 text-sm font-medium text-muted-foreground">
           {headerSubtitle}
         </p>
       </header>
 
-      <form className="space-y-6" onSubmit={handleSubmit}>
+      <form className="space-y-6" onSubmit={onSubmit}>
         {/* Main Title Input */}
-        <div>
-          <FloatingInput
-            id="title"
-            value={title}
-            onChange={handleTitleChange}
-            label={titleLabel}
-            icon={<FileText className="size-4" />}
-            maxLength={22}
-            required
-            disabled={disabled}
-          />
-          {validationErrors.title && (
-            <p className="mt-1 text-sm text-red-500">{validationErrors.title}</p>
-          )}
-        </div>
+        <FloatingInput
+          id="title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          label={titleLabel}
+          icon={<FileText className="h-4 w-4" />}
+          maxLength={22}
+          required
+          disabled={disabled}
+        />
 
         {/* Description Field */}
-        <div>
-          <FloatingTextarea
-            id="description"
-            value={description}
-            onChange={handleDescriptionChange}
-            placeholder={descriptionPlaceholder}
-            label={descriptionLabel}
-            icon={<Sparkles className="size-4" />}
-          />
-          {validationErrors.description && (
-            <p className="mt-1 text-sm text-red-500">{validationErrors.description}</p>
-          )}
-        </div>
+        <FloatingTextarea
+          id="description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder={descriptionPlaceholder}
+          label={descriptionLabel}
+          icon={<Sparkles className="h-4 w-4" />}
+        />
 
         {/* Quick Action Bar */}
         <div className="w-full">

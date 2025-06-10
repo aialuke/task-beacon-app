@@ -1,13 +1,12 @@
-import { LogOut, User } from "lucide-react";
 import { memo } from "react";
-
+import { LogOut, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/core";
 
 function TaskDashboardHeader() {
@@ -43,9 +42,9 @@ function TaskDashboardHeader() {
           <img
             src="/assets/hourglass_logo.svg"
             alt="Task Flow Logo"
-            className="size-7 sm:size-8"
+            className="h-7 w-7 sm:h-8 sm:w-8"
           />
-          <h1 className="text-foreground text-xl font-semibold tracking-wide sm:text-2xl">
+          <h1 className="text-xl font-semibold tracking-wide text-foreground sm:text-2xl">
             Task Flow
           </h1>
         </div>
@@ -57,9 +56,9 @@ function TaskDashboardHeader() {
             <PopoverTrigger asChild>
               <Button
                 variant="ghost"
-                className="relative size-10 rounded-full p-0"
+                className="relative h-10 w-10 rounded-full p-0"
               >
-                <Avatar className="size-9">
+                <Avatar className="h-9 w-9">
                   <AvatarImage
                     src={user.user_metadata?.avatar_url}
                     alt={user.user_metadata?.full_name || user.email || "User"}
@@ -72,14 +71,14 @@ function TaskDashboardHeader() {
             </PopoverTrigger>
             <PopoverContent className="w-56 p-0" align="end">
               <div className="flex flex-col">
-                <div className="border-border border-b px-4 py-3">
+                <div className="px-4 py-3 border-b border-border">
                   <div className="flex items-center gap-2">
-                    <User className="text-muted-foreground size-4" />
+                    <User className="h-4 w-4 text-muted-foreground" />
                     <div className="flex flex-col">
                       <p className="text-sm font-medium">
                         {user.user_metadata?.full_name || "User"}
                       </p>
-                      <p className="text-muted-foreground truncate text-xs">
+                      <p className="text-xs text-muted-foreground truncate">
                         {user.email}
                       </p>
                     </div>
@@ -88,10 +87,10 @@ function TaskDashboardHeader() {
                 <div className="p-1">
                   <Button
                     variant="ghost"
-                    className="w-full justify-start gap-2 text-red-600 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-950"
+                    className="w-full justify-start gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
                     onClick={handleLogout}
                   >
-                    <LogOut className="size-4" />
+                    <LogOut className="h-4 w-4" />
                     Logout
                   </Button>
                 </div>

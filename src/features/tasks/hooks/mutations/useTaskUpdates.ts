@@ -1,12 +1,8 @@
 
-import { useCallback } from 'react';
-
-import { TaskService } from '@/lib/api/tasks';
 import { Task } from '@/types';
-
+import { TaskService } from '@/lib/api/tasks';
 import { useTaskOptimisticUpdates } from '../useTaskOptimisticUpdates';
-
-
+import { useCallback } from 'react';
 import { useBaseMutation } from './useBaseMutation';
 
 interface TaskUpdateVariables {

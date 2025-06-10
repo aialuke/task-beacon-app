@@ -1,17 +1,13 @@
+
+import { useState } from 'react';
 import { User, ImageUp, Link, FileCheck } from 'lucide-react';
-import { useState, lazy, Suspense } from 'react';
-
-import { ModalContentSkeleton } from '@/components/ui/loading/SkeletonLoader';
-import type { ProcessingResult } from '@/lib/utils/image';
-
-import { ActionButton } from './components/ActionButton';
 import { DatePickerButton } from './components/DatePickerButton';
+import { ActionButton } from './components/ActionButton';
 import { SubmitButton } from './components/SubmitButton';
-
-// Lazy load modal components for performance optimization
-const SimplePhotoUploadModal = lazy(() => import('./SimplePhotoUploadModal'));
-const UrlInputModal = lazy(() => import('./UrlInputModal').then(module => ({ default: module.UrlInputModal })));
-const UserSearchModal = lazy(() => import('./UserSearchModal').then(module => ({ default: module.UserSearchModal })));
+import { UrlInputModal } from './UrlInputModal';
+import { UserSearchModal } from './UserSearchModal';
+import SimplePhotoUploadModal from './SimplePhotoUploadModal';
+import type { ProcessingResult } from '@/lib/utils/image';
 
 interface QuickActionBarProps {
   // Date picker props
@@ -40,13 +36,6 @@ interface QuickActionBarProps {
 
   disabled?: boolean;
 }
-
-// Phase 2: Enhanced loading fallback component for modals with skeleton UI
-const ModalLoader = () => (
-  <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm dark:bg-gray-900/80">
-    <ModalContentSkeleton />
-  </div>
-);
 
 export function QuickActionBar({
   dueDate,
@@ -84,7 +73,7 @@ export function QuickActionBar({
   };
 
   return (
-    <div className="bg-background/30 flex items-center justify-center gap-4 rounded-xl px-4 py-1.5 backdrop-blur-sm">
+    <div className="flex items-center justify-center gap-4 rounded-xl bg-background/30 px-4 py-1.5 backdrop-blur-sm">
       {/* Action buttons container */}
       <div className="flex items-center gap-3">
         {/* Date Picker Button */}
@@ -130,44 +119,33 @@ export function QuickActionBar({
         disabled={disabled}
       />
 
-      {/* Conditionally rendered modals with lazy loading */}
-      {isUrlModalOpen && (
-        <Suspense fallback={<ModalLoader />}>
-          <UrlInputModal
-            isOpen={isUrlModalOpen}
-            onClose={() => { setIsUrlModalOpen(false); }}
-            value={url}
-            onChange={onUrlChange}
-          />
-        </Suspense>
-      )}
+      {/* Modals */}
+      <UrlInputModal
+        isOpen={isUrlModalOpen}
+        onClose={() => { setIsUrlModalOpen(false); }}
+        value={url}
+        onChange={onUrlChange}
+      />
 
-      {isUserModalOpen && (
-        <Suspense fallback={<ModalLoader />}>
-          <UserSearchModal
-            isOpen={isUserModalOpen}
-            onClose={() => { setIsUserModalOpen(false); }}
-            value={assigneeId}
-            onChange={onAssigneeChange}
-          />
-        </Suspense>
-      )}
+      <UserSearchModal
+        isOpen={isUserModalOpen}
+        onClose={() => { setIsUserModalOpen(false); }}
+        value={assigneeId}
+        onChange={onAssigneeChange}
+      />
 
-      {isPhotoModalOpen && (
-        <Suspense fallback={<ModalLoader />}>
-          <SimplePhotoUploadModal
-            isOpen={isPhotoModalOpen}
-            onClose={() => { setIsPhotoModalOpen(false); }}
-            photoPreview={photoPreview}
-            onPhotoChange={onPhotoChange}
-            onPhotoRemove={onPhotoRemove}
-            onSubmit={handlePhotoSubmit}
-            processingResult={processingResult}
-            loading={photoLoading}
-            title="Upload Task Image"
-          />
-        </Suspense>
-      )}
+      {/* Simple Photo Upload Modal */}
+      <SimplePhotoUploadModal
+        isOpen={isPhotoModalOpen}
+        onClose={() => { setIsPhotoModalOpen(false); }}
+        photoPreview={photoPreview}
+        onPhotoChange={onPhotoChange}
+        onPhotoRemove={onPhotoRemove}
+        onSubmit={handlePhotoSubmit}
+        processingResult={processingResult}
+        loading={photoLoading}
+        title="Upload Task Image"
+      />
     </div>
   );
-} 
+}

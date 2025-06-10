@@ -4,16 +4,18 @@ import { memo, useMemo } from "react";
 
 // === INTERNAL UTILITIES ===
 import { CardLoader } from "@/components/ui/loading/UnifiedLoadingStates";
-// === COMPONENTS ===
-// === HOOKS ===
-import { useTaskDataContext, useTaskUIContext } from "@/features/tasks/context";
-import { useTasksFilter } from "@/features/tasks/hooks/useTasksFilter";
-import { getStaggeredDelay } from "@/animations";
-// === TYPES ===
-import type { Task } from "@/types";
 
+// === COMPONENTS ===
 import { TaskCard } from "../cards";
 import TaskPagination from "../TaskPagination";
+
+// === HOOKS ===
+import { useTaskDataContext } from "@/features/tasks/context/TaskDataContext";
+import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
+import { useTasksFilter } from "@/features/tasks/hooks/useTasksFilter";
+
+// === TYPES ===
+import type { Task } from "@/types";
 
 function TaskListComponent() {
   const {
@@ -27,9 +29,8 @@ function TaskListComponent() {
 
   const { filter, isMobile } = useTaskUIContext();
 
-  // Filter tasks based on current filter (ensure it returns array)
-  const filteredTasksResult = useTasksFilter(tasks, filter);
-  const filteredTasks = Array.isArray(filteredTasksResult) ? filteredTasksResult : [];
+  // Filter tasks based on current filter
+  const filteredTasks = useTasksFilter(tasks, filter);
 
   // Show pagination if there are multiple pages
   const shouldShowPagination = useMemo(
@@ -48,7 +49,7 @@ function TaskListComponent() {
       <div className="flex h-64 items-center justify-center">
         <div className="text-center">
           <p className="text-muted-foreground">Failed to load tasks</p>
-          <p className="text-muted-foreground text-sm">{error}</p>
+          <p className="text-sm text-muted-foreground">{error}</p>
         </div>
       </div>
     );
@@ -64,15 +65,8 @@ function TaskListComponent() {
           </div>
         ) : (
           <div className={`space-y-4 sm:space-y-6 ${isMobile ? "pb-20" : "pb-6"}`}>
-            {filteredTasks.map((task: Task, index: number) => (
-              <TaskCard 
-                key={task.id} 
-                task={task}
-                style={{
-                  animationDelay: getStaggeredDelay(index),
-                }}
-                className="animate-fade-in"
-              />
+            {filteredTasks.map((task: Task) => (
+              <TaskCard key={task.id} task={task} />
             ))}
           </div>
         )}
@@ -80,7 +74,7 @@ function TaskListComponent() {
 
       {/* Pagination Section - Now uses refactored component */}
       {shouldShowPagination && (
-        <div className="border-border border-t pt-6">
+        <div className="border-t border-border pt-6">
           <TaskPagination
             pagination={pagination}
             totalCount={totalCount}

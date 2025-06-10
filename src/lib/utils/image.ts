@@ -7,8 +7,6 @@
 
 import { logger } from '../logger';
 
-import { executeWithConcurrency } from './async';
-
 // ============================================================================
 // TYPES
 // ============================================================================
@@ -348,7 +346,7 @@ export async function resizeImage(
   file: File,
   maxWidth: number,
   maxHeight: number = maxWidth,
-  quality = 0.85
+  quality: number = 0.85
 ): Promise<Blob> {
   const result = await processImageEnhanced(file, {
     maxWidth,
@@ -366,7 +364,7 @@ export async function resizeImage(
  */
 export async function convertToWebPWithFallback(
   file: File,
-  quality = 0.85
+  quality: number = 0.85
 ): Promise<ConversionResult> {
   const supportsWebP = await WebPDetector.supportsWebP();
   
@@ -401,57 +399,5 @@ export async function generateThumbnail(
   return result.blob;
 }
 
-// ============================================================================
-// BATCH PROCESSING FUNCTIONS
-// ============================================================================
-
-/**
- * Process multiple images concurrently with controlled concurrency
- */
-export async function processBatchImages(
-  files: File[],
-  options: EnhancedImageProcessingOptions = {},
-  concurrency = 3
-): Promise<ProcessingResult[]> {
-  const operations = files.map(file => 
-    () => processImageEnhanced(file, options)
-  );
-  
-  return executeWithConcurrency(operations, concurrency);
-}
-
-/**
- * Generate thumbnails for multiple images concurrently
- */
-export async function generateBatchThumbnails(
-  files: File[],
-  size = 150,
-  format: 'auto' | 'webp' | 'jpeg' = 'auto',
-  concurrency = 3
-): Promise<Blob[]> {
-  const operations = files.map(file => 
-    () => generateThumbnail(file, size, format)
-  );
-  
-  return executeWithConcurrency(operations, concurrency);
-}
-
-/**
- * Resize multiple images concurrently
- */
-export async function resizeBatchImages(
-  files: File[],
-  maxWidth: number,
-  maxHeight: number = maxWidth,
-  quality = 0.85,
-  concurrency = 3
-): Promise<Blob[]> {
-  const operations = files.map(file => 
-    () => resizeImage(file, maxWidth, maxHeight, quality)
-  );
-  
-  return executeWithConcurrency(operations, concurrency);
-}
-
 // Re-export for backward compatibility
- 
+export const extractImageMetadataEnhanced = extractImageMetadata; 

@@ -1,10 +1,8 @@
 
-import type { User, Session, AuthError } from '@supabase/supabase-js';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-
-import { supabase } from '@/integrations/supabase/client';
-
 import { AuthService } from './AuthService';
+import { supabase } from '@/integrations/supabase/client';
+import type { User, Session, AuthError } from '@supabase/supabase-js';
 
 // Helper to create mock AuthError
 const createMockAuthError = (message: string): AuthError => ({

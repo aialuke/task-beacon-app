@@ -1,6 +1,6 @@
 
-import { ReferenceCard } from '@/components/form/ReferenceCard';
 import { TaskWithRelations } from '@/types';
+import { ReferenceCard } from '@/components/form/ReferenceCard';
 
 interface ParentTaskReferenceProps {
   parentTask: NonNullable<TaskWithRelations['parent_task']>;

@@ -23,7 +23,7 @@ export function AnimatedCharacterCount({
         className={cn(
           'text-xs font-medium transition-all duration-300',
           isOverLimit
-            ? 'text-destructive animate-pulse'
+            ? 'animate-pulse text-destructive'
             : isNearLimit
               ? 'text-warning animate-pulse'
               : 'text-muted-foreground',
@@ -35,3 +35,5 @@ export function AnimatedCharacterCount({
     </div>
   );
 }
+
+export default AnimatedCharacterCount;

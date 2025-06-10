@@ -1,0 +1,58 @@
+```yaml
+inputs:
+  ignore_draft_pr: false
+  release_notes: true
+  enable_beta_features: true
+  system_language: "en-US"
+  path_filters:
+    - "src/**"                    # Core code, tests, styles
+    - "vite.config.ts"            # Vite config
+    - "eslint.config.js"          # ESLint config
+    - "tsconfig*.json"            # TypeScript configs
+    - ".stylelintrc.json"         # Stylelint config
+    - "postcss.config.js"         # PostCSS config
+    - "tailwind.config.ts"        # Tailwind config
+    - "knip.config.ts"            # Knip config
+    - "supabase/config.toml"      # Supabase config
+    - "!dist/**"                  # Build output
+    - "!node_modules/**"          # Dependencies
+    - "!coverage/**"              # Test coverage
+    - "!purged.css"               # PostCSS output
+    - "!stylelint-report.txt"     # Stylelint report
+    - "!postcss.purge.js"         # PurgeCSS config
+    - "!bun.lockb"                # Bun lockfile
+    - "!.env*"                    # Environment files
+    - "!.vite/**"                 # Vite cache
+    - "!.DS_Store"                # macOS metadata
+    - "!.cursor/**"               # Cursor rules
+    - "!public/**"                # Static assets
+    - "!docs/**"                  # Documentation
+    - "!.github/**"               # CI/CD configs
+    - "!README.md"                # Project readme
+    - "!index.html"               # HTML entry
+    - "!components.json"          # Component config
+    - "!package.json"             # Package metadata
+    - "!package-lock.json"        # Lockfile
+    - "!*.min.*"                  # Minified files
+
+tools:
+  eslint:
+    enabled: true
+    config_file: eslint.config.js
+  stylelint:
+    enabled: true
+    config_file: .stylelintrc.json
+
+reviews:
+  tone: constructive
+  max_files: 200                # Match CodeRabbit's limit
+  file_comments: true
+  summary: true
+  walkthrough: true
+  focus:
+    - security                  # Supabase auth, API
+    - performance               # React Query, Tailwind
+    - readability               # TypeScript, components
+    - testability               # Vitest tests
+    - accessibility             # Radix UI, CSS
+```

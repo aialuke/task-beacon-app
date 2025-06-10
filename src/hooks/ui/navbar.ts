@@ -1,17 +1,15 @@
+import { useRef, useEffect, useState, useCallback } from 'react';
 import { useSpring } from '@react-spring/web';
 import { LucideIcon } from 'lucide-react';
-import { useRef, useEffect, useState, useCallback } from 'react';
-
 import {
   computeNavbarColors,
   setupThemeObserver,
-} from '@/features/tasks/utils/navbarColors';
+} from '@/lib/utils/navbarColors';
 import {
   calculateActiveButtonBounds,
   calculateIndicatorPosition,
   calculateGlowPosition,
-} from '@/features/tasks/utils/navbarGeometry';
-import { throttle } from '@/lib/utils/core';
+} from '@/lib/utils/navbarGeometry';
 
 interface NavItem {
   name: string;
@@ -90,14 +88,14 @@ export function useNavbar({ items, activeItem, onItemChange }: UseNavbarOptions)
     return () => { cancelAnimationFrame(frame); };
   }, [updateActiveButtonBounds]);
 
-  // Handle window resize with throttling for performance
+  // Handle window resize
   useEffect(() => {
-    const throttledResize = throttle(() => {
+    const handleResize = () => {
       updateActiveButtonBounds();
-    }, 100); // Throttle resize events to 100ms
+    };
 
-    window.addEventListener('resize', throttledResize);
-    return () => { window.removeEventListener('resize', throttledResize); };
+    window.addEventListener('resize', handleResize);
+    return () => { window.removeEventListener('resize', handleResize); };
   }, [updateActiveButtonBounds]);
 
   // Keyboard navigation

@@ -1,13 +1,13 @@
-import { createContext, ReactNode } from 'react';
-
-import { useAuth as useAuthHook } from '@/hooks/core';
+import { createContext, useContext, ReactNode } from 'react';
 import type { AuthContextType } from '@/types/shared/auth.types';
+import { useAuth as useAuthHook } from '@/hooks/core';
 
 interface AuthProviderProps {
   children: ReactNode;
 }
 
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+// Note: AuthContext export removed as unused
 
 export function AuthProvider({ children }: AuthProviderProps) {
   // Use the simplified auth hook
@@ -28,4 +28,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
       {children}
     </AuthContext.Provider>
   );
+}
+
+/**
+ * Hook for accessing authentication context
+ * Must be used within an AuthProvider
+ */
+export function useAuth(): AuthContextType {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
 }

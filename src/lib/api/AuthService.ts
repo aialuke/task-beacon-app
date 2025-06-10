@@ -7,7 +7,6 @@
  */
 
 import type { User, Session } from '@supabase/supabase-js';
-
 import { supabase } from '@/integrations/supabase/client';
 import type { ApiResponse, ServiceResult, ApiError, AuthResponse } from '@/types';
 

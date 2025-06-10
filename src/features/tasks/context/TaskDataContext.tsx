@@ -1,9 +1,41 @@
-import { ReactNode } from 'react';
 
-import { UnifiedErrorBoundary } from '@/components/ui/UnifiedErrorBoundary';
+import { ReactNode } from 'react';
+import { createStandardContext } from '@/lib/utils/createContext';
+import UnifiedErrorBoundary from '@/components/ui/UnifiedErrorBoundary';
+import type { Task } from '@/types';
 import { useTasksQuery } from '@/features/tasks/hooks/useTasksQuery';
 
-import { TaskDataProvider, type TaskDataContextValue } from './task-data-utils';
+interface TaskDataContextValue {
+  // Data state (from React Query with standardized patterns)
+  tasks: Task[];
+  isLoading: boolean;
+  isFetching: boolean;
+  error: string | null;
+  
+  // Pagination object (complete pagination API)
+  pagination: {
+    currentPage: number;
+    totalPages: number;
+    pageSize: number;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+    goToNextPage: () => void;
+    goToPreviousPage: () => void;
+    goToPage: (page: number) => void;
+  };
+  
+  // Pagination metadata
+  totalCount: number;
+  
+  // Error recovery
+  retry: () => void;
+}
+
+// Create standardized context
+const { Provider: TaskDataProvider, useContext: useTaskDataContext } = createStandardContext<TaskDataContextValue>({
+  name: 'TaskData',
+  errorMessage: 'useTaskDataContext must be used within a TaskDataContextProvider'
+});
 
 interface TaskDataContextProviderProps {
   children: ReactNode;
@@ -38,9 +70,7 @@ export function TaskDataContextProvider({
       goToPreviousPage: taskQueries.pagination.goToPreviousPage,
       goToPage: taskQueries.pagination.goToPage,
     },
-    retry: taskQueries.refetch || (() => {
-      console.warn('TaskDataContext: No refetch function available for retry');
-    }),
+    retry: taskQueries.refetch || (() => {}),
   };
 
   return (
@@ -58,4 +88,5 @@ export function TaskDataContextProvider({
   );
 }
 
-
+// Export the standardized hook
+export { useTaskDataContext };

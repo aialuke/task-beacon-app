@@ -6,7 +6,6 @@
  */
 
 import { useState, useCallback } from 'react';
-
 import { handleError, createErrorState, type ErrorOptions, type ErrorState } from '@/lib/core/ErrorHandler';
 
 // === HOOK INTERFACE ===

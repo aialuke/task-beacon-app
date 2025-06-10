@@ -5,14 +5,13 @@
  * Replaces the complex multi-hook architecture with a simpler approach.
  */
 
-import { User, Session } from '@supabase/supabase-js';
 import { useState, useEffect, useCallback } from 'react';
-
+import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { AuthService } from '@/lib/api/AuthService';
-import { cleanupAuthState } from '@/lib/auth-utils';
-import { logger, realtimeLogger } from '@/lib/logger';
 import type { ApiError } from '@/types/shared';
+import { cleanupAuthState } from '@/lib/auth-utils';
+import { logger } from '@/lib/logger';
 
 export interface UseAuthReturn {
   user: User | null;
@@ -74,8 +73,8 @@ export function useAuth(): UseAuthReturn {
       if (!response.success) {
         logMobileDebug('Sign in failed', { error: response.error });
         setError(response.error || { 
-          message: 'Failed to sign in',
-          code: 'SIGN_IN_ERROR'
+          name: 'SignInError', 
+          message: 'Failed to sign in' 
         });
         clearAuthState();
         return;
@@ -87,8 +86,8 @@ export function useAuth(): UseAuthReturn {
       logMobileDebug('Sign in error caught', { error: err });
       const errorMessage = err instanceof Error ? err.message : 'Failed to sign in';
       setError({ 
-        message: errorMessage,
-        code: 'SIGN_IN_ERROR'
+        name: 'SignInError', 
+        message: errorMessage 
       });
       clearAuthState();
     } finally {
@@ -109,7 +108,7 @@ export function useAuth(): UseAuthReturn {
       const { error } = await supabase.auth.signOut();
       if (error) {
         logMobileDebug('Sign out error', { error });
-        setError({ message: error.message, code: 'SIGN_OUT_ERROR' });
+        setError({ name: 'SignOutError', message: error.message });
         return;
       }
 
@@ -118,8 +117,8 @@ export function useAuth(): UseAuthReturn {
     } catch (err: unknown) {
       logMobileDebug('Sign out error caught', { error: err });
       setError({ 
-        message: 'An unexpected error occurred during sign out',
-        code: 'SIGN_OUT_ERROR'
+        name: 'SignOutError', 
+        message: 'An unexpected error occurred during sign out' 
       });
     } finally {
       setLoading(false);
@@ -136,7 +135,7 @@ export function useAuth(): UseAuthReturn {
       const { error } = await supabase.auth.refreshSession();
       if (error) {
         logMobileDebug('Session refresh error', { error });
-        setError({ message: error.message, code: 'REFRESH_ERROR' });
+        setError({ name: 'RefreshError', message: error.message });
         return;
       }
       
@@ -144,8 +143,8 @@ export function useAuth(): UseAuthReturn {
     } catch (err: unknown) {
       logMobileDebug('Session refresh error caught', { error: err });
       setError({ 
-        message: 'Failed to refresh session',
-        code: 'REFRESH_ERROR'
+        name: 'RefreshError', 
+        message: 'Failed to refresh session' 
       });
     } finally {
       setLoading(false);
@@ -190,11 +189,6 @@ export function useAuth(): UseAuthReturn {
         if (!mounted) return;
         
         logMobileDebug('Auth state change', { event, hasSession: !!session });
-        realtimeLogger.info('Auth state change subscription', { 
-          event, 
-          hasSession: !!session,
-          userId: session?.user?.id 
-        });
         
         updateSessionAndUser(session);
         

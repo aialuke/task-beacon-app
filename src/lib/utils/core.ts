@@ -1,8 +1,7 @@
+
 /**
  * Core utility functions that don't fit into specific domains
  */
-
-import { prefersReducedMotion } from '@/animations';
 
 /**
  * Generates a UUID v4 string
@@ -61,6 +60,9 @@ export function throttle<T extends (...args: unknown[]) => unknown>(
  * Optimize CSS animations for performance (essential function from css-optimization)
  */
 export function optimizeAnimations(): void {
+  // Import here to avoid circular dependencies
+  const { prefersReducedMotion } = require('./animation');
+  
   if (prefersReducedMotion()) {
     document.documentElement.style.setProperty('--animation-duration', '0ms');
     document.documentElement.style.setProperty('--transition-duration', '0ms');

@@ -1,12 +1,10 @@
-import { User as UserIcon, ArrowRight, X } from 'lucide-react';
-import { useState, useRef, useMemo, useEffect, useCallback } from 'react';
 
-import { Button } from '@/components/ui/button';
+import { useState, useRef, useMemo, useEffect } from 'react';
+import { User as UserIcon, ArrowRight, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { useUsersQuery } from '@/features/users/hooks/useUsersQuery';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { debounce } from '@/lib/utils/core';
-import { searchByTerm } from '@/lib/utils/data';
+import { useUsersQuery } from '@/features/users/hooks/useUsersQuery';
 
 interface AutocompleteUserInputProps {
   value: string; // user ID when selected, empty when not
@@ -28,22 +26,10 @@ export function AutocompleteUserInput({
   className,
 }: AutocompleteUserInputProps) {
   const [inputValue, setInputValue] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   
-  // Enable user query only when component is focused or has input (Performance Fix 2)
-  const shouldFetchUsers = isFocused || inputValue.length > 0 || searchTerm.length > 0;
-  const { users, isLoading: _isLoading } = useUsersQuery({ enabled: shouldFetchUsers });
-  
-  // Debounced search to improve performance
-  const debouncedSetSearchTerm = useCallback(
-    (term: string) => {
-      const debouncedFn = debounce((searchTerm: string) => setSearchTerm(searchTerm), 300);
-      debouncedFn(term);
-    },
-    [setSearchTerm]
-  );
+  const { users, isLoading } = useUsersQuery();
   
   // Find selected user
   const selectedUser = useMemo(() => 
@@ -51,23 +37,17 @@ export function AutocompleteUserInput({
     [users, value]
   );
 
-  // Filter users using searchByTerm for better search performance
-  const filteredUsers = useMemo(() => {
-    if (!searchTerm.trim()) return users;
-    return searchByTerm(users, searchTerm, ['name', 'email']);
-  }, [users, searchTerm]);
-
-  // Find exact match for typed input from filtered results
+  // Find exact match for typed input
   const exactMatch = useMemo(() => {
     if (!inputValue.trim() || selectedUser) return null;
     
-    const term = inputValue.toLowerCase().trim();
-    return filteredUsers.find(user => {
+    const searchTerm = inputValue.toLowerCase().trim();
+    return users.find(user => {
       const displayName = user.name || user.email.split('@')[0];
-      return displayName.toLowerCase() === term || 
-             user.email.toLowerCase() === term;
+      return displayName.toLowerCase() === searchTerm || 
+             user.email.toLowerCase() === searchTerm;
     });
-  }, [filteredUsers, inputValue, selectedUser]);
+  }, [users, inputValue, selectedUser]);
 
   // Auto-select exact matches
   useEffect(() => {
@@ -79,19 +59,19 @@ export function AutocompleteUserInput({
     }
   }, [exactMatch, selectedUser, onChange]);
 
-  // Find the best matching suggestion for ghost text from filtered results
+  // Find the best matching suggestion for ghost text
   const ghostSuggestion = useMemo(() => {
     if (!inputValue.trim() || selectedUser || exactMatch) return null;
     
-    const term = inputValue.toLowerCase();
-    const match = filteredUsers.find(user => {
+    const searchTerm = inputValue.toLowerCase();
+    const match = users.find(user => {
       const displayName = user.name || user.email.split('@')[0];
-      return displayName.toLowerCase().startsWith(term) || 
-             user.email.toLowerCase().startsWith(term);
+      return displayName.toLowerCase().startsWith(searchTerm) || 
+             user.email.toLowerCase().startsWith(searchTerm);
     });
     
     return match;
-  }, [filteredUsers, inputValue, selectedUser, exactMatch]);
+  }, [users, inputValue, selectedUser, exactMatch]);
 
   // Generate ghost text completion
   const ghostText = useMemo(() => {
@@ -128,9 +108,6 @@ export function AutocompleteUserInput({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setInputValue(newValue);
-    
-    // Trigger debounced search
-    debouncedSetSearchTerm(newValue);
     
     // Don't clear selection when typing - let the user keep typing to search
     // Selection will only be cleared via backspace when input is empty
@@ -196,10 +173,10 @@ export function AutocompleteUserInput({
   };
 
   const getStatusIcon = () => {
-    if (selectedUser) return <UserIcon className="size-4 text-green-500" />;
+    if (selectedUser) return <UserIcon className="h-4 w-4 text-green-500" />;
     switch (validationState) {
-      case 'invalid': return <UserIcon className="size-4 text-red-500" />;
-      default: return <UserIcon className="text-muted-foreground size-4" />;
+      case 'invalid': return <UserIcon className="h-4 w-4 text-red-500" />;
+      default: return <UserIcon className="h-4 w-4 text-muted-foreground" />;
     }
   };
 
@@ -211,7 +188,7 @@ export function AutocompleteUserInput({
       <div className="group relative">
         <div
           className={cn(
-            'bg-background/60 flex h-12 items-center rounded-2xl border p-2 backdrop-blur-sm transition-all duration-300',
+            'flex h-12 items-center rounded-2xl border bg-background/60 p-2 backdrop-blur-sm transition-all duration-300',
             'hover:border-border/60 hover:bg-background/70',
             isFocused && 'bg-background/80',
             getBorderColor(),
@@ -220,31 +197,31 @@ export function AutocompleteUserInput({
         >
           {getStatusIcon()}
 
-          <div className="ml-3 flex min-w-0 flex-1 items-center gap-2">
+          <div className="flex-1 min-w-0 ml-3 flex items-center gap-2">
             {/* User tag - displayed inline for selected user */}
             {selectedUser && (
-              <div className="bg-primary/10 text-primary flex items-center px-2 py-1 text-sm">
+              <div className="flex items-center bg-primary/10 text-primary px-2 py-1 text-sm">
                 <span>{selectedUser.name || selectedUser.email.split('@')[0]}</span>
                 <button
                   type="button"
-                  className="text-primary/70 hover:text-primary ml-1"
+                  className="ml-1 text-primary/70 hover:text-primary"
                   onClick={handleClearUser}
                   disabled={disabled}
                 >
-                  <X className="size-3" />
+                  <X className="h-3 w-3" />
                 </button>
               </div>
             )}
 
             {/* Input container with ghost text */}
-            <div className="relative min-w-0 flex-1">
+            <div className="relative flex-1 min-w-0">
               {/* Ghost text overlay */}
               {ghostText && isFocused && !selectedUser && (
-                <div className="pointer-events-none absolute inset-0 flex items-center">
-                  <span className="text-foreground select-none text-sm font-semibold">
+                <div className="absolute inset-0 pointer-events-none flex items-center">
+                  <span className="text-sm text-foreground font-semibold select-none">
                     {inputValue}
                   </span>
-                  <span className="text-muted-foreground/70 select-none text-sm">
+                  <span className="text-sm text-muted-foreground/70 select-none">
                     {ghostText}
                   </span>
                 </div>
@@ -260,7 +237,7 @@ export function AutocompleteUserInput({
                 onKeyDown={handleKeyDown}
                 onFocus={() => { setIsFocused(true); }}
                 onBlur={() => { setIsFocused(false); }}
-                className="text-foreground relative z-10 h-auto border-none bg-transparent p-0 py-3 text-sm font-semibold focus:ring-0 focus-visible:ring-0"
+                className="h-auto border-none bg-transparent p-0 py-3 pl-0 pr-0 text-sm text-foreground font-semibold focus:ring-0 focus-visible:ring-0 relative z-10"
                 disabled={disabled}
               />
             </div>
@@ -271,13 +248,13 @@ export function AutocompleteUserInput({
             type="button"
             variant="ghost"
             size="sm"
-            className="ml-2 size-8 p-0 transition-colors"
+            className="ml-2 h-8 w-8 p-0 transition-colors"
             onClick={selectedUser ? onSubmit : handleAcceptSuggestion}
             disabled={disabled || (!ghostSuggestion && !selectedUser)}
           >
             <ArrowRight 
               className={cn(
-                "size-4 transition-colors",
+                "h-4 w-4 transition-colors",
                 selectedUser ? "text-primary" : "text-muted-foreground"
               )} 
             />
@@ -287,7 +264,7 @@ export function AutocompleteUserInput({
         {/* Placeholder */}
         {showPlaceholder && (
           <label
-            className="text-muted-foreground pointer-events-none absolute left-11 top-1/2 -translate-y-1/2 select-none text-sm"
+            className="pointer-events-none absolute left-11 top-1/2 -translate-y-1/2 select-none text-sm text-muted-foreground"
           >
             {placeholder}
           </label>

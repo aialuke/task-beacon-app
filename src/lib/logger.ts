@@ -1,3 +1,4 @@
+
 /**
  * Environment-aware logging utility for the application.
  * 
@@ -276,17 +277,16 @@ export function logFunctionCall<T extends (...args: unknown[]) => unknown>(
     try {
       const result = fn(...args);
       if (result instanceof Promise) {
-        return (async () => {
-          try {
-            const res = await result;
+        return result
+          .then((res) => {
             logger.debug(`Function completed: ${functionName}`, { result: res });
             return res;
-          } catch (error: unknown) {
+          })
+          .catch((error: unknown) => {
             const errorObj = error instanceof Error ? error : new Error(String(error));
             logger.error(`Function failed: ${functionName}`, errorObj, { args });
             throw error;
-          }
-        })();
+          });
       } else {
         logger.debug(`Function completed: ${functionName}`, { result });
         return result;

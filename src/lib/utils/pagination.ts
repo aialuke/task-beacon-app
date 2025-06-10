@@ -89,7 +89,7 @@ export function validatePaginationParams(
   let pageSize = config.defaultPageSize;
 
   if (typeof params === 'object' && params !== null) {
-    const p = params as Record<string, unknown>;
+    const p = params as any;
     
     // Validate page
     if (p.page !== undefined) {

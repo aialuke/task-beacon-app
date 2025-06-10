@@ -1,10 +1,9 @@
 import { useCallback } from 'react';
 import { toast } from 'sonner';
-
-import { generateUUID } from '@/lib/utils/core';
 import {
   useUnifiedValidation,
   validateUnifiedTask,
+  type UnifiedValidationResult
 } from '@/lib/validation';
 
 interface TaskFormData {
@@ -24,7 +23,7 @@ interface TaskFormData {
  * Uses unified validation system to replace scattered validation patterns.
  */
 export function useTaskFormValidation() {
-  const { validateTaskTitle, validateTaskDescription: _validateTaskDescription, validateUrl: _validateUrl, validateField } = useUnifiedValidation();
+  const { validateTaskTitle, validateTaskDescription, validateUrl, validateField } = useUnifiedValidation();
 
   /**
    * Validate complete task form data
@@ -124,7 +123,7 @@ export function useTaskFormValidation() {
   }, []);
 
   /**
-   * Prepare task data with validation and temporary ID generation
+   * Prepare task data with validation
    */
   const prepareTaskData = useCallback((formData: TaskFormData): TaskFormData | null => {
     const validation = validateCreateTaskData(formData);
@@ -137,13 +136,6 @@ export function useTaskFormValidation() {
     return validation.data || null;
   }, [validateCreateTaskData, showValidationErrors]);
 
-  /**
-   * Generate temporary ID for draft tasks or form state management
-   */
-  const generateTempTaskId = useCallback((): string => {
-    return `temp-task-${generateUUID()}`;
-  }, []);
-
   return {
     validateTaskFormData,
     validateCreateTaskData,
@@ -153,6 +145,5 @@ export function useTaskFormValidation() {
     createTitleSetter,
     showValidationErrors,
     prepareTaskData,
-    generateTempTaskId,
   };
 }

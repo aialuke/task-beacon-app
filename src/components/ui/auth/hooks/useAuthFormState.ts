@@ -1,15 +1,13 @@
-import { useState, useRef, useCallback } from 'react';
 
-import { useErrorHandler , useSubmissionState } from '@/hooks/core';
+import { useState, useRef, useCallback } from 'react';
 import { AuthService } from '@/lib/api/AuthService';
+import { useErrorHandler } from '@/hooks/core';
+import { useSubmissionState } from '@/hooks/core';
 import { 
+  useUnifiedValidation,
   validateUnifiedSignIn,
   validateUnifiedSignUp
-} from '@/lib/validation/unified-validation';
-import { 
-  isValidEmail,
-  isValidPassword
-} from '@/lib/validation/validators';
+} from '@/lib/validation';
 
 type AuthMode = 'signin' | 'signup';
 
@@ -64,27 +62,26 @@ export function useAuthFormState(): UseAuthFormStateReturn {
   const emailInputRef = useRef<HTMLInputElement>(null);
   const { handleError } = useErrorHandler({ showToast: false });
   const { isSubmitting, startSubmitting, stopSubmitting } = useSubmissionState();
-  // Using standard validation functions for real-time validation
+  const { validateEmail: validateEmailUnified, validatePassword: validatePasswordUnified, validateUserName } = useUnifiedValidation();
+
+  // Using unified validation functions
   const validateEmail = useCallback((value: string) => {
     if (!value) return 'Email is required';
-    if (!isValidEmail(value)) return 'Please enter a valid email address';
-    return '';
-  }, []);
+    const result = validateEmailUnified(value);
+    return result.isValid ? '' : result.errors[0] || 'Invalid email';
+  }, [validateEmailUnified]);
 
   const validatePassword = useCallback((value: string) => {
     if (!value) return 'Password is required';
-    if (mode === 'signup' && !isValidPassword(value)) {
-      return 'Password must be at least 8 characters with uppercase, lowercase, number, and special character';
-    }
-    return '';
-  }, [mode]);
+    const result = validatePasswordUnified(value);
+    return result.isValid ? '' : result.errors[0] || 'Invalid password';
+  }, [validatePasswordUnified]);
 
   const validateName = useCallback((value: string) => {
     if (!value) return 'Name is required';
-    if (value.length < 2) return 'Name must be at least 2 characters';
-    if (value.length > 50) return 'Name cannot exceed 50 characters';
-    return '';
-  }, []);
+    const result = validateUserName(value);
+    return result.isValid ? '' : result.errors[0] || 'Invalid name';
+  }, [validateUserName]);
 
   const validateForm = useCallback(() => {
     const emailError = validateEmail(email);
@@ -152,15 +149,15 @@ export function useAuthFormState(): UseAuthFormStateReturn {
       // Attempt global sign out first using AuthService
       try {
         await AuthService.signOut();
-      } catch (_err) {
+      } catch (err) {
         // Pre-auth cleanup failed, continue with sign-in
       }
 
       if (mode === 'signin') {
-        // Validate with unified schema for enhanced validation
-        const unifiedResult = validateUnifiedSignIn({ email, password });
-        if (!unifiedResult.isValid) {
-          throw new Error(unifiedResult.errors[0] || 'Invalid sign-in data');
+        // Validate with unified schema
+        const validationResult = validateUnifiedSignIn({ email, password });
+        if (!validationResult.isValid) {
+          throw new Error('Invalid sign-in data');
         }
 
         const response = await AuthService.signIn(email, password);
@@ -172,10 +169,10 @@ export function useAuthFormState(): UseAuthFormStateReturn {
           window.location.href = '/';
         }, 1000);
       } else {
-        // Validate with unified schema for enhanced validation
-        const unifiedResult = validateUnifiedSignUp({ email, password, name });
-        if (!unifiedResult.isValid) {
-          throw new Error(unifiedResult.errors[0] || 'Invalid sign-up data');
+        // Validate with unified schema
+        const validationResult = validateUnifiedSignUp({ email, password, name });
+        if (!validationResult.isValid) {
+          throw new Error('Invalid sign-up data');
         }
 
         const response = await AuthService.signUp(email, password, {
@@ -218,7 +215,7 @@ export function useAuthFormState(): UseAuthFormStateReturn {
     } finally {
       stopSubmitting();
     }
-  }, [mode, email, password, name, handleError, validateForm, cleanupAuthState, startSubmitting, stopSubmitting]);
+  }, [mode, email, password, name, handleError, validateForm, cleanupAuthState]);
 
   const toggleMode = useCallback(() => {
     setMode(prevMode => prevMode === 'signin' ? 'signup' : 'signin');
@@ -250,3 +247,6 @@ export function useAuthFormState(): UseAuthFormStateReturn {
     handleNameChange,
   };
 }
+
+// Export alias for backward compatibility
+export const useAuthForm = useAuthFormState;

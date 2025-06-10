@@ -6,11 +6,6 @@
  */
 
 import { z } from 'zod';
-
-import { DEFAULT_PAGINATION_CONFIG } from '@/lib/utils/pagination';
-
-import { isDatePast } from '../utils/date';
-
 import { 
   unifiedEmailSchema, 
   unifiedPasswordSchema, 
@@ -18,7 +13,9 @@ import {
   unifiedTaskTitleSchema,
   unifiedTaskDescriptionSchema,
   unifiedUrlSchema,
+  UNIFIED_VALIDATION_MESSAGES 
 } from './unified-validation';
+import { DEFAULT_PAGINATION_CONFIG } from '@/lib/utils/pagination';
 
 // ============================================================================
 // COMMON SCHEMAS
@@ -41,9 +38,7 @@ export const paginationSchema = z.object({
 });
 
 export const sortingSchema = z.object({
-  field: z.enum(['created_at', 'updated_at', 'due_date', 'title', 'priority', 'status'], {
-    errorMap: () => ({ message: 'Sort field must be one of: created_at, updated_at, due_date, title, priority, status' }),
-  }),
+  field: z.string().min(1, 'Sort field is required'),
   order: z.enum(['asc', 'desc']).default('asc'),
 });
 
@@ -69,7 +64,21 @@ export const signUpSchema = z.object({
   }
 );
 
+export const passwordResetSchema = z.object({
+  email: unifiedEmailSchema,
+});
 
+export const passwordChangeSchema = z.object({
+  currentPassword: z.string().min(1, 'Current password is required'),
+  newPassword: unifiedPasswordSchema,
+  confirmNewPassword: z.string().min(1, 'Password confirmation is required'),
+}).refine(
+  (data) => data.newPassword === data.confirmNewPassword,
+  {
+    message: "New passwords don't match",
+    path: ["confirmNewPassword"],
+  }
+);
 
 // ============================================================================
 // USER PROFILE SCHEMAS
@@ -110,8 +119,8 @@ const futureDateSchema = z
       if (!date || typeof date !== 'string') return true;
       const dateObj = new Date(date);
       if (isNaN(dateObj.getTime())) return false;
-      // Use the isDatePast utility for consistent date validation
-      return !isDatePast(date);
+      const now = new Date();
+      return dateObj > now;
     },
     'Date cannot be in the past'
   );
@@ -147,7 +156,7 @@ export const taskFormSchema = z.object({
         new URL(url);
         return true;
       } catch {
-        const domainPattern = /^(www\.)?[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
+        const domainPattern = /^(www\.)?[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
         return domainPattern.test(url.trim());
       }
     },
@@ -180,7 +189,12 @@ export const fileUploadSchema = z.object({
 // TYPE EXPORTS
 // ============================================================================
 
+export type SignInInput = z.infer<typeof signInSchema>;
+export type SignUpInput = z.infer<typeof signUpSchema>;
+export type PasswordResetInput = z.infer<typeof passwordResetSchema>;
+export type PasswordChangeInput = z.infer<typeof passwordChangeSchema>;
 export type ProfileUpdateInput = z.infer<typeof profileUpdateSchema>;
+export type ProfileCreateInput = z.infer<typeof profileCreateSchema>;
 
 export type TaskPriority = z.infer<typeof taskPrioritySchema>;
 export type TaskStatus = z.infer<typeof taskStatusSchema>;

@@ -6,7 +6,7 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
-export interface Database {
+export type Database = {
   public: {
     Tables: {
       profiles: {
@@ -107,7 +107,9 @@ export interface Database {
         ]
       }
     }
-    Views: Record<never, never>
+    Views: {
+      [_ in never]: never
+    }
     Functions: {
       is_valid_email: {
         Args: { email: string }
@@ -126,7 +128,9 @@ export interface Database {
       task_status: "pending" | "complete" | "overdue"
       user_role: "admin" | "manager" | "user"
     }
-    CompositeTypes: Record<never, never>
+    CompositeTypes: {
+      [_ in never]: never
+    }
   }
 }
 

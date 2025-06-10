@@ -8,13 +8,30 @@
 import { 
   signInSchema, 
   signUpSchema, 
+  passwordResetSchema,
+  passwordChangeSchema,
   profileUpdateSchema, 
   profileCreateSchema,
   createTaskSchema,
+  updateTaskSchema,
   taskFormSchema,
+  taskFilterSchema,
   paginationSchema,
   sortingSchema,
-  fileUploadSchema
+  fileUploadSchema,
+  type SignInInput,
+  type SignUpInput,
+  type PasswordResetInput,
+  type PasswordChangeInput,
+  type ProfileUpdateInput,
+  type ProfileCreateInput,
+  type CreateTaskInput,
+  type UpdateTaskInput,
+  type TaskFormInput,
+  type TaskFilterInput,
+  type PaginationInput,
+  type SortingInput,
+  type FileUploadInput
 } from './schemas';
 
 // ============================================================================
@@ -27,6 +44,14 @@ export function validateSignIn(data: unknown) {
 
 export function validateSignUp(data: unknown) {
   return signUpSchema.safeParse(data);
+}
+
+export function validatePasswordReset(data: unknown) {
+  return passwordResetSchema.safeParse(data);
+}
+
+export function validatePasswordChange(data: unknown) {
+  return passwordChangeSchema.safeParse(data);
 }
 
 // ============================================================================
@@ -49,8 +74,16 @@ export function validateTaskCreation(data: unknown) {
   return createTaskSchema.safeParse(data);
 }
 
+export function validateTaskUpdate(data: unknown) {
+  return updateTaskSchema.safeParse(data);
+}
+
 export function validateTaskForm(data: unknown) {
   return taskFormSchema.safeParse(data);
+}
+
+export function validateTaskFilter(data: unknown) {
+  return taskFilterSchema.safeParse(data);
 }
 
 // ============================================================================
@@ -69,7 +102,23 @@ export function validateFileUpload(data: unknown) {
   return fileUploadSchema.safeParse(data);
 }
 
+// ============================================================================
+// TRANSFORMATION UTILITIES
+// ============================================================================
 
+/**
+ * Transform form data to API format for task creation
+ */
+export function transformTaskFormToApiData(formData: TaskFormInput): Partial<CreateTaskInput> {
+  return {
+    title: formData.title,
+    description: formData.description || undefined,
+    priority: formData.priority,
+    due_date: formData.dueDate || undefined,
+    url_link: formData.url || undefined,
+    assignee_id: formData.assigneeId || undefined,
+  };
+}
 
 // ============================================================================
 // VALIDATION RESULT HELPERS
@@ -116,7 +165,18 @@ export function toValidationResult<T>(result: ReturnType<typeof signInSchema.saf
 // VALIDATION HOOKS UTILITIES
 // ============================================================================
 
-
+/**
+ * Generic field validator
+ */
+export function validateField(fieldName: string, value: unknown): { isValid: boolean; error?: string } {
+  // This could be extended to map field names to specific validators
+  // For now, we'll keep it simple and return a basic validation
+  if (value === null || value === undefined || value === '') {
+    return { isValid: false, error: 'This field is required' };
+  }
+  
+  return { isValid: true };
+}
 
 /**
  * Validate email format specifically
@@ -157,7 +217,7 @@ export function isValidUrl(url: string): boolean {
     new URL(url);
     return true;
   } catch {
-    const domainPattern = /^(www\.)?[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
+    const domainPattern = /^(www\.)?[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
     return domainPattern.test(url.trim());
   }
 }

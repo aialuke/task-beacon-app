@@ -1,11 +1,8 @@
 
-import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
-
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
-import type { ProcessingResult } from '@/lib/utils/image';
-
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import SimplePhotoUpload from './SimplePhotoUpload';
-
+import type { ProcessingResult } from '@/lib/utils/image';
 
 interface SimplePhotoUploadModalProps {
   isOpen: boolean;
@@ -38,7 +35,7 @@ export default function SimplePhotoUploadModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-xs py-4">
+      <DialogContent className="max-w-xs pt-4 pb-4">
         <VisuallyHidden>
           <DialogTitle>Upload Photo</DialogTitle>
         </VisuallyHidden>

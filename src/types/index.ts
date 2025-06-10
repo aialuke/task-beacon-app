@@ -33,7 +33,7 @@ export type {
   SignInCredentials,
   SignUpCredentials,
   SignUpOptions,
-} from './shared/auth.types';
+} from './auth.types';
 
 // API types
 export type {

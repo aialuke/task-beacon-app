@@ -1,8 +1,7 @@
 import "@testing-library/jest-dom";
-import type { User } from "@supabase/supabase-js";
 import { vi } from "vitest";
-
 import { supabase } from "@/integrations/supabase/client";
+import type { User } from "@supabase/supabase-js";
 
 /**
  * Integration test setup

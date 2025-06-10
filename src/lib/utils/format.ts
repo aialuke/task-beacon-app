@@ -52,6 +52,38 @@ export function formatPercentage(value: number, decimals = 1): string {
 }
 
 /**
+ * Formats a price value with currency symbol
+ */
+export function formatPrice(
+  amount: number,
+  currency = 'USD',
+  locale = 'en-US'
+): string {
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency,
+  }).format(amount);
+}
+
+/**
+ * Formats a number with thousands separators
+ */
+export function formatNumber(
+  value: number,
+  locale = 'en-US',
+  options: Intl.NumberFormatOptions = {}
+): string {
+  return new Intl.NumberFormat(locale, options).format(value);
+}
+
+/**
+ * Parses a formatted number string to number
+ */
+export function parseNumber(numberString: string): number {
+  return parseFloat(numberString.replace(/[^0-9.-]+/g, ''));
+}
+
+/**
  * Truncates a URL to a more readable format
  */
 export function truncateUrl(url: string, maxLength = 30): string {

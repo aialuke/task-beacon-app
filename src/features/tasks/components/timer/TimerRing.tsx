@@ -1,6 +1,5 @@
-import { animated, SpringValue } from "@react-spring/web";
 import { memo, useMemo } from "react";
-
+import { animated, SpringValue } from "@react-spring/web";
 import { TaskStatus } from "@/types";
 
 export interface TimerRingProps {
@@ -40,8 +39,6 @@ const GradientDefs = memo(() => (
     </filter>
   </defs>
 ));
-
-GradientDefs.displayName = 'GradientDefs';
 
 const TimerRing = ({
   size,

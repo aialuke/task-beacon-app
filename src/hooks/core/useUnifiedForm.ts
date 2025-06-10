@@ -6,10 +6,8 @@
  */
 
 import { useState, useCallback, useMemo } from 'react';
-
-import type { FormState, FormErrors, FormTouched } from '@/types/form.types';
-
 import { useSubmissionState } from './useLoadingState';
+import type { FormState, FormErrors, FormTouched } from '@/types/form.types';
 
 // === CORE INTERFACES ===
 

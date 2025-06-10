@@ -7,7 +7,7 @@
 // === API RESPONSE TYPES ===
 export interface ApiResponse<T = unknown> {
   data: T | null;
-  error: ApiError | null;
+  error: string | null;
   success: boolean;
   message?: string;
 }

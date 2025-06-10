@@ -1,8 +1,5 @@
 
 import { memo } from 'react';
-
-import type { PaginationAPI } from '@/types/pagination.types';
-
 import {
   Pagination,
   PaginationContent,
@@ -12,6 +9,7 @@ import {
   PaginationLink,
   PaginationEllipsis,
 } from './pagination';
+import type { PaginationAPI } from '@/types/pagination.types';
 
 interface GenericPaginationProps {
   pagination: Pick<PaginationAPI, 'currentPage' | 'totalPages' | 'hasNextPage' | 'hasPreviousPage' | 'goToNextPage' | 'goToPreviousPage' | 'goToPage'>;
@@ -138,7 +136,7 @@ function GenericPaginationComponent({
 
       {/* Optional info display */}
       {showInfo && (
-        <div className="text-muted-foreground mt-2 text-center text-sm">
+        <div className="mt-2 text-center text-sm text-muted-foreground">
           Showing {Math.min((currentPage - 1) * pageSize + 1, totalCount)} to{' '}
           {Math.min(currentPage * pageSize, totalCount)} of {totalCount} items
         </div>
@@ -146,7 +144,7 @@ function GenericPaginationComponent({
 
       {/* Loading indicator */}
       {isFetching && !isLoading && (
-        <div className="bg-primary/20 text-primary fixed bottom-20 left-1/2 -translate-x-1/2 transform rounded-full px-4 py-1 text-sm">
+        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 transform rounded-full bg-primary/20 px-4 py-1 text-sm text-primary">
           Updating...
         </div>
       )}

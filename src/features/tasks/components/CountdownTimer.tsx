@@ -1,20 +1,17 @@
+import { useMemo } from "react";
 import { useSpring, animated } from "@react-spring/web";
-import { useMemo, useEffect, useRef } from "react";
-
-
+import { TaskStatus } from "@/types";
+import TimerRing from "./timer/TimerRing";
+import TimerDisplay from "./timer/TimerDisplay";
+import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
 import {
   Tooltip,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import TimerTooltip from "@/features/tasks/components/TimerTooltip";
-import { useTaskUIContext } from "@/features/tasks/context";
 import { useCountdown } from "@/features/tasks/hooks/useCountdown";
-import { prefersReducedMotion, getSpringConfig, setupAnimationVariables } from "@/animations";
-import { TaskStatus } from "@/types";
-
-import TimerDisplay from "./timer/TimerDisplay";
-import TimerRing from "./timer/TimerRing";
+import { useMotionPreferences } from "@/hooks/useMotionPreferences";
 
 interface CountdownTimerProps {
   dueDate: string | null;
@@ -32,8 +29,7 @@ function CountdownTimer({
   priority = "medium",
 }: CountdownTimerProps) {
   const { isMobile } = useTaskUIContext();
-  const shouldReduceMotion = prefersReducedMotion();
-  const timerRef = useRef<HTMLDivElement>(null);
+  const { shouldReduceMotion, getAnimationConfig } = useMotionPreferences();
 
   const { dynamicSize, radius, circumference } = useMemo(() => {
     // Replace complex nested ternaries with lookup table
@@ -54,11 +50,11 @@ function CountdownTimer({
 
   const springConfig = useMemo(
     () =>
-      getSpringConfig(
+      getAnimationConfig(
         { tension: 120, friction: 14 },
         { tension: 300, friction: 30 }
       ),
-    []
+    [getAnimationConfig]
   );
 
   const { strokeDashoffset } = useSpring({
@@ -79,29 +75,16 @@ function CountdownTimer({
     }),
     [dynamicSize, shouldReduceMotion]
   );
-  
-  // Setup animation variables for enhanced performance
-  useEffect(() => {
-    if (timerRef.current) {
-      setupAnimationVariables(timerRef.current, {
-        circumference,
-        targetOffset: dashOffset,
-        duration: shouldReduceMotion ? '0ms' : '1.5s',
-        enableGPU: !shouldReduceMotion,
-      });
-    }
-  }, [circumference, dashOffset, shouldReduceMotion]);
 
   return (
     <TooltipProvider>
       <Tooltip delayDuration={300}>
         <TooltipTrigger asChild>
           <AnimatedDiv
-            ref={timerRef}
             role="timer"
             tabIndex={0}
             aria-label={ariaLabel}
-            className={`timer-container focus-visible:ring-primary relative flex items-center justify-center rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+            className={`timer-container relative flex items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 transition-all ${
               status === "pending" &&
               Number(timeDisplay) === 0 &&
               !shouldReduceMotion

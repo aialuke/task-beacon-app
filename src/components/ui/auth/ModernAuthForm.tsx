@@ -1,11 +1,9 @@
 import React, { useEffect } from 'react';
-
 import { Card, CardContent } from '@/components/ui/card';
-
-import { AuthFormFields } from './components/AuthFormFields';
 import { AuthFormHeader } from './components/AuthFormHeader';
-import { AuthModeToggle } from './components/AuthModeToggle';
+import { AuthFormFields } from './components/AuthFormFields';
 import { AuthSubmitButton } from './components/AuthSubmitButton';
+import { AuthModeToggle } from './components/AuthModeToggle';
 import { useAuthFormState } from './hooks/useAuthFormState';
 
 const ModernAuthForm: React.FC = () => {
@@ -42,8 +40,8 @@ const ModernAuthForm: React.FC = () => {
   const handleTogglePassword = () => { setShowPassword(!showPassword); };
 
   return (
-    <div className="from-background via-background to-muted/20 flex min-h-screen items-center justify-center bg-gradient-to-br p-4">
-      <Card className="w-full max-w-md rounded-xl border shadow-2xl backdrop-blur-sm">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background via-background to-muted/20 p-4">
+      <Card className="w-full max-w-md border shadow-2xl backdrop-blur-sm rounded-xl">
         <CardContent className="p-8">
           <AuthFormHeader />
 

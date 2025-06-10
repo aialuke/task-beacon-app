@@ -1,7 +1,5 @@
-import { useSpring, SpringValue } from "@react-spring/web";
-import { useState, useRef, useLayoutEffect } from "react";
-
-import { useTaskCardAnimation, prefersReducedMotion } from "@/animations";
+import { useSpring, SpringValue, config } from "@react-spring/web";
+import { useState } from "react";
 
 export interface TaskAnimationState {
   height: SpringValue<number>;
@@ -10,41 +8,11 @@ export interface TaskAnimationState {
 
 export function useTaskAnimation() {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [measuredHeight, setMeasuredHeight] = useState(0);
-  const measureRef = useRef<HTMLDivElement>(null);
-  
-  const { expandConfig } = useTaskCardAnimation();
-  
-  // Get animation config with motion preference support
-  const shouldReduceMotion = prefersReducedMotion();
-  const animationConfig = shouldReduceMotion 
-    ? { tension: 500, friction: 50 } 
-    : expandConfig;
-
-  // Measure content height when expanded state changes
-  useLayoutEffect(() => {
-    if (isExpanded && measureRef.current) {
-      // Temporarily show content to measure its height
-      const element = measureRef.current;
-      const originalHeight = element.style.height;
-      const originalOverflow = element.style.overflow;
-      
-      element.style.height = 'auto';
-      element.style.overflow = 'visible';
-      
-      const rect = element.getBoundingClientRect();
-      setMeasuredHeight(rect.height);
-      
-      // Restore original styles
-      element.style.height = originalHeight;
-      element.style.overflow = originalOverflow;
-    }
-  }, [isExpanded]);
 
   const animationProps = useSpring({
-    height: isExpanded ? measuredHeight : 0,
+    height: isExpanded ? 'auto' : 0,
     opacity: isExpanded ? 1 : 0,
-    config: animationConfig,
+    config: config.gentle, // Use React Spring's built-in gentle config
     immediate: false,
   });
 
@@ -56,6 +24,7 @@ export function useTaskAnimation() {
     isExpanded,
     toggleExpanded,
     animationState: animationProps,
-    measureRef, // Expose ref for height measurement
+    // Derived state instead of separate tracking
+    animationPhase: isExpanded ? "enter" : "exit",
   };
 }

@@ -1,9 +1,10 @@
-// === EXTERNAL LIBRARIES ===
-import { Trash2 } from "lucide-react";
+
+// External libraries
 import { useCallback, memo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Trash2 } from "lucide-react";
 
-// === INTERNAL COMPONENTS ===
+// Components
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -14,11 +15,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-// === HOOKS ===
+
+// Hooks
 import { useTaskMutations } from "@/features/tasks/hooks/useTaskMutations";
-import { useUnifiedError } from "@/hooks/core/useUnifiedError";
-import { useAsyncOperation } from "@/lib/utils/async";
-// === TYPES ===
+
+// Types
 import type { Task } from "@/types";
 
 interface TaskActionsProps {
@@ -30,54 +31,38 @@ interface TaskActionsProps {
 function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
   const navigate = useNavigate();
   const { toggleTaskCompleteCallback, deleteTaskCallback } = useTaskMutations();
+  const [isDeleting, setIsDeleting] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const { handleError, withErrorHandling: _withErrorHandling } = useUnifiedError({ context: 'TaskActions' });
-  
-  // Async operations using useAsyncOperation for reliable state management
-  const {
-    execute: executeToggle,
-    isLoading: isToggling
-  } = useAsyncOperation(
-    async () => {
-      const result = await toggleTaskCompleteCallback(task);
-      if (!result.success && result.error) {
-        throw new Error(result.message);
-      }
-      return result;
-    },
-    {
-      onError: (error) => handleError(error, 'Toggle task completion')
-    }
-  );
-  
-  const {
-    execute: executeDelete,
-    isLoading: isDeleting
-  } = useAsyncOperation(
-    async () => {
-      const result = await deleteTaskCallback(task.id);
-      if (!result.success && result.error) {
-        throw new Error(result.message);
-      }
-      setIsDeleteDialogOpen(false);
-      return result;
-    },
-    {
-      onError: (error) => handleError(error, 'Delete task')
-    }
-  );
 
   const handleCreateFollowUp = useCallback(() => {
     navigate(`/follow-up-task/${task.id}`);
   }, [navigate, task.id]);
 
-  const handleToggleComplete = useCallback(() => {
-    executeToggle();
-  }, [executeToggle]);
+  const handleToggleComplete = useCallback(async () => {
+    const result = await toggleTaskCompleteCallback(task);
+    if (result.success) {
+      // toast.success(result.message);
+    } else if (result.error) {
+      // toast.error(result.message);
+    }
+  }, [toggleTaskCompleteCallback, task]);
 
-  const handleDelete = useCallback(() => {
-    executeDelete();
-  }, [executeDelete]);
+  const handleDelete = useCallback(async () => {
+    setIsDeleting(true);
+    try {
+      const result = await deleteTaskCallback(task.id);
+      if (result.success) {
+        // toast.success(result.message);
+        setIsDeleteDialogOpen(false);
+      } else if (result.error) {
+        // toast.error(result.message);
+      }
+    } catch (error) {
+      // toast.error('Failed to delete task');
+    } finally {
+      setIsDeleting(false);
+    }
+  }, [deleteTaskCallback, task.id]);
 
   return (
     <div className="flex flex-wrap gap-2">
@@ -85,10 +70,9 @@ function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
         variant={task.status === "complete" ? "outline" : "default"}
         size="sm"
         onClick={handleToggleComplete}
-        disabled={isToggling}
         className="rounded-full"
       >
-        {isToggling ? "Updating..." : (task.status === "complete" ? "Mark Incomplete" : "Complete")}
+        {task.status === "complete" ? "Mark Incomplete" : "Complete"}
       </Button>
       <Button 
         variant="outline" 
@@ -113,7 +97,7 @@ function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
             <Button
               variant="ghost"
               size="icon"
-              className="text-muted-foreground hover:bg-muted hover:text-foreground size-8"
+              className="h-8 w-8 text-muted-foreground hover:bg-muted hover:text-foreground"
               disabled={isDeleting}
             >
               <Trash2 size={16} />
@@ -123,7 +107,7 @@ function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
             <DialogHeader>
               <DialogTitle>Delete Task</DialogTitle>
               <DialogDescription>
-                Are you sure you want to delete &quot;{task.title}&quot;? This action
+                Are you sure you want to delete "{task.title}"? This action
                 cannot be undone.
               </DialogDescription>
             </DialogHeader>

@@ -6,7 +6,6 @@
  */
 
 import type { QueryClient } from '@tanstack/react-query';
-
 import type { ApiResponse, ApiError } from '@/types/api.types';
 
 /**

@@ -31,7 +31,7 @@ export const PasswordStrengthIndicator: React.FC<
   if (!show || password.length === 0) return null;
 
   return (
-    <div className="animate-fade-in mt-3 space-y-2">
+    <div className="mt-3 animate-fade-in space-y-2">
       <div className="flex space-x-1">
         {[...Array(5)].map((_, i) => (
           <div

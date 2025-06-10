@@ -6,10 +6,6 @@
  */
 
 import { useState, useCallback } from 'react';
-
-import type { StandardLoadingState } from '@/types/async-state.types';
-import { createLoadingState } from '@/types/async-state.types';
-
 import { logger } from '../logger';
 
 // ============================================================================
@@ -23,8 +19,10 @@ export interface AsyncOperationOptions<T> {
   retryDelay?: number;
 }
 
-export interface AsyncOperationResult<T> extends StandardLoadingState {
+export interface AsyncOperationResult<T> {
   data: T | null;
+  error: Error | null;
+  isLoading: boolean;
   execute: () => Promise<void>;
   reset: () => void;
 }
@@ -34,21 +32,21 @@ export interface AsyncOperationResult<T> extends StandardLoadingState {
 // ============================================================================
 
 /**
- * Hook for managing async operations with standardized loading states and error handling
+ * Hook for managing async operations with loading states and error handling
  */
 export function useAsyncOperation<T>(
   operation: () => Promise<T>,
   options: AsyncOperationOptions<T> = {}
 ): AsyncOperationResult<T> {
   const [data, setData] = useState<T | null>(null);
-  const [loadingState, setLoadingState] = useState<StandardLoadingState>(
-    createLoadingState(false, false)
-  );
+  const [error, setError] = useState<Error | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const execute = useCallback(async () => {
     const { onSuccess, onError, retries = 0, retryDelay = 1000 } = options;
     
-    setLoadingState(createLoadingState(true, true));
+    setIsLoading(true);
+    setError(null);
 
     let lastError: Error | null = null;
     
@@ -56,7 +54,7 @@ export function useAsyncOperation<T>(
       try {
         const result = await operation();
         setData(result);
-        setLoadingState(createLoadingState(false, false));
+        setIsLoading(false);
         onSuccess?.(result);
         return;
       } catch (err) {
@@ -67,29 +65,23 @@ export function useAsyncOperation<T>(
         });
         
         if (attempt < retries) {
-          setLoadingState(createLoadingState(true, true, lastError));
           await new Promise(resolve => setTimeout(resolve, retryDelay));
         }
       }
     }
 
-    setLoadingState(createLoadingState(false, false, lastError));
-    if (lastError) {
-      onError?.(lastError);
-    }
+    setError(lastError);
+    setIsLoading(false);
+    onError?.(lastError!);
   }, [operation, options]);
 
   const reset = useCallback(() => {
     setData(null);
-    setLoadingState(createLoadingState(false, false));
+    setError(null);
+    setIsLoading(false);
   }, []);
 
-  return { 
-    data, 
-    execute, 
-    reset,
-    ...loadingState
-  };
+  return { data, error, isLoading, execute, reset };
 }
 
 // ============================================================================
@@ -101,10 +93,10 @@ export function useAsyncOperation<T>(
  */
 export async function withRetry<T>(
   operation: () => Promise<T>,
-  retries = 3,
-  delay = 1000
+  retries: number = 3,
+  delay: number = 1000
 ): Promise<T> {
-  let lastError: Error | null = null;
+  let lastError: Error;
   
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
@@ -118,19 +110,14 @@ export async function withRetry<T>(
     }
   }
   
-  if (lastError) {
-    throw lastError;
-  }
-  
-  // This should never happen, but provides a fallback
-  throw new Error('Operation failed without error details');
+  throw lastError!;
 }
 
 /**
  * Execute multiple async operations in sequence
  */
 export async function executeInSequence<T>(
-  operations: (() => Promise<T>)[]
+  operations: Array<() => Promise<T>>
 ): Promise<T[]> {
   const results: T[] = [];
   
@@ -146,8 +133,8 @@ export async function executeInSequence<T>(
  * Execute multiple async operations with limited concurrency
  */
 export async function executeWithConcurrency<T>(
-  operations: (() => Promise<T>)[],
-  concurrency = 3
+  operations: Array<() => Promise<T>>,
+  concurrency: number = 3
 ): Promise<T[]> {
   const results: T[] = [];
   

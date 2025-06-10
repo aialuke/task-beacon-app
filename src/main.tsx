@@ -1,7 +1,8 @@
+
 /**
- * Application Entry Point - Simplified Initialization
+ * Application Entry Point - Optimized Import Organization
  * 
- * Minimal entry point with deferred heavy operations.
+ * Simplified entry point with better error handling.
  */
 
 // === EXTERNAL LIBRARIES ===
@@ -9,31 +10,24 @@ import React, { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
 // === COMPONENTS ===
-import { logger } from '@/lib/logger';
-
 import App from './App.tsx';
-import { UnifiedErrorBoundary } from './components/ui/UnifiedErrorBoundary';
+import UnifiedErrorBoundary from './components/ui/UnifiedErrorBoundary';
+
+// === UTILITIES ===
+import { logger } from '@/lib/logger';
 
 // === STYLES ===
 import './index.css';
 
 logger.info('Starting application...');
 
-// Defer non-critical setup operations
-Promise.resolve().then(async () => {
-  // Setup error handling after initial render
-  const { ErrorHandler } = await import('@/lib/core/ErrorHandler');
-  ErrorHandler.setup();
-  
-  // Setup service worker if in production
-  if ('serviceWorker' in navigator && import.meta.env.PROD) {
-    const { setupServiceWorker } = await import('@/lib/utils/service-worker');
-    setupServiceWorker();
-  }
-  
-  // Optimize animations after initial render
-  const { optimizeAnimations } = await import('@/lib/utils/core');
-  optimizeAnimations();
+// Setup basic error handlers
+window.addEventListener('error', (event) => {
+  logger.error('Global error', event.error);
+});
+
+window.addEventListener('unhandledrejection', (event) => {
+  logger.error('Unhandled promise rejection', new Error(String(event.reason)));
 });
 
 const rootElement = document.getElementById('root');
@@ -42,6 +36,13 @@ if (!rootElement) {
 }
 
 logger.info('Root element found, creating React app...');
+
+// Ensure React is properly available
+if (!React) {
+  throw new Error('React is not available');
+}
+
+logger.info('React version', { version: React.version });
 
 const root = createRoot(rootElement);
 

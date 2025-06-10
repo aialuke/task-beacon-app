@@ -1,14 +1,9 @@
-import { toast } from 'sonner';
-
-import { useUnifiedPhotoUpload } from '@/components/form/hooks/useUnifiedPhotoUpload';
-import { logger } from '@/lib/logger';
-import type { ProcessingResult } from '@/lib/utils/image';
-
 import { useTaskForm } from './useTaskForm';
-import { useTaskFormValidation } from './useTaskFormValidation';
+import { useUnifiedPhotoUpload } from '@/components/form/hooks/useUnifiedPhotoUpload';
 import { useTaskMutations } from './useTaskMutations';
-
-
+import { useTaskFormValidation } from './useTaskFormValidation';
+import { toast } from 'sonner';
+import { logger } from '@/lib/logger';
 
 interface UseCreateTaskOptions {
   onClose?: () => void;
@@ -37,7 +32,7 @@ interface UseCreateTaskReturn {
   handlePhotoChange: (e: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
   handlePhotoRemove: () => void;
   photoLoading: boolean;
-  processingResult: ProcessingResult | null;
+  processingResult: any;
   
   // Actions
   handleSubmit: (e: React.FormEvent) => Promise<void>;
@@ -102,7 +97,7 @@ export function useCreateTask({ onClose }: UseCreateTaskOptions = {}): UseCreate
       }
 
       // Create task
-      const result = await createTaskCallback(taskData);
+      const result = await createTaskCallback(taskData as any);
 
       if (result.success) {
         toast.success('Task created successfully');

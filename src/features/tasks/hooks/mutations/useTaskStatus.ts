@@ -1,14 +1,9 @@
-import { useCallback } from 'react';
-
-import { TaskService } from '@/lib/api/tasks';
-import { logger } from '@/lib/logger';
 import { Task } from '@/types';
-
+import { TaskService } from '@/lib/api/tasks';
 import { useTaskOptimisticUpdates } from '../useTaskOptimisticUpdates';
-
-
+import { useCallback } from 'react';
 import { useBaseMutation } from './useBaseMutation';
-
+import { logger } from '@/lib/logger';
 
 interface TaskMutationResult {
   success: boolean;
@@ -18,7 +13,7 @@ interface TaskMutationResult {
 }
 
 interface UseTaskStatusReturn {
-  toggleTaskComplete: ReturnType<typeof useBaseMutation>['mutation']; // From baseMutation.mutation
+  toggleTaskComplete: any; // From baseMutation.mutation
   toggleTaskCompleteCallback: (task: Task) => Promise<TaskMutationResult>;
   markAsComplete: (taskId: string) => Promise<{ success: boolean; error: string }>;
   markAsIncomplete: (taskId: string) => Promise<{ success: boolean; error: string }>;

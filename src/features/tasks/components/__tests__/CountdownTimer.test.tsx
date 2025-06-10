@@ -1,10 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-
 import CountdownTimer from '../CountdownTimer';
 
 // Mock the TaskUIContext
-vi.mock('@/features/tasks/context', () => ({
+vi.mock('@/features/tasks/context/TaskUIContext', () => ({
   useTaskUIContext: () => ({
     isMobile: false,
   }),

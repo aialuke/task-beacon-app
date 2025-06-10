@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-
-import { formatTaskStatus } from '@/features/tasks/utils/taskUiUtils';
 import { getUpdateInterval, formatTimeDisplay, getDaysRemaining } from '@/lib/utils/date';
-import { calculateTimerOffset } from '@/animations';
+import { calculateTimerOffset } from '@/lib/utils/animation';
 import type { TaskStatus } from '@/types';
 
 interface CountdownResult {
@@ -121,16 +119,16 @@ export function useCountdown(
       dueDate
     );
     
-    // Generate tooltip content with formatted status
+    // Generate tooltip content
     let tooltipContent = '';
     if (status === 'complete') {
-      tooltipContent = `Task ${formatTaskStatus(status)}`;
+      tooltipContent = 'Task completed';
     } else if (status === 'overdue') {
-      tooltipContent = `Task is ${formatTaskStatus(status)}`;
+      tooltipContent = 'Task is overdue';
     } else if (!dueDate) {
       tooltipContent = 'No due date set';
     } else if (timeLeft.isOverdue) {
-      tooltipContent = `Task is ${formatTaskStatus('overdue')}`;
+      tooltipContent = 'Task is overdue';
     } else if (timeLeft.days === 0) {
       tooltipContent = 'Due today';
     } else if (timeLeft.days === 1) {
@@ -141,12 +139,12 @@ export function useCountdown(
       tooltipContent = 'Due date approaching';
     }
     
-    // Generate aria label for accessibility with formatted status
+    // Generate aria label for accessibility
     let ariaLabel = '';
     if (status === 'complete') {
-      ariaLabel = `Task timer: ${formatTaskStatus(status)}`;
+      ariaLabel = 'Task timer: Completed';
     } else if (status === 'overdue') {
-      ariaLabel = `Task timer: ${formatTaskStatus(status)}`;
+      ariaLabel = 'Task timer: Overdue';
     } else if (!dueDate) {
       ariaLabel = 'Task timer: No due date';
     } else if (timeLeft.days === 0) {

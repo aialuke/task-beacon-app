@@ -1,8 +1,15 @@
-import { Calendar } from 'lucide-react';
-import { memo } from 'react';
 
-import { SimpleDateInput } from '@/components/ui/simple-date-input';
+import { memo, useState } from 'react';
+import { Calendar } from 'lucide-react';
+import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Calendar as CalendarComponent } from '@/components/ui/calendar';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 
 interface DatePickerButtonProps {
   dueDate: string;
@@ -15,44 +22,68 @@ export const DatePickerButton = memo(function DatePickerButton({
   onDueDateChange,
   disabled = false,
 }: DatePickerButtonProps) {
-  const hasDate = !!dueDate;
+  const [isOpen, setIsOpen] = useState(false);
 
-  // Convert datetime-local to date format for input
-  const dateValue = dueDate ? dueDate.split('T')[0] : '';
+  const selectedDate: Date | undefined = dueDate ? new Date(dueDate) : undefined;
+  const hasDate = !!selectedDate;
 
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const dateValue = e.target.value;
-    if (dateValue) {
-      // Convert date to datetime-local format with noon time
+  const handleDateSelect = (date: Date | undefined): void => {
+    if (date) {
+      // Fix timezone issue by creating a local datetime string
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const localDateTime = `${year}-${month}-${day}T12:00`;
+
       const syntheticEvent = {
-        target: { value: `${dateValue}T12:00` },
+        target: { value: localDateTime },
       } as React.ChangeEvent<HTMLInputElement>;
+
       onDueDateChange(syntheticEvent);
-    } else {
-      onDueDateChange(e);
     }
+    setIsOpen(false);
   };
 
+  const buttonClasses = cn(
+    'flex items-center justify-center gap-2 transition-all duration-200 touch-manipulation',
+    'hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30',
+    'w-[48px] h-[48px] sm:w-auto sm:h-[48px] sm:pl-3 sm:pr-4 sm:py-2',
+    'rounded-full aspect-square [aspect-ratio:1/1] sm:aspect-auto sm:[aspect-ratio:unset]',
+    hasDate
+      ? 'bg-primary/20 text-primary border border-primary/30 shadow-md shadow-primary/10'
+      : 'bg-background/60 text-muted-foreground border border-border/40 hover:bg-background/80 hover:text-foreground hover:border-border/60',
+    disabled && 'opacity-50 cursor-not-allowed hover:scale-100'
+  );
+
   return (
-    <div className={cn(
-      'flex items-center justify-center transition-all duration-200',
-      'focus-within:ring-primary/30 hover:scale-105 focus-within:outline-none focus-within:ring-2',
-      'size-[48px] sm:h-[48px] sm:w-auto sm:py-2 sm:pl-3 sm:pr-4',
-      'aspect-square rounded-full [aspect-ratio:1/1] sm:aspect-auto sm:[aspect-ratio:unset]',
-      hasDate
-        ? 'bg-primary/20 text-primary border-primary/30 shadow-primary/10 border shadow-md'
-        : 'bg-background/60 text-muted-foreground border-border/40 hover:bg-background/80 hover:text-foreground hover:border-border/60 border',
-      disabled && 'cursor-not-allowed opacity-50 hover:scale-100'
-    )}>
-      <SimpleDateInput
-        value={dateValue}
-        onChange={handleDateChange}
-        disabled={disabled}
-        className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
-        showIcon={false}
-        min={new Date().toISOString().split('T')[0]} // Prevent past dates
-      />
-      <Calendar className="size-5 flex-shrink-0 transition-all duration-200 sm:size-4 pointer-events-none" />
-    </div>
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
+      <PopoverTrigger asChild>
+        <Button type="button" variant="ghost" disabled={disabled} className={buttonClasses}>
+          <Calendar
+            className={cn(
+              'h-5 w-5 flex-shrink-0 transition-all duration-200 sm:h-4 sm:w-4',
+              hasDate && 'scale-110'
+            )}
+          />
+          <span className="hidden whitespace-nowrap text-sm font-medium sm:inline">
+            {hasDate ? format(selectedDate, 'MMM d') : 'Due Date'}
+          </span>
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent
+        className="w-auto border-border bg-popover p-0 text-popover-foreground shadow-lg"
+        align="start"
+        sideOffset={8}
+      >
+        <CalendarComponent
+          mode="single"
+          selected={selectedDate}
+          onSelect={handleDateSelect}
+          disabled={(date: Date) => date < new Date()}
+          initialFocus
+          className="pointer-events-auto p-4"
+        />
+      </PopoverContent>
+    </Popover>
   );
 });
