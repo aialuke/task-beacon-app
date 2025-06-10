@@ -9,7 +9,7 @@ import { memo, useMemo, useRef, useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { isFeatureEnabled } from '@/lib/config/app';
 import { cn } from '@/lib/utils';
-import { pulseElement } from '@/lib/utils/animation';
+import { pulseElement } from '@/animations';
 
 // === PERFORMANCE OPTIMIZED INTERFACES ===
 

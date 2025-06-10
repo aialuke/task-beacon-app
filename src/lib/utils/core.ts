@@ -2,7 +2,7 @@
  * Core utility functions that don't fit into specific domains
  */
 
-import { prefersReducedMotion } from './animation';
+import { prefersReducedMotion } from '@/animations';
 
 /**
  * Generates a UUID v4 string

@@ -8,7 +8,7 @@ import { CardLoader } from "@/components/ui/loading/UnifiedLoadingStates";
 // === HOOKS ===
 import { useTaskDataContext, useTaskUIContext } from "@/features/tasks/context";
 import { useTasksFilter } from "@/features/tasks/hooks/useTasksFilter";
-import { getStaggeredDelay } from "@/lib/utils/animation";
+import { getStaggeredDelay } from "@/animations";
 // === TYPES ===
 import type { Task } from "@/types";
 

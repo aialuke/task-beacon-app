@@ -3,7 +3,6 @@ import { memo, useEffect, useState } from "react";
 
 import { UnifiedErrorBoundary } from '@/components/ui/UnifiedErrorBoundary';
 import { componentLogger } from '@/lib/logger';
-import { animationUtils } from '@/lib/utils/animation';
 import { isElementInViewport } from '@/lib/utils/ui';
 import type { Task } from "@/types";
 
@@ -57,14 +56,6 @@ function TaskCard({ task, style, className }: TaskCardProps) {
   // Log component lifecycle events
   useEffect(() => {
     componentLogger.info('TaskCard mounted', { taskId: task.id, title: task.title });
-    
-    // Use animationUtils for comprehensive animation setup
-    if (cardRef.current && !animationUtils.prefersReducedMotion()) {
-      animationUtils.setupAnimationVariables(cardRef.current, {
-        enableGPU: true,
-        duration: '200ms',
-      });
-    }
     
     return () => {
       componentLogger.info('TaskCard unmounted', { taskId: task.id });

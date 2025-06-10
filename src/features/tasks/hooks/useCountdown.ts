@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 
 import { formatTaskStatus } from '@/features/tasks/utils/taskUiUtils';
-import { calculateTimerOffset } from '@/lib/utils/animation';
 import { getUpdateInterval, formatTimeDisplay, getDaysRemaining } from '@/lib/utils/date';
+import { calculateTimerOffset } from '@/animations';
 import type { TaskStatus } from '@/types';
 
 interface CountdownResult {

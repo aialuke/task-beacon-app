@@ -34,5 +34,4 @@ export * from './async';
 // ============================================================================
 
 export * from './patterns';
-export * from './animation';
 export * from './createContext';

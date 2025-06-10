@@ -280,13 +280,18 @@ test('animation performance within bounds', async () => {
 
 **Before**:
 ```typescript
-import { prefersReducedMotion } from '@/lib/utils/animation';
+import { prefersReducedMotion } from '@/lib/utils/animation'; // OLD - REMOVED
 ```
 
 **After**:
 ```typescript
+// Option 1: Use React context (recommended)
 import { useMotionPreferenceContext } from '@/contexts/MotionPreferenceContext';
 const { shouldReduceMotion } = useMotionPreferenceContext();
+
+// Option 2: Use direct utility function
+import { prefersReducedMotion } from '@/animations';
+const shouldReduce = prefersReducedMotion();
 ```
 
 ### **From Manual Configs**

@@ -10,7 +10,7 @@ import {
 import TimerTooltip from "@/features/tasks/components/TimerTooltip";
 import { useTaskUIContext } from "@/features/tasks/context";
 import { useCountdown } from "@/features/tasks/hooks/useCountdown";
-import { prefersReducedMotion, getSpringConfig, setupAnimationVariables } from "@/lib/utils/animation";
+import { prefersReducedMotion, getSpringConfig, setupAnimationVariables } from "@/animations";
 import { TaskStatus } from "@/types";
 
 import TimerDisplay from "./timer/TimerDisplay";
