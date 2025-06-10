@@ -128,7 +128,7 @@ const getTasks = async (options: {
     }
     
     // Validate sorting parameters
-    const sortingValidation = validateSorting({ sortBy, sortDirection });
+    const sortingValidation = validateSorting({ field: sortBy, order: sortDirection });
     if (!sortingValidation.success) {
       throw new Error('Invalid sorting parameters');
     }

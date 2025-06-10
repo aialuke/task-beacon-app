@@ -39,7 +39,9 @@ export const paginationSchema = z.object({
 });
 
 export const sortingSchema = z.object({
-  field: z.string().min(1, 'Sort field is required'),
+  field: z.enum(['created_at', 'updated_at', 'due_date', 'title', 'priority', 'status'], {
+    errorMap: () => ({ message: 'Sort field must be one of: created_at, updated_at, due_date, title, priority, status' }),
+  }),
   order: z.enum(['asc', 'desc']).default('asc'),
 });
 
