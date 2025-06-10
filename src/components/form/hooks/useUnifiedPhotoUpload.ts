@@ -4,14 +4,19 @@ import { TaskService } from '@/lib/api/tasks';
 import { logger } from '@/lib/logger';
 import { 
   compressAndResizePhoto,
-  extractImageMetadataEnhanced,
+  extractImageMetadata,
+  convertToWebPWithFallback,
   ProcessingResult,
   EnhancedImageProcessingOptions 
 } from '@/lib/utils/image';
+import { withRetry } from '@/lib/utils/async';
+import { validateFileUpload } from '@/lib/validation/validators';
 
 interface UnifiedPhotoUploadOptions {
   processingOptions?: EnhancedImageProcessingOptions;
   autoUpload?: boolean;
+  uploadRetries?: number;
+  uploadRetryDelay?: number;
 }
 
 interface UnifiedPhotoUploadReturn {
@@ -47,6 +52,8 @@ export function useUnifiedPhotoUpload(options: UnifiedPhotoUploadOptions = {}): 
       format: 'auto' as const,
     },
     autoUpload = false,
+    uploadRetries = 3,
+    uploadRetryDelay = 1000,
   } = options;
 
   // Consolidated state management
@@ -67,7 +74,7 @@ export function useUnifiedPhotoUpload(options: UnifiedPhotoUploadOptions = {}): 
     setUploadedUrl(null);
   }, [photoPreview]);
 
-  // Upload functionality
+  // Upload functionality with retry logic
   const uploadPhoto = useCallback(
     async (fileToUpload?: File): Promise<string | null> => {
       const targetFile = fileToUpload || photo;
@@ -77,44 +84,78 @@ export function useUnifiedPhotoUpload(options: UnifiedPhotoUploadOptions = {}): 
 
       try {
         setLoading(true);
-        const response = await TaskService.media.uploadPhoto(targetFile);
-        if (!response.success) {
-          throw new Error(response.error?.message || 'Photo upload failed');
-        }
         
-        const url = response.data || null;
-        setUploadedUrl(url);
-        return url;
+        // Use withRetry for network resilience
+        const url = await withRetry(
+          async () => {
+            const response = await TaskService.media.uploadPhoto(targetFile);
+            if (!response.success) {
+              throw new Error(response.error?.message || 'Photo upload failed');
+            }
+            return response.data;
+          },
+          uploadRetries,
+          uploadRetryDelay
+        );
+        
+        setUploadedUrl(url || null);
+        return url || null;
       } catch (error) {
-        logger.error('Photo upload error', error instanceof Error ? error : new Error(String(error)));
+        logger.error('Photo upload failed after retries', error instanceof Error ? error : new Error(String(error)), {
+          retries: uploadRetries,
+          file: targetFile.name,
+          size: targetFile.size
+        });
         return null;
       } finally {
         setLoading(false);
       }
     },
-    [photo]
+    [photo, uploadRetries, uploadRetryDelay]
   );
 
-  // Photo processing and handling
+  // Photo processing and handling with validation
   const handlePhotoChange = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (!file) return;
+
+      // Validate file upload using standard validator
+      const fileValidation = {
+        file,
+        maxSize: 5 * 1024 * 1024, // 5MB
+        allowedTypes: ['image/jpeg', 'image/png', 'image/webp']
+      };
+      
+      const validationResult = validateFileUpload(fileValidation);
+      if (!validationResult.success) {
+        const errors = validationResult.error.errors.map(err => err.message).join(', ');
+        logger.error('File validation failed', new Error(errors), { file: file.name, size: file.size });
+        return;
+      }
 
       setLoading(true);
       try {
         const preview = URL.createObjectURL(file);
         setPhotoPreview(preview);
 
-        const processedFile = await compressAndResizePhoto(
+        // First compress and resize
+        const resizedFile = await compressAndResizePhoto(
           file,
           processingOptions.maxWidth,
           processingOptions.maxHeight,
           processingOptions.quality
         );
+        
+        // Then convert to WebP with fallback for optimal format
+        const conversionResult = await convertToWebPWithFallback(resizedFile, processingOptions.quality);
+        const processedFile = new File([conversionResult.blob], file.name, {
+          type: conversionResult.blob.type,
+          lastModified: Date.now(),
+        });
 
         // Extract full metadata for the processed file
-        const metadata = await extractImageMetadataEnhanced(processedFile);
+        const metadata = await extractImageMetadata(processedFile);
 
         setPhoto(processedFile);
         setProcessingResult({

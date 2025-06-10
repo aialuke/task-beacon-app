@@ -1,9 +1,11 @@
 
 import { FileText, Sparkles } from 'lucide-react';
+import { useState, useCallback } from 'react';
 
 import { QuickActionBar } from '@/components/form/QuickActionBar';
 import { FloatingInput } from '@/components/ui/form/FloatingInput';
 import { FloatingTextarea } from '@/components/ui/form/FloatingTextarea';
+import { validateTaskForm, validateTaskCreation, isValidUrl, isDateInFuture, toValidationResult } from '@/lib/validation/validators';
 import type { ProcessingResult } from '@/lib/utils/image';
 
 interface UnifiedTaskFormProps {
@@ -82,12 +84,81 @@ export function UnifiedTaskForm({
   disabled = false,
   children,
 }: UnifiedTaskFormProps) {
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+
+  const validateForm = useCallback(() => {
+    const formData = {
+      title,
+      description,
+      dueDate: dueDate || undefined,
+      url: url || undefined,
+      assigneeId: assigneeId || undefined,
+    };
+
+    // Use enhanced task creation validation
+    const result = validateTaskCreation(formData);
+    const errors: Record<string, string> = {};
+
+    if (!result.success) {
+      result.error.errors.forEach(error => {
+        const field = error.path.join('.');
+        if (field) {
+          errors[field] = error.message;
+        }
+      });
+    }
+
+    // Additional URL validation using isValidUrl
+    if (url && !isValidUrl(url)) {
+      errors.url = 'Please enter a valid URL';
+    }
+
+    // Additional date validation using isDateInFuture
+    if (dueDate && !isDateInFuture(dueDate)) {
+      errors.dueDate = 'Due date must be in the future';
+    }
+
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  }, [title, description, dueDate, url, assigneeId]);
+
   const handleUrlChange = (newUrl: string) => {
     setUrl(newUrl);
+    // Clear URL validation error when user starts typing
+    if (validationErrors.url) {
+      setValidationErrors(prev => ({ ...prev, url: '' }));
+    }
   };
 
   const handleDueDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDueDate(e.target.value);
+    // Clear date validation error when user changes date
+    if (validationErrors.dueDate) {
+      setValidationErrors(prev => ({ ...prev, dueDate: '' }));
+    }
+  };
+
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
+    // Clear title validation error when user starts typing
+    if (validationErrors.title) {
+      setValidationErrors(prev => ({ ...prev, title: '' }));
+    }
+  };
+
+  const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setDescription(e.target.value);
+    // Clear description validation error when user starts typing
+    if (validationErrors.description) {
+      setValidationErrors(prev => ({ ...prev, description: '' }));
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (validateForm()) {
+      onSubmit(e);
+    }
   };
 
   return (
@@ -105,28 +176,38 @@ export function UnifiedTaskForm({
         </p>
       </header>
 
-      <form className="space-y-6" onSubmit={onSubmit}>
+      <form className="space-y-6" onSubmit={handleSubmit}>
         {/* Main Title Input */}
-        <FloatingInput
-          id="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          label={titleLabel}
-          icon={<FileText className="size-4" />}
-          maxLength={22}
-          required
-          disabled={disabled}
-        />
+        <div>
+          <FloatingInput
+            id="title"
+            value={title}
+            onChange={handleTitleChange}
+            label={titleLabel}
+            icon={<FileText className="size-4" />}
+            maxLength={22}
+            required
+            disabled={disabled}
+          />
+          {validationErrors.title && (
+            <p className="mt-1 text-sm text-red-500">{validationErrors.title}</p>
+          )}
+        </div>
 
         {/* Description Field */}
-        <FloatingTextarea
-          id="description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder={descriptionPlaceholder}
-          label={descriptionLabel}
-          icon={<Sparkles className="size-4" />}
-        />
+        <div>
+          <FloatingTextarea
+            id="description"
+            value={description}
+            onChange={handleDescriptionChange}
+            placeholder={descriptionPlaceholder}
+            label={descriptionLabel}
+            icon={<Sparkles className="size-4" />}
+          />
+          {validationErrors.description && (
+            <p className="mt-1 text-sm text-red-500">{validationErrors.description}</p>
+          )}
+        </div>
 
         {/* Quick Action Bar */}
         <div className="w-full">

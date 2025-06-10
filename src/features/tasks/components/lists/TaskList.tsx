@@ -4,6 +4,7 @@ import { memo, useMemo } from "react";
 
 // === INTERNAL UTILITIES ===
 import { CardLoader } from "@/components/ui/loading/UnifiedLoadingStates";
+import { getStaggeredDelay } from "@/lib/utils/animation";
 // === COMPONENTS ===
 // === HOOKS ===
 import { useTaskDataContext, useTaskUIContext } from "@/features/tasks/context";
@@ -26,8 +27,9 @@ function TaskListComponent() {
 
   const { filter, isMobile } = useTaskUIContext();
 
-  // Filter tasks based on current filter
-  const filteredTasks = useTasksFilter(tasks, filter);
+  // Filter tasks based on current filter (ensure it returns array)
+  const filteredTasksResult = useTasksFilter(tasks, filter);
+  const filteredTasks = Array.isArray(filteredTasksResult) ? filteredTasksResult : [];
 
   // Show pagination if there are multiple pages
   const shouldShowPagination = useMemo(
@@ -62,8 +64,15 @@ function TaskListComponent() {
           </div>
         ) : (
           <div className={`space-y-4 sm:space-y-6 ${isMobile ? "pb-20" : "pb-6"}`}>
-            {filteredTasks.map((task: Task) => (
-              <TaskCard key={task.id} task={task} />
+            {filteredTasks.map((task: Task, index: number) => (
+              <TaskCard 
+                key={task.id} 
+                task={task}
+                style={{
+                  animationDelay: getStaggeredDelay(index),
+                }}
+                className="animate-fade-in"
+              />
             ))}
           </div>
         )}

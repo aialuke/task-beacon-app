@@ -1,11 +1,13 @@
 
 import { User as UserIcon, ArrowRight, X } from 'lucide-react';
-import { useState, useRef, useMemo, useEffect } from 'react';
+import { useState, useRef, useMemo, useEffect, useCallback } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useUsersQuery } from '@/features/users/hooks/useUsersQuery';
 import { cn } from '@/lib/utils';
+import { debounce } from '@/lib/utils/core';
+import { searchByTerm } from '@/lib/utils/data';
 
 interface AutocompleteUserInputProps {
   value: string; // user ID when selected, empty when not
@@ -27,10 +29,17 @@ export function AutocompleteUserInput({
   className,
 }: AutocompleteUserInputProps) {
   const [inputValue, setInputValue] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   
   const { users, isLoading: _isLoading } = useUsersQuery();
+  
+  // Debounced search to improve performance
+  const debouncedSetSearchTerm = useCallback(
+    debounce((term: string) => setSearchTerm(term), 300),
+    []
+  );
   
   // Find selected user
   const selectedUser = useMemo(() => 
@@ -38,17 +47,23 @@ export function AutocompleteUserInput({
     [users, value]
   );
 
-  // Find exact match for typed input
+  // Filter users using searchByTerm for better search performance
+  const filteredUsers = useMemo(() => {
+    if (!searchTerm.trim()) return users;
+    return searchByTerm(users, searchTerm, ['name', 'email']);
+  }, [users, searchTerm]);
+
+  // Find exact match for typed input from filtered results
   const exactMatch = useMemo(() => {
     if (!inputValue.trim() || selectedUser) return null;
     
-    const searchTerm = inputValue.toLowerCase().trim();
-    return users.find(user => {
+    const term = inputValue.toLowerCase().trim();
+    return filteredUsers.find(user => {
       const displayName = user.name || user.email.split('@')[0];
-      return displayName.toLowerCase() === searchTerm || 
-             user.email.toLowerCase() === searchTerm;
+      return displayName.toLowerCase() === term || 
+             user.email.toLowerCase() === term;
     });
-  }, [users, inputValue, selectedUser]);
+  }, [filteredUsers, inputValue, selectedUser]);
 
   // Auto-select exact matches
   useEffect(() => {
@@ -60,19 +75,19 @@ export function AutocompleteUserInput({
     }
   }, [exactMatch, selectedUser, onChange]);
 
-  // Find the best matching suggestion for ghost text
+  // Find the best matching suggestion for ghost text from filtered results
   const ghostSuggestion = useMemo(() => {
     if (!inputValue.trim() || selectedUser || exactMatch) return null;
     
-    const searchTerm = inputValue.toLowerCase();
-    const match = users.find(user => {
+    const term = inputValue.toLowerCase();
+    const match = filteredUsers.find(user => {
       const displayName = user.name || user.email.split('@')[0];
-      return displayName.toLowerCase().startsWith(searchTerm) || 
-             user.email.toLowerCase().startsWith(searchTerm);
+      return displayName.toLowerCase().startsWith(term) || 
+             user.email.toLowerCase().startsWith(term);
     });
     
     return match;
-  }, [users, inputValue, selectedUser, exactMatch]);
+  }, [filteredUsers, inputValue, selectedUser, exactMatch]);
 
   // Generate ghost text completion
   const ghostText = useMemo(() => {
@@ -109,6 +124,9 @@ export function AutocompleteUserInput({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setInputValue(newValue);
+    
+    // Trigger debounced search
+    debouncedSetSearchTerm(newValue);
     
     // Don't clear selection when typing - let the user keep typing to search
     // Selection will only be cleared via backspace when input is empty

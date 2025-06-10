@@ -1,9 +1,10 @@
 // === EXTERNAL LIBRARIES ===
-import { memo as _memo } from 'react';
+import { memo as _memo, useCallback } from 'react';
 
 // === INTERNAL UTILITIES ===
 import { LazyImage } from '@/components/ui/LazyImage';
 import { cn } from '@/lib/utils';
+import { safeAsync } from '@/lib/core/ErrorHandler';
 // === INTERNAL COMPONENTS ===
 import type { Task } from '@/types';
 
@@ -46,9 +47,27 @@ function TaskImageGallery({ task, className }: TaskImageGalleryProps) {
     return null;
   }
 
-  const handleImageClick = () => {
-    openPreview(task.photo_url);
-  };
+  const handleImageClick = useCallback(() => {
+    // Use safeAsync for safe image preview operations
+    safeAsync(
+      async () => {
+        // Preload image before opening preview to ensure it loads properly
+        if (task.photo_url) {
+          const img = new Image();
+          img.src = task.photo_url;
+          await new Promise((resolve, reject) => {
+            img.onload = resolve;
+            img.onerror = reject;
+          });
+          openPreview(task.photo_url);
+        }
+      },
+      {
+        context: 'TaskImageGallery - Image Preview',
+        showToast: true
+      }
+    );
+  }, [task.photo_url, openPreview]);
 
   return (
     <>

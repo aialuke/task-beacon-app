@@ -6,7 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 // Components
 import { PageLoader } from '@/components/ui/loading/UnifiedLoadingStates';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import UnifiedErrorBoundary from '@/components/ui/UnifiedErrorBoundary';
+import { UnifiedErrorBoundary } from '@/components/ui/UnifiedErrorBoundary';
 // Contexts
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';

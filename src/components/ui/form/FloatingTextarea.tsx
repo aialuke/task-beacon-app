@@ -81,5 +81,3 @@ export function FloatingTextarea({
     </div>
   );
 }
-
-export default FloatingTextarea;

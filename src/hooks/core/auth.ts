@@ -11,7 +11,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { AuthService } from '@/lib/api/AuthService';
 import { cleanupAuthState } from '@/lib/auth-utils';
-import { logger } from '@/lib/logger';
+import { logger, realtimeLogger } from '@/lib/logger';
 import type { ApiError } from '@/types/shared';
 
 export interface UseAuthReturn {
@@ -74,8 +74,8 @@ export function useAuth(): UseAuthReturn {
       if (!response.success) {
         logMobileDebug('Sign in failed', { error: response.error });
         setError(response.error || { 
-          name: 'SignInError', 
-          message: 'Failed to sign in' 
+          message: 'Failed to sign in',
+          code: 'SIGN_IN_ERROR'
         });
         clearAuthState();
         return;
@@ -87,8 +87,8 @@ export function useAuth(): UseAuthReturn {
       logMobileDebug('Sign in error caught', { error: err });
       const errorMessage = err instanceof Error ? err.message : 'Failed to sign in';
       setError({ 
-        name: 'SignInError', 
-        message: errorMessage 
+        message: errorMessage,
+        code: 'SIGN_IN_ERROR'
       });
       clearAuthState();
     } finally {
@@ -109,7 +109,7 @@ export function useAuth(): UseAuthReturn {
       const { error } = await supabase.auth.signOut();
       if (error) {
         logMobileDebug('Sign out error', { error });
-        setError({ name: 'SignOutError', message: error.message });
+        setError({ message: error.message, code: 'SIGN_OUT_ERROR' });
         return;
       }
 
@@ -118,8 +118,8 @@ export function useAuth(): UseAuthReturn {
     } catch (err: unknown) {
       logMobileDebug('Sign out error caught', { error: err });
       setError({ 
-        name: 'SignOutError', 
-        message: 'An unexpected error occurred during sign out' 
+        message: 'An unexpected error occurred during sign out',
+        code: 'SIGN_OUT_ERROR'
       });
     } finally {
       setLoading(false);
@@ -136,7 +136,7 @@ export function useAuth(): UseAuthReturn {
       const { error } = await supabase.auth.refreshSession();
       if (error) {
         logMobileDebug('Session refresh error', { error });
-        setError({ name: 'RefreshError', message: error.message });
+        setError({ message: error.message, code: 'REFRESH_ERROR' });
         return;
       }
       
@@ -144,8 +144,8 @@ export function useAuth(): UseAuthReturn {
     } catch (err: unknown) {
       logMobileDebug('Session refresh error caught', { error: err });
       setError({ 
-        name: 'RefreshError', 
-        message: 'Failed to refresh session' 
+        message: 'Failed to refresh session',
+        code: 'REFRESH_ERROR'
       });
     } finally {
       setLoading(false);
@@ -190,6 +190,11 @@ export function useAuth(): UseAuthReturn {
         if (!mounted) return;
         
         logMobileDebug('Auth state change', { event, hasSession: !!session });
+        realtimeLogger.info('Auth state change subscription', { 
+          event, 
+          hasSession: !!session,
+          userId: session?.user?.id 
+        });
         
         updateSessionAndUser(session);
         

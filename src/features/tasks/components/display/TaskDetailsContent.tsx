@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { ParentTaskReference } from "@/components/form/ParentTaskReference";
 import { formatDate } from "@/lib/utils/shared";
+import { truncateText, truncateUrl } from "@/lib/utils/format";
 import type { Task } from "@/types";
 
 import TaskActions from "../actions/TaskActions";
@@ -24,7 +25,9 @@ export default function TaskDetailsContent({ task, isExpanded = false }: TaskDet
       {/* Task Description */}
       {task.description && (
         <div>
-          <p className="text-muted-foreground text-sm">{task.description}</p>
+          <p className="text-muted-foreground text-sm">
+            {isExpanded ? task.description : truncateText(task.description, 150)}
+          </p>
         </div>
       )}
 
@@ -51,8 +54,9 @@ export default function TaskDetailsContent({ task, isExpanded = false }: TaskDet
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary flex items-center gap-1 text-sm hover:underline"
+                title={task.url_link}
               >
-                {task.url_link}
+                {truncateUrl(task.url_link, 40)}
               </a>
             </div>
           )}

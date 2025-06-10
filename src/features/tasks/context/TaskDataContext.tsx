@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import UnifiedErrorBoundary from '@/components/ui/UnifiedErrorBoundary';
+import { UnifiedErrorBoundary } from '@/components/ui/UnifiedErrorBoundary';
 import { useTasksQuery } from '@/features/tasks/hooks/useTasksQuery';
 
 import { TaskDataProvider, type TaskDataContextValue } from './task-data-utils';

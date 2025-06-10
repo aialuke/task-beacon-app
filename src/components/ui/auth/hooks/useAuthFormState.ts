@@ -3,10 +3,12 @@ import { useState, useRef, useCallback } from 'react';
 import { useErrorHandler , useSubmissionState } from '@/hooks/core';
 import { AuthService } from '@/lib/api/AuthService';
 import { 
-  useUnifiedValidation,
-  validateUnifiedSignIn,
-  validateUnifiedSignUp
-} from '@/lib/validation';
+  validateSignIn,
+  validateSignUp,
+  isValidEmail,
+  isValidPassword,
+  toValidationResult
+} from '@/lib/validation/validators';
 
 type AuthMode = 'signin' | 'signup';
 
@@ -61,26 +63,27 @@ export function useAuthFormState(): UseAuthFormStateReturn {
   const emailInputRef = useRef<HTMLInputElement>(null);
   const { handleError } = useErrorHandler({ showToast: false });
   const { isSubmitting, startSubmitting, stopSubmitting } = useSubmissionState();
-  const { validateEmail: validateEmailUnified, validatePassword: validatePasswordUnified, validateUserName } = useUnifiedValidation();
-
-  // Using unified validation functions
+  // Using standard validation functions for real-time validation
   const validateEmail = useCallback((value: string) => {
     if (!value) return 'Email is required';
-    const result = validateEmailUnified(value);
-    return result.isValid ? '' : result.errors[0] || 'Invalid email';
-  }, [validateEmailUnified]);
+    if (!isValidEmail(value)) return 'Please enter a valid email address';
+    return '';
+  }, []);
 
   const validatePassword = useCallback((value: string) => {
     if (!value) return 'Password is required';
-    const result = validatePasswordUnified(value);
-    return result.isValid ? '' : result.errors[0] || 'Invalid password';
-  }, [validatePasswordUnified]);
+    if (mode === 'signup' && !isValidPassword(value)) {
+      return 'Password must be at least 8 characters with uppercase, lowercase, number, and special character';
+    }
+    return '';
+  }, [mode]);
 
   const validateName = useCallback((value: string) => {
     if (!value) return 'Name is required';
-    const result = validateUserName(value);
-    return result.isValid ? '' : result.errors[0] || 'Invalid name';
-  }, [validateUserName]);
+    if (value.length < 2) return 'Name must be at least 2 characters';
+    if (value.length > 50) return 'Name cannot exceed 50 characters';
+    return '';
+  }, []);
 
   const validateForm = useCallback(() => {
     const emailError = validateEmail(email);
@@ -153,10 +156,11 @@ export function useAuthFormState(): UseAuthFormStateReturn {
       }
 
       if (mode === 'signin') {
-        // Validate with unified schema
-        const validationResult = validateUnifiedSignIn({ email, password });
-        if (!validationResult.isValid) {
-          throw new Error('Invalid sign-in data');
+        // Validate with standard schema
+        const validationResult = validateSignIn({ email, password });
+        if (!validationResult.success) {
+          const formattedResult = toValidationResult(validationResult);
+          throw new Error(formattedResult.errors[0] || 'Invalid sign-in data');
         }
 
         const response = await AuthService.signIn(email, password);
@@ -168,10 +172,11 @@ export function useAuthFormState(): UseAuthFormStateReturn {
           window.location.href = '/';
         }, 1000);
       } else {
-        // Validate with unified schema
-        const validationResult = validateUnifiedSignUp({ email, password, name });
-        if (!validationResult.isValid) {
-          throw new Error('Invalid sign-up data');
+        // Validate with standard schema  
+        const validationResult = validateSignUp({ email, password, confirmPassword: password, name });
+        if (!validationResult.success) {
+          const formattedResult = toValidationResult(validationResult);
+          throw new Error(formattedResult.errors[0] || 'Invalid sign-up data');
         }
 
         const response = await AuthService.signUp(email, password, {
@@ -246,6 +251,3 @@ export function useAuthFormState(): UseAuthFormStateReturn {
     handleNameChange,
   };
 }
-
-// Export alias for backward compatibility
-export const useAuthForm = useAuthFormState;

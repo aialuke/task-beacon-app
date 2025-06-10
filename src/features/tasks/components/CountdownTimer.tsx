@@ -1,5 +1,5 @@
 import { useSpring, animated } from "@react-spring/web";
-import { useMemo } from "react";
+import { useMemo, useEffect, useRef } from "react";
 
 
 import {
@@ -10,7 +10,7 @@ import {
 import TimerTooltip from "@/features/tasks/components/TimerTooltip";
 import { useTaskUIContext } from "@/features/tasks/context";
 import { useCountdown } from "@/features/tasks/hooks/useCountdown";
-import { useMotionPreferences } from "@/hooks/useMotionPreferences";
+import { prefersReducedMotion, getSpringConfig, setupAnimationVariables } from "@/lib/utils/animation";
 import { TaskStatus } from "@/types";
 
 import TimerDisplay from "./timer/TimerDisplay";
@@ -32,7 +32,8 @@ function CountdownTimer({
   priority = "medium",
 }: CountdownTimerProps) {
   const { isMobile } = useTaskUIContext();
-  const { shouldReduceMotion, getAnimationConfig } = useMotionPreferences();
+  const shouldReduceMotion = prefersReducedMotion();
+  const timerRef = useRef<HTMLDivElement>(null);
 
   const { dynamicSize, radius, circumference } = useMemo(() => {
     // Replace complex nested ternaries with lookup table
@@ -53,11 +54,11 @@ function CountdownTimer({
 
   const springConfig = useMemo(
     () =>
-      getAnimationConfig(
+      getSpringConfig(
         { tension: 120, friction: 14 },
         { tension: 300, friction: 30 }
       ),
-    [getAnimationConfig]
+    [shouldReduceMotion]
   );
 
   const { strokeDashoffset } = useSpring({
@@ -78,12 +79,25 @@ function CountdownTimer({
     }),
     [dynamicSize, shouldReduceMotion]
   );
+  
+  // Setup animation variables for enhanced performance
+  useEffect(() => {
+    if (timerRef.current) {
+      setupAnimationVariables(timerRef.current, {
+        circumference,
+        targetOffset: dashOffset,
+        duration: shouldReduceMotion ? '0ms' : '1.5s',
+        enableGPU: !shouldReduceMotion,
+      });
+    }
+  }, [circumference, dashOffset, shouldReduceMotion]);
 
   return (
     <TooltipProvider>
       <Tooltip delayDuration={300}>
         <TooltipTrigger asChild>
           <AnimatedDiv
+            ref={timerRef}
             role="timer"
             tabIndex={0}
             aria-label={ariaLabel}

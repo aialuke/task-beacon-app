@@ -222,6 +222,4 @@ function UnifiedErrorUI({
   );
 }
 
-// === EXPORTS ===
-
-export default UnifiedErrorBoundary; 
+// === EXPORTS === 

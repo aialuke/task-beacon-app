@@ -67,43 +67,12 @@ const config: KnipConfig = {
   // === DEPENDENCY CONFIGURATION ===
   // Ignore dependencies that are used indirectly or by tooling
   ignoreDependencies: [
-    // Vite plugins and build tools (used in config files)
-    '@vitejs/plugin-react-swc',
-    'lovable-tagger',
-    'autoprefixer',
-    'postcss',
-    
-    // Testing utilities (used in config/setup)
-    '@testing-library/jest-dom',
-    'jsdom',
-    '@vitest/coverage-v8',
-    
-    // Type-only dependencies
-    '@types/node',
-    '@types/react',
-    '@types/react-dom',
-    
-    // ESLint plugins (used in eslint.config.js)
-    '@eslint/js',
-    'globals',
-    'eslint-plugin-*',
-    'typescript-eslint',
-    
-    // shadcn/ui peer dependencies that may not be directly imported
-    '@radix-ui/react-*',
-    'class-variance-authority',
-    'tailwind-merge',
-    'tailwindcss-animate',
-    
-    // Supabase CLI (if used for migrations)
-    'supabase',
+    // No dependencies need to be ignored - all are properly detected
   ],
 
   // Don't warn about these binaries
   ignoreBinaries: [
-    'supabase', // Used for database management
-    'vite', // Used in package.json scripts
-    'vitest', // Used in package.json scripts
+    // No binaries need to be ignored - all are properly detected
   ],
 
   // === TOOL-SPECIFIC CONFIGURATIONS ===

@@ -2,9 +2,9 @@ import { useCallback } from 'react';
 
 import { 
   validateProfileUpdate,
-  profileUpdateSchema,
-  type ProfileUpdateInput 
-} from '../../../lib/validation';
+  validateProfileCreate
+} from '../../../lib/validation/validators';
+import { profileUpdateSchema, type ProfileUpdateInput } from '../../../lib/validation/schemas';
 
 interface ProfileValidationResult {
   isValid: boolean;
@@ -20,7 +20,7 @@ interface ProfileValidationResult {
  */
 export function useProfileValidation() {
   /**
-   * Validate complete profile data using centralized schema
+   * Validate complete profile data using centralized schema for updates
    */
   const validateProfile = useCallback(
     (data: unknown): ProfileValidationResult => {
@@ -31,6 +31,32 @@ export function useProfileValidation() {
           isValid: true, 
           errors: {}, 
           data: result.data 
+        };
+      }
+      
+      const errors: Record<string, string> = {};
+      result.error.errors.forEach((err) => {
+        const field = err.path.join('.');
+        errors[field] = err.message;
+      });
+      
+      return { isValid: false, errors };
+    },
+    []
+  );
+
+  /**
+   * Validate profile data for creation using centralized schema
+   */
+  const validateNewProfile = useCallback(
+    (data: unknown): ProfileValidationResult => {
+      const result = validateProfileCreate(data);
+      
+      if (result.success) {
+        return { 
+          isValid: true, 
+          errors: {}, 
+          data: result.data as ProfileUpdateInput
         };
       }
       
@@ -88,6 +114,7 @@ export function useProfileValidation() {
 
   return {
     validateProfile,
+    validateNewProfile,
     validateProfileField,
     validateName,
     validateEmail,

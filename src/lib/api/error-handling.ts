@@ -8,6 +8,7 @@
 import { PostgrestError, AuthError } from '@supabase/supabase-js';
 
 import { logger } from '@/lib/logger';
+import { createAsyncHandler } from '@/lib/utils/patterns';
 import type { ApiError } from '@/types/shared';
 
 /**
@@ -274,7 +275,29 @@ export const apiRequest = async <T>(
   }
 };
 
-// NOTE: Specialized error handlers and patterns removed as unused exports
+/**
+ * Factory for creating standardized async handlers with consistent error handling
+ */
+export function createStandardAsyncHandler<T extends unknown[], R>(
+  operation: string,
+  handler: (...args: T) => Promise<R>,
+  options: ErrorHandlingOptions = {}
+) {
+  return createAsyncHandler(
+    async (...args: T) => {
+      try {
+        return await handler(...args);
+      } catch (error) {
+        handleApiError(error, operation, {
+          logToConsole: true,
+          rethrow: true,
+          ...options
+        });
+        throw error; // This line won't be reached due to rethrow, but TypeScript needs it
+      }
+    }
+  );
+}
 
 // Export types for external use
 export type { ErrorHandlingOptions, ProcessedError };

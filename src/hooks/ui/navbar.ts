@@ -11,6 +11,7 @@ import {
   calculateIndicatorPosition,
   calculateGlowPosition,
 } from '@/lib/utils/navbarGeometry';
+import { throttle } from '@/lib/utils/core';
 
 interface NavItem {
   name: string;
@@ -89,14 +90,14 @@ export function useNavbar({ items, activeItem, onItemChange }: UseNavbarOptions)
     return () => { cancelAnimationFrame(frame); };
   }, [updateActiveButtonBounds]);
 
-  // Handle window resize
+  // Handle window resize with throttling for performance
   useEffect(() => {
-    const handleResize = () => {
+    const throttledResize = throttle(() => {
       updateActiveButtonBounds();
-    };
+    }, 100); // Throttle resize events to 100ms
 
-    window.addEventListener('resize', handleResize);
-    return () => { window.removeEventListener('resize', handleResize); };
+    window.addEventListener('resize', throttledResize);
+    return () => { window.removeEventListener('resize', throttledResize); };
   }, [updateActiveButtonBounds]);
 
   // Keyboard navigation

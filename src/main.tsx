@@ -11,25 +11,24 @@ import { createRoot } from 'react-dom/client';
 
 // === COMPONENTS ===
 import { logger } from '@/lib/logger';
+import { ErrorHandler } from '@/lib/core/ErrorHandler';
 
 import App from './App.tsx';
-import UnifiedErrorBoundary from './components/ui/UnifiedErrorBoundary';
+import { UnifiedErrorBoundary } from './components/ui/UnifiedErrorBoundary';
 
 // === UTILITIES ===
+import { optimizeAnimations } from '@/lib/utils/core';
 
 // === STYLES ===
 import './index.css';
 
 logger.info('Starting application...');
 
-// Setup basic error handlers
-window.addEventListener('error', (event) => {
-  logger.error('Global error', event.error);
-});
+// Setup unified error handling system
+ErrorHandler.setup();
 
-window.addEventListener('unhandledrejection', (event) => {
-  logger.error('Unhandled promise rejection', new Error(String(event.reason)));
-});
+// Initialize animation optimizations based on user preferences
+optimizeAnimations();
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {

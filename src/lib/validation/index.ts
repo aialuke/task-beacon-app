@@ -24,7 +24,6 @@ export {
   profileUpdateSchema,
   taskFormSchema,
   createTaskSchema,
-  updateTaskSchema,
   paginationSchema,
   sortingSchema,
   fileUploadSchema,
@@ -37,7 +36,6 @@ export {
   validateProfileUpdate,
   validateTaskForm,
   validateTaskCreation,
-  validateTaskUpdate,
   validatePagination,
   validateSorting,
   validateFileUpload,
@@ -62,7 +60,6 @@ export {
   isValidUrl,
   isDateInFuture,
   toValidationResult,
-  transformTaskFormToApiData,
 } from './validators';
 
 // ============================================================================
@@ -86,17 +83,13 @@ export { profileUpdateSchema as profileFormSchema } from './schemas';
 export type {
   SignInInput,
   SignUpInput,
-  PasswordResetInput,
-  PasswordChangeInput,
   ProfileUpdateInput,
   ProfileCreateInput,
   TaskPriority,
   TaskStatus,
   BaseTask,
   CreateTaskInput,
-  UpdateTaskInput,
   TaskFormInput,
-  TaskFilterInput,
   PaginationInput,
   SortingInput,
   FileUploadInput,

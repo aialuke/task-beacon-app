@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/dialog";
 // === HOOKS ===
 import { useTaskMutations } from "@/features/tasks/hooks/useTaskMutations";
+import { useUnifiedError } from "@/hooks/core/useUnifiedError";
+import { useAsyncOperation } from "@/lib/utils/async";
 // === TYPES ===
 import type { Task } from "@/types";
 
@@ -28,38 +30,54 @@ interface TaskActionsProps {
 function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
   const navigate = useNavigate();
   const { toggleTaskCompleteCallback, deleteTaskCallback } = useTaskMutations();
-  const [isDeleting, setIsDeleting] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const { handleError, withErrorHandling } = useUnifiedError({ context: 'TaskActions' });
+  
+  // Async operations using useAsyncOperation for reliable state management
+  const {
+    execute: executeToggle,
+    isLoading: isToggling
+  } = useAsyncOperation(
+    async () => {
+      const result = await toggleTaskCompleteCallback(task);
+      if (!result.success && result.error) {
+        throw new Error(result.message);
+      }
+      return result;
+    },
+    {
+      onError: (error) => handleError(error, 'Toggle task completion')
+    }
+  );
+  
+  const {
+    execute: executeDelete,
+    isLoading: isDeleting
+  } = useAsyncOperation(
+    async () => {
+      const result = await deleteTaskCallback(task.id);
+      if (!result.success && result.error) {
+        throw new Error(result.message);
+      }
+      setIsDeleteDialogOpen(false);
+      return result;
+    },
+    {
+      onError: (error) => handleError(error, 'Delete task')
+    }
+  );
 
   const handleCreateFollowUp = useCallback(() => {
     navigate(`/follow-up-task/${task.id}`);
   }, [navigate, task.id]);
 
-  const handleToggleComplete = useCallback(async () => {
-    const result = await toggleTaskCompleteCallback(task);
-    if (result.success) {
-      // toast.success(result.message);
-    } else if (result.error) {
-      // toast.error(result.message);
-    }
-  }, [toggleTaskCompleteCallback, task]);
+  const handleToggleComplete = useCallback(() => {
+    executeToggle();
+  }, [executeToggle]);
 
-  const handleDelete = useCallback(async () => {
-    setIsDeleting(true);
-    try {
-      const result = await deleteTaskCallback(task.id);
-      if (result.success) {
-        // toast.success(result.message);
-        setIsDeleteDialogOpen(false);
-      } else if (result.error) {
-        // toast.error(result.message);
-      }
-    } catch (_error) {
-      // toast.error('Failed to delete task');
-    } finally {
-      setIsDeleting(false);
-    }
-  }, [deleteTaskCallback, task.id]);
+  const handleDelete = useCallback(() => {
+    executeDelete();
+  }, [executeDelete]);
 
   return (
     <div className="flex flex-wrap gap-2">
@@ -67,9 +85,10 @@ function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
         variant={task.status === "complete" ? "outline" : "default"}
         size="sm"
         onClick={handleToggleComplete}
+        disabled={isToggling}
         className="rounded-full"
       >
-        {task.status === "complete" ? "Mark Incomplete" : "Complete"}
+        {isToggling ? "Updating..." : (task.status === "complete" ? "Mark Incomplete" : "Complete")}
       </Button>
       <Button 
         variant="outline" 

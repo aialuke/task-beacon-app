@@ -4,16 +4,19 @@
  * Single source of truth for all loading components with optimized performance.
  */
 
-import { memo, useMemo } from 'react';
+import { memo, useMemo, useRef, useEffect } from 'react';
 
 import { Skeleton } from '@/components/ui/skeleton';
+import { isFeatureEnabled } from '@/lib/config/app';
 import { cn } from '@/lib/utils';
+import { pulseElement } from '@/lib/utils/animation';
 
 // === PERFORMANCE OPTIMIZED INTERFACES ===
 
 export interface LoadingSpinnerProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
+  enablePulse?: boolean;
 }
 
 export interface SkeletonProps {
@@ -32,13 +35,32 @@ const SPINNER_SIZES = {
 // === OPTIMIZED LOADING SPINNER ===
 export const LoadingSpinner = memo(function LoadingSpinner({ 
   size = 'md', 
-  className 
+  className,
+  enablePulse = false
 }: LoadingSpinnerProps) {
   // Memoize size classes to prevent recalculation
   const sizeClasses = useMemo(() => SPINNER_SIZES[size], [size]);
+  const spinnerRef = useRef<HTMLDivElement>(null);
+  
+  // Apply pulse animation if enabled and feature flag allows
+  useEffect(() => {
+    const enhancedAnimationsEnabled = isFeatureEnabled('enableBundleOptimization');
+    if (enablePulse && enhancedAnimationsEnabled && spinnerRef.current) {
+      const pulseAnimation = () => {
+        pulseElement(spinnerRef.current, 1500).then(() => {
+          // Continue pulsing while component is mounted
+          if (spinnerRef.current) {
+            setTimeout(pulseAnimation, 500);
+          }
+        });
+      };
+      pulseAnimation();
+    }
+  }, [enablePulse]);
   
   return (
     <div 
+      ref={spinnerRef}
       className={cn(
         'loading-unified-spinner',
         sizeClasses,

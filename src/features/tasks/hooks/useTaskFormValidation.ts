@@ -5,6 +5,7 @@ import {
   useUnifiedValidation,
   validateUnifiedTask,
 } from '@/lib/validation';
+import { generateUUID } from '@/lib/utils/core';
 
 interface TaskFormData {
   title: string;
@@ -123,7 +124,7 @@ export function useTaskFormValidation() {
   }, []);
 
   /**
-   * Prepare task data with validation
+   * Prepare task data with validation and temporary ID generation
    */
   const prepareTaskData = useCallback((formData: TaskFormData): TaskFormData | null => {
     const validation = validateCreateTaskData(formData);
@@ -136,6 +137,13 @@ export function useTaskFormValidation() {
     return validation.data || null;
   }, [validateCreateTaskData, showValidationErrors]);
 
+  /**
+   * Generate temporary ID for draft tasks or form state management
+   */
+  const generateTempTaskId = useCallback((): string => {
+    return `temp-task-${generateUUID()}`;
+  }, []);
+
   return {
     validateTaskFormData,
     validateCreateTaskData,
@@ -145,5 +153,6 @@ export function useTaskFormValidation() {
     createTitleSetter,
     showValidationErrors,
     prepareTaskData,
+    generateTempTaskId,
   };
 }

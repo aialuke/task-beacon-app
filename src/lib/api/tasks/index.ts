@@ -7,57 +7,78 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import { apiRequest } from '@/lib/api/error-handling';
+import { transformApiError, createSuccessResponse, createErrorResponse } from '@/lib/api/standardized-api';
+import { apiLogger } from '@/lib/logger';
+import { retryAsync, executeAsync } from '@/lib/utils/patterns';
+import { validatePagination, validateSorting } from '@/lib/validation/validators';
 import type { TaskCreateData, TaskUpdateData } from '@/types';
 
 // === TASK CRUD OPERATIONS ===
 
 const createTask = async (taskData: TaskCreateData) => {
-  return apiRequest('createTask', async () => {
-    // Get current user for owner_id
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      throw new Error('User must be authenticated to create tasks');
-    }
+  apiLogger.info('Creating task', { title: taskData.title });
+  try {
+    const result = await apiRequest('createTask', async () => {
+      // Use retryAsync for critical task creation operation
+      return retryAsync(async () => {
+        // Get current user for owner_id
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          throw new Error('User must be authenticated to create tasks');
+        }
 
-    const { data, error } = await supabase
-      .from('tasks')
-      .insert({
-        title: taskData.title,
-        description: taskData.description,
-        due_date: taskData.due_date,
-        url_link: taskData.url_link,
-        assignee_id: taskData.assignee_id,
-        parent_task_id: taskData.parent_task_id,
-        photo_url: taskData.photo_url,
-        owner_id: user.id,
-      })
-      .select()
-      .single();
+        return executeAsync(async () => {
+          const { data, error } = await supabase
+            .from('tasks')
+            .insert({
+              title: taskData.title,
+              description: taskData.description,
+              due_date: taskData.due_date,
+              url_link: taskData.url_link,
+              assignee_id: taskData.assignee_id,
+              parent_task_id: taskData.parent_task_id,
+              photo_url: taskData.photo_url,
+              owner_id: user.id,
+            })
+            .select()
+            .single();
 
-    if (error) throw error;
-    return data;
-  });
+          if (error) throw error;
+          return data;
+        });
+      }, 3, 1000);
+    });
+
+    return result.success ? createSuccessResponse(result.data) : createErrorResponse(result.error!);
+  } catch (error) {
+    return createErrorResponse(transformApiError(error));
+  }
 };
 
 const updateTask = async (taskId: string, updates: Partial<TaskUpdateData>) => {
   return apiRequest('updateTask', async () => {
-    const { data, error } = await supabase
-      .from('tasks')
-      .update({
-        title: updates.title,
-        description: updates.description,
-        due_date: updates.due_date,
-        url_link: updates.url_link,
-        assignee_id: updates.assignee_id,
-        photo_url: updates.photo_url,
-        status: updates.status,
-      })
-      .eq('id', taskId)
-      .select()
-      .single();
+    // Use retryAsync for critical task update operation
+    return retryAsync(async () => {
+      return executeAsync(async () => {
+        const { data, error } = await supabase
+          .from('tasks')
+          .update({
+            title: updates.title,
+            description: updates.description,
+            due_date: updates.due_date,
+            url_link: updates.url_link,
+            assignee_id: updates.assignee_id,
+            photo_url: updates.photo_url,
+            status: updates.status,
+          })
+          .eq('id', taskId)
+          .select()
+          .single();
 
-    if (error) throw error;
-    return data;
+        if (error) throw error;
+        return data;
+      });
+    }, 3, 1000);
   });
 };
 
@@ -94,9 +115,24 @@ const getTasks = async (options: {
   page?: number;
   pageSize?: number;
   assignedToMe?: boolean;
+  sortBy?: string;
+  sortDirection?: 'asc' | 'desc';
 } = {}) => {
   return apiRequest('getTasks', async () => {
-    const { page = 1, pageSize = 10, assignedToMe = false } = options;
+    const { page = 1, pageSize = 10, assignedToMe = false, sortBy = 'created_at', sortDirection = 'desc' } = options;
+    
+    // Validate pagination parameters
+    const paginationValidation = validatePagination({ page, pageSize });
+    if (!paginationValidation.success) {
+      throw new Error('Invalid pagination parameters');
+    }
+    
+    // Validate sorting parameters
+    const sortingValidation = validateSorting({ sortBy, sortDirection });
+    if (!sortingValidation.success) {
+      throw new Error('Invalid sorting parameters');
+    }
+    
     const from = (page - 1) * pageSize;
     const to = from + pageSize - 1;
 
@@ -116,7 +152,7 @@ const getTasks = async (options: {
     }
 
     const { data, error, count } = await query
-      .order('created_at', { ascending: false })
+      .order(sortBy, { ascending: sortDirection === 'asc' })
       .range(from, to);
 
     if (error) throw error;

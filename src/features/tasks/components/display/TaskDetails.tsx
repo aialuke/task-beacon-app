@@ -10,7 +10,7 @@ interface TaskDetailsProps {
   task: Task;
   isExpanded: boolean;
   animationState: {
-    height: SpringValue<number>;
+    height: SpringValue<string | number>;
     opacity: SpringValue<number>;
   };
   contentRef: React.RefObject<HTMLDivElement>;
