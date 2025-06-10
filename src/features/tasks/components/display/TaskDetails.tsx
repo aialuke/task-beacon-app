@@ -10,10 +10,11 @@ interface TaskDetailsProps {
   task: Task;
   isExpanded: boolean;
   animationState: {
-    height: SpringValue<string | number>;
+    height: SpringValue<number>;
     opacity: SpringValue<number>;
   };
   contentRef: React.RefObject<HTMLDivElement>;
+  measureRef?: React.RefObject<HTMLDivElement>;
 }
 
 function TaskDetails({
@@ -21,6 +22,7 @@ function TaskDetails({
   isExpanded,
   animationState,
   contentRef,
+  measureRef,
 }: TaskDetailsProps) {
   return (
     <animated.div
@@ -34,7 +36,9 @@ function TaskDetails({
       }}
       className="mt-1 w-full"
     >
-      <TaskDetailsContent task={task} isExpanded={isExpanded} />
+      <div ref={measureRef}>
+        <TaskDetailsContent task={task} isExpanded={isExpanded} />
+      </div>
     </animated.div>
   );
 }

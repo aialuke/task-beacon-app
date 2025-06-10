@@ -1,6 +1,8 @@
 /**
  * Navbar color computation utilities
  * Handles theme-aware color calculations for navbar components
+ * 
+ * Phase 1 Fix: Moved from lib/utils to establish clear feature boundaries
  */
 
 interface NavbarColors {
@@ -82,4 +84,4 @@ export function setupThemeObserver(callback: () => void): () => void {
   observer.observe(document.documentElement, { attributes: true });
 
   return () => { observer.disconnect(); };
-}
+} 

@@ -1,112 +1,58 @@
-import { useCallback, useState } from 'react';
+// Phase 1 Fix: Removed complex batch operations and unused imports
 
-import { useQueryClient } from '@/lib/query-client';
-import { executeInSequence } from '@/lib/utils/async';
-import { uniqueBy } from '@/lib/utils/data';
-
-import { useTaskCreation } from './mutations/useTaskCreation';
-import { useTaskDeletion } from './mutations/useTaskDeletion';
-import { useTaskStatus } from './mutations/useTaskStatus';
-import { useTaskUpdates } from './mutations/useTaskUpdates';
+import { useTaskCreation } from './useTaskCreation';
+import { useTaskDeletion } from './useTaskDeletion';
+import { useTaskStatusToggle } from './useTaskStatusToggle';
+import { useTaskUpdates } from './useTaskUpdates';
 
 /**
- * Unified Task Mutations Hook - Phase 3 Consolidated
+ * Unified Task Mutations Hook - Phase 1 Simplified
  * 
- * Combines all task mutation hooks with simplified, consistent patterns.
- * Eliminates duplicate error handling, optimistic updates, and toast notifications.
+ * Combines focused task mutation hooks with clean, single-responsibility patterns.
+ * Removed complex batch operations for better maintainability.
  */
 export function useTaskMutations() {
   const creation = useTaskCreation();
   const deletion = useTaskDeletion();
   const updates = useTaskUpdates();
-  const status = useTaskStatus();
-  const queryClient = useQueryClient();
-  
-  // Batch operation state
-  const [isBatchProcessing, setIsBatchProcessing] = useState(false);
-  
-  // Batch operations using executeInSequence with duplicate prevention
-  const batchCompleteTask = useCallback(async (taskIds: string[]) => {
-    setIsBatchProcessing(true);
-    try {
-      // Remove duplicates using uniqueBy based on ID
-      const taskObjects = taskIds.map(id => ({ id }));
-      const uniqueTaskIds = uniqueBy(taskObjects, 'id').map(task => task.id);
-      
-      const operations = uniqueTaskIds.map(taskId => () => status.markAsComplete(taskId));
-      await executeInSequence(operations);
-      
-      // Invalidate tasks cache after batch completion
-      await queryClient.invalidateQueries({ queryKey: ['tasks'] });
-      
-      return { success: true };
-    } catch (error) {
-      return { 
-        success: false, 
-        error: error instanceof Error ? error : new Error(String(error)) 
-      };
-    } finally {
-      setIsBatchProcessing(false);
-    }
-  }, [status, queryClient]);
-  
-  const batchDeleteTasks = useCallback(async (taskIds: string[]) => {
-    setIsBatchProcessing(true);
-    try {
-      // Remove duplicates using uniqueBy based on ID
-      const taskObjects = taskIds.map(id => ({ id }));
-      const uniqueTaskIds = uniqueBy(taskObjects, 'id').map(task => task.id);
-      
-      const operations = uniqueTaskIds.map(taskId => () => deletion.deleteTaskById(taskId));
-      await executeInSequence(operations);
-      
-      // Invalidate tasks cache after batch deletion
-      await queryClient.invalidateQueries({ queryKey: ['tasks'] });
-      
-      return { success: true };
-    } catch (error) {
-      return { 
-        success: false, 
-        error: error instanceof Error ? error : new Error(String(error)) 
-      };
-    } finally {
-      setIsBatchProcessing(false);
-    }
-  }, [deletion, queryClient]);
+  const status = useTaskStatusToggle();
 
   return {
     // Creation operations
     createTask: creation.createTask,
-    createTaskCallback: creation.createTaskCallback,
+    createTaskAsync: creation.createTaskAsync,
     createFollowUpTask: creation.createFollowUpTask,
+    createFollowUpTaskAsync: creation.createFollowUpTaskAsync,
 
     // Update operations
     updateTask: updates.updateTask,
-    updateTaskCallback: updates.updateTaskCallback,
+    updateTaskAsync: updates.updateTaskAsync,
 
     // Status operations
-    toggleTaskComplete: status.toggleTaskComplete,
-    toggleTaskCompleteCallback: status.toggleTaskCompleteCallback,
-    markAsComplete: status.markAsComplete,
-    markAsIncomplete: status.markAsIncomplete,
+    toggleStatus: status.toggleStatus,
+    toggleStatusAsync: status.toggleStatusAsync,
+    markComplete: status.markComplete,
+    markCompleteAsync: status.markCompleteAsync,
+    markIncomplete: status.markIncomplete,
+    markIncompleteAsync: status.markIncompleteAsync,
 
     // Deletion operations
     deleteTask: deletion.deleteTask,
-    deleteTaskCallback: deletion.deleteTaskCallback,
-    deleteTaskById: deletion.deleteTaskById,
-
-    // Batch operations
-    batchCompleteTask,
-    batchDeleteTasks,
+    deleteTaskAsync: deletion.deleteTaskAsync,
 
     // Loading states
     isCreating: creation.isLoading,
     isUpdating: updates.isLoading,
     isDeleting: deletion.isLoading,
     isTogglingStatus: status.isLoading,
-    isBatchProcessing,
     
     // Combined loading state
-    isLoading: creation.isLoading || updates.isLoading || deletion.isLoading || status.isLoading || isBatchProcessing,
+    isLoading: creation.isLoading || updates.isLoading || deletion.isLoading || status.isLoading,
+    
+    // Reset functions
+    resetCreation: creation.reset,
+    resetUpdates: updates.reset,
+    resetDeletion: deletion.reset,
+    resetStatus: status.reset,
   };
 }

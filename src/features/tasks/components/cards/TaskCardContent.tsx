@@ -10,10 +10,11 @@ interface TaskCardContentProps {
   task: Task;
   isExpanded: boolean;
   animationState: {
-    height: SpringValue<string | number>;
+    height: SpringValue<number>;
     opacity: SpringValue<number>;
   };
   contentRef: React.RefObject<HTMLDivElement>;
+  measureRef?: React.RefObject<HTMLDivElement>;
 }
 
 function TaskCardContent({
@@ -21,6 +22,7 @@ function TaskCardContent({
   isExpanded,
   animationState,
   contentRef,
+  measureRef,
 }: TaskCardContentProps) {
   return (
     <TaskDetails
@@ -28,6 +30,7 @@ function TaskCardContent({
       isExpanded={isExpanded}
       animationState={animationState}
       contentRef={contentRef}
+      measureRef={measureRef}
     />
   );
 }

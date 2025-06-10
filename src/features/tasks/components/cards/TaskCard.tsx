@@ -49,6 +49,7 @@ function TaskCard({ task, style, className }: TaskCardProps) {
     isExpanded,
     animationState,
     toggleExpand,
+    measureRef,
   } = useTaskCard(task);
   
   const [isInViewport, setIsInViewport] = useState(false);
@@ -138,6 +139,7 @@ function TaskCard({ task, style, className }: TaskCardProps) {
           isExpanded={isExpanded}
           animationState={animationState}
           contentRef={contentRef}
+          measureRef={measureRef}
         />
       </article>
     </UnifiedErrorBoundary>

@@ -3,10 +3,8 @@ import { useState, useCallback, useMemo } from 'react';
 import { TaskService } from '@/lib/api/tasks';
 import { logger } from '@/lib/logger';
 import { withRetry } from '@/lib/utils/async';
-import { 
-  compressAndResizePhoto,
-  extractImageMetadata,
-  convertToWebPWithFallback,
+// Phase 2: Lazy load heavy image processing utilities - only import types
+import type { 
   ProcessingResult,
   EnhancedImageProcessingOptions 
 } from '@/lib/utils/image';
@@ -36,6 +34,20 @@ interface UnifiedPhotoUploadReturn {
   // Configuration
   processingOptions: EnhancedImageProcessingOptions;
 }
+
+// Phase 2: Lazy load image processing utilities only when needed
+const loadImageUtils = async () => {
+  const { 
+    compressAndResizePhoto,
+    extractImageMetadata,
+    convertToWebPWithFallback 
+  } = await import('@/lib/utils/image');
+  return {
+    compressAndResizePhoto,
+    extractImageMetadata,
+    convertToWebPWithFallback
+  };
+};
 
 /**
  * Unified Photo Upload Hook - Phase 3 Consolidation
@@ -139,6 +151,9 @@ export function useUnifiedPhotoUpload(options: UnifiedPhotoUploadOptions = {}): 
         const preview = URL.createObjectURL(file);
         setPhotoPreview(preview);
 
+        // Phase 2: Lazy load image processing utilities only when actually needed
+        const { compressAndResizePhoto, extractImageMetadata, convertToWebPWithFallback } = await loadImageUtils();
+
         // First compress and resize
         const resizedFile = await compressAndResizePhoto(
           file,
@@ -199,7 +214,7 @@ export function useUnifiedPhotoUpload(options: UnifiedPhotoUploadOptions = {}): 
       handlePhotoChange,
       uploadPhoto,
       resetPhoto,
-      handlePhotoRemove: resetPhoto,
+      handlePhotoRemove: resetPhoto, // Alias for consistency
       
       // Configuration
       processingOptions,
@@ -213,7 +228,7 @@ export function useUnifiedPhotoUpload(options: UnifiedPhotoUploadOptions = {}): 
       handlePhotoChange,
       uploadPhoto,
       resetPhoto,
-      processingOptions,
+      processingOptions
     ]
   );
 }

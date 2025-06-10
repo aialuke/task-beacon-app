@@ -25,11 +25,9 @@ export * from './image';
 export * from './async';
 
 // ============================================================================
-// NAVBAR UTILITIES (Specific to UI components)
+// NAVBAR UTILITIES - Moved to features/tasks/utils (Phase 1 Fix)
 // ============================================================================
-
-export * from './navbarColors';
-export * from './navbarGeometry';
+// Note: Navbar utilities moved to feature directory for better boundaries
 
 // ============================================================================
 // OTHER UTILITIES

@@ -1,7 +1,8 @@
-
 /**
  * Navbar geometry calculation utilities
  * Handles button positioning and bounds calculations
+ * 
+ * Phase 1 Fix: Moved from lib/utils to establish clear feature boundaries
  */
 
 import { logger } from '@/lib/logger';
@@ -92,4 +93,4 @@ export function setButtonRef(
   element: HTMLButtonElement | null
 ): void {
   refs.current[index] = element;
-}
+} 

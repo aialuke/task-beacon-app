@@ -1,16 +1,17 @@
-
 import { User, ImageUp, Link, FileCheck } from 'lucide-react';
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 
+import { ModalContentSkeleton } from '@/components/ui/loading/SkeletonLoader';
 import type { ProcessingResult } from '@/lib/utils/image';
 
 import { ActionButton } from './components/ActionButton';
 import { DatePickerButton } from './components/DatePickerButton';
 import { SubmitButton } from './components/SubmitButton';
-import SimplePhotoUploadModal from './SimplePhotoUploadModal';
-import { UrlInputModal } from './UrlInputModal';
-import { UserSearchModal } from './UserSearchModal';
 
+// Lazy load modal components for performance optimization
+const SimplePhotoUploadModal = lazy(() => import('./SimplePhotoUploadModal'));
+const UrlInputModal = lazy(() => import('./UrlInputModal').then(module => ({ default: module.UrlInputModal })));
+const UserSearchModal = lazy(() => import('./UserSearchModal').then(module => ({ default: module.UserSearchModal })));
 
 interface QuickActionBarProps {
   // Date picker props
@@ -39,6 +40,13 @@ interface QuickActionBarProps {
 
   disabled?: boolean;
 }
+
+// Phase 2: Enhanced loading fallback component for modals with skeleton UI
+const ModalLoader = () => (
+  <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm dark:bg-gray-900/80">
+    <ModalContentSkeleton />
+  </div>
+);
 
 export function QuickActionBar({
   dueDate,
@@ -122,33 +130,44 @@ export function QuickActionBar({
         disabled={disabled}
       />
 
-      {/* Modals */}
-      <UrlInputModal
-        isOpen={isUrlModalOpen}
-        onClose={() => { setIsUrlModalOpen(false); }}
-        value={url}
-        onChange={onUrlChange}
-      />
+      {/* Conditionally rendered modals with lazy loading */}
+      {isUrlModalOpen && (
+        <Suspense fallback={<ModalLoader />}>
+          <UrlInputModal
+            isOpen={isUrlModalOpen}
+            onClose={() => { setIsUrlModalOpen(false); }}
+            value={url}
+            onChange={onUrlChange}
+          />
+        </Suspense>
+      )}
 
-      <UserSearchModal
-        isOpen={isUserModalOpen}
-        onClose={() => { setIsUserModalOpen(false); }}
-        value={assigneeId}
-        onChange={onAssigneeChange}
-      />
+      {isUserModalOpen && (
+        <Suspense fallback={<ModalLoader />}>
+          <UserSearchModal
+            isOpen={isUserModalOpen}
+            onClose={() => { setIsUserModalOpen(false); }}
+            value={assigneeId}
+            onChange={onAssigneeChange}
+          />
+        </Suspense>
+      )}
 
-      {/* Simple Photo Upload Modal */}
-      <SimplePhotoUploadModal
-        isOpen={isPhotoModalOpen}
-        onClose={() => { setIsPhotoModalOpen(false); }}
-        photoPreview={photoPreview}
-        onPhotoChange={onPhotoChange}
-        onPhotoRemove={onPhotoRemove}
-        onSubmit={handlePhotoSubmit}
-        processingResult={processingResult}
-        loading={photoLoading}
-        title="Upload Task Image"
-      />
+      {isPhotoModalOpen && (
+        <Suspense fallback={<ModalLoader />}>
+          <SimplePhotoUploadModal
+            isOpen={isPhotoModalOpen}
+            onClose={() => { setIsPhotoModalOpen(false); }}
+            photoPreview={photoPreview}
+            onPhotoChange={onPhotoChange}
+            onPhotoRemove={onPhotoRemove}
+            onSubmit={handlePhotoSubmit}
+            processingResult={processingResult}
+            loading={photoLoading}
+            title="Upload Task Image"
+          />
+        </Suspense>
+      )}
     </div>
   );
-}
+} 

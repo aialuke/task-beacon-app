@@ -2,16 +2,16 @@ import { useSpring } from '@react-spring/web';
 import { LucideIcon } from 'lucide-react';
 import { useRef, useEffect, useState, useCallback } from 'react';
 
-import { throttle } from '@/lib/utils/core';
 import {
   computeNavbarColors,
   setupThemeObserver,
-} from '@/lib/utils/navbarColors';
+} from '@/features/tasks/utils/navbarColors';
 import {
   calculateActiveButtonBounds,
   calculateIndicatorPosition,
   calculateGlowPosition,
-} from '@/lib/utils/navbarGeometry';
+} from '@/features/tasks/utils/navbarGeometry';
+import { throttle } from '@/lib/utils/core';
 
 interface NavItem {
   name: string;

@@ -9,6 +9,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { UnifiedErrorBoundary } from '@/components/ui/UnifiedErrorBoundary';
 // Contexts
 import { AuthProvider } from '@/contexts/AuthContext';
+import { MotionPreferenceProvider } from '@/contexts/MotionPreferenceContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 // Utilities
 import { queryClient } from '@/lib/query-client';
@@ -55,27 +56,30 @@ interface AppProvidersProps {
  * 1. Error handling
  * 2. Performance optimizations
  * 3. Theme/styling
- * 4. Data/caching
- * 5. Authentication
- * 6. UI infrastructure
- * 7. Routing
+ * 4. Motion preferences (accessibility)
+ * 5. Data/caching
+ * 6. Authentication
+ * 7. UI infrastructure
+ * 8. Routing
  */
 export function AppProviders({ children }: AppProvidersProps) {
   return (
     <UnifiedErrorBoundary variant="page" title="Application Error">
       <PerformanceOptimizations>
         <ThemeProvider>
-          <QueryClientProvider client={queryClient}>
-            <AuthProvider>
-              <TooltipProvider>
-                <BrowserRouter>
-                  <React.Suspense fallback={<PageLoader message="Loading application..." />}>
-                    {children}
-                  </React.Suspense>
-                </BrowserRouter>
-              </TooltipProvider>
-            </AuthProvider>
-          </QueryClientProvider>
+          <MotionPreferenceProvider>
+            <QueryClientProvider client={queryClient}>
+              <AuthProvider>
+                <TooltipProvider>
+                  <BrowserRouter>
+                    <React.Suspense fallback={<PageLoader message="Loading application..." />}>
+                      {children}
+                    </React.Suspense>
+                  </BrowserRouter>
+                </TooltipProvider>
+              </AuthProvider>
+            </QueryClientProvider>
+          </MotionPreferenceProvider>
         </ThemeProvider>
       </PerformanceOptimizations>
     </UnifiedErrorBoundary>

@@ -7,7 +7,7 @@ import { useTaskAnimation } from "./useTaskAnimation";
 export function useTaskCard(_task: Task) {
   const contentRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
-  const { isExpanded, animationState, toggleExpanded } =
+  const { isExpanded, animationState, toggleExpanded, measureRef } =
     useTaskAnimation();
 
   return {
@@ -16,5 +16,6 @@ export function useTaskCard(_task: Task) {
     isExpanded,
     animationState,
     toggleExpand: toggleExpanded,
+    measureRef,
   };
 }

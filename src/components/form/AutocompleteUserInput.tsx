@@ -32,7 +32,9 @@ export function AutocompleteUserInput({
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   
-  const { users, isLoading: _isLoading } = useUsersQuery();
+  // Enable user query only when component is focused or has input (Performance Fix 2)
+  const shouldFetchUsers = isFocused || inputValue.length > 0 || searchTerm.length > 0;
+  const { users, isLoading: _isLoading } = useUsersQuery({ enabled: shouldFetchUsers });
   
   // Debounced search to improve performance
   const debouncedSetSearchTerm = useCallback(

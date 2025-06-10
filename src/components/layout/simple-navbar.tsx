@@ -1,3 +1,8 @@
+/**
+ * Simple Navigation Bar Component
+ * Phase 1 Fix: Moved from ui to layout for proper component boundaries
+ */
+
 import { animated } from '@react-spring/web';
 import { LucideIcon } from 'lucide-react';
 
@@ -131,4 +136,4 @@ export function SimpleNavbar({
       </div>
     </div>
   );
-}
+} 
