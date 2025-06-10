@@ -9,8 +9,6 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { SpringConfig } from '@react-spring/web';
 
-import { AnimationPresets } from '@/animations';
-
 export type MotionPreference = 'normal' | 'reduced' | 'disabled';
 
 interface MotionPreferenceContextValue {
@@ -75,7 +73,7 @@ export function MotionPreferenceProvider({
 
   const getAnimationConfig = (
     normalConfig: SpringConfig,
-    reducedConfig: SpringConfig = AnimationPresets.reduced,
+    reducedConfig: SpringConfig = { tension: 500, friction: 50 },
     disabledConfig: SpringConfig = { tension: 1000, friction: 100 }
   ): SpringConfig => {
     if (shouldDisableMotion) {
