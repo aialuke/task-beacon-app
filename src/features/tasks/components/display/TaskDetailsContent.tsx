@@ -2,8 +2,9 @@ import { Calendar1, ExternalLink } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import { ParentTaskReference } from "@/components/form/ParentTaskReference";
-import { formatDate } from "@/lib/utils/shared";
+import { formatDate, getTooltipContent } from "@/lib/utils/shared";
 import { truncateText, truncateUrl } from "@/lib/utils/format";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import type { Task } from "@/types";
 
 import TaskActions from "../actions/TaskActions";
@@ -40,9 +41,18 @@ export default function TaskDetailsContent({ task, isExpanded = false }: TaskDet
           {task.due_date && (
             <div className="flex items-center gap-3">
               <Calendar1 className="text-muted-foreground size-4" />
-              <span className="text-muted-foreground text-sm">
-                {formatDate(task.due_date)}
-              </span>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="text-muted-foreground text-sm cursor-help">
+                      {formatDate(task.due_date)}
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    {getTooltipContent(task.due_date)}
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           )}
 

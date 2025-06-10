@@ -4,6 +4,7 @@ import { useRef } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { useImageLoadingState } from '@/hooks/core';
+import { formatFileSize, formatPercentage } from '@/lib/utils/format';
 import type { ProcessingResult } from '@/lib/utils/image';
 
 interface SimplePhotoUploadProps {
@@ -113,9 +114,21 @@ export default function SimplePhotoUpload({
       {/* File info and remove option */}
       {photoPreview && fileName && (
         <div className="inline-flex gap-2 text-xs">
-          <p className="text-muted-foreground max-w-32 truncate" aria-live="polite">
-            {fileName}
-          </p>
+          <div className="text-muted-foreground max-w-32">
+            <p className="truncate" aria-live="polite">
+              {fileName}
+            </p>
+            {processingResult?.compressionStats && (
+              <p className="text-xs">
+                {formatFileSize(processingResult.compressionStats.compressedSize)}
+                {processingResult.compressionStats.originalSize !== processingResult.compressionStats.compressedSize && (
+                  <span className="text-green-600">
+                    {' '}(-{formatPercentage(processingResult.compressionStats.sizeSavedPercent / 100)})
+                  </span>
+                )}
+              </p>
+            )}
+          </div>
           {onPhotoRemove && (
             <button
               onClick={onPhotoRemove}

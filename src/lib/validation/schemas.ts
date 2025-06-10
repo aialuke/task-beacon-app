@@ -8,6 +8,7 @@
 import { z } from 'zod';
 
 import { DEFAULT_PAGINATION_CONFIG } from '@/lib/utils/pagination';
+import { isDatePast } from '../utils/date';
 
 import { 
   unifiedEmailSchema, 
@@ -67,21 +68,7 @@ export const signUpSchema = z.object({
   }
 );
 
-export const passwordResetSchema = z.object({
-  email: unifiedEmailSchema,
-});
 
-export const passwordChangeSchema = z.object({
-  currentPassword: z.string().min(1, 'Current password is required'),
-  newPassword: unifiedPasswordSchema,
-  confirmNewPassword: z.string().min(1, 'Password confirmation is required'),
-}).refine(
-  (data) => data.newPassword === data.confirmNewPassword,
-  {
-    message: "New passwords don't match",
-    path: ["confirmNewPassword"],
-  }
-);
 
 // ============================================================================
 // USER PROFILE SCHEMAS
@@ -122,8 +109,8 @@ const futureDateSchema = z
       if (!date || typeof date !== 'string') return true;
       const dateObj = new Date(date);
       if (isNaN(dateObj.getTime())) return false;
-      const now = new Date();
-      return dateObj > now;
+      // Use the isDatePast utility for consistent date validation
+      return !isDatePast(date);
     },
     'Date cannot be in the past'
   );
@@ -192,12 +179,7 @@ export const fileUploadSchema = z.object({
 // TYPE EXPORTS
 // ============================================================================
 
-export type SignInInput = z.infer<typeof signInSchema>;
-export type SignUpInput = z.infer<typeof signUpSchema>;
-export type PasswordResetInput = z.infer<typeof passwordResetSchema>;
-export type PasswordChangeInput = z.infer<typeof passwordChangeSchema>;
 export type ProfileUpdateInput = z.infer<typeof profileUpdateSchema>;
-export type ProfileCreateInput = z.infer<typeof profileCreateSchema>;
 
 export type TaskPriority = z.infer<typeof taskPrioritySchema>;
 export type TaskStatus = z.infer<typeof taskStatusSchema>;

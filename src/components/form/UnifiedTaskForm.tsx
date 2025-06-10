@@ -5,7 +5,8 @@ import { useState, useCallback } from 'react';
 import { QuickActionBar } from '@/components/form/QuickActionBar';
 import { FloatingInput } from '@/components/ui/form/FloatingInput';
 import { FloatingTextarea } from '@/components/ui/form/FloatingTextarea';
-import { validateTaskForm, validateTaskCreation, isValidUrl, isDateInFuture, toValidationResult } from '@/lib/validation/validators';
+import { validateTaskCreation, isValidUrl } from '@/lib/validation/validators';
+import { isDatePast } from '@/lib/utils/date';
 import type { ProcessingResult } from '@/lib/utils/image';
 
 interface UnifiedTaskFormProps {
@@ -113,8 +114,8 @@ export function UnifiedTaskForm({
       errors.url = 'Please enter a valid URL';
     }
 
-    // Additional date validation using isDateInFuture
-    if (dueDate && !isDateInFuture(dueDate)) {
+    // Additional date validation using isDatePast
+    if (dueDate && isDatePast(dueDate)) {
       errors.dueDate = 'Due date must be in the future';
     }
 

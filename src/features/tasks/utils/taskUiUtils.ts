@@ -1,4 +1,5 @@
 import { getDaysRemaining } from "@/lib/utils/shared";
+import { toTitleCase } from "@/lib/utils/format";
 import { Task, TaskStatus } from "@/types";
 
 export function getTaskStatus(task: Task): TaskStatus {
@@ -13,6 +14,20 @@ export function getTaskStatus(task: Task): TaskStatus {
     return "overdue";
   }
   return "pending";
+}
+
+/**
+ * Format task status for display with proper title casing
+ */
+export function formatTaskStatus(status: TaskStatus): string {
+  return toTitleCase(status);
+}
+
+/**
+ * Format task priority for display with proper title casing
+ */
+export function formatTaskPriority(priority: string): string {
+  return toTitleCase(priority);
 }
 
 // Note: getStatusColor, getTimerColor, getTimerGradient exports removed as unused

@@ -1,9 +1,9 @@
 import { useCallback } from 'react';
 
 import { 
-  validateProfileUpdate,
   validateProfileCreate
 } from '../../../lib/validation/validators';
+import { validateUnifiedProfile } from '../../../lib/validation/unified-validation';
 import { profileUpdateSchema, type ProfileUpdateInput } from '../../../lib/validation/schemas';
 
 interface ProfileValidationResult {
@@ -20,27 +20,25 @@ interface ProfileValidationResult {
  */
 export function useProfileValidation() {
   /**
-   * Validate complete profile data using centralized schema for updates
+   * Validate complete profile data using unified validation for enhanced validation
    */
   const validateProfile = useCallback(
     (data: unknown): ProfileValidationResult => {
-      const result = validateProfileUpdate(data);
+      // Use unified validation for enhanced validation
+      const unifiedResult = validateUnifiedProfile(data);
       
-      if (result.success) {
+      if (unifiedResult.isValid) {
         return { 
           isValid: true, 
           errors: {}, 
-          data: result.data 
+          data: unifiedResult.data as ProfileUpdateInput
         };
       }
       
-      const errors: Record<string, string> = {};
-      result.error.errors.forEach((err) => {
-        const field = err.path.join('.');
-        errors[field] = err.message;
-      });
-      
-      return { isValid: false, errors };
+      return { 
+        isValid: false, 
+        errors: unifiedResult.fieldErrors || {}
+      };
     },
     []
   );

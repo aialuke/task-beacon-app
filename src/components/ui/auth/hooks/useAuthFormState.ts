@@ -3,12 +3,13 @@ import { useState, useRef, useCallback } from 'react';
 import { useErrorHandler , useSubmissionState } from '@/hooks/core';
 import { AuthService } from '@/lib/api/AuthService';
 import { 
-  validateSignIn,
-  validateSignUp,
   isValidEmail,
-  isValidPassword,
-  toValidationResult
+  isValidPassword
 } from '@/lib/validation/validators';
+import { 
+  validateUnifiedSignIn,
+  validateUnifiedSignUp
+} from '@/lib/validation/unified-validation';
 
 type AuthMode = 'signin' | 'signup';
 
@@ -156,11 +157,10 @@ export function useAuthFormState(): UseAuthFormStateReturn {
       }
 
       if (mode === 'signin') {
-        // Validate with standard schema
-        const validationResult = validateSignIn({ email, password });
-        if (!validationResult.success) {
-          const formattedResult = toValidationResult(validationResult);
-          throw new Error(formattedResult.errors[0] || 'Invalid sign-in data');
+        // Validate with unified schema for enhanced validation
+        const unifiedResult = validateUnifiedSignIn({ email, password });
+        if (!unifiedResult.isValid) {
+          throw new Error(unifiedResult.errors[0] || 'Invalid sign-in data');
         }
 
         const response = await AuthService.signIn(email, password);
@@ -172,11 +172,10 @@ export function useAuthFormState(): UseAuthFormStateReturn {
           window.location.href = '/';
         }, 1000);
       } else {
-        // Validate with standard schema  
-        const validationResult = validateSignUp({ email, password, confirmPassword: password, name });
-        if (!validationResult.success) {
-          const formattedResult = toValidationResult(validationResult);
-          throw new Error(formattedResult.errors[0] || 'Invalid sign-up data');
+        // Validate with unified schema for enhanced validation
+        const unifiedResult = validateUnifiedSignUp({ email, password, name });
+        if (!unifiedResult.isValid) {
+          throw new Error(unifiedResult.errors[0] || 'Invalid sign-up data');
         }
 
         const response = await AuthService.signUp(email, password, {

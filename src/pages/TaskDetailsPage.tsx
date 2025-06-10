@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { PageLoader, CardLoader, LoadingSpinner } from "@/components/ui/loading/UnifiedLoadingStates";
 import { useTaskQuery } from "@/features/tasks/hooks/useTaskQuery";
 import { getTaskStatus } from "@/features/tasks/utils/taskUiUtils";
-import { formatDate } from "@/lib/utils/shared";
+import { formatDate, getTooltipContent } from "@/lib/utils/shared";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 // Lazy load heavy components for better performance
 const CountdownTimer = lazy(
@@ -79,9 +80,22 @@ const TaskDetailsPage = () => {
         <div className="border-t pt-4">
           <div className="mb-3 flex items-center gap-3">
             <Calendar1 size={18} className="text-gray-500" />
-            <span>
-              {task.due_date ? formatDate(task.due_date) : "No due date"}
-            </span>
+            {task.due_date ? (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="cursor-help">
+                      {formatDate(task.due_date)}
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    {getTooltipContent(task.due_date)}
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            ) : (
+              <span>No due date</span>
+            )}
           </div>
 
           {task.url_link && (
