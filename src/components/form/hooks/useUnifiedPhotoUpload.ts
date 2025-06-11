@@ -7,7 +7,7 @@ import {
   extractImageMetadataEnhanced,
   ProcessingResult,
   EnhancedImageProcessingOptions,
-} from '@/lib/utils/image';
+} from '@/lib/utils/image/';
 
 interface UnifiedPhotoUploadOptions {
   processingOptions?: EnhancedImageProcessingOptions;

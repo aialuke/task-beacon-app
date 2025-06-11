@@ -11,12 +11,12 @@ import { cn } from '@/lib/utils';
 
 // === PERFORMANCE OPTIMIZED INTERFACES ===
 
-export interface LoadingSpinnerProps {
+interface LoadingSpinnerProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
 }
 
-export interface SkeletonProps {
+interface SkeletonProps {
   className?: string;
   aspectRatio?: string;
 }

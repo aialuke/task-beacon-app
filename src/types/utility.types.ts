@@ -8,83 +8,74 @@
 // State management utilities moved to @/types/async-state.types.ts to eliminate duplication
 import type { BaseAsyncState } from './async-state.types';
 
-export type DeepPartial<T> = {
+type DeepPartial<T> = {
   [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
 };
 
-export type DeepRequired<T> = {
+type DeepRequired<T> = {
   [P in keyof T]-?: T[P] extends object ? DeepRequired<T[P]> : T[P];
 };
 
-export type DeepReadonly<T> = {
+type DeepReadonly<T> = {
   readonly [P in keyof T]: T[P] extends object ? DeepReadonly<T[P]> : T[P];
 };
 
-export type Merge<T, U> = Omit<T, keyof U> & U;
-export type Override<T, U> = Omit<T, keyof U> & U;
+type Merge<T, U> = Omit<T, keyof U> & U;
+type Override<T, U> = Omit<T, keyof U> & U;
 
 // Key and value utilities
-export type KeysOfType<T, U> = {
+type KeysOfType<T, U> = {
   [K in keyof T]: T[K] extends U ? K : never;
 }[keyof T];
 
-export type ValuesOfType<T, U> = T[KeysOfType<T, U>];
+type ValuesOfType<T, U> = T[KeysOfType<T, U>];
 
-export type NonNullable<T> = T extends null | undefined ? never : T;
+type NonNullable<T> = T extends null | undefined ? never : T;
 
 // Array and record utilities
-export type ArrayElement<T> = T extends readonly (infer U)[] ? U : never;
-export type RecordValue<T> = T extends Record<string, infer U> ? U : never;
+type ArrayElement<T> = T extends readonly (infer U)[] ? U : never;
+type RecordValue<T> = T extends Record<string, infer U> ? U : never;
 
 // Function utilities - Fixed parameter types
-export type AsyncReturnType<
-  T extends (...args: unknown[]) => Promise<unknown>,
-> = T extends (...args: unknown[]) => Promise<infer R> ? R : never;
+type AsyncReturnType<T extends (...args: unknown[]) => Promise<unknown>> =
+  T extends (...args: unknown[]) => Promise<infer R> ? R : never;
 
-export type Parameters<T extends (...args: unknown[]) => unknown> = T extends (
+type Parameters<T extends (...args: unknown[]) => unknown> = T extends (
   ...args: infer P
 ) => unknown
   ? P
   : never;
 
 // Conditional utilities
-export type If<C extends boolean, T, F> = C extends true ? T : F;
-export type Equals<T, U> = T extends U ? (U extends T ? true : false) : false;
+type If<C extends boolean, T, F> = C extends true ? T : F;
+type Equals<T, U> = T extends U ? (U extends T ? true : false) : false;
 
 // String utilities
-export type Capitalize<S extends string> = S extends `${infer F}${infer R}`
+type Capitalize<S extends string> = S extends `${infer F}${infer R}`
   ? `${Uppercase<F>}${R}`
   : S;
 
-export type Uncapitalize<S extends string> = S extends `${infer F}${infer R}`
+type Uncapitalize<S extends string> = S extends `${infer F}${infer R}`
   ? `${Lowercase<F>}${R}`
   : S;
 
-// Component prop utilities moved to @/types/component.types.ts to eliminate duplication
-export type {
-  PropsWithClassName,
-  PropsWithChildren,
-  BaseComponentProps,
-} from './component.types';
+// Component prop utilities moved to @/types/component.types.ts to eliminate duplication;
 
 // Additional prop utilities
-export type PropsWithTestId<P = Record<string, never>> = P & {
+type PropsWithTestId<P = Record<string, never>> = P & {
   testId?: string;
 };
-export type { BaseAsyncState as AsyncState } from './async-state.types';
-export type { LoadingState } from '@/hooks/core/useLoadingState';
 
 // API utilities
-export type ApiState<T> = BaseAsyncState<T> & {
+type ApiState<T> = BaseAsyncState<T> & {
   success: boolean;
   lastFetch?: Date;
 };
 
-// Form utilities moved to @/types/form.types.ts to eliminate duplication
-export type { FormErrors, FormTouched, FormState } from './form.types';
+// Form utilities moved to @/types/form.types.ts to eliminate duplication;
 
 // Validation interfaces
-export interface ValidationRule<T = unknown> {
+interface ValidationRule<T = unknown> {
   required?: boolean;
   minLength?: number;
   maxLength?: number;
@@ -94,15 +85,11 @@ export interface ValidationRule<T = unknown> {
   custom?: (value: T) => string | null;
 }
 
-export interface ValidationResult {
-  isValid: boolean;
-  errors: Record<string, string>;
-  warnings?: Record<string, string>;
-}
+// Use canonical ValidationResult from validators;
 
 // Event handler utilities
-export type EventHandler<T = Event> = (event: T) => void;
-export type AsyncEventHandler<T = Event> = (event: T) => Promise<void>;
+type EventHandler<T = Event> = (event: T) => void;
+type AsyncEventHandler<T = Event> = (event: T) => Promise<void>;
 
 // ID and timestamp utilities
 export type ID = string;
@@ -110,5 +97,4 @@ export type Timestamp = string; // ISO 8601 format
 
 // Status utilities
 export type Status = 'idle' | 'loading' | 'success' | 'error';
-// AsyncOperationState moved to @/types/async-state.types.ts to eliminate duplication
-export type { AsyncOperationState } from './async-state.types';
+// AsyncOperationState moved to @/types/async-state.types.ts to eliminate duplication;

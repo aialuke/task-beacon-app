@@ -77,4 +77,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-// Note: useTheme hook export removed as unused
+export function useTheme(): ThemeContextType {
+  const context = useContext(ThemeContext);
+  if (context === undefined) {
+    throw new Error('useTheme must be used within a ThemeProvider');
+  }
+  return context;
+}

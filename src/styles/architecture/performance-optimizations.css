@@ -1,22 +1,5 @@
 @layer utilities {
-  .optimize-rendering {
-    contain: layout style paint;
-  }
-
-  .gpu-accelerated {
-    transform: translateZ(0);
-    backface-visibility: hidden;
-  }
-
-  .will-change-transform {
-    will-change: transform;
-  }
-
-  .scroll-smooth {
-    scroll-behavior: smooth;
-  }
-
-  /* Reduced motion handled by accessibility.css */
+  /* Performance utilities consolidated into utilities.css - Phase 4 CSS Architecture Review */
 
   @media (prefers-contrast: more) {
     .optimize-rendering {

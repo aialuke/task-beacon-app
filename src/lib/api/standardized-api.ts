@@ -12,7 +12,7 @@ import type { ApiResponse, ApiError } from '@/types/api.types';
 /**
  * Standard error transformation utility
  */
-export function transformApiError(error: unknown): ApiError {
+function transformApiError(error: unknown): ApiError {
   if (error instanceof Error) {
     return {
       message: error.message,
@@ -35,7 +35,7 @@ export function transformApiError(error: unknown): ApiError {
 /**
  * Standard success response creator
  */
-export function createSuccessResponse<T>(data: T): ApiResponse<T> {
+function createSuccessResponse<T>(data: T): ApiResponse<T> {
   return {
     data,
     error: null,
@@ -46,7 +46,7 @@ export function createSuccessResponse<T>(data: T): ApiResponse<T> {
 /**
  * Standard error response creator
  */
-export function createErrorResponse<T = null>(error: ApiError): ApiResponse<T> {
+function createErrorResponse<T = null>(error: ApiError): ApiResponse<T> {
   return {
     data: null,
     error,
@@ -85,6 +85,5 @@ export const QueryKeys = {
   },
 } as const;
 
-// Loading state utilities moved to @/types/async-state.types.ts to eliminate duplication
-export type { StandardLoadingState } from '@/types/async-state.types';
+// Loading state utilities moved to @/types/async-state.types.ts to eliminate duplication;
 export { createLoadingState } from '@/types/async-state.types';

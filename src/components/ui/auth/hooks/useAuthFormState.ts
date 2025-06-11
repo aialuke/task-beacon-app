@@ -207,7 +207,8 @@ export function useAuthFormState(): UseAuthFormStateReturn {
 
           const response = await AuthService.signIn(email, password);
           if (!response.success) {
-            const errorMessage = getErrorMessage(response.error) || 'Sign in failed';
+            const errorMessage =
+              getErrorMessage(response.error) || 'Sign in failed';
             throw new Error(errorMessage);
           }
           setTimeout(() => {
@@ -231,7 +232,8 @@ export function useAuthFormState(): UseAuthFormStateReturn {
             },
           });
           if (!response.success) {
-            const errorMessage = getErrorMessage(response.error) || 'Sign up failed';
+            const errorMessage =
+              getErrorMessage(response.error) || 'Sign up failed';
             throw new Error(errorMessage);
           }
           setTimeout(() => {
@@ -294,7 +296,17 @@ export function useAuthFormState(): UseAuthFormStateReturn {
         stopSubmitting();
       }
     },
-    [mode, email, password, name, handleError, validateForm, cleanupAuthState, startSubmitting, stopSubmitting]
+    [
+      mode,
+      email,
+      password,
+      name,
+      handleError,
+      validateForm,
+      cleanupAuthState,
+      startSubmitting,
+      stopSubmitting,
+    ]
   );
 
   const toggleMode = useCallback(() => {
@@ -329,4 +341,3 @@ export function useAuthFormState(): UseAuthFormStateReturn {
 }
 
 // Export alias for backward compatibility
-

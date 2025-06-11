@@ -14,7 +14,7 @@ import { cleanupAuthState } from '@/lib/auth-utils';
 import { logger } from '@/lib/logger';
 import type { ApiError } from '@/types/shared';
 
-export interface UseAuthReturn {
+interface UseAuthReturn {
   user: User | null;
   session: Session | null;
   loading: boolean;

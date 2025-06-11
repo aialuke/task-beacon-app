@@ -3,7 +3,7 @@ import { useRef } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { useImageLoadingState } from '@/hooks/core';
-import type { ProcessingResult } from '@/lib/utils/image';
+import type { ProcessingResult } from '@/lib/utils/image/';
 
 interface SimplePhotoUploadProps {
   photoPreview: string | null;

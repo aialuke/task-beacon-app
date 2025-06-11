@@ -72,7 +72,11 @@ export function TaskDataContextProvider({
       goToPreviousPage: taskQueries.pagination.goToPreviousPage,
       goToPage: taskQueries.pagination.goToPage,
     },
-    retry: taskQueries.refetch || (() => {}),
+    retry:
+      taskQueries.refetch ||
+      function retryFallback() {
+        console.warn('Retry not available - no refetch function provided');
+      },
   };
 
   return (

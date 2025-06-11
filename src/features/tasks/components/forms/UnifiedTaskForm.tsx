@@ -1,9 +1,10 @@
 import { FileText, Sparkles } from 'lucide-react';
 
-import { QuickActionBar } from '@/components/form/QuickActionBar';
 import { FloatingInput } from '@/components/ui/form/FloatingInput';
 import { FloatingTextarea } from '@/components/ui/form/FloatingTextarea';
-import type { ProcessingResult } from '@/lib/utils/image';
+import type { ProcessingResult } from '@/lib/utils/image/';
+
+import { QuickActionBar } from './QuickActionBar';
 
 interface UnifiedTaskFormProps {
   // Form state
@@ -21,7 +22,6 @@ interface UnifiedTaskFormProps {
   // Form submission
   onSubmit: (e: React.FormEvent) => void;
   isSubmitting: boolean;
-  submitLabel: string;
 
   // Photo upload
   photoPreview: string | null;
@@ -62,7 +62,6 @@ export function UnifiedTaskForm({
   // Form submission
   onSubmit,
   isSubmitting,
-  submitLabel,
 
   // Photo upload
   photoPreview,
@@ -143,7 +142,6 @@ export function UnifiedTaskForm({
             onUrlChange={handleUrlChange}
             onSubmit={onSubmit}
             isSubmitting={isSubmitting}
-            submitLabel={submitLabel}
             disabled={disabled}
           />
         </div>

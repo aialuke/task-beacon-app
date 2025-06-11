@@ -95,7 +95,7 @@ export function calculateGlowPosition(
 /**
  * Updates button references array safely
  */
-export function setButtonRef(
+function setButtonRef(
   refs: React.MutableRefObject<(HTMLButtonElement | null)[]>,
   index: number,
   element: HTMLButtonElement | null

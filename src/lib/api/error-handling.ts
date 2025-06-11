@@ -178,7 +178,7 @@ export const formatApiError = (error: unknown): ApiError => {
  * Consolidated error handling utility for API operations
  * Merges handleApiError functionality with enhanced options
  */
-export function handleApiError(
+function handleApiError(
   error: unknown,
   operation?: string,
   options: ErrorHandlingOptions = {}
@@ -292,5 +292,4 @@ export const apiRequest = async <T>(
 
 // NOTE: Specialized error handlers and patterns removed as unused exports
 
-// Export types for external use
-export type { ErrorHandlingOptions, ProcessedError };
+// Export types for external use;

@@ -184,7 +184,7 @@ export class AuthService {
       if (error) {
         return {
           success: false,
-          error: error.message,
+          error: createApiError(error.message),
           data: null,
         };
       }
@@ -197,7 +197,9 @@ export class AuthService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: createApiError(
+          error instanceof Error ? error.message : 'Unknown error'
+        ),
         data: null,
       };
     }
@@ -216,7 +218,7 @@ export class AuthService {
       if (error) {
         return {
           success: false,
-          error: error.message,
+          error: createApiError(error.message),
           data: null,
         };
       }
@@ -224,7 +226,7 @@ export class AuthService {
       if (!user) {
         return {
           success: false,
-          error: 'No authenticated user',
+          error: createApiError('No authenticated user'),
           data: null,
         };
       }
@@ -237,7 +239,9 @@ export class AuthService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: createApiError(
+          error instanceof Error ? error.message : 'Unknown error'
+        ),
         data: null,
       };
     }
@@ -253,7 +257,7 @@ export class AuthService {
       if (!userResult.success || !userResult.data) {
         return {
           success: false,
-          error: userResult.error || 'No user found',
+          error: userResult.error || createApiError('No user found'),
           data: null,
         };
       }
@@ -266,7 +270,9 @@ export class AuthService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: createApiError(
+          error instanceof Error ? error.message : 'Unknown error'
+        ),
         data: null,
       };
     }

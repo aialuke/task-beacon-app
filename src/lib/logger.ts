@@ -6,7 +6,7 @@
  * performance monitoring systems.
  */
 
-export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
+type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
 interface LogEntry {
   level: LogLevel;
@@ -261,9 +261,9 @@ export const logger = new Logger();
 
 // Export specialized loggers for different modules
 export const authLogger = logger.createChild('Auth');
-export const apiLogger = logger.createChild('API');
-export const realtimeLogger = logger.createChild('Realtime');
-export const componentLogger = logger.createChild('Component');
+const apiLogger = logger.createChild('API');
+const realtimeLogger = logger.createChild('Realtime');
+const componentLogger = logger.createChild('Component');
 
 // Export Logger class for custom instances
 export { Logger };
@@ -275,7 +275,7 @@ export { Logger };
 /**
  * Log function entry and exit for debugging
  */
-export function logFunctionCall<T extends (...args: unknown[]) => unknown>(
+function logFunctionCall<T extends (...args: unknown[]) => unknown>(
   fn: T,
   functionName: string
 ): T {
@@ -315,7 +315,7 @@ export function logFunctionCall<T extends (...args: unknown[]) => unknown>(
 /**
  * Log async operation timing
  */
-export async function logAsyncOperation<T>(
+async function logAsyncOperation<T>(
   operation: () => Promise<T>,
   operationName: string,
   context?: Record<string, unknown>

@@ -34,6 +34,19 @@
     transform: var(--transform-gpu);
   }
 
+  .gpu-accelerated {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  .optimize-rendering {
+    contain: layout style paint;
+  }
+
+  .will-change-transform {
+    will-change: transform;
+  }
+
   /* ===== INTERACTIVE UTILITIES ===== */
   .interactive {
     transition: all var(--duration-normal) var(--ease-out);
@@ -142,6 +155,39 @@
 
   /* ===== ACCESSIBILITY UTILITIES ===== */
   /* Forced colors handled by accessibility.css - no duplicates needed */
+
+  /* ===== ICON UTILITIES ===== */
+  .icon-filled {
+    fill: currentcolor;
+  }
+
+  .icon-stroked {
+    stroke: currentcolor;
+    fill: none;
+  }
+
+  /* ===== BORDER UTILITIES ===== */
+  .border-gradient {
+    border: 1px solid;
+    border-image: linear-gradient(
+        45deg,
+        hsl(var(--primary)),
+        hsl(var(--primary) / 50%)
+      )
+      1;
+  }
+
+  .border-force-destructive {
+    border-color: hsl(var(--destructive)) !important;
+  }
+
+  .border-force-success {
+    border-color: hsl(var(--success)) !important;
+  }
+
+  .border-force-primary {
+    border-color: hsl(var(--primary)) !important;
+  }
 
   /* ===== LAYOUT UTILITIES ===== */
   /* Use Tailwind classes in components instead of custom utilities */

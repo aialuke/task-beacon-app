@@ -6,7 +6,3 @@
  */
 
 export { useUnifiedError as useErrorHandler } from './useUnifiedError';
-export type {
-  ErrorOptions as UseErrorHandlerOptions,
-  ErrorState,
-} from '@/lib/core/ErrorHandler';

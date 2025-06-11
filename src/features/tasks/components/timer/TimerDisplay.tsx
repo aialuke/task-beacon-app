@@ -2,7 +2,7 @@ import { memo } from 'react';
 
 import { TaskStatus } from '@/types';
 
-export interface TimerDisplayProps {
+interface TimerDisplayProps {
   size: number;
   status: TaskStatus;
   timeDisplay: string;

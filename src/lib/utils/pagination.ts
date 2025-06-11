@@ -28,7 +28,7 @@ export const DEFAULT_PAGINATION_CONFIG: PaginationConfig = {
 /**
  * Type guard to check if an object is a valid PaginationMeta
  */
-export function isPaginationMeta(obj: unknown): obj is PaginationMeta {
+function isPaginationMeta(obj: unknown): obj is PaginationMeta {
   return (
     typeof obj === 'object' &&
     obj !== null &&
@@ -44,7 +44,7 @@ export function isPaginationMeta(obj: unknown): obj is PaginationMeta {
 /**
  * Type guard to check if an object is valid PaginationParams
  */
-export function isPaginationParams(obj: unknown): obj is PaginationParams {
+function isPaginationParams(obj: unknown): obj is PaginationParams {
   return (
     typeof obj === 'object' &&
     obj !== null &&
@@ -131,9 +131,7 @@ export function validatePaginationParams(
 /**
  * Get pagination range information
  */
-export function getPaginationRange(
-  pagination: PaginationMeta
-): PaginationRange {
+function getPaginationRange(pagination: PaginationMeta): PaginationRange {
   const start = (pagination.currentPage - 1) * pagination.pageSize + 1;
   const end = Math.min(start + pagination.pageSize - 1, pagination.totalCount);
 

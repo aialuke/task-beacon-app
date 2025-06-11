@@ -1,14 +1,13 @@
 import { User, ImageUp, Link, FileCheck } from 'lucide-react';
 import { useState } from 'react';
 
-import type { ProcessingResult } from '@/lib/utils/image';
-
-import { ActionButton } from './components/ActionButton';
-import { DatePickerButton } from './components/DatePickerButton';
-import { SubmitButton } from './components/SubmitButton';
-import SimplePhotoUploadModal from './SimplePhotoUploadModal';
-import { UrlInputModal } from './UrlInputModal';
-import { UserSearchModal } from './UserSearchModal';
+import { ActionButton } from '@/components/form/components/ActionButton';
+import { DatePickerButton } from '@/components/form/components/DatePickerButton';
+import { SubmitButton } from '@/components/form/components/SubmitButton';
+import SimplePhotoUploadModal from '@/components/form/SimplePhotoUploadModal';
+import { UrlInputModal } from '@/components/form/UrlInputModal';
+import { UserSearchModal } from '@/components/form/UserSearchModal';
+import type { ProcessingResult } from '@/lib/utils/image/';
 
 interface QuickActionBarProps {
   // Date picker props
@@ -33,7 +32,6 @@ interface QuickActionBarProps {
   // Submit props
   onSubmit?: (e: React.FormEvent) => void;
   isSubmitting?: boolean;
-  submitLabel?: string;
 
   disabled?: boolean;
 }
@@ -52,7 +50,6 @@ export function QuickActionBar({
   onUrlChange,
   onSubmit,
   isSubmitting = false,
-  submitLabel = 'Share Task',
   disabled = false,
 }: QuickActionBarProps) {
   const [isUrlModalOpen, setIsUrlModalOpen] = useState(false);
@@ -120,7 +117,6 @@ export function QuickActionBar({
       <SubmitButton
         onSubmit={onSubmit}
         isSubmitting={isSubmitting}
-        submitLabel={submitLabel}
         disabled={disabled}
       />
 

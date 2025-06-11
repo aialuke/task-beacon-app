@@ -5,58 +5,22 @@
  */
 
 // Import from unified type system
-export type {
-  ID,
-  Timestamp,
-  Status,
-  AsyncState,
-  LoadingState,
-  FormState,
-  ValidationRule,
-  ValidationResult,
-  BaseComponentProps,
-  ApiResponse,
-  ApiError,
-  PaginatedResponse,
-  PaginationMeta,
-  BaseQueryParams,
-  ServiceResult,
-  ActionResult,
-  DatabaseOperationResult,
-  Size,
-  Variant,
-  ColorScheme,
-  InputFieldProps,
-  TextareaFieldProps,
-  SelectFieldProps,
-  AuthResponse,
-  SignUpOptions,
-  AuthContextType,
-  AuthState,
-  SignInCredentials,
-  SignUpCredentials,
-  NotificationType,
-  Notification,
-  NotificationAction,
-  SelectOption,
-  FilterOptions,
-  ModalState,
-} from '@/types';
+export type { ApiError } from '@/types';
 
 // Simplified interfaces without legacy compatibility
-export interface DragItem {
+interface DragItem {
   id: string;
   type: string;
   data: unknown;
 }
 
-export interface DropTarget {
+interface DropTarget {
   id: string;
   accepts: string[];
   onDrop: (item: DragItem) => void;
 }
 
-export interface ResponseWrapper<T> {
+interface ResponseWrapper<T> {
   data: T;
   meta: {
     total: number;
@@ -66,7 +30,7 @@ export interface ResponseWrapper<T> {
   };
 }
 
-export interface Metadata {
+interface Metadata {
   version: string;
   lastModified: string;
   author?: string;

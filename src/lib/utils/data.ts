@@ -5,7 +5,7 @@
 /**
  * Sorts an array of objects by a specific property
  */
-export function sortByProperty<T>(
+function sortByProperty<T>(
   array: T[],
   key: keyof T,
   direction: 'asc' | 'desc' = 'asc'
@@ -40,7 +40,7 @@ export function sortByProperty<T>(
 /**
  * Filters an array of objects based on a search term across multiple properties
  */
-export function searchByTerm<T>(
+function searchByTerm<T>(
   array: T[],
   searchTerm: string,
   keys: (keyof T)[]
@@ -61,7 +61,7 @@ export function searchByTerm<T>(
 /**
  * Groups an array of objects by a specific property
  */
-export function groupBy<T>(array: T[], key: keyof T): Record<string, T[]> {
+function groupBy<T>(array: T[], key: keyof T): Record<string, T[]> {
   return array.reduce((result, item) => {
     const groupKey = String(item[key]);
     if (!result[groupKey]) {
@@ -75,7 +75,7 @@ export function groupBy<T>(array: T[], key: keyof T): Record<string, T[]> {
 /**
  * Removes duplicate items from an array based on a property
  */
-export function uniqueBy<T>(array: T[], key: keyof T): T[] {
+function uniqueBy<T>(array: T[], key: keyof T): T[] {
   const seen = new Set();
   return array.filter(item => {
     const value = item[key];
@@ -90,7 +90,7 @@ export function uniqueBy<T>(array: T[], key: keyof T): T[] {
 /**
  * Creates a paginated subset of an array
  */
-export function paginateArray<T>(array: T[], page = 1, pageSize = 10): T[] {
+function paginateArray<T>(array: T[], page = 1, pageSize = 10): T[] {
   const startIndex = (page - 1) * pageSize;
   return array.slice(startIndex, startIndex + pageSize);
 }
@@ -98,7 +98,7 @@ export function paginateArray<T>(array: T[], page = 1, pageSize = 10): T[] {
 /**
  * Checks if a value is empty (null, undefined, empty string, empty array, or empty object)
  */
-export function isEmpty(value: unknown): boolean {
+function isEmpty(value: unknown): boolean {
   if (value === null || value === undefined) return true;
   if (typeof value === 'string') return value.trim() === '';
   if (Array.isArray(value)) return value.length === 0;
@@ -109,7 +109,7 @@ export function isEmpty(value: unknown): boolean {
 /**
  * Safely parses a JSON string, returning a default value if parsing fails
  */
-export function safeJsonParse<T>(jsonString: string, defaultValue: T): T {
+function safeJsonParse<T>(jsonString: string, defaultValue: T): T {
   try {
     return JSON.parse(jsonString) as T;
   } catch {

@@ -5,23 +5,23 @@
  */
 
 // === COMMON UI TYPES ===
-export type Size = 'sm' | 'md' | 'lg' | 'xl';
-export type Variant =
+type Size = 'sm' | 'md' | 'lg' | 'xl';
+type Variant =
   | 'default'
   | 'primary'
   | 'secondary'
   | 'destructive'
   | 'outline'
   | 'ghost';
-export type ColorScheme = 'light' | 'dark' | 'auto';
+type ColorScheme = 'light' | 'dark' | 'auto';
 
 // === BASE COMPONENT PROPS ===
-export interface BaseComponentProps {
+interface BaseComponentProps {
   className?: string;
   children?: React.ReactNode;
 }
 
-export interface ButtonProps extends BaseComponentProps {
+interface ButtonProps extends BaseComponentProps {
   variant?: Variant;
   size?: Size;
   disabled?: boolean;
@@ -29,47 +29,47 @@ export interface ButtonProps extends BaseComponentProps {
   onClick?: () => void;
 }
 
-export interface ModalProps extends BaseComponentProps {
+interface ModalProps extends BaseComponentProps {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
   description?: string;
 }
 
-export interface CardProps extends BaseComponentProps {
+interface CardProps extends BaseComponentProps {
   title?: string;
   description?: string;
   footer?: React.ReactNode;
 }
 
-export interface LoadingProps {
+interface LoadingProps {
   size?: Size;
   variant?: 'spinner' | 'skeleton' | 'dots';
   message?: string;
 }
 
 // === UTILITY UI TYPES ===
-export interface SelectOption<T = string> {
+interface SelectOption<T = string> {
   value: T;
   label: string;
   disabled?: boolean;
 }
 
-export interface FilterOptions<T = string> {
+interface FilterOptions<T = string> {
   value: T;
   label: string;
   count?: number;
 }
 
-export interface ModalState {
+interface ModalState {
   isOpen: boolean;
   data?: unknown;
 }
 
 // === NOTIFICATION TYPES ===
-export type NotificationType = 'info' | 'success' | 'warning' | 'error';
+type NotificationType = 'info' | 'success' | 'warning' | 'error';
 
-export interface Notification {
+interface Notification {
   id: string;
   type: NotificationType;
   title: string;
@@ -79,7 +79,7 @@ export interface Notification {
   actions?: NotificationAction[];
 }
 
-export interface NotificationAction {
+interface NotificationAction {
   label: string;
   action: () => void;
   variant?: 'primary' | 'secondary' | 'destructive';

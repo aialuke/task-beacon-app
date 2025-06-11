@@ -7,21 +7,21 @@ import { useState, useCallback } from 'react';
  * Eliminates duplicate loading logic across 15+ components and hooks.
  */
 
-export interface LoadingState {
+interface LoadingState {
   isLoading: boolean;
   isSubmitting: boolean;
   isFetching: boolean;
   error: string | null;
 }
 
-export interface LoadingStateOptions {
+interface LoadingStateOptions {
   initialLoading?: boolean;
   initialSubmitting?: boolean;
   initialFetching?: boolean;
   initialError?: string | null;
 }
 
-export interface LoadingStateActions {
+interface LoadingStateActions {
   setLoading: (loading: boolean) => void;
   setSubmitting: (submitting: boolean) => void;
   setFetching: (fetching: boolean) => void;
@@ -37,9 +37,7 @@ export interface LoadingStateActions {
   setFailure: (error: string) => void;
 }
 
-export interface UseLoadingStateReturn
-  extends LoadingState,
-    LoadingStateActions {
+interface UseLoadingStateReturn extends LoadingState, LoadingStateActions {
   isIdle: boolean;
   hasError: boolean;
   isAnyLoading: boolean;
@@ -48,7 +46,7 @@ export interface UseLoadingStateReturn
 /**
  * Unified loading state hook that replaces all scattered loading patterns
  */
-export function useLoadingState(
+function useLoadingState(
   options: LoadingStateOptions = {}
 ): UseLoadingStateReturn {
   const {
@@ -158,7 +156,7 @@ export function useLoadingState(
 /**
  * Specialized hook for simple loading/error states
  */
-export function useSimpleLoading(initialLoading = false) {
+function useSimpleLoading(initialLoading = false) {
   const loadingState = useLoadingState({ initialLoading });
 
   return {

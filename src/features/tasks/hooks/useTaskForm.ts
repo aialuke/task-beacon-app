@@ -5,7 +5,7 @@ import { logger } from '@/lib/logger';
 import type { TaskCreateData } from '@/types';
 import type { FormErrors } from '@/types/form.types';
 
-export interface UseTaskFormOptions {
+interface UseTaskFormOptions {
   initialTitle?: string;
   initialDescription?: string;
   initialDueDate?: string | null;
@@ -15,7 +15,7 @@ export interface UseTaskFormOptions {
   onClose?: () => void;
 }
 
-export interface TaskFormValues extends Record<string, unknown> {
+interface TaskFormValues extends Record<string, unknown> {
   title: string;
   description: string;
   dueDate: string;

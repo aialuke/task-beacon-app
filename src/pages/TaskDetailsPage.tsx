@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/loading/UnifiedLoadingStates';
 import { useTaskQuery } from '@/features/tasks/hooks/useTaskQuery';
 import { getTaskStatus } from '@/features/tasks/utils/taskUiUtils';
-import { formatDate } from '@/lib/utils/shared';
+import { formatDate } from '@/lib/utils/date';
 
 // Lazy load heavy components for better performance
 const CountdownTimer = lazy(

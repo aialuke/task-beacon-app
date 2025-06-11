@@ -5,7 +5,7 @@
 /**
  * Generates a UUID v4 string
  */
-export function generateUUID(): string {
+function generateUUID(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     const r = (Math.random() * 16) | 0;
     const v = c === 'x' ? r : (r & 0x3) | 0x8;
@@ -16,7 +16,7 @@ export function generateUUID(): string {
 /**
  * Debounces a function to limit how often it can be called
  */
-export function debounce<T extends (...args: unknown[]) => unknown>(
+function debounce<T extends (...args: unknown[]) => unknown>(
   func: T,
   wait: number
 ): (...args: Parameters<T>) => void {
@@ -38,7 +38,7 @@ export function debounce<T extends (...args: unknown[]) => unknown>(
 /**
  * Creates a throttled function that only invokes the provided function at most once per specified interval
  */
-export function throttle<T extends (...args: unknown[]) => unknown>(
+function throttle<T extends (...args: unknown[]) => unknown>(
   func: T,
   limit: number
 ): (...args: Parameters<T>) => void {
@@ -58,9 +58,9 @@ export function throttle<T extends (...args: unknown[]) => unknown>(
 /**
  * Optimize CSS animations for performance (essential function from css-optimization)
  */
-export function optimizeAnimations(): void {
+async function optimizeAnimations(): Promise<void> {
   // Import here to avoid circular dependencies
-  const { prefersReducedMotion } = require('./animation');
+  const { prefersReducedMotion } = await import('./animation');
 
   if (prefersReducedMotion()) {
     document.documentElement.style.setProperty('--animation-duration', '0ms');

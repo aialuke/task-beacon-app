@@ -1,4 +1,4 @@
-import { UnifiedTaskForm } from '@/components/form/UnifiedTaskForm';
+import { UnifiedTaskForm } from '@/features/tasks/components/forms/UnifiedTaskForm';
 import { useCreateTask } from '@/features/tasks/hooks/useCreateTask';
 
 export default function CreateTaskForm({ onClose }: { onClose?: () => void }) {
@@ -43,7 +43,6 @@ export default function CreateTaskForm({ onClose }: { onClose?: () => void }) {
       processingResult={processingResult}
       headerTitle="Create your task"
       headerSubtitle="For every minute spent organising, an hour is earnt. ✨"
-      submitLabel="Share Task"
     />
   );
 }

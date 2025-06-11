@@ -14,7 +14,7 @@ export function cn(...inputs: ClassValue[]) {
 /**
  * Determines if an element is visible in the viewport
  */
-export function isElementInViewport(element: HTMLElement): boolean {
+function isElementInViewport(element: HTMLElement): boolean {
   const rect = element.getBoundingClientRect();
   return (
     rect.top >= 0 &&
@@ -28,7 +28,7 @@ export function isElementInViewport(element: HTMLElement): boolean {
 /**
  * Checks if the device is in dark mode
  */
-export function isDarkMode(): boolean {
+function isDarkMode(): boolean {
   return (
     window.matchMedia &&
     window.matchMedia('(prefers-color-scheme: dark)').matches

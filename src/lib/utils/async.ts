@@ -13,14 +13,14 @@ import { logger } from '../logger';
 // TYPES
 // ============================================================================
 
-export interface AsyncOperationOptions<T> {
+interface AsyncOperationOptions<T> {
   onSuccess?: (result: T) => void;
   onError?: (error: Error) => void;
   retries?: number;
   retryDelay?: number;
 }
 
-export interface AsyncOperationResult<T> {
+interface AsyncOperationResult<T> {
   data: T | null;
   error: Error | null;
   isLoading: boolean;
@@ -35,7 +35,7 @@ export interface AsyncOperationResult<T> {
 /**
  * Hook for managing async operations with loading states and error handling
  */
-export function useAsyncOperation<T>(
+function useAsyncOperation<T>(
   operation: () => Promise<T>,
   options: AsyncOperationOptions<T> = {}
 ): AsyncOperationResult<T> {
@@ -92,7 +92,7 @@ export function useAsyncOperation<T>(
 /**
  * Simple retry wrapper for async functions
  */
-export async function withRetry<T>(
+async function withRetry<T>(
   operation: () => Promise<T>,
   retries = 3,
   delay = 1000
@@ -117,7 +117,7 @@ export async function withRetry<T>(
 /**
  * Execute multiple async operations in sequence
  */
-export async function executeInSequence<T>(
+async function executeInSequence<T>(
   operations: (() => Promise<T>)[]
 ): Promise<T[]> {
   const results: T[] = [];
@@ -133,7 +133,7 @@ export async function executeInSequence<T>(
 /**
  * Execute multiple async operations with limited concurrency
  */
-export async function executeWithConcurrency<T>(
+async function executeWithConcurrency<T>(
   operations: (() => Promise<T>)[],
   concurrency = 3
 ): Promise<T[]> {
@@ -148,4 +148,4 @@ export async function executeWithConcurrency<T>(
   return results;
 }
 
-// Note: debounce and throttle utilities are available from core utilities
+// Note: debounce and throttle utilities are available from ./core

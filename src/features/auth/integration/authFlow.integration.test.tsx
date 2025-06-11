@@ -1,22 +1,19 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import {
-  render,
-  screen,
-  fireEvent,
-  waitFor,
-  renderHook,
-  act,
-} from '@testing-library/react';
+import { waitFor, renderHook, act } from '@testing-library/react';
 import { ReactNode } from 'react';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 // === INTERNAL UTILITIES ===
-import { useAuth, AuthProvider } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/core';
 import { AuthService } from '@/lib/api';
 import { setupIntegrationTest } from '@/test/integration/setup';
-
-// === TYPES ===
-import type { AuthUser, Session, AuthResponse, ApiResponse } from '@/types';
+import type {
+  AuthUser,
+  Session,
+  AuthResponse,
+  ApiResponse,
+  ApiError,
+} from '@/types';
 
 /**
  * Authentication Flow Integration Tests
@@ -45,9 +42,7 @@ describe('Auth Flow Integration Tests', () => {
   });
 
   const wrapper = ({ children }: { children: ReactNode }) => (
-    <AuthProvider>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 
   describe('Sign In Workflow', () => {
@@ -102,13 +97,12 @@ describe('Auth Flow Integration Tests', () => {
 
     it('should handle sign in validation failures', async () => {
       // Act: Attempt sign in with invalid data
-      let error: unknown = null;
       const { result } = renderHook(() => useAuth(), { wrapper });
       await act(async () => {
         try {
           await result.current.signIn('', '');
-        } catch (e) {
-          error = e;
+        } catch {
+          // Expected to fail validation
         }
       });
       // Assert: Sign in should fail validation
@@ -116,16 +110,18 @@ describe('Auth Flow Integration Tests', () => {
     });
 
     it('should handle API errors during sign in', async () => {
-      // Mock API failure with proper typing
+      // Mock API failure with proper ApiError structure
+      const mockApiError: ApiError = {
+        message: 'Invalid credentials',
+        code: 'AUTH_ERROR',
+        name: 'AuthError',
+      };
+
       const signInSpy = vi.spyOn(AuthService, 'signIn').mockResolvedValue({
         success: false,
         data: null,
-        error: {
-          message: 'Invalid credentials',
-          code: 'AUTH_ERROR',
-          name: 'AuthError',
-        },
-      } as ApiResponse<AuthResponse>);
+        error: mockApiError,
+      });
 
       // Act: Attempt sign in with API failure
       const response = await AuthService.signIn(

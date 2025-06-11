@@ -5,7 +5,7 @@
 /**
  * Truncates text to a specified length with ellipsis
  */
-export function truncateText(text: string, maxLength = 100): string {
+function truncateText(text: string, maxLength = 100): string {
   if (text.length <= maxLength) return text;
   return text.substring(0, maxLength - 3) + '...';
 }
@@ -13,7 +13,7 @@ export function truncateText(text: string, maxLength = 100): string {
 /**
  * Capitalizes the first letter of a string
  */
-export function capitalizeFirst(text: string): string {
+function capitalizeFirst(text: string): string {
   if (!text) return '';
   return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
 }
@@ -21,7 +21,7 @@ export function capitalizeFirst(text: string): string {
 /**
  * Converts a string to title case
  */
-export function toTitleCase(text: string): string {
+function toTitleCase(text: string): string {
   return text
     .toLowerCase()
     .split(' ')
@@ -32,7 +32,7 @@ export function toTitleCase(text: string): string {
 /**
  * Formats a file size in bytes to a human-readable string
  */
-export function formatFileSize(bytes: number, decimals = 2): string {
+function formatFileSize(bytes: number, decimals = 2): string {
   if (bytes === 0) return '0 Bytes';
 
   const k = 1024;
@@ -47,14 +47,14 @@ export function formatFileSize(bytes: number, decimals = 2): string {
 /**
  * Formats a percentage value with optional decimal places
  */
-export function formatPercentage(value: number, decimals = 1): string {
+function formatPercentage(value: number, decimals = 1): string {
   return `${value.toFixed(decimals)}%`;
 }
 
 /**
  * Formats a price value with currency symbol
  */
-export function formatPrice(
+function formatPrice(
   amount: number,
   currency = 'USD',
   locale = 'en-US'
@@ -68,7 +68,7 @@ export function formatPrice(
 /**
  * Formats a number with thousands separators
  */
-export function formatNumber(
+function formatNumber(
   value: number,
   locale = 'en-US',
   options: Intl.NumberFormatOptions = {}
@@ -79,14 +79,14 @@ export function formatNumber(
 /**
  * Parses a formatted number string to number
  */
-export function parseNumber(numberString: string): number {
+function parseNumber(numberString: string): number {
   return parseFloat(numberString.replace(/[^0-9.-]+/g, ''));
 }
 
 /**
  * Truncates a URL to a more readable format
  */
-export function truncateUrl(url: string, maxLength = 30): string {
+function truncateUrl(url: string, maxLength = 30): string {
   if (!url || typeof url !== 'string') return '';
 
   if (url.length <= maxLength) return url;

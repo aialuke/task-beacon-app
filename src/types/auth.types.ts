@@ -16,7 +16,7 @@ export interface AuthResponse {
   emailConfirmed: boolean;
 }
 
-export interface SignUpOptions {
+interface SignUpOptions {
   data?: {
     full_name?: string;
     name?: string;
@@ -25,18 +25,9 @@ export interface SignUpOptions {
   redirectTo?: string;
 }
 
-// === AUTH CONTEXT TYPES ===
-export interface AuthContextType {
-  user: User | null;
-  session: Session | null;
-  loading: boolean;
-  error: Error | null;
-  signOut: () => Promise<void>;
-  refreshSession: () => Promise<void>;
-  signIn: (email: string, password: string) => Promise<void>;
-}
+// === AUTH STATE TYPES ===
 
-export interface AuthState {
+interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   user: User | null;
@@ -45,12 +36,12 @@ export interface AuthState {
 }
 
 // === AUTH CREDENTIALS TYPES ===
-export interface SignInCredentials {
+interface SignInCredentials {
   email: string;
   password: string;
 }
 
-export interface SignUpCredentials extends SignInCredentials {
+interface SignUpCredentials extends SignInCredentials {
   name?: string;
   confirmPassword?: string;
 }

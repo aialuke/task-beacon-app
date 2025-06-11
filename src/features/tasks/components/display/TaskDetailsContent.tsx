@@ -2,7 +2,7 @@ import { Calendar1, ExternalLink } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 import { ParentTaskReference } from '@/components/form/ParentTaskReference';
-import { formatDate } from '@/lib/utils/shared';
+import { formatDate } from '@/lib/utils/date';
 import type { Task } from '@/types';
 
 import { getTaskStatus } from '../../utils/taskUiUtils';

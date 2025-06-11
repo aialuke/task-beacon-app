@@ -76,14 +76,14 @@ vi.mock('react-router-dom', async () => {
 });
 
 // Global test utilities for integration tests
-export const mockApiResponse = <T>(data: T, error: unknown = null) => ({
+const mockApiResponse = <T>(data: T, error: unknown = null) => ({
   data,
   error,
   status: error ? 400 : 200,
   statusText: error ? 'Bad Request' : 'OK',
 });
 
-export const mockSuccessfulAuth = (userOverrides: Partial<User> = {}) => {
+const mockSuccessfulAuth = (userOverrides: Partial<User> = {}) => {
   const mockUser: User = {
     id: 'test-user',
     email: 'test@example.com',
@@ -100,7 +100,7 @@ export const mockSuccessfulAuth = (userOverrides: Partial<User> = {}) => {
   });
 };
 
-export const mockFailedAuth = (errorMessage = 'Authentication failed') => {
+const mockFailedAuth = (errorMessage = 'Authentication failed') => {
   vi.mocked(supabase.auth.getUser).mockResolvedValue({
     data: { user: null },
     error: {
@@ -111,7 +111,7 @@ export const mockFailedAuth = (errorMessage = 'Authentication failed') => {
   });
 };
 
-export const mockDatabaseQuery = (tableName: string, result: unknown) => {
+const mockDatabaseQuery = (tableName: string, result: unknown) => {
   const mockChain = {
     select: vi.fn().mockReturnThis(),
     insert: vi.fn().mockReturnThis(),
@@ -130,7 +130,7 @@ export const mockDatabaseQuery = (tableName: string, result: unknown) => {
 };
 
 // Test data factories for integration tests
-export const createTestUser = (overrides = {}) => ({
+const createTestUser = (overrides = {}) => ({
   id: 'test-user-id',
   email: 'test@example.com',
   name: 'Test User',
@@ -140,7 +140,7 @@ export const createTestUser = (overrides = {}) => ({
   ...overrides,
 });
 
-export const createTestTask = (overrides = {}) => ({
+const createTestTask = (overrides = {}) => ({
   id: 'test-task-id',
   title: 'Test Task',
   description: 'Test task description',

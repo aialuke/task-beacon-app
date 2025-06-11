@@ -34,7 +34,7 @@ interface UnifiedErrorBoundaryState {
 /**
  * Unified error boundary with consistent behavior across all use cases
  */
-export class UnifiedErrorBoundary extends Component<
+class UnifiedErrorBoundary extends Component<
   UnifiedErrorBoundaryProps,
   UnifiedErrorBoundaryState
 > {

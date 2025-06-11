@@ -3,7 +3,7 @@ import { memo, useMemo } from 'react';
 
 import { TaskStatus } from '@/types';
 
-export interface TimerRingProps {
+interface TimerRingProps {
   size: number;
   radius: number;
   circumference: number;
@@ -40,6 +40,8 @@ const GradientDefs = memo(() => (
     </filter>
   </defs>
 ));
+
+GradientDefs.displayName = 'GradientDefs';
 
 const TimerRing = ({
   size,

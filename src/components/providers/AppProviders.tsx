@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { PageLoader } from '@/components/ui/loading/UnifiedLoadingStates';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import UnifiedErrorBoundary from '@/components/ui/UnifiedErrorBoundary';
-import { AuthProvider } from '@/contexts/AuthContext';
+// AuthProvider removed - using direct useAuth hook instead
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { isFeatureEnabled } from '@/lib/config/app';
 import { queryClient } from '@/lib/query-client';
@@ -66,17 +66,15 @@ export function AppProviders({ children }: AppProvidersProps) {
       <PerformanceOptimizations>
         <ThemeProvider>
           <QueryClientProvider client={queryClient}>
-            <AuthProvider>
-              <TooltipProvider>
-                <BrowserRouter>
-                  <React.Suspense
-                    fallback={<PageLoader message="Loading application..." />}
-                  >
-                    {children}
-                  </React.Suspense>
-                </BrowserRouter>
-              </TooltipProvider>
-            </AuthProvider>
+            <TooltipProvider>
+              <BrowserRouter>
+                <React.Suspense
+                  fallback={<PageLoader message="Loading application..." />}
+                >
+                  {children}
+                </React.Suspense>
+              </BrowserRouter>
+            </TooltipProvider>
           </QueryClientProvider>
         </ThemeProvider>
       </PerformanceOptimizations>

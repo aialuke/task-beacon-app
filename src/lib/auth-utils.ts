@@ -52,7 +52,7 @@ export const cleanupAuthState = (): void => {
 /**
  * Checks if there's any auth data in storage
  */
-export const hasAuthDataInStorage = (): boolean => {
+const hasAuthDataInStorage = (): boolean => {
   try {
     const localStorageKeys = Object.keys(localStorage);
     const sessionStorageKeys = Object.keys(sessionStorage || {});
@@ -73,7 +73,7 @@ export const hasAuthDataInStorage = (): boolean => {
 /**
  * Type guard for checking if an error is an auth-related error
  */
-export const isAuthError = (error: unknown): error is Error => {
+const isAuthError = (error: unknown): error is Error => {
   return (
     error instanceof Error &&
     (error.message.includes('auth') ||
@@ -86,7 +86,7 @@ export const isAuthError = (error: unknown): error is Error => {
 /**
  * Safely handles auth operation errors with consistent logging
  */
-export const handleAuthError = (error: unknown, operation: string): Error => {
+const handleAuthError = (error: unknown, operation: string): Error => {
   const authError =
     error instanceof Error ? error : new Error(`${operation} failed`);
   authLogger.error(`Auth operation failed: ${operation}`, authError);

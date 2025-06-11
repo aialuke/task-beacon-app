@@ -1,6 +1,6 @@
+import { Trash2 } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Trash2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -100,8 +100,8 @@ function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
             <DialogHeader>
               <DialogTitle>Delete Task</DialogTitle>
               <DialogDescription>
-                Are you sure you want to delete &ldquo;{task.title}&rdquo;? This action
-                cannot be undone.
+                Are you sure you want to delete &ldquo;{task.title}&rdquo;? This
+                action cannot be undone.
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>

@@ -1,7 +1,7 @@
 import { useSpring, SpringValue, config } from '@react-spring/web';
 import { useState } from 'react';
 
-export interface TaskAnimationState {
+interface TaskAnimationState {
   height: SpringValue<number>;
   opacity: SpringValue<number>;
 }

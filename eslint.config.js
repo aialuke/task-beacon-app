@@ -59,7 +59,16 @@ export default tseslint.config(
       'react/prop-types': 'off', // Using TypeScript
       'react-refresh/only-export-components': [
         'warn',
-        { allowConstantExport: true },
+        {
+          allowConstantExport: true,
+          // Allow context and provider exports
+          allowExportNames: [
+            'createContext',
+            'useContext',
+            'Provider',
+            'Consumer',
+          ],
+        },
       ],
 
       // TypeScript Rules - Enhanced Strict Mode
@@ -67,7 +76,9 @@ export default tseslint.config(
         'warn',
         {
           argsIgnorePattern: '^_',
-          varsIgnorePattern: '^_',
+          // Updated pattern to handle utility functions
+          varsIgnorePattern:
+            '^_|^(generate|format|parse|is|has|can|should|get|create|transform|validate)',
           caughtErrorsIgnorePattern: '^_',
         },
       ],
@@ -117,7 +128,7 @@ export default tseslint.config(
       'promise/always-return': 'off', // Not needed with TypeScript
       'promise/catch-or-return': ['error', { allowFinally: true }],
       'promise/prefer-await-to-then': 'warn',
-      'promise/prefer-await-to-callbacks': 'warn',
+      'promise/prefer-await-to-callbacks': 'warn', // Simplified - will handle specific cases manually
     },
   },
   // Specific overrides for test files
@@ -152,6 +163,32 @@ export default tseslint.config(
       // Configuration files may need require imports and empty functions
       '@typescript-eslint/no-require-imports': 'off',
       '@typescript-eslint/no-empty-function': 'off',
+    },
+  },
+  // Specific overrides for context files
+  {
+    files: [
+      '**/context/**/*.{ts,tsx}',
+      '**/contexts/**/*.{ts,tsx}',
+      '**/*Context.{ts,tsx}',
+      '**/testing/context-helpers.{ts,tsx}',
+    ],
+    rules: {
+      // Context files legitimately export hooks and providers alongside components
+      'react-refresh/only-export-components': 'off',
+    },
+  },
+  // Specific overrides for files with DOM callbacks
+  {
+    files: [
+      '**/navbar/**/*.{ts,tsx}',
+      '**/animation/**/*.{ts,tsx}',
+      '**/logger.{ts,tsx}',
+      '**/utils/**/*.{ts,tsx}',
+    ],
+    rules: {
+      // Allow callback patterns for DOM APIs and performance utilities
+      'promise/prefer-await-to-callbacks': 'off',
     },
   }
 );

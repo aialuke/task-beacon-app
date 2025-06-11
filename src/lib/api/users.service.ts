@@ -7,7 +7,6 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import type { Database } from '@/integrations/supabase/types';
-
 // Clean imports from organized type system
 import type { User, UserRole, ApiResponse } from '@/types';
 import type {

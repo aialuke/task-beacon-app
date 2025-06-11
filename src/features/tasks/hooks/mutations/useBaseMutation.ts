@@ -16,7 +16,7 @@ interface BaseMutationOptions<TData, TVariables> {
   queryKeys?: string[][];
 }
 
-export interface BaseMutationResult<TData> {
+interface BaseMutationResult<TData> {
   success: boolean;
   message: string;
   data?: TData;

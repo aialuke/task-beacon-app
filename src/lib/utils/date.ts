@@ -47,7 +47,7 @@ export function getDaysRemaining(dueDate: string | null): number | null {
  * @param dueDate - ISO date string for the due date
  * @returns A string like "2 days left", "Due today", or "No due date"
  */
-export function getTimeUntilDue(dueDate: string | null): string {
+function getTimeUntilDue(dueDate: string | null): string {
   if (!dueDate) return 'No due date';
 
   const daysRemaining = getDaysRemaining(dueDate);
@@ -65,7 +65,7 @@ export function getTimeUntilDue(dueDate: string | null): string {
  * @param dateString - ISO date string to check
  * @returns True if the date is in the past, false otherwise
  */
-export function isDatePast(dateString: string | null): boolean {
+function isDatePast(dateString: string | null): boolean {
   if (!dateString) return false;
 
   const now = new Date();
@@ -79,7 +79,7 @@ export function isDatePast(dateString: string | null): boolean {
  * @param dueDate - ISO date string for the due date
  * @returns Appropriate tooltip text based on due date
  */
-export function getDueDateTooltip(dueDate: string | null): string {
+function getDueDateTooltip(dueDate: string | null): string {
   if (!dueDate) return 'No due date set';
 
   const date = new Date(dueDate);
@@ -136,7 +136,7 @@ export function formatTimeDisplay(
  * @param dueDate - ISO date string for the due date
  * @returns Appropriate tooltip content based on due date
  */
-export function getTooltipContent(dueDate: string | null): string {
+function getTooltipContent(dueDate: string | null): string {
   return getDueDateTooltip(dueDate);
 }
 

@@ -13,7 +13,7 @@ import { createLoadingState } from '@/types/async-state.types';
 
 // === CORE INTERFACES ===
 
-export interface EntityQueryConfig<T> {
+interface EntityQueryConfig<T> {
   /** Query key for caching */
   queryKey: readonly unknown[];
   /** Function to fetch the entity */
@@ -28,7 +28,7 @@ export interface EntityQueryConfig<T> {
   errorContext?: string;
 }
 
-export interface EntityQueryReturn<T> {
+interface EntityQueryReturn<T> {
   data: T | null;
   isLoading: boolean;
   isFetching: boolean;
@@ -41,9 +41,7 @@ export interface EntityQueryReturn<T> {
 /**
  * Generic entity query hook with standardized configuration
  */
-export function useEntityQuery<T>(
-  config: EntityQueryConfig<T>
-): EntityQueryReturn<T> {
+function useEntityQuery<T>(config: EntityQueryConfig<T>): EntityQueryReturn<T> {
   const {
     queryKey,
     queryFn,

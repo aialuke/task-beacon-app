@@ -38,19 +38,19 @@ import {
 // AUTHENTICATION VALIDATORS
 // ============================================================================
 
-export function validateSignIn(data: unknown) {
+function validateSignIn(data: unknown) {
   return signInSchema.safeParse(data);
 }
 
-export function validateSignUp(data: unknown) {
+function validateSignUp(data: unknown) {
   return signUpSchema.safeParse(data);
 }
 
-export function validatePasswordReset(data: unknown) {
+function validatePasswordReset(data: unknown) {
   return passwordResetSchema.safeParse(data);
 }
 
-export function validatePasswordChange(data: unknown) {
+function validatePasswordChange(data: unknown) {
   return passwordChangeSchema.safeParse(data);
 }
 
@@ -62,7 +62,7 @@ export function validateProfileUpdate(data: unknown) {
   return profileUpdateSchema.safeParse(data);
 }
 
-export function validateProfileCreate(data: unknown) {
+function validateProfileCreate(data: unknown) {
   return profileCreateSchema.safeParse(data);
 }
 
@@ -70,19 +70,19 @@ export function validateProfileCreate(data: unknown) {
 // TASK VALIDATORS
 // ============================================================================
 
-export function validateTaskCreation(data: unknown) {
+function validateTaskCreation(data: unknown) {
   return createTaskSchema.safeParse(data);
 }
 
-export function validateTaskUpdate(data: unknown) {
+function validateTaskUpdate(data: unknown) {
   return updateTaskSchema.safeParse(data);
 }
 
-export function validateTaskForm(data: unknown) {
+function validateTaskForm(data: unknown) {
   return taskFormSchema.safeParse(data);
 }
 
-export function validateTaskFilter(data: unknown) {
+function validateTaskFilter(data: unknown) {
   return taskFilterSchema.safeParse(data);
 }
 
@@ -90,15 +90,15 @@ export function validateTaskFilter(data: unknown) {
 // COMMON VALIDATORS
 // ============================================================================
 
-export function validatePagination(data: unknown) {
+function validatePagination(data: unknown) {
   return paginationSchema.safeParse(data);
 }
 
-export function validateSorting(data: unknown) {
+function validateSorting(data: unknown) {
   return sortingSchema.safeParse(data);
 }
 
-export function validateFileUpload(data: unknown) {
+function validateFileUpload(data: unknown) {
   return fileUploadSchema.safeParse(data);
 }
 
@@ -109,7 +109,7 @@ export function validateFileUpload(data: unknown) {
 /**
  * Transform form data to API format for task creation
  */
-export function transformTaskFormToApiData(
+function transformTaskFormToApiData(
   formData: TaskFormInput
 ): Partial<CreateTaskInput> {
   return {
@@ -126,7 +126,7 @@ export function transformTaskFormToApiData(
 // VALIDATION RESULT HELPERS
 // ============================================================================
 
-export interface ValidationResult<T = unknown> {
+interface ValidationResult<T = unknown> {
   isValid: boolean;
   errors: string[];
   warnings?: string[];
@@ -137,7 +137,7 @@ export interface ValidationResult<T = unknown> {
 /**
  * Convert Zod SafeParseResult to ValidationResult
  */
-export function toValidationResult<T>(
+function toValidationResult<T>(
   result: ReturnType<typeof signInSchema.safeParse>
 ): ValidationResult<T> {
   if (result.success) {
@@ -172,7 +172,7 @@ export function toValidationResult<T>(
 /**
  * Generic field validator
  */
-export function validateField(
+function validateField(
   fieldName: string,
   value: unknown
 ): { isValid: boolean; error?: string } {
@@ -188,7 +188,7 @@ export function validateField(
 /**
  * Validate email format specifically
  */
-export function isValidEmail(email: string): boolean {
+function isValidEmail(email: string): boolean {
   if (!email || typeof email !== 'string') return false;
 
   const emailRegex =
@@ -203,7 +203,7 @@ export function isValidEmail(email: string): boolean {
 /**
  * Validate password strength
  */
-export function isValidPassword(password: string): boolean {
+function isValidPassword(password: string): boolean {
   if (!password || typeof password !== 'string') return false;
 
   return (
@@ -218,7 +218,7 @@ export function isValidPassword(password: string): boolean {
 /**
  * Validate URL format
  */
-export function isValidUrl(url: string): boolean {
+function isValidUrl(url: string): boolean {
   if (!url || typeof url !== 'string') return false;
 
   try {
@@ -226,7 +226,7 @@ export function isValidUrl(url: string): boolean {
     return true;
   } catch {
     const domainPattern =
-      /^(www\.)?[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
+      /^(www\.)?[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
     return domainPattern.test(url.trim());
   }
 }
@@ -234,7 +234,7 @@ export function isValidUrl(url: string): boolean {
 /**
  * Check if date is in future
  */
-export function isDateInFuture(date: string): boolean {
+function isDateInFuture(date: string): boolean {
   if (!date || typeof date !== 'string') return true; // Allow empty dates
 
   const dateObj = new Date(date);

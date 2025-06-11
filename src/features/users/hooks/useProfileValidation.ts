@@ -105,4 +105,4 @@ export function useProfileValidation() {
 }
 
 // Backward compatibility exports
-export const useProfileValidationHook = useProfileValidation;
+const useProfileValidationHook = useProfileValidation;

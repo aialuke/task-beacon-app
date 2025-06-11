@@ -8,7 +8,9 @@
 import { z } from 'zod';
 
 import { DEFAULT_PAGINATION_CONFIG } from '@/lib/utils/pagination';
+import type { TaskPriority as TaskPriorityType } from '@/types/feature-types/task.types';
 
+import { UNIFIED_VALIDATION_MESSAGES } from './messages';
 import {
   unifiedEmailSchema,
   unifiedPasswordSchema,
@@ -16,15 +18,20 @@ import {
   unifiedTaskTitleSchema,
   unifiedTaskDescriptionSchema,
   unifiedUrlSchema,
-  UNIFIED_VALIDATION_MESSAGES,
-} from './unified-validation';
+} from './unified-schemas';
+
+// ============================================================================
+// TASK SCHEMAS
+// ============================================================================
+
+// Import TaskPriority from the canonical location
 
 // ============================================================================
 // COMMON SCHEMAS
 // ============================================================================
 
-export const uuidSchema = z.string().uuid('Invalid ID format');
-export const timestampSchema = z.string().datetime('Invalid timestamp format');
+const uuidSchema = z.string().uuid('Invalid ID format');
+const timestampSchema = z.string().datetime('Invalid timestamp format');
 
 // ============================================================================
 // PAGINATION SCHEMAS
@@ -105,17 +112,13 @@ export const profileCreateSchema = z.object({
   avatar_url: z.string().url('Invalid avatar URL').optional().nullable(),
 });
 
-// ============================================================================
-// TASK SCHEMAS
-// ============================================================================
-
-export const taskPrioritySchema = z.enum(['low', 'medium', 'high', 'urgent'], {
+const taskPrioritySchema = z.enum(['low', 'medium', 'high', 'urgent'], {
   errorMap: () => ({
     message: 'Priority must be low, medium, high, or urgent',
   }),
 });
 
-export const taskStatusSchema = z.enum(['pending', 'complete', 'overdue'], {
+const taskStatusSchema = z.enum(['pending', 'complete', 'overdue'], {
   errorMap: () => ({ message: 'Status must be pending, complete, or overdue' }),
 });
 
@@ -132,7 +135,7 @@ const futureDateSchema = z
     return dateObj > now;
   }, 'Date cannot be in the past');
 
-export const baseTaskSchema = z.object({
+const baseTaskSchema = z.object({
   title: unifiedTaskTitleSchema,
   description: unifiedTaskDescriptionSchema,
   priority: taskPrioritySchema.default('medium'),
@@ -168,7 +171,7 @@ export const taskFormSchema = z.object({
         return true;
       } catch {
         const domainPattern =
-          /^(www\.)?[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
+          /^(www\.)?[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
         return domainPattern.test(url.trim());
       }
     }, 'Please enter a valid URL')
@@ -212,9 +215,9 @@ export type PasswordChangeInput = z.infer<typeof passwordChangeSchema>;
 export type ProfileUpdateInput = z.infer<typeof profileUpdateSchema>;
 export type ProfileCreateInput = z.infer<typeof profileCreateSchema>;
 
-export type TaskPriority = z.infer<typeof taskPrioritySchema>;
-export type TaskStatus = z.infer<typeof taskStatusSchema>;
-export type BaseTask = z.infer<typeof baseTaskSchema>;
+// Use the canonical TaskPriority type instead of inferring from schema;
+type TaskStatus = z.infer<typeof taskStatusSchema>;
+type BaseTask = z.infer<typeof baseTaskSchema>;
 export type CreateTaskInput = z.infer<typeof createTaskSchema>;
 export type UpdateTaskInput = z.infer<typeof updateTaskSchema>;
 export type TaskFormInput = z.infer<typeof taskFormSchema>;

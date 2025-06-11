@@ -13,7 +13,7 @@ import { useSubmissionState } from './useLoadingState';
 
 // === CORE INTERFACES ===
 
-export interface UnifiedFormConfig<T extends Record<string, unknown>> {
+interface UnifiedFormConfig<T extends Record<string, unknown>> {
   /** Initial form values */
   initialValues: T;
   /** Custom validation function */
@@ -28,7 +28,7 @@ export interface UnifiedFormConfig<T extends Record<string, unknown>> {
   validateOnBlur?: boolean;
 }
 
-export interface UnifiedFormActions<T extends Record<string, unknown>> {
+interface UnifiedFormActions<T extends Record<string, unknown>> {
   /** Set a specific field value */
   setFieldValue: (field: keyof T, value: T[keyof T]) => void;
   /** Set multiple field values */
@@ -51,7 +51,7 @@ export interface UnifiedFormActions<T extends Record<string, unknown>> {
   validateField: (field: keyof T) => boolean;
 }
 
-export interface UnifiedFormReturn<T extends Record<string, unknown>>
+interface UnifiedFormReturn<T extends Record<string, unknown>>
   extends FormState<T>,
     UnifiedFormActions<T> {
   /** Helper to check if field has error */
@@ -308,7 +308,7 @@ export function useUnifiedForm<T extends Record<string, unknown>>(
 /**
  * Simple form hook for basic forms without complex validation
  */
-export function useSimpleForm<T extends Record<string, unknown>>(
+function useSimpleForm<T extends Record<string, unknown>>(
   initialValues: T,
   onSubmit?: (values: T) => Promise<void> | void
 ) {

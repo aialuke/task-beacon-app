@@ -33,7 +33,7 @@ export interface PaginationParams {
  * Base query parameters interface
  * Used for extending pagination with additional query options
  */
-export interface BaseQueryParams {
+interface BaseQueryParams {
   page?: number;
   pageSize?: number;
   sortBy?: string;
@@ -84,7 +84,7 @@ export interface PaginationAPI extends PaginationControls {
  * Standard paginated API response structure
  * Used consistently across all paginated API endpoints
  */
-export interface PaginatedResponse<T> {
+interface PaginatedResponse<T> {
   data: T[];
   pagination: PaginationMeta;
   filters?: Record<string, unknown>;

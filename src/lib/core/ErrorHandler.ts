@@ -77,7 +77,7 @@ export function handleError(
 /**
  * Wraps async functions with unified error handling
  */
-export function withErrorHandling<TArgs extends unknown[], TResult>(
+function withErrorHandling<TArgs extends unknown[], TResult>(
   fn: (...args: TArgs) => Promise<TResult>,
   options: ErrorOptions = {}
 ): (...args: TArgs) => Promise<TResult | null> {
@@ -96,7 +96,7 @@ export function withErrorHandling<TArgs extends unknown[], TResult>(
 /**
  * Initialize global error handlers
  */
-export function setupGlobalErrorHandling(): void {
+function setupGlobalErrorHandling(): void {
   // Unhandled promise rejections
   window.addEventListener('unhandledrejection', event => {
     handleError(event.reason, {
@@ -120,7 +120,7 @@ export function setupGlobalErrorHandling(): void {
 /**
  * Safe async execution with error handling
  */
-export async function safeAsync<T>(
+async function safeAsync<T>(
   asyncFn: () => Promise<T>,
   options: ErrorOptions = {}
 ): Promise<T | null> {
@@ -146,7 +146,7 @@ export function createErrorState(error?: Error | null): ErrorState {
 
 // === EXPORTS ===
 
-export const ErrorHandler = {
+const ErrorHandler = {
   handle: handleError,
   wrap: withErrorHandling,
   safeAsync,

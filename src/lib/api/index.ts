@@ -4,27 +4,7 @@
 // === INTERNAL UTILITIES ===
 import { supabase } from '@/integrations/supabase/client';
 
-// === TYPES (from unified system) ===
-export type {
-  ApiResponse,
-  ApiError,
-  ServiceResult,
-  PaginatedResponse,
-  BaseQueryParams,
-  ActionResult,
-  DatabaseOperationResult,
-} from '@/types/api.types';
-
-export type {
-  Tables,
-  TablesInsert,
-  TablesUpdate,
-  TaskTable,
-  ProfileTable,
-  TaskWithRelations,
-  ProfileWithRelations,
-} from '@/types/database';
-
+// === TYPES (from unified system) ===;
 // === USED SERVICES ===
 export { AuthService } from './AuthService';
 
@@ -32,4 +12,3 @@ export { AuthService } from './AuthService';
 // Individual services still available for direct import
 
 // === SUPABASE CLIENT ===
-export { supabase };
