@@ -1,6 +1,7 @@
 import { createContext, useContext, ReactNode } from 'react';
-import type { AuthContextType } from '@/types/shared/auth.types';
+
 import { useAuth as useAuthHook } from '@/hooks/core';
+import type { AuthContextType } from '@/types/shared/auth.types';
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -24,9 +25,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   return (
-    <AuthContext.Provider value={contextValue}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 }
 

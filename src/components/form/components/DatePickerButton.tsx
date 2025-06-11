@@ -1,8 +1,7 @@
-
-import { memo, useState } from 'react';
-import { Calendar } from 'lucide-react';
 import { format } from 'date-fns';
-import { cn } from '@/lib/utils';
+import { Calendar } from 'lucide-react';
+import { memo, useState } from 'react';
+
 import { Button } from '@/components/ui/button';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import {
@@ -10,6 +9,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
 
 interface DatePickerButtonProps {
   dueDate: string;
@@ -24,7 +24,9 @@ export const DatePickerButton = memo(function DatePickerButton({
 }: DatePickerButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const selectedDate: Date | undefined = dueDate ? new Date(dueDate) : undefined;
+  const selectedDate: Date | undefined = dueDate
+    ? new Date(dueDate)
+    : undefined;
   const hasDate = !!selectedDate;
 
   const handleDateSelect = (date: Date | undefined): void => {
@@ -45,23 +47,28 @@ export const DatePickerButton = memo(function DatePickerButton({
   };
 
   const buttonClasses = cn(
-    'flex items-center justify-center gap-2 transition-all duration-200 touch-manipulation',
-    'hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30',
-    'w-[48px] h-[48px] sm:w-auto sm:h-[48px] sm:pl-3 sm:pr-4 sm:py-2',
-    'rounded-full aspect-square [aspect-ratio:1/1] sm:aspect-auto sm:[aspect-ratio:unset]',
+    'flex touch-manipulation items-center justify-center gap-2 transition-all duration-200',
+    'hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 active:scale-95',
+    'size-[48px] sm:h-[48px] sm:w-auto sm:py-2 sm:pl-3 sm:pr-4',
+    'aspect-square rounded-full [aspect-ratio:1/1] sm:aspect-auto sm:[aspect-ratio:unset]',
     hasDate
-      ? 'bg-primary/20 text-primary border border-primary/30 shadow-md shadow-primary/10'
-      : 'bg-background/60 text-muted-foreground border border-border/40 hover:bg-background/80 hover:text-foreground hover:border-border/60',
-    disabled && 'opacity-50 cursor-not-allowed hover:scale-100'
+      ? 'border border-primary/30 bg-primary/20 text-primary shadow-md shadow-primary/10'
+      : 'border border-border/40 bg-background/60 text-muted-foreground hover:border-border/60 hover:bg-background/80 hover:text-foreground',
+    disabled && 'cursor-not-allowed opacity-50 hover:scale-100'
   );
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <Button type="button" variant="ghost" disabled={disabled} className={buttonClasses}>
+        <Button
+          type="button"
+          variant="ghost"
+          disabled={disabled}
+          className={buttonClasses}
+        >
           <Calendar
             className={cn(
-              'h-5 w-5 flex-shrink-0 transition-all duration-200 sm:h-4 sm:w-4',
+              'size-5 flex-shrink-0 transition-all duration-200 sm:size-4',
               hasDate && 'scale-110'
             )}
           />

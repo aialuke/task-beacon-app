@@ -1,10 +1,13 @@
 /**
  * Utility Types - TypeScript Helpers
- * 
+ *
  * Advanced TypeScript utility types for better type manipulation and safety.
  */
 
 // Object manipulation utilities
+// State management utilities moved to @/types/async-state.types.ts to eliminate duplication
+import type { BaseAsyncState } from './async-state.types';
+
 export type DeepPartial<T> = {
   [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
 };
@@ -34,36 +37,40 @@ export type ArrayElement<T> = T extends readonly (infer U)[] ? U : never;
 export type RecordValue<T> = T extends Record<string, infer U> ? U : never;
 
 // Function utilities - Fixed parameter types
-export type AsyncReturnType<T extends (...args: any[]) => Promise<any>> = 
-  T extends (...args: any[]) => Promise<infer R> ? R : never;
+export type AsyncReturnType<
+  T extends (...args: unknown[]) => Promise<unknown>,
+> = T extends (...args: unknown[]) => Promise<infer R> ? R : never;
 
-export type Parameters<T extends (...args: any[]) => any> = T extends (...args: infer P) => any ? P : never;
+export type Parameters<T extends (...args: unknown[]) => unknown> = T extends (
+  ...args: infer P
+) => unknown
+  ? P
+  : never;
 
 // Conditional utilities
 export type If<C extends boolean, T, F> = C extends true ? T : F;
 export type Equals<T, U> = T extends U ? (U extends T ? true : false) : false;
 
 // String utilities
-export type Capitalize<S extends string> = S extends `${infer F}${infer R}` 
-  ? `${Uppercase<F>}${R}` 
+export type Capitalize<S extends string> = S extends `${infer F}${infer R}`
+  ? `${Uppercase<F>}${R}`
   : S;
 
-export type Uncapitalize<S extends string> = S extends `${infer F}${infer R}` 
-  ? `${Lowercase<F>}${R}` 
+export type Uncapitalize<S extends string> = S extends `${infer F}${infer R}`
+  ? `${Lowercase<F>}${R}`
   : S;
 
 // Component prop utilities moved to @/types/component.types.ts to eliminate duplication
-export type { 
-  PropsWithClassName, 
-  PropsWithChildren, 
-  BaseComponentProps 
+export type {
+  PropsWithClassName,
+  PropsWithChildren,
+  BaseComponentProps,
 } from './component.types';
 
 // Additional prop utilities
-export type PropsWithTestId<P = Record<string, never>> = P & { testId?: string };
-
-// State management utilities moved to @/types/async-state.types.ts to eliminate duplication
-import type { BaseAsyncState } from './async-state.types';
+export type PropsWithTestId<P = Record<string, never>> = P & {
+  testId?: string;
+};
 export type { BaseAsyncState as AsyncState } from './async-state.types';
 export type { LoadingState } from '@/hooks/core/useLoadingState';
 

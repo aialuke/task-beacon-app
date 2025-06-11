@@ -1,5 +1,5 @@
-
 import { useRef, useEffect, forwardRef } from 'react';
+
 import { cn } from '@/lib/utils';
 
 interface FloatingInputProps {
@@ -61,7 +61,9 @@ const FloatingInput = forwardRef<HTMLInputElement, FloatingInputProps>(
           id={id}
           type={type}
           value={value}
-          onChange={(e) => { onChange(e.target.value); }}
+          onChange={e => {
+            onChange(e.target.value);
+          }}
           autoComplete={autoComplete}
           disabled={disabled}
           required={required}

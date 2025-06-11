@@ -1,23 +1,25 @@
-import { useMemo } from "react";
-import { useSpring, animated } from "@react-spring/web";
-import { TaskStatus } from "@/types";
-import TimerRing from "./timer/TimerRing";
-import TimerDisplay from "./timer/TimerDisplay";
-import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
+import { useSpring, animated } from '@react-spring/web';
+import { useMemo } from 'react';
+
 import {
   Tooltip,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import TimerTooltip from "@/features/tasks/components/TimerTooltip";
-import { useCountdown } from "@/features/tasks/hooks/useCountdown";
-import { useMotionPreferences } from "@/hooks/useMotionPreferences";
+} from '@/components/ui/tooltip';
+import TimerTooltip from '@/features/tasks/components/TimerTooltip';
+import { useTaskUIContext } from '@/features/tasks/context/TaskUIContext';
+import { useCountdown } from '@/features/tasks/hooks/useCountdown';
+import { useMotionPreferences } from '@/hooks/useMotionPreferences';
+import { TaskStatus } from '@/types';
+
+import TimerDisplay from './timer/TimerDisplay';
+import TimerRing from './timer/TimerRing';
 
 interface CountdownTimerProps {
   dueDate: string | null;
   status: TaskStatus;
   size?: number;
-  priority?: "low" | "medium" | "high";
+  priority?: 'low' | 'medium' | 'high';
 }
 
 const AnimatedDiv = animated.div;
@@ -26,7 +28,7 @@ function CountdownTimer({
   dueDate,
   status,
   size = 48,
-  priority = "medium",
+  priority = 'medium',
 }: CountdownTimerProps) {
   const { isMobile } = useTaskUIContext();
   const { shouldReduceMotion, getAnimationConfig } = useMotionPreferences();
@@ -35,9 +37,9 @@ function CountdownTimer({
     // Replace complex nested ternaries with lookup table
     const SIZE_MULTIPLIERS = {
       mobile: { high: 1.1, medium: 0.9, low: 0.7 },
-      desktop: { high: 1.2, medium: 1.0, low: 0.8 }
+      desktop: { high: 1.2, medium: 1.0, low: 0.8 },
     } as const;
-    
+
     const deviceType = isMobile ? 'mobile' : 'desktop';
     const dynamicSize = size * SIZE_MULTIPLIERS[deviceType][priority];
     const radius = dynamicSize / 2 - 4;
@@ -61,8 +63,8 @@ function CountdownTimer({
     strokeDashoffset: dashOffset,
     config: springConfig,
     immediate:
-      status === "complete" ||
-      status === "overdue" ||
+      status === 'complete' ||
+      status === 'overdue' ||
       !dueDate ||
       shouldReduceMotion,
   });
@@ -71,7 +73,7 @@ function CountdownTimer({
     () => ({
       width: dynamicSize,
       height: dynamicSize,
-      transform: shouldReduceMotion ? undefined : "translateZ(0)",
+      transform: shouldReduceMotion ? undefined : 'translateZ(0)',
     }),
     [dynamicSize, shouldReduceMotion]
   );
@@ -84,13 +86,13 @@ function CountdownTimer({
             role="timer"
             tabIndex={0}
             aria-label={ariaLabel}
-            className={`timer-container relative flex items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 transition-all ${
-              status === "pending" &&
+            className={`timer-container relative flex items-center justify-center rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
+              status === 'pending' &&
               Number(timeDisplay) === 0 &&
               !shouldReduceMotion
-                ? "animate-pulse-subtle"
-                : ""
-            } ${shouldReduceMotion ? "" : "gpu-accelerated"}`}
+                ? 'animate-pulse-subtle'
+                : ''
+            } ${shouldReduceMotion ? '' : 'gpu-accelerated'}`}
             style={containerStyles}
           >
             <TimerRing

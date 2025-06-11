@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+
 import { useAuth } from '@/hooks/core';
 
 interface AuthenticatedAppProps {
@@ -6,12 +7,12 @@ interface AuthenticatedAppProps {
    * Component to show while authentication state is loading
    */
   loadingComponent: ReactNode;
-  
+
   /**
    * Component to show when user is authenticated
    */
   authenticatedComponent: ReactNode;
-  
+
   /**
    * Component to show when user is not authenticated
    */
@@ -20,11 +21,11 @@ interface AuthenticatedAppProps {
 
 /**
  * Authentication-aware app wrapper
- * 
+ *
  * This component handles the authentication state logic and conditional
  * rendering based on auth status, removing this responsibility from
  * page components to follow separation of concerns.
- * 
+ *
  * Benefits:
  * - Pages focus only on layout
  * - Authentication logic is centralized and reusable
@@ -50,4 +51,4 @@ export function AuthenticatedApp({
 
   // Show unauthenticated fallback for guests
   return <>{unauthenticatedFallback}</>;
-} 
+}

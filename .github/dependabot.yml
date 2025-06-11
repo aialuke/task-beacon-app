@@ -4,56 +4,56 @@
 version: 2
 updates:
   # NPM dependencies
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
-      timezone: "UTC"
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+      timezone: 'UTC'
     open-pull-requests-limit: 10
-    target-branch: "main"
+    target-branch: 'main'
     groups:
       # Group React ecosystem updates together
       react:
         patterns:
-          - "react"
-          - "react-dom"
-          - "react-router-dom"
-          - "@types/react*"
+          - 'react'
+          - 'react-dom'
+          - 'react-router-dom'
+          - '@types/react*'
       # Group Radix UI updates together
       radix:
         patterns:
-          - "@radix-ui/*"
+          - '@radix-ui/*'
       # Group testing libraries together
       testing:
         patterns:
-          - "@testing-library/*"
-          - "vitest"
-          - "@vitest/*"
+          - '@testing-library/*'
+          - 'vitest'
+          - '@vitest/*'
       # Group TypeScript-related updates together
       typescript:
         patterns:
-          - "typescript"
-          - "@types/*"
-          - "typescript-eslint"
+          - 'typescript'
+          - '@types/*'
+          - 'typescript-eslint'
     ignore:
       # Ignore major version updates for these packages
-      - dependency-name: "@testing-library/*"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "typescript"
-        update-types: ["version-update:semver-major"]
+      - dependency-name: '@testing-library/*'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
 
   # GitHub Actions
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: 'github-actions'
+    directory: '/'
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
-      timezone: "UTC"
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+      timezone: 'UTC'
     open-pull-requests-limit: 5
     groups:
       actions:
         patterns:
-          - "actions/*" 
+          - 'actions/*'

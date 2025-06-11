@@ -1,4 +1,3 @@
-
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // Simple unit tests for the useTaskMutations hook
@@ -22,7 +21,7 @@ describe('useTaskMutations - Simplified Tests', () => {
       const { useTaskUpdates } = await import('../mutations/useTaskUpdates');
       const { useTaskDeletion } = await import('../mutations/useTaskDeletion');
       const { useTaskStatus } = await import('../mutations/useTaskStatus');
-      
+
       expect(useTaskCreation).toBeDefined();
       expect(useTaskUpdates).toBeDefined();
       expect(useTaskDeletion).toBeDefined();
@@ -39,7 +38,7 @@ describe('useTaskMutations - Simplified Tests', () => {
         await import('../mutations/useTaskUpdates');
         await import('../mutations/useTaskDeletion');
         await import('../mutations/useTaskStatus');
-        
+
         // If we get here, no circular dependencies
         expect(true).toBe(true);
       } catch (error) {
@@ -53,7 +52,7 @@ describe('useTaskMutations - Simplified Tests', () => {
     it('should have proper TypeScript types', async () => {
       // This test validates that TypeScript compilation succeeds
       const module = await import('../useTaskMutations');
-      
+
       // Basic type checking - if this compiles, types are working
       expect(module).toBeDefined();
       expect(typeof module.useTaskMutations).toBe('function');

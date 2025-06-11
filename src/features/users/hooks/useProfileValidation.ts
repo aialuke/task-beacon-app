@@ -1,10 +1,10 @@
-
 import { useCallback } from 'react';
 import { z } from 'zod';
-import { 
+
+import {
   validateProfileUpdate,
   profileUpdateSchema,
-  type ProfileUpdateInput 
+  type ProfileUpdateInput,
 } from '@/lib/validation';
 
 interface ProfileValidationResult {
@@ -15,7 +15,7 @@ interface ProfileValidationResult {
 
 /**
  * Profile validation hook - Phase 3 Update
- * 
+ *
  * Migrated to use centralized Zod validation from Phase 1 implementation
  */
 export function useProfileValidation() {
@@ -25,21 +25,21 @@ export function useProfileValidation() {
   const validateProfile = useCallback(
     (data: unknown): ProfileValidationResult => {
       const result = validateProfileUpdate(data);
-      
+
       if (result.success) {
-        return { 
-          isValid: true, 
-          errors: {}, 
-          data: result.data 
+        return {
+          isValid: true,
+          errors: {},
+          data: result.data,
         };
       }
-      
+
       const errors: Record<string, string> = {};
-      result.error.errors.forEach((err) => {
+      result.error.errors.forEach(err => {
         const field = err.path.join('.');
         errors[field] = err.message;
       });
-      
+
       return { isValid: false, errors };
     },
     []
@@ -49,14 +49,17 @@ export function useProfileValidation() {
    * Validate individual profile field
    */
   const validateProfileField = useCallback(
-    (fieldName: keyof ProfileUpdateInput, value: unknown): { isValid: boolean; error?: string } => {
+    (
+      fieldName: keyof ProfileUpdateInput,
+      value: unknown
+    ): { isValid: boolean; error?: string } => {
       const fieldSchema = profileUpdateSchema.shape[fieldName];
       if (!fieldSchema) {
         return { isValid: true };
       }
-      
+
       const result = fieldSchema.safeParse(value);
-      
+
       return {
         isValid: result.success,
         error: result.success ? undefined : result.error.errors[0]?.message,
@@ -95,7 +98,7 @@ export function useProfileValidation() {
     validateName,
     validateEmail,
     validateAvatarUrl,
-    
+
     // Export schema for convenience
     schema: profileUpdateSchema,
   };

@@ -1,5 +1,6 @@
-import { memo } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
+import { memo } from 'react';
+
 import { FloatingInput } from '../FloatingInput';
 import { PasswordStrengthIndicator } from '../PasswordStrengthIndicator';
 
@@ -84,12 +85,19 @@ export const AuthFormFields = memo(function AuthFormFields({
           disabled={loading}
           tabIndex={-1}
         >
-          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+          {showPassword ? (
+            <EyeOff className="size-4" />
+          ) : (
+            <Eye className="size-4" />
+          )}
         </button>
       </div>
 
       {mode === 'signup' && password && (
-        <PasswordStrengthIndicator password={password} show={password.length > 0} />
+        <PasswordStrengthIndicator
+          password={password}
+          show={password.length > 0}
+        />
       )}
     </div>
   );

@@ -1,16 +1,16 @@
 /**
  * Pagination Utilities
- * 
+ *
  * Implementation functions for pagination operations.
  * Separated from type definitions for better organization.
  */
 
-import type { 
-  PaginationMeta, 
-  PaginationParams, 
-  PaginationConfig, 
+import type {
+  PaginationMeta,
+  PaginationParams,
+  PaginationConfig,
   PaginationValidationResult,
-  PaginationRange 
+  PaginationRange,
 } from '@/types/pagination.types';
 
 // === DEFAULT CONFIGURATION ===
@@ -66,7 +66,7 @@ export function calculatePaginationMeta(
   totalCount: number
 ): PaginationMeta {
   const totalPages = Math.ceil(totalCount / pageSize);
-  
+
   return {
     currentPage: page,
     totalPages,
@@ -89,21 +89,32 @@ export function validatePaginationParams(
   let pageSize = config.defaultPageSize;
 
   if (typeof params === 'object' && params !== null) {
-    const p = params as any;
-    
+    const p = params as Record<string, unknown>;
+
     // Validate page
     if (p.page !== undefined) {
-      if (typeof p.page !== 'number' || p.page < 1 || !Number.isInteger(p.page)) {
+      if (
+        typeof p.page !== 'number' ||
+        p.page < 1 ||
+        !Number.isInteger(p.page)
+      ) {
         errors.push('Page must be a positive integer');
       } else {
         page = p.page;
       }
     }
-    
+
     // Validate pageSize
     if (p.pageSize !== undefined) {
-      if (typeof p.pageSize !== 'number' || p.pageSize < config.minPageSize || p.pageSize > config.maxPageSize || !Number.isInteger(p.pageSize)) {
-        errors.push(`Page size must be between ${config.minPageSize} and ${config.maxPageSize}`);
+      if (
+        typeof p.pageSize !== 'number' ||
+        p.pageSize < config.minPageSize ||
+        p.pageSize > config.maxPageSize ||
+        !Number.isInteger(p.pageSize)
+      ) {
+        errors.push(
+          `Page size must be between ${config.minPageSize} and ${config.maxPageSize}`
+        );
       } else {
         pageSize = p.pageSize;
       }
@@ -120,13 +131,15 @@ export function validatePaginationParams(
 /**
  * Get pagination range information
  */
-export function getPaginationRange(pagination: PaginationMeta): PaginationRange {
+export function getPaginationRange(
+  pagination: PaginationMeta
+): PaginationRange {
   const start = (pagination.currentPage - 1) * pagination.pageSize + 1;
   const end = Math.min(start + pagination.pageSize - 1, pagination.totalCount);
-  
+
   return {
     start,
     end,
     total: pagination.totalCount,
   };
-} 
+}

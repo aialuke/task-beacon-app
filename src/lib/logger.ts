@@ -1,9 +1,8 @@
-
 /**
  * Environment-aware logging utility for the application.
- * 
+ *
  * Provides structured logging with different levels (debug, info, warn, error)
- * and environment-based filtering. Integrates with error handling and 
+ * and environment-based filtering. Integrates with error handling and
  * performance monitoring systems.
  */
 
@@ -184,7 +183,11 @@ class Logger {
   /**
    * Log error message (actual errors)
    */
-  error(message: string, error?: Error, context?: Record<string, unknown>): void {
+  error(
+    message: string,
+    error?: Error,
+    context?: Record<string, unknown>
+  ): void {
     const entry = this.createLogEntry('error', message, context, error);
     this.outputLog(entry);
   }
@@ -206,7 +209,7 @@ class Logger {
     delete safeContext.password;
     delete safeContext.token;
     delete safeContext.secret;
-    
+
     this.info(`Auth: ${event}`, safeContext);
   }
 
@@ -220,7 +223,11 @@ class Logger {
   /**
    * Log component lifecycle events
    */
-  component(component: string, event: string, context?: Record<string, unknown>): void {
+  component(
+    component: string,
+    event: string,
+    context?: Record<string, unknown>
+  ): void {
     this.debug(`Component [${component}]: ${event}`, context);
   }
 
@@ -278,13 +285,18 @@ export function logFunctionCall<T extends (...args: unknown[]) => unknown>(
       const result = fn(...args);
       if (result instanceof Promise) {
         return result
-          .then((res) => {
-            logger.debug(`Function completed: ${functionName}`, { result: res });
+          .then(res => {
+            logger.debug(`Function completed: ${functionName}`, {
+              result: res,
+            });
             return res;
           })
           .catch((error: unknown) => {
-            const errorObj = error instanceof Error ? error : new Error(String(error));
-            logger.error(`Function failed: ${functionName}`, errorObj, { args });
+            const errorObj =
+              error instanceof Error ? error : new Error(String(error));
+            logger.error(`Function failed: ${functionName}`, errorObj, {
+              args,
+            });
             throw error;
           });
       } else {
@@ -292,7 +304,8 @@ export function logFunctionCall<T extends (...args: unknown[]) => unknown>(
         return result;
       }
     } catch (error) {
-      const errorObj = error instanceof Error ? error : new Error(String(error));
+      const errorObj =
+        error instanceof Error ? error : new Error(String(error));
       logger.error(`Function failed: ${functionName}`, errorObj, { args });
       throw error;
     }
@@ -309,7 +322,7 @@ export async function logAsyncOperation<T>(
 ): Promise<T> {
   const startTime = performance.now();
   logger.debug(`Starting async operation: ${operationName}`, context);
-  
+
   try {
     const result = await operation();
     const duration = performance.now() - startTime;

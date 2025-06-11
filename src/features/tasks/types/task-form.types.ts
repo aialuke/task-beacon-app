@@ -1,4 +1,3 @@
-
 // Task form specific types
 export interface TaskFormData {
   title: string;

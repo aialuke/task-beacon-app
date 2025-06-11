@@ -1,7 +1,8 @@
-import * as React from "react";
-import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import * as DialogPrimitive from '@radix-ui/react-dialog';
+import { X } from 'lucide-react';
+import * as React from 'react';
+
+import { cn } from '@/lib/utils';
 
 const Dialog = DialogPrimitive.Root;
 const DialogTrigger = DialogPrimitive.Trigger;
@@ -15,11 +16,11 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "fixed inset-0 z-50 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      'fixed inset-0 z-50 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
       className
     )}
     style={{
-      backgroundColor: "rgb(0 0 0 / 80%)",
+      backgroundColor: 'rgb(0 0 0 / 80%)',
     }}
     {...props}
   />
@@ -28,8 +29,8 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
 /**
  * Simplified DialogContent - Phase 1 Consolidation
- * 
- * Replaces 120+ lines of complex mobile keyboard positioning logic with 
+ *
+ * Replaces 120+ lines of complex mobile keyboard positioning logic with
  * simple CSS-based solutions. Uses modern CSS features for better performance.
  */
 const DialogContent = React.forwardRef<
@@ -43,34 +44,34 @@ const DialogContent = React.forwardRef<
         ref={ref}
         className={cn(
           // Base positioning and sizing
-          "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%]",
-          
+          'fixed left-1/2 top-1/2 z-50 grid w-full max-w-lg -translate-x-1/2 -translate-y-1/2',
+
           // Layout and styling
-          "gap-4 border p-6 shadow-lg sm:rounded-xl",
-          
+          'gap-4 border p-6 shadow-lg sm:rounded-xl',
+
           // Mobile keyboard handling with CSS
-          "max-h-[85vh] overflow-y-auto",
-          "sm:max-h-[90vh]",
-          
+          'max-h-[85vh] overflow-y-auto',
+          'sm:max-h-[90vh]',
+
           // Animations
-          "duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out",
-          "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
-          "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
-          "data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%]",
-          "data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]",
-          
+          'duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out',
+          'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
+          'data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
+          'data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%]',
+          'data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]',
+
           className
         )}
         style={{
-          backgroundColor: "#1a1a1a",
-          color: "#ffffff",
-          borderColor: "#404040",
+          backgroundColor: '#1a1a1a',
+          color: '#ffffff',
+          borderColor: '#404040',
         }}
         {...props}
       >
         {children}
         <DialogClose className="absolute right-4 top-4 rounded-full opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none">
-          <X className="h-4 w-4" style={{ color: "#ffffff" }} />
+          <X className="size-4" style={{ color: '#ffffff' }} />
           <span className="sr-only">Close</span>
         </DialogClose>
       </DialogPrimitive.Content>
@@ -85,13 +86,13 @@ const DialogHeader = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "flex flex-col space-y-1.5 text-center sm:text-left",
+      'flex flex-col space-y-1.5 text-center sm:text-left',
       className
     )}
     {...props}
   />
 );
-DialogHeader.displayName = "DialogHeader";
+DialogHeader.displayName = 'DialogHeader';
 
 const DialogFooter = ({
   className,
@@ -99,13 +100,13 @@ const DialogFooter = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
+      'flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2',
       className
     )}
     {...props}
   />
 );
-DialogFooter.displayName = "DialogFooter";
+DialogFooter.displayName = 'DialogFooter';
 
 const DialogTitle = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Title>,
@@ -114,10 +115,10 @@ const DialogTitle = React.forwardRef<
   <DialogPrimitive.Title
     ref={ref}
     className={cn(
-      "text-lg font-semibold leading-none tracking-tight",
+      'text-lg font-semibold leading-none tracking-tight',
       className
     )}
-    style={{ color: "#ffffff" }}
+    style={{ color: '#ffffff' }}
     {...props}
   />
 ));
@@ -129,8 +130,8 @@ const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn("text-sm", className)}
-    style={{ color: "#a3a3a3" }}
+    className={cn('text-sm', className)}
+    style={{ color: '#a3a3a3' }}
     {...props}
   />
 ));

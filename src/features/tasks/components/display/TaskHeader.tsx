@@ -1,8 +1,10 @@
+import { memo } from 'react';
 
-import { memo } from "react";
-import type { Task } from "@/types";
-import TaskStatus from "./TaskStatus";
-import TaskExpandButton from "../TaskExpandButton";
+import type { Task } from '@/types';
+
+import TaskExpandButton from '../TaskExpandButton';
+
+import TaskStatus from './TaskStatus';
 
 interface TaskHeaderProps {
   task: Task;

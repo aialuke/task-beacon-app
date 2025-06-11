@@ -1,14 +1,15 @@
 /**
  * Unified Entity Query Hook - Phase 2 Consolidation
- * 
+ *
  * Generic hook for entity queries that eliminates duplicate React Query patterns.
  * Replaces scattered query configurations with standardized approach.
  */
 
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import { createLoadingState } from '@/types/async-state.types';
+
 import type { ApiResponse } from '@/types/api.types';
+import { createLoadingState } from '@/types/async-state.types';
 
 // === CORE INTERFACES ===
 
@@ -40,7 +41,9 @@ export interface EntityQueryReturn<T> {
 /**
  * Generic entity query hook with standardized configuration
  */
-export function useEntityQuery<T>(config: EntityQueryConfig<T>): EntityQueryReturn<T> {
+export function useEntityQuery<T>(
+  config: EntityQueryConfig<T>
+): EntityQueryReturn<T> {
   const {
     queryKey,
     queryFn,
@@ -51,13 +54,18 @@ export function useEntityQuery<T>(config: EntityQueryConfig<T>): EntityQueryRetu
   } = config;
 
   // Default smart retry logic
-  const defaultRetry = retry ?? ((failureCount: number, error: Error) => {
-    // Don't retry on 404 errors
-    if (error.message.includes('not found') || error.message.includes('404')) {
-      return false;
-    }
-    return failureCount < 3;
-  });
+  const defaultRetry =
+    retry ??
+    ((failureCount: number, error: Error) => {
+      // Don't retry on 404 errors
+      if (
+        error.message.includes('not found') ||
+        error.message.includes('404')
+      ) {
+        return false;
+      }
+      return failureCount < 3;
+    });
 
   const {
     data: response,
@@ -70,7 +78,8 @@ export function useEntityQuery<T>(config: EntityQueryConfig<T>): EntityQueryRetu
     queryFn: async () => {
       const result = await queryFn();
       if (!result.success) {
-        const errorMsg = result.error?.message || `Failed to fetch ${errorContext || 'data'}`;
+        const errorMsg =
+          result.error?.message || `Failed to fetch ${errorContext || 'data'}`;
         throw new Error(errorMsg);
       }
       return result.data;
@@ -86,7 +95,7 @@ export function useEntityQuery<T>(config: EntityQueryConfig<T>): EntityQueryRetu
   // Memoized return object for stable references
   return useMemo(() => {
     const loadingState = createLoadingState(isLoading, isFetching, queryError);
-    
+
     return {
       data: (response as T) || null,
       isLoading: loadingState.isLoading,
@@ -137,4 +146,4 @@ export function useEntityListQuery<T, TFilters = unknown>(
     errorContext: `${entityName} list`,
     ...options,
   });
-} 
+}

@@ -1,12 +1,11 @@
-
 import { useTaskCreation } from './mutations/useTaskCreation';
 import { useTaskDeletion } from './mutations/useTaskDeletion';
-import { useTaskUpdates } from './mutations/useTaskUpdates';
 import { useTaskStatus } from './mutations/useTaskStatus';
+import { useTaskUpdates } from './mutations/useTaskUpdates';
 
 /**
  * Unified Task Mutations Hook - Phase 3 Consolidated
- * 
+ *
  * Combines all task mutation hooks with simplified, consistent patterns.
  * Eliminates duplicate error handling, optimistic updates, and toast notifications.
  */
@@ -42,8 +41,12 @@ export function useTaskMutations() {
     isUpdating: updates.isLoading,
     isDeleting: deletion.isLoading,
     isTogglingStatus: status.isLoading,
-    
+
     // Combined loading state
-    isLoading: creation.isLoading || updates.isLoading || deletion.isLoading || status.isLoading,
+    isLoading:
+      creation.isLoading ||
+      updates.isLoading ||
+      deletion.isLoading ||
+      status.isLoading,
   };
 }

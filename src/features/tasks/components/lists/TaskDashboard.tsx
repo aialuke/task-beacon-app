@@ -1,15 +1,16 @@
-
 // === EXTERNAL LIBRARIES ===
-import React from "react";
+import React from 'react';
 
 // === COMPONENTS ===
-import TaskDashboardHeader from "@/components/layout/TaskDashboardHeader";
-import TaskFilterNavbar from "../TaskFilterNavbar";
-import TaskList from "./TaskList";
-import { FabButton } from "../actions";
+import TaskDashboardHeader from '@/components/layout/TaskDashboardHeader';
+import { useTaskUIContext } from '@/features/tasks/context/TaskUIContext';
+
+import { FabButton } from '../actions';
+import TaskFilterNavbar from '../TaskFilterNavbar';
+
+import TaskList from './TaskList';
 
 // === HOOKS ===
-import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
 
 export default function TaskDashboard() {
   const { filter, setFilter } = useTaskUIContext();

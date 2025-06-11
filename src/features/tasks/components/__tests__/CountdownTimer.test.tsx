@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+
 import CountdownTimer from '../CountdownTimer';
 
 // Mock the TaskUIContext
@@ -102,4 +103,4 @@ describe('CountdownTimer', () => {
     expect(timer).toHaveAttribute('tabIndex', '0');
     expect(timer).toHaveAttribute('aria-label', 'Task timer: Due tomorrow');
   });
-}); 
+});

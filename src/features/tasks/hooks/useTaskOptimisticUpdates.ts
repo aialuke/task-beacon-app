@@ -1,5 +1,6 @@
-import { useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import { useCallback } from 'react';
+
 import { QueryKeys } from '@/lib/api/standardized-api';
 import { Task } from '@/types';
 
@@ -46,7 +47,7 @@ function isInfiniteResponse(data: unknown): data is InfiniteTasksResponse {
 
 /**
  * Task Optimistic Updates Hook - Simplified Implementation
- * 
+ *
  * Provides utilities for optimistically updating task data in React Query cache
  * using standard React patterns for better maintainability.
  */
@@ -66,38 +67,43 @@ export function useTaskOptimisticUpdates() {
    */
   const updateTaskOptimistically = useCallback(
     (taskId: string, updates: Partial<Task>, fallbackData?: unknown) => {
-      queryClient.setQueriesData({ queryKey: QueryKeys.tasks }, (oldData: unknown) => {
-        if (!oldData) return fallbackData || oldData;
+      queryClient.setQueriesData(
+        { queryKey: QueryKeys.tasks },
+        (oldData: unknown) => {
+          if (!oldData) return fallbackData || oldData;
 
-        // Handle infinite query structure (pages)
-        if (isInfiniteResponse(oldData)) {
-          return {
-            ...oldData,
-            pages: oldData.pages.map((page) => ({
-              ...page,
-              data: page.data?.map((task: Task) =>
-                task.id === taskId ? { ...task, ...updates } : task
-              ) || [],
-            })),
-          };
+          // Handle infinite query structure (pages)
+          if (isInfiniteResponse(oldData)) {
+            return {
+              ...oldData,
+              pages: oldData.pages.map(page => ({
+                ...page,
+                data:
+                  page.data?.map((task: Task) =>
+                    task.id === taskId ? { ...task, ...updates } : task
+                  ) || [],
+              })),
+            };
+          }
+
+          // Handle regular paginated response
+          if (isPaginatedResponse(oldData)) {
+            return {
+              ...oldData,
+              data: {
+                ...oldData.data,
+                data:
+                  oldData.data.data?.map((task: Task) =>
+                    task.id === taskId ? { ...task, ...updates } : task
+                  ) || [],
+              },
+            };
+          }
+
+          // Return unchanged if structure is unrecognized
+          return oldData;
         }
-
-        // Handle regular paginated response
-        if (isPaginatedResponse(oldData)) {
-          return {
-            ...oldData,
-            data: {
-              ...oldData.data,
-              data: oldData.data.data?.map((task: Task) =>
-                task.id === taskId ? { ...task, ...updates } : task
-              ) || [],
-            },
-          };
-        }
-
-        // Return unchanged if structure is unrecognized
-        return oldData;
-      });
+      );
     },
     [queryClient]
   );
@@ -107,33 +113,40 @@ export function useTaskOptimisticUpdates() {
    */
   const removeTaskOptimistically = useCallback(
     (taskId: string, fallbackData?: unknown) => {
-      queryClient.setQueriesData({ queryKey: QueryKeys.tasks }, (oldData: unknown) => {
-        if (!oldData) return fallbackData || oldData;
+      queryClient.setQueriesData(
+        { queryKey: QueryKeys.tasks },
+        (oldData: unknown) => {
+          if (!oldData) return fallbackData || oldData;
 
-        if (isInfiniteResponse(oldData)) {
-          return {
-            ...oldData,
-            pages: oldData.pages.map((page) => ({
-              ...page,
-              data: page.data?.filter((task: Task) => task.id !== taskId) || [],
-              totalCount: Math.max(0, page.totalCount - 1),
-            })),
-          };
+          if (isInfiniteResponse(oldData)) {
+            return {
+              ...oldData,
+              pages: oldData.pages.map(page => ({
+                ...page,
+                data:
+                  page.data?.filter((task: Task) => task.id !== taskId) || [],
+                totalCount: Math.max(0, page.totalCount - 1),
+              })),
+            };
+          }
+
+          if (isPaginatedResponse(oldData)) {
+            return {
+              ...oldData,
+              data: {
+                ...oldData.data,
+                data:
+                  oldData.data.data?.filter(
+                    (task: Task) => task.id !== taskId
+                  ) || [],
+                totalCount: Math.max(0, oldData.data.totalCount - 1),
+              },
+            };
+          }
+
+          return oldData;
         }
-
-        if (isPaginatedResponse(oldData)) {
-          return {
-            ...oldData,
-            data: {
-              ...oldData.data,
-              data: oldData.data.data?.filter((task: Task) => task.id !== taskId) || [],
-              totalCount: Math.max(0, oldData.data.totalCount - 1),
-            },
-          };
-        }
-
-        return oldData;
-      });
+      );
     },
     [queryClient]
   );

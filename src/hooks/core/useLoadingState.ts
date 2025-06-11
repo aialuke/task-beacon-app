@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 
 /**
  * Unified Loading State Hook - Phase 1 Consolidation
- * 
+ *
  * Replaces all scattered loading state patterns with a single, consistent implementation.
  * Eliminates duplicate loading logic across 15+ components and hooks.
  */
@@ -37,7 +37,9 @@ export interface LoadingStateActions {
   setFailure: (error: string) => void;
 }
 
-export interface UseLoadingStateReturn extends LoadingState, LoadingStateActions {
+export interface UseLoadingStateReturn
+  extends LoadingState,
+    LoadingStateActions {
   isIdle: boolean;
   hasError: boolean;
   isAnyLoading: boolean;
@@ -46,7 +48,9 @@ export interface UseLoadingStateReturn extends LoadingState, LoadingStateActions
 /**
  * Unified loading state hook that replaces all scattered loading patterns
  */
-export function useLoadingState(options: LoadingStateOptions = {}): UseLoadingStateReturn {
+export function useLoadingState(
+  options: LoadingStateOptions = {}
+): UseLoadingStateReturn {
   const {
     initialLoading = false,
     initialSubmitting = false,
@@ -94,8 +98,14 @@ export function useLoadingState(options: LoadingStateOptions = {}): UseLoadingSt
   // Convenience methods
   const startLoading = useCallback(() => setLoading(true), [setLoading]);
   const stopLoading = useCallback(() => setLoading(false), [setLoading]);
-  const startSubmitting = useCallback(() => setSubmitting(true), [setSubmitting]);
-  const stopSubmitting = useCallback(() => setSubmitting(false), [setSubmitting]);
+  const startSubmitting = useCallback(
+    () => setSubmitting(true),
+    [setSubmitting]
+  );
+  const stopSubmitting = useCallback(
+    () => setSubmitting(false),
+    [setSubmitting]
+  );
   const startFetching = useCallback(() => setFetching(true), [setFetching]);
   const stopFetching = useCallback(() => setFetching(false), [setFetching]);
 
@@ -106,9 +116,12 @@ export function useLoadingState(options: LoadingStateOptions = {}): UseLoadingSt
     setErrorState(null);
   }, []);
 
-  const setFailure = useCallback((error: string) => {
-    setError(error);
-  }, [setError]);
+  const setFailure = useCallback(
+    (error: string) => {
+      setError(error);
+    },
+    [setError]
+  );
 
   // Computed states
   const isIdle = !isLoading && !isSubmitting && !isFetching && !error;
@@ -147,7 +160,7 @@ export function useLoadingState(options: LoadingStateOptions = {}): UseLoadingSt
  */
 export function useSimpleLoading(initialLoading = false) {
   const loadingState = useLoadingState({ initialLoading });
-  
+
   return {
     loading: loadingState.isLoading,
     error: loadingState.error,
@@ -162,7 +175,7 @@ export function useSimpleLoading(initialLoading = false) {
  */
 export function useSubmissionState(initialSubmitting = false) {
   const loadingState = useLoadingState({ initialSubmitting });
-  
+
   return {
     isSubmitting: loadingState.isSubmitting,
     error: loadingState.error,
@@ -205,4 +218,4 @@ export function useImageLoadingState() {
     handleImageError,
     resetImageState,
   };
-} 
+}

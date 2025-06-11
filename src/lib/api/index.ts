@@ -1,4 +1,3 @@
-
 // === EXTERNAL LIBRARIES ===
 // (Supabase client is imported from integration layer)
 

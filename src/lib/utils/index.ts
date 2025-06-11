@@ -1,6 +1,6 @@
 /**
  * Simplified Utilities Index
- * 
+ *
  * Direct exports without over-engineered lazy loading patterns.
  * Consolidated from nested directory structure for better maintainability.
  */

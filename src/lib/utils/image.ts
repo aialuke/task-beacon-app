@@ -1,6 +1,6 @@
 /**
  * Consolidated Image Utilities
- * 
+ *
  * Simplified image processing, validation, and utility functions.
  * Consolidated from multiple nested directories for better maintainability.
  */
@@ -72,19 +72,20 @@ const DEFAULT_PROCESSING_OPTIONS: Required<EnhancedImageProcessingOptions> = {
 
 class WebPDetector {
   private static _supportsWebP: boolean | null = null;
-  
+
   static async supportsWebP(): Promise<boolean> {
     if (this._supportsWebP !== null) {
       return this._supportsWebP;
     }
 
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const webP = new Image();
       webP.onload = webP.onerror = () => {
         this._supportsWebP = webP.height === 2;
         resolve(this._supportsWebP);
       };
-      webP.src = 'data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA';
+      webP.src =
+        'data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA';
     });
   }
 }
@@ -99,13 +100,13 @@ class WebPDetector {
 export async function extractImageMetadata(file: File): Promise<ImageMetadata> {
   return new Promise((resolve, reject) => {
     const img = new Image();
-    
+
     img.onload = () => {
       const width = img.naturalWidth;
       const height = img.naturalHeight;
       const aspectRatio = width / height;
       const megapixels = (width * height) / 1000000;
-      
+
       resolve({
         width,
         height,
@@ -115,12 +116,13 @@ export async function extractImageMetadata(file: File): Promise<ImageMetadata> {
         lastModified: file.lastModified,
         aspectRatio,
         megapixels,
-        hasAlphaChannel: file.type === 'image/png' || file.type === 'image/webp',
+        hasAlphaChannel:
+          file.type === 'image/png' || file.type === 'image/webp',
         isAnimated: file.type === 'image/gif',
         colorSpace: 'sRGB', // Default assumption
       });
     };
-    
+
     img.onerror = () => reject(new Error('Failed to load image'));
     img.src = URL.createObjectURL(file);
   });
@@ -131,17 +133,21 @@ export async function extractImageMetadata(file: File): Promise<ImageMetadata> {
  */
 async function processImageWithCanvas(
   file: File,
-  canvasProcessor: (canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, img: HTMLImageElement) => void,
+  canvasProcessor: (
+    canvas: HTMLCanvasElement,
+    ctx: CanvasRenderingContext2D,
+    img: HTMLImageElement
+  ) => void,
   format: 'jpeg' | 'png' | 'webp',
   quality: number
 ): Promise<Blob> {
   return new Promise((resolve, reject) => {
     const img = new Image();
-    
+
     img.onload = () => {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
-      
+
       if (!ctx) {
         reject(new Error('Could not get canvas context'));
         return;
@@ -149,9 +155,9 @@ async function processImageWithCanvas(
 
       try {
         canvasProcessor(canvas, ctx, img);
-        
+
         canvas.toBlob(
-          (blob) => {
+          blob => {
             if (blob) {
               resolve(blob);
             } else {
@@ -165,7 +171,7 @@ async function processImageWithCanvas(
         reject(error);
       }
     };
-    
+
     img.onerror = () => reject(new Error('Failed to load image'));
     img.src = URL.createObjectURL(file);
   });
@@ -195,7 +201,7 @@ function calculateOptimalDimensions(
     const scaleX = maxWidth / originalWidth;
     const scaleY = maxHeight / originalHeight;
     const scale = Math.min(scaleX, scaleY);
-    
+
     newWidth = Math.round(originalWidth * scale);
     newHeight = Math.round(originalHeight * scale);
   }
@@ -215,7 +221,7 @@ async function getOptimalImageFormat(
   }
 
   const webpSupport = await WebPDetector.supportsWebP();
-  
+
   if (webpSupport) {
     return 'webp';
   }
@@ -243,12 +249,15 @@ export async function processImageEnhanced(
 
   try {
     const metadata = await extractImageMetadata(file);
-    
-    const targetFormat = opts.format === 'auto' 
-      ? await getOptimalImageFormat(file)
-      : opts.format === 'webp' 
-        ? await WebPDetector.supportsWebP() ? 'webp' : 'jpeg'
-        : opts.format as 'jpeg' | 'png' | 'webp';
+
+    const targetFormat =
+      opts.format === 'auto'
+        ? await getOptimalImageFormat(file)
+        : opts.format === 'webp'
+          ? (await WebPDetector.supportsWebP())
+            ? 'webp'
+            : 'jpeg'
+          : (opts.format as 'jpeg' | 'png' | 'webp');
 
     const { width: newWidth, height: newHeight } = calculateOptimalDimensions(
       metadata.width,
@@ -306,10 +315,11 @@ export async function processImageEnhanced(
       compressionStats,
       processingTime,
     };
-
   } catch (error) {
     logger.error('Error processing image:', error);
-    throw new Error(`Failed to process image: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to process image: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 }
 
@@ -346,7 +356,7 @@ export async function resizeImage(
   file: File,
   maxWidth: number,
   maxHeight: number = maxWidth,
-  quality: number = 0.85
+  quality = 0.85
 ): Promise<Blob> {
   const result = await processImageEnhanced(file, {
     maxWidth,
@@ -364,10 +374,10 @@ export async function resizeImage(
  */
 export async function convertToWebPWithFallback(
   file: File,
-  quality: number = 0.85
+  quality = 0.85
 ): Promise<ConversionResult> {
   const supportsWebP = await WebPDetector.supportsWebP();
-  
+
   const result = await processImageEnhanced(file, {
     format: supportsWebP ? 'webp' : 'jpeg',
     quality,
@@ -400,4 +410,4 @@ export async function generateThumbnail(
 }
 
 // Re-export for backward compatibility
-export const extractImageMetadataEnhanced = extractImageMetadata; 
+export const extractImageMetadataEnhanced = extractImageMetadata;

@@ -1,6 +1,8 @@
-import { useRef } from "react";
-import { useTaskAnimation } from "./useTaskAnimation";
-import type { Task } from "@/types";
+import { useRef } from 'react';
+
+import type { Task } from '@/types';
+
+import { useTaskAnimation } from './useTaskAnimation';
 
 export function useTaskCard(task: Task) {
   const contentRef = useRef<HTMLDivElement>(null);

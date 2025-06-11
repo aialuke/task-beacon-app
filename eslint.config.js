@@ -13,7 +13,7 @@ export default tseslint.config(
   { ignores: ['dist', 'node_modules', '*.config.js'] },
   {
     extends: [
-      js.configs.recommended, 
+      js.configs.recommended,
       ...tseslint.configs.recommended,
       ...tseslint.configs.stylistic,
     ],
@@ -26,13 +26,13 @@ export default tseslint.config(
       },
     },
     plugins: {
-      'react': react,
+      react: react,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
       'jsx-a11y': jsxA11y,
-      'import': importPlugin,
-      'tailwindcss': tailwindcss,
-      'promise': promise,
+      import: importPlugin,
+      tailwindcss: tailwindcss,
+      promise: promise,
     },
     settings: {
       react: { version: 'detect' },
@@ -53,7 +53,7 @@ export default tseslint.config(
       ...react.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
       ...jsxA11y.configs.recommended.rules,
-      
+
       // React Specific
       'react/react-in-jsx-scope': 'off', // React 17+
       'react/prop-types': 'off', // Using TypeScript
@@ -61,7 +61,7 @@ export default tseslint.config(
         'warn',
         { allowConstantExport: true },
       ],
-      
+
       // TypeScript Rules - Enhanced Strict Mode
       '@typescript-eslint/no-unused-vars': [
         'warn',
@@ -69,41 +69,41 @@ export default tseslint.config(
           argsIgnorePattern: '^_',
           varsIgnorePattern: '^_',
           caughtErrorsIgnorePattern: '^_',
-        }
+        },
       ],
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-non-null-assertion': 'warn',
       '@typescript-eslint/no-require-imports': 'error',
-      
+
       // Import Rules
       'import/order': [
         'error',
         {
-          'groups': [
+          groups: [
             'builtin',
-            'external', 
-            'internal', 
-            'parent', 
-            'sibling', 
-            'index'
+            'external',
+            'internal',
+            'parent',
+            'sibling',
+            'index',
           ],
           'newlines-between': 'always',
-          'alphabetize': { 
+          alphabetize: {
             order: 'asc',
             caseInsensitive: true,
           },
-        }
+        },
       ],
       'import/no-duplicates': 'error',
       'import/no-unused-modules': 'warn',
       'import/first': 'error',
       'import/newline-after-import': 'error',
       'import/no-default-export': 'off', // Allow default exports for React components
-      
+
       // Tailwind CSS Rules
-      'tailwindcss/classnames-order': 'warn',
+      'tailwindcss/classnames-order': 'off', // Disabled: Let Prettier handle class ordering
       'tailwindcss/no-contradicting-classname': 'error',
       'tailwindcss/no-custom-classname': 'off', // Allow shadcn/ui custom classes
       'tailwindcss/enforces-negative-arbitrary-values': 'warn',
@@ -111,7 +111,7 @@ export default tseslint.config(
       'tailwindcss/migration-from-tailwind-2': 'off',
       'tailwindcss/no-arbitrary-value': 'off', // Allow arbitrary values for flexibility
       'tailwindcss/no-unnecessary-arbitrary-value': 'warn',
-      
+
       // Promise/Async Rules for TanStack Query patterns
       ...promise.configs.recommended.rules,
       'promise/always-return': 'off', // Not needed with TypeScript
@@ -122,7 +122,12 @@ export default tseslint.config(
   },
   // Specific overrides for test files
   {
-    files: ['**/*.test.{ts,tsx}', '**/*.spec.{ts,tsx}', '**/test/**/*.{ts,tsx}', '**/tests/**/*.{ts,tsx}'],
+    files: [
+      '**/*.test.{ts,tsx}',
+      '**/*.spec.{ts,tsx}',
+      '**/test/**/*.{ts,tsx}',
+      '**/tests/**/*.{ts,tsx}',
+    ],
     rules: {
       // Relax rules for test files
       '@typescript-eslint/no-empty-function': 'off', // Allow empty mocks

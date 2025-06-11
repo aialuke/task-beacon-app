@@ -1,14 +1,15 @@
 /**
  * Unified Error Handling System - Phase 1 Consolidation
- * 
+ *
  * Consolidates all error handling patterns into a single, unified system.
  * Replaces 6+ fragmented error handling approaches with one consistent API.
  */
 
 import { toast } from 'sonner';
+
+import { formatApiError } from '@/lib/api/error-handling';
 import { logger } from '@/lib/logger';
 import type { ApiError } from '@/types/shared';
-import { formatApiError } from '@/lib/api/error-handling';
 
 // === CORE ERROR INTERFACES ===
 
@@ -44,15 +45,16 @@ export function handleError(
     showToast = true,
     logToConsole = true,
     rethrow = false,
-    context
+    context,
   } = options;
 
   // Format error using existing API error formatter
   const apiError = formatApiError(error);
-  
+
   // Log error with context
   if (logToConsole) {
-    const errorInstance = error instanceof Error ? error : new Error(apiError.message);
+    const errorInstance =
+      error instanceof Error ? error : new Error(apiError.message);
     const logContext = context ? ` [${context}]` : '';
     logger.error(`Error${logContext}:`, errorInstance);
   }
@@ -96,19 +98,19 @@ export function withErrorHandling<TArgs extends unknown[], TResult>(
  */
 export function setupGlobalErrorHandling(): void {
   // Unhandled promise rejections
-  window.addEventListener('unhandledrejection', (event) => {
+  window.addEventListener('unhandledrejection', event => {
     handleError(event.reason, {
       context: 'Unhandled Promise Rejection',
-      showToast: false // Don't spam user with global errors
+      showToast: false, // Don't spam user with global errors
     });
     event.preventDefault();
   });
 
   // Uncaught errors
-  window.addEventListener('error', (event) => {
+  window.addEventListener('error', event => {
     handleError(event.error, {
       context: 'Uncaught Error',
-      showToast: false // Don't spam user with global errors
+      showToast: false, // Don't spam user with global errors
     });
   });
 }
@@ -150,4 +152,4 @@ export const ErrorHandler = {
   safeAsync,
   setup: setupGlobalErrorHandling,
   createState: createErrorState,
-}; 
+};

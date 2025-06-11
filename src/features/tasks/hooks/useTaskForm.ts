@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+
 import { useUnifiedForm } from '@/hooks/core';
 import { logger } from '@/lib/logger';
 import type { TaskCreateData } from '@/types';
@@ -24,7 +25,7 @@ export interface TaskFormValues extends Record<string, unknown> {
 
 /**
  * Task form hook - Phase 2 Refactored
- * 
+ *
  * Now uses unified form hook to eliminate duplicate form state patterns.
  * Maintains backward compatibility with existing interface.
  */
@@ -40,23 +41,26 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
   } = options;
 
   // Task form validation logic
-  const validateTaskForm = useCallback((values: TaskFormValues): FormErrors<TaskFormValues> => {
-    const errors: FormErrors<TaskFormValues> = {};
-    
-    if (!values.title.trim()) {
-      errors.title = 'Title is required';
-    }
-    
-    if (values.url?.trim()) {
-      try {
-        new URL(values.url);
-      } catch {
-        errors.url = 'Please enter a valid URL';
+  const validateTaskForm = useCallback(
+    (values: TaskFormValues): FormErrors<TaskFormValues> => {
+      const errors: FormErrors<TaskFormValues> = {};
+
+      if (!values.title.trim()) {
+        errors.title = 'Title is required';
       }
-    }
-    
-    return errors;
-  }, []);
+
+      if (values.url?.trim()) {
+        try {
+          new URL(values.url);
+        } catch {
+          errors.url = 'Please enter a valid URL';
+        }
+      }
+
+      return errors;
+    },
+    []
+  );
 
   // Unified form with task-specific configuration
   const form = useUnifiedForm<TaskFormValues>({
@@ -68,7 +72,7 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
       assigneeId: initialAssigneeId ?? '',
     },
     validate: validateTaskForm,
-    onSubmit: async (values) => {
+    onSubmit: async values => {
       if (onSubmit) {
         const trimmedValues = {
           title: values.title.trim(),
@@ -121,7 +125,9 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     isSubmitting: form.isSubmitting,
     setIsSubmitting: (submitting: boolean) => {
       // Legacy compatibility - unified form handles this internally
-      logger.warn('setIsSubmitting is deprecated - form handles submission state automatically');
+      logger.warn(
+        'setIsSubmitting is deprecated - form handles submission state automatically'
+      );
     },
 
     // Form actions (backward compatibility)

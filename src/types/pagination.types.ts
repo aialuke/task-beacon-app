@@ -1,6 +1,6 @@
 /**
  * Pagination Types
- * 
+ *
  * Type definitions for pagination interfaces.
  * Implementation functions moved to @/lib/utils/pagination.ts
  */

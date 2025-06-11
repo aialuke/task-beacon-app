@@ -1,6 +1,6 @@
 /**
  * Unified Validation System - Main Entry Point
- * 
+ *
  * Single source of truth for all validation patterns.
  * Consolidates scattered validation logic into a unified API.
  */
@@ -102,10 +102,6 @@ export type {
   FileUploadInput,
 } from './schemas';
 
-export type {
-  ValidationResult,
-} from './validators';
+export type { ValidationResult } from './validators';
 
-export type {
-  UnifiedValidationResult,
-} from './unified-validation'; 
+export type { UnifiedValidationResult } from './unified-validation';

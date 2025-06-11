@@ -1,19 +1,24 @@
+import { Calendar1, ExternalLink } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-import { Calendar1, ExternalLink } from "lucide-react";
-import { formatDate } from "@/lib/utils/shared";
-import { TaskImageGallery } from "./TaskImageGallery";
-import { ParentTaskReference } from "@/components/form/ParentTaskReference";
-import TaskActions from "../actions/TaskActions";
-import { getTaskStatus } from "../../utils/taskUiUtils";
-import { useNavigate } from "react-router-dom";
-import type { Task } from "@/types";
+import { ParentTaskReference } from '@/components/form/ParentTaskReference';
+import { formatDate } from '@/lib/utils/shared';
+import type { Task } from '@/types';
+
+import { getTaskStatus } from '../../utils/taskUiUtils';
+import TaskActions from '../actions/TaskActions';
+
+import { TaskImageGallery } from './TaskImageGallery';
 
 interface TaskDetailsContentProps {
   task: Task;
   isExpanded?: boolean;
 }
 
-export default function TaskDetailsContent({ task, isExpanded = false }: TaskDetailsContentProps) {
+export default function TaskDetailsContent({
+  task,
+  isExpanded = false,
+}: TaskDetailsContentProps) {
   const navigate = useNavigate();
   const status = getTaskStatus(task);
 
@@ -34,7 +39,7 @@ export default function TaskDetailsContent({ task, isExpanded = false }: TaskDet
         <div className="space-y-3">
           {task.due_date && (
             <div className="flex items-center gap-3">
-              <Calendar1 className="h-4 w-4 text-muted-foreground" />
+              <Calendar1 className="size-4 text-muted-foreground" />
               <span className="text-sm text-muted-foreground">
                 {formatDate(task.due_date)}
               </span>
@@ -43,7 +48,7 @@ export default function TaskDetailsContent({ task, isExpanded = false }: TaskDet
 
           {task.url_link && (
             <div className="flex items-center gap-2">
-              <ExternalLink className="h-4 w-4 text-primary" />
+              <ExternalLink className="size-4 text-primary" />
               <a
                 href={task.url_link}
                 target="_blank"
@@ -66,7 +71,13 @@ export default function TaskDetailsContent({ task, isExpanded = false }: TaskDet
 
       {/* Single Border Separator + Action Buttons */}
       <div className="border-t pt-4">
-        <TaskActions task={task} onView={() => { navigate(`/tasks/${task.id}`); }} isExpanded={isExpanded} />
+        <TaskActions
+          task={task}
+          onView={() => {
+            navigate(`/tasks/${task.id}`);
+          }}
+          isExpanded={isExpanded}
+        />
       </div>
     </div>
   );

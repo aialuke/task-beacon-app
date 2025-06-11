@@ -1,7 +1,6 @@
-
 /**
  * Application Entry Point - Optimized Import Organization
- * 
+ *
  * Simplified entry point with better error handling.
  */
 
@@ -10,11 +9,12 @@ import React, { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
 // === COMPONENTS ===
+import { logger } from '@/lib/logger';
+
 import App from './App.tsx';
 import UnifiedErrorBoundary from './components/ui/UnifiedErrorBoundary';
 
 // === UTILITIES ===
-import { logger } from '@/lib/logger';
 
 // === STYLES ===
 import './index.css';
@@ -22,11 +22,11 @@ import './index.css';
 logger.info('Starting application...');
 
 // Setup basic error handlers
-window.addEventListener('error', (event) => {
+window.addEventListener('error', event => {
   logger.error('Global error', event.error);
 });
 
-window.addEventListener('unhandledrejection', (event) => {
+window.addEventListener('unhandledrejection', event => {
   logger.error('Unhandled promise rejection', new Error(String(event.reason)));
 });
 

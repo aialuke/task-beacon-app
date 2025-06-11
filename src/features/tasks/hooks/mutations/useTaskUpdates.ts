@@ -1,8 +1,10 @@
-
-import { Task } from '@/types';
-import { TaskService } from '@/lib/api/tasks';
-import { useTaskOptimisticUpdates } from '../useTaskOptimisticUpdates';
 import { useCallback } from 'react';
+
+import { TaskService } from '@/lib/api/tasks';
+import { Task } from '@/types';
+
+import { useTaskOptimisticUpdates } from '../useTaskOptimisticUpdates';
+
 import { useBaseMutation } from './useBaseMutation';
 
 interface TaskUpdateVariables {
@@ -27,11 +29,11 @@ export function useTaskUpdates() {
   const baseMutation = useBaseMutation<Task, TaskUpdateVariables>({
     mutationFn: async ({ taskId, updates }: TaskUpdateVariables) => {
       const result = await TaskService.crud.update(taskId, updates);
-      
+
       if (!result.success) {
         throw new Error(result.error?.message || 'Failed to update task');
       }
-      
+
       return result.data as Task;
     },
     onMutate: async ({ taskId, updates }) => {
@@ -44,7 +46,10 @@ export function useTaskUpdates() {
   });
 
   const updateTaskCallback = useCallback(
-    async (taskId: string, updates: Partial<Task>): Promise<TaskMutationResult> => {
+    async (
+      taskId: string,
+      updates: Partial<Task>
+    ): Promise<TaskMutationResult> => {
       return await baseMutation.execute({ taskId, updates });
     },
     [baseMutation]

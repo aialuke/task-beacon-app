@@ -1,16 +1,18 @@
-
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { AuthService } from './AuthService';
-import { supabase } from '@/integrations/supabase/client';
 import type { User, Session, AuthError } from '@supabase/supabase-js';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+
+import { supabase } from '@/integrations/supabase/client';
+
+import { AuthService } from './AuthService';
 
 // Helper to create mock AuthError
-const createMockAuthError = (message: string): AuthError => ({
-  name: 'AuthError',
-  message,
-  status: 400,
-  code: 'auth_error',
-} as AuthError);
+const createMockAuthError = (message: string): AuthError =>
+  ({
+    name: 'AuthError',
+    message,
+    status: 400,
+    code: 'auth_error',
+  }) as AuthError;
 
 // Mock Supabase client
 vi.mock('@/integrations/supabase/client', () => ({
@@ -63,9 +65,14 @@ describe('AuthService', () => {
         error: null,
       };
 
-      vi.mocked(supabase.auth.signInWithPassword).mockResolvedValue(mockResponse);
+      vi.mocked(supabase.auth.signInWithPassword).mockResolvedValue(
+        mockResponse
+      );
 
-      const result = await AuthService.signIn('test@example.com', 'password123');
+      const result = await AuthService.signIn(
+        'test@example.com',
+        'password123'
+      );
 
       expect(result.success).toBe(true);
       expect(result.data?.user).toEqual(mockUser);
@@ -84,9 +91,14 @@ describe('AuthService', () => {
         error: mockError,
       };
 
-      vi.mocked(supabase.auth.signInWithPassword).mockResolvedValue(mockResponse);
+      vi.mocked(supabase.auth.signInWithPassword).mockResolvedValue(
+        mockResponse
+      );
 
-      const result = await AuthService.signIn('test@example.com', 'wrongpassword');
+      const result = await AuthService.signIn(
+        'test@example.com',
+        'wrongpassword'
+      );
 
       expect(result.success).toBe(false);
       expect(result.error?.message).toContain('Invalid credentials');
@@ -98,12 +110,19 @@ describe('AuthService', () => {
         error: null,
       };
 
-      vi.mocked(supabase.auth.signInWithPassword).mockResolvedValue(mockResponse);
+      vi.mocked(supabase.auth.signInWithPassword).mockResolvedValue(
+        mockResponse
+      );
 
-      const result = await AuthService.signIn('test@example.com', 'password123');
+      const result = await AuthService.signIn(
+        'test@example.com',
+        'password123'
+      );
 
       expect(result.success).toBe(false);
-      expect(result.error?.message).toContain('Sign in failed - no user returned');
+      expect(result.error?.message).toContain(
+        'Sign in failed - no user returned'
+      );
     });
   });
 
@@ -138,7 +157,11 @@ describe('AuthService', () => {
 
       vi.mocked(supabase.auth.signUp).mockResolvedValue(mockResponse);
 
-      const result = await AuthService.signUp('new@example.com', 'password123', signUpOptions);
+      const result = await AuthService.signUp(
+        'new@example.com',
+        'password123',
+        signUpOptions
+      );
 
       expect(result.success).toBe(true);
       expect(supabase.auth.signUp).toHaveBeenCalledWith({
@@ -157,7 +180,10 @@ describe('AuthService', () => {
 
       vi.mocked(supabase.auth.signUp).mockResolvedValue(mockResponse);
 
-      const result = await AuthService.signUp('existing@example.com', 'password123');
+      const result = await AuthService.signUp(
+        'existing@example.com',
+        'password123'
+      );
 
       expect(result.success).toBe(false);
       expect(result.error?.message).toContain('Email already registered');
@@ -323,4 +349,4 @@ describe('AuthService', () => {
       expect(result.error?.message).toContain('Refresh token expired');
     });
   });
-}); 
+});

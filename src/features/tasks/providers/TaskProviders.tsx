@@ -1,12 +1,15 @@
-
 // === EXTERNAL LIBRARIES ===
 import React from 'react';
 
 // === FEATURE CONTEXTS ===
-import { TaskDataContextProvider } from '../context/TaskDataContext';
-import { TaskUIContextProvider, useTaskUIContext } from '../context/TaskUIContext';
-import { useTaskDataContext } from '../context/TaskDataContext';
-
+import { 
+  TaskDataContextProvider,
+  useTaskDataContext 
+} from '../context/TaskDataContext';
+import {
+  TaskUIContextProvider,
+  useTaskUIContext,
+} from '../context/TaskUIContext';
 // === FEATURE HOOKS ===
 import { useTasksFilter } from '../hooks/useTasksFilter';
 
@@ -16,16 +19,14 @@ interface TaskProvidersProps {
 
 /**
  * Simplified task providers - Step 2.4 Revised
- * 
+ *
  * Provides both task data and UI state contexts using standard patterns.
  * Removed complex unified system in favor of proven React patterns.
  */
 export function TaskProviders({ children }: TaskProvidersProps) {
   return (
     <TaskDataContextProvider>
-      <TaskUIContextProvider>
-        {children}
-      </TaskUIContextProvider>
+      <TaskUIContextProvider>{children}</TaskUIContextProvider>
     </TaskDataContextProvider>
   );
 }
@@ -33,17 +34,17 @@ export function TaskProviders({ children }: TaskProvidersProps) {
 /**
  * Convenience hook for filtering operations
  * Combines task data, filtering state, and filtered results
- * 
+ *
  * @returns Object with filtered tasks and filter controls
  */
 export function useTaskFiltering() {
   const { tasks } = useTaskDataContext();
   const { filter, setFilter } = useTaskUIContext();
   const filteredTasks = useTasksFilter(tasks, filter);
-  
-  return { 
-    tasks: filteredTasks, 
-    filter, 
+
+  return {
+    tasks: filteredTasks,
+    filter,
     setFilter,
     totalCount: tasks.length,
     filteredCount: filteredTasks.length,
@@ -52,7 +53,7 @@ export function useTaskFiltering() {
 
 /**
  * Higher-order component for wrapping components with task providers
- * 
+ *
  * @param Component - Component that needs task context
  * @returns Wrapped component with task providers
  */
@@ -66,6 +67,6 @@ export function withTaskProviders<T extends object>(
   );
 
   WrappedComponent.displayName = `withTaskProviders(${Component.displayName || Component.name})`;
-  
+
   return WrappedComponent;
 }

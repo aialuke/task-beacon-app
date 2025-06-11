@@ -1,18 +1,22 @@
 /**
  * Users Service - Provides clean abstraction for user operations
- * 
+ *
  * This service layer abstracts all user-related database operations,
  * providing a consistent API that can be easily tested and modified.
  */
 
-import { apiRequest } from './error-handling';
-import { AuthService } from './AuthService';
 import { supabase } from '@/integrations/supabase/client';
 import type { Database } from '@/integrations/supabase/types';
 
 // Clean imports from organized type system
 import type { User, UserRole, ApiResponse } from '@/types';
-import type { UserSearchOptions, UserUpdateData } from '@/types/feature-types/user.types';
+import type {
+  UserSearchOptions,
+  UserUpdateData,
+} from '@/types/feature-types/user.types';
+
+import { AuthService } from './AuthService';
+import { apiRequest } from './error-handling';
 
 // Type-safe database references
 type ProfileRow = Database['public']['Tables']['profiles']['Row'];
@@ -59,7 +63,9 @@ export class UserService {
   /**
    * Get all users with optional filtering
    */
-  static async getAll(options: UserSearchOptions = {}): Promise<ApiResponse<User[]>> {
+  static async getAll(
+    options: UserSearchOptions = {}
+  ): Promise<ApiResponse<User[]>> {
     return apiRequest('users.getAll', async () => {
       const { query, role, limit = 50, excludeCurrentUser = false } = options;
 
@@ -74,7 +80,9 @@ export class UserService {
       }
 
       if (query) {
-        queryBuilder = queryBuilder.or(`name.ilike.%${query}%, email.ilike.%${query}%`);
+        queryBuilder = queryBuilder.or(
+          `name.ilike.%${query}%, email.ilike.%${query}%`
+        );
       }
 
       if (excludeCurrentUser) {
@@ -97,7 +105,10 @@ export class UserService {
   /**
    * Search users by name or email
    */
-  static async search(searchQuery: string, options: Omit<UserSearchOptions, 'query'> = {}): Promise<ApiResponse<User[]>> {
+  static async search(
+    searchQuery: string,
+    options: Omit<UserSearchOptions, 'query'> = {}
+  ): Promise<ApiResponse<User[]>> {
     return this.getAll({ ...options, query: searchQuery });
   }
 
@@ -125,7 +136,10 @@ export class UserService {
   /**
    * Update user profile
    */
-  static async updateProfile(userId: string, userData: UserUpdateData): Promise<ApiResponse<User>> {
+  static async updateProfile(
+    userId: string,
+    userData: UserUpdateData
+  ): Promise<ApiResponse<User>> {
     return apiRequest('users.updateProfile', async () => {
       const updateData: ProfileUpdate = {};
 
@@ -148,14 +162,16 @@ export class UserService {
   /**
    * Update current user's profile
    */
-  static async updateCurrentUserProfile(userData: UserUpdateData): Promise<ApiResponse<User>> {
+  static async updateCurrentUserProfile(
+    userData: UserUpdateData
+  ): Promise<ApiResponse<User>> {
     const userResponse = await AuthService.getCurrentUserId();
     if (!userResponse.success || !userResponse.data) {
       return {
         data: null,
-        error: { 
+        error: {
           name: 'AuthenticationError',
-          message: 'User not authenticated' 
+          message: 'User not authenticated',
         },
         success: false,
       };
@@ -190,19 +206,31 @@ export class UserService {
   /**
    * Get user statistics
    */
-  static async getStats(): Promise<ApiResponse<{
-    total: number;
-    admins: number;
-    managers: number;
-    users: number;
-  }>> {
+  static async getStats(): Promise<
+    ApiResponse<{
+      total: number;
+      admins: number;
+      managers: number;
+      users: number;
+    }>
+  > {
     return apiRequest('users.getStats', async () => {
-      const [totalResult, adminResult, managerResult, userResult] = await Promise.all([
-        supabase.from('profiles').select('*', { count: 'exact', head: true }),
-        supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'admin'),
-        supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'manager'),
-        supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'user'),
-      ]);
+      const [totalResult, adminResult, managerResult, userResult] =
+        await Promise.all([
+          supabase.from('profiles').select('*', { count: 'exact', head: true }),
+          supabase
+            .from('profiles')
+            .select('*', { count: 'exact', head: true })
+            .eq('role', 'admin'),
+          supabase
+            .from('profiles')
+            .select('*', { count: 'exact', head: true })
+            .eq('role', 'manager'),
+          supabase
+            .from('profiles')
+            .select('*', { count: 'exact', head: true })
+            .eq('role', 'user'),
+        ]);
 
       return {
         total: totalResult.count || 0,

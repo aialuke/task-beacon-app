@@ -1,6 +1,5 @@
-
-import { UserService } from '@/lib/api/users.service';
 import { useEntityListQuery } from '@/hooks/core';
+import { UserService } from '@/lib/api/users.service';
 import type { User, UserQueryOptions } from '@/types';
 
 interface UseUsersQueryOptions extends UserQueryOptions {
@@ -15,11 +14,13 @@ interface UseUsersQueryReturn {
 }
 
 /**
- * Consolidated user query hook - Phase 2 Refactored  
- * 
+ * Consolidated user query hook - Phase 2 Refactored
+ *
  * Now uses the generic useEntityListQuery to eliminate duplicate React Query patterns.
  */
-export function useUsersQuery(options: UseUsersQueryOptions = {}): UseUsersQueryReturn {
+export function useUsersQuery(
+  options: UseUsersQueryOptions = {}
+): UseUsersQueryReturn {
   const { enabled = true, ...queryOptions } = options;
 
   const {
@@ -30,7 +31,7 @@ export function useUsersQuery(options: UseUsersQueryOptions = {}): UseUsersQuery
   } = useEntityListQuery<User, UserQueryOptions>(
     'users',
     queryOptions,
-    (filters) => UserService.getAll(filters),
+    filters => UserService.getAll(filters),
     {
       enabled,
       staleTime: 5 * 60 * 1000, // 5 minutes

@@ -1,12 +1,13 @@
 /**
  * Authentication Types
- * 
+ *
  * All authentication-related type definitions.
  */
 
 // === SUPABASE AUTH IMPORTS ===
-export type { User as AuthUser, Session } from '@supabase/supabase-js';
 import type { User, Session } from '@supabase/supabase-js';
+
+export type { User as AuthUser, Session } from '@supabase/supabase-js';
 
 // === AUTH RESPONSE TYPES ===
 export interface AuthResponse {
@@ -52,4 +53,4 @@ export interface SignInCredentials {
 export interface SignUpCredentials extends SignInCredentials {
   name?: string;
   confirmPassword?: string;
-} 
+}

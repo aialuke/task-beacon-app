@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+
 import { Logger, authLogger } from '../logger';
 
 // Mock console methods
@@ -31,7 +32,9 @@ describe('Logger', () => {
 
   describe('log levels', () => {
     it('should log debug messages when level is debug', () => {
-      const consoleSpy = vi.spyOn(console, 'debug').mockImplementation(() => {});
+      const consoleSpy = vi
+        .spyOn(console, 'debug')
+        .mockImplementation(() => {});
       testLogger.debug('test debug message');
       expect(consoleSpy).toHaveBeenCalled();
       consoleSpy.mockRestore();
@@ -39,7 +42,9 @@ describe('Logger', () => {
 
     it('should not log debug messages when level is info', () => {
       testLogger.configure({ level: 'info' });
-      const consoleSpy = vi.spyOn(console, 'debug').mockImplementation(() => {});
+      const consoleSpy = vi
+        .spyOn(console, 'debug')
+        .mockImplementation(() => {});
       testLogger.debug('test debug message');
       expect(consoleSpy).not.toHaveBeenCalled();
       consoleSpy.mockRestore();
@@ -60,7 +65,9 @@ describe('Logger', () => {
     });
 
     it('should log error messages', () => {
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const consoleSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
       testLogger.error('test error message');
       expect(consoleSpy).toHaveBeenCalled();
       consoleSpy.mockRestore();
@@ -151,22 +158,22 @@ describe('Logger', () => {
   describe('auth logging', () => {
     it('should remove sensitive information from auth logs', () => {
       const consoleSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
-      testLogger.auth('login', { 
-        username: 'test', 
+      testLogger.auth('login', {
+        username: 'test',
         password: 'secret',
         token: 'jwt-token',
-        secret: 'api-secret'
+        secret: 'api-secret',
       });
-      
+
       const logCall = consoleSpy.mock.calls[0];
       const context = logCall[1];
-      
+
       expect(context).toHaveProperty('username', 'test');
       expect(context).not.toHaveProperty('password');
       expect(context).not.toHaveProperty('token');
       expect(context).not.toHaveProperty('secret');
-      
+
       consoleSpy.mockRestore();
     });
   });
-}); 
+});

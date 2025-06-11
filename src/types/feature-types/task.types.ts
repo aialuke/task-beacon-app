@@ -1,7 +1,6 @@
-
 /**
  * Task Feature Types
- * 
+ *
  * Task-specific types and interfaces for the task management feature.
  */
 
@@ -9,7 +8,12 @@
 import type { ID, Timestamp, Status } from '../utility.types';
 
 // Task filter union type (not interface)
-export type TaskFilter = 'all' | 'pending' | 'complete' | 'overdue' | 'assigned';
+export type TaskFilter =
+  | 'all'
+  | 'pending'
+  | 'complete'
+  | 'overdue'
+  | 'assigned';
 
 // Task priority as a simple string union type
 export type TaskPriority = 'low' | 'medium' | 'high' | 'urgent';

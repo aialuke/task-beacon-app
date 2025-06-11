@@ -1,7 +1,6 @@
-
 /**
  * User Feature Types
- * 
+ *
  * User-specific types and interfaces for user management features.
  */
 

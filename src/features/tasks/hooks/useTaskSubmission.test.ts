@@ -1,9 +1,10 @@
-
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import { useTaskSubmission } from './useTaskSubmission';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+
 import { TaskService } from '@/lib/api';
 import type { TaskWithRelations } from '@/types';
+
+import { useTaskSubmission } from './useTaskSubmission';
 
 // Mock the TaskService
 vi.mock('@/lib/api', () => ({
@@ -183,6 +184,9 @@ describe('useTaskSubmission', () => {
       success: true,
       taskId,
     });
-    expect(TaskService.crud.update).toHaveBeenCalledWith(taskId, expect.objectContaining(updates));
+    expect(TaskService.crud.update).toHaveBeenCalledWith(
+      taskId,
+      expect.objectContaining(updates)
+    );
   });
 });

@@ -1,4 +1,3 @@
-
 import { Link, ExternalLink } from 'lucide-react';
 
 interface ReferenceCardProps {
@@ -24,7 +23,7 @@ export function ReferenceCard({
     >
       <div className="flex items-start gap-3">
         <div className="mt-0.5 rounded-xl bg-accent/50 p-2">
-          {icon ?? <Link className="h-4 w-4 text-accent-foreground" />}
+          {icon ?? <Link className="size-4 text-accent-foreground" />}
         </div>
         <div className="flex-1 space-y-1">
           <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
@@ -46,7 +45,7 @@ export function ReferenceCard({
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 text-xs text-primary transition-colors hover:text-primary/80"
               >
-                <ExternalLink className="h-3 w-3" />
+                <ExternalLink className="size-3" />
                 <span className="max-w-[200px] truncate">{url}</span>
               </a>
             </div>

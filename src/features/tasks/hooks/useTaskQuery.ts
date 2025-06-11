@@ -1,7 +1,6 @@
-
-import { TaskService } from '@/lib/api/tasks';
-import { QueryKeys } from '@/lib/api/standardized-api';
 import { useEntityByIdQuery } from '@/hooks/core';
+import { QueryKeys } from '@/lib/api/standardized-api';
+import { TaskService } from '@/lib/api/tasks';
 import type { Task } from '@/types';
 
 interface UseTaskQueryReturn {
@@ -12,7 +11,7 @@ interface UseTaskQueryReturn {
 
 /**
  * Standardized hook for querying a single task by ID - Phase 2 Refactored
- * 
+ *
  * Now uses the generic useEntityByIdQuery to eliminate duplicate React Query patterns.
  */
 export function useTaskQuery(taskId: string | undefined): UseTaskQueryReturn {

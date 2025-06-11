@@ -1,8 +1,8 @@
-
 import { FileText, Sparkles } from 'lucide-react';
+
+import { QuickActionBar } from '@/components/form/QuickActionBar';
 import { FloatingInput } from '@/components/ui/form/FloatingInput';
 import { FloatingTextarea } from '@/components/ui/form/FloatingTextarea';
-import { QuickActionBar } from '@/components/form/QuickActionBar';
 import type { ProcessingResult } from '@/lib/utils/image';
 
 interface UnifiedTaskFormProps {
@@ -35,7 +35,7 @@ interface UnifiedTaskFormProps {
   headerSubtitle: string;
   titleLabel?: string;
   descriptionLabel?: string;
-  titlePlaceholder?: string;
+
   descriptionPlaceholder?: string;
   disabled?: boolean;
   children?: React.ReactNode;
@@ -43,7 +43,7 @@ interface UnifiedTaskFormProps {
 
 /**
  * Unified Task Form Component - Consolidated Form Interface
- * 
+ *
  * Single component for all task form variations with consistent interface.
  */
 export function UnifiedTaskForm({
@@ -58,25 +58,25 @@ export function UnifiedTaskForm({
   setUrl,
   assigneeId,
   setAssigneeId,
-  
+
   // Form submission
   onSubmit,
   isSubmitting,
   submitLabel,
-  
+
   // Photo upload
   photoPreview,
   onPhotoChange,
   onPhotoRemove,
   photoLoading = false,
   processingResult,
-  
+
   // Presentation
   headerTitle,
   headerSubtitle,
   titleLabel = 'Task Title',
   descriptionLabel = 'Description',
-  titlePlaceholder,
+
   descriptionPlaceholder = 'Describe your task...',
   disabled = false,
   children,
@@ -109,9 +109,9 @@ export function UnifiedTaskForm({
         <FloatingInput
           id="title"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={e => setTitle(e.target.value)}
           label={titleLabel}
-          icon={<FileText className="h-4 w-4" />}
+          icon={<FileText className="size-4" />}
           maxLength={22}
           required
           disabled={disabled}
@@ -121,10 +121,10 @@ export function UnifiedTaskForm({
         <FloatingTextarea
           id="description"
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={e => setDescription(e.target.value)}
           placeholder={descriptionPlaceholder}
           label={descriptionLabel}
-          icon={<Sparkles className="h-4 w-4" />}
+          icon={<Sparkles className="size-4" />}
         />
 
         {/* Quick Action Bar */}

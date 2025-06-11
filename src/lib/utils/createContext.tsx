@@ -1,4 +1,4 @@
-import React, { createContext, useContext, ReactNode } from "react";
+import React, { createContext, useContext, ReactNode } from 'react';
 
 interface CreateContextOptions<T> {
   /**
@@ -111,7 +111,8 @@ export function createStandardContext<T>(
     // Handle strict mode (default)
     if (strict && context === undefined) {
       const message =
-        errorMessage ?? `use${name} must be used within a ${name}Provider`;      throw new Error(message);
+        errorMessage ?? `use${name} must be used within a ${name}Provider`;
+      throw new Error(message);
     }
 
     // Handle non-strict mode with default value

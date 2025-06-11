@@ -1,6 +1,6 @@
 /**
  * Types Index - Domain-Specific Organization
- * 
+ *
  * Streamlined index that imports from domain-specific type files.
  * This provides better tree-shaking and clearer type organization.
  */

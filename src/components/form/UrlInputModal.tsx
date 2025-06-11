@@ -1,14 +1,10 @@
-
-import { useState, useRef } from 'react';
-import { Link, ArrowRight } from 'lucide-react';
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-} from '@/components/ui/dialog';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
-import { Input } from '@/components/ui/input';
+import { Link, ArrowRight } from 'lucide-react';
+import { useState, useRef } from 'react';
+
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 
 interface UrlInputModalProps {
@@ -30,7 +26,7 @@ export function UrlInputModal({
   // Enhanced URL validation that accepts domains without protocol
   const isValidUrl = (url: string): boolean => {
     if (!url.trim()) return false;
-    
+
     // Check if it already has a protocol
     if (/^https?:\/\//.test(url)) {
       try {
@@ -40,9 +36,10 @@ export function UrlInputModal({
         return false;
       }
     }
-    
+
     // Check for domain pattern without protocol (e.g., google.com, www.google.com)
-    const domainPattern = /^(www\.)?[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
+    const domainPattern =
+      /^(www\.)?[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
     return domainPattern.test(url);
   };
 
@@ -51,12 +48,12 @@ export function UrlInputModal({
   const handleSubmit = () => {
     if (isValid) {
       let finalUrl = tempValue;
-      
+
       // Add https:// prefix if URL doesn't have a protocol
       if (!/^https?:\/\//.test(finalUrl)) {
         finalUrl = `https://${finalUrl}`;
       }
-      
+
       onChange(finalUrl);
       onClose();
     }
@@ -87,15 +84,15 @@ export function UrlInputModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="fixed top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 sm:max-w-md">
+      <DialogContent className="fixed left-1/2 top-[40%] -translate-x-1/2 -translate-y-1/2 sm:max-w-md">
         <VisuallyHidden>
           <DialogTitle>Enter URL</DialogTitle>
         </VisuallyHidden>
         <div className="space-y-4">
-          <div className="relative flex h-12 items-center p-2 rounded-2xl border border-border bg-background/60 backdrop-blur-sm hover:bg-background/70">
-            <Link className={cn('h-4 w-4 ml-1', getIconColor())} />
+          <div className="relative flex h-12 items-center rounded-2xl border border-border bg-background/60 p-2 backdrop-blur-sm hover:bg-background/70">
+            <Link className={cn('ml-1 size-4', getIconColor())} />
 
-            <div className="flex-1 min-w-0 ml-3 flex items-center">
+            <div className="ml-3 flex min-w-0 flex-1 items-center">
               <Input
                 ref={inputRef}
                 type="text"
@@ -104,7 +101,7 @@ export function UrlInputModal({
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
                 className={cn(
-                  "h-auto border-none bg-transparent pl-1 pr-0 text-sm font-semibold focus:ring-0 focus-visible:ring-0",
+                  'h-auto border-none bg-transparent pl-1 pr-0 text-sm font-semibold focus:ring-0 focus-visible:ring-0',
                   getTextColor()
                 )}
                 // eslint-disable-next-line jsx-a11y/no-autofocus
@@ -116,15 +113,15 @@ export function UrlInputModal({
               type="button"
               variant="ghost"
               size="sm"
-              className="ml-2 h-8 w-8 p-0 transition-colors"
+              className="ml-2 size-8 p-0 transition-colors"
               onClick={handleSubmit}
               disabled={!isValid}
             >
-              <ArrowRight 
+              <ArrowRight
                 className={cn(
-                  "h-4 w-4 transition-colors",
-                  isValid ? "text-blue-500" : "text-muted-foreground"
-                )} 
+                  'size-4 transition-colors',
+                  isValid ? 'text-blue-500' : 'text-muted-foreground'
+                )}
               />
             </Button>
           </div>

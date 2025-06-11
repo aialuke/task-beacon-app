@@ -1,9 +1,9 @@
-import { z } from 'zod';
 import { useCallback } from 'react';
+import { z } from 'zod';
 
 /**
  * Unified Validation System - Phase 1 Consolidation
- * 
+ *
  * Replaces all scattered validation patterns with a single, consistent Zod-based system.
  * Eliminates manual validation, async validation wrappers, and component-specific validation.
  */
@@ -22,34 +22,35 @@ export const UNIFIED_VALIDATION_MESSAGES = {
   // Field Requirements
   REQUIRED: 'This field is required',
   INVALID_FORMAT: 'Invalid format',
-  
+
   // Email
   EMAIL_REQUIRED: 'Email is required',
   EMAIL_INVALID: 'Please enter a valid email address',
-  
+
   // Password
   PASSWORD_REQUIRED: 'Password is required',
   PASSWORD_TOO_SHORT: 'Password must be at least 8 characters',
-  PASSWORD_TOO_WEAK: 'Password must include uppercase, lowercase, number, and special character',
-  
+  PASSWORD_TOO_WEAK:
+    'Password must include uppercase, lowercase, number, and special character',
+
   // Username/Name
   NAME_REQUIRED: 'Name is required',
   NAME_TOO_SHORT: 'Name must be at least 2 characters',
   NAME_TOO_LONG: 'Name cannot exceed 50 characters',
-  
+
   // Task fields
   TITLE_REQUIRED: 'Task title is required',
   TITLE_TOO_LONG: 'Title cannot exceed 22 characters',
   DESCRIPTION_TOO_LONG: 'Description cannot exceed 500 characters',
-  
+
   // URLs
   URL_INVALID: 'Please enter a valid URL',
-  
+
   // Dates
   DATE_INVALID: 'Please enter a valid date',
   DATE_FUTURE: 'Date must be in the future',
   DATE_PAST: 'Date must be in the past',
-  
+
   // Text Content
   TEXT_TOO_SHORT: (min: number) => `Text must be at least ${min} characters`,
   TEXT_TOO_LONG: (max: number) => `Text cannot exceed ${max} characters`,
@@ -58,11 +59,12 @@ export const UNIFIED_VALIDATION_MESSAGES = {
 // === ENHANCED VALIDATION FUNCTIONS ===
 const isValidEmailEnhanced = (email: string): boolean => {
   if (!email || typeof email !== 'string') return false;
-  
-  const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-  
+
+  const emailRegex =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+
   if (!emailRegex.test(email.trim())) return false;
-  
+
   // Additional domain validation
   const [, domain] = email.split('@');
   return domain && domain.includes('.') && domain.length > 2;
@@ -70,12 +72,12 @@ const isValidEmailEnhanced = (email: string): boolean => {
 
 const isValidPasswordEnhanced = (password: string): boolean => {
   if (!password || typeof password !== 'string') return false;
-  
+
   return (
     password.length >= 8 &&
-    /[A-Z]/.test(password) &&     // Uppercase letter
-    /[a-z]/.test(password) &&     // Lowercase letter
-    /[0-9]/.test(password) &&     // Number
+    /[A-Z]/.test(password) && // Uppercase letter
+    /[a-z]/.test(password) && // Lowercase letter
+    /[0-9]/.test(password) && // Number
     /[^A-Za-z0-9]/.test(password) // Special character
   );
 };
@@ -99,7 +101,10 @@ export const unifiedPasswordSchema = z
   .string()
   .min(1, UNIFIED_VALIDATION_MESSAGES.PASSWORD_REQUIRED)
   .min(8, UNIFIED_VALIDATION_MESSAGES.PASSWORD_TOO_SHORT)
-  .refine(isValidPasswordEnhanced, UNIFIED_VALIDATION_MESSAGES.PASSWORD_TOO_WEAK);
+  .refine(
+    isValidPasswordEnhanced,
+    UNIFIED_VALIDATION_MESSAGES.PASSWORD_TOO_WEAK
+  );
 
 /**
  * User name validation schema
@@ -152,11 +157,17 @@ export const createUnifiedTextSchema = (
   }
 
   if (minLength > 0) {
-    schema = schema.min(minLength, UNIFIED_VALIDATION_MESSAGES.TEXT_TOO_SHORT(minLength));
+    schema = schema.min(
+      minLength,
+      UNIFIED_VALIDATION_MESSAGES.TEXT_TOO_SHORT(minLength)
+    );
   }
 
   if (maxLength < 1000) {
-    schema = schema.max(maxLength, UNIFIED_VALIDATION_MESSAGES.TEXT_TOO_LONG(maxLength));
+    schema = schema.max(
+      maxLength,
+      UNIFIED_VALIDATION_MESSAGES.TEXT_TOO_LONG(maxLength)
+    );
   }
 
   return schema;
@@ -238,12 +249,16 @@ export function validateUnifiedForm<T extends Record<string, unknown>>(
   const validatedData: Partial<T> = {};
   let isValid = true;
 
-  for (const [field, schema] of Object.entries(schemas) as [keyof T, z.ZodSchema<unknown>][]) {
+  for (const [field, schema] of Object.entries(schemas) as [
+    keyof T,
+    z.ZodSchema<unknown>,
+  ][]) {
     const fieldResult = validateWithUnifiedSchema(schema, data[field]);
-    
+
     if (!fieldResult.isValid) {
       errors.push(...fieldResult.errors);
-      fieldErrors[field as string] = fieldResult.errors[0] || 'Validation failed';
+      fieldErrors[field as string] =
+        fieldResult.errors[0] || 'Validation failed';
       isValid = false;
     } else if (fieldResult.data !== undefined) {
       validatedData[field] = fieldResult.data as T[keyof T];
@@ -264,7 +279,10 @@ export function validateUnifiedForm<T extends Record<string, unknown>>(
  * Unified validation hook that replaces all scattered validation patterns
  */
 export function useUnifiedValidation(): {
-  validateField: (fieldName: string, value: unknown) => UnifiedValidationResult<unknown>;
+  validateField: (
+    fieldName: string,
+    value: unknown
+  ) => UnifiedValidationResult<unknown>;
   validateForm: <T extends Record<string, unknown>>(
     data: T,
     schemas: Partial<Record<keyof T, z.ZodSchema<unknown>>>
@@ -274,7 +292,9 @@ export function useUnifiedValidation(): {
   validatePassword: (password: string) => UnifiedValidationResult<string>;
   validateUserName: (name: string) => UnifiedValidationResult<string>;
   validateTaskTitle: (title: string) => UnifiedValidationResult<string>;
-  validateTaskDescription: (description: string) => UnifiedValidationResult<string>;
+  validateTaskDescription: (
+    description: string
+  ) => UnifiedValidationResult<string>;
   validateUrl: (url: string) => UnifiedValidationResult<string>;
   schemas: {
     email: z.ZodString;
@@ -289,12 +309,15 @@ export function useUnifiedValidation(): {
     return validateUnifiedField(fieldName, value);
   }, []);
 
-  const validateForm = useCallback(<T extends Record<string, unknown>>(
-    data: T,
-    schemas: Partial<Record<keyof T, z.ZodSchema<unknown>>>
-  ) => {
-    return validateUnifiedForm(data, schemas);
-  }, []);
+  const validateForm = useCallback(
+    <T extends Record<string, unknown>>(
+      data: T,
+      schemas: Partial<Record<keyof T, z.ZodSchema<unknown>>>
+    ) => {
+      return validateUnifiedForm(data, schemas);
+    },
+    []
+  );
 
   const validateEmail = useCallback((email: string) => {
     return validateWithUnifiedSchema(unifiedEmailSchema, email);
@@ -388,27 +411,35 @@ export const unifiedProfileFormSchema = z.object({
 /**
  * Validate sign-in data
  */
-export function validateUnifiedSignIn(data: unknown): UnifiedValidationResult<z.infer<typeof unifiedSignInSchema>> {
+export function validateUnifiedSignIn(
+  data: unknown
+): UnifiedValidationResult<z.infer<typeof unifiedSignInSchema>> {
   return validateWithUnifiedSchema(unifiedSignInSchema, data);
 }
 
 /**
  * Validate sign-up data
  */
-export function validateUnifiedSignUp(data: unknown): UnifiedValidationResult<z.infer<typeof unifiedSignUpSchema>> {
+export function validateUnifiedSignUp(
+  data: unknown
+): UnifiedValidationResult<z.infer<typeof unifiedSignUpSchema>> {
   return validateWithUnifiedSchema(unifiedSignUpSchema, data);
 }
 
 /**
  * Validate task data
  */
-export function validateUnifiedTask(data: unknown): UnifiedValidationResult<z.infer<typeof unifiedTaskFormSchema>> {
+export function validateUnifiedTask(
+  data: unknown
+): UnifiedValidationResult<z.infer<typeof unifiedTaskFormSchema>> {
   return validateWithUnifiedSchema(unifiedTaskFormSchema, data);
 }
 
 /**
  * Validate profile data
  */
-export function validateUnifiedProfile(data: unknown): UnifiedValidationResult<z.infer<typeof unifiedProfileFormSchema>> {
+export function validateUnifiedProfile(
+  data: unknown
+): UnifiedValidationResult<z.infer<typeof unifiedProfileFormSchema>> {
   return validateWithUnifiedSchema(unifiedProfileFormSchema, data);
-} 
+}

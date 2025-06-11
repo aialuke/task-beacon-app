@@ -1,11 +1,8 @@
+import { memo, useCallback, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Trash2 } from 'lucide-react';
 
-// External libraries
-import { useCallback, memo, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Trash2 } from "lucide-react";
-
-// Components
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -14,13 +11,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-
-// Hooks
-import { useTaskMutations } from "@/features/tasks/hooks/useTaskMutations";
-
-// Types
-import type { Task } from "@/types";
+} from '@/components/ui/dialog';
+import { useTaskMutations } from '@/features/tasks/hooks/useTaskMutations';
+import type { Task } from '@/types';
 
 interface TaskActionsProps {
   task: Task;
@@ -57,7 +50,7 @@ function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
       } else if (result.error) {
         // toast.error(result.message);
       }
-    } catch (error) {
+    } catch {
       // toast.error('Failed to delete task');
     } finally {
       setIsDeleting(false);
@@ -67,22 +60,22 @@ function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
   return (
     <div className="flex flex-wrap gap-2">
       <Button
-        variant={task.status === "complete" ? "outline" : "default"}
+        variant={task.status === 'complete' ? 'outline' : 'default'}
         size="sm"
         onClick={handleToggleComplete}
         className="rounded-full"
       >
-        {task.status === "complete" ? "Mark Incomplete" : "Complete"}
+        {task.status === 'complete' ? 'Mark Incomplete' : 'Complete'}
       </Button>
-      <Button 
-        variant="outline" 
-        size="sm" 
+      <Button
+        variant="outline"
+        size="sm"
         onClick={handleCreateFollowUp}
         className="rounded-full"
       >
         Follow Up
       </Button>
-      
+
       {/* Only show View Details button when not expanded */}
       {!isExpanded && (
         <Button variant="outline" size="sm" onClick={onView}>
@@ -97,7 +90,7 @@ function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 text-muted-foreground hover:bg-muted hover:text-foreground"
+              className="size-8 text-muted-foreground hover:bg-muted hover:text-foreground"
               disabled={isDeleting}
             >
               <Trash2 size={16} />
@@ -107,14 +100,16 @@ function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
             <DialogHeader>
               <DialogTitle>Delete Task</DialogTitle>
               <DialogDescription>
-                Are you sure you want to delete "{task.title}"? This action
+                Are you sure you want to delete &ldquo;{task.title}&rdquo;? This action
                 cannot be undone.
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>
               <Button
                 variant="outline"
-                onClick={() => { setIsDeleteDialogOpen(false); }}
+                onClick={() => {
+                  setIsDeleteDialogOpen(false);
+                }}
                 disabled={isDeleting}
               >
                 Cancel
@@ -124,7 +119,7 @@ function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
                 onClick={handleDelete}
                 disabled={isDeleting}
               >
-                {isDeleting ? "Deleting..." : "Delete"}
+                {isDeleting ? 'Deleting...' : 'Delete'}
               </Button>
             </DialogFooter>
           </DialogContent>

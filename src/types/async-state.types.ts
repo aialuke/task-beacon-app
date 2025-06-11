@@ -1,7 +1,6 @@
-
 /**
  * Unified Async State Interfaces - Phase 1 Consolidation
- * 
+ *
  * Shared base interfaces to eliminate duplication across async operations.
  */
 
@@ -26,7 +25,8 @@ export interface AsyncOperationState<T = unknown> extends BaseAsyncState<T> {
 /**
  * Batch async operation state for multiple operations
  */
-export interface BatchAsyncOperationState<T = unknown> extends BaseAsyncState<T[]> {
+export interface BatchAsyncOperationState<T = unknown>
+  extends BaseAsyncState<T[]> {
   completedCount: number;
   totalCount: number;
   failedItems: { index: number; error: Error }[];
@@ -35,7 +35,8 @@ export interface BatchAsyncOperationState<T = unknown> extends BaseAsyncState<T[
 /**
  * Optimistic async operation state for UI updates
  */
-export interface OptimisticAsyncOperationState<T = unknown> extends BaseAsyncState<T> {
+export interface OptimisticAsyncOperationState<T = unknown>
+  extends BaseAsyncState<T> {
   optimisticData: T | null;
   isOptimistic: boolean;
   rollbackData: T | null;
@@ -81,6 +82,10 @@ export function createLoadingState(
     isLoading,
     isFetching,
     isError: !!error,
-    error: error ? (error instanceof Error ? error.message : String(error)) : null,
+    error: error
+      ? error instanceof Error
+        ? error.message
+        : String(error)
+      : null,
   };
 }

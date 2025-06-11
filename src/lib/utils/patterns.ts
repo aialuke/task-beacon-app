@@ -4,34 +4,39 @@
 
 import { logger } from '@/lib/logger';
 
-export type AsyncFunc<T> = (...args: any[]) => Promise<T>;
+export type AsyncFunc<T, TArgs extends unknown[] = unknown[]> = (
+  ...args: TArgs
+) => Promise<T>;
 
-export const executeAsync = async <T>(
-  asyncFn: AsyncFunc<T>,
-  ...args: any[]
+export const executeAsync = async <T, TArgs extends unknown[]>(
+  asyncFn: AsyncFunc<T, TArgs>,
+  ...args: TArgs
 ): Promise<T | null> => {
   try {
     const result = await asyncFn(...args);
     return result;
   } catch (error) {
-    logger.error("Async function execution failed", error instanceof Error ? error : new Error(String(error)));
+    logger.error(
+      'Async function execution failed',
+      error instanceof Error ? error : new Error(String(error))
+    );
     return null;
   }
 };
 
 export const retryAsync = async <T>(
   asyncFn: () => Promise<T>,
-  maxRetries: number = 3,
-  delay: number = 1000
+  maxRetries = 3,
+  delay = 1000
 ): Promise<T> => {
   let attempt = 0;
   while (attempt < maxRetries) {
     try {
       return await asyncFn();
-    } catch (error) {
+    } catch (_error) {
       attempt++;
       logger.warn(`Attempt ${attempt} failed. Retrying in ${delay}ms...`);
-      await new Promise((resolve) => setTimeout(resolve, delay));
+      await new Promise(resolve => setTimeout(resolve, delay));
     }
   }
   throw new Error(`Async function failed after ${maxRetries} attempts`);
@@ -45,35 +50,38 @@ export function createAsyncHandler<T = void>(
     try {
       return await handler();
     } catch (error) {
-      logger.error(errorMessage, error instanceof Error ? error : new Error(String(error)));
+      logger.error(
+        errorMessage,
+        error instanceof Error ? error : new Error(String(error))
+      );
       throw error;
     }
   };
 }
 
-export function debounce<T extends (...args: any[]) => any>(
-  func: T,
-  wait: number = 300
-): (...args: Parameters<T>) => void {
+export function debounce<TArgs extends unknown[], TReturn>(
+  func: (...args: TArgs) => TReturn,
+  wait = 300
+): (...args: TArgs) => void {
   let timeout: NodeJS.Timeout;
-  
-  return (...args: Parameters<T>) => {
+
+  return (...args: TArgs) => {
     clearTimeout(timeout);
     timeout = setTimeout(() => func(...args), wait);
   };
 }
 
-export function throttle<T extends (...args: any[]) => any>(
-  func: T,
-  limit: number = 300
-): (...args: Parameters<T>) => void {
+export function throttle<TArgs extends unknown[], TReturn>(
+  func: (...args: TArgs) => TReturn,
+  limit = 300
+): (...args: TArgs) => void {
   let inThrottle: boolean;
-  
-  return (...args: Parameters<T>) => {
+
+  return (...args: TArgs) => {
     if (!inThrottle) {
       func(...args);
       inThrottle = true;
-      setTimeout(() => inThrottle = false, limit);
+      setTimeout(() => (inThrottle = false), limit);
     }
   };
 }

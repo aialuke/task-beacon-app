@@ -1,11 +1,12 @@
 import { useState, useCallback, useMemo } from 'react';
+
 import { TaskService } from '@/lib/api/tasks';
 import { logger } from '@/lib/logger';
-import { 
+import {
   compressAndResizePhoto,
   extractImageMetadataEnhanced,
   ProcessingResult,
-  EnhancedImageProcessingOptions 
+  EnhancedImageProcessingOptions,
 } from '@/lib/utils/image';
 
 interface UnifiedPhotoUploadOptions {
@@ -20,24 +21,26 @@ interface UnifiedPhotoUploadReturn {
   loading: boolean;
   processingResult: ProcessingResult | null;
   uploadedUrl: string | null;
-  
+
   // Actions
   handlePhotoChange: (e: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
   uploadPhoto: (fileToUpload?: File) => Promise<string | null>;
   resetPhoto: () => void;
   handlePhotoRemove: () => void;
-  
+
   // Configuration
   processingOptions: EnhancedImageProcessingOptions;
 }
 
 /**
  * Unified Photo Upload Hook - Phase 3 Consolidation
- * 
+ *
  * Consolidates all photo upload logic into a single, reusable hook.
  * Eliminates duplication between usePhotoState, usePhotoProcessing, and useTaskPhotoUpload.
  */
-export function useUnifiedPhotoUpload(options: UnifiedPhotoUploadOptions = {}): UnifiedPhotoUploadReturn {
+export function useUnifiedPhotoUpload(
+  options: UnifiedPhotoUploadOptions = {}
+): UnifiedPhotoUploadReturn {
   const {
     processingOptions = {
       maxWidth: 1920,
@@ -52,7 +55,8 @@ export function useUnifiedPhotoUpload(options: UnifiedPhotoUploadOptions = {}): 
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [processingResult, setProcessingResult] = useState<ProcessingResult | null>(null);
+  const [processingResult, setProcessingResult] =
+    useState<ProcessingResult | null>(null);
   const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
 
   // Reset function
@@ -65,6 +69,37 @@ export function useUnifiedPhotoUpload(options: UnifiedPhotoUploadOptions = {}): 
     setProcessingResult(null);
     setUploadedUrl(null);
   }, [photoPreview]);
+
+  // Upload functionality
+  const uploadPhoto = useCallback(
+    async (fileToUpload?: File): Promise<string | null> => {
+      const targetFile = fileToUpload || photo;
+      if (!targetFile) {
+        return null;
+      }
+
+      try {
+        setLoading(true);
+        const response = await TaskService.media.uploadPhoto(targetFile);
+        if (!response.success) {
+          throw new Error(response.error?.message || 'Photo upload failed');
+        }
+
+        const url = response.data || null;
+        setUploadedUrl(url);
+        return url;
+      } catch (error) {
+        logger.error(
+          'Photo upload error',
+          error instanceof Error ? error : new Error(String(error))
+        );
+        return null;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [photo]
+  );
 
   // Photo processing and handling
   const handlePhotoChange = useCallback(
@@ -96,7 +131,8 @@ export function useUnifiedPhotoUpload(options: UnifiedPhotoUploadOptions = {}): 
             compressedSize: processedFile.size,
             compressionRatio: processedFile.size / file.size,
             sizeSavedBytes: file.size - processedFile.size,
-            sizeSavedPercent: ((file.size - processedFile.size) / file.size) * 100,
+            sizeSavedPercent:
+              ((file.size - processedFile.size) / file.size) * 100,
           },
           processingTime: 0, // Could be measured if needed
         });
@@ -106,41 +142,16 @@ export function useUnifiedPhotoUpload(options: UnifiedPhotoUploadOptions = {}): 
           await uploadPhoto(processedFile);
         }
       } catch (error) {
-        logger.error('Photo processing error', error instanceof Error ? error : new Error(String(error)));
+        logger.error(
+          'Photo processing error',
+          error instanceof Error ? error : new Error(String(error))
+        );
         setProcessingResult(null);
       } finally {
         setLoading(false);
       }
     },
-    [processingOptions, autoUpload]
-  );
-
-  // Upload functionality
-  const uploadPhoto = useCallback(
-    async (fileToUpload?: File): Promise<string | null> => {
-      const targetFile = fileToUpload || photo;
-      if (!targetFile) {
-        return null;
-      }
-
-      try {
-        setLoading(true);
-        const response = await TaskService.media.uploadPhoto(targetFile);
-        if (!response.success) {
-          throw new Error(response.error?.message || 'Photo upload failed');
-        }
-        
-        const url = response.data || null;
-        setUploadedUrl(url);
-        return url;
-      } catch (error) {
-        logger.error('Photo upload error', error instanceof Error ? error : new Error(String(error)));
-        return null;
-      } finally {
-        setLoading(false);
-      }
-    },
-    [photo]
+    [processingOptions, autoUpload, uploadPhoto]
   );
 
   // Return memoized object to prevent unnecessary re-renders
@@ -152,13 +163,13 @@ export function useUnifiedPhotoUpload(options: UnifiedPhotoUploadOptions = {}): 
       loading,
       processingResult,
       uploadedUrl,
-      
+
       // Actions
       handlePhotoChange,
       uploadPhoto,
       resetPhoto,
       handlePhotoRemove: resetPhoto,
-      
+
       // Configuration
       processingOptions,
     }),

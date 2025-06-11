@@ -1,11 +1,13 @@
 /**
  * Form Types
- * 
+ *
  * All form-related type definitions including validation, state, and field types.
  */
 
 // === FORM STATE TYPES ===
-export interface FormState<T extends Record<string, unknown> = Record<string, unknown>> {
+export interface FormState<
+  T extends Record<string, unknown> = Record<string, unknown>,
+> {
   values: T;
   errors: FormErrors<T>;
   touched: FormTouched<T>;
@@ -94,7 +96,9 @@ export interface SelectFieldProps<T = string> extends BaseFieldProps {
 }
 
 // === FORM CONFIGURATION ===
-export interface FormConfig<T extends Record<string, unknown> = Record<string, unknown>> {
+export interface FormConfig<
+  T extends Record<string, unknown> = Record<string, unknown>,
+> {
   initialValues: T;
   validationRules?: {
     [K in keyof T]?: ValidationRule;

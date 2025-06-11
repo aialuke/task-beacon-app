@@ -49,8 +49,8 @@ export function searchByTerm<T>(
 
   const term = searchTerm.toLowerCase().trim();
 
-  return array.filter((item) =>
-    keys.some((key) => {
+  return array.filter(item =>
+    keys.some(key => {
       const value = item[key];
       if (value === null || value === undefined) return false;
       return String(value).toLowerCase().includes(term);
@@ -62,17 +62,14 @@ export function searchByTerm<T>(
  * Groups an array of objects by a specific property
  */
 export function groupBy<T>(array: T[], key: keyof T): Record<string, T[]> {
-  return array.reduce(
-    (result, item) => {
-      const groupKey = String(item[key]);
-      if (!result[groupKey]) {
-        result[groupKey] = [];
-      }
-      result[groupKey].push(item);
-      return result;
-    },
-    {}
-  );
+  return array.reduce((result, item) => {
+    const groupKey = String(item[key]);
+    if (!result[groupKey]) {
+      result[groupKey] = [];
+    }
+    result[groupKey].push(item);
+    return result;
+  }, {});
 }
 
 /**
@@ -80,7 +77,7 @@ export function groupBy<T>(array: T[], key: keyof T): Record<string, T[]> {
  */
 export function uniqueBy<T>(array: T[], key: keyof T): T[] {
   const seen = new Set();
-  return array.filter((item) => {
+  return array.filter(item => {
     const value = item[key];
     if (seen.has(value)) {
       return false;
@@ -93,11 +90,7 @@ export function uniqueBy<T>(array: T[], key: keyof T): T[] {
 /**
  * Creates a paginated subset of an array
  */
-export function paginateArray<T>(
-  array: T[],
-  page = 1,
-  pageSize = 10
-): T[] {
+export function paginateArray<T>(array: T[], page = 1, pageSize = 10): T[] {
   const startIndex = (page - 1) * pageSize;
   return array.slice(startIndex, startIndex + pageSize);
 }
@@ -109,8 +102,7 @@ export function isEmpty(value: unknown): boolean {
   if (value === null || value === undefined) return true;
   if (typeof value === 'string') return value.trim() === '';
   if (Array.isArray(value)) return value.length === 0;
-  if (typeof value === 'object')
-    return Object.keys(value).length === 0;
+  if (typeof value === 'object') return Object.keys(value).length === 0;
   return false;
 }
 

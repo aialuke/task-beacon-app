@@ -1,19 +1,23 @@
+import { ArrowLeft, Calendar1, ExternalLink } from 'lucide-react';
+import { lazy, Suspense } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 
-import { useParams, useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, Calendar1, ExternalLink } from "lucide-react";
-import { formatDate } from "@/lib/utils/shared";
-import { lazy, Suspense } from "react";
-import { getTaskStatus } from "@/features/tasks/utils/taskUiUtils";
-import { PageLoader, CardLoader, LoadingSpinner } from "@/components/ui/loading/UnifiedLoadingStates";
-import { useTaskQuery } from "@/features/tasks/hooks/useTaskQuery";
+import { Button } from '@/components/ui/button';
+import {
+  PageLoader,
+  CardLoader,
+  LoadingSpinner,
+} from '@/components/ui/loading/UnifiedLoadingStates';
+import { useTaskQuery } from '@/features/tasks/hooks/useTaskQuery';
+import { getTaskStatus } from '@/features/tasks/utils/taskUiUtils';
+import { formatDate } from '@/lib/utils/shared';
 
 // Lazy load heavy components for better performance
 const CountdownTimer = lazy(
-  () => import("@/features/tasks/components/CountdownTimer")
+  () => import('@/features/tasks/components/CountdownTimer')
 );
 const TaskActions = lazy(
-  () => import("@/features/tasks/components/actions/TaskActions")
+  () => import('@/features/tasks/components/actions/TaskActions')
 );
 
 const TaskDetailsPage = () => {
@@ -22,9 +26,7 @@ const TaskDetailsPage = () => {
   const { task, loading, error } = useTaskQuery(id);
 
   if (loading) {
-    return (
-      <PageLoader message="Loading task details..." />
-    );
+    return <PageLoader message="Loading task details..." />;
   }
 
   if (error || !task) {
@@ -33,13 +35,15 @@ const TaskDetailsPage = () => {
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => { navigate(-1); }}
+          onClick={() => {
+            navigate(-1);
+          }}
           className="mb-4"
         >
           <ArrowLeft size={16} className="mr-2" /> Back
         </Button>
         <div className="rounded-lg bg-red-50 p-4 text-red-600">
-          {error || "Task not found"}
+          {error || 'Task not found'}
         </div>
       </div>
     );
@@ -61,9 +65,7 @@ const TaskDetailsPage = () => {
       <div className="space-y-6 rounded-xl bg-white p-6 shadow-sm">
         <div className="flex items-start gap-4">
           <div className="shrink-0">
-            <Suspense
-              fallback={<LoadingSpinner size="lg" />}
-            >
+            <Suspense fallback={<LoadingSpinner size="lg" />}>
               <CountdownTimer dueDate={task.due_date} status={status} />
             </Suspense>
           </div>
@@ -79,7 +81,7 @@ const TaskDetailsPage = () => {
           <div className="mb-3 flex items-center gap-3">
             <Calendar1 size={18} className="text-gray-500" />
             <span>
-              {task.due_date ? formatDate(task.due_date) : "No due date"}
+              {task.due_date ? formatDate(task.due_date) : 'No due date'}
             </span>
           </div>
 
@@ -123,7 +125,9 @@ const TaskDetailsPage = () => {
                 variant="ghost"
                 size="sm"
                 className="mt-3"
-                onClick={() => { navigate(`/tasks/${task.parent_task_id}`); }}
+                onClick={() => {
+                  navigate(`/tasks/${task.parent_task_id}`);
+                }}
               >
                 <ExternalLink size={14} className="mr-2" />
                 View Original Task
@@ -133,10 +137,13 @@ const TaskDetailsPage = () => {
         )}
 
         <div className="border-t pt-4">
-          <Suspense
-            fallback={<CardLoader count={1} />}
-          >
-            <TaskActions task={task} onView={() => { navigate(`/tasks/${task.id}`); }} />
+          <Suspense fallback={<CardLoader count={1} />}>
+            <TaskActions
+              task={task}
+              onView={() => {
+                navigate(`/tasks/${task.id}`);
+              }}
+            />
           </Suspense>
         </div>
       </div>

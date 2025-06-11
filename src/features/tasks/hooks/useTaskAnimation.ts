@@ -1,5 +1,5 @@
-import { useSpring, SpringValue, config } from "@react-spring/web";
-import { useState } from "react";
+import { useSpring, SpringValue, config } from '@react-spring/web';
+import { useState } from 'react';
 
 export interface TaskAnimationState {
   height: SpringValue<number>;
@@ -25,6 +25,6 @@ export function useTaskAnimation() {
     toggleExpanded,
     animationState: animationProps,
     // Derived state instead of separate tracking
-    animationPhase: isExpanded ? "enter" : "exit",
+    animationPhase: isExpanded ? 'enter' : 'exit',
   };
 }

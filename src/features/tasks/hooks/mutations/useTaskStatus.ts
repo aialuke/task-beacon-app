@@ -1,9 +1,13 @@
-import { Task } from '@/types';
-import { TaskService } from '@/lib/api/tasks';
-import { useTaskOptimisticUpdates } from '../useTaskOptimisticUpdates';
 import { useCallback } from 'react';
-import { useBaseMutation } from './useBaseMutation';
+import { UseMutationResult } from '@tanstack/react-query';
+
+import { TaskService } from '@/lib/api/tasks';
 import { logger } from '@/lib/logger';
+import { Task } from '@/types';
+
+import { useTaskOptimisticUpdates } from '../useTaskOptimisticUpdates';
+
+import { useBaseMutation } from './useBaseMutation';
 
 interface TaskMutationResult {
   success: boolean;
@@ -13,10 +17,14 @@ interface TaskMutationResult {
 }
 
 interface UseTaskStatusReturn {
-  toggleTaskComplete: any; // From baseMutation.mutation
+  toggleTaskComplete: UseMutationResult<Task, Error, Task, unknown>; // From baseMutation.mutation
   toggleTaskCompleteCallback: (task: Task) => Promise<TaskMutationResult>;
-  markAsComplete: (taskId: string) => Promise<{ success: boolean; error: string }>;
-  markAsIncomplete: (taskId: string) => Promise<{ success: boolean; error: string }>;
+  markAsComplete: (
+    taskId: string
+  ) => Promise<{ success: boolean; error: string }>;
+  markAsIncomplete: (
+    taskId: string
+  ) => Promise<{ success: boolean; error: string }>;
   isLoading: boolean;
 }
 
@@ -31,19 +39,23 @@ export function useTaskStatus(): UseTaskStatusReturn {
     mutationFn: async (task: Task) => {
       const newStatus = task.status === 'complete' ? 'pending' : 'complete';
       const result = await TaskService.status.updateStatus(task.id, newStatus);
-      
+
       if (!result.success) {
-        throw new Error(result.error?.message || 'Failed to update task status');
+        throw new Error(
+          result.error?.message || 'Failed to update task status'
+        );
       }
-      
+
       return result.data as Task;
     },
-    onMutate: async (task) => {
+    onMutate: async task => {
       const previousData = optimisticUpdates.getPreviousData();
       const newStatus = task.status === 'complete' ? 'pending' : 'complete';
-      
-      optimisticUpdates.updateTaskOptimistically(task.id, { status: newStatus });
-      
+
+      optimisticUpdates.updateTaskOptimistically(task.id, {
+        status: newStatus,
+      });
+
       return { previousData };
     },
     successMessage: 'Task updated successfully',
@@ -58,21 +70,21 @@ export function useTaskStatus(): UseTaskStatusReturn {
   );
 
   // Backward compatibility methods
-  const markAsComplete = useCallback(
-    async (taskId: string) => {
-      logger.debug('markAsComplete called with taskId', { taskId });
-      return { success: false, error: 'Task object required for completion toggle' };
-    },
-    []
-  );
+  const markAsComplete = useCallback(async (taskId: string) => {
+    logger.debug('markAsComplete called with taskId', { taskId });
+    return {
+      success: false,
+      error: 'Task object required for completion toggle',
+    };
+  }, []);
 
-  const markAsIncomplete = useCallback(
-    async (taskId: string) => {
-      logger.debug('markAsIncomplete called with taskId', { taskId });
-      return { success: false, error: 'Task object required for completion toggle' };
-    },
-    []
-  );
+  const markAsIncomplete = useCallback(async (taskId: string) => {
+    logger.debug('markAsIncomplete called with taskId', { taskId });
+    return {
+      success: false,
+      error: 'Task object required for completion toggle',
+    };
+  }, []);
 
   return {
     toggleTaskComplete: baseMutation.mutation,

@@ -1,5 +1,6 @@
-import { Textarea } from '@/components/ui/textarea';
 import { useState, useRef, useEffect, ReactNode } from 'react';
+
+import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 
 interface FloatingTextareaProps {
@@ -53,8 +54,12 @@ export function FloatingTextarea({
           id={id}
           value={value}
           onChange={onChange}
-          onFocus={() => { setIsFocused(true); }}
-          onBlur={() => { setIsFocused(false); }}
+          onFocus={() => {
+            setIsFocused(true);
+          }}
+          onBlur={() => {
+            setIsFocused(false);
+          }}
           placeholder=""
           rows={1}
           className={cn(
@@ -80,5 +85,3 @@ export function FloatingTextarea({
     </div>
   );
 }
-
-export default FloatingTextarea;

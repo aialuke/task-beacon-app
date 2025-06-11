@@ -1,6 +1,6 @@
-
-import { Routes, Route } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
+import { Routes, Route } from 'react-router-dom';
+
 import { AppProviders } from './components/providers/AppProviders';
 import { PageLoader } from './components/ui/loading/UnifiedLoadingStates';
 
@@ -17,7 +17,10 @@ const App = () => (
       <Routes>
         <Route path="/" element={<AuthPage />} />
         <Route path="/create-task" element={<CreateTaskPage />} />
-        <Route path="/follow-up-task/:parentTaskId" element={<FollowUpTaskPage />} />
+        <Route
+          path="/follow-up-task/:parentTaskId"
+          element={<FollowUpTaskPage />}
+        />
         <Route path="/tasks/:id" element={<TaskDetailsPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

@@ -1,9 +1,9 @@
-
 import { ImageUp } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { useRef } from 'react';
-import type { ProcessingResult } from '@/lib/utils/image';
+
+import { Button } from '@/components/ui/button';
 import { useImageLoadingState } from '@/hooks/core';
+import type { ProcessingResult } from '@/lib/utils/image';
 
 interface SimplePhotoUploadProps {
   photoPreview: string | null;
@@ -25,7 +25,8 @@ export default function SimplePhotoUpload({
   loading = false,
 }: SimplePhotoUploadProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { imageLoaded, imageError, handleImageLoad, handleImageError } = useImageLoadingState();
+  const { imageLoaded, imageError, handleImageLoad, handleImageError } =
+    useImageLoadingState();
 
   const handleButtonClick = () => {
     if (photoPreview && onSubmit) {
@@ -42,20 +43,22 @@ export default function SimplePhotoUpload({
       <div className="inline-flex items-center gap-6 align-top">
         {/* Preview box */}
         <div
-          className="border-input relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-full border"
+          className="relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-full border border-input"
           aria-label={
-            photoPreview ? "Preview of uploaded image" : "Default image placeholder"
+            photoPreview
+              ? 'Preview of uploaded image'
+              : 'Default image placeholder'
           }
         >
           {photoPreview ? (
             <div className="relative size-full">
               {!imageLoaded && !imageError && (
-                <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
-                  <div className="w-3 h-3 border border-primary border-t-transparent rounded-full animate-spin" />
+                <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+                  <div className="size-3 animate-spin rounded-full border border-primary border-t-transparent" />
                 </div>
               )}
               {imageError && (
-                <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
+                <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
                   <ImageUp className="opacity-40" size={12} />
                 </div>
               )}
@@ -80,22 +83,22 @@ export default function SimplePhotoUpload({
             </div>
           )}
           {loading && (
-            <div className="absolute inset-0 bg-background/80 flex items-center justify-center">
-              <div className="w-3 h-3 border border-primary border-t-transparent rounded-full animate-spin" />
+            <div className="absolute inset-0 flex items-center justify-center bg-background/80">
+              <div className="size-3 animate-spin rounded-full border border-primary border-t-transparent" />
             </div>
           )}
         </div>
 
         {/* Upload/Submit button */}
         <div className="relative inline-block">
-          <Button 
-            onClick={handleButtonClick} 
-            aria-haspopup={!photoPreview ? "dialog" : undefined}
+          <Button
+            onClick={handleButtonClick}
+            aria-haspopup={!photoPreview ? 'dialog' : undefined}
             disabled={disabled || loading}
             size="default"
             variant="default"
           >
-            {photoPreview ? "Submit" : "Upload image"}
+            {photoPreview ? 'Submit' : 'Upload image'}
           </Button>
           <input
             ref={fileInputRef}
@@ -112,13 +115,16 @@ export default function SimplePhotoUpload({
       {/* File info and remove option */}
       {photoPreview && fileName && (
         <div className="inline-flex gap-2 text-xs">
-          <p className="text-muted-foreground truncate max-w-32" aria-live="polite">
+          <p
+            className="max-w-32 truncate text-muted-foreground"
+            aria-live="polite"
+          >
             {fileName}
           </p>
           {onPhotoRemove && (
             <button
               onClick={onPhotoRemove}
-              className="text-destructive font-medium hover:underline"
+              className="font-medium text-destructive hover:underline"
               aria-label={`Remove ${fileName}`}
               disabled={disabled || loading}
             >

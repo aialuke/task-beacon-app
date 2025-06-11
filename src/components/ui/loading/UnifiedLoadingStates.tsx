@@ -1,13 +1,13 @@
-
 /**
  * Unified Loading States - Phase 4 Consolidation
- * 
+ *
  * Single source of truth for all loading components with optimized performance.
  */
 
 import { memo, useMemo } from 'react';
-import { cn } from '@/lib/utils';
+
 import { Skeleton } from '@/components/ui/skeleton';
+import { cn } from '@/lib/utils';
 
 // === PERFORMANCE OPTIMIZED INTERFACES ===
 
@@ -24,21 +24,21 @@ export interface SkeletonProps {
 // === SIZE CONFIGURATIONS - MEMOIZED ===
 const SPINNER_SIZES = {
   sm: 'h-4 w-4',
-  md: 'h-6 w-6', 
+  md: 'h-6 w-6',
   lg: 'h-8 w-8',
-  xl: 'h-12 w-12'
+  xl: 'h-12 w-12',
 } as const;
 
 // === OPTIMIZED LOADING SPINNER ===
-export const LoadingSpinner = memo(function LoadingSpinner({ 
-  size = 'md', 
-  className 
+export const LoadingSpinner = memo(function LoadingSpinner({
+  size = 'md',
+  className,
 }: LoadingSpinnerProps) {
   // Memoize size classes to prevent recalculation
   const sizeClasses = useMemo(() => SPINNER_SIZES[size], [size]);
-  
+
   return (
-    <div 
+    <div
       className={cn(
         'loading-unified-spinner',
         sizeClasses,
@@ -52,13 +52,11 @@ export const LoadingSpinner = memo(function LoadingSpinner({
 });
 
 // === CARD SKELETON (Internal use) ===
-const CardSkeleton = memo(function CardSkeleton({ 
-  className 
-}: SkeletonProps) {
+const CardSkeleton = memo(function CardSkeleton({ className }: SkeletonProps) {
   return (
     <div className={cn('space-y-4 rounded-lg border p-6', className)}>
       <div className="flex items-start gap-4">
-        <Skeleton className="h-12 w-12 rounded-full" />
+        <Skeleton className="size-12 rounded-full" />
         <div className="flex-1 space-y-2">
           <Skeleton className="h-4 w-3/4" />
           <Skeleton className="h-3 w-1/2" />
@@ -87,9 +85,14 @@ export const PageLoader = memo(function PageLoader({
   className?: string;
 }) {
   return (
-    <div className={cn("flex flex-col items-center justify-center min-h-[400px] space-y-4", className)}>
+    <div
+      className={cn(
+        'flex min-h-[400px] flex-col items-center justify-center space-y-4',
+        className
+      )}
+    >
       <LoadingSpinner size="xl" />
-      <div className="text-center space-y-2">
+      <div className="space-y-2 text-center">
         <h3 className="text-lg font-semibold">Loading</h3>
         {message && <p className="text-muted-foreground">{message}</p>}
       </div>
@@ -106,7 +109,7 @@ export const CardLoader = memo(function CardLoader({
   className?: string;
 }) {
   return (
-    <div className={cn("space-y-6", className)}>
+    <div className={cn('space-y-6', className)}>
       {Array.from({ length: count }, (_, i) => (
         <CardSkeleton key={i} />
       ))}
@@ -119,8 +122,14 @@ export const CardLoader = memo(function CardLoader({
 // === PERFORMANCE METRICS (Development only) ===
 if (process.env.NODE_ENV === 'development') {
   // Track component render performance
-  (LoadingSpinner as any).displayName = 'LoadingSpinner';
-  (CardSkeleton as any).displayName = 'CardSkeleton';
-  (PageLoader as any).displayName = 'PageLoader';
-  (CardLoader as any).displayName = 'CardLoader';
+  (LoadingSpinner as React.ComponentType<LoadingSpinnerProps>).displayName =
+    'LoadingSpinner';
+  (CardSkeleton as React.ComponentType<SkeletonProps>).displayName =
+    'CardSkeleton';
+  (
+    PageLoader as React.ComponentType<{ message?: string; className?: string }>
+  ).displayName = 'PageLoader';
+  (
+    CardLoader as React.ComponentType<{ count?: number; className?: string }>
+  ).displayName = 'CardLoader';
 }

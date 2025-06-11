@@ -1,6 +1,6 @@
 /**
  * Component Types - UI Component Interfaces
- * 
+ *
  * Standardized component prop interfaces and UI-related types.
  */
 
@@ -9,9 +9,15 @@ import type { ReactNode } from 'react';
 // === COMPONENT PROP UTILITIES ===
 
 // Component prop utilities
-export type PropsWithClassName<P = Record<string, never>> = P & { className?: string };
-export type PropsWithChildren<P = Record<string, never>> = P & { children?: ReactNode };
-export type PropsWithTestId<P = Record<string, never>> = P & { testId?: string };
+export type PropsWithClassName<P = Record<string, never>> = P & {
+  className?: string;
+};
+export type PropsWithChildren<P = Record<string, never>> = P & {
+  children?: ReactNode;
+};
+export type PropsWithTestId<P = Record<string, never>> = P & {
+  testId?: string;
+};
 
 // Base component props
 export interface BaseComponentProps {
@@ -24,7 +30,13 @@ export interface BaseComponentProps {
 
 // Basic UI types
 export type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-export type Variant = 'default' | 'primary' | 'secondary' | 'destructive' | 'outline' | 'ghost';
+export type Variant =
+  | 'default'
+  | 'primary'
+  | 'secondary'
+  | 'destructive'
+  | 'outline'
+  | 'ghost';
 export type ColorScheme = 'light' | 'dark' | 'auto';
 
 // Layout props

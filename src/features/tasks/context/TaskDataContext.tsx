@@ -1,9 +1,9 @@
-
 import { ReactNode } from 'react';
-import { createStandardContext } from '@/lib/utils/createContext';
+
 import UnifiedErrorBoundary from '@/components/ui/UnifiedErrorBoundary';
-import type { Task } from '@/types';
 import { useTasksQuery } from '@/features/tasks/hooks/useTasksQuery';
+import { createStandardContext } from '@/lib/utils/createContext';
+import type { Task } from '@/types';
 
 interface TaskDataContextValue {
   // Data state (from React Query with standardized patterns)
@@ -11,7 +11,7 @@ interface TaskDataContextValue {
   isLoading: boolean;
   isFetching: boolean;
   error: string | null;
-  
+
   // Pagination object (complete pagination API)
   pagination: {
     currentPage: number;
@@ -23,19 +23,21 @@ interface TaskDataContextValue {
     goToPreviousPage: () => void;
     goToPage: (page: number) => void;
   };
-  
+
   // Pagination metadata
   totalCount: number;
-  
+
   // Error recovery
   retry: () => void;
 }
 
 // Create standardized context
-const { Provider: TaskDataProvider, useContext: useTaskDataContext } = createStandardContext<TaskDataContextValue>({
-  name: 'TaskData',
-  errorMessage: 'useTaskDataContext must be used within a TaskDataContextProvider'
-});
+const { Provider: TaskDataProvider, useContext: useTaskDataContext } =
+  createStandardContext<TaskDataContextValue>({
+    name: 'TaskData',
+    errorMessage:
+      'useTaskDataContext must be used within a TaskDataContextProvider',
+  });
 
 interface TaskDataContextProviderProps {
   children: ReactNode;
@@ -43,7 +45,7 @@ interface TaskDataContextProviderProps {
 
 /**
  * Task Data Context Provider - Phase 3 Enhanced
- * 
+ *
  * Provides server-side data state with enhanced error handling,
  * loading state management, and recovery mechanisms.
  */
@@ -81,9 +83,7 @@ export function TaskDataContextProvider({
         // Could integrate with error reporting service here
       }}
     >
-      <TaskDataProvider value={contextValue}>
-        {children}
-      </TaskDataProvider>
+      <TaskDataProvider value={contextValue}>{children}</TaskDataProvider>
     </UnifiedErrorBoundary>
   );
 }

@@ -1,7 +1,6 @@
-
 /**
  * Feature Types Barrel - Simplified
- * 
+ *
  * Clean exports for domain-specific types without overwhelming the developer.
  */
 

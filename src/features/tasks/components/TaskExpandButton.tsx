@@ -1,5 +1,6 @@
-import { memo } from "react";
-import { Button } from "@/components/ui/button";
+import { memo } from 'react';
+
+import { Button } from '@/components/ui/button';
 
 interface TaskExpandButtonProps {
   isExpanded: boolean;
@@ -11,7 +12,7 @@ function TaskExpandButton({ isExpanded, onClick }: TaskExpandButtonProps) {
     <Button
       variant="ghost"
       size="icon"
-      className="h-8 w-8 shrink-0 hover:bg-accent hover:text-accent-foreground"
+      className="size-8 shrink-0 hover:bg-accent hover:text-accent-foreground"
       onClick={onClick}
     >
       <svg
@@ -20,7 +21,7 @@ function TaskExpandButton({ isExpanded, onClick }: TaskExpandButtonProps) {
         viewBox="0 0 24 24"
         xmlns="http://www.w3.org/2000/svg"
         className={`transform text-foreground transition-transform ${
-          isExpanded ? "rotate-180" : ""
+          isExpanded ? 'rotate-180' : ''
         }`}
       >
         <path

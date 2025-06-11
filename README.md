@@ -1,7 +1,7 @@
-
 # Task Beacon - Modern Task Management App
 
-A comprehensive task management Progressive Web Application (PWA) built with React, TypeScript, and Supabase.
+A comprehensive task management Progressive Web Application (PWA) built with React, TypeScript, and
+Supabase.
 
 ## Features
 
@@ -42,6 +42,7 @@ src/
 
 ## Development
 
-This project uses modern development practices including TypeScript strict mode, comprehensive testing, and performance monitoring.
+This project uses modern development practices including TypeScript strict mode, comprehensive
+testing, and performance monitoring.
 
 For detailed development guidelines, see the documentation in the `docs/` directory.

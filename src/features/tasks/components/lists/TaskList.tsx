@@ -1,31 +1,17 @@
+import { memo, useMemo } from 'react';
 
-// === EXTERNAL LIBRARIES ===
-import { memo, useMemo } from "react";
+import { CardLoader } from '@/components/ui/loading/UnifiedLoadingStates';
+import { useTaskDataContext } from '@/features/tasks/context/TaskDataContext';
+import { useTaskUIContext } from '@/features/tasks/context/TaskUIContext';
+import { useTasksFilter } from '@/features/tasks/hooks/useTasksFilter';
+import type { Task } from '@/types';
 
-// === INTERNAL UTILITIES ===
-import { CardLoader } from "@/components/ui/loading/UnifiedLoadingStates";
-
-// === COMPONENTS ===
-import { TaskCard } from "../cards";
-import TaskPagination from "../TaskPagination";
-
-// === HOOKS ===
-import { useTaskDataContext } from "@/features/tasks/context/TaskDataContext";
-import { useTaskUIContext } from "@/features/tasks/context/TaskUIContext";
-import { useTasksFilter } from "@/features/tasks/hooks/useTasksFilter";
-
-// === TYPES ===
-import type { Task } from "@/types";
+import { TaskCard } from '../cards';
+import TaskPagination from '../TaskPagination';
 
 function TaskListComponent() {
-  const {
-    tasks,
-    isLoading,
-    error,
-    pagination,
-    totalCount,
-    isFetching,
-  } = useTaskDataContext();
+  const { tasks, isLoading, error, pagination, totalCount, isFetching } =
+    useTaskDataContext();
 
   const { filter, isMobile } = useTaskUIContext();
 
@@ -39,9 +25,7 @@ function TaskListComponent() {
   );
 
   if (isLoading) {
-    return (
-      <CardLoader count={3} />
-    );
+    return <CardLoader count={3} />;
   }
 
   if (error) {
@@ -64,7 +48,9 @@ function TaskListComponent() {
             <p className="text-muted-foreground">No tasks found</p>
           </div>
         ) : (
-          <div className={`space-y-4 sm:space-y-6 ${isMobile ? "pb-20" : "pb-6"}`}>
+          <div
+            className={`space-y-4 sm:space-y-6 ${isMobile ? 'pb-20' : 'pb-6'}`}
+          >
             {filteredTasks.map((task: Task) => (
               <TaskCard key={task.id} task={task} />
             ))}

@@ -1,11 +1,12 @@
 /**
  * Consolidated Async Utilities
- * 
+ *
  * Essential async operation patterns and utilities.
  * Simplified from nested directory structure.
  */
 
 import { useState, useCallback } from 'react';
+
 import { logger } from '../logger';
 
 // ============================================================================
@@ -44,12 +45,12 @@ export function useAsyncOperation<T>(
 
   const execute = useCallback(async () => {
     const { onSuccess, onError, retries = 0, retryDelay = 1000 } = options;
-    
+
     setIsLoading(true);
     setError(null);
 
     let lastError: Error | null = null;
-    
+
     for (let attempt = 0; attempt <= retries; attempt++) {
       try {
         const result = await operation();
@@ -59,11 +60,11 @@ export function useAsyncOperation<T>(
         return;
       } catch (err) {
         lastError = err instanceof Error ? err : new Error(String(err));
-        logger.warn('Async operation attempt failed', { 
-          attempt: attempt + 1, 
-          error: lastError.message 
+        logger.warn('Async operation attempt failed', {
+          attempt: attempt + 1,
+          error: lastError.message,
         });
-        
+
         if (attempt < retries) {
           await new Promise(resolve => setTimeout(resolve, retryDelay));
         }
@@ -93,23 +94,23 @@ export function useAsyncOperation<T>(
  */
 export async function withRetry<T>(
   operation: () => Promise<T>,
-  retries: number = 3,
-  delay: number = 1000
+  retries = 3,
+  delay = 1000
 ): Promise<T> {
   let lastError: Error;
-  
+
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
       return await operation();
     } catch (error) {
       lastError = error instanceof Error ? error : new Error(String(error));
-      
+
       if (attempt < retries) {
         await new Promise(resolve => setTimeout(resolve, delay));
       }
     }
   }
-  
+
   throw lastError!;
 }
 
@@ -117,15 +118,15 @@ export async function withRetry<T>(
  * Execute multiple async operations in sequence
  */
 export async function executeInSequence<T>(
-  operations: Array<() => Promise<T>>
+  operations: (() => Promise<T>)[]
 ): Promise<T[]> {
   const results: T[] = [];
-  
+
   for (const operation of operations) {
     const result = await operation();
     results.push(result);
   }
-  
+
   return results;
 }
 
@@ -133,18 +134,18 @@ export async function executeInSequence<T>(
  * Execute multiple async operations with limited concurrency
  */
 export async function executeWithConcurrency<T>(
-  operations: Array<() => Promise<T>>,
-  concurrency: number = 3
+  operations: (() => Promise<T>)[],
+  concurrency = 3
 ): Promise<T[]> {
   const results: T[] = [];
-  
+
   for (let i = 0; i < operations.length; i += concurrency) {
     const batch = operations.slice(i, i + concurrency);
     const batchResults = await Promise.all(batch.map(op => op()));
     results.push(...batchResults);
   }
-  
+
   return results;
 }
 
-// Note: debounce and throttle utilities are available from core utilities 
+// Note: debounce and throttle utilities are available from core utilities

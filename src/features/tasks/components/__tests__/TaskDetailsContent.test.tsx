@@ -1,8 +1,9 @@
-
-import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import TaskDetailsContent from '../display/TaskDetailsContent';
+import { describe, it, expect } from 'vitest';
+
 import type { Task } from '@/types';
+
+import TaskDetailsContent from '../display/TaskDetailsContent';
 
 describe('TaskDetailsContent', () => {
   const mockTask: Task = {
@@ -23,13 +24,13 @@ describe('TaskDetailsContent', () => {
 
   it('renders task description when provided', () => {
     render(<TaskDetailsContent task={mockTask} />);
-    
+
     expect(screen.getByText('This is a test description')).toBeInTheDocument();
   });
 
   it('renders URL link when provided', () => {
     render(<TaskDetailsContent task={mockTask} />);
-    
+
     const link = screen.getByRole('link', { name: /visit link/i });
     expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute('href', 'https://example.com');
@@ -38,14 +39,16 @@ describe('TaskDetailsContent', () => {
   it('handles task without description gracefully', () => {
     const taskWithoutDescription = { ...mockTask, description: null };
     render(<TaskDetailsContent task={taskWithoutDescription} />);
-    
-    expect(screen.queryByText('This is a test description')).not.toBeInTheDocument();
+
+    expect(
+      screen.queryByText('This is a test description')
+    ).not.toBeInTheDocument();
   });
 
   it('handles task without URL link gracefully', () => {
     const taskWithoutUrl = { ...mockTask, url_link: null };
     render(<TaskDetailsContent task={taskWithoutUrl} />);
-    
+
     expect(screen.queryByRole('link')).not.toBeInTheDocument();
   });
 });

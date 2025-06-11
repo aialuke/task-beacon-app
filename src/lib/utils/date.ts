@@ -125,7 +125,7 @@ export function formatTimeDisplay(
   if (daysLeft < 0) return 'Due';
   if (daysLeft === 0) return 'Today';
   if (daysLeft === 1) return '1 day';
-  
+
   // Always show days remaining, regardless of how many days
   return `${daysLeft}d`;
 }

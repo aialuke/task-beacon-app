@@ -1,13 +1,14 @@
-
-import { useState } from 'react';
 import { User, ImageUp, Link, FileCheck } from 'lucide-react';
-import { DatePickerButton } from './components/DatePickerButton';
+import { useState } from 'react';
+
+import type { ProcessingResult } from '@/lib/utils/image';
+
 import { ActionButton } from './components/ActionButton';
+import { DatePickerButton } from './components/DatePickerButton';
 import { SubmitButton } from './components/SubmitButton';
+import SimplePhotoUploadModal from './SimplePhotoUploadModal';
 import { UrlInputModal } from './UrlInputModal';
 import { UserSearchModal } from './UserSearchModal';
-import SimplePhotoUploadModal from './SimplePhotoUploadModal';
-import type { ProcessingResult } from '@/lib/utils/image';
 
 interface QuickActionBarProps {
   // Date picker props
@@ -89,7 +90,9 @@ export function QuickActionBar({
           label={hasAssignee ? 'Assigned' : 'Assign'}
           active={hasAssignee}
           disabled={disabled}
-          onClick={() => { setIsUserModalOpen(true); }}
+          onClick={() => {
+            setIsUserModalOpen(true);
+          }}
         />
 
         {/* Photo Button */}
@@ -107,7 +110,9 @@ export function QuickActionBar({
           label={hasUrl ? 'Link Added' : 'Link'}
           active={hasUrl}
           disabled={disabled}
-          onClick={() => { setIsUrlModalOpen(true); }}
+          onClick={() => {
+            setIsUrlModalOpen(true);
+          }}
         />
       </div>
 
@@ -122,14 +127,18 @@ export function QuickActionBar({
       {/* Modals */}
       <UrlInputModal
         isOpen={isUrlModalOpen}
-        onClose={() => { setIsUrlModalOpen(false); }}
+        onClose={() => {
+          setIsUrlModalOpen(false);
+        }}
         value={url}
         onChange={onUrlChange}
       />
 
       <UserSearchModal
         isOpen={isUserModalOpen}
-        onClose={() => { setIsUserModalOpen(false); }}
+        onClose={() => {
+          setIsUserModalOpen(false);
+        }}
         value={assigneeId}
         onChange={onAssigneeChange}
       />
@@ -137,7 +146,9 @@ export function QuickActionBar({
       {/* Simple Photo Upload Modal */}
       <SimplePhotoUploadModal
         isOpen={isPhotoModalOpen}
-        onClose={() => { setIsPhotoModalOpen(false); }}
+        onClose={() => {
+          setIsPhotoModalOpen(false);
+        }}
         photoPreview={photoPreview}
         onPhotoChange={onPhotoChange}
         onPhotoRemove={onPhotoRemove}

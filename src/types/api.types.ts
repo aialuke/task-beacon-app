@@ -1,6 +1,6 @@
 /**
  * API Types
- * 
+ *
  * All API-related type definitions including responses, errors, and service results.
  */
 
@@ -54,4 +54,3 @@ export interface ApiState<T = unknown, E = string> {
   success: boolean;
   lastFetch?: Date;
 }
-

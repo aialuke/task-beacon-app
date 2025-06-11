@@ -1,4 +1,3 @@
-
 // Main auth form (still used)
 export { default as ModernAuthForm } from './ModernAuthForm';
 

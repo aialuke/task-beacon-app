@@ -1,14 +1,13 @@
-
 /**
  * Task API - Simplified Direct Implementation
- * 
+ *
  * Provides direct task operations without unnecessary facade complexity.
  * Eliminates multiple abstraction layers for better maintainability.
  */
 
 import { supabase } from '@/integrations/supabase/client';
-import { apiRequest } from '@/lib/api/error-handling';
 import { AuthService } from '@/lib/api/AuthService';
+import { apiRequest } from '@/lib/api/error-handling';
 import type { Task, TaskCreateData, TaskUpdateData } from '@/types';
 
 // === TASK CRUD OPERATIONS ===
@@ -16,7 +15,9 @@ import type { Task, TaskCreateData, TaskUpdateData } from '@/types';
 const createTask = async (taskData: TaskCreateData) => {
   return apiRequest('createTask', async () => {
     // Get current user for owner_id
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) {
       throw new Error('User must be authenticated to create tasks');
     }
@@ -65,10 +66,7 @@ const updateTask = async (taskId: string, updates: Partial<TaskUpdateData>) => {
 
 const deleteTask = async (taskId: string) => {
   return apiRequest('deleteTask', async () => {
-    const { error } = await supabase
-      .from('tasks')
-      .delete()
-      .eq('id', taskId);
+    const { error } = await supabase.from('tasks').delete().eq('id', taskId);
 
     if (error) throw error;
     return { success: true };
@@ -79,11 +77,13 @@ const getTaskById = async (taskId: string) => {
   return apiRequest('getTaskById', async () => {
     const { data, error } = await supabase
       .from('tasks')
-      .select(`
+      .select(
+        `
         *,
         assignee:profiles!tasks_assignee_id_fkey(id, name, email, avatar_url),
         owner:profiles!tasks_owner_id_fkey(id, name, email, avatar_url)
-      `)
+      `
+      )
       .eq('id', taskId)
       .single();
 
@@ -92,26 +92,31 @@ const getTaskById = async (taskId: string) => {
   });
 };
 
-const getTasks = async (options: {
-  page?: number;
-  pageSize?: number;
-  assignedToMe?: boolean;
-} = {}) => {
+const getTasks = async (
+  options: {
+    page?: number;
+    pageSize?: number;
+    assignedToMe?: boolean;
+  } = {}
+) => {
   return apiRequest('getTasks', async () => {
     const { page = 1, pageSize = 10, assignedToMe = false } = options;
     const from = (page - 1) * pageSize;
     const to = from + pageSize - 1;
 
-    let query = supabase
-      .from('tasks')
-      .select(`
+    let query = supabase.from('tasks').select(
+      `
         *,
         assignee:profiles!tasks_assignee_id_fkey(id, name, email, avatar_url),
         owner:profiles!tasks_owner_id_fkey(id, name, email, avatar_url)
-      `, { count: 'exact' });
+      `,
+      { count: 'exact' }
+    );
 
     if (assignedToMe) {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (user) {
         query = query.eq('assignee_id', user.id);
       }
@@ -135,7 +140,10 @@ const getTasks = async (options: {
   });
 };
 
-const updateTaskStatus = async (taskId: string, status: 'pending' | 'complete' | 'overdue') => {
+const updateTaskStatus = async (
+  taskId: string,
+  status: 'pending' | 'complete' | 'overdue'
+) => {
   return apiRequest('updateTaskStatus', async () => {
     const { data, error } = await supabase
       .from('tasks')

@@ -1,4 +1,5 @@
 import { QueryClient } from '@tanstack/react-query';
+
 import { getCacheConfig, getApiConfig } from '@/lib/config/app';
 
 // Create optimized query client using centralized configuration
@@ -22,4 +23,4 @@ export const queryClient = new QueryClient({
  */
 export function useQueryClient() {
   return queryClient;
-} 
+}

@@ -1,12 +1,12 @@
-
 /**
  * Consolidated API Error Handling - Phase 1 Consolidation
- * 
+ *
  * Unified error formatting and handling for all API operations.
  * Consolidates duplicate logic from api-handlers.ts and error-handling.ts
  */
 
 import { PostgrestError, AuthError } from '@supabase/supabase-js';
+
 import { logger } from '@/lib/logger';
 import type { ApiError } from '@/types/shared';
 
@@ -61,19 +61,19 @@ function safeStringify(value: unknown): string {
   if (typeof value === 'string') {
     return value;
   }
-  
+
   if (value === null) {
     return 'null';
   }
-  
+
   if (value === undefined) {
     return 'undefined';
   }
-  
+
   if (typeof value === 'number' || typeof value === 'boolean') {
     return String(value);
   }
-  
+
   if (typeof value === 'object') {
     try {
       return JSON.stringify(value);
@@ -81,7 +81,7 @@ function safeStringify(value: unknown): string {
       return '[Object: cannot stringify]';
     }
   }
-  
+
   // Fallback for any other type
   try {
     return String(value);
@@ -98,11 +98,11 @@ export const formatApiError = (error: unknown): ApiError => {
   // Handle Supabase PostgrestError with enhanced code mapping
   if (isPostgrestError(error)) {
     const pgError = error as PostgrestError;
-    
+
     // Enhanced status code mapping
     let statusCode = 400;
     let userMessage = pgError.message;
-    
+
     switch (pgError.code) {
       case 'PGRST116':
         statusCode = 404;
@@ -127,7 +127,7 @@ export const formatApiError = (error: unknown): ApiError => {
       default:
         userMessage = pgError.message || 'Database operation failed';
     }
-    
+
     return {
       name: 'PostgrestError',
       message: userMessage,
@@ -196,8 +196,9 @@ export function handleApiError(
   // Use logger instead of console.error
   if (logToConsole) {
     // Convert unknown error to Error instance for logger
-    const errorInstance = error instanceof Error ? error : new Error(apiError.message);
-    
+    const errorInstance =
+      error instanceof Error ? error : new Error(apiError.message);
+
     // Create safe context object - ensure all values are properly typed
     const logContext: Record<string, unknown> = {
       userMessage,
@@ -205,8 +206,12 @@ export function handleApiError(
       statusCode: apiError.statusCode || 500,
       errorDetails: safeStringify(apiError.details || 'No additional details'),
     };
-    
-    logger.error(`${logPrefix}: ${operation ?? 'An error occurred'}`, errorInstance, logContext);
+
+    logger.error(
+      `${logPrefix}: ${operation ?? 'An error occurred'}`,
+      errorInstance,
+      logContext
+    );
   }
 
   // Show user notification if requested
@@ -218,7 +223,8 @@ export function handleApiError(
   // Re-throw if requested (useful for upstream error handling)
   if (rethrow) {
     const enhancedError = new Error(userMessage);
-    (enhancedError as Error & { originalError?: unknown }).originalError = error;
+    (enhancedError as Error & { originalError?: unknown }).originalError =
+      error;
     throw enhancedError;
   }
 
@@ -244,15 +250,15 @@ export const apiRequest = async <T>(
   success: boolean;
 }> => {
   const startTime = Date.now();
-  
+
   try {
     logger.debug(`API Request started: ${operation}`);
-    
+
     const data = await requestFn();
     const duration = Date.now() - startTime;
-    
+
     logger.debug(`API Request completed: ${operation} (${duration}ms)`);
-    
+
     return {
       data,
       error: null,
@@ -266,7 +272,7 @@ export const apiRequest = async <T>(
       rethrow: false,
       logPrefix: 'API Request Failed',
     });
-    
+
     // Convert ProcessedError to ApiError format
     const apiError: ApiError = {
       name: 'ApiRequestError',
@@ -275,7 +281,7 @@ export const apiRequest = async <T>(
       details: processedError.details,
       originalError: processedError.originalError,
     };
-    
+
     return {
       data: null,
       error: apiError,

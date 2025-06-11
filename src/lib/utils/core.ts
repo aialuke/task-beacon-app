@@ -1,4 +1,3 @@
-
 /**
  * Core utility functions that don't fit into specific domains
  */
@@ -62,7 +61,7 @@ export function throttle<T extends (...args: unknown[]) => unknown>(
 export function optimizeAnimations(): void {
   // Import here to avoid circular dependencies
   const { prefersReducedMotion } = require('./animation');
-  
+
   if (prefersReducedMotion()) {
     document.documentElement.style.setProperty('--animation-duration', '0ms');
     document.documentElement.style.setProperty('--transition-duration', '0ms');

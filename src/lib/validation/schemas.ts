@@ -1,21 +1,23 @@
 /**
  * Consolidated Validation Schemas
- * 
+ *
  * All validation schemas consolidated from scattered schema files.
  * Uses unified validation patterns for consistency.
  */
 
 import { z } from 'zod';
-import { 
-  unifiedEmailSchema, 
-  unifiedPasswordSchema, 
+
+import { DEFAULT_PAGINATION_CONFIG } from '@/lib/utils/pagination';
+
+import {
+  unifiedEmailSchema,
+  unifiedPasswordSchema,
   unifiedUserNameSchema,
   unifiedTaskTitleSchema,
   unifiedTaskDescriptionSchema,
   unifiedUrlSchema,
-  UNIFIED_VALIDATION_MESSAGES 
+  UNIFIED_VALIDATION_MESSAGES,
 } from './unified-validation';
-import { DEFAULT_PAGINATION_CONFIG } from '@/lib/utils/pagination';
 
 // ============================================================================
 // COMMON SCHEMAS
@@ -30,9 +32,17 @@ export const timestampSchema = z.string().datetime('Invalid timestamp format');
 
 export const paginationSchema = z.object({
   page: z.number().int().min(1, 'Page must be at least 1').default(1),
-  pageSize: z.number().int()
-    .min(DEFAULT_PAGINATION_CONFIG.minPageSize, `Page size must be at least ${DEFAULT_PAGINATION_CONFIG.minPageSize}`)
-    .max(DEFAULT_PAGINATION_CONFIG.maxPageSize, `Page size cannot exceed ${DEFAULT_PAGINATION_CONFIG.maxPageSize}`)
+  pageSize: z
+    .number()
+    .int()
+    .min(
+      DEFAULT_PAGINATION_CONFIG.minPageSize,
+      `Page size must be at least ${DEFAULT_PAGINATION_CONFIG.minPageSize}`
+    )
+    .max(
+      DEFAULT_PAGINATION_CONFIG.maxPageSize,
+      `Page size cannot exceed ${DEFAULT_PAGINATION_CONFIG.maxPageSize}`
+    )
     .default(DEFAULT_PAGINATION_CONFIG.defaultPageSize),
   total: z.number().int().min(0).optional(),
 });
@@ -51,34 +61,32 @@ export const signInSchema = z.object({
   password: z.string().min(1, 'Password is required'),
 });
 
-export const signUpSchema = z.object({
-  email: unifiedEmailSchema,
-  password: unifiedPasswordSchema,
-  confirmPassword: z.string().min(1, 'Password confirmation is required'),
-  name: unifiedUserNameSchema.optional(),
-}).refine(
-  (data) => data.password === data.confirmPassword,
-  {
+export const signUpSchema = z
+  .object({
+    email: unifiedEmailSchema,
+    password: unifiedPasswordSchema,
+    confirmPassword: z.string().min(1, 'Password confirmation is required'),
+    name: unifiedUserNameSchema.optional(),
+  })
+  .refine(data => data.password === data.confirmPassword, {
     message: "Passwords don't match",
-    path: ["confirmPassword"],
-  }
-);
+    path: ['confirmPassword'],
+  });
 
 export const passwordResetSchema = z.object({
   email: unifiedEmailSchema,
 });
 
-export const passwordChangeSchema = z.object({
-  currentPassword: z.string().min(1, 'Current password is required'),
-  newPassword: unifiedPasswordSchema,
-  confirmNewPassword: z.string().min(1, 'Password confirmation is required'),
-}).refine(
-  (data) => data.newPassword === data.confirmNewPassword,
-  {
+export const passwordChangeSchema = z
+  .object({
+    currentPassword: z.string().min(1, 'Current password is required'),
+    newPassword: unifiedPasswordSchema,
+    confirmNewPassword: z.string().min(1, 'Password confirmation is required'),
+  })
+  .refine(data => data.newPassword === data.confirmNewPassword, {
     message: "New passwords don't match",
-    path: ["confirmNewPassword"],
-  }
-);
+    path: ['confirmNewPassword'],
+  });
 
 // ============================================================================
 // USER PROFILE SCHEMAS
@@ -102,7 +110,9 @@ export const profileCreateSchema = z.object({
 // ============================================================================
 
 export const taskPrioritySchema = z.enum(['low', 'medium', 'high', 'urgent'], {
-  errorMap: () => ({ message: 'Priority must be low, medium, high, or urgent' }),
+  errorMap: () => ({
+    message: 'Priority must be low, medium, high, or urgent',
+  }),
 });
 
 export const taskStatusSchema = z.enum(['pending', 'complete', 'overdue'], {
@@ -114,16 +124,13 @@ const futureDateSchema = z
   .optional()
   .nullable()
   .or(z.literal(''))
-  .refine(
-    (date) => {
-      if (!date || typeof date !== 'string') return true;
-      const dateObj = new Date(date);
-      if (isNaN(dateObj.getTime())) return false;
-      const now = new Date();
-      return dateObj > now;
-    },
-    'Date cannot be in the past'
-  );
+  .refine(date => {
+    if (!date || typeof date !== 'string') return true;
+    const dateObj = new Date(date);
+    if (isNaN(dateObj.getTime())) return false;
+    const now = new Date();
+    return dateObj > now;
+  }, 'Date cannot be in the past');
 
 export const baseTaskSchema = z.object({
   title: unifiedTaskTitleSchema,
@@ -146,22 +153,26 @@ export const updateTaskSchema = baseTaskSchema.partial();
 
 export const taskFormSchema = z.object({
   title: unifiedTaskTitleSchema,
-  description: z.string().max(500, 'Description cannot exceed 500 characters').default(''),
+  description: z
+    .string()
+    .max(500, 'Description cannot exceed 500 characters')
+    .default(''),
   priority: taskPrioritySchema.default('medium'),
   dueDate: z.string().default(''),
-  url: z.string().refine(
-    (url) => {
+  url: z
+    .string()
+    .refine(url => {
       if (!url || !url.trim()) return true;
       try {
         new URL(url);
         return true;
       } catch {
-        const domainPattern = /^(www\.)?[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
+        const domainPattern =
+          /^(www\.)?[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
         return domainPattern.test(url.trim());
       }
-    },
-    'Please enter a valid URL'
-  ).default(''),
+    }, 'Please enter a valid URL')
+    .default(''),
   assigneeId: z.string().default(''),
 });
 
@@ -181,8 +192,13 @@ export const taskFilterSchema = z.object({
 
 export const fileUploadSchema = z.object({
   file: z.any(),
-  maxSize: z.number().positive().default(5 * 1024 * 1024), // 5MB default
-  allowedTypes: z.array(z.string()).default(['image/jpeg', 'image/png', 'image/webp']),
+  maxSize: z
+    .number()
+    .positive()
+    .default(5 * 1024 * 1024), // 5MB default
+  allowedTypes: z
+    .array(z.string())
+    .default(['image/jpeg', 'image/png', 'image/webp']),
 });
 
 // ============================================================================
@@ -206,4 +222,4 @@ export type TaskFilterInput = z.infer<typeof taskFilterSchema>;
 
 export type PaginationInput = z.infer<typeof paginationSchema>;
 export type SortingInput = z.infer<typeof sortingSchema>;
-export type FileUploadInput = z.infer<typeof fileUploadSchema>; 
+export type FileUploadInput = z.infer<typeof fileUploadSchema>;

@@ -1,29 +1,45 @@
-
-import { useTaskForm } from './useTaskForm';
-import { useUnifiedPhotoUpload } from '@/components/form/hooks/useUnifiedPhotoUpload';
-import { useTaskMutations } from './useTaskMutations';
-import { useTaskFormValidation } from './useTaskFormValidation';
 import { toast } from 'sonner';
+
+import { useUnifiedPhotoUpload } from '@/components/form/hooks/useUnifiedPhotoUpload';
 import { logger } from '@/lib/logger';
 import type { Task } from '@/types';
+
+import { useTaskForm } from './useTaskForm';
+import { useTaskFormValidation } from './useTaskFormValidation';
+import { useTaskMutations } from './useTaskMutations';
 
 interface UseFollowUpTaskOptions {
   parentTask: Task;
   onClose?: () => void;
 }
 
+interface FollowUpTaskCreateData {
+  title: string;
+  description?: string;
+  dueDate: string;
+  url: string;
+  assigneeId: string;
+  priority: 'low' | 'medium' | 'high';
+  photoUrl?: string;
+  urlLink?: string;
+  parentTaskId: string;
+}
+
 /**
  * Follow-up task hook - Simplified and consolidated
- * 
+ *
  * Specialized for creating follow-up tasks with parent task context.
  */
-export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskOptions) {
+export function useFollowUpTask({
+  parentTask,
+  onClose,
+}: UseFollowUpTaskOptions) {
   // Form state management with follow-up defaults
-  const taskForm = useTaskForm({ 
+  const taskForm = useTaskForm({
     onClose,
     initialDescription: `Follow-up from task: ${parentTask.title}`,
   });
-  
+
   // Photo upload functionality
   const photoUpload = useUnifiedPhotoUpload({
     processingOptions: {
@@ -49,7 +65,7 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskOptions)
     }
 
     taskForm.setIsSubmitting(true);
-    
+
     try {
       // Handle photo upload
       const photoUrl = await photoUpload.uploadPhoto();
@@ -57,7 +73,9 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskOptions)
       // Prepare follow-up task data
       const rawTaskData = {
         title: taskForm.title.trim(),
-        description: taskForm.description.trim() || `Follow-up from task: ${parentTask.title}`,
+        description:
+          taskForm.description.trim() ||
+          `Follow-up from task: ${parentTask.title}`,
         dueDate: taskForm.dueDate,
         url: taskForm.url.trim(),
         assigneeId: taskForm.assigneeId,
@@ -74,7 +92,9 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskOptions)
       }
 
       // Create follow-up task
-      const result = await createTaskCallback(taskData as any);
+      const result = await createTaskCallback(
+        taskData as FollowUpTaskCreateData
+      );
 
       if (result.success) {
         toast.success('Follow-up task created successfully');
@@ -84,8 +104,14 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskOptions)
         toast.error(result.error || 'Failed to create follow-up task');
       }
     } catch (error) {
-      logger.error('Follow-up task creation error', error instanceof Error ? error : new Error(String(error)));
-      const errorMessage = error instanceof Error ? error.message : 'Failed to create follow-up task';
+      logger.error(
+        'Follow-up task creation error',
+        error instanceof Error ? error : new Error(String(error))
+      );
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Failed to create follow-up task';
       toast.error(errorMessage);
     } finally {
       taskForm.setIsSubmitting(false);
@@ -104,23 +130,23 @@ export function useFollowUpTask({ parentTask, onClose }: UseFollowUpTaskOptions)
     setUrl: taskForm.setUrl,
     assigneeId: taskForm.assigneeId,
     setAssigneeId: taskForm.setAssigneeId,
-    
+
     // Form validation and state
     isValid: taskForm.isValid,
     errors: taskForm.errors,
     loading: taskForm.isSubmitting || photoUpload.loading,
-    
+
     // Photo upload
     photoPreview: photoUpload.photoPreview,
     handlePhotoChange: photoUpload.handlePhotoChange,
     handlePhotoRemove: photoUpload.handlePhotoRemove,
     photoLoading: photoUpload.loading,
     processingResult: photoUpload.processingResult,
-    
+
     // Actions
     handleSubmit,
     values: taskForm.values,
-    
+
     // Parent task context
     parentTask,
   };

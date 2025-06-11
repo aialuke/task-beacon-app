@@ -1,20 +1,26 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { renderHook, act } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  renderHook,
+  act,
+} from '@testing-library/react';
 import { ReactNode } from 'react';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 // === INTERNAL UTILITIES ===
 import { useAuth, AuthProvider } from '@/contexts/AuthContext';
-import { setupIntegrationTest } from '@/test/integration/setup';
 import { AuthService } from '@/lib/api';
+import { setupIntegrationTest } from '@/test/integration/setup';
 
 // === TYPES ===
 import type { AuthUser, Session, AuthResponse, ApiResponse } from '@/types';
 
 /**
  * Authentication Flow Integration Tests
- * 
+ *
  * Tests the complete authentication workflow including login, logout,
  * session management, and protected route access.
  */
@@ -40,9 +46,7 @@ describe('Auth Flow Integration Tests', () => {
 
   const wrapper = ({ children }: { children: ReactNode }) => (
     <AuthProvider>
-      <QueryClientProvider client={queryClient}>
-        {children}
-      </QueryClientProvider>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </AuthProvider>
   );
 
@@ -116,11 +120,18 @@ describe('Auth Flow Integration Tests', () => {
       const signInSpy = vi.spyOn(AuthService, 'signIn').mockResolvedValue({
         success: false,
         data: null,
-        error: { message: 'Invalid credentials', code: 'AUTH_ERROR', name: 'AuthError' },
+        error: {
+          message: 'Invalid credentials',
+          code: 'AUTH_ERROR',
+          name: 'AuthError',
+        },
       } as ApiResponse<AuthResponse>);
 
       // Act: Attempt sign in with API failure
-      const response = await AuthService.signIn('test@example.com', 'wrong-password');
+      const response = await AuthService.signIn(
+        'test@example.com',
+        'wrong-password'
+      );
 
       // Assert: Sign in should handle error gracefully
       expect(response.success).toBe(false);
@@ -156,7 +167,10 @@ describe('Auth Flow Integration Tests', () => {
       } as ApiResponse<AuthResponse>);
 
       // Act: Execute sign up
-      const response = await AuthService.signUp('new@example.com', 'password123');
+      const response = await AuthService.signUp(
+        'new@example.com',
+        'password123'
+      );
 
       // Assert: Verify sign up completed successfully
       expect(response.success).toBe(true);
@@ -189,11 +203,13 @@ describe('Auth Flow Integration Tests', () => {
       };
 
       // Mock successful session refresh with proper typing
-      const refreshSpy = vi.spyOn(AuthService, 'refreshSession').mockResolvedValue({
-        success: true,
-        data: { user: mockUser, session: mockSession },
-        error: null,
-      } as ApiResponse<{ user: AuthUser; session: Session }>);
+      const refreshSpy = vi
+        .spyOn(AuthService, 'refreshSession')
+        .mockResolvedValue({
+          success: true,
+          data: { user: mockUser, session: mockSession },
+          error: null,
+        } as ApiResponse<{ user: AuthUser; session: Session }>);
 
       const { result } = renderHook(() => useAuth(), { wrapper });
 

@@ -1,7 +1,6 @@
-
 /**
  * Shared Types - Cleaned Legacy Exports
- * 
+ *
  * Simplified imports from unified type system with legacy compatibility removed.
  */
 

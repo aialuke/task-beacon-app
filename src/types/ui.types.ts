@@ -1,12 +1,18 @@
 /**
  * UI Component Types
- * 
+ *
  * All UI component-related type definitions.
  */
 
 // === COMMON UI TYPES ===
 export type Size = 'sm' | 'md' | 'lg' | 'xl';
-export type Variant = 'default' | 'primary' | 'secondary' | 'destructive' | 'outline' | 'ghost';
+export type Variant =
+  | 'default'
+  | 'primary'
+  | 'secondary'
+  | 'destructive'
+  | 'outline'
+  | 'ghost';
 export type ColorScheme = 'light' | 'dark' | 'auto';
 
 // === BASE COMPONENT PROPS ===
@@ -77,4 +83,4 @@ export interface NotificationAction {
   label: string;
   action: () => void;
   variant?: 'primary' | 'secondary' | 'destructive';
-} 
+}

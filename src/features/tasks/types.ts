@@ -1,7 +1,6 @@
-
 /**
  * Task Feature Types - Unified Import System
- * 
+ *
  * This file now imports from the unified type system instead of duplicating definitions.
  */
 
@@ -28,13 +27,7 @@ export type {
 } from './types/task-ui.types';
 
 // Re-export form-specific types
-export type {
-  TaskFormData,
-  TaskFormOptions,
-} from './types/task-form.types';
+export type { TaskFormData, TaskFormOptions } from './types/task-form.types';
 
 // Legacy compatibility exports (will be phased out)
-export type {
-  Task as TaskType,
-  TaskStatus as TaskStatusType,
-} from '@/types';
+export type { Task as TaskType, TaskStatus as TaskStatusType } from '@/types';

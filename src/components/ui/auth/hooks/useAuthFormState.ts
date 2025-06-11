@@ -1,15 +1,28 @@
-
 import { useState, useRef, useCallback } from 'react';
+
+import { useErrorHandler, useSubmissionState } from '@/hooks/core';
 import { AuthService } from '@/lib/api/AuthService';
-import { useErrorHandler } from '@/hooks/core';
-import { useSubmissionState } from '@/hooks/core';
-import { 
+import {
   useUnifiedValidation,
   validateUnifiedSignIn,
-  validateUnifiedSignUp
+  validateUnifiedSignUp,
 } from '@/lib/validation';
 
 type AuthMode = 'signin' | 'signup';
+
+interface ErrorWithMessage {
+  message: string;
+}
+
+function isErrorWithMessage(error: unknown): error is ErrorWithMessage {
+  return typeof error === 'object' && error !== null && 'message' in error;
+}
+
+function getErrorMessage(error: unknown): string {
+  if (typeof error === 'string') return error;
+  if (isErrorWithMessage(error)) return error.message;
+  return 'Unknown error';
+}
 
 interface UseAuthFormStateReturn {
   // Form state
@@ -24,11 +37,11 @@ interface UseAuthFormStateReturn {
     password?: string;
     name?: string;
   };
-  
+
   // Refs
   nameInputRef: React.RefObject<HTMLInputElement>;
   emailInputRef: React.RefObject<HTMLInputElement>;
-  
+
   // Actions
   setEmail: (value: string) => void;
   setPassword: (value: string) => void;
@@ -43,7 +56,7 @@ interface UseAuthFormStateReturn {
 
 /**
  * Simplified auth form state hook - Phase 2.4 Revised
- * 
+ *
  * Using standard React hooks instead of custom performance abstractions
  */
 export function useAuthFormState(): UseAuthFormStateReturn {
@@ -57,31 +70,45 @@ export function useAuthFormState(): UseAuthFormStateReturn {
     password?: string;
     name?: string;
   }>({});
-  
+
   const nameInputRef = useRef<HTMLInputElement>(null);
   const emailInputRef = useRef<HTMLInputElement>(null);
   const { handleError } = useErrorHandler({ showToast: false });
-  const { isSubmitting, startSubmitting, stopSubmitting } = useSubmissionState();
-  const { validateEmail: validateEmailUnified, validatePassword: validatePasswordUnified, validateUserName } = useUnifiedValidation();
+  const { isSubmitting, startSubmitting, stopSubmitting } =
+    useSubmissionState();
+  const {
+    validateEmail: validateEmailUnified,
+    validatePassword: validatePasswordUnified,
+    validateUserName,
+  } = useUnifiedValidation();
 
   // Using unified validation functions
-  const validateEmail = useCallback((value: string) => {
-    if (!value) return 'Email is required';
-    const result = validateEmailUnified(value);
-    return result.isValid ? '' : result.errors[0] || 'Invalid email';
-  }, [validateEmailUnified]);
+  const validateEmail = useCallback(
+    (value: string) => {
+      if (!value) return 'Email is required';
+      const result = validateEmailUnified(value);
+      return result.isValid ? '' : result.errors[0] || 'Invalid email';
+    },
+    [validateEmailUnified]
+  );
 
-  const validatePassword = useCallback((value: string) => {
-    if (!value) return 'Password is required';
-    const result = validatePasswordUnified(value);
-    return result.isValid ? '' : result.errors[0] || 'Invalid password';
-  }, [validatePasswordUnified]);
+  const validatePassword = useCallback(
+    (value: string) => {
+      if (!value) return 'Password is required';
+      const result = validatePasswordUnified(value);
+      return result.isValid ? '' : result.errors[0] || 'Invalid password';
+    },
+    [validatePasswordUnified]
+  );
 
-  const validateName = useCallback((value: string) => {
-    if (!value) return 'Name is required';
-    const result = validateUserName(value);
-    return result.isValid ? '' : result.errors[0] || 'Invalid name';
-  }, [validateUserName]);
+  const validateName = useCallback(
+    (value: string) => {
+      if (!value) return 'Name is required';
+      const result = validateUserName(value);
+      return result.isValid ? '' : result.errors[0] || 'Invalid name';
+    },
+    [validateUserName]
+  );
 
   const validateForm = useCallback(() => {
     const emailError = validateEmail(email);
@@ -91,11 +118,19 @@ export function useAuthFormState(): UseAuthFormStateReturn {
     setErrors({
       email: emailError,
       password: passwordError,
-      name: nameError
+      name: nameError,
     });
 
     return !emailError && !passwordError && !nameError;
-  }, [email, password, name, mode, validateEmail, validatePassword, validateName]);
+  }, [
+    email,
+    password,
+    name,
+    mode,
+    validateEmail,
+    validatePassword,
+    validateName,
+  ]);
 
   // Clean up auth state utility
   const cleanupAuthState = useCallback(() => {
@@ -111,114 +146,159 @@ export function useAuthFormState(): UseAuthFormStateReturn {
     });
   }, []);
 
-  const handleEmailChange = useCallback((value: string) => {
-    setEmail(value);
-    if (errors.email) {
-      const error = validateEmail(value);
-      setErrors(prev => ({ ...prev, email: error }));
-    }
-  }, [errors.email, validateEmail]);
+  const handleEmailChange = useCallback(
+    (value: string) => {
+      setEmail(value);
+      if (errors.email) {
+        const error = validateEmail(value);
+        setErrors(prev => ({ ...prev, email: error }));
+      }
+    },
+    [errors.email, validateEmail]
+  );
 
-  const handlePasswordChange = useCallback((value: string) => {
-    setPassword(value);
-    if (errors.password) {
-      const error = validatePassword(value);
-      setErrors(prev => ({ ...prev, password: error }));
-    }
-  }, [errors.password, validatePassword]);
+  const handlePasswordChange = useCallback(
+    (value: string) => {
+      setPassword(value);
+      if (errors.password) {
+        const error = validatePassword(value);
+        setErrors(prev => ({ ...prev, password: error }));
+      }
+    },
+    [errors.password, validatePassword]
+  );
 
-  const handleNameChange = useCallback((value: string) => {
-    setName(value);
-    if (errors.name) {
-      const error = validateName(value);
-      setErrors(prev => ({ ...prev, name: error }));
-    }
-  }, [errors.name, validateName]);
+  const handleNameChange = useCallback(
+    (value: string) => {
+      setName(value);
+      if (errors.name) {
+        const error = validateName(value);
+        setErrors(prev => ({ ...prev, name: error }));
+      }
+    },
+    [errors.name, validateName]
+  );
 
-  const handleSubmit = useCallback(async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validateForm()) {
-      return;
-    }
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!validateForm()) {
+        return;
+      }
 
-    startSubmitting();
-    try {
-      // Clean up existing state before any auth operation
-      cleanupAuthState();
-
-      // Attempt global sign out first using AuthService
+      startSubmitting();
       try {
-        await AuthService.signOut();
-      } catch (err) {
-        // Pre-auth cleanup failed, continue with sign-in
-      }
+        // Clean up existing state before any auth operation
+        cleanupAuthState();
 
-      if (mode === 'signin') {
-        // Validate with unified schema
-        const validationResult = validateUnifiedSignIn({ email, password });
-        if (!validationResult.isValid) {
-          throw new Error('Invalid sign-in data');
+        // Attempt global sign out first using AuthService
+        try {
+          await AuthService.signOut();
+        } catch {
+          // Pre-auth cleanup failed, continue with sign-in
         }
 
-        const response = await AuthService.signIn(email, password);
-        if (!response.success) {
-          const errorMessage = response.error?.message || 'Sign in failed';
-          throw new Error(errorMessage);
-        }
-        setTimeout(() => {
-          window.location.href = '/';
-        }, 1000);
-      } else {
-        // Validate with unified schema
-        const validationResult = validateUnifiedSignUp({ email, password, name });
-        if (!validationResult.isValid) {
-          throw new Error('Invalid sign-up data');
-        }
-
-        const response = await AuthService.signUp(email, password, {
-          data: {
-            full_name: name,
-            name: name
+        if (mode === 'signin') {
+          // Validate with unified schema
+          const validationResult = validateUnifiedSignIn({ email, password });
+          if (!validationResult.isValid) {
+            throw new Error('Invalid sign-in data');
           }
-        });
-        if (!response.success) {
-          const errorMessage = response.error?.message || 'Sign up failed';
-          throw new Error(errorMessage);
-        }
-        setTimeout(() => {
-          window.location.href = '/';
-        }, 1500);
-      }
-    } catch (error: unknown) {
-      handleError(error, 'Authentication');
-      
-      if (error instanceof Error) {
-        const errorMessage = error.message;
-        if (errorMessage.includes('Invalid login credentials') || errorMessage.includes('invalid_credentials')) {
-          setErrors({ email: 'Invalid email or password. Please try again.' });
-        } else if (errorMessage.includes('User already registered') || errorMessage.includes('already_registered')) {
-          setErrors({ email: 'An account with this email already exists. Try signing in instead.' });
-        } else if (errorMessage.includes('Email not confirmed') || errorMessage.includes('email_not_confirmed')) {
-          setErrors({ email: 'Please check your email and confirm your account before signing in.' });
-        } else if (errorMessage.includes('Signup not allowed') || errorMessage.includes('signup_disabled')) {
-          setErrors({ email: 'Account creation is currently disabled. Please contact support.' });
-        } else if (errorMessage.includes('Password should be at least')) {
-          setErrors({ password: 'Password does not meet the minimum requirements.' });
-        } else if (errorMessage.includes('Unable to validate email address')) {
-          setErrors({ email: 'Please enter a valid email address.' });
+
+          const response = await AuthService.signIn(email, password);
+          if (!response.success) {
+            const errorMessage = getErrorMessage(response.error) || 'Sign in failed';
+            throw new Error(errorMessage);
+          }
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 1000);
         } else {
-          setErrors({ email: errorMessage || 'An authentication error occurred' });
+          // Validate with unified schema
+          const validationResult = validateUnifiedSignUp({
+            email,
+            password,
+            name,
+          });
+          if (!validationResult.isValid) {
+            throw new Error('Invalid sign-up data');
+          }
+
+          const response = await AuthService.signUp(email, password, {
+            data: {
+              full_name: name,
+              name: name,
+            },
+          });
+          if (!response.success) {
+            const errorMessage = getErrorMessage(response.error) || 'Sign up failed';
+            throw new Error(errorMessage);
+          }
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 1500);
         }
-      } else {
-        setErrors({ email: 'An unexpected error occurred' });
+      } catch (error: unknown) {
+        handleError(error, 'Authentication');
+
+        if (error instanceof Error) {
+          const errorMessage = error.message;
+          if (
+            errorMessage.includes('Invalid login credentials') ||
+            errorMessage.includes('invalid_credentials')
+          ) {
+            setErrors({
+              email: 'Invalid email or password. Please try again.',
+            });
+          } else if (
+            errorMessage.includes('User already registered') ||
+            errorMessage.includes('already_registered')
+          ) {
+            setErrors({
+              email:
+                'An account with this email already exists. Try signing in instead.',
+            });
+          } else if (
+            errorMessage.includes('Email not confirmed') ||
+            errorMessage.includes('email_not_confirmed')
+          ) {
+            setErrors({
+              email:
+                'Please check your email and confirm your account before signing in.',
+            });
+          } else if (
+            errorMessage.includes('Signup not allowed') ||
+            errorMessage.includes('signup_disabled')
+          ) {
+            setErrors({
+              email:
+                'Account creation is currently disabled. Please contact support.',
+            });
+          } else if (errorMessage.includes('Password should be at least')) {
+            setErrors({
+              password: 'Password does not meet the minimum requirements.',
+            });
+          } else if (
+            errorMessage.includes('Unable to validate email address')
+          ) {
+            setErrors({ email: 'Please enter a valid email address.' });
+          } else {
+            setErrors({
+              email: errorMessage || 'An authentication error occurred',
+            });
+          }
+        } else {
+          setErrors({ email: 'An unexpected error occurred' });
+        }
+      } finally {
+        stopSubmitting();
       }
-    } finally {
-      stopSubmitting();
-    }
-  }, [mode, email, password, name, handleError, validateForm, cleanupAuthState]);
+    },
+    [mode, email, password, name, handleError, validateForm, cleanupAuthState, startSubmitting, stopSubmitting]
+  );
 
   const toggleMode = useCallback(() => {
-    setMode(prevMode => prevMode === 'signin' ? 'signup' : 'signin');
+    setMode(prevMode => (prevMode === 'signin' ? 'signup' : 'signin'));
     setErrors({});
     setEmail('');
     setPassword('');
@@ -249,4 +329,4 @@ export function useAuthFormState(): UseAuthFormStateReturn {
 }
 
 // Export alias for backward compatibility
-export const useAuthForm = useAuthFormState;
+

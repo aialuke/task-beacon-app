@@ -1,6 +1,6 @@
 /**
  * Shared Authentication Types
- * 
+ *
  * Types for user authentication, authorization, sessions, and auth operations.
  * Used across auth services, contexts, and components.
  */
@@ -83,4 +83,4 @@ export interface AuthOperationResult {
   session?: Session;
   error?: string;
   requiresEmailConfirmation?: boolean;
-} 
+}

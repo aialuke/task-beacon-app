@@ -1,5 +1,6 @@
-import { memo } from 'react';
 import { Loader2 } from 'lucide-react';
+import { memo } from 'react';
+
 import { Button } from '@/components/ui/button';
 
 interface AuthSubmitButtonProps {
@@ -19,15 +20,13 @@ export const AuthSubmitButton = memo(function AuthSubmitButton({
     >
       {loading ? (
         <div className="flex items-center justify-center space-x-2">
-          <Loader2 className="h-4 w-4 animate-spin" />
+          <Loader2 className="size-4 animate-spin" />
           <span>
             {mode === 'signin' ? 'Signing in...' : 'Creating account...'}
           </span>
         </div>
       ) : (
-        <span>
-          {mode === 'signin' ? 'Sign in' : 'Create account'}
-        </span>
+        <span>{mode === 'signin' ? 'Sign in' : 'Create account'}</span>
       )}
     </Button>
   );

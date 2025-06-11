@@ -1,6 +1,6 @@
 /**
  * Shared Utility Functions - Phase 2 Consolidated
- * 
+ *
  * Centralized re-exports of utility functions to eliminate duplication.
  * Single source of truth for commonly used utilities.
  */
