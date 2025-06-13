@@ -1,4 +1,4 @@
-import GenericPagination from '@/components/ui/GenericPagination';
+import GenericPagination from '@/shared/components/ui/GenericPagination';
 import type { PaginationAPI } from '@/types/pagination.types';
 
 interface TaskPaginationProps {

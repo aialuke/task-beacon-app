@@ -308,14 +308,3 @@ export function useUnifiedForm<T extends Record<string, unknown>>(
 /**
  * Simple form hook for basic forms without complex validation
  */
-function useSimpleForm<T extends Record<string, unknown>>(
-  initialValues: T,
-  onSubmit?: (values: T) => Promise<void> | void
-) {
-  return useUnifiedForm({
-    initialValues,
-    onSubmit,
-    validateOnChange: false,
-    validateOnBlur: false,
-  });
-}

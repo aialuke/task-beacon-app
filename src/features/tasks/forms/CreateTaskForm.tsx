@@ -1,5 +1,5 @@
-import { UnifiedTaskForm } from '@/features/tasks/components/forms/UnifiedTaskForm';
-import { useCreateTask } from '@/features/tasks/hooks/useCreateTask';
+import { UnifiedTaskForm } from '../components/forms/UnifiedTaskForm';
+import { useCreateTask } from '../hooks/useCreateTask';
 
 export default function CreateTaskForm({ onClose }: { onClose?: () => void }) {
   const {

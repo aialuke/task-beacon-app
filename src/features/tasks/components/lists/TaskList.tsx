@@ -1,11 +1,11 @@
 import { memo, useMemo } from 'react';
 
-import { CardLoader } from '@/components/ui/loading/UnifiedLoadingStates';
-import { useTaskDataContext } from '@/features/tasks/context/TaskDataContext';
-import { useTaskUIContext } from '@/features/tasks/context/TaskUIContext';
-import { useTasksFilter } from '@/features/tasks/hooks/useTasksFilter';
+import { CardLoader } from '@/shared/components/ui/loading/UnifiedLoadingStates';
 import type { Task } from '@/types';
 
+import { useTaskDataContext } from '../../context/TaskDataContext';
+import { useTaskUIContext } from '../../context/TaskUIContext';
+import { useTasksFilter } from '../../hooks/useTasksFilter';
 import { TaskCard } from '../cards';
 import TaskPagination from '../TaskPagination';
 

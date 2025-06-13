@@ -8,7 +8,7 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
-import type { ApiResponse } from '@/types/api.types';
+import type { ApiResponse } from '@/types';
 import { createLoadingState } from '@/types/async-state.types';
 
 // === CORE INTERFACES ===

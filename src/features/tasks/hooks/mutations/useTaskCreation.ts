@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { TaskService } from '@/lib/api/tasks';
+import { TaskService } from '@/shared/services/api';
 import type { Task } from '@/types';
 
 import { useBaseMutation } from './useBaseMutation';

@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { TaskService } from '@/lib/api/tasks';
+import { TaskService } from '@/shared/services/api';
 import { Task } from '@/types';
 
 import { useTaskOptimisticUpdates } from '../useTaskOptimisticUpdates';

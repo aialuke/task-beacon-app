@@ -2,15 +2,15 @@ import { ArrowLeft, Calendar1, ExternalLink } from 'lucide-react';
 import { lazy, Suspense } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-import { Button } from '@/components/ui/button';
+import { useTaskQuery } from '@/features/tasks/hooks/useTaskQuery';
+import { getTaskStatus } from '@/features/tasks/utils/taskUiUtils';
+import { Button } from '@/shared/components/ui/button';
 import {
   PageLoader,
   CardLoader,
   LoadingSpinner,
-} from '@/components/ui/loading/UnifiedLoadingStates';
-import { useTaskQuery } from '@/features/tasks/hooks/useTaskQuery';
-import { getTaskStatus } from '@/features/tasks/utils/taskUiUtils';
-import { formatDate } from '@/lib/utils/date';
+} from '@/shared/components/ui/loading/UnifiedLoadingStates';
+import { formatDate } from '@/shared/utils/date';
 
 // Lazy load heavy components for better performance
 const CountdownTimer = lazy(

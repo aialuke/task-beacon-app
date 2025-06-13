@@ -1,19 +1,20 @@
 import { useSpring, animated } from '@react-spring/web';
 import { useMemo } from 'react';
 
+import { useMotionPreferences } from '@/hooks/useMotionPreferences';
 import {
   Tooltip,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip';
-import TimerTooltip from '@/features/tasks/components/TimerTooltip';
-import { useTaskUIContext } from '@/features/tasks/context/TaskUIContext';
-import { useCountdown } from '@/features/tasks/hooks/useCountdown';
-import { useMotionPreferences } from '@/hooks/useMotionPreferences';
+} from '@/shared/components/ui/tooltip';
 import { TaskStatus } from '@/types';
+
+import { useTaskUIContext } from '../context/TaskUIContext';
+import { useCountdown } from '../hooks/useCountdown';
 
 import TimerDisplay from './timer/TimerDisplay';
 import TimerRing from './timer/TimerRing';
+import TimerTooltip from './TimerTooltip';
 
 interface CountdownTimerProps {
   dueDate: string | null;

@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 
-import { calculateTimerOffset } from '@/lib/utils/animation';
+import { calculateTimerOffset } from '@/shared/utils/animation';
 import {
   getUpdateInterval,
   formatTimeDisplay,
   getDaysRemaining,
-} from '@/lib/utils/date';
+} from '@/shared/utils/date';
 import type { TaskStatus } from '@/types';
 
 interface CountdownResult {

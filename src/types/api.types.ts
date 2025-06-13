@@ -16,8 +16,11 @@ export interface ApiError {
   message: string;
   name?: string;
   status?: number;
+  statusCode?: number;
   code?: string;
   details?: unknown;
+  originalError?: unknown;
+  timestamp?: string;
 }
 
 export interface ServiceResult<T = unknown> {

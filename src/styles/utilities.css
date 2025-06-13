@@ -5,6 +5,47 @@
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   }
 
+  .grid-mobile-first-card {
+    grid-template-columns: 1fr;
+  }
+
+  .grid-mobile-first-list {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .grid-mobile-first-split {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  /* Progressive enhancement for larger screens */
+  @media (min-width: 481px) {
+    .grid-mobile-first-card {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid-mobile-first-split {
+      grid-template-columns: 1fr 2fr;
+    }
+  }
+
+  @media (min-width: 769px) {
+    .grid-mobile-first-card {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .grid-mobile-first-split {
+      grid-template-columns: 1fr 3fr;
+    }
+  }
+
+  @media (min-width: 1025px) {
+    .grid-mobile-first-card {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
   .shadow-sm {
     box-shadow: var(--shadow-sm);
   }
@@ -51,6 +92,7 @@
   .interactive {
     transition: all var(--duration-normal) var(--ease-out);
     cursor: pointer;
+    touch-action: manipulation;
   }
 
   .interactive:hover {
@@ -61,6 +103,32 @@
   .interactive:active {
     transform: translateY(0);
     box-shadow: var(--shadow-sm);
+  }
+
+  .touch-ripple {
+    position: relative;
+    overflow: hidden;
+    touch-action: manipulation;
+  }
+
+  .touch-ripple::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.3) 0%,
+      transparent 70%
+    );
+    transform: scale(0);
+    transition: transform 0.2s ease-out;
+    pointer-events: none;
+  }
+
+  .touch-ripple:active::before {
+    transform: scale(1);
+    transition: transform 0.1s ease-out;
   }
 
   /* ===== SCROLL UTILITIES ===== */
@@ -94,33 +162,28 @@
   }
 
   /* ===== RESPONSIVE UTILITIES ===== */
-  @media (width <= 480px) {
-    .filter-dropdown-mobile {
-      width: 45%;
-    }
-
-    .touch-target {
-      min-height: 44px;
-      min-width: 44px;
-    }
-
-    .xs\:inline {
-      display: inline;
-    }
+  /* Base mobile styles (no media query needed) */
+  .filter-dropdown-mobile {
+    width: 45%;
   }
 
-  @media (width <= 640px) {
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .xs\:inline {
+    display: inline;
+  }
+
+  /* Progressive enhancement for larger screens */
+  @media (min-width: 481px) {
     .filter-dropdown-mobile {
       width: 40%;
     }
-
-    .touch-target {
-      min-height: 44px;
-      min-width: 44px;
-    }
   }
 
-  @media (width >= 641px) {
+  @media (min-width: 641px) {
     .filter-dropdown-mobile {
       width: 25%;
     }

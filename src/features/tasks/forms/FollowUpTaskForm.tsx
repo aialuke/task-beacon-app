@@ -1,7 +1,8 @@
 import { ParentTaskReference } from '@/components/form/ParentTaskReference';
-import { UnifiedTaskForm } from '@/features/tasks/components/forms/UnifiedTaskForm';
-import { useFollowUpTask } from '@/features/tasks/hooks/useFollowUpTask';
 import type { Task } from '@/types';
+
+import { UnifiedTaskForm } from '../components/forms/UnifiedTaskForm';
+import { useFollowUpTask } from '../hooks/useFollowUpTask';
 
 interface FollowUpTaskFormProps {
   parentTask: Task;

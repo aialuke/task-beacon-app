@@ -1,13 +1,13 @@
 import { useState, useCallback, useMemo } from 'react';
 
-import { TaskService } from '@/lib/api/tasks';
 import { logger } from '@/lib/logger';
+import { usePhotoUpload } from '@/shared/hooks/api';
 import {
   compressAndResizePhoto,
   extractImageMetadataEnhanced,
   ProcessingResult,
   EnhancedImageProcessingOptions,
-} from '@/lib/utils/image/';
+} from '@/shared/utils/image/';
 
 interface UnifiedPhotoUploadOptions {
   processingOptions?: EnhancedImageProcessingOptions;
@@ -51,6 +51,9 @@ export function useUnifiedPhotoUpload(
     autoUpload = false,
   } = options;
 
+  // Use the new photo upload hook
+  const { uploadPhoto: uploadPhotoService, isUploading } = usePhotoUpload();
+
   // Consolidated state management
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
@@ -80,12 +83,12 @@ export function useUnifiedPhotoUpload(
 
       try {
         setLoading(true);
-        const response = await TaskService.media.uploadPhoto(targetFile);
-        if (!response.success) {
-          throw new Error(response.error?.message || 'Photo upload failed');
+        const result = await uploadPhotoService(targetFile);
+        if (!result.success) {
+          throw new Error(result.error || 'Photo upload failed');
         }
 
-        const url = response.data || null;
+        const url = result.url || null;
         setUploadedUrl(url);
         return url;
       } catch (error) {
@@ -98,7 +101,7 @@ export function useUnifiedPhotoUpload(
         setLoading(false);
       }
     },
-    [photo]
+    [photo, uploadPhotoService]
   );
 
   // Photo processing and handling
@@ -160,7 +163,7 @@ export function useUnifiedPhotoUpload(
       // State
       photo,
       photoPreview,
-      loading,
+      loading: loading || isUploading,
       processingResult,
       uploadedUrl,
 
@@ -177,6 +180,7 @@ export function useUnifiedPhotoUpload(
       photo,
       photoPreview,
       loading,
+      isUploading,
       processingResult,
       uploadedUrl,
       handlePhotoChange,

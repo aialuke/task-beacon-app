@@ -1,11 +1,19 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { waitFor, renderHook, act } from '@testing-library/react';
 import { ReactNode } from 'react';
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
-// === INTERNAL UTILITIES ===
 import { useAuth } from '@/hooks/core';
-import { AuthService } from '@/lib/api';
+import { AuthService } from '@/shared/services/api';
+import {
+  waitFor,
+  renderHook,
+  act,
+  describe,
+  it,
+  expect,
+  beforeEach,
+  afterEach,
+  vi,
+} from '@/test';
 import { setupIntegrationTest } from '@/test/integration/setup';
 import type {
   AuthUser,

@@ -1,14 +1,11 @@
 import { ArrowLeft } from 'lucide-react';
-import { lazy, Suspense } from 'react';
+import { Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Button } from '@/components/ui/button';
-import { PageLoader } from '@/components/ui/loading/UnifiedLoadingStates';
-
-// Lazy load the form component for additional code splitting
-const CreateTaskForm = lazy(
-  () => import('@/features/tasks/forms/CreateTaskForm')
-);
+// Import from feature public API for better code splitting
+import { CreateTaskForm } from '@/features/tasks';
+import { Button } from '@/shared/components/ui/button';
+import { PageLoader } from '@/shared/components/ui/loading/UnifiedLoadingStates';
 
 export default function CreateTaskPage() {
   const navigate = useNavigate();

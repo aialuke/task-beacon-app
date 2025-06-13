@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 
 type Theme = 'dark' | 'light' | 'system';
 
@@ -77,10 +77,13 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function useTheme(): ThemeContextType {
-  const context = useContext(ThemeContext);
-  if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider');
-  }
-  return context;
-}
+// useTheme hook removed - no components currently implement theme switching
+// Theme management is handled internally by ThemeProvider
+// If theme switching is needed in the future, uncomment and implement:
+// export function useTheme(): ThemeContextType {
+//   const context = useContext(ThemeContext);
+//   if (context === undefined) {
+//     throw new Error('useTheme must be used within a ThemeProvider');
+//   }
+//   return context;
+// }

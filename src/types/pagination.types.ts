@@ -2,7 +2,7 @@
  * Pagination Types
  *
  * Type definitions for pagination interfaces.
- * Implementation functions moved to @/lib/utils/pagination.ts
+ * Implementation functions moved to @/shared/utils/pagination.ts
  */
 
 // === CORE PAGINATION INTERFACES ===

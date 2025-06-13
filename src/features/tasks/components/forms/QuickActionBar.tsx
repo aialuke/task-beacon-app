@@ -7,7 +7,7 @@ import { SubmitButton } from '@/components/form/components/SubmitButton';
 import SimplePhotoUploadModal from '@/components/form/SimplePhotoUploadModal';
 import { UrlInputModal } from '@/components/form/UrlInputModal';
 import { UserSearchModal } from '@/components/form/UserSearchModal';
-import type { ProcessingResult } from '@/lib/utils/image/';
+import type { ProcessingResult } from '@/shared/utils/image/';
 
 interface QuickActionBarProps {
   // Date picker props

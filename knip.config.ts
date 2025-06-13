@@ -3,8 +3,8 @@ import type { KnipConfig } from 'knip';
 const config: KnipConfig = {
   entry: [
     // Application entry points
-    'src/main.tsx',
-    'src/App.tsx',
+    'src/app/main.tsx',
+    'src/app/App.tsx',
     'index.html',
 
     // Styling entry points (main CSS only, not @import chain)
@@ -63,7 +63,7 @@ const config: KnipConfig = {
   // Enhanced plugin configurations for Solution B approaches
   vite: {
     config: 'vite.config.ts',
-    entry: ['src/main.tsx', 'index.html'],
+    entry: ['src/app/main.tsx', 'index.html'],
   },
 
   vitest: {

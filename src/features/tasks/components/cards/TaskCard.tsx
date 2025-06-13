@@ -1,6 +1,6 @@
 import { memo } from 'react';
 
-import UnifiedErrorBoundary from '@/components/ui/UnifiedErrorBoundary';
+import UnifiedErrorBoundary from '@/shared/components/ui/UnifiedErrorBoundary';
 import type { Task } from '@/types';
 
 import { useTaskCard } from '../../hooks/useTaskCard';

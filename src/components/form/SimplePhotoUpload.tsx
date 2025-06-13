@@ -1,9 +1,9 @@
 import { ImageUp } from 'lucide-react';
 import { useRef } from 'react';
 
-import { Button } from '@/components/ui/button';
 import { useImageLoadingState } from '@/hooks/core';
-import type { ProcessingResult } from '@/lib/utils/image/';
+import { Button } from '@/shared/components/ui/button';
+import type { ProcessingResult } from '@/shared/utils/image/';
 
 interface SimplePhotoUploadProps {
   photoPreview: string | null;

@@ -1,9 +1,9 @@
 import { Send } from 'lucide-react';
 import { memo } from 'react';
 
-import { Button } from '@/components/ui/button';
-import { LoadingSpinner } from '@/components/ui/loading/UnifiedLoadingStates';
-import { cn } from '@/lib/utils';
+import { Button } from '@/shared/components/ui/button';
+import { LoadingSpinner } from '@/shared/components/ui/loading/UnifiedLoadingStates';
+import { cn } from '@/shared/utils';
 
 interface SubmitButtonProps {
   onSubmit?: (e: React.FormEvent) => void;

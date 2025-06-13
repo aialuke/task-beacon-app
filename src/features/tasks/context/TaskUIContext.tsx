@@ -1,6 +1,6 @@
 import { ReactNode, useState, useEffect } from 'react';
 
-import { createStandardContext } from '@/lib/utils/createContext';
+import { createStandardContext } from '@/shared/utils/createContext';
 
 import { TaskFilter } from '../types';
 

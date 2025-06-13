@@ -10,8 +10,7 @@ import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import { QueryKeys } from '@/lib/api/standardized-api';
-import { TaskService } from '@/lib/api/tasks';
+import { QueryKeys, TaskService } from '@/shared/services/api';
 import type { Task, TaskCreateData, TaskUpdateData } from '@/types';
 
 import { useTaskOptimisticUpdates } from './useTaskOptimisticUpdates';

@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { toast } from 'sonner';
 
-import { QueryKeys } from '@/lib/api/standardized-api';
+import { QueryKeys } from '@/shared/services/api';
 
 import { useTaskOptimisticUpdates } from '../useTaskOptimisticUpdates';
 

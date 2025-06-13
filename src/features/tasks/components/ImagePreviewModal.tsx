@@ -1,9 +1,9 @@
 import { X } from 'lucide-react';
 import { memo } from 'react';
 
-import { Button } from '@/components/ui/button';
-import ImageErrorFallback from '@/components/ui/ImageErrorFallback';
-import ImageLoadingState from '@/components/ui/ImageLoadingState';
+import { Button } from '@/shared/components/ui/button';
+import ImageErrorFallback from '@/shared/components/ui/ImageErrorFallback';
+import ImageLoadingState from '@/shared/components/ui/ImageLoadingState';
 
 import { useImagePreview } from '../hooks/useImagePreview';
 

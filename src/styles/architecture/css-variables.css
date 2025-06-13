@@ -100,7 +100,7 @@
     --card-shadow: var(--shadow-sm);
 
     /* === LAYOUT CONSTANTS === */
-    --layout-content-max-width: 80rem;
+    --layout-content-max-width: min(80rem, calc(100vw - 2rem));
     --layout-container-padding: var(--spacing-4);
   }
 

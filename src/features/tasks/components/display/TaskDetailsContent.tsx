@@ -2,10 +2,9 @@ import { Calendar1, ExternalLink } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 import { ParentTaskReference } from '@/components/form/ParentTaskReference';
-import { formatDate } from '@/lib/utils/date';
+import { formatDate } from '@/shared/utils/date';
 import type { Task } from '@/types';
 
-import { getTaskStatus } from '../../utils/taskUiUtils';
 import TaskActions from '../actions/TaskActions';
 
 import { TaskImageGallery } from './TaskImageGallery';
@@ -20,7 +19,6 @@ export default function TaskDetailsContent({
   isExpanded = false,
 }: TaskDetailsContentProps) {
   const navigate = useNavigate();
-  const status = getTaskStatus(task);
 
   return (
     <div className="space-y-4">

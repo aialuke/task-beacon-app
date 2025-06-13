@@ -46,7 +46,7 @@ interface UseLoadingStateReturn extends LoadingState, LoadingStateActions {
 /**
  * Unified loading state hook that replaces all scattered loading patterns
  */
-function useLoadingState(
+export function useLoadingState(
   options: LoadingStateOptions = {}
 ): UseLoadingStateReturn {
   const {
@@ -150,21 +150,6 @@ function useLoadingState(
     stopFetching,
     setSuccess,
     setFailure,
-  };
-}
-
-/**
- * Specialized hook for simple loading/error states
- */
-function useSimpleLoading(initialLoading = false) {
-  const loadingState = useLoadingState({ initialLoading });
-
-  return {
-    loading: loadingState.isLoading,
-    error: loadingState.error,
-    setLoading: loadingState.setLoading,
-    setError: loadingState.setError,
-    reset: loadingState.reset,
   };
 }
 

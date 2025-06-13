@@ -2,7 +2,7 @@ import { Trash2 } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -11,9 +11,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { useTaskMutations } from '@/features/tasks/hooks/useTaskMutations';
+} from '@/shared/components/ui/dialog';
 import type { Task } from '@/types';
+
+import { useTaskMutations } from '../../hooks/useTaskMutations';
 
 interface TaskActionsProps {
   task: Task;

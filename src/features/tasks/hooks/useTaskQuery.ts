@@ -1,6 +1,5 @@
 import { useEntityByIdQuery } from '@/hooks/core';
-import { QueryKeys } from '@/lib/api/standardized-api';
-import { TaskService } from '@/lib/api/tasks';
+import { QueryKeys, TaskService } from '@/shared/services/api';
 import type { Task } from '@/types';
 
 interface UseTaskQueryReturn {

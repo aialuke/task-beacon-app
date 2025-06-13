@@ -4,7 +4,7 @@ import type { Task } from '@/types';
 
 import { useTaskAnimation } from './useTaskAnimation';
 
-export function useTaskCard(task: Task) {
+export function useTaskCard(_task: Task) {
   const contentRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const { isExpanded, animationPhase, animationState, toggleExpanded } =
