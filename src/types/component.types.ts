@@ -1,6 +1,6 @@
 /**
  * Component Types - UI Component Interfaces
- *
+ * 
  * Standardized component prop interfaces and UI-related types.
  */
 
@@ -9,18 +9,12 @@ import type { ReactNode } from 'react';
 // === COMPONENT PROP UTILITIES ===
 
 // Component prop utilities
-type PropsWithClassName<P = Record<string, never>> = P & {
-  className?: string;
-};
-type PropsWithChildren<P = Record<string, never>> = P & {
-  children?: ReactNode;
-};
-type PropsWithTestId<P = Record<string, never>> = P & {
-  testId?: string;
-};
+export type PropsWithClassName<P = Record<string, never>> = P & { className?: string };
+export type PropsWithChildren<P = Record<string, never>> = P & { children?: ReactNode };
+export type PropsWithTestId<P = Record<string, never>> = P & { testId?: string };
 
 // Base component props
-interface BaseComponentProps {
+export interface BaseComponentProps {
   className?: string;
   children?: ReactNode;
   testId?: string;
@@ -29,18 +23,12 @@ interface BaseComponentProps {
 // === UI COMPONENT INTERFACES ===
 
 // Basic UI types
-type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-type Variant =
-  | 'default'
-  | 'primary'
-  | 'secondary'
-  | 'destructive'
-  | 'outline'
-  | 'ghost';
-type ColorScheme = 'light' | 'dark' | 'auto';
+export type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+export type Variant = 'default' | 'primary' | 'secondary' | 'destructive' | 'outline' | 'ghost';
+export type ColorScheme = 'light' | 'dark' | 'auto';
 
 // Layout props
-interface LayoutProps extends BaseComponentProps {
+export interface LayoutProps extends BaseComponentProps {
   padding?: Size;
   margin?: Size;
   fullWidth?: boolean;
@@ -48,7 +36,7 @@ interface LayoutProps extends BaseComponentProps {
 }
 
 // Button component props
-interface ButtonProps extends BaseComponentProps {
+export interface ButtonProps extends BaseComponentProps {
   variant?: Variant;
   size?: Size;
   disabled?: boolean;
@@ -58,7 +46,7 @@ interface ButtonProps extends BaseComponentProps {
 }
 
 // Modal and dialog props
-interface ModalProps extends BaseComponentProps {
+export interface ModalProps extends BaseComponentProps {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
@@ -66,14 +54,14 @@ interface ModalProps extends BaseComponentProps {
   size?: Size;
 }
 
-interface DialogAction {
+export interface DialogAction {
   label: string;
   onClick: () => void;
   variant?: Variant;
 }
 
 // Card component props
-interface CardProps extends BaseComponentProps {
+export interface CardProps extends BaseComponentProps {
   title?: string;
   description?: string;
   footer?: ReactNode;
@@ -83,7 +71,7 @@ interface CardProps extends BaseComponentProps {
 }
 
 // Navigation props
-interface NavItem {
+export interface NavItem {
   id: string;
   label: string;
   href?: string;
@@ -92,14 +80,14 @@ interface NavItem {
   disabled?: boolean;
 }
 
-interface NavProps extends BaseComponentProps {
+export interface NavProps extends BaseComponentProps {
   items: NavItem[];
   activeItem?: string;
   onItemClick?: (item: NavItem) => void;
 }
 
 // Table component types
-interface TableColumn<T = unknown> {
+export interface TableColumn<T = unknown> {
   key: keyof T;
   label: string;
   sortable?: boolean;
@@ -107,7 +95,7 @@ interface TableColumn<T = unknown> {
   render?: (value: T[keyof T], row: T) => ReactNode;
 }
 
-interface TableProps<T = unknown> extends BaseComponentProps {
+export interface TableProps<T = unknown> extends BaseComponentProps {
   columns: TableColumn<T>[];
   data: T[];
   loading?: boolean;
@@ -118,13 +106,13 @@ interface TableProps<T = unknown> extends BaseComponentProps {
 }
 
 // Loading and feedback props
-interface LoadingProps extends BaseComponentProps {
+export interface LoadingProps extends BaseComponentProps {
   size?: Size;
   text?: string;
   overlay?: boolean;
 }
 
-interface ToastProps {
+export interface ToastProps {
   id: string;
   type: 'success' | 'error' | 'warning' | 'info';
   title: string;
@@ -134,14 +122,14 @@ interface ToastProps {
 }
 
 // Animation and interaction props
-interface AnimationProps {
+export interface AnimationProps {
   duration?: number;
   delay?: number;
   easing?: string;
   disabled?: boolean;
 }
 
-interface InteractionProps {
+export interface InteractionProps {
   onClick?: () => void;
   onHover?: () => void;
   onFocus?: () => void;
@@ -150,7 +138,7 @@ interface InteractionProps {
 }
 
 // Form field component props
-interface InputFieldProps extends BaseComponentProps {
+export interface InputFieldProps extends BaseComponentProps {
   name: string;
   label?: string;
   placeholder?: string;
@@ -164,7 +152,7 @@ interface InputFieldProps extends BaseComponentProps {
   touched?: boolean;
 }
 
-interface TextareaFieldProps extends BaseComponentProps {
+export interface TextareaFieldProps extends BaseComponentProps {
   name: string;
   label?: string;
   placeholder?: string;
@@ -179,7 +167,7 @@ interface TextareaFieldProps extends BaseComponentProps {
   touched?: boolean;
 }
 
-interface SelectFieldProps extends BaseComponentProps {
+export interface SelectFieldProps extends BaseComponentProps {
   name: string;
   label?: string;
   value: string;

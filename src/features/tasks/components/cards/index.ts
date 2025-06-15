@@ -1,6 +1,7 @@
+
 /**
  * Task Card Components - Phase 4.2 Consolidated
- *
+ * 
  * Simplified exports after consolidation - removed duplicate implementations.
  */
 

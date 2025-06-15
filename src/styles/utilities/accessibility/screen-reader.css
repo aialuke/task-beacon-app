@@ -68,7 +68,7 @@
   }
 
   .loading-indicator::after {
-    content: "Loading...";
+    content: 'Loading...';
     position: absolute;
     left: -10000px;
     width: 1px;

@@ -1,6 +1,7 @@
+
 import { useCallback } from 'react';
 
-import { TaskService } from '@/shared/services/api';
+import { TaskService } from '@/lib/api/tasks';
 
 import { useTaskOptimisticUpdates } from '../useTaskOptimisticUpdates';
 
@@ -22,12 +23,12 @@ export function useTaskDeletion() {
   const baseMutation = useBaseMutation<void, string>({
     mutationFn: async (taskId: string) => {
       const result = await TaskService.crud.delete(taskId);
-
+      
       if (!result.success) {
         throw new Error(result.error?.message || 'Failed to delete task');
       }
     },
-    onMutate: async taskId => {
+    onMutate: async (taskId) => {
       const previousData = optimisticUpdates.getPreviousData();
       optimisticUpdates.removeTaskOptimistically(taskId);
       return { previousData };

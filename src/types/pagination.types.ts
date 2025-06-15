@@ -1,8 +1,8 @@
 /**
  * Pagination Types
- *
+ * 
  * Type definitions for pagination interfaces.
- * Implementation functions moved to @/shared/utils/pagination.ts
+ * Implementation functions moved to @/lib/utils/pagination.ts
  */
 
 // === CORE PAGINATION INTERFACES ===
@@ -33,7 +33,7 @@ export interface PaginationParams {
  * Base query parameters interface
  * Used for extending pagination with additional query options
  */
-interface BaseQueryParams {
+export interface BaseQueryParams {
   page?: number;
   pageSize?: number;
   sortBy?: string;
@@ -84,7 +84,7 @@ export interface PaginationAPI extends PaginationControls {
  * Standard paginated API response structure
  * Used consistently across all paginated API endpoints
  */
-interface PaginatedResponse<T> {
+export interface PaginatedResponse<T> {
   data: T[];
   pagination: PaginationMeta;
   filters?: Record<string, unknown>;

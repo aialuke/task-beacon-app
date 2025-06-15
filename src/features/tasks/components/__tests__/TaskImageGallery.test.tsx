@@ -1,3 +1,11 @@
+import { render, screen } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
+
+import type { Task } from '@/types';
+
+import { TaskImageGallery } from '../display/TaskImageGallery';
+
+
 // Mock the image preview hook
 vi.mock('../hooks/useImagePreview', () => ({
   useImagePreview: () => ({
@@ -7,11 +15,6 @@ vi.mock('../hooks/useImagePreview', () => ({
     closePreview: vi.fn(),
   }),
 }));
-
-import { render, screen, describe, it, expect, vi } from '@/test';
-import type { Task } from '@/types';
-
-import { TaskImageGallery } from '../display/TaskImageGallery';
 
 describe('TaskImageGallery', () => {
   const mockTask: Task = {
@@ -32,7 +35,7 @@ describe('TaskImageGallery', () => {
 
   it('renders image when photo_url is provided', () => {
     render(<TaskImageGallery task={mockTask} />);
-
+    
     const image = screen.getByRole('img', { name: /task image/i });
     expect(image).toBeInTheDocument();
     expect(image).toHaveAttribute('src', 'https://example.com/image.jpg');
@@ -41,13 +44,13 @@ describe('TaskImageGallery', () => {
   it('does not render when no photo_url is provided', () => {
     const taskWithoutImage = { ...mockTask, photo_url: null };
     const { container } = render(<TaskImageGallery task={taskWithoutImage} />);
-
+    
     expect(container.firstChild).toBeNull();
   });
 
   it('applies correct accessibility attributes', () => {
     render(<TaskImageGallery task={mockTask} />);
-
+    
     const button = screen.getByRole('button', { name: /view task image/i });
     expect(button).toBeInTheDocument();
     expect(button).toHaveAttribute('aria-label', 'View task image');

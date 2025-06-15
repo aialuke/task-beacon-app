@@ -1,26 +1,63 @@
+
 /**
  * Shared Types - Cleaned Legacy Exports
- *
+ * 
  * Simplified imports from unified type system with legacy compatibility removed.
  */
 
 // Import from unified type system
-export type { ApiError } from '@/types';
+export type {
+  ID,
+  Timestamp,
+  Status,
+  AsyncState,
+  LoadingState,
+  FormState,
+  ValidationRule,
+  ValidationResult,
+  BaseComponentProps,
+  ApiResponse,
+  ApiError,
+  PaginatedResponse,
+  PaginationMeta,
+  BaseQueryParams,
+  ServiceResult,
+  ActionResult,
+  DatabaseOperationResult,
+  Size,
+  Variant,
+  ColorScheme,
+  InputFieldProps,
+  TextareaFieldProps,
+  SelectFieldProps,
+  AuthResponse,
+  SignUpOptions,
+  AuthContextType,
+  AuthState,
+  SignInCredentials,
+  SignUpCredentials,
+  NotificationType,
+  Notification,
+  NotificationAction,
+  SelectOption,
+  FilterOptions,
+  ModalState,
+} from '@/types';
 
 // Simplified interfaces without legacy compatibility
-interface DragItem {
+export interface DragItem {
   id: string;
   type: string;
   data: unknown;
 }
 
-interface DropTarget {
+export interface DropTarget {
   id: string;
   accepts: string[];
   onDrop: (item: DragItem) => void;
 }
 
-interface ResponseWrapper<T> {
+export interface ResponseWrapper<T> {
   data: T;
   meta: {
     total: number;
@@ -30,7 +67,7 @@ interface ResponseWrapper<T> {
   };
 }
 
-interface Metadata {
+export interface Metadata {
   version: string;
   lastModified: string;
   author?: string;

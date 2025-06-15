@@ -13,7 +13,7 @@ export default tseslint.config(
   { ignores: ['dist', 'node_modules', '*.config.js'] },
   {
     extends: [
-      js.configs.recommended,
+      js.configs.recommended, 
       ...tseslint.configs.recommended,
       ...tseslint.configs.stylistic,
     ],
@@ -26,13 +26,13 @@ export default tseslint.config(
       },
     },
     plugins: {
-      react: react,
+      'react': react,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
       'jsx-a11y': jsxA11y,
-      import: importPlugin,
-      tailwindcss: tailwindcss,
-      promise: promise,
+      'import': importPlugin,
+      'tailwindcss': tailwindcss,
+      'promise': promise,
     },
     settings: {
       react: { version: 'detect' },
@@ -53,68 +53,57 @@ export default tseslint.config(
       ...react.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
       ...jsxA11y.configs.recommended.rules,
-
+      
       // React Specific
       'react/react-in-jsx-scope': 'off', // React 17+
       'react/prop-types': 'off', // Using TypeScript
       'react-refresh/only-export-components': [
         'warn',
-        {
-          allowConstantExport: true,
-          // Allow context and provider exports
-          allowExportNames: [
-            'createContext',
-            'useContext',
-            'Provider',
-            'Consumer',
-          ],
-        },
+        { allowConstantExport: true },
       ],
-
+      
       // TypeScript Rules - Enhanced Strict Mode
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {
           argsIgnorePattern: '^_',
-          // Updated pattern to handle utility functions
-          varsIgnorePattern:
-            '^_|^(generate|format|parse|is|has|can|should|get|create|transform|validate)',
+          varsIgnorePattern: '^_',
           caughtErrorsIgnorePattern: '^_',
-        },
+        }
       ],
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-non-null-assertion': 'warn',
       '@typescript-eslint/no-require-imports': 'error',
-
+      
       // Import Rules
       'import/order': [
         'error',
         {
-          groups: [
+          'groups': [
             'builtin',
-            'external',
-            'internal',
-            'parent',
-            'sibling',
-            'index',
+            'external', 
+            'internal', 
+            'parent', 
+            'sibling', 
+            'index'
           ],
           'newlines-between': 'always',
-          alphabetize: {
+          'alphabetize': { 
             order: 'asc',
             caseInsensitive: true,
           },
-        },
+        }
       ],
       'import/no-duplicates': 'error',
       'import/no-unused-modules': 'warn',
       'import/first': 'error',
       'import/newline-after-import': 'error',
       'import/no-default-export': 'off', // Allow default exports for React components
-
+      
       // Tailwind CSS Rules
-      'tailwindcss/classnames-order': 'off', // Disabled: Let Prettier handle class ordering
+      'tailwindcss/classnames-order': 'warn',
       'tailwindcss/no-contradicting-classname': 'error',
       'tailwindcss/no-custom-classname': 'off', // Allow shadcn/ui custom classes
       'tailwindcss/enforces-negative-arbitrary-values': 'warn',
@@ -122,23 +111,18 @@ export default tseslint.config(
       'tailwindcss/migration-from-tailwind-2': 'off',
       'tailwindcss/no-arbitrary-value': 'off', // Allow arbitrary values for flexibility
       'tailwindcss/no-unnecessary-arbitrary-value': 'warn',
-
+      
       // Promise/Async Rules for TanStack Query patterns
       ...promise.configs.recommended.rules,
       'promise/always-return': 'off', // Not needed with TypeScript
       'promise/catch-or-return': ['error', { allowFinally: true }],
       'promise/prefer-await-to-then': 'warn',
-      'promise/prefer-await-to-callbacks': 'warn', // Simplified - will handle specific cases manually
+      'promise/prefer-await-to-callbacks': 'warn',
     },
   },
   // Specific overrides for test files
   {
-    files: [
-      '**/*.test.{ts,tsx}',
-      '**/*.spec.{ts,tsx}',
-      '**/test/**/*.{ts,tsx}',
-      '**/tests/**/*.{ts,tsx}',
-    ],
+    files: ['**/*.test.{ts,tsx}', '**/*.spec.{ts,tsx}', '**/test/**/*.{ts,tsx}', '**/tests/**/*.{ts,tsx}'],
     rules: {
       // Relax rules for test files
       '@typescript-eslint/no-empty-function': 'off', // Allow empty mocks
@@ -163,32 +147,6 @@ export default tseslint.config(
       // Configuration files may need require imports and empty functions
       '@typescript-eslint/no-require-imports': 'off',
       '@typescript-eslint/no-empty-function': 'off',
-    },
-  },
-  // Specific overrides for context files
-  {
-    files: [
-      '**/context/**/*.{ts,tsx}',
-      '**/contexts/**/*.{ts,tsx}',
-      '**/*Context.{ts,tsx}',
-      '**/testing/context-helpers.{ts,tsx}',
-    ],
-    rules: {
-      // Context files legitimately export hooks and providers alongside components
-      'react-refresh/only-export-components': 'off',
-    },
-  },
-  // Specific overrides for files with DOM callbacks
-  {
-    files: [
-      '**/navbar/**/*.{ts,tsx}',
-      '**/animation/**/*.{ts,tsx}',
-      '**/logger.{ts,tsx}',
-      '**/utils/**/*.{ts,tsx}',
-    ],
-    rules: {
-      // Allow callback patterns for DOM APIs and performance utilities
-      'promise/prefer-await-to-callbacks': 'off',
     },
   }
 );

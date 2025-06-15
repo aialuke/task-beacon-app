@@ -4,11 +4,11 @@ import {
   CircleCheckBig,
   Users,
   LucideIcon,
-} from 'lucide-react';
-import { memo } from 'react';
+} from "lucide-react";
+import { memo } from "react";
 
-import { SimpleNavbar } from '@/shared/components/ui/simple-navbar';
-import type { TaskFilter } from '@/types';
+import { SimpleNavbar } from "@/components/layout/simple-navbar";
+import type { TaskFilter } from "@/types";
 
 interface TaskFilterNavbarProps {
   filter: TaskFilter;
@@ -26,14 +26,14 @@ function TaskFilterNavbarComponent({
   onFilterChange,
 }: TaskFilterNavbarProps) {
   const filters: FilterItem[] = [
-    { name: 'Current', value: 'all', icon: ClockFading },
-    { name: 'Overdue', value: 'overdue', icon: ClockAlert },
-    { name: 'Assigned', value: 'assigned', icon: Users },
-    { name: 'Complete', value: 'complete', icon: CircleCheckBig },
+    { name: "Current", value: "all", icon: ClockFading },
+    { name: "Overdue", value: "overdue", icon: ClockAlert },
+    { name: "Assigned", value: "assigned", icon: Users },
+    { name: "Complete", value: "complete", icon: CircleCheckBig },
   ];
 
   // Convert to SimpleNavbar format
-  const navItems = filters.map(f => ({
+  const navItems = filters.map((f) => ({
     name: f.name,
     value: f.value as string,
     icon: f.icon,

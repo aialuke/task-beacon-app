@@ -56,12 +56,12 @@
     /* === CONSOLIDATED SHADOWS === */
     --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 5%);
     --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
-    --shadow-base:
-      0 4px 6px -1px rgb(0 0 0 / 10%), 0 2px 4px -2px rgb(0 0 0 / 10%);
-    --shadow-md:
-      0 10px 15px -3px rgb(0 0 0 / 10%), 0 4px 6px -4px rgb(0 0 0 / 10%);
-    --shadow-lg:
-      0 20px 25px -5px rgb(0 0 0 / 10%), 0 8px 10px -6px rgb(0 0 0 / 10%);
+    --shadow-base: 0 4px 6px -1px rgb(0 0 0 / 10%),
+      0 2px 4px -2px rgb(0 0 0 / 10%);
+    --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 10%),
+      0 4px 6px -4px rgb(0 0 0 / 10%);
+    --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 10%),
+      0 8px 10px -6px rgb(0 0 0 / 10%);
     --shadow-xl: 0 25px 50px -12px rgb(0 0 0 / 25%);
     --shadow-focus: 0 0 0 2px hsl(var(--ring));
 
@@ -100,7 +100,7 @@
     --card-shadow: var(--shadow-sm);
 
     /* === LAYOUT CONSTANTS === */
-    --layout-content-max-width: min(80rem, calc(100vw - 2rem));
+    --layout-content-max-width: 80rem;
     --layout-container-padding: var(--spacing-4);
   }
 
@@ -108,15 +108,16 @@
   .dark {
     --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 20%);
     --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 30%), 0 1px 2px -1px rgb(0 0 0 / 30%);
-    --shadow-base:
-      0 4px 6px -1px rgb(0 0 0 / 30%), 0 2px 4px -2px rgb(0 0 0 / 30%);
-    --shadow-md:
-      0 10px 15px -3px rgb(0 0 0 / 40%), 0 4px 6px -4px rgb(0 0 0 / 40%);
-    --shadow-lg:
-      0 20px 25px -5px rgb(0 0 0 / 40%), 0 8px 10px -6px rgb(0 0 0 / 40%);
+    --shadow-base: 0 4px 6px -1px rgb(0 0 0 / 30%),
+      0 2px 4px -2px rgb(0 0 0 / 30%);
+    --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 40%),
+      0 4px 6px -4px rgb(0 0 0 / 40%);
+    --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 40%),
+      0 8px 10px -6px rgb(0 0 0 / 40%);
   }
 }
 
 /* === ARCHITECTURAL SEPARATION === */
 /* Utility classes moved to utilities.css for proper layer organization */
 /* Reduced motion handled by accessibility.css */
+

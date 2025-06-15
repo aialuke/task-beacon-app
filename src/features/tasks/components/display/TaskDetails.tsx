@@ -1,9 +1,10 @@
-import { animated, SpringValue } from '@react-spring/web';
-import { memo } from 'react';
 
-import { Task } from '@/types';
+import { animated, SpringValue } from "@react-spring/web";
+import { memo } from "react";
 
-import TaskDetailsContent from './TaskDetailsContent';
+import { Task } from "@/types";
+
+import TaskDetailsContent from "./TaskDetailsContent";
 
 interface TaskDetailsProps {
   task: Task;
@@ -13,6 +14,7 @@ interface TaskDetailsProps {
     opacity: SpringValue<number>;
   };
   contentRef: React.RefObject<HTMLDivElement>;
+  measureRef?: React.RefObject<HTMLDivElement>;
 }
 
 function TaskDetails({
@@ -20,6 +22,7 @@ function TaskDetails({
   isExpanded,
   animationState,
   contentRef,
+  measureRef,
 }: TaskDetailsProps) {
   return (
     <animated.div
@@ -27,13 +30,15 @@ function TaskDetails({
       style={{
         height: animationState.height,
         opacity: animationState.opacity,
-        willChange: 'height, opacity',
-        overflow: 'hidden',
+        willChange: "height, opacity",
+        overflow: "hidden",
         minHeight: 0,
       }}
       className="mt-1 w-full"
     >
-      <TaskDetailsContent task={task} isExpanded={isExpanded} />
+      <div ref={measureRef}>
+        <TaskDetailsContent task={task} isExpanded={isExpanded} />
+      </div>
     </animated.div>
   );
 }

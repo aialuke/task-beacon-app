@@ -16,7 +16,7 @@ interface ApiConfig {
 }
 
 const features: FeatureFlags = {
-  enableBundleOptimization: false,
+  enableBundleOptimization: true,
 };
 
 const cacheConfig: CacheConfig = {

@@ -1,6 +1,6 @@
 /**
  * Unified Form Hook - Phase 2 Consolidation
- *
+ * 
  * Generic form state management hook that eliminates duplicate form patterns.
  * Replaces scattered form state logic with standardized approach.
  */
@@ -13,7 +13,7 @@ import { useSubmissionState } from './useLoadingState';
 
 // === CORE INTERFACES ===
 
-interface UnifiedFormConfig<T extends Record<string, unknown>> {
+export interface UnifiedFormConfig<T extends Record<string, unknown>> {
   /** Initial form values */
   initialValues: T;
   /** Custom validation function */
@@ -28,7 +28,7 @@ interface UnifiedFormConfig<T extends Record<string, unknown>> {
   validateOnBlur?: boolean;
 }
 
-interface UnifiedFormActions<T extends Record<string, unknown>> {
+export interface UnifiedFormActions<T extends Record<string, unknown>> {
   /** Set a specific field value */
   setFieldValue: (field: keyof T, value: T[keyof T]) => void;
   /** Set multiple field values */
@@ -51,9 +51,8 @@ interface UnifiedFormActions<T extends Record<string, unknown>> {
   validateField: (field: keyof T) => boolean;
 }
 
-interface UnifiedFormReturn<T extends Record<string, unknown>>
-  extends FormState<T>,
-    UnifiedFormActions<T> {
+export interface UnifiedFormReturn<T extends Record<string, unknown>> 
+  extends FormState<T>, UnifiedFormActions<T> {
   /** Helper to check if field has error */
   getFieldError: (field: keyof T) => string | undefined;
   /** Helper to check if field is touched */
@@ -91,11 +90,11 @@ export function useUnifiedForm<T extends Record<string, unknown>>(
 
   // Form field values
   const [values, setValuesState] = useState<T>(initialValues);
-
+  
   // Form validation state
   const [errors, setErrors] = useState<FormErrors<T>>({});
   const [touched, setTouched] = useState<FormTouched<T>>({});
-
+  
   // Submission state using unified loading hook
   const {
     isSubmitting,
@@ -106,29 +105,26 @@ export function useUnifiedForm<T extends Record<string, unknown>>(
 
   // === VALIDATION HELPERS ===
 
-  const validateField = useCallback(
-    (field: keyof T): boolean => {
-      if (!validate) return true;
-
-      const fieldErrors = validate(values);
-      const fieldError = fieldErrors[field];
-
-      setErrors(prev => ({
-        ...prev,
-        [field]: fieldError || undefined,
-      }));
-
-      return !fieldError;
-    },
-    [values, validate]
-  );
+  const validateField = useCallback((field: keyof T): boolean => {
+    if (!validate) return true;
+    
+    const fieldErrors = validate(values);
+    const fieldError = fieldErrors[field];
+    
+    setErrors(prev => ({
+      ...prev,
+      [field]: fieldError || undefined,
+    }));
+    
+    return !fieldError;
+  }, [values, validate]);
 
   const validateForm = useCallback((): boolean => {
     if (!validate) return true;
-
+    
     const formErrors = validate(values);
     setErrors(formErrors);
-
+    
     return Object.keys(formErrors).length === 0;
   }, [values, validate]);
 
@@ -138,26 +134,23 @@ export function useUnifiedForm<T extends Record<string, unknown>>(
     setValuesState(prev => ({ ...prev, ...newValues }));
   }, []);
 
-  const setFieldValue = useCallback(
-    (field: keyof T, value: T[keyof T]) => {
-      setValuesState(prev => ({ ...prev, [field]: value }));
-
-      // Clear field error when user starts typing
-      if (errors[field]) {
-        setErrors(prev => {
-          const newErrors = { ...prev };
-          delete newErrors[field];
-          return newErrors;
-        });
-      }
-
-      // Validate on change if enabled
-      if (validateOnChange && validate) {
-        setTimeout(() => validateField(field), 0);
-      }
-    },
-    [errors, validateOnChange, validate, validateField]
-  );
+  const setFieldValue = useCallback((field: keyof T, value: T[keyof T]) => {
+    setValuesState(prev => ({ ...prev, [field]: value }));
+    
+    // Clear field error when user starts typing
+    if (errors[field]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[field];
+        return newErrors;
+      });
+    }
+    
+    // Validate on change if enabled
+    if (validateOnChange && validate) {
+      setTimeout(() => validateField(field), 0);
+    }
+  }, [errors, validateOnChange, validate, validateField]);
 
   const setFieldError = useCallback((field: keyof T, error: string | null) => {
     setErrors(prev => ({
@@ -166,60 +159,47 @@ export function useUnifiedForm<T extends Record<string, unknown>>(
     }));
   }, []);
 
-  const setFieldTouched = useCallback(
-    (field: keyof T, isTouched: boolean) => {
-      setTouched(prev => ({ ...prev, [field]: isTouched }));
-
-      // Validate on blur if enabled
-      if (isTouched && validateOnBlur && validate) {
-        setTimeout(() => validateField(field), 0);
-      }
-    },
-    [validateOnBlur, validate, validateField]
-  );
+  const setFieldTouched = useCallback((field: keyof T, isTouched: boolean) => {
+    setTouched(prev => ({ ...prev, [field]: isTouched }));
+    
+    // Validate on blur if enabled
+    if (isTouched && validateOnBlur && validate) {
+      setTimeout(() => validateField(field), 0);
+    }
+  }, [validateOnBlur, validate, validateField]);
 
   // === FORM ACTIONS ===
 
-  const handleSubmit = useCallback(
-    async (e?: React.FormEvent) => {
-      if (e) {
-        e.preventDefault();
-      }
-
-      // Mark all fields as touched
-      const allTouched = Object.keys(values).reduce((acc, key) => {
-        acc[key as keyof T] = true;
-        return acc;
-      }, {} as FormTouched<T>);
-      setTouched(allTouched);
-
-      // Validate form
-      if (!validateForm()) {
-        return;
-      }
-
-      if (!onSubmit) return;
-
-      startSubmitting();
-      try {
-        await onSubmit(values);
-      } catch (error) {
-        setSubmissionError(
-          error instanceof Error ? error.message : 'Form submission failed'
-        );
-      } finally {
-        stopSubmitting();
-      }
-    },
-    [
-      values,
-      validateForm,
-      onSubmit,
-      startSubmitting,
-      stopSubmitting,
-      setSubmissionError,
-    ]
-  );
+  const handleSubmit = useCallback(async (e?: React.FormEvent) => {
+    if (e) {
+      e.preventDefault();
+    }
+    
+    // Mark all fields as touched
+    const allTouched = Object.keys(values).reduce((acc, key) => {
+      acc[key as keyof T] = true;
+      return acc;
+    }, {} as FormTouched<T>);
+    setTouched(allTouched);
+    
+    // Validate form
+    if (!validateForm()) {
+      return;
+    }
+    
+    if (!onSubmit) return;
+    
+    startSubmitting();
+    try {
+      await onSubmit(values);
+    } catch (error) {
+      setSubmissionError(
+        error instanceof Error ? error.message : 'Form submission failed'
+      );
+    } finally {
+      stopSubmitting();
+    }
+  }, [values, validateForm, onSubmit, startSubmitting, stopSubmitting, setSubmissionError]);
 
   const reset = useCallback(() => {
     setValuesState(initialValues);
@@ -235,44 +215,32 @@ export function useUnifiedForm<T extends Record<string, unknown>>(
   }, [errors]);
 
   const isDirty = useMemo(() => {
-    return Object.keys(values).some(
-      key => values[key as keyof T] !== initialValues[key as keyof T]
+    return Object.keys(values).some(key => 
+      values[key as keyof T] !== initialValues[key as keyof T]
     );
   }, [values, initialValues]);
 
   // === HELPER FUNCTIONS ===
 
-  const getFieldError = useCallback(
-    (field: keyof T): string | undefined => {
-      return errors[field];
-    },
-    [errors]
-  );
+  const getFieldError = useCallback((field: keyof T): string | undefined => {
+    return errors[field];
+  }, [errors]);
 
-  const isFieldTouched = useCallback(
-    (field: keyof T): boolean => {
-      return !!touched[field];
-    },
-    [touched]
-  );
+  const isFieldTouched = useCallback((field: keyof T): boolean => {
+    return !!touched[field];
+  }, [touched]);
 
-  const isFieldDirty = useCallback(
-    (field: keyof T): boolean => {
-      return values[field as keyof T] !== initialValues[field as keyof T];
-    },
-    [values, initialValues]
-  );
+  const isFieldDirty = useCallback((field: keyof T): boolean => {
+    return values[field as keyof T] !== initialValues[field as keyof T];
+  }, [values, initialValues]);
 
-  const getFieldProps = useCallback(
-    (field: keyof T) => ({
-      value: values[field],
-      onChange: (value: T[keyof T]) => setFieldValue(field, value),
-      onBlur: () => setFieldTouched(field, true),
-      error: getFieldError(field),
-      touched: isFieldTouched(field),
-    }),
-    [values, setFieldValue, setFieldTouched, getFieldError, isFieldTouched]
-  );
+  const getFieldProps = useCallback((field: keyof T) => ({
+    value: values[field],
+    onChange: (value: T[keyof T]) => setFieldValue(field, value),
+    onBlur: () => setFieldTouched(field, true),
+    error: getFieldError(field),
+    touched: isFieldTouched(field),
+  }), [values, setFieldValue, setFieldTouched, getFieldError, isFieldTouched]);
 
   return {
     // Form state
@@ -282,7 +250,7 @@ export function useUnifiedForm<T extends Record<string, unknown>>(
     isValid,
     isDirty,
     isSubmitting,
-
+    
     // Actions
     setFieldValue,
     setValues,
@@ -294,7 +262,7 @@ export function useUnifiedForm<T extends Record<string, unknown>>(
     reset,
     validateForm,
     validateField,
-
+    
     // Helpers
     getFieldError,
     isFieldTouched,
@@ -308,3 +276,14 @@ export function useUnifiedForm<T extends Record<string, unknown>>(
 /**
  * Simple form hook for basic forms without complex validation
  */
+export function useSimpleForm<T extends Record<string, unknown>>(
+  initialValues: T,
+  onSubmit?: (values: T) => Promise<void> | void
+) {
+  return useUnifiedForm({
+    initialValues,
+    onSubmit,
+    validateOnChange: false,
+    validateOnBlur: false,
+  });
+} 

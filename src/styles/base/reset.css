@@ -1,3 +1,4 @@
+
 /* src/styles/base/reset.css - Targeted CSS reset that doesn't conflict with Tailwind */
 
 @layer base {
@@ -16,38 +17,23 @@
   /* Remove default margins only where needed */
 
   body,
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  p,
-  blockquote,
-  pre,
-  dl,
-  dd,
-  ol,
-  ul,
-  figure,
-  hr,
-  fieldset,
-  legend {
+  h1, h2, h3, h4, h5, h6,
+  p, blockquote, pre,
+  dl, dd, ol, ul,
+  figure, hr,
+  fieldset, legend {
     margin: 0;
   }
 
   /* Remove default padding only where needed */
 
-  dd,
-  ol,
-  ul {
+  dd, ol, ul {
     padding: 0;
   }
 
   /* Remove list styles */
 
-  ol,
-  ul {
+  ol, ul {
     list-style: none;
   }
 
@@ -61,21 +47,14 @@
 
   /* Improve media defaults */
 
-  img,
-  picture,
-  video,
-  canvas,
-  svg {
+  img, picture, video, canvas, svg {
     display: block;
     max-width: 100%;
   }
 
   /* Improve form defaults */
 
-  input,
-  button,
-  textarea,
-  select {
+  input, button, textarea, select {
     font: inherit;
   }
 
@@ -100,20 +79,13 @@
 
   /* Ensure text elements don't break out of containers */
 
-  p,
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  p, h1, h2, h3, h4, h5, h6 {
     overflow-wrap: break-word;
   }
 
   /* Root stacking context for isolation */
 
-  #root,
-  #__next {
+  #root, #__next {
     isolation: isolate;
   }
 }

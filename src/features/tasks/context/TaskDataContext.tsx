@@ -1,44 +1,9 @@
 import { ReactNode } from 'react';
 
-import UnifiedErrorBoundary from '@/shared/components/ui/UnifiedErrorBoundary';
-import { createStandardContext } from '@/shared/utils/createContext';
-import type { Task } from '@/types';
+import { UnifiedErrorBoundary } from '@/components/ui/UnifiedErrorBoundary';
+import { useTasksQuery } from '@/features/tasks/hooks/useTasksQuery';
 
-import { useTasksQuery } from '../hooks/useTasksQuery';
-
-interface TaskDataContextValue {
-  // Data state (from React Query with standardized patterns)
-  tasks: Task[];
-  isLoading: boolean;
-  isFetching: boolean;
-  error: string | null;
-
-  // Pagination object (complete pagination API)
-  pagination: {
-    currentPage: number;
-    totalPages: number;
-    pageSize: number;
-    hasNextPage: boolean;
-    hasPreviousPage: boolean;
-    goToNextPage: () => void;
-    goToPreviousPage: () => void;
-    goToPage: (page: number) => void;
-  };
-
-  // Pagination metadata
-  totalCount: number;
-
-  // Error recovery
-  retry: () => void;
-}
-
-// Create standardized context
-const { Provider: TaskDataProvider, useContext: useTaskDataContext } =
-  createStandardContext<TaskDataContextValue>({
-    name: 'TaskData',
-    errorMessage:
-      'useTaskDataContext must be used within a TaskDataContextProvider',
-  });
+import { TaskDataProvider, type TaskDataContextValue } from './task-data-utils';
 
 interface TaskDataContextProviderProps {
   children: ReactNode;
@@ -46,7 +11,7 @@ interface TaskDataContextProviderProps {
 
 /**
  * Task Data Context Provider - Phase 3 Enhanced
- *
+ * 
  * Provides server-side data state with enhanced error handling,
  * loading state management, and recovery mechanisms.
  */
@@ -73,11 +38,9 @@ export function TaskDataContextProvider({
       goToPreviousPage: taskQueries.pagination.goToPreviousPage,
       goToPage: taskQueries.pagination.goToPage,
     },
-    retry:
-      taskQueries.refetch ||
-      function retryFallback() {
-        console.warn('Retry not available - no refetch function provided');
-      },
+    retry: taskQueries.refetch || (() => {
+      console.warn('TaskDataContext: No refetch function available for retry');
+    }),
   };
 
   return (
@@ -88,10 +51,11 @@ export function TaskDataContextProvider({
         // Could integrate with error reporting service here
       }}
     >
-      <TaskDataProvider value={contextValue}>{children}</TaskDataProvider>
+      <TaskDataProvider value={contextValue}>
+        {children}
+      </TaskDataProvider>
     </UnifiedErrorBoundary>
   );
 }
 
-// Export the standardized hook
-export { useTaskDataContext };
+

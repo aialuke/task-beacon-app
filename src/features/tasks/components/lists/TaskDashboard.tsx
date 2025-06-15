@@ -1,14 +1,12 @@
-// === EXTERNAL LIBRARIES ===
-import React from 'react';
 
 // === COMPONENTS ===
-import TaskDashboardHeader from '@/shared/components/layout/TaskDashboardHeader';
+import TaskDashboardHeader from "@/components/layout/TaskDashboardHeader";
+import { useTaskUIContext } from "@/features/tasks/context";
 
-import { useTaskUIContext } from '../../context/TaskUIContext';
-import { FabButton } from '../actions';
-import TaskFilterNavbar from '../TaskFilterNavbar';
+import { FabButton } from "../actions";
+import TaskFilterNavbar from "../TaskFilterNavbar";
 
-import TaskList from './TaskList';
+import TaskList from "./TaskList";
 
 // === HOOKS ===
 
@@ -16,7 +14,7 @@ export default function TaskDashboard() {
   const { filter, setFilter } = useTaskUIContext();
 
   return (
-    <div className="safe-area-top safe-area-left safe-area-right min-h-screen bg-background">
+    <div className="bg-background min-h-screen">
       <div className="mx-auto max-w-4xl px-4 py-6 sm:px-6 lg:px-8">
         <TaskDashboardHeader />
 

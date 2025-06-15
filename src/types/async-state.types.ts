@@ -1,6 +1,7 @@
+
 /**
  * Unified Async State Interfaces - Phase 1 Consolidation
- *
+ * 
  * Shared base interfaces to eliminate duplication across async operations.
  */
 
@@ -17,7 +18,7 @@ export interface BaseAsyncState<T = unknown, E = Error> {
 /**
  * Extended async operation state with retry capabilities
  */
-interface AsyncOperationState<T = unknown> extends BaseAsyncState<T> {
+export interface AsyncOperationState<T = unknown> extends BaseAsyncState<T> {
   retryCount?: number;
   canRetry?: boolean;
 }
@@ -25,7 +26,7 @@ interface AsyncOperationState<T = unknown> extends BaseAsyncState<T> {
 /**
  * Batch async operation state for multiple operations
  */
-interface BatchAsyncOperationState<T = unknown> extends BaseAsyncState<T[]> {
+export interface BatchAsyncOperationState<T = unknown> extends BaseAsyncState<T[]> {
   completedCount: number;
   totalCount: number;
   failedItems: { index: number; error: Error }[];
@@ -34,7 +35,7 @@ interface BatchAsyncOperationState<T = unknown> extends BaseAsyncState<T[]> {
 /**
  * Optimistic async operation state for UI updates
  */
-interface OptimisticAsyncOperationState<T = unknown> extends BaseAsyncState<T> {
+export interface OptimisticAsyncOperationState<T = unknown> extends BaseAsyncState<T> {
   optimisticData: T | null;
   isOptimistic: boolean;
   rollbackData: T | null;
@@ -43,7 +44,7 @@ interface OptimisticAsyncOperationState<T = unknown> extends BaseAsyncState<T> {
 /**
  * Standard loading state patterns
  */
-interface StandardLoadingState {
+export interface StandardLoadingState {
   isLoading: boolean;
   isFetching: boolean;
   isError: boolean;
@@ -53,7 +54,7 @@ interface StandardLoadingState {
 /**
  * Form submission state
  */
-interface FormSubmissionState extends BaseAsyncState<unknown> {
+export interface FormSubmissionState extends BaseAsyncState<unknown> {
   isSubmitting: boolean;
   isValid: boolean;
   submitCount: number;
@@ -62,7 +63,7 @@ interface FormSubmissionState extends BaseAsyncState<unknown> {
 /**
  * Query state for data fetching
  */
-interface QueryState<T = unknown> extends BaseAsyncState<T> {
+export interface QueryState<T = unknown> extends BaseAsyncState<T> {
   isFetching: boolean;
   isStale: boolean;
   refetch: () => Promise<void>;
@@ -80,10 +81,6 @@ export function createLoadingState(
     isLoading,
     isFetching,
     isError: !!error,
-    error: error
-      ? error instanceof Error
-        ? error.message
-        : String(error)
-      : null,
+    error: error ? (error instanceof Error ? error.message : String(error)) : null,
   };
 }

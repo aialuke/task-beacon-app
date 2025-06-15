@@ -1,9 +1,9 @@
-import { animated, SpringValue } from '@react-spring/web';
-import { memo, useMemo } from 'react';
+import { animated, SpringValue } from "@react-spring/web";
+import { memo, useMemo } from "react";
 
-import { TaskStatus } from '@/types';
+import { TaskStatus } from "@/types";
 
-interface TimerRingProps {
+export interface TimerRingProps {
   size: number;
   radius: number;
   circumference: number;
@@ -53,22 +53,22 @@ const TimerRing = ({
 }: TimerRingProps) => {
   const staticProps = useMemo(() => {
     let gradientId: string;
-    if (status === 'pending' && daysRemaining !== null && daysRemaining >= 5) {
-      gradientId = 'url(#gradientComplete)';
-    } else if (status === 'pending') {
-      gradientId = 'url(#gradientPending)';
-    } else if (status === 'overdue') {
-      gradientId = 'url(#gradientOverdue)';
+    if (status === "pending" && daysRemaining !== null && daysRemaining >= 5) {
+      gradientId = "url(#gradientComplete)";
+    } else if (status === "pending") {
+      gradientId = "url(#gradientPending)";
+    } else if (status === "overdue") {
+      gradientId = "url(#gradientOverdue)";
     } else {
-      gradientId = 'url(#gradientComplete)';
+      gradientId = "url(#gradientComplete)";
     }
     const filterId =
-      status === 'overdue'
-        ? 'url(#glowOverdue)'
-        : status === 'complete'
-          ? 'url(#glowComplete)'
-          : 'url(#glowPending)';
-    const strokeWidth = status === 'overdue' ? '5px' : '4px';
+      status === "overdue"
+        ? "url(#glowOverdue)"
+        : status === "complete"
+        ? "url(#glowComplete)"
+        : "url(#glowPending)";
+    const strokeWidth = status === "overdue" ? "5px" : "4px";
     return { gradientId, filterId, strokeWidth };
   }, [status, daysRemaining]);
 
@@ -77,7 +77,7 @@ const TimerRing = ({
       width={size}
       height={size}
       viewBox={`0 0 ${size} ${size}`}
-      style={{ overflow: 'visible' }}
+      style={{ overflow: "visible" }}
       className="timer-ring"
       aria-hidden="true"
     >
@@ -89,7 +89,7 @@ const TimerRing = ({
         fill="none"
         strokeWidth="2.5"
         stroke="#F9FAFB"
-        style={{ strokeWidth: '2.5px' }}
+        style={{ strokeWidth: "2.5px" }}
       />
       <animated.circle
         cx={size / 2}
@@ -119,8 +119,8 @@ export default memo(TimerRing, (prevProps, nextProps) => {
     prevProps.status === nextProps.status &&
     prevProps.daysRemaining === nextProps.daysRemaining &&
     (prevProps.strokeDashoffset === nextProps.strokeDashoffset ||
-      (typeof prevProps.strokeDashoffset === 'number' &&
-        typeof nextProps.strokeDashoffset === 'number' &&
+      (typeof prevProps.strokeDashoffset === "number" &&
+        typeof nextProps.strokeDashoffset === "number" &&
         prevProps.strokeDashoffset === nextProps.strokeDashoffset))
   );
 });

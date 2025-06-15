@@ -1,8 +1,8 @@
-import { ParentTaskReference } from '@/components/form/ParentTaskReference';
-import type { Task } from '@/types';
 
-import { UnifiedTaskForm } from '../components/forms/UnifiedTaskForm';
-import { useFollowUpTask } from '../hooks/useFollowUpTask';
+import { ParentTaskReference } from '@/components/form/ParentTaskReference';
+import { UnifiedTaskForm } from '@/components/form/UnifiedTaskForm';
+import { useFollowUpTask } from '@/features/tasks/hooks/useFollowUpTask';
+import type { Task } from '@/types';
 
 interface FollowUpTaskFormProps {
   parentTask: Task;
@@ -54,11 +54,13 @@ export default function FollowUpTaskForm({
       processingResult={processingResult}
       headerTitle="Create Follow-up Task"
       headerSubtitle="Alone we can do so little; together we can do so much.✨"
+      submitLabel="Create Follow-up"
+      titlePlaceholder="Enter follow-up task title"
       titleLabel="Follow-up Title"
       descriptionPlaceholder="Describe your follow-up task..."
     >
       {/* Parent Task Reference */}
-      <div className="mt-8 border-t border-border/20 pt-6">
+      <div className="border-border/20 mt-8 border-t pt-6">
         <ParentTaskReference parentTask={parentTask} />
       </div>
     </UnifiedTaskForm>

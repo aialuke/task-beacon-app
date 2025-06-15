@@ -1,23 +1,24 @@
-import { Calendar1, ExternalLink } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Calendar1, ExternalLink } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-import { ParentTaskReference } from '@/components/form/ParentTaskReference';
-import { formatDate } from '@/shared/utils/date';
-import type { Task } from '@/types';
+import { ParentTaskReference } from "@/components/form/ParentTaskReference";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { truncateText, truncateUrl } from "@/lib/utils/format";
+import { formatDate, getTooltipContent } from "@/lib/utils/shared";
+import type { Task } from "@/types";
 
-import TaskActions from '../actions/TaskActions';
+import TaskActions from "../actions/TaskActions";
 
-import { TaskImageGallery } from './TaskImageGallery';
+import { TaskImageGallery } from "./TaskImageGallery";
+
+
 
 interface TaskDetailsContentProps {
   task: Task;
   isExpanded?: boolean;
 }
 
-export default function TaskDetailsContent({
-  task,
-  isExpanded = false,
-}: TaskDetailsContentProps) {
+export default function TaskDetailsContent({ task, isExpanded = false }: TaskDetailsContentProps) {
   const navigate = useNavigate();
 
   return (
@@ -25,7 +26,9 @@ export default function TaskDetailsContent({
       {/* Task Description */}
       {task.description && (
         <div>
-          <p className="text-sm text-muted-foreground">{task.description}</p>
+          <p className="text-muted-foreground text-sm">
+            {isExpanded ? task.description : truncateText(task.description, 150)}
+          </p>
         </div>
       )}
 
@@ -37,23 +40,33 @@ export default function TaskDetailsContent({
         <div className="space-y-3">
           {task.due_date && (
             <div className="flex items-center gap-3">
-              <Calendar1 className="size-4 text-muted-foreground" />
-              <span className="text-sm text-muted-foreground">
-                {formatDate(task.due_date)}
-              </span>
+              <Calendar1 className="text-muted-foreground size-4" />
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="text-muted-foreground cursor-help text-sm">
+                      {formatDate(task.due_date)}
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    {getTooltipContent(task.due_date)}
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           )}
 
           {task.url_link && (
             <div className="flex items-center gap-2">
-              <ExternalLink className="size-4 text-primary" />
+              <ExternalLink className="text-primary size-4" />
               <a
                 href={task.url_link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1 text-sm text-primary hover:underline"
+                className="text-primary flex items-center gap-1 text-sm hover:underline"
+                title={task.url_link}
               >
-                {task.url_link}
+                {truncateUrl(task.url_link, 40)}
               </a>
             </div>
           )}
@@ -69,13 +82,7 @@ export default function TaskDetailsContent({
 
       {/* Single Border Separator + Action Buttons */}
       <div className="border-t pt-4">
-        <TaskActions
-          task={task}
-          onView={() => {
-            navigate(`/tasks/${task.id}`);
-          }}
-          isExpanded={isExpanded}
-        />
+        <TaskActions task={task} onView={() => { navigate(`/tasks/${task.id}`); }} isExpanded={isExpanded} />
       </div>
     </div>
   );

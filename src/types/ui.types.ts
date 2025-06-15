@@ -1,27 +1,21 @@
 /**
  * UI Component Types
- *
+ * 
  * All UI component-related type definitions.
  */
 
 // === COMMON UI TYPES ===
-type Size = 'sm' | 'md' | 'lg' | 'xl';
-type Variant =
-  | 'default'
-  | 'primary'
-  | 'secondary'
-  | 'destructive'
-  | 'outline'
-  | 'ghost';
-type ColorScheme = 'light' | 'dark' | 'auto';
+export type Size = 'sm' | 'md' | 'lg' | 'xl';
+export type Variant = 'default' | 'primary' | 'secondary' | 'destructive' | 'outline' | 'ghost';
+export type ColorScheme = 'light' | 'dark' | 'auto';
 
 // === BASE COMPONENT PROPS ===
-interface BaseComponentProps {
+export interface BaseComponentProps {
   className?: string;
   children?: React.ReactNode;
 }
 
-interface ButtonProps extends BaseComponentProps {
+export interface ButtonProps extends BaseComponentProps {
   variant?: Variant;
   size?: Size;
   disabled?: boolean;
@@ -29,47 +23,47 @@ interface ButtonProps extends BaseComponentProps {
   onClick?: () => void;
 }
 
-interface ModalProps extends BaseComponentProps {
+export interface ModalProps extends BaseComponentProps {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
   description?: string;
 }
 
-interface CardProps extends BaseComponentProps {
+export interface CardProps extends BaseComponentProps {
   title?: string;
   description?: string;
   footer?: React.ReactNode;
 }
 
-interface LoadingProps {
+export interface LoadingProps {
   size?: Size;
   variant?: 'spinner' | 'skeleton' | 'dots';
   message?: string;
 }
 
 // === UTILITY UI TYPES ===
-interface SelectOption<T = string> {
+export interface SelectOption<T = string> {
   value: T;
   label: string;
   disabled?: boolean;
 }
 
-interface FilterOptions<T = string> {
+export interface FilterOptions<T = string> {
   value: T;
   label: string;
   count?: number;
 }
 
-interface ModalState {
+export interface ModalState {
   isOpen: boolean;
   data?: unknown;
 }
 
 // === NOTIFICATION TYPES ===
-type NotificationType = 'info' | 'success' | 'warning' | 'error';
+export type NotificationType = 'info' | 'success' | 'warning' | 'error';
 
-interface Notification {
+export interface Notification {
   id: string;
   type: NotificationType;
   title: string;
@@ -79,8 +73,8 @@ interface Notification {
   actions?: NotificationAction[];
 }
 
-interface NotificationAction {
+export interface NotificationAction {
   label: string;
   action: () => void;
   variant?: 'primary' | 'secondary' | 'destructive';
-}
+} 

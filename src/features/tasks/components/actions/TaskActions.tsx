@@ -1,8 +1,10 @@
-import { Trash2 } from 'lucide-react';
-import { memo, useCallback, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// === EXTERNAL LIBRARIES ===
+import { Trash2 } from "lucide-react";
+import { useCallback, memo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import { Button } from '@/shared/components/ui/button';
+// === INTERNAL COMPONENTS ===
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -11,10 +13,13 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/shared/components/ui/dialog';
-import type { Task } from '@/types';
-
-import { useTaskMutations } from '../../hooks/useTaskMutations';
+} from "@/components/ui/dialog";
+// === HOOKS ===
+import { useTaskMutations } from "@/features/tasks/hooks/useTaskMutations";
+import { useUnifiedError } from "@/hooks/core/useUnifiedError";
+import { useAsyncOperation } from "@/lib/utils/async";
+// === TYPES ===
+import type { Task } from "@/types";
 
 interface TaskActionsProps {
   task: Task;
@@ -25,58 +30,75 @@ interface TaskActionsProps {
 function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
   const navigate = useNavigate();
   const { toggleTaskCompleteCallback, deleteTaskCallback } = useTaskMutations();
-  const [isDeleting, setIsDeleting] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const { handleError, withErrorHandling: _withErrorHandling } = useUnifiedError({ context: 'TaskActions' });
+  
+  // Async operations using useAsyncOperation for reliable state management
+  const {
+    execute: executeToggle,
+    isLoading: isToggling
+  } = useAsyncOperation(
+    async () => {
+      const result = await toggleTaskCompleteCallback(task);
+      if (!result.success && result.error) {
+        throw new Error(result.message);
+      }
+      return result;
+    },
+    {
+      onError: (error) => handleError(error, 'Toggle task completion')
+    }
+  );
+  
+  const {
+    execute: executeDelete,
+    isLoading: isDeleting
+  } = useAsyncOperation(
+    async () => {
+      const result = await deleteTaskCallback(task.id);
+      if (!result.success && result.error) {
+        throw new Error(result.message);
+      }
+      setIsDeleteDialogOpen(false);
+      return result;
+    },
+    {
+      onError: (error) => handleError(error, 'Delete task')
+    }
+  );
 
   const handleCreateFollowUp = useCallback(() => {
     navigate(`/follow-up-task/${task.id}`);
   }, [navigate, task.id]);
 
-  const handleToggleComplete = useCallback(async () => {
-    const result = await toggleTaskCompleteCallback(task);
-    if (result.success) {
-      // toast.success(result.message);
-    } else if (result.error) {
-      // toast.error(result.message);
-    }
-  }, [toggleTaskCompleteCallback, task]);
+  const handleToggleComplete = useCallback(() => {
+    executeToggle();
+  }, [executeToggle]);
 
-  const handleDelete = useCallback(async () => {
-    setIsDeleting(true);
-    try {
-      const result = await deleteTaskCallback(task.id);
-      if (result.success) {
-        // toast.success(result.message);
-        setIsDeleteDialogOpen(false);
-      } else if (result.error) {
-        // toast.error(result.message);
-      }
-    } catch {
-      // toast.error('Failed to delete task');
-    } finally {
-      setIsDeleting(false);
-    }
-  }, [deleteTaskCallback, task.id]);
+  const handleDelete = useCallback(() => {
+    executeDelete();
+  }, [executeDelete]);
 
   return (
     <div className="flex flex-wrap gap-2">
       <Button
-        variant={task.status === 'complete' ? 'outline' : 'default'}
+        variant={task.status === "complete" ? "outline" : "default"}
         size="sm"
         onClick={handleToggleComplete}
+        disabled={isToggling}
         className="rounded-full"
       >
-        {task.status === 'complete' ? 'Mark Incomplete' : 'Complete'}
+        {isToggling ? "Updating..." : (task.status === "complete" ? "Mark Incomplete" : "Complete")}
       </Button>
-      <Button
-        variant="outline"
-        size="sm"
+      <Button 
+        variant="outline" 
+        size="sm" 
         onClick={handleCreateFollowUp}
         className="rounded-full"
       >
         Follow Up
       </Button>
-
+      
       {/* Only show View Details button when not expanded */}
       {!isExpanded && (
         <Button variant="outline" size="sm" onClick={onView}>
@@ -91,7 +113,7 @@ function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
             <Button
               variant="ghost"
               size="icon"
-              className="size-8 text-muted-foreground hover:bg-muted hover:text-foreground"
+              className="text-muted-foreground hover:bg-muted hover:text-foreground size-8"
               disabled={isDeleting}
             >
               <Trash2 size={16} />
@@ -101,16 +123,14 @@ function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
             <DialogHeader>
               <DialogTitle>Delete Task</DialogTitle>
               <DialogDescription>
-                Are you sure you want to delete &ldquo;{task.title}&rdquo;? This
-                action cannot be undone.
+                Are you sure you want to delete &quot;{task.title}&quot;? This action
+                cannot be undone.
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>
               <Button
                 variant="outline"
-                onClick={() => {
-                  setIsDeleteDialogOpen(false);
-                }}
+                onClick={() => { setIsDeleteDialogOpen(false); }}
                 disabled={isDeleting}
               >
                 Cancel
@@ -120,7 +140,7 @@ function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
                 onClick={handleDelete}
                 disabled={isDeleting}
               >
-                {isDeleting ? 'Deleting...' : 'Delete'}
+                {isDeleting ? "Deleting..." : "Delete"}
               </Button>
             </DialogFooter>
           </DialogContent>

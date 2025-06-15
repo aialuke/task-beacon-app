@@ -1,6 +1,6 @@
 /**
  * Task Submission Hook - Phase 2 Simplified
- *
+ * 
  * Unified hook for all task submission operations with standardized error handling
  * and optimistic updates. Eliminates duplicate submission patterns.
  */
@@ -10,10 +10,12 @@ import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import { QueryKeys, TaskService } from '@/shared/services/api';
+import { QueryKeys } from '@/lib/api/standardized-api';
+import { TaskService } from '@/lib/api/tasks';
 import type { Task, TaskCreateData, TaskUpdateData } from '@/types';
 
 import { useTaskOptimisticUpdates } from './useTaskOptimisticUpdates';
+
 
 // === TASK SUBMISSION RESULT TYPES ===
 
@@ -26,10 +28,7 @@ interface TaskSubmissionResult {
 
 interface UseTaskSubmissionReturn {
   createTask: (data: TaskCreateData) => Promise<TaskSubmissionResult>;
-  updateTask: (
-    id: string,
-    data: TaskUpdateData
-  ) => Promise<TaskSubmissionResult>;
+  updateTask: (id: string, data: TaskUpdateData) => Promise<TaskSubmissionResult>;
   deleteTask: (id: string) => Promise<TaskSubmissionResult>;
   isSubmitting: boolean;
 }
@@ -48,11 +47,11 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
   const createMutation = useMutation({
     mutationFn: async (data: TaskCreateData): Promise<Task> => {
       const response = await TaskService.crud.create(data);
-
+      
       if (!response.success) {
         throw new Error(response.error?.message || 'Failed to create task');
       }
-
+      
       return response.data;
     },
     onError: (error: Error) => {
@@ -62,7 +61,7 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
       // Invalidate and refetch tasks list
       queryClient.invalidateQueries({ queryKey: QueryKeys.tasks });
       toast.success('Task created successfully!');
-
+      
       // Navigate to task details
       navigate(`/tasks/${task.id}`);
     },
@@ -70,31 +69,25 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
 
   // Update task mutation
   const updateMutation = useMutation({
-    mutationFn: async ({
-      id,
-      data,
-    }: {
-      id: string;
-      data: TaskUpdateData;
-    }): Promise<Task> => {
+    mutationFn: async ({ id, data }: { id: string; data: TaskUpdateData }): Promise<Task> => {
       const response = await TaskService.crud.update(id, data);
-
+      
       if (!response.success) {
         throw new Error(response.error?.message || 'Failed to update task');
       }
-
+      
       return response.data;
     },
     onMutate: async ({ id, data }) => {
       // Cancel outgoing refetches
       await queryClient.cancelQueries({ queryKey: QueryKeys.task(id) });
-
+      
       // Snapshot previous value
       const previousTask = queryClient.getQueryData(QueryKeys.task(id));
-
+      
       // Optimistically update
       optimisticUpdates.updateTaskOptimistically(id, data, previousTask);
-
+      
       return { previousTask };
     },
     onError: (error: Error, _, context) => {
@@ -115,7 +108,7 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
   const deleteMutation = useMutation({
     mutationFn: async (id: string): Promise<void> => {
       const response = await TaskService.crud.delete(id);
-
+      
       if (!response.success) {
         throw new Error(response.error?.message || 'Failed to delete task');
       }
@@ -123,13 +116,13 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
     onMutate: async (id: string) => {
       // Cancel outgoing refetches
       await queryClient.cancelQueries({ queryKey: QueryKeys.task(id) });
-
+      
       // Snapshot previous value
       const previousData = optimisticUpdates.getPreviousData();
-
+      
       // Optimistically remove task
       optimisticUpdates.removeTaskOptimistically(id, previousData);
-
+      
       return { previousData };
     },
     onError: (error: Error, _, context) => {
@@ -143,7 +136,7 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: QueryKeys.tasks });
       toast.success('Task deleted successfully!');
-
+      
       // Navigate back to tasks list
       navigate('/');
     },
@@ -210,10 +203,7 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
     [deleteMutation]
   );
 
-  const isSubmitting =
-    createMutation.isPending ||
-    updateMutation.isPending ||
-    deleteMutation.isPending;
+  const isSubmitting = createMutation.isPending || updateMutation.isPending || deleteMutation.isPending;
 
   return {
     createTask,
@@ -221,4 +211,4 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
     deleteTask,
     isSubmitting,
   };
-}
+} 

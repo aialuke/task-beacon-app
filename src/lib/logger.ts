@@ -1,12 +1,12 @@
 /**
  * Environment-aware logging utility for the application.
- *
+ * 
  * Provides structured logging with different levels (debug, info, warn, error)
- * and environment-based filtering. Integrates with error handling and
+ * and environment-based filtering. Integrates with error handling and 
  * performance monitoring systems.
  */
 
-type LogLevel = 'debug' | 'info' | 'warn' | 'error';
+export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
 interface LogEntry {
   level: LogLevel;
@@ -183,11 +183,7 @@ class Logger {
   /**
    * Log error message (actual errors)
    */
-  error(
-    message: string,
-    error?: Error,
-    context?: Record<string, unknown>
-  ): void {
+  error(message: string, error?: Error, context?: Record<string, unknown>): void {
     const entry = this.createLogEntry('error', message, context, error);
     this.outputLog(entry);
   }
@@ -209,7 +205,7 @@ class Logger {
     delete safeContext.password;
     delete safeContext.token;
     delete safeContext.secret;
-
+    
     this.info(`Auth: ${event}`, safeContext);
   }
 
@@ -223,11 +219,7 @@ class Logger {
   /**
    * Log component lifecycle events
    */
-  component(
-    component: string,
-    event: string,
-    context?: Record<string, unknown>
-  ): void {
+  component(component: string, event: string, context?: Record<string, unknown>): void {
     this.debug(`Component [${component}]: ${event}`, context);
   }
 
@@ -261,9 +253,9 @@ export const logger = new Logger();
 
 // Export specialized loggers for different modules
 export const authLogger = logger.createChild('Auth');
-const apiLogger = logger.createChild('API');
-const realtimeLogger = logger.createChild('Realtime');
-const componentLogger = logger.createChild('Component');
+export const apiLogger = logger.createChild('API');
+export const realtimeLogger = logger.createChild('Realtime');
+export const componentLogger = logger.createChild('Component');
 
 // Export Logger class for custom instances
 export { Logger };
@@ -275,7 +267,7 @@ export { Logger };
 /**
  * Log function entry and exit for debugging
  */
-function logFunctionCall<T extends (...args: unknown[]) => unknown>(
+export function logFunctionCall<T extends (...args: unknown[]) => unknown>(
   fn: T,
   functionName: string
 ): T {
@@ -284,28 +276,23 @@ function logFunctionCall<T extends (...args: unknown[]) => unknown>(
     try {
       const result = fn(...args);
       if (result instanceof Promise) {
-        return result
-          .then(res => {
-            logger.debug(`Function completed: ${functionName}`, {
-              result: res,
-            });
+        return (async () => {
+          try {
+            const res = await result;
+            logger.debug(`Function completed: ${functionName}`, { result: res });
             return res;
-          })
-          .catch((error: unknown) => {
-            const errorObj =
-              error instanceof Error ? error : new Error(String(error));
-            logger.error(`Function failed: ${functionName}`, errorObj, {
-              args,
-            });
+          } catch (error: unknown) {
+            const errorObj = error instanceof Error ? error : new Error(String(error));
+            logger.error(`Function failed: ${functionName}`, errorObj, { args });
             throw error;
-          });
+          }
+        })();
       } else {
         logger.debug(`Function completed: ${functionName}`, { result });
         return result;
       }
     } catch (error) {
-      const errorObj =
-        error instanceof Error ? error : new Error(String(error));
+      const errorObj = error instanceof Error ? error : new Error(String(error));
       logger.error(`Function failed: ${functionName}`, errorObj, { args });
       throw error;
     }
@@ -315,14 +302,14 @@ function logFunctionCall<T extends (...args: unknown[]) => unknown>(
 /**
  * Log async operation timing
  */
-async function logAsyncOperation<T>(
+export async function logAsyncOperation<T>(
   operation: () => Promise<T>,
   operationName: string,
   context?: Record<string, unknown>
 ): Promise<T> {
   const startTime = performance.now();
   logger.debug(`Starting async operation: ${operationName}`, context);
-
+  
   try {
     const result = await operation();
     const duration = performance.now() - startTime;

@@ -1,11 +1,13 @@
+
 import { X } from 'lucide-react';
 import { memo } from 'react';
 
-import { Button } from '@/shared/components/ui/button';
-import ImageErrorFallback from '@/shared/components/ui/ImageErrorFallback';
-import ImageLoadingState from '@/shared/components/ui/ImageLoadingState';
+import { Button } from '@/components/ui/button';
+import ImageErrorFallback from '@/components/ui/ImageErrorFallback';
+import ImageLoadingState from '@/components/ui/ImageLoadingState';
 
 import { useImagePreview } from '../hooks/useImagePreview';
+
 
 interface ImagePreviewModalProps {
   isOpen: boolean;
@@ -20,8 +22,7 @@ export const ImagePreviewModal = memo(function ImagePreviewModal({
   imageUrl,
   alt = 'Task attachment',
 }: ImagePreviewModalProps) {
-  const { imageLoaded, imageError, handleImageLoad, handleImageError } =
-    useImagePreview();
+  const { imageLoaded, imageError, handleImageLoad, handleImageError } = useImagePreview();
 
   if (!isOpen) return null;
 
@@ -33,9 +34,9 @@ export const ImagePreviewModal = memo(function ImagePreviewModal({
 
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
-    <div
+    <div 
       className="fixed inset-0 flex items-center justify-center bg-black/90 p-4"
-      style={{
+      style={{ 
         zIndex: 9999,
         backdropFilter: 'blur(8px)',
       }}
@@ -46,7 +47,7 @@ export const ImagePreviewModal = memo(function ImagePreviewModal({
         variant="default"
         size="icon"
         onClick={onClose}
-        className="absolute right-4 top-4 z-10 size-10 rounded-full bg-primary text-white shadow-lg hover:bg-primary/90"
+        className="bg-primary hover:bg-primary/90 absolute right-4 top-4 z-10 size-10 rounded-full text-white shadow-lg"
         style={{ zIndex: 10000 }}
       >
         <X className="size-4" />
@@ -54,17 +55,15 @@ export const ImagePreviewModal = memo(function ImagePreviewModal({
 
       {/* Modal Window */}
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
-      <div
+      <div 
         className="relative max-h-[90vh] max-w-[90vw] overflow-hidden rounded-2xl bg-white shadow-2xl"
-        onClick={e => {
-          e.stopPropagation();
-        }}
+        onClick={(e) => { e.stopPropagation(); }}
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b bg-gray-50 p-4">
           <h3 className="text-lg font-semibold text-gray-900">Image Preview</h3>
         </div>
-
+        
         {/* Image Content */}
         <div className="relative flex min-h-[200px] items-center justify-center bg-gray-100 p-6">
           {!imageLoaded && !imageError && <ImageLoadingState />}

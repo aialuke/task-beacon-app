@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 
 import { useImageLoadingState } from '@/hooks/core';
@@ -5,12 +6,12 @@ import { useImageLoadingState } from '@/hooks/core';
 export function useImagePreview() {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
-  const {
-    imageLoaded,
-    imageError,
-    handleImageLoad,
-    handleImageError,
-    resetImageState,
+  const { 
+    imageLoaded, 
+    imageError, 
+    handleImageLoad, 
+    handleImageError, 
+    resetImageState 
   } = useImageLoadingState();
 
   const openPreview = (imageUrl: string) => {

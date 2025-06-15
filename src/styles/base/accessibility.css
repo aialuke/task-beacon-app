@@ -8,7 +8,7 @@
   }
 
   button,
-  a[role="button"],
+  a[role='button'],
   .btn-primary,
   .btn-secondary {
     border: 1px solid CanvasText;

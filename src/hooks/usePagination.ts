@@ -1,13 +1,13 @@
 import { useState, useCallback, useMemo } from 'react';
 
-import {
+import { 
   DEFAULT_PAGINATION_CONFIG,
   validatePaginationParams,
   calculatePaginationMeta,
-} from '@/shared/utils/pagination';
+} from '@/lib/utils/pagination';
 import type {
-  PaginationState,
-  PaginationControls,
+  PaginationState as _PaginationState,
+  PaginationControls as _PaginationControls,
   PaginationAPI,
   PaginationParams,
   PaginationConfig,
@@ -30,13 +30,11 @@ interface UsePaginationReturn extends PaginationAPI {
 
 /**
  * Centralized pagination hook - Phase 2 Implementation
- *
+ * 
  * Provides standardized pagination logic with validation and callbacks.
  * Replaces scattered pagination logic across components.
  */
-export function usePagination(
-  options: UsePaginationOptions = {}
-): UsePaginationReturn {
+export function usePagination(options: UsePaginationOptions = {}): UsePaginationReturn {
   const {
     initialPage = 1,
     initialPageSize = DEFAULT_PAGINATION_CONFIG.defaultPageSize,
@@ -46,10 +44,7 @@ export function usePagination(
     onPageSizeChange,
   } = options;
 
-  // Memoize the final config to prevent dependency array issues
-  const finalConfig = useMemo(() => {
-    return { ...DEFAULT_PAGINATION_CONFIG, ...config };
-  }, [config]);
+  const finalConfig = useMemo(() => ({ ...DEFAULT_PAGINATION_CONFIG, ...config }), [config]);
 
   // Core pagination state
   const [page, setPage] = useState(initialPage);
@@ -78,38 +73,26 @@ export function usePagination(
     }
   }, [page, paginationMeta.hasPreviousPage, onPageChange]);
 
-  const goToPage = useCallback(
-    (targetPage: number) => {
-      const validationResult = validatePaginationParams(
-        { page: targetPage, pageSize },
-        finalConfig
-      );
+  const goToPage = useCallback((targetPage: number) => {
+    const validationResult = validatePaginationParams({ page: targetPage, pageSize }, finalConfig);
+    
+    if (validationResult.isValid && targetPage <= paginationMeta.totalPages) {
+      setPage(targetPage);
+      onPageChange?.(targetPage);
+    }
+  }, [pageSize, finalConfig, paginationMeta.totalPages, onPageChange]);
 
-      if (validationResult.isValid && targetPage <= paginationMeta.totalPages) {
-        setPage(targetPage);
-        onPageChange?.(targetPage);
-      }
-    },
-    [pageSize, finalConfig, paginationMeta.totalPages, onPageChange]
-  );
-
-  const setPageSizeHandler = useCallback(
-    (newPageSize: number) => {
-      const validationResult = validatePaginationParams(
-        { page, pageSize: newPageSize },
-        finalConfig
-      );
-
-      if (validationResult.isValid) {
-        setPageSize(newPageSize);
-        // Reset to page 1 when changing page size to avoid out-of-bounds
-        setPage(1);
-        onPageSizeChange?.(newPageSize);
-        onPageChange?.(1);
-      }
-    },
-    [page, finalConfig, onPageSizeChange, onPageChange]
-  );
+  const setPageSizeHandler = useCallback((newPageSize: number) => {
+    const validationResult = validatePaginationParams({ page, pageSize: newPageSize }, finalConfig);
+    
+    if (validationResult.isValid) {
+      setPageSize(newPageSize);
+      // Reset to page 1 when changing page size to avoid out-of-bounds
+      setPage(1);
+      onPageSizeChange?.(newPageSize);
+      onPageChange?.(1);
+    }
+  }, [page, finalConfig, onPageSizeChange, onPageChange]);
 
   // Utility functions
   const reset = useCallback(() => {
@@ -118,13 +101,10 @@ export function usePagination(
     setTotalCount(0);
   }, [initialPage, initialPageSize]);
 
-  const getParams = useCallback(
-    (): PaginationParams => ({
-      page,
-      pageSize,
-    }),
-    [page, pageSize]
-  );
+  const getParams = useCallback((): PaginationParams => ({
+    page,
+    pageSize,
+  }), [page, pageSize]);
 
   // Update total count when external value changes
   if (externalTotalCount !== totalCount && externalTotalCount > 0) {
@@ -139,13 +119,13 @@ export function usePagination(
     totalPages: paginationMeta.totalPages,
     hasNextPage: paginationMeta.hasNextPage,
     hasPreviousPage: paginationMeta.hasPreviousPage,
-
+    
     // Controls
     goToNextPage,
     goToPreviousPage,
     goToPage,
     setPageSize: setPageSizeHandler,
-
+    
     // Utilities
     setTotalCount,
     reset,
