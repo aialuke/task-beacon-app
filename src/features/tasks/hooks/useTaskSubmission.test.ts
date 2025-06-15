@@ -63,6 +63,7 @@ interface SubmitTaskData {
 }
 
 interface TaskUpdateData {
+  id: string;
   title?: string;
   description?: string;
   dueDate?: string;
@@ -161,6 +162,7 @@ describe('useTaskSubmission', () => {
 
   it('should successfully update a task', async () => {
     const taskUpdateData: TaskUpdateData = { 
+      id: 'task-123',
       title: 'Updated Task',
       priority: 'high' as TaskPriority
     };
