@@ -1,3 +1,4 @@
+
 import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
@@ -60,6 +61,16 @@ interface SubmitTaskData {
   priority?: 'low' | 'medium' | 'high' | 'urgent';
 }
 
+interface TaskUpdateData {
+  id: string;
+  title?: string;
+  description?: string;
+  dueDate?: string;
+  url?: string;
+  assigneeId?: string;
+  priority?: string;
+}
+
 describe('useTaskSubmission', () => {
   const mockTaskData: SubmitTaskData = {
     title: 'Test Task',
@@ -74,7 +85,7 @@ describe('useTaskSubmission', () => {
     vi.clearAllMocks();
   });
 
-  it('should successfully submit a task', async () => {
+  it('should successfully create a task', async () => {
     const mockCreatedTask: TaskWithRelations = {
       id: 'task-123',
       title: mockTaskData.title,
@@ -100,7 +111,7 @@ describe('useTaskSubmission', () => {
 
     let submissionResult;
     await act(async () => {
-      submissionResult = await result.current.submitTask(mockTaskData);
+      submissionResult = await result.current.createTask(mockTaskData);
     });
 
     expect(submissionResult).toEqual({
@@ -122,7 +133,7 @@ describe('useTaskSubmission', () => {
 
     let submissionResult;
     await act(async () => {
-      submissionResult = await result.current.submitTask(mockTaskData);
+      submissionResult = await result.current.createTask(mockTaskData);
     });
 
     expect(submissionResult).toEqual({
@@ -139,7 +150,7 @@ describe('useTaskSubmission', () => {
 
     let submissionResult;
     await act(async () => {
-      submissionResult = await result.current.submitTask(mockTaskData);
+      submissionResult = await result.current.createTask(mockTaskData);
     });
 
     expect(submissionResult).toEqual({
@@ -149,11 +160,13 @@ describe('useTaskSubmission', () => {
   });
 
   it('should successfully update a task', async () => {
-    const taskId = 'task-123';
-    const updates = { title: 'Updated Task' };
+    const taskUpdateData: TaskUpdateData = { 
+      id: 'task-123', 
+      title: 'Updated Task' 
+    };
 
     const mockUpdatedTask: TaskWithRelations = {
-      id: taskId,
+      id: taskUpdateData.id,
       title: 'Updated Task',
       description: 'Test Description',
       owner_id: 'owner-123',
@@ -177,16 +190,16 @@ describe('useTaskSubmission', () => {
 
     let updateResult;
     await act(async () => {
-      updateResult = await result.current.updateTask(taskId, updates);
+      updateResult = await result.current.updateTask(taskUpdateData.id, taskUpdateData);
     });
 
     expect(updateResult).toEqual({
       success: true,
-      taskId,
+      taskId: taskUpdateData.id,
     });
     expect(TaskService.crud.update).toHaveBeenCalledWith(
-      taskId,
-      expect.objectContaining(updates)
+      taskUpdateData.id,
+      expect.objectContaining({ title: taskUpdateData.title })
     );
   });
 });

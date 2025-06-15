@@ -1,18 +1,27 @@
+
 /**
  * Standardized API Layer - Phase 3 Implementation
- *
- * Simplified to use single response pattern with apiRequest.
- * Removed duplicate apiCall function to eliminate confusion.
  */
 
 import type { QueryClient } from '@tanstack/react-query';
 
-import type { ApiResponse, ApiError } from '@/types/api.types';
+import type { ApiResponse } from '@/types/api.types';
+
+/**
+ * Extended API error with additional properties
+ */
+interface ExtendedApiError {
+  message: string;
+  name: string;
+  code: string;
+  timestamp: string;
+  originalError?: unknown;
+}
 
 /**
  * Standard error transformation utility
  */
-function transformApiError(error: unknown): ApiError {
+function transformApiError(error: unknown): ExtendedApiError {
   if (error instanceof Error) {
     return {
       message: error.message,
@@ -46,7 +55,7 @@ function createSuccessResponse<T>(data: T): ApiResponse<T> {
 /**
  * Standard error response creator
  */
-function createErrorResponse<T = null>(error: ApiError): ApiResponse<T> {
+function createErrorResponse<T = null>(error: ExtendedApiError): ApiResponse<T> {
   return {
     data: null,
     error,
@@ -58,24 +67,20 @@ function createErrorResponse<T = null>(error: ApiError): ApiResponse<T> {
  * Query key management utilities
  */
 export const QueryKeys = {
-  // Task queries
   tasks: ['tasks'] as const,
   task: (id: string) => ['tasks', id] as const,
   tasksByAssignee: (assigneeId: string) =>
     ['tasks', 'assignee', assigneeId] as const,
   tasksByStatus: (status: string) => ['tasks', 'status', status] as const,
 
-  // User queries - Enhanced for Phase 2.2
   users: ['users'] as const,
   user: (id: string) => ['users', id] as const,
   usersByRole: (role: string) => ['users', 'role', role] as const,
   userSearch: (query: string) => ['users', 'search', query] as const,
 
-  // Auth queries
   currentUser: ['auth', 'current-user'] as const,
   session: ['auth', 'session'] as const,
 
-  // Utility for invalidating related queries
   invalidateTaskQueries: (queryClient: QueryClient) => {
     return queryClient.invalidateQueries({ queryKey: QueryKeys.tasks });
   },
@@ -85,5 +90,4 @@ export const QueryKeys = {
   },
 } as const;
 
-// Loading state utilities moved to @/types/async-state.types.ts to eliminate duplication;
 export { createLoadingState } from '@/types/async-state.types';

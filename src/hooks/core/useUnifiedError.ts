@@ -1,8 +1,6 @@
+
 /**
  * Unified Error Hook - Phase 1 Consolidation
- *
- * Replaces useErrorHandler and useAsyncOperation with a single,
- * consistent error handling hook for React components.
  */
 
 import { useState, useCallback } from 'react';
@@ -14,40 +12,36 @@ import {
   type ErrorState,
 } from '@/lib/core/ErrorHandler';
 
-// === HOOK INTERFACE ===
+/**
+ * Extended API error with additional properties
+ */
+interface ExtendedApiError {
+  message: string;
+  name: string;
+  code?: string;
+  originalError?: unknown;
+}
 
 interface UseUnifiedErrorOptions extends ErrorOptions {
-  /** Initial error state */
   initialError?: Error | null;
 }
 
 interface UseUnifiedErrorReturn {
-  // State
   error: Error | null;
   hasError: boolean;
   isRecoverable: boolean;
-
-  // Actions
   handleError: (error: unknown, context?: string) => void;
   clearError: () => void;
-
-  // Utilities
   withErrorHandling: <T extends unknown[], R>(
     fn: (...args: T) => Promise<R>,
     context?: string
   ) => (...args: T) => Promise<R | null>;
-
   safeAsync: <T>(
     asyncFn: () => Promise<T>,
     context?: string
   ) => Promise<T | null>;
 }
 
-// === UNIFIED ERROR HOOK ===
-
-/**
- * Single hook for all error handling needs in React components
- */
 export function useUnifiedError(
   options: UseUnifiedErrorOptions = {}
 ): UseUnifiedErrorReturn {
@@ -68,9 +62,8 @@ export function useUnifiedError(
         showToast,
         logToConsole,
         context: context || defaultContext,
-      });
+      }) as ExtendedApiError;
 
-      // Convert ApiError back to Error for state consistency
       const errorInstance =
         processedError.originalError instanceof Error
           ? processedError.originalError
@@ -120,16 +113,11 @@ export function useUnifiedError(
   );
 
   return {
-    // State
     error: errorState.error,
     hasError: errorState.hasError,
     isRecoverable: errorState.isRecoverable,
-
-    // Actions
     handleError: handleErrorCallback,
     clearError,
-
-    // Utilities
     withErrorHandling,
     safeAsync,
   };
