@@ -1,3 +1,4 @@
+
 /**
  * Unified Error Hook - Phase 1 Consolidation
  *

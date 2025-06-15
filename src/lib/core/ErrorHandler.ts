@@ -1,3 +1,4 @@
+
 /**
  * Unified Error Handling System - Phase 1 Consolidation
  *
@@ -153,3 +154,5 @@ const ErrorHandler = {
   setup: setupGlobalErrorHandling,
   createState: createErrorState,
 };
+
+export default ErrorHandler;

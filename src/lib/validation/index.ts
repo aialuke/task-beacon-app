@@ -1,3 +1,4 @@
+
 /**
  * Unified Validation System - Main Entry Point
  *
@@ -37,13 +38,7 @@ export {
   validateUnifiedSignIn,
   validateUnifiedSignUp,
 } from './unified-forms';
-// Helper functions
-// ============================================================================
-// LEGACY COMPATIBILITY EXPORTS
-// ============================================================================
 
-// For backward compatibility with existing imports
-// Legacy schema aliases
 // ============================================================================
 // TYPE EXPORTS
 // ============================================================================
@@ -56,10 +51,9 @@ export type {
   ZodValidationResult,
 } from './unified-core';
 
-// Profile schema re-exports
+// Profile schema re-exports - fix the missing export
 export {
   unifiedProfileSchema,
-  unifiedProfileCreateSchema,
   unifiedProfileUpdateSchema,
   unifiedProfileFormSchema,
 } from './unified-schemas';

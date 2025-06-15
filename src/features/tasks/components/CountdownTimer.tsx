@@ -61,7 +61,7 @@ function CountdownTimer({
     [getAnimationConfig]
   );
 
-  // Fix React Spring configuration - use proper typing
+  // Fix React Spring configuration - properly type the animation properties
   const springProps = useSpring({
     strokeDashoffset: dashOffset,
     config: springConfig,

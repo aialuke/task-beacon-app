@@ -1,3 +1,4 @@
+
 /**
  * Unified Error Boundary - Phase 1 Consolidation
  *

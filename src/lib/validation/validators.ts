@@ -58,8 +58,71 @@ function validatePasswordChange(data: unknown) {
 // PROFILE VALIDATORS
 // ============================================================================
 
-export function validateProfileUpdate(data: unknown) {
-  return profileUpdateSchema.safeParse(data);
+export function validateProfileUpdate(
+  data: Partial<ProfileUpdateInput>
+): ProfileValidationResult {
+  const errors: Record<string, string> = {};
+  const fieldErrors: {
+    name?: string;
+    email?: string;
+    avatar_url?: string;
+  } = {};
+
+  // Name validation
+  if (data.name !== undefined) {
+    if (typeof data.name !== 'string') {
+      errors.name = 'Name must be a string';
+      fieldErrors.name = 'Name must be a string';
+    } else if (data.name.trim().length === 0) {
+      errors.name = 'Name is required';
+      fieldErrors.name = 'Name is required';
+    } else if (data.name.length < 2) {
+      errors.name = 'Name must be at least 2 characters';
+      fieldErrors.name = 'Name must be at least 2 characters';
+    } else if (data.name.length > 100) {
+      errors.name = 'Name must be less than 100 characters';
+      fieldErrors.name = 'Name must be less than 100 characters';
+    }
+  }
+
+  // Email validation
+  if (data.email !== undefined) {
+    if (typeof data.email !== 'string') {
+      errors.email = 'Email must be a string';
+      fieldErrors.email = 'Email must be a string';
+    } else if (data.email.trim().length === 0) {
+      errors.email = 'Email is required';
+      fieldErrors.email = 'Email is required';
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const isValidEmail = emailRegex.test(data.email); // Fix: ensure boolean type
+      if (!isValidEmail) {
+        errors.email = 'Please enter a valid email address';
+        fieldErrors.email = 'Please enter a valid email address';
+      }
+    }
+  }
+
+  // Avatar URL validation
+  if (data.avatar_url !== undefined && data.avatar_url !== null) {
+    if (typeof data.avatar_url !== 'string') {
+      errors.avatar_url = 'Avatar URL must be a string';
+      fieldErrors.avatar_url = 'Avatar URL must be a string';
+    } else if (data.avatar_url.trim().length > 0) {
+      try {
+        new URL(data.avatar_url);
+      } catch {
+        errors.avatar_url = 'Please enter a valid URL';
+        fieldErrors.avatar_url = 'Please enter a valid URL';
+      }
+    }
+  }
+
+  return {
+    isValid: Object.keys(errors).length === 0,
+    errors,
+    fieldErrors,
+  };
 }
 
 function validateProfileCreate(data: unknown) {
@@ -192,7 +255,7 @@ function isValidEmail(email: string): boolean {
   if (!email || typeof email !== 'string') return false;
 
   const emailRegex =
-    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
   if (!emailRegex.test(email.trim())) return false;
 
