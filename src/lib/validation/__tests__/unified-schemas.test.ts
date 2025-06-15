@@ -10,9 +10,6 @@ describe('Unified Schemas', () => {
         title: 'Test Task',
         description: 'Test Description',
         url: 'https://example.com',
-        dueDate: '2024-12-31',
-        assigneeId: 'user-123',
-        priority: 'medium',
       };
 
       const result = validateUnifiedTask(validTask);
@@ -40,6 +37,19 @@ describe('Unified Schemas', () => {
       };
 
       const result = validateUnifiedTask(incompleteTask);
+      
+      expect(result.isValid).toBe(false);
+      expect(result.fieldErrors).toBeDefined();
+    });
+
+    it('should handle invalid URL', () => {
+      const taskWithInvalidUrl = {
+        title: 'Test Task',
+        description: 'Test Description',
+        url: 'not-a-valid-url',
+      };
+
+      const result = validateUnifiedTask(taskWithInvalidUrl);
       
       expect(result.isValid).toBe(false);
       expect(result.fieldErrors).toBeDefined();

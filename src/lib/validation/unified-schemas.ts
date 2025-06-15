@@ -1,3 +1,4 @@
+
 /**
  * Unified Validation Schemas - Zod Schema Definitions
  *
@@ -240,3 +241,43 @@ export const unifiedProfileFormSchema = z.object({
   email: unifiedEmailSchema,
   avatar_url: unifiedNullableUrlSchema,
 });
+
+// ============================================================================
+// VALIDATION FUNCTIONS
+// ============================================================================
+
+/**
+ * Validate task data against unified task schema
+ */
+export function validateUnifiedTask(data: unknown) {
+  try {
+    const result = unifiedTaskFormSchema.safeParse(data);
+    
+    if (result.success) {
+      return {
+        isValid: true,
+        data: result.data,
+        fieldErrors: null,
+      };
+    } else {
+      const fieldErrors: Record<string, string> = {};
+      result.error.errors.forEach(err => {
+        if (err.path.length > 0) {
+          fieldErrors[err.path[0] as string] = err.message;
+        }
+      });
+      
+      return {
+        isValid: false,
+        data: null,
+        fieldErrors,
+      };
+    }
+  } catch (error) {
+    return {
+      isValid: false,
+      data: null,
+      fieldErrors: { general: 'Validation failed' },
+    };
+  }
+}

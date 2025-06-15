@@ -4,6 +4,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import { TaskService } from '@/lib/api';
 import type { TaskWithRelations } from '@/types';
+import type { TaskPriority } from '@/types/feature-types/task.types';
 
 import { useTaskSubmission } from './useTaskSubmission';
 
@@ -58,17 +59,16 @@ interface SubmitTaskData {
   pinned: boolean;
   assigneeId: string;
   photoUrl?: string | null;
-  priority?: 'low' | 'medium' | 'high' | 'urgent';
+  priority?: TaskPriority;
 }
 
 interface TaskUpdateData {
-  id: string;
   title?: string;
   description?: string;
   dueDate?: string;
   url?: string;
   assigneeId?: string;
-  priority?: string;
+  priority?: TaskPriority;
 }
 
 describe('useTaskSubmission', () => {
@@ -161,12 +161,12 @@ describe('useTaskSubmission', () => {
 
   it('should successfully update a task', async () => {
     const taskUpdateData: TaskUpdateData = { 
-      id: 'task-123', 
-      title: 'Updated Task' 
+      title: 'Updated Task',
+      priority: 'high' as TaskPriority
     };
 
     const mockUpdatedTask: TaskWithRelations = {
-      id: taskUpdateData.id,
+      id: 'task-123',
       title: 'Updated Task',
       description: 'Test Description',
       owner_id: 'owner-123',
@@ -190,16 +190,19 @@ describe('useTaskSubmission', () => {
 
     let updateResult;
     await act(async () => {
-      updateResult = await result.current.updateTask(taskUpdateData.id, taskUpdateData);
+      updateResult = await result.current.updateTask('task-123', taskUpdateData);
     });
 
     expect(updateResult).toEqual({
       success: true,
-      taskId: taskUpdateData.id,
+      taskId: 'task-123',
     });
     expect(TaskService.crud.update).toHaveBeenCalledWith(
-      taskUpdateData.id,
-      expect.objectContaining({ title: taskUpdateData.title })
+      'task-123',
+      expect.objectContaining({ 
+        title: taskUpdateData.title,
+        priority: taskUpdateData.priority
+      })
     );
   });
 });
