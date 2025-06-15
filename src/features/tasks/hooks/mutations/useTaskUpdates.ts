@@ -1,7 +1,8 @@
+
 import { useCallback } from 'react';
 
 import { TaskService } from '@/shared/services/api';
-import { Task } from '@/types';
+import { Task, TaskUpdateData } from '@/types';
 
 import { useTaskOptimisticUpdates } from '../useTaskOptimisticUpdates';
 
@@ -9,7 +10,7 @@ import { useBaseMutation } from './useBaseMutation';
 
 interface TaskUpdateVariables {
   taskId: string;
-  updates: Partial<Task>;
+  updates: TaskUpdateData;
 }
 
 interface TaskMutationResult {
@@ -48,7 +49,7 @@ export function useTaskUpdates() {
   const updateTaskCallback = useCallback(
     async (
       taskId: string,
-      updates: Partial<Task>
+      updates: TaskUpdateData
     ): Promise<TaskMutationResult> => {
       return await baseMutation.execute({ taskId, updates });
     },

@@ -1,3 +1,4 @@
+
 /**
  * Task Submission Hook - Phase 2 Simplified
  *
@@ -49,7 +50,7 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
     mutationFn: async (data: TaskCreateData): Promise<Task> => {
       const response = await TaskService.crud.create(data);
 
-      if (!response.success) {
+      if (!response.success || !response.data) {
         throw new Error(response.error?.message || 'Failed to create task');
       }
 
@@ -79,7 +80,7 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
     }): Promise<Task> => {
       const response = await TaskService.crud.update(id, data);
 
-      if (!response.success) {
+      if (!response.success || !response.data) {
         throw new Error(response.error?.message || 'Failed to update task');
       }
 

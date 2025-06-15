@@ -1,3 +1,4 @@
+
 /**
  * Autocomplete Logic Hook - Business Logic for User Autocomplete
  *
@@ -34,7 +35,7 @@ export function useAutocompleteLogic({
 
   // Find selected user
   const selectedUser = useMemo(
-    () => users.find(user => user.id === value),
+    () => users.find(user => user.id === value) || null,
     [users, value]
   );
 
@@ -49,7 +50,7 @@ export function useAutocompleteLogic({
         displayName.toLowerCase() === searchTerm ||
         user.email.toLowerCase() === searchTerm
       );
-    });
+    }) || null;
   }, [users, inputValue, selectedUser]);
 
   // Auto-select exact matches
@@ -75,7 +76,7 @@ export function useAutocompleteLogic({
       );
     });
 
-    return match;
+    return match || null;
   }, [users, inputValue, selectedUser, exactMatch]);
 
   // Generate ghost text completion

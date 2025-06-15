@@ -1,4 +1,5 @@
-import { useSpring, animated } from '@react-spring/web';
+
+import { useSpring, animated, config } from '@react-spring/web';
 import { useMemo } from 'react';
 
 import { useMotionPreferences } from '@/hooks/useMotionPreferences';
@@ -60,7 +61,7 @@ function CountdownTimer({
     [getAnimationConfig]
   );
 
-  const { strokeDashoffset } = useSpring({
+  const springAnimation = useSpring({
     strokeDashoffset: dashOffset,
     config: springConfig,
     immediate:
@@ -100,7 +101,7 @@ function CountdownTimer({
               size={dynamicSize}
               radius={radius}
               circumference={circumference}
-              strokeDashoffset={strokeDashoffset}
+              strokeDashoffset={springAnimation.strokeDashoffset}
               status={status}
               daysRemaining={daysRemaining}
             />

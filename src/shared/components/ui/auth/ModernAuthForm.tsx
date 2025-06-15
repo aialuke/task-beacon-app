@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 
 import { Card, CardContent } from '@/shared/components/ui/card';
@@ -64,8 +65,8 @@ const ModernAuthForm: React.FC = () => {
               onEmailChange={handleEmailChange}
               onPasswordChange={handlePasswordChange}
               onTogglePassword={handleTogglePassword}
-              nameInputRef={nameInputRef}
-              emailInputRef={emailInputRef}
+              nameInputRef={nameInputRef as React.RefObject<HTMLInputElement>}
+              emailInputRef={emailInputRef as React.RefObject<HTMLInputElement>}
             />
 
             <AuthSubmitButton mode={mode} loading={loading} />

@@ -1,3 +1,4 @@
+
 /**
  * Unified Validation Hooks - React Integration
  *
@@ -87,11 +88,19 @@ export function useUnifiedValidation(): {
   }, []);
 
   const validateTaskDescription = useCallback((description: string) => {
-    return validateWithUnifiedSchema(unifiedTaskDescriptionSchema, description);
+    const result = validateWithUnifiedSchema(unifiedTaskDescriptionSchema, description);
+    return {
+      ...result,
+      data: result.data || description, // Ensure we return string, not undefined
+    } as UnifiedValidationResult<string>;
   }, []);
 
   const validateUrl = useCallback((url: string) => {
-    return validateWithUnifiedSchema(unifiedUrlSchema, url);
+    const result = validateWithUnifiedSchema(unifiedUrlSchema, url);
+    return {
+      ...result,
+      data: result.data || url, // Ensure we return string, not undefined
+    } as UnifiedValidationResult<string>;
   }, []);
 
   return {

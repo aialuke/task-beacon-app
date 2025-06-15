@@ -1,3 +1,4 @@
+
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useAuth } from '@/hooks/core';
@@ -83,8 +84,8 @@ export function useTasksQuery(
       }
 
       return {
-        data: response.data.data,
-        totalCount: response.data.pagination.totalCount,
+        data: response.data?.data || [],
+        totalCount: response.data?.pagination?.totalCount || 0,
       };
     },
     staleTime: 5 * 60 * 1000, // 5 minutes for better UX
@@ -110,7 +111,7 @@ export function useTasksQuery(
   const shouldPrefetch =
     pagination.hasNextPage &&
     !isLoading &&
-    response?.data.length === pagination.pageSize;
+    (response?.data?.length || 0) === pagination.pageSize;
 
   if (shouldPrefetch && user && session) {
     const nextPageKey = [
@@ -141,8 +142,8 @@ export function useTasksQuery(
           }
 
           return {
-            data: response.data.data,
-            totalCount: response.data.pagination.totalCount,
+            data: response.data?.data || [],
+            totalCount: response.data?.pagination?.totalCount || 0,
           };
         },
         staleTime: 5 * 60 * 1000,
