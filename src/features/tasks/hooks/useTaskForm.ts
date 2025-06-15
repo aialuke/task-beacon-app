@@ -5,7 +5,7 @@ import { logger } from '@/lib/logger';
 import type { TaskCreateData } from '@/types';
 import type { FormErrors } from '@/types/form.types';
 
-export interface UseTaskFormOptions {
+interface UseTaskFormOptions {
   initialTitle?: string;
   initialDescription?: string;
   initialDueDate?: string | null;
@@ -15,7 +15,7 @@ export interface UseTaskFormOptions {
   onClose?: () => void;
 }
 
-export interface TaskFormValues extends Record<string, unknown> {
+interface TaskFormValues extends Record<string, unknown> {
   title: string;
   description: string;
   dueDate: string;
@@ -25,7 +25,7 @@ export interface TaskFormValues extends Record<string, unknown> {
 
 /**
  * Task form hook - Phase 2 Refactored
- * 
+ *
  * Now uses unified form hook to eliminate duplicate form state patterns.
  * Maintains backward compatibility with existing interface.
  */
@@ -41,23 +41,26 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
   } = options;
 
   // Task form validation logic
-  const validateTaskForm = useCallback((values: TaskFormValues): FormErrors<TaskFormValues> => {
-    const errors: FormErrors<TaskFormValues> = {};
-    
-    if (!values.title.trim()) {
-      errors.title = 'Title is required';
-    }
-    
-    if (values.url?.trim()) {
-      try {
-        new URL(values.url);
-      } catch {
-        errors.url = 'Please enter a valid URL';
+  const validateTaskForm = useCallback(
+    (values: TaskFormValues): FormErrors<TaskFormValues> => {
+      const errors: FormErrors<TaskFormValues> = {};
+
+      if (!values.title.trim()) {
+        errors.title = 'Title is required';
       }
-    }
-    
-    return errors;
-  }, []);
+
+      if (values.url?.trim()) {
+        try {
+          new URL(values.url);
+        } catch {
+          errors.url = 'Please enter a valid URL';
+        }
+      }
+
+      return errors;
+    },
+    []
+  );
 
   // Unified form with task-specific configuration
   const form = useUnifiedForm<TaskFormValues>({
@@ -69,7 +72,7 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
       assigneeId: initialAssigneeId ?? '',
     },
     validate: validateTaskForm,
-    onSubmit: async (values) => {
+    onSubmit: async values => {
       if (onSubmit) {
         const trimmedValues = {
           title: values.title.trim(),
@@ -91,7 +94,7 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
       title: form.values.title.trim(),
       description: form.values.description.trim() || undefined,
       due_date: form.values.dueDate || undefined,
-      photo_url: null,
+      photo_url: undefined,
       url_link: form.values.url.trim() || undefined,
       assignee_id: form.values.assigneeId || undefined,
     };
@@ -122,7 +125,9 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     isSubmitting: form.isSubmitting,
     setIsSubmitting: (_submitting: boolean) => {
       // Legacy compatibility - unified form handles this internally
-      logger.warn('setIsSubmitting is deprecated - form handles submission state automatically');
+      logger.warn(
+        'setIsSubmitting is deprecated - form handles submission state automatically'
+      );
     },
 
     // Form actions (backward compatibility)

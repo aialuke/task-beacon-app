@@ -1,8 +1,11 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 
-import { formatTaskStatus } from '@/features/tasks/utils/taskUiUtils';
-import { getUpdateInterval, formatTimeDisplay, getDaysRemaining } from '@/lib/utils/date';
-import { calculateTimerOffset } from '@/animations';
+import { calculateTimerOffset } from '@/shared/utils/animation';
+import {
+  getUpdateInterval,
+  formatTimeDisplay,
+  getDaysRemaining,
+} from '@/shared/utils/date';
 import type { TaskStatus } from '@/types';
 
 interface CountdownResult {
@@ -36,8 +39,8 @@ interface CountdownTimerResult {
  * @returns Object containing formatted time display, dash offset, tooltip content, and aria label
  */
 export function useCountdown(
-  dueDate: string | null, 
-  status: TaskStatus, 
+  dueDate: string | null,
+  status: TaskStatus,
   circumference: number
 ): CountdownTimerResult {
   const [state, setState] = useState<CountdownState>(() => {
@@ -54,18 +57,21 @@ export function useCountdown(
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Optimize calculation frequency
-  const calculateWithThrottle = useCallback((currentDueDate: string | null, currentStatus: TaskStatus) => {
-    const now = Date.now();
-    const timeSinceLastCalc = now - lastCalculationRef.current;
+  const calculateWithThrottle = useCallback(
+    (currentDueDate: string | null, currentStatus: TaskStatus) => {
+      const now = Date.now();
+      const timeSinceLastCalc = now - lastCalculationRef.current;
 
-    // Throttle calculations to avoid excessive computation
-    if (timeSinceLastCalc < 100) {
-      return state.timeLeft;
-    }
+      // Throttle calculations to avoid excessive computation
+      if (timeSinceLastCalc < 100) {
+        return state.timeLeft;
+      }
 
-    lastCalculationRef.current = now;
-    return calculateTimeLeft(currentDueDate, currentStatus);
-  }, [state.timeLeft]);
+      lastCalculationRef.current = now;
+      return calculateTimeLeft(currentDueDate, currentStatus);
+    },
+    [state.timeLeft]
+  );
 
   // Update countdown when props change or interval triggers
   const updateCountdown = useCallback(() => {
@@ -109,10 +115,10 @@ export function useCountdown(
   // Memoize the computed values that depend on the countdown state
   const computedValues = useMemo(() => {
     const { timeLeft } = state;
-    
+
     // Format the time display
     const timeDisplay = formatTimeDisplay(timeLeft.days, dueDate, status);
-    
+
     // Calculate dash offset for the timer ring
     const dashOffset = calculateTimerOffset(
       circumference,
@@ -120,17 +126,17 @@ export function useCountdown(
       status,
       dueDate
     );
-    
-    // Generate tooltip content with formatted status
+
+    // Generate tooltip content
     let tooltipContent = '';
     if (status === 'complete') {
-      tooltipContent = `Task ${formatTaskStatus(status)}`;
+      tooltipContent = 'Task completed';
     } else if (status === 'overdue') {
-      tooltipContent = `Task is ${formatTaskStatus(status)}`;
+      tooltipContent = 'Task is overdue';
     } else if (!dueDate) {
       tooltipContent = 'No due date set';
     } else if (timeLeft.isOverdue) {
-      tooltipContent = `Task is ${formatTaskStatus('overdue')}`;
+      tooltipContent = 'Task is overdue';
     } else if (timeLeft.days === 0) {
       tooltipContent = 'Due today';
     } else if (timeLeft.days === 1) {
@@ -140,13 +146,13 @@ export function useCountdown(
     } else {
       tooltipContent = 'Due date approaching';
     }
-    
-    // Generate aria label for accessibility with formatted status
+
+    // Generate aria label for accessibility
     let ariaLabel = '';
     if (status === 'complete') {
-      ariaLabel = `Task timer: ${formatTaskStatus(status)}`;
+      ariaLabel = 'Task timer: Completed';
     } else if (status === 'overdue') {
-      ariaLabel = `Task timer: ${formatTaskStatus(status)}`;
+      ariaLabel = 'Task timer: Overdue';
     } else if (!dueDate) {
       ariaLabel = 'Task timer: No due date';
     } else if (timeLeft.days === 0) {
@@ -158,7 +164,7 @@ export function useCountdown(
     } else {
       ariaLabel = 'Task timer: Due soon';
     }
-    
+
     return {
       timeDisplay,
       dashOffset,
@@ -174,7 +180,10 @@ export function useCountdown(
 /**
  * Calculate time remaining until due date
  */
-function calculateTimeLeft(dueDate: string | null, status: TaskStatus): CountdownResult {
+function calculateTimeLeft(
+  dueDate: string | null,
+  status: TaskStatus
+): CountdownResult {
   const nullResult: CountdownResult = {
     days: null,
     hours: null,
@@ -190,7 +199,7 @@ function calculateTimeLeft(dueDate: string | null, status: TaskStatus): Countdow
 
   // Use the same day calculation logic as getDaysRemaining for consistency
   const daysRemaining = getDaysRemaining(dueDate);
-  
+
   if (daysRemaining === null) {
     return nullResult;
   }
@@ -206,7 +215,7 @@ function calculateTimeLeft(dueDate: string | null, status: TaskStatus): Countdow
     };
   }
 
-  // For more detailed time calculations (hours, minutes, seconds), 
+  // For more detailed time calculations (hours, minutes, seconds),
   // still use the original method but base it on the normalized days
   const now = new Date().getTime();
   const targetDate = new Date(dueDate).getTime();
@@ -223,7 +232,9 @@ function calculateTimeLeft(dueDate: string | null, status: TaskStatus): Countdow
     };
   }
 
-  const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const hours = Math.floor(
+    (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+  );
   const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
   const seconds = Math.floor((difference % (1000 * 60)) / 1000);
   const totalSecondsLeft = Math.floor(difference / 1000);

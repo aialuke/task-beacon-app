@@ -1,18 +1,9 @@
-import { renderHook, act } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-
-import { TaskService } from '@/lib/api/tasks';
-import type { TaskWithRelations } from '@/types';
-
-import { useTaskSubmission } from './useTaskSubmission';
-
 // Mock the TaskService
-vi.mock('@/lib/api/tasks', () => ({
+vi.mock('@/shared/services/api', () => ({
   TaskService: {
     crud: {
       create: vi.fn(),
       update: vi.fn(),
-      delete: vi.fn(),
     },
   },
 }));
@@ -25,41 +16,36 @@ vi.mock('sonner', () => ({
   },
 }));
 
-// Mock the standardized-api
-vi.mock('@/lib/api/standardized-api', () => ({
-  QueryKeys: {
-    tasks: ['tasks'],
-    task: (id: string) => ['tasks', id],
-  },
-}));
-
-// Mock the query client and mutations
+// Mock the query client
 vi.mock('@tanstack/react-query', () => ({
   useQueryClient: () => ({
     invalidateQueries: vi.fn(),
-    cancelQueries: vi.fn(),
-    getQueryData: vi.fn(),
-  }),
-  useMutation: vi.fn((_config) => ({
-    mutateAsync: vi.fn(),
-    isPending: false,
-  })),
-}));
-
-// Mock optimistic updates
-vi.mock('./useTaskOptimisticUpdates', () => ({
-  useTaskOptimisticUpdates: () => ({
-    updateTaskOptimistically: vi.fn(),
-    removeTaskOptimistically: vi.fn(),
-    rollbackToData: vi.fn(),
-    getPreviousData: vi.fn(),
   }),
 }));
 
-// Mock navigate
-vi.mock('react-router-dom', () => ({
-  useNavigate: () => vi.fn(),
+// Mock the validation hook
+vi.mock('./useTaskFormValidation', () => ({
+  useTaskFormValidation: () => ({
+    validateCreateTask: vi.fn(() => ({
+      isValid: true,
+      errors: [],
+    })),
+    showValidationErrors: vi.fn(),
+  }),
 }));
+
+// Mock the auth service
+vi.mock('@/lib/api/base', () => ({
+  AuthService: {
+    getCurrentUserId: vi.fn(),
+  },
+}));
+
+import { TaskService } from '@/shared/services/api';
+import { renderHook, act, describe, it, expect, vi, beforeEach } from '@/test';
+import type { TaskWithRelations } from '@/types';
+
+import { useTaskSubmission } from './useTaskSubmission';
 
 interface SubmitTaskData {
   title: string;
@@ -82,26 +68,26 @@ describe('useTaskSubmission', () => {
     assigneeId: 'user-123',
   };
 
-  const mockCreatedTask: TaskWithRelations = {
-    id: 'task-123',
-    title: mockTaskData.title,
-    description: mockTaskData.description,
-    owner_id: 'owner-123',
-    assignee_id: 'user-123',
-    status: 'pending' as const,
-    created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-01T00:00:00Z',
-    due_date: null,
-    parent_task_id: null,
-    photo_url: null,
-    url_link: null,
-  };
-
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   it('should successfully create a task', async () => {
+    const mockCreatedTask: TaskWithRelations = {
+      id: 'task-123',
+      title: mockTaskData.title,
+      description: mockTaskData.description,
+      owner_id: 'owner-123',
+      assignee_id: 'user-123',
+      status: 'pending' as const,
+      created_at: '2024-01-01T00:00:00Z',
+      updated_at: '2024-01-01T00:00:00Z',
+      due_date: null,
+      parent_task_id: null,
+      photo_url: null,
+      url_link: null,
+    };
+
     vi.mocked(TaskService.crud.create).mockResolvedValue({
       success: true,
       data: mockCreatedTask,
@@ -115,7 +101,6 @@ describe('useTaskSubmission', () => {
       submissionResult = await result.current.createTask({
         title: mockTaskData.title,
         description: mockTaskData.description,
-        due_date: mockTaskData.dueDate,
         assignee_id: mockTaskData.assigneeId,
       });
     });
@@ -125,6 +110,7 @@ describe('useTaskSubmission', () => {
       message: 'Task created successfully!',
       task: mockCreatedTask,
     });
+    expect(TaskService.crud.create).toHaveBeenCalled();
   });
 
   it('should handle creation errors', async () => {
@@ -132,7 +118,7 @@ describe('useTaskSubmission', () => {
     vi.mocked(TaskService.crud.create).mockResolvedValue({
       success: false,
       data: null,
-      error: { message: errorMessage },
+      error: { message: errorMessage, name: 'TaskError' },
     });
 
     const { result } = renderHook(() => useTaskSubmission());
@@ -142,6 +128,7 @@ describe('useTaskSubmission', () => {
       submissionResult = await result.current.createTask({
         title: mockTaskData.title,
         description: mockTaskData.description,
+        assignee_id: mockTaskData.assigneeId,
       });
     });
 
@@ -162,6 +149,8 @@ describe('useTaskSubmission', () => {
     await act(async () => {
       submissionResult = await result.current.createTask({
         title: mockTaskData.title,
+        description: mockTaskData.description,
+        assignee_id: mockTaskData.assigneeId,
       });
     });
 
@@ -174,12 +163,24 @@ describe('useTaskSubmission', () => {
 
   it('should successfully update a task', async () => {
     const taskId = 'task-123';
-    const updates = { title: 'Updated Task' };
-
-    const mockUpdatedTask: TaskWithRelations = {
-      ...mockCreatedTask,
+    const updates = {
       id: taskId,
       title: 'Updated Task',
+    };
+
+    const mockUpdatedTask: TaskWithRelations = {
+      id: taskId,
+      title: 'Updated Task',
+      description: 'Test Description',
+      owner_id: 'owner-123',
+      assignee_id: 'user-123',
+      status: 'pending' as const,
+      created_at: '2024-01-01T00:00:00Z',
+      updated_at: '2024-01-01T00:00:00Z',
+      due_date: null,
+      parent_task_id: null,
+      photo_url: null,
+      url_link: null,
     };
 
     vi.mocked(TaskService.crud.update).mockResolvedValue({
@@ -192,10 +193,7 @@ describe('useTaskSubmission', () => {
 
     let updateResult;
     await act(async () => {
-      updateResult = await result.current.updateTask(taskId, {
-        id: taskId,
-        title: updates.title,
-      });
+      updateResult = await result.current.updateTask(taskId, updates);
     });
 
     expect(updateResult).toEqual({
@@ -203,32 +201,9 @@ describe('useTaskSubmission', () => {
       message: 'Task updated successfully!',
       task: mockUpdatedTask,
     });
-    expect(TaskService.crud.update).toHaveBeenCalledWith(taskId, {
-      id: taskId,
-      title: updates.title,
-    });
-  });
-
-  it('should successfully delete a task', async () => {
-    const taskId = 'task-123';
-
-    vi.mocked(TaskService.crud.delete).mockResolvedValue({
-      success: true,
-      data: { success: true },
-      error: null,
-    });
-
-    const { result } = renderHook(() => useTaskSubmission());
-
-    let deleteResult;
-    await act(async () => {
-      deleteResult = await result.current.deleteTask(taskId);
-    });
-
-    expect(deleteResult).toEqual({
-      success: true,
-      message: 'Task deleted successfully!',
-    });
-    expect(TaskService.crud.delete).toHaveBeenCalledWith(taskId);
+    expect(TaskService.crud.update).toHaveBeenCalledWith(
+      taskId,
+      expect.objectContaining(updates)
+    );
   });
 });

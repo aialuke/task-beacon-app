@@ -1,7 +1,6 @@
-
 /**
  * User Feature Types
- * 
+ *
  * User-specific types and interfaces for user management features.
  */
 
@@ -9,7 +8,7 @@
 import type { ID, Timestamp, UserRole } from '../index';
 
 // User preferences and settings
-export interface UserPreferences {
+interface UserPreferences {
   theme: 'light' | 'dark' | 'system';
   language: string;
   timezone: string;
@@ -17,7 +16,7 @@ export interface UserPreferences {
   timeFormat: '12h' | '24h';
 }
 
-export interface NotificationPreferences {
+interface NotificationPreferences {
   email: boolean;
   push: boolean;
   taskReminders: boolean;
@@ -27,7 +26,7 @@ export interface NotificationPreferences {
 }
 
 // User creation and update data
-export interface UserCreateData {
+interface UserCreateData {
   email: string;
   name?: string;
   role?: UserRole;
@@ -61,5 +60,5 @@ export interface UserSearchOptions {
 }
 
 // Export convenience type aliases
-export type UserId = ID;
-export type UserTimestamp = Timestamp;
+type UserId = ID;
+type UserTimestamp = Timestamp;

@@ -1,11 +1,13 @@
 /**
  * Form Types
- * 
+ *
  * All form-related type definitions including validation, state, and field types.
  */
 
 // === FORM STATE TYPES ===
-export interface FormState<T extends Record<string, unknown> = Record<string, unknown>> {
+export interface FormState<
+  T extends Record<string, unknown> = Record<string, unknown>,
+> {
   values: T;
   errors: FormErrors<T>;
   touched: FormTouched<T>;
@@ -23,13 +25,9 @@ export type FormTouched<T extends Record<string, unknown>> = {
 };
 
 // === VALIDATION TYPES ===
-export interface ValidationResult {
-  isValid: boolean;
-  errors: Record<string, string>;
-  data?: unknown;
-}
+// Use canonical ValidationResult from validators;
 
-export interface ValidationRule {
+interface ValidationRule {
   required?: boolean;
   minLength?: number;
   maxLength?: number;
@@ -37,7 +35,7 @@ export interface ValidationRule {
   custom?: (value: unknown) => string | null;
 }
 
-export interface FieldValidationState {
+interface FieldValidationState {
   isValid: boolean;
   error?: string;
   isTouched: boolean;
@@ -45,20 +43,20 @@ export interface FieldValidationState {
 }
 
 // === FORM SUBMISSION TYPES ===
-export interface FormSubmissionResult<T = unknown> {
+interface FormSubmissionResult<T = unknown> {
   success: boolean;
   data?: T;
   errors?: Record<string, string>;
 }
 
-export interface FormSubmissionState {
+interface FormSubmissionState {
   isSubmitting: boolean;
   isSuccess: boolean;
   error: string | null;
 }
 
 // === FORM FIELD TYPES ===
-export interface BaseFieldProps {
+interface BaseFieldProps {
   name: string;
   label?: string;
   placeholder?: string;
@@ -68,21 +66,21 @@ export interface BaseFieldProps {
   touched?: boolean;
 }
 
-export interface InputFieldProps extends BaseFieldProps {
+interface InputFieldProps extends BaseFieldProps {
   type?: 'text' | 'email' | 'password' | 'number' | 'tel' | 'url';
   value: string;
   onChange: (value: string) => void;
   onBlur?: () => void;
 }
 
-export interface TextareaFieldProps extends BaseFieldProps {
+interface TextareaFieldProps extends BaseFieldProps {
   value: string;
   onChange: (value: string) => void;
   onBlur?: () => void;
   rows?: number;
 }
 
-export interface SelectFieldProps<T = string> extends BaseFieldProps {
+interface SelectFieldProps<T = string> extends BaseFieldProps {
   value: T;
   onChange: (value: T) => void;
   onBlur?: () => void;
@@ -94,7 +92,9 @@ export interface SelectFieldProps<T = string> extends BaseFieldProps {
 }
 
 // === FORM CONFIGURATION ===
-export interface FormConfig<T extends Record<string, unknown> = Record<string, unknown>> {
+interface FormConfig<
+  T extends Record<string, unknown> = Record<string, unknown>,
+> {
   initialValues: T;
   validationRules?: {
     [K in keyof T]?: ValidationRule;

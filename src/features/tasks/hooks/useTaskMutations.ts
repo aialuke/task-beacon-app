@@ -1,58 +1,52 @@
-// Phase 1 Fix: Removed complex batch operations and unused imports
-
-import { useTaskCreation } from './useTaskCreation';
-import { useTaskDeletion } from './useTaskDeletion';
-import { useTaskStatusToggle } from './useTaskStatusToggle';
-import { useTaskUpdates } from './useTaskUpdates';
+import { useTaskCreation } from './mutations/useTaskCreation';
+import { useTaskDeletion } from './mutations/useTaskDeletion';
+import { useTaskStatus } from './mutations/useTaskStatus';
+import { useTaskUpdates } from './mutations/useTaskUpdates';
 
 /**
- * Unified Task Mutations Hook - Phase 1 Simplified
- * 
- * Combines focused task mutation hooks with clean, single-responsibility patterns.
- * Removed complex batch operations for better maintainability.
+ * Unified Task Mutations Hook - Phase 3 Consolidated
+ *
+ * Combines all task mutation hooks with simplified, consistent patterns.
+ * Eliminates duplicate error handling, optimistic updates, and toast notifications.
  */
 export function useTaskMutations() {
   const creation = useTaskCreation();
   const deletion = useTaskDeletion();
   const updates = useTaskUpdates();
-  const status = useTaskStatusToggle();
+  const status = useTaskStatus();
 
   return {
     // Creation operations
     createTask: creation.createTask,
-    createTaskAsync: creation.createTaskAsync,
+    createTaskCallback: creation.createTaskCallback,
     createFollowUpTask: creation.createFollowUpTask,
-    createFollowUpTaskAsync: creation.createFollowUpTaskAsync,
 
     // Update operations
     updateTask: updates.updateTask,
-    updateTaskAsync: updates.updateTaskAsync,
+    updateTaskCallback: updates.updateTaskCallback,
 
     // Status operations
-    toggleStatus: status.toggleStatus,
-    toggleStatusAsync: status.toggleStatusAsync,
-    markComplete: status.markComplete,
-    markCompleteAsync: status.markCompleteAsync,
-    markIncomplete: status.markIncomplete,
-    markIncompleteAsync: status.markIncompleteAsync,
+    toggleTaskComplete: status.toggleTaskComplete,
+    toggleTaskCompleteCallback: status.toggleTaskCompleteCallback,
+    markAsComplete: status.markAsComplete,
+    markAsIncomplete: status.markAsIncomplete,
 
     // Deletion operations
     deleteTask: deletion.deleteTask,
-    deleteTaskAsync: deletion.deleteTaskAsync,
+    deleteTaskCallback: deletion.deleteTaskCallback,
+    deleteTaskById: deletion.deleteTaskById,
 
     // Loading states
     isCreating: creation.isLoading,
     isUpdating: updates.isLoading,
     isDeleting: deletion.isLoading,
     isTogglingStatus: status.isLoading,
-    
+
     // Combined loading state
-    isLoading: creation.isLoading || updates.isLoading || deletion.isLoading || status.isLoading,
-    
-    // Reset functions
-    resetCreation: creation.reset,
-    resetUpdates: updates.reset,
-    resetDeletion: deletion.reset,
-    resetStatus: status.reset,
+    isLoading:
+      creation.isLoading ||
+      updates.isLoading ||
+      deletion.isLoading ||
+      status.isLoading,
   };
 }

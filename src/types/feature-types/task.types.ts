@@ -1,7 +1,6 @@
-
 /**
  * Task Feature Types
- * 
+ *
  * Task-specific types and interfaces for the task management feature.
  */
 
@@ -9,13 +8,18 @@
 import type { ID, Timestamp, Status } from '../utility.types';
 
 // Task filter union type (not interface)
-export type TaskFilter = 'all' | 'pending' | 'complete' | 'overdue' | 'assigned';
+export type TaskFilter =
+  | 'all'
+  | 'pending'
+  | 'complete'
+  | 'overdue'
+  | 'assigned';
 
 // Task priority as a simple string union type
 export type TaskPriority = 'low' | 'medium' | 'high' | 'urgent';
 
 // Main task interfaces
-export interface TaskFilterOptions {
+interface TaskFilterOptions {
   status?: 'pending' | 'complete' | 'overdue' | 'all';
   search?: string;
   assignee?: string;
@@ -28,7 +32,7 @@ export interface TaskFilterOptions {
   parentId?: string;
 }
 
-export interface ParentTask {
+interface ParentTask {
   id: string;
   title: string;
   description?: string;
@@ -54,7 +58,7 @@ export interface TaskUpdateData extends Partial<TaskCreateData> {
 }
 
 // Query and filtering options
-export interface TaskQueryOptions {
+interface TaskQueryOptions {
   page?: number;
   pageSize?: number;
   filters?: TaskFilterOptions;
@@ -64,7 +68,7 @@ export interface TaskQueryOptions {
 }
 
 // Task workflow and status management
-export interface TaskWorkflowStatus {
+interface TaskWorkflowStatus {
   canEdit: boolean;
   canDelete: boolean;
   canComplete: boolean;
@@ -74,7 +78,7 @@ export interface TaskWorkflowStatus {
 }
 
 // Task analytics and metrics
-export interface TaskMetrics {
+interface TaskMetrics {
   total: number;
   pending: number;
   completed: number;
@@ -84,7 +88,7 @@ export interface TaskMetrics {
 }
 
 // Task relationship types
-export interface TaskRelationship {
+interface TaskRelationship {
   parentId?: string;
   childIds: string[];
   siblingIds: string[];
@@ -92,13 +96,13 @@ export interface TaskRelationship {
 }
 
 // Additional types for compatibility
-export interface TaskSearchFilters {
+interface TaskSearchFilters {
   search?: string;
   status?: TaskFilter;
   assignee?: string;
 }
 
-export interface TaskListResponse {
+interface TaskListResponse {
   data: unknown[];
   total: number;
   page: number;
@@ -106,6 +110,6 @@ export interface TaskListResponse {
 }
 
 // Export convenience type aliases
-export type TaskId = ID;
-export type TaskTimestamp = Timestamp;
-export type TaskStatus = Status;
+type TaskId = ID;
+type TaskTimestamp = Timestamp;
+type TaskStatus = Status;

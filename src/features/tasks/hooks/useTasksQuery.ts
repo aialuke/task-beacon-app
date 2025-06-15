@@ -1,10 +1,12 @@
-
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useAuth } from '@/hooks/core';
 import { usePagination } from '@/hooks/usePagination';
-import { QueryKeys, createLoadingState } from '@/lib/api/standardized-api';
-import { TaskService } from '@/lib/api/tasks';
+import {
+  QueryKeys,
+  createLoadingState,
+  TaskService,
+} from '@/shared/services/api';
 import type { Task } from '@/types';
 
 interface UseTasksQueryOptions {
@@ -33,11 +35,13 @@ interface UseTasksQueryReturn {
 
 /**
  * Optimized hook for paginated task queries - Phase 3 Refactored
- * 
+ *
  * Now uses the centralized usePagination hook for state management.
  * Eliminates scattered pagination logic and provides clean abstraction.
  */
-export function useTasksQuery(options: UseTasksQueryOptions = {}): UseTasksQueryReturn {
+export function useTasksQuery(
+  options: UseTasksQueryOptions = {}
+): UseTasksQueryReturn {
   const { pageSize = 10, onPageChange } = options;
   const queryClient = useQueryClient();
   const { user, session } = useAuth();
@@ -50,7 +54,13 @@ export function useTasksQuery(options: UseTasksQueryOptions = {}): UseTasksQuery
   });
 
   // Optimized query key structure
-  const queryKey = [...QueryKeys.tasks, 'paginated', pagination.currentPage, pagination.pageSize, user?.id];
+  const queryKey = [
+    ...QueryKeys.tasks,
+    'paginated',
+    pagination.currentPage,
+    pagination.pageSize,
+    user?.id,
+  ];
 
   // Fetch tasks with enhanced caching and error handling
   const {
@@ -67,11 +77,11 @@ export function useTasksQuery(options: UseTasksQueryOptions = {}): UseTasksQuery
         pageSize: pagination.pageSize,
         assignedToMe: false,
       });
-      
+
       if (!response.success) {
         throw new Error(response.error?.message || 'Failed to load tasks');
       }
-      
+
       return {
         data: response.data.data,
         totalCount: response.data.pagination.totalCount,
@@ -97,14 +107,23 @@ export function useTasksQuery(options: UseTasksQueryOptions = {}): UseTasksQuery
   }
 
   // Intelligent prefetching - only when beneficial
-  const shouldPrefetch = pagination.hasNextPage && !isLoading && response?.data.length === pagination.pageSize;
-  
+  const shouldPrefetch =
+    pagination.hasNextPage &&
+    !isLoading &&
+    response?.data.length === pagination.pageSize;
+
   if (shouldPrefetch && user && session) {
-    const nextPageKey = [...QueryKeys.tasks, 'paginated', pagination.currentPage + 1, pagination.pageSize, user.id];
-    
+    const nextPageKey = [
+      ...QueryKeys.tasks,
+      'paginated',
+      pagination.currentPage + 1,
+      pagination.pageSize,
+      user.id,
+    ];
+
     // Check if next page is already cached
     const existingData = queryClient.getQueryData(nextPageKey);
-    
+
     if (!existingData) {
       queryClient.prefetchQuery({
         queryKey: nextPageKey,
@@ -114,11 +133,13 @@ export function useTasksQuery(options: UseTasksQueryOptions = {}): UseTasksQuery
             pageSize: pagination.pageSize,
             assignedToMe: false,
           });
-          
+
           if (!response.success) {
-            throw new Error(response.error?.message || 'Failed to prefetch tasks');
+            throw new Error(
+              response.error?.message || 'Failed to prefetch tasks'
+            );
           }
-          
+
           return {
             data: response.data.data,
             totalCount: response.data.pagination.totalCount,

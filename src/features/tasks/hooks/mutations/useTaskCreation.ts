@@ -1,11 +1,9 @@
-
 import { useCallback } from 'react';
 
-import { TaskService } from '@/lib/api/tasks';
+import { TaskService } from '@/shared/services/api';
 import type { Task } from '@/types';
 
 import { useBaseMutation } from './useBaseMutation';
-
 
 interface TaskCreationData {
   title: string;
@@ -32,11 +30,11 @@ export function useTaskCreation() {
   const baseMutation = useBaseMutation<Task, TaskCreationData>({
     mutationFn: async (taskData: TaskCreationData) => {
       const result = await TaskService.crud.create(taskData);
-      
+
       if (!result.success) {
         throw new Error(result.error?.message || 'Failed to create task');
       }
-      
+
       return result.data as Task;
     },
     successMessage: 'Task created successfully',
@@ -51,7 +49,10 @@ export function useTaskCreation() {
   );
 
   const createFollowUpTask = useCallback(
-    async (parentTask: Task, taskData: { title: string; description?: string }): Promise<TaskMutationResult> => {
+    async (
+      parentTask: Task,
+      taskData: { title: string; description?: string }
+    ): Promise<TaskMutationResult> => {
       const followUpData = {
         ...taskData,
         parentTaskId: parentTask.id,

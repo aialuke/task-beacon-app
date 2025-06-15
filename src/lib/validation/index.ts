@@ -1,6 +1,6 @@
 /**
  * Unified Validation System - Main Entry Point
- * 
+ *
  * Single source of truth for all validation patterns.
  * Consolidates scattered validation logic into a unified API.
  */
@@ -9,7 +9,14 @@
 // CORE VALIDATION SYSTEM
 // ============================================================================
 
-export * from './unified-validation';
+// New modular validation system
+export * from './messages';
+export * from './unified-schemas';
+export * from './unified-core';
+export * from './unified-hooks';
+export * from './unified-forms';
+
+// Legacy support
 export * from './schemas';
 export * from './validators';
 
@@ -18,87 +25,41 @@ export * from './validators';
 // ============================================================================
 
 // Core schemas
-export {
-  signInSchema,
-  signUpSchema,
-  profileUpdateSchema,
-  taskFormSchema,
-  createTaskSchema,
-  paginationSchema,
-  sortingSchema,
-  fileUploadSchema,
-} from './schemas';
+export { profileUpdateSchema } from './schemas';
 
 // Core validators
-export {
-  validateSignIn,
-  validateSignUp,
-  validateProfileUpdate,
-  validateTaskForm,
-  validateTaskCreation,
-  validatePagination,
-  validateSorting,
-  validateFileUpload,
-} from './validators';
+export { validateProfileUpdate } from './validators';
 
-// Core validation utilities
+// Core validation utilities from new modules
+export { useUnifiedValidation } from './unified-hooks';
 export {
-  useUnifiedValidation,
-  validateUnifiedField,
-  validateUnifiedForm,
   validateUnifiedTask,
-  validateUnifiedProfile,
   validateUnifiedSignIn,
   validateUnifiedSignUp,
-  UNIFIED_VALIDATION_MESSAGES,
-} from './unified-validation';
-
+} from './unified-forms';
 // Helper functions
-export {
-  isValidEmail,
-  isValidPassword,
-  isValidUrl,
-  isDateInFuture,
-  toValidationResult,
-} from './validators';
-
 // ============================================================================
 // LEGACY COMPATIBILITY EXPORTS
 // ============================================================================
 
 // For backward compatibility with existing imports
-export { UNIFIED_VALIDATION_MESSAGES as VALIDATION_MESSAGES } from './unified-validation';
-export { toValidationResult as validateWithZod } from './validators';
-
 // Legacy schema aliases
-export { signInSchema as signInFormSchema } from './schemas';
-export { signUpSchema as signUpFormSchema } from './schemas';
-export { taskFormSchema as taskCreateFormSchema } from './schemas';
-export { profileUpdateSchema as profileFormSchema } from './schemas';
-
 // ============================================================================
 // TYPE EXPORTS
 // ============================================================================
 
-export type {
-  SignInInput,
-  SignUpInput,
-  ProfileUpdateInput,
-  ProfileCreateInput,
-  TaskPriority,
-  TaskStatus,
-  BaseTask,
-  CreateTaskInput,
-  TaskFormInput,
-  PaginationInput,
-  SortingInput,
-  FileUploadInput,
-} from './schemas';
-
-export type {
-  ValidationResult,
-} from './validators';
-
+export type { ProfileUpdateInput } from './schemas';
 export type {
   UnifiedValidationResult,
-} from './unified-validation'; 
+  ProfileValidationResult,
+  ValidationResult,
+  ZodValidationResult,
+} from './unified-core';
+
+// Profile schema re-exports
+export {
+  unifiedProfileSchema,
+  unifiedProfileCreateSchema,
+  unifiedProfileUpdateSchema,
+  unifiedProfileFormSchema,
+} from './unified-schemas';

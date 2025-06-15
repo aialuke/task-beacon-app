@@ -1,10 +1,9 @@
+import { SpringValue } from '@react-spring/web';
+import { memo } from 'react';
 
-import { SpringValue } from "@react-spring/web";
-import { memo } from "react";
+import { Task } from '@/types';
 
-import { Task } from "@/types";
-
-import TaskDetails from "../display/TaskDetails";
+import TaskDetails from '../display/TaskDetails';
 
 interface TaskCardContentProps {
   task: Task;
@@ -14,7 +13,6 @@ interface TaskCardContentProps {
     opacity: SpringValue<number>;
   };
   contentRef: React.RefObject<HTMLDivElement>;
-  measureRef?: React.RefObject<HTMLDivElement>;
 }
 
 function TaskCardContent({
@@ -22,7 +20,6 @@ function TaskCardContent({
   isExpanded,
   animationState,
   contentRef,
-  measureRef,
 }: TaskCardContentProps) {
   return (
     <TaskDetails
@@ -30,7 +27,6 @@ function TaskCardContent({
       isExpanded={isExpanded}
       animationState={animationState}
       contentRef={contentRef}
-      measureRef={measureRef}
     />
   );
 }

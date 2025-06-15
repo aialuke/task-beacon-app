@@ -21,6 +21,6 @@ export const queryClient = new QueryClient({
  * Hook to access the query client instance
  * Useful for programmatic query operations
  */
-export function useQueryClient() {
+function useQueryClient() {
   return queryClient;
-} 
+}

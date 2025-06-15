@@ -1,20 +1,22 @@
 /**
- * Simplified Auth Hook - Enhanced with Mobile Error Handling
- * 
- * Consolidates all auth functionality into a single, easy-to-use hook.
- * Replaces the complex multi-hook architecture with a simpler approach.
+ * Authentication Hook
+ *
+ * Unified authentication state management using consistent patterns.
+ * **Updated**: Now uses unified error management patterns.
  */
 
 import { User, Session } from '@supabase/supabase-js';
 import { useState, useEffect, useCallback } from 'react';
 
-import { supabase } from '@/integrations/supabase/client';
-import { AuthService } from '@/lib/api/AuthService';
 import { cleanupAuthState } from '@/lib/auth-utils';
-import { logger, realtimeLogger } from '@/lib/logger';
-import type { ApiError } from '@/types/shared';
+import { logger } from '@/lib/logger';
+import { AuthService } from '@/shared/services/api';
+import { supabase } from '@/shared/services/supabase/client';
+import type { ApiError } from '@/types';
 
-export interface UseAuthReturn {
+import { useUnifiedError } from './useUnifiedError';
+
+interface UseAuthReturn {
   user: User | null;
   session: Session | null;
   loading: boolean;
@@ -22,6 +24,7 @@ export interface UseAuthReturn {
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   refreshSession: () => Promise<void>;
+  clearError: () => void;
 }
 
 /**
@@ -31,85 +34,130 @@ export function useAuth(): UseAuthReturn {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<ApiError | null>(null);
+
+  // Use unified error management
+  const { error, handleError, clearError } = useUnifiedError({
+    showToast: true,
+    context: 'Authentication',
+  });
 
   // Enhanced logging for mobile debugging
-  const logMobileDebug = useCallback((message: string, data?: Record<string, unknown>) => {
-    logger.auth(`Mobile Debug: ${message}`, {
-      timestamp: new Date().toISOString(),
-      isMobile: /Mobi|Android/i.test(navigator.userAgent),
-      userAgent: navigator.userAgent,
-      url: window.location.href,
-      ...(data || {})
-    });
-  }, []);
+  const logMobileDebug = useCallback(
+    (message: string, data?: Record<string, unknown>) => {
+      logger.auth(`Mobile Debug: ${message}`, {
+        timestamp: new Date().toISOString(),
+        isMobile: /Mobi|Android/i.test(navigator.userAgent),
+        userAgent: navigator.userAgent,
+        url: window.location.href,
+        ...(data || {}),
+      });
+    },
+    []
+  );
 
   // Update session and user together
-  const updateSessionAndUser = useCallback((newSession: Session | null) => {
-    logMobileDebug('Updating session and user', { 
-      hasSession: !!newSession, 
-      hasUser: !!newSession?.user 
-    });
-    setSession(newSession);
-    setUser(newSession?.user ?? null);
-    setError(null);
-  }, [logMobileDebug]);
+  const updateSessionAndUser = useCallback(
+    (newSession: Session | null) => {
+      logMobileDebug('Updating session and user', {
+        hasSession: !!newSession,
+        hasUser: !!newSession?.user,
+      });
+      setSession(newSession);
+      setUser(newSession?.user ?? null);
+      clearError();
+    },
+    [logMobileDebug, clearError]
+  );
 
   // Clear auth state
   const clearAuthState = useCallback(() => {
     logMobileDebug('Clearing auth state');
     setSession(null);
     setUser(null);
-    setError(null);
-  }, [logMobileDebug]);
+    clearError();
+  }, [logMobileDebug, clearError]);
+
+  // Initialize auth state
+  useEffect(() => {
+    const initializeAuth = async () => {
+      try {
+        // Check for existing session/token
+        const token = localStorage.getItem('auth_token');
+        if (token) {
+          // Validate token and get user data
+          // This would typically involve an API call
+          setLoading(true);
+          const response = await AuthService.signIn(token, '');
+          if (response.success) {
+            logMobileDebug('Initial session retrieved', {
+              hasSession: !!session,
+            });
+            updateSessionAndUser(session);
+          } else {
+            logMobileDebug('Initial session error', { error: response.error });
+            clearAuthState();
+          }
+        }
+      } catch (err) {
+        logMobileDebug('Initialize auth error caught', { error: err });
+        handleError(err, 'Failed to initialize authentication');
+        clearAuthState();
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initializeAuth();
+  }, [handleError, updateSessionAndUser, clearAuthState, logMobileDebug]);
 
   // Sign in operation
-  const signIn = useCallback(async (email: string, password: string) => {
-    try {
-      logMobileDebug('Starting sign in process');
-      setLoading(true);
-      setError(null);
-      
-      const response = await AuthService.signIn(email, password);
-      if (!response.success) {
-        logMobileDebug('Sign in failed', { error: response.error });
-        setError(response.error || { 
-          message: 'Failed to sign in',
-          code: 'SIGN_IN_ERROR'
-        });
+  const signIn = useCallback(
+    async (email: string, password: string) => {
+      try {
+        logMobileDebug('Starting sign in process');
+        setLoading(true);
+        clearError();
+
+        const response = await AuthService.signIn(email, password);
+        if (!response.success) {
+          logMobileDebug('Sign in failed', { error: response.error });
+          handleError(
+            new Error(response.error?.message || 'Failed to sign in'),
+            'Sign in failed'
+          );
+          clearAuthState();
+          return;
+        }
+
+        logMobileDebug('Sign in successful');
+        // Session will be updated by the auth state listener
+      } catch (err: unknown) {
+        logMobileDebug('Sign in error caught', { error: err });
+        const errorMessage =
+          err instanceof Error ? err.message : 'Failed to sign in';
+        handleError(new Error(errorMessage), 'Sign in failed');
         clearAuthState();
-        return;
+      } finally {
+        setLoading(false);
       }
-      
-      logMobileDebug('Sign in successful');
-      // Session will be updated by the auth state listener
-    } catch (err: unknown) {
-      logMobileDebug('Sign in error caught', { error: err });
-      const errorMessage = err instanceof Error ? err.message : 'Failed to sign in';
-      setError({ 
-        message: errorMessage,
-        code: 'SIGN_IN_ERROR'
-      });
-      clearAuthState();
-    } finally {
-      setLoading(false);
-    }
-  }, [clearAuthState, logMobileDebug]);
+    },
+    [handleError, clearAuthState, logMobileDebug]
+  );
 
   // Sign out operation
   const signOut = useCallback(async () => {
     try {
       logMobileDebug('Starting sign out process');
       setLoading(true);
-      setError(null);
+      clearError();
 
       // Clean up auth state first
       cleanupAuthState();
-      
+
       const { error } = await supabase.auth.signOut();
       if (error) {
         logMobileDebug('Sign out error', { error });
-        setError({ message: error.message, code: 'SIGN_OUT_ERROR' });
+        handleError(new Error(error.message), 'Sign out failed');
         return;
       }
 
@@ -117,99 +165,56 @@ export function useAuth(): UseAuthReturn {
       clearAuthState();
     } catch (err: unknown) {
       logMobileDebug('Sign out error caught', { error: err });
-      setError({ 
-        message: 'An unexpected error occurred during sign out',
-        code: 'SIGN_OUT_ERROR'
-      });
+      handleError(err, 'Sign out failed');
     } finally {
       setLoading(false);
     }
-  }, [clearAuthState, logMobileDebug]);
+  }, [handleError, clearAuthState, logMobileDebug]);
 
   // Refresh session operation
   const refreshSession = useCallback(async () => {
     try {
       logMobileDebug('Starting session refresh');
       setLoading(true);
-      setError(null);
+      clearError();
 
       const { error } = await supabase.auth.refreshSession();
       if (error) {
         logMobileDebug('Session refresh error', { error });
-        setError({ message: error.message, code: 'REFRESH_ERROR' });
+        handleError(new Error(error.message), 'Failed to refresh session');
         return;
       }
-      
+
       logMobileDebug('Session refresh successful');
     } catch (err: unknown) {
       logMobileDebug('Session refresh error caught', { error: err });
-      setError({ 
-        message: 'Failed to refresh session',
-        code: 'REFRESH_ERROR'
-      });
+      handleError(err, 'Failed to refresh session');
     } finally {
       setLoading(false);
     }
-  }, [logMobileDebug]);
+  }, [handleError, logMobileDebug]);
 
-  // Initialize auth and set up listener
+  // Set up auth state listener
   useEffect(() => {
     let mounted = true;
 
-    const initializeAuth = async () => {
-      try {
-        logMobileDebug('Initializing auth');
-        // Get initial session
-        const { data: { session }, error } = await supabase.auth.getSession();
-        
-        if (!mounted) return;
-        
-        if (error) {
-          logMobileDebug('Initial session error', { error });
-          clearAuthState();
-          return;
-        }
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (!mounted) return;
 
-        logMobileDebug('Initial session retrieved', { hasSession: !!session });
-        updateSessionAndUser(session);
-      } catch (err) {
-        logMobileDebug('Initialize auth error caught', { error: err });
-        if (mounted) {
-          clearAuthState();
-        }
-      } finally {
-        if (mounted) {
-          setLoading(false);
-        }
+      logMobileDebug('Auth state change', { event, hasSession: !!session });
+
+      updateSessionAndUser(session);
+
+      // Handle specific events
+      if (event === 'SIGNED_OUT') {
+        clearError();
       }
-    };
 
-    // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        if (!mounted) return;
-        
-        logMobileDebug('Auth state change', { event, hasSession: !!session });
-        realtimeLogger.info('Auth state change subscription', { 
-          event, 
-          hasSession: !!session,
-          userId: session?.user?.id 
-        });
-        
-        updateSessionAndUser(session);
-        
-        // Handle specific events
-        if (event === 'SIGNED_OUT') {
-          setError(null);
-        }
-        
-        // Set loading to false after auth state is determined
-        setLoading(false);
-      }
-    );
-
-    // Initialize auth state
-    void initializeAuth();
+      // Set loading to false after auth state is determined
+      setLoading(false);
+    });
 
     return () => {
       logMobileDebug('Cleaning up auth hook');
@@ -222,9 +227,12 @@ export function useAuth(): UseAuthReturn {
     user,
     session,
     loading,
-    error,
+    error: error
+      ? { message: error.message, code: 'AUTH_ERROR', statusCode: 500 }
+      : null,
     signIn,
     signOut,
     refreshSession,
+    clearError,
   };
-} 
+}

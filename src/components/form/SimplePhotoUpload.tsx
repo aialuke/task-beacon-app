@@ -1,11 +1,9 @@
-
 import { ImageUp } from 'lucide-react';
 import { useRef } from 'react';
 
-import { Button } from '@/components/ui/button';
 import { useImageLoadingState } from '@/hooks/core';
-import { formatFileSize, formatPercentage } from '@/lib/utils/format';
-import type { ProcessingResult } from '@/lib/utils/image';
+import { Button } from '@/shared/components/ui/button';
+import type { ProcessingResult } from '@/shared/utils/image/';
 
 interface SimplePhotoUploadProps {
   photoPreview: string | null;
@@ -27,7 +25,8 @@ export default function SimplePhotoUpload({
   loading = false,
 }: SimplePhotoUploadProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { imageLoaded, imageError, handleImageLoad, handleImageError } = useImageLoadingState();
+  const { imageLoaded, imageError, handleImageLoad, handleImageError } =
+    useImageLoadingState();
 
   const handleButtonClick = () => {
     if (photoPreview && onSubmit) {
@@ -44,16 +43,18 @@ export default function SimplePhotoUpload({
       <div className="inline-flex items-center gap-6 align-top">
         {/* Preview box */}
         <div
-          className="border-input relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-full border"
+          className="relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-full border border-input"
           aria-label={
-            photoPreview ? "Preview of uploaded image" : "Default image placeholder"
+            photoPreview
+              ? 'Preview of uploaded image'
+              : 'Default image placeholder'
           }
         >
           {photoPreview ? (
             <div className="relative size-full">
               {!imageLoaded && !imageError && (
                 <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-                  <div className="border-primary size-3 animate-spin rounded-full border border-t-transparent" />
+                  <div className="size-3 animate-spin rounded-full border border-primary border-t-transparent" />
                 </div>
               )}
               {imageError && (
@@ -82,22 +83,22 @@ export default function SimplePhotoUpload({
             </div>
           )}
           {loading && (
-            <div className="bg-background/80 absolute inset-0 flex items-center justify-center">
-              <div className="border-primary size-3 animate-spin rounded-full border border-t-transparent" />
+            <div className="absolute inset-0 flex items-center justify-center bg-background/80">
+              <div className="size-3 animate-spin rounded-full border border-primary border-t-transparent" />
             </div>
           )}
         </div>
 
         {/* Upload/Submit button */}
         <div className="relative inline-block">
-          <Button 
-            onClick={handleButtonClick} 
-            aria-haspopup={!photoPreview ? "dialog" : undefined}
+          <Button
+            onClick={handleButtonClick}
+            aria-haspopup={!photoPreview ? 'dialog' : undefined}
             disabled={disabled || loading}
             size="default"
             variant="default"
           >
-            {photoPreview ? "Submit" : "Upload image"}
+            {photoPreview ? 'Submit' : 'Upload image'}
           </Button>
           <input
             ref={fileInputRef}
@@ -114,25 +115,16 @@ export default function SimplePhotoUpload({
       {/* File info and remove option */}
       {photoPreview && fileName && (
         <div className="inline-flex gap-2 text-xs">
-          <div className="text-muted-foreground max-w-32">
-            <p className="truncate" aria-live="polite">
-              {fileName}
-            </p>
-            {processingResult?.compressionStats && (
-              <p className="text-xs">
-                {formatFileSize(processingResult.compressionStats.compressedSize)}
-                {processingResult.compressionStats.originalSize !== processingResult.compressionStats.compressedSize && (
-                  <span className="text-green-600">
-                    {' '}(-{formatPercentage(processingResult.compressionStats.sizeSavedPercent / 100)})
-                  </span>
-                )}
-              </p>
-            )}
-          </div>
+          <p
+            className="max-w-32 truncate text-muted-foreground"
+            aria-live="polite"
+          >
+            {fileName}
+          </p>
           {onPhotoRemove && (
             <button
               onClick={onPhotoRemove}
-              className="text-destructive font-medium hover:underline"
+              className="font-medium text-destructive hover:underline"
               aria-label={`Remove ${fileName}`}
               disabled={disabled || loading}
             >

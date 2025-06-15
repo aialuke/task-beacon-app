@@ -1,47 +1,133 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build Artifacts & Distribution
+dist/
+dist-ssr/
+build/
+out/
+*.tsbuildinfo
+
+# Vite
+.vite/
+vite.config.ts.timestamp-*
+
+# Environment Variables
+.env
+.env*.local
+.env.development.local
+.env.test.local
+.env.production.local
+
 # Logs
-logs
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+bun-debug.log*
 
-# Build Artifacts
-node_modules/
-dist/
-dist-ssr/
-*.local
-
-# Environment Variables
-.env
-.env.local
-.env.development
-.env.test
-.env.production
-
-# Vite Cache
-.vite/
-
-# Test Artifacts
+# Testing
 coverage/
+.nyc_output/
+.coverage/
+junit.xml
+test-results/
+playwright-report/
 
-# Editor Directories and Files
-.vscode/*
-!.vscode/extensions.json
-.idea/
+# PWA & Service Workers
+sw.js
+sw.js.map
+workbox-*.js
+service-worker.js
+service-worker.js.map
+
+# Supabase
+.supabase/
+supabase/logs/
+supabase/.branches/
+supabase/.temp/
+
+# TypeScript
+*.tsbuildinfo
+.tsc-cache/
+
+# Cache Directories
+.cache/
+.parcel-cache/
+.next/
+.nuxt/
+.turbo/
+
+# Temporary Files
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*~
+
+# OS Files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE & Editor Files
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+.idea/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
 .cursor/rules
+.cursor/chat-logs/
 
-# Temporary Files
-*.bak
-*.tmp
-*.temp
+# Package Manager Files
+.yarn/
+.pnp.*
+.npm/
+.bun/
 
-# macOS
-*.DS_Store
+# Runtime & Debug
+*.pid
+*.seed
+*.pid.lock
+
+# Optional npm cache directory
+.npm
+
+# ESLint cache
+.eslintcache
+
+# Prettier cache
+.prettiercache
+
+# Stylelint cache
+.stylelintcache
+
+# Storybook build outputs
+storybook-static/
+
+# Local development
+*.local
+.local/
+
+# Miscellaneous
+*.tgz
+*.tar.gz
+.vercel/
+.netlify/

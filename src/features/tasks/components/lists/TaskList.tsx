@@ -1,35 +1,22 @@
+import { memo, useMemo } from 'react';
 
-// === EXTERNAL LIBRARIES ===
-import { memo, useMemo } from "react";
+import { CardLoader } from '@/shared/components/ui/loading/UnifiedLoadingStates';
+import type { Task } from '@/types';
 
-// === INTERNAL UTILITIES ===
-import { CardLoader } from "@/components/ui/loading/UnifiedLoadingStates";
-// === COMPONENTS ===
-// === HOOKS ===
-import { useTaskDataContext, useTaskUIContext } from "@/features/tasks/context";
-import { useTasksFilter } from "@/features/tasks/hooks/useTasksFilter";
-import { getStaggeredDelay } from "@/animations";
-// === TYPES ===
-import type { Task } from "@/types";
-
-import { TaskCard } from "../cards";
-import TaskPagination from "../TaskPagination";
+import { useTaskDataContext } from '../../context/TaskDataContext';
+import { useTaskUIContext } from '../../context/TaskUIContext';
+import { useTasksFilter } from '../../hooks/useTasksFilter';
+import { TaskCard } from '../cards';
+import TaskPagination from '../TaskPagination';
 
 function TaskListComponent() {
-  const {
-    tasks,
-    isLoading,
-    error,
-    pagination,
-    totalCount,
-    isFetching,
-  } = useTaskDataContext();
+  const { tasks, isLoading, error, pagination, totalCount, isFetching } =
+    useTaskDataContext();
 
   const { filter, isMobile } = useTaskUIContext();
 
-  // Filter tasks based on current filter (ensure it returns array)
-  const filteredTasksResult = useTasksFilter(tasks, filter);
-  const filteredTasks = Array.isArray(filteredTasksResult) ? filteredTasksResult : [];
+  // Filter tasks based on current filter
+  const filteredTasks = useTasksFilter(tasks, filter);
 
   // Show pagination if there are multiple pages
   const shouldShowPagination = useMemo(
@@ -38,9 +25,7 @@ function TaskListComponent() {
   );
 
   if (isLoading) {
-    return (
-      <CardLoader count={3} />
-    );
+    return <CardLoader count={3} />;
   }
 
   if (error) {
@@ -48,7 +33,7 @@ function TaskListComponent() {
       <div className="flex h-64 items-center justify-center">
         <div className="text-center">
           <p className="text-muted-foreground">Failed to load tasks</p>
-          <p className="text-muted-foreground text-sm">{error}</p>
+          <p className="text-sm text-muted-foreground">{error}</p>
         </div>
       </div>
     );
@@ -63,16 +48,11 @@ function TaskListComponent() {
             <p className="text-muted-foreground">No tasks found</p>
           </div>
         ) : (
-          <div className={`space-y-4 sm:space-y-6 ${isMobile ? "pb-20" : "pb-6"}`}>
-            {filteredTasks.map((task: Task, index: number) => (
-              <TaskCard 
-                key={task.id} 
-                task={task}
-                style={{
-                  animationDelay: getStaggeredDelay(index),
-                }}
-                className="animate-fade-in"
-              />
+          <div
+            className={`space-y-4 sm:space-y-6 ${isMobile ? 'pb-20' : 'pb-6'}`}
+          >
+            {filteredTasks.map((task: Task) => (
+              <TaskCard key={task.id} task={task} />
             ))}
           </div>
         )}
@@ -80,7 +60,7 @@ function TaskListComponent() {
 
       {/* Pagination Section - Now uses refactored component */}
       {shouldShowPagination && (
-        <div className="border-border border-t pt-6">
+        <div className="border-t border-border pt-6">
           <TaskPagination
             pagination={pagination}
             totalCount={totalCount}

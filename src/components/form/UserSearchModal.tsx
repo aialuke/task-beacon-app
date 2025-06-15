@@ -1,11 +1,10 @@
-
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 
 import {
   Dialog,
   DialogContent,
   DialogTitle,
-} from '@/components/ui/dialog';
+} from '@/shared/components/ui/dialog';
 
 import { AutocompleteUserInput } from './AutocompleteUserInput';
 
@@ -18,7 +17,7 @@ interface UserSearchModalProps {
 
 /**
  * User Search Modal - Phase 2.2 Simplified
- * 
+ *
  * Delegates all user state management to AutocompleteUserInput.
  * No local state duplication.
  */
@@ -43,8 +42,8 @@ export function UserSearchModal({
           <DialogTitle>Search Users</DialogTitle>
         </VisuallyHidden>
         <div className="py-4">
-          <AutocompleteUserInput 
-            value={value} 
+          <AutocompleteUserInput
+            value={value}
             onChange={handleUserSelect}
             onSubmit={handleSubmit}
             placeholder="Search for a user to assign..."

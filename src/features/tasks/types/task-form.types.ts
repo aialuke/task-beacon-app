@@ -1,6 +1,5 @@
-
 // Task form specific types
-export interface TaskFormData {
+interface TaskFormData {
   title: string;
   description: string;
   dueDate: string;
@@ -8,7 +7,7 @@ export interface TaskFormData {
   assigneeId: string;
 }
 
-export interface TaskFormOptions {
+interface TaskFormOptions {
   initialUrl?: string;
   onClose?: () => void;
 }

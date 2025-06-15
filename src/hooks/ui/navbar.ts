@@ -5,13 +5,12 @@ import { useRef, useEffect, useState, useCallback } from 'react';
 import {
   computeNavbarColors,
   setupThemeObserver,
-} from '@/features/tasks/utils/navbarColors';
+} from '@/shared/components/ui/navbar/utils/navbarColors';
 import {
   calculateActiveButtonBounds,
   calculateIndicatorPosition,
   calculateGlowPosition,
-} from '@/features/tasks/utils/navbarGeometry';
-import { throttle } from '@/lib/utils/core';
+} from '@/shared/components/ui/navbar/utils/navbarGeometry';
 
 interface NavItem {
   name: string;
@@ -27,7 +26,7 @@ interface UseNavbarOptions {
 
 /**
  * Custom hook for navbar business logic
- * 
+ *
  * Handles:
  * - Active button positioning and animation
  * - Theme change detection
@@ -35,10 +34,14 @@ interface UseNavbarOptions {
  * - Resize handling
  * - Spring animations for visual feedback
  */
-export function useNavbar({ items, activeItem, onItemChange }: UseNavbarOptions) {
+export function useNavbar({
+  items,
+  activeItem,
+  onItemChange,
+}: UseNavbarOptions) {
   const containerRef = useRef<HTMLDivElement>(null);
   const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  
+
   const [activeButtonBounds, setActiveButtonBounds] = useState({
     x: 0,
     width: 0,
@@ -62,7 +65,7 @@ export function useNavbar({ items, activeItem, onItemChange }: UseNavbarOptions)
 
   // Active button position calculation
   const updateActiveButtonBounds = useCallback(() => {
-    const activeIndex = items.findIndex((item) => item.value === activeItem);
+    const activeIndex = items.findIndex(item => item.value === activeItem);
     const container = containerRef.current;
 
     if (activeIndex >= 0 && container) {
@@ -87,54 +90,64 @@ export function useNavbar({ items, activeItem, onItemChange }: UseNavbarOptions)
     const frame = requestAnimationFrame(() => {
       updateActiveButtonBounds();
     });
-    return () => { cancelAnimationFrame(frame); };
+    return () => {
+      cancelAnimationFrame(frame);
+    };
   }, [updateActiveButtonBounds]);
 
-  // Handle window resize with throttling for performance
+  // Handle window resize
   useEffect(() => {
-    const throttledResize = throttle(() => {
+    const handleResize = () => {
       updateActiveButtonBounds();
-    }, 100); // Throttle resize events to 100ms
+    };
 
-    window.addEventListener('resize', throttledResize);
-    return () => { window.removeEventListener('resize', throttledResize); };
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
   }, [updateActiveButtonBounds]);
 
   // Keyboard navigation
-  const handleKeyDown = useCallback((event: React.KeyboardEvent<HTMLDivElement>) => {
-    const activeIndex = items.findIndex((item) => item.value === activeItem);
-    let newIndex = activeIndex;
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
+      const activeIndex = items.findIndex(item => item.value === activeItem);
+      let newIndex = activeIndex;
 
-    switch (event.key) {
-      case 'ArrowLeft':
-        event.preventDefault();
-        newIndex = activeIndex > 0 ? activeIndex - 1 : items.length - 1;
-        break;
-      case 'ArrowRight':
-        event.preventDefault();
-        newIndex = activeIndex < items.length - 1 ? activeIndex + 1 : 0;
-        break;
-      case 'Home':
-        event.preventDefault();
-        newIndex = 0;
-        break;
-      case 'End':
-        event.preventDefault();
-        newIndex = items.length - 1;
-        break;
-      default:
-        return;
-    }
+      switch (event.key) {
+        case 'ArrowLeft':
+          event.preventDefault();
+          newIndex = activeIndex > 0 ? activeIndex - 1 : items.length - 1;
+          break;
+        case 'ArrowRight':
+          event.preventDefault();
+          newIndex = activeIndex < items.length - 1 ? activeIndex + 1 : 0;
+          break;
+        case 'Home':
+          event.preventDefault();
+          newIndex = 0;
+          break;
+        case 'End':
+          event.preventDefault();
+          newIndex = items.length - 1;
+          break;
+        default:
+          return;
+      }
 
-    const newItem = items[newIndex];
-    if (newItem) {
-      onItemChange(newItem.value);
-      buttonRefs.current[newIndex]?.focus();
-    }
-  }, [items, activeItem, onItemChange]);
+      const newItem = items[newIndex];
+      if (newItem) {
+        onItemChange(newItem.value);
+        buttonRefs.current[newIndex]?.focus();
+      }
+    },
+    [items, activeItem, onItemChange]
+  );
 
   // Calculate positions for effects
-  const indicatorPosition = calculateIndicatorPosition(activeButtonBounds.centerX, 24);
+  const indicatorPosition = calculateIndicatorPosition(
+    activeButtonBounds.centerX,
+    24
+  );
   const glowPosition = calculateGlowPosition(activeButtonBounds, 8);
 
   // Unified spring animation for all navbar elements
@@ -145,7 +158,7 @@ export function useNavbar({ items, activeItem, onItemChange }: UseNavbarOptions)
     // Button background position
     backgroundX: activeButtonBounds.x,
     backgroundWidth: activeButtonBounds.width,
-    // Glow effect position  
+    // Glow effect position
     glowX: glowPosition.x,
     glowWidth: glowPosition.width,
     // Common opacity
@@ -157,22 +170,23 @@ export function useNavbar({ items, activeItem, onItemChange }: UseNavbarOptions)
   });
 
   // Helper function to set button ref
-  const setButtonRef = (index: number) => (element: HTMLButtonElement | null) => {
-    buttonRefs.current[index] = element;
-  };
+  const setButtonRef =
+    (index: number) => (element: HTMLButtonElement | null) => {
+      buttonRefs.current[index] = element;
+    };
 
   return {
     // Refs
     containerRef,
     setButtonRef,
-    
+
     // State
     computedColors,
     isInitialized,
-    
+
     // Event handlers
     handleKeyDown,
-    
+
     // Animations - derived from unified spring
     indicatorLineSpring: {
       transform: navbarAnimation.indicatorX.to(x => `translateX(${x}px)`),
@@ -190,4 +204,4 @@ export function useNavbar({ items, activeItem, onItemChange }: UseNavbarOptions)
       opacity: navbarAnimation.opacity,
     },
   };
-} 
+}

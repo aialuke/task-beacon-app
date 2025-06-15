@@ -1,4 +1,3 @@
-
 /**
  * Optimized Loading Components CSS - Phase 3 Performance Enhancement
  * 
@@ -14,17 +13,17 @@
     border-top-color: transparent;
     border-radius: 50%;
     animation: unified-spin 1s linear infinite;
-    
+
     /* Performance optimizations */
     will-change: transform;
     transform: translateZ(0);
     backface-visibility: hidden;
-    
+
     /* Ensure smooth animation on all devices */
     animation-timing-function: linear;
     animation-fill-mode: both;
   }
-  
+
   /* === OPTIMIZED KEYFRAMES === */
   @keyframes unified-spin {
     0% {
@@ -34,7 +33,7 @@
       transform: translateZ(0) rotate(360deg);
     }
   }
-  
+
   /* === SKELETON OPTIMIZATIONS === */
   .skeleton-optimized {
     background: linear-gradient(
@@ -45,12 +44,12 @@
     );
     background-size: 200% 100%;
     animation: skeleton-shimmer 2s ease-in-out infinite;
-    
+
     /* Performance optimizations */
     will-change: background-position;
     contain: layout style paint;
   }
-  
+
   @keyframes skeleton-shimmer {
     0% {
       background-position: -200% 0;
@@ -59,10 +58,10 @@
       background-position: 200% 0;
     }
   }
-  
+
   /* === REDUCED MOTION SUPPORT === */
   /* Handled by accessibility.css */
-  
+
   /* === HIGH CONTRAST SUPPORT === */
   @media (prefers-contrast: high) {
     .loading-unified-spinner {

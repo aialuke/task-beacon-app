@@ -2,16 +2,26 @@ import { toast } from 'sonner';
 
 import { useUnifiedPhotoUpload } from '@/components/form/hooks/useUnifiedPhotoUpload';
 import { logger } from '@/lib/logger';
-import type { ProcessingResult } from '@/lib/utils/image';
+import { ProcessingResult } from '@/shared/utils/image/';
+import { Task } from '@/types';
 
 import { useTaskForm } from './useTaskForm';
 import { useTaskFormValidation } from './useTaskFormValidation';
 import { useTaskMutations } from './useTaskMutations';
 
-
-
 interface UseCreateTaskOptions {
   onClose?: () => void;
+}
+
+interface TaskCreateData {
+  title: string;
+  description?: string;
+  dueDate: string;
+  url: string;
+  assigneeId: string;
+  priority: 'low' | 'medium' | 'high';
+  photoUrl?: string;
+  urlLink?: string;
 }
 
 interface UseCreateTaskReturn {
@@ -26,19 +36,19 @@ interface UseCreateTaskReturn {
   setUrl: (value: string) => void;
   assigneeId: string;
   setAssigneeId: (value: string) => void;
-  
+
   // Form validation and state
   isValid: boolean;
   errors: Record<string, string | undefined>;
   loading: boolean;
-  
+
   // Photo upload
   photoPreview: string | null;
   handlePhotoChange: (e: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
   handlePhotoRemove: () => void;
   photoLoading: boolean;
   processingResult: ProcessingResult | null;
-  
+
   // Actions
   handleSubmit: (e: React.FormEvent) => Promise<void>;
   values: Record<string, unknown>;
@@ -46,13 +56,15 @@ interface UseCreateTaskReturn {
 
 /**
  * Create task hook - Simplified and consolidated
- * 
+ *
  * Combines form state, photo upload, and task creation without redundant layers.
  */
-export function useCreateTask({ onClose }: UseCreateTaskOptions = {}): UseCreateTaskReturn {
+export function useCreateTask({
+  onClose,
+}: UseCreateTaskOptions = {}): UseCreateTaskReturn {
   // Form state management
   const taskForm = useTaskForm({ onClose });
-  
+
   // Photo upload functionality
   const photoUpload = useUnifiedPhotoUpload({
     processingOptions: {
@@ -78,7 +90,7 @@ export function useCreateTask({ onClose }: UseCreateTaskOptions = {}): UseCreate
     }
 
     taskForm.setIsSubmitting(true);
-    
+
     try {
       // Handle photo upload
       const photoUrl = await photoUpload.uploadPhoto();
@@ -102,7 +114,7 @@ export function useCreateTask({ onClose }: UseCreateTaskOptions = {}): UseCreate
       }
 
       // Create task
-      const result = await createTaskCallback(taskData);
+      const result = await createTaskCallback(taskData as TaskCreateData);
 
       if (result.success) {
         toast.success('Task created successfully');
@@ -112,8 +124,12 @@ export function useCreateTask({ onClose }: UseCreateTaskOptions = {}): UseCreate
         toast.error(result.error || 'Failed to create task');
       }
     } catch (error) {
-      logger.error('Task creation error', error instanceof Error ? error : new Error(String(error)));
-      const errorMessage = error instanceof Error ? error.message : 'Failed to create task';
+      logger.error(
+        'Task creation error',
+        error instanceof Error ? error : new Error(String(error))
+      );
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to create task';
       toast.error(errorMessage);
     } finally {
       taskForm.setIsSubmitting(false);
@@ -132,19 +148,19 @@ export function useCreateTask({ onClose }: UseCreateTaskOptions = {}): UseCreate
     setUrl: taskForm.setUrl,
     assigneeId: taskForm.assigneeId,
     setAssigneeId: taskForm.setAssigneeId,
-    
+
     // Form validation and state
     isValid: taskForm.isValid,
     errors: taskForm.errors,
     loading: taskForm.isSubmitting || photoUpload.loading,
-    
+
     // Photo upload
     photoPreview: photoUpload.photoPreview,
     handlePhotoChange: photoUpload.handlePhotoChange,
     handlePhotoRemove: photoUpload.handlePhotoRemove,
     photoLoading: photoUpload.loading,
     processingResult: photoUpload.processingResult,
-    
+
     // Actions
     handleSubmit,
     values: taskForm.values,

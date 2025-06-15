@@ -3,27 +3,27 @@ import type { TaskStatus, TaskFilter } from '@/types';
 /**
  * UI-related types for task components
  */
-export interface TaskListUIProps {
+interface TaskListUIProps {
   className?: string;
   showFilters?: boolean;
   showPagination?: boolean;
   emptyMessage?: string;
 }
 
-export interface TaskCardUIProps {
+interface TaskCardUIProps {
   isExpanded: boolean;
   toggleExpand: () => void;
   handleTogglePin: () => void;
   isPinLoading?: boolean;
 }
 
-export interface TaskTimerProps {
+interface TaskTimerProps {
   dueDate: string | null;
   status: TaskStatus;
   size?: number;
 }
 
-export interface TaskDialogState {
+interface TaskDialogState {
   isOpen: boolean;
   type: 'create' | 'edit' | 'followUp' | null;
   taskId: string | null;
@@ -32,7 +32,7 @@ export interface TaskDialogState {
 /**
  * Task UI Context interface
  */
-export interface TaskUIContextType {
+interface TaskUIContextType {
   // UI filters
   filter: TaskFilter;
   setFilter: (filter: TaskFilter) => void;

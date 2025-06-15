@@ -1,9 +1,30 @@
+import { ReactNode, useState, useEffect } from 'react';
 
-import { ReactNode, useState, useEffect } from "react";
+import { createStandardContext } from '@/shared/utils/createContext';
 
-import { TaskFilter } from "../types";
+import { TaskFilter } from '../types';
 
-import { TaskUIProvider, type TaskUIContextType } from './task-ui-utils';
+// Define the shape of our UI context
+interface TaskUIContextType {
+  // UI filters
+  filter: TaskFilter;
+  setFilter: (filter: TaskFilter) => void;
+
+  // Expanded state
+  expandedTaskId: string | null;
+  setExpandedTaskId: (id: string | null) => void;
+
+  // Mobile detection
+  isMobile: boolean;
+}
+
+// Create standardized context
+const { Provider: TaskUIProvider, useContext: useTaskUIContext } =
+  createStandardContext<TaskUIContextType>({
+    name: 'TaskUI',
+    errorMessage:
+      'useTaskUIContext must be used within a TaskUIContextProvider',
+  });
 
 /**
  * Provider component for task UI-related state
@@ -11,7 +32,7 @@ import { TaskUIProvider, type TaskUIContextType } from './task-ui-utils';
  */
 export function TaskUIContextProvider({ children }: { children: ReactNode }) {
   // UI States - using standard React hooks
-  const [filter, setFilter] = useState<TaskFilter>("all");
+  const [filter, setFilter] = useState<TaskFilter>('all');
   const [expandedTaskId, setExpandedTaskId] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -22,9 +43,11 @@ export function TaskUIContextProvider({ children }: { children: ReactNode }) {
     };
 
     checkIfMobile();
-    window.addEventListener("resize", checkIfMobile);
+    window.addEventListener('resize', checkIfMobile);
 
-    return () => { window.removeEventListener("resize", checkIfMobile); };
+    return () => {
+      window.removeEventListener('resize', checkIfMobile);
+    };
   }, []);
 
   const contextValue: TaskUIContextType = {
@@ -35,11 +58,8 @@ export function TaskUIContextProvider({ children }: { children: ReactNode }) {
     isMobile,
   };
 
-  return (
-    <TaskUIProvider value={contextValue}>
-      {children}
-    </TaskUIProvider>
-  );
+  return <TaskUIProvider value={contextValue}>{children}</TaskUIProvider>;
 }
 
-
+// Export the standardized hook
+export { useTaskUIContext };

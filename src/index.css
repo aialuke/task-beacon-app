@@ -22,7 +22,16 @@
   }
   body {
     line-height: 1.5;
-    font-family: system-ui, -apple-system, "Inter", sans-serif;
+    font-family:
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      "Roboto",
+      "Helvetica Neue",
+      "Inter",
+      "Arial",
+      sans-serif;
     will-change: auto;
   }
   :focus-visible {
@@ -45,7 +54,9 @@
   }
   svg {
     fill: none;
-    transition: stroke var(--duration-normal) var(--ease-out), fill var(--duration-normal) var(--ease-out);
+    transition:
+      stroke var(--duration-normal) var(--ease-out),
+      fill var(--duration-normal) var(--ease-out);
   }
   .backdrop-blur-fix {
     backdrop-filter: blur(8px);
@@ -58,5 +69,3 @@
     animation-timing-function: ease-out;
   }
 }
-
-

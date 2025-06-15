@@ -1,121 +1,84 @@
 import type { KnipConfig } from 'knip';
 
 const config: KnipConfig = {
-  // === PROJECT SCOPE ===
-  // Define which files to analyze for dependencies and exports
   entry: [
-    // Main application entry points
-    'src/main.tsx',
-    'src/App.tsx',
+    // Application entry points
+    'src/app/main.tsx',
+    'src/app/App.tsx',
     'index.html',
-    
+
+    // Styling entry points (main CSS only, not @import chain)
+    'src/index.css',
+
     // Configuration files
     'vite.config.ts',
-    'tailwind.config.ts', 
+    'tailwind.config.ts',
     'eslint.config.js',
-    'postcss.config.js',
-    
-    // Test setup and entry points
+
+    // Testing entry points (Solution B: Selective Test Analysis)
     'src/test/setup.ts',
-    'src/test/integration/setup.ts',
     'src/**/*.test.{ts,tsx}',
     'src/**/*.spec.{ts,tsx}',
-    
-    // Component stories (if using Storybook)
-    'src/**/*.stories.{ts,tsx}',
-    
-    // Configuration entry points for tools
-    'components.json', // shadcn/ui config
+    'vitest.config.ts',
+
+    // Type definitions
+    'src/**/*.d.ts',
   ],
 
-  // Define project files to analyze (exclude test files from unused export detection)
   project: [
     'src/**/*.{ts,tsx,js,jsx}',
     '!src/**/*.test.{ts,tsx}',
     '!src/**/*.spec.{ts,tsx}',
     '!src/**/__tests__/**',
-    '!src/**/*.stories.{ts,tsx}',
+    '!src/**/__mocks__/**',
+    // Solution A: Ignore entire styles directory (CSS @import chains)
+    '!src/styles/**',
   ],
 
-  // === IGNORE PATTERNS ===
   ignore: [
-    // Environment and build artifacts
+    // Generated and build files
     'src/vite-env.d.ts',
     'dist/**',
-    'build/**',
-    'coverage/**',
     'node_modules/**',
     '.git/**',
-    '.cache/**',
-    '.turbo/**',
-    
-    // OS files
-    '**/.DS_Store',
-    
-    // IDE files
-    '.vscode/**',
+    'coverage/**',
+
+    // Solution A: Supabase - ignore generated files only
+    'src/integrations/supabase/types.ts',
+
+    // Solution A: Tailwind CSS - ignore entire styles directory
+    'src/styles/**',
+
+    // Development and tooling files
     '.cursor/**',
-    
-    // Generated types that may appear unused
-    'src/integrations/supabase/types.ts', // Contains generated DB types
-    
-    // Utility files that export many functions for potential use
-    'src/lib/utils/shared.ts', // Re-export utility hub
-    'src/types/index.ts', // Main type export hub
+    '*.md',
+    'public/**',
   ],
 
-  // === DEPENDENCY CONFIGURATION ===
-  // Ignore dependencies that are used indirectly or by tooling
   ignoreDependencies: [
-    // No dependencies need to be ignored - all are properly detected
+    // Only ignore dependencies that actually show as false positives
+    // Based on actual testing, most utilities are properly detected by Knip
   ],
 
-  // Don't warn about these binaries
-  ignoreBinaries: [
-    // No binaries need to be ignored - all are properly detected
-  ],
-
-  // === TOOL-SPECIFIC CONFIGURATIONS ===
-  
-  // Vite configuration
+  // Enhanced plugin configurations for Solution B approaches
   vite: {
     config: 'vite.config.ts',
-    entry: [
-      'src/main.tsx',
-      'index.html',
-    ],
+    entry: ['src/app/main.tsx', 'index.html'],
   },
 
-  // Vitest configuration  
   vitest: {
-    config: 'vite.config.ts', // Vitest config is in vite.config.ts
-    entry: [
-      'src/test/setup.ts',
-      'src/test/integration/setup.ts',
-    ],
+    config: 'vite.config.ts',
+    // Solution B: Better test analysis
+    entry: ['src/test/setup.ts'],
   },
 
-  // ESLint configuration
   eslint: {
     config: 'eslint.config.js',
-    entry: ['eslint.config.js'],
   },
 
-  // Tailwind CSS configuration
   tailwind: {
     config: 'tailwind.config.ts',
-    entry: ['tailwind.config.ts'],
   },
-
-  // PostCSS configuration
-  postcss: {
-    config: 'postcss.config.js',
-  },
-
-  // === ADDITIONAL IGNORE PATTERNS ===
-  
-  // Ignore exports that are used within the same file (common pattern for utilities)
-  ignoreExportsUsedInFile: true,
 };
 
 export default config;

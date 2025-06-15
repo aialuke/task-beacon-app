@@ -1,7 +1,4 @@
-import React, { createContext, useContext as _useContext, useEffect, useState } from 'react';
-
-import { safeJsonParse } from '@/lib/utils/data';
-import { isDarkMode } from '@/lib/utils/ui';
+import React, { createContext, useEffect, useState } from 'react';
 
 type Theme = 'dark' | 'light' | 'system';
 
@@ -9,7 +6,6 @@ interface ThemeContextType {
   theme: Theme;
   setTheme: (theme: Theme) => void;
   actualTheme: 'dark' | 'light';
-  isDark: boolean;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -20,17 +16,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [actualTheme, setActualTheme] = useState<'dark' | 'light'>('dark');
 
   useEffect(() => {
-    // Get stored theme preference or default to dark using safeJsonParse
-    const storedThemeString = localStorage.getItem('theme');
-    if (storedThemeString) {
-      // Use safeJsonParse for safer parsing, fallback to string parsing
-      const storedTheme = safeJsonParse(storedThemeString, storedThemeString) as Theme;
-      if (['dark', 'light', 'system'].includes(storedTheme)) {
-        setTheme(storedTheme);
-      } else {
-        // Invalid theme, set dark as default
-        localStorage.setItem('theme', 'dark');
-      }
+    // Get stored theme preference or default to dark
+    const storedTheme = localStorage.getItem('theme') as Theme;
+    if (storedTheme) {
+      setTheme(storedTheme);
     } else {
       // Set dark as default and store it
       localStorage.setItem('theme', 'dark');
@@ -76,19 +65,25 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     };
 
     mediaQuery.addEventListener('change', handleChange);
-    return () => { mediaQuery.removeEventListener('change', handleChange); };
+    return () => {
+      mediaQuery.removeEventListener('change', handleChange);
+    };
   }, [theme]);
 
   return (
-    <ThemeContext.Provider value={{ 
-      theme, 
-      setTheme, 
-      actualTheme,
-      isDark: isDarkMode() || actualTheme === 'dark'
-    }}>
+    <ThemeContext.Provider value={{ theme, setTheme, actualTheme }}>
       {children}
     </ThemeContext.Provider>
   );
 }
 
-// Note: useTheme hook export removed as unused
+// useTheme hook removed - no components currently implement theme switching
+// Theme management is handled internally by ThemeProvider
+// If theme switching is needed in the future, uncomment and implement:
+// export function useTheme(): ThemeContextType {
+//   const context = useContext(ThemeContext);
+//   if (context === undefined) {
+//     throw new Error('useTheme must be used within a ThemeProvider');
+//   }
+//   return context;
+// }

@@ -1,10 +1,5 @@
-import { render, screen } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-
-import CountdownTimer from '../CountdownTimer';
-
 // Mock the TaskUIContext
-vi.mock('@/features/tasks/context', () => ({
+vi.mock('@/features/tasks/context/TaskUIContext', () => ({
   useTaskUIContext: () => ({
     isMobile: false,
   }),
@@ -19,6 +14,10 @@ vi.mock('@/hooks/useCountdown', () => ({
     ariaLabel: 'Task timer: 5 days remaining',
   }),
 }));
+
+import { render, screen, describe, it, expect, vi, beforeEach } from '@/test';
+
+import CountdownTimer from '../CountdownTimer';
 
 describe('CountdownTimer', () => {
   beforeEach(() => {
@@ -103,4 +102,4 @@ describe('CountdownTimer', () => {
     expect(timer).toHaveAttribute('tabIndex', '0');
     expect(timer).toHaveAttribute('aria-label', 'Task timer: Due tomorrow');
   });
-}); 
+});

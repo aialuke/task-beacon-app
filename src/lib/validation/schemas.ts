@@ -1,31 +1,37 @@
 /**
  * Consolidated Validation Schemas
- * 
+ *
  * All validation schemas consolidated from scattered schema files.
  * Uses unified validation patterns for consistency.
  */
 
 import { z } from 'zod';
 
-import { DEFAULT_PAGINATION_CONFIG } from '@/lib/utils/pagination';
+import { DEFAULT_PAGINATION_CONFIG } from '@/shared/utils/pagination';
+import type { TaskPriority as TaskPriorityType } from '@/types/feature-types/task.types';
 
-import { isDatePast } from '../utils/date';
-
-import { 
-  unifiedEmailSchema, 
-  unifiedPasswordSchema, 
+import { UNIFIED_VALIDATION_MESSAGES } from './messages';
+import {
+  unifiedEmailSchema,
+  unifiedPasswordSchema,
   unifiedUserNameSchema,
   unifiedTaskTitleSchema,
   unifiedTaskDescriptionSchema,
   unifiedUrlSchema,
-} from './unified-validation';
+} from './unified-schemas';
+
+// ============================================================================
+// TASK SCHEMAS
+// ============================================================================
+
+// Import TaskPriority from the canonical location
 
 // ============================================================================
 // COMMON SCHEMAS
 // ============================================================================
 
-export const uuidSchema = z.string().uuid('Invalid ID format');
-export const timestampSchema = z.string().datetime('Invalid timestamp format');
+const uuidSchema = z.string().uuid('Invalid ID format');
+const timestampSchema = z.string().datetime('Invalid timestamp format');
 
 // ============================================================================
 // PAGINATION SCHEMAS
@@ -33,17 +39,23 @@ export const timestampSchema = z.string().datetime('Invalid timestamp format');
 
 export const paginationSchema = z.object({
   page: z.number().int().min(1, 'Page must be at least 1').default(1),
-  pageSize: z.number().int()
-    .min(DEFAULT_PAGINATION_CONFIG.minPageSize, `Page size must be at least ${DEFAULT_PAGINATION_CONFIG.minPageSize}`)
-    .max(DEFAULT_PAGINATION_CONFIG.maxPageSize, `Page size cannot exceed ${DEFAULT_PAGINATION_CONFIG.maxPageSize}`)
+  pageSize: z
+    .number()
+    .int()
+    .min(
+      DEFAULT_PAGINATION_CONFIG.minPageSize,
+      `Page size must be at least ${DEFAULT_PAGINATION_CONFIG.minPageSize}`
+    )
+    .max(
+      DEFAULT_PAGINATION_CONFIG.maxPageSize,
+      `Page size cannot exceed ${DEFAULT_PAGINATION_CONFIG.maxPageSize}`
+    )
     .default(DEFAULT_PAGINATION_CONFIG.defaultPageSize),
   total: z.number().int().min(0).optional(),
 });
 
 export const sortingSchema = z.object({
-  field: z.enum(['created_at', 'updated_at', 'due_date', 'title', 'priority', 'status'], {
-    errorMap: () => ({ message: 'Sort field must be one of: created_at, updated_at, due_date, title, priority, status' }),
-  }),
+  field: z.string().min(1, 'Sort field is required'),
   order: z.enum(['asc', 'desc']).default('asc'),
 });
 
@@ -56,20 +68,32 @@ export const signInSchema = z.object({
   password: z.string().min(1, 'Password is required'),
 });
 
-export const signUpSchema = z.object({
-  email: unifiedEmailSchema,
-  password: unifiedPasswordSchema,
-  confirmPassword: z.string().min(1, 'Password confirmation is required'),
-  name: unifiedUserNameSchema.optional(),
-}).refine(
-  (data) => data.password === data.confirmPassword,
-  {
+export const signUpSchema = z
+  .object({
+    email: unifiedEmailSchema,
+    password: unifiedPasswordSchema,
+    confirmPassword: z.string().min(1, 'Password confirmation is required'),
+    name: unifiedUserNameSchema.optional(),
+  })
+  .refine(data => data.password === data.confirmPassword, {
     message: "Passwords don't match",
-    path: ["confirmPassword"],
-  }
-);
+    path: ['confirmPassword'],
+  });
 
+export const passwordResetSchema = z.object({
+  email: unifiedEmailSchema,
+});
 
+export const passwordChangeSchema = z
+  .object({
+    currentPassword: z.string().min(1, 'Current password is required'),
+    newPassword: unifiedPasswordSchema,
+    confirmNewPassword: z.string().min(1, 'Password confirmation is required'),
+  })
+  .refine(data => data.newPassword === data.confirmNewPassword, {
+    message: "New passwords don't match",
+    path: ['confirmNewPassword'],
+  });
 
 // ============================================================================
 // USER PROFILE SCHEMAS
@@ -88,15 +112,13 @@ export const profileCreateSchema = z.object({
   avatar_url: z.string().url('Invalid avatar URL').optional().nullable(),
 });
 
-// ============================================================================
-// TASK SCHEMAS
-// ============================================================================
-
-export const taskPrioritySchema = z.enum(['low', 'medium', 'high', 'urgent'], {
-  errorMap: () => ({ message: 'Priority must be low, medium, high, or urgent' }),
+const taskPrioritySchema = z.enum(['low', 'medium', 'high', 'urgent'], {
+  errorMap: () => ({
+    message: 'Priority must be low, medium, high, or urgent',
+  }),
 });
 
-export const taskStatusSchema = z.enum(['pending', 'complete', 'overdue'], {
+const taskStatusSchema = z.enum(['pending', 'complete', 'overdue'], {
   errorMap: () => ({ message: 'Status must be pending, complete, or overdue' }),
 });
 
@@ -105,18 +127,15 @@ const futureDateSchema = z
   .optional()
   .nullable()
   .or(z.literal(''))
-  .refine(
-    (date) => {
-      if (!date || typeof date !== 'string') return true;
-      const dateObj = new Date(date);
-      if (isNaN(dateObj.getTime())) return false;
-      // Use the isDatePast utility for consistent date validation
-      return !isDatePast(date);
-    },
-    'Date cannot be in the past'
-  );
+  .refine(date => {
+    if (!date || typeof date !== 'string') return true;
+    const dateObj = new Date(date);
+    if (isNaN(dateObj.getTime())) return false;
+    const now = new Date();
+    return dateObj > now;
+  }, 'Date cannot be in the past');
 
-export const baseTaskSchema = z.object({
+const baseTaskSchema = z.object({
   title: unifiedTaskTitleSchema,
   description: unifiedTaskDescriptionSchema,
   priority: taskPrioritySchema.default('medium'),
@@ -137,22 +156,26 @@ export const updateTaskSchema = baseTaskSchema.partial();
 
 export const taskFormSchema = z.object({
   title: unifiedTaskTitleSchema,
-  description: z.string().max(500, 'Description cannot exceed 500 characters').default(''),
+  description: z
+    .string()
+    .max(500, 'Description cannot exceed 500 characters')
+    .default(''),
   priority: taskPrioritySchema.default('medium'),
   dueDate: z.string().default(''),
-  url: z.string().refine(
-    (url) => {
+  url: z
+    .string()
+    .refine(url => {
       if (!url || !url.trim()) return true;
       try {
         new URL(url);
         return true;
       } catch {
-        const domainPattern = /^(www\.)?[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
+        const domainPattern =
+          /^(www\.)?[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
         return domainPattern.test(url.trim());
       }
-    },
-    'Please enter a valid URL'
-  ).default(''),
+    }, 'Please enter a valid URL')
+    .default(''),
   assigneeId: z.string().default(''),
 });
 
@@ -172,19 +195,29 @@ export const taskFilterSchema = z.object({
 
 export const fileUploadSchema = z.object({
   file: z.any(),
-  maxSize: z.number().positive().default(5 * 1024 * 1024), // 5MB default
-  allowedTypes: z.array(z.string()).default(['image/jpeg', 'image/png', 'image/webp']),
+  maxSize: z
+    .number()
+    .positive()
+    .default(5 * 1024 * 1024), // 5MB default
+  allowedTypes: z
+    .array(z.string())
+    .default(['image/jpeg', 'image/png', 'image/webp']),
 });
 
 // ============================================================================
 // TYPE EXPORTS
 // ============================================================================
 
+export type SignInInput = z.infer<typeof signInSchema>;
+export type SignUpInput = z.infer<typeof signUpSchema>;
+export type PasswordResetInput = z.infer<typeof passwordResetSchema>;
+export type PasswordChangeInput = z.infer<typeof passwordChangeSchema>;
 export type ProfileUpdateInput = z.infer<typeof profileUpdateSchema>;
+export type ProfileCreateInput = z.infer<typeof profileCreateSchema>;
 
-export type TaskPriority = z.infer<typeof taskPrioritySchema>;
-export type TaskStatus = z.infer<typeof taskStatusSchema>;
-export type BaseTask = z.infer<typeof baseTaskSchema>;
+// Use the canonical TaskPriority type instead of inferring from schema;
+type TaskStatus = z.infer<typeof taskStatusSchema>;
+type BaseTask = z.infer<typeof baseTaskSchema>;
 export type CreateTaskInput = z.infer<typeof createTaskSchema>;
 export type UpdateTaskInput = z.infer<typeof updateTaskSchema>;
 export type TaskFormInput = z.infer<typeof taskFormSchema>;
@@ -192,4 +225,4 @@ export type TaskFilterInput = z.infer<typeof taskFilterSchema>;
 
 export type PaginationInput = z.infer<typeof paginationSchema>;
 export type SortingInput = z.infer<typeof sortingSchema>;
-export type FileUploadInput = z.infer<typeof fileUploadSchema>; 
+export type FileUploadInput = z.infer<typeof fileUploadSchema>;

@@ -26,7 +26,9 @@ class MockIntersectionObserver implements IntersectionObserver {
   readonly thresholds: readonly number[] = [];
   disconnect(): void {}
   observe(): void {}
-  takeRecords(): IntersectionObserverEntry[] { return []; }
+  takeRecords(): IntersectionObserverEntry[] {
+    return [];
+  }
   unobserve(): void {}
 }
 global.IntersectionObserver = MockIntersectionObserver;
