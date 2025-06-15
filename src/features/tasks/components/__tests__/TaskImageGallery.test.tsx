@@ -1,3 +1,10 @@
+import { render, screen } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
+
+import type { Task } from '@/types';
+
+import { TaskImageGallery } from '../display/TaskImageGallery';
+
 // Mock the image preview hook
 vi.mock('../hooks/useImagePreview', () => ({
   useImagePreview: () => ({
@@ -7,11 +14,6 @@ vi.mock('../hooks/useImagePreview', () => ({
     closePreview: vi.fn(),
   }),
 }));
-
-import { render, screen, describe, it, expect, vi } from '@/test';
-import type { Task } from '@/types';
-
-import { TaskImageGallery } from '../display/TaskImageGallery';
 
 describe('TaskImageGallery', () => {
   const mockTask: Task = {

@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
-import { QueryKeys } from '@/shared/services/api';
+import { QueryKeys } from '@/lib/api/standardized-api';
 import { Task } from '@/types';
 
 // Define proper types for React Query data structures

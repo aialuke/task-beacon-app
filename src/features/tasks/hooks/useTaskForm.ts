@@ -94,7 +94,7 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
       title: form.values.title.trim(),
       description: form.values.description.trim() || undefined,
       due_date: form.values.dueDate || undefined,
-      photo_url: undefined,
+      photo_url: null,
       url_link: form.values.url.trim() || undefined,
       assignee_id: form.values.assigneeId || undefined,
     };
@@ -123,7 +123,7 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     isValid,
     errors: form.errors,
     isSubmitting: form.isSubmitting,
-    setIsSubmitting: (_submitting: boolean) => {
+    setIsSubmitting: (submitting: boolean) => {
       // Legacy compatibility - unified form handles this internally
       logger.warn(
         'setIsSubmitting is deprecated - form handles submission state automatically'

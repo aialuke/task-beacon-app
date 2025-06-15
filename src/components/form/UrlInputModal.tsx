@@ -2,14 +2,10 @@ import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { Link, ArrowRight } from 'lucide-react';
 import { useState, useRef } from 'react';
 
-import { Button } from '@/shared/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-} from '@/shared/components/ui/dialog';
-import { Input } from '@/shared/components/ui/input';
-import { cn } from '@/shared/utils';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
 
 interface UrlInputModalProps {
   isOpen: boolean;

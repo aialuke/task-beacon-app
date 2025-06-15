@@ -2,14 +2,14 @@ import { format } from 'date-fns';
 import { Calendar } from 'lucide-react';
 import { memo, useState } from 'react';
 
-import { Button } from '@/shared/components/ui/button';
-import { Calendar as CalendarComponent } from '@/shared/components/ui/calendar';
+import { Button } from '@/components/ui/button';
+import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/shared/components/ui/popover';
-import { cn } from '@/shared/utils';
+} from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
 
 interface DatePickerButtonProps {
   dueDate: string;

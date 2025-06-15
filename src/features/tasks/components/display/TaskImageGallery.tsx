@@ -1,8 +1,9 @@
 // === EXTERNAL LIBRARIES ===
+import { memo } from 'react';
 
 // === INTERNAL UTILITIES ===
-import { LazyImage } from '@/shared/components/ui/LazyImage';
-import { cn } from '@/shared/utils';
+import { LazyImage } from '@/components/ui/LazyImage';
+import { cn } from '@/lib/utils';
 import type { Task } from '@/types';
 
 // === INTERNAL COMPONENTS ===
@@ -47,7 +48,7 @@ function TaskImageGallery({ task, className }: TaskImageGalleryProps) {
   }
 
   const handleImageClick = () => {
-    openPreview(task.photo_url!);
+    openPreview(task.photo_url);
   };
 
   return (
@@ -59,7 +60,7 @@ function TaskImageGallery({ task, className }: TaskImageGalleryProps) {
           aria-label="View task image"
         >
           <LazyImage
-            src={task.photo_url!}
+            src={task.photo_url}
             alt="Task image"
             className="h-48 w-full object-cover"
           />
@@ -68,7 +69,7 @@ function TaskImageGallery({ task, className }: TaskImageGalleryProps) {
 
       <ImagePreviewModal
         isOpen={isPreviewOpen}
-        imageUrl={previewImageUrl!}
+        imageUrl={previewImageUrl}
         onClose={closePreview}
         alt={`Image for task: ${task.title}`}
       />

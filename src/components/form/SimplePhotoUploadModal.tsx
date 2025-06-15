@@ -1,11 +1,7 @@
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-} from '@/shared/components/ui/dialog';
-import type { ProcessingResult } from '@/shared/utils/image/';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import type { ProcessingResult } from '@/lib/utils/image/';
 
 import SimplePhotoUpload from './SimplePhotoUpload';
 

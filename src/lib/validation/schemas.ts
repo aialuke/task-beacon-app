@@ -7,7 +7,7 @@
 
 import { z } from 'zod';
 
-import { DEFAULT_PAGINATION_CONFIG } from '@/shared/utils/pagination';
+import { DEFAULT_PAGINATION_CONFIG } from '@/lib/utils/pagination';
 import type { TaskPriority as TaskPriorityType } from '@/types/feature-types/task.types';
 
 import { UNIFIED_VALIDATION_MESSAGES } from './messages';

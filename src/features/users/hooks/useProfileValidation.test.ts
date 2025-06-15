@@ -1,4 +1,5 @@
-import { renderHook, describe, it, expect } from '@/test';
+import { renderHook } from '@testing-library/react';
+import { describe, it, expect } from 'vitest';
 
 import { useProfileValidation } from './useProfileValidation';
 

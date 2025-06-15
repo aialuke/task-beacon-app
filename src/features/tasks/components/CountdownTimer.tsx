@@ -1,21 +1,19 @@
-
 import { useSpring, animated } from '@react-spring/web';
 import { useMemo } from 'react';
 
-import { useMotionPreferences } from '@/hooks/useMotionPreferences';
 import {
   Tooltip,
   TooltipProvider,
   TooltipTrigger,
-} from '@/shared/components/ui/tooltip';
+} from '@/components/ui/tooltip';
+import TimerTooltip from '@/features/tasks/components/TimerTooltip';
+import { useTaskUIContext } from '@/features/tasks/context/TaskUIContext';
+import { useCountdown } from '@/features/tasks/hooks/useCountdown';
+import { useMotionPreferences } from '@/hooks/useMotionPreferences';
 import { TaskStatus } from '@/types';
-
-import { useTaskUIContext } from '../context/TaskUIContext';
-import { useCountdown } from '../hooks/useCountdown';
 
 import TimerDisplay from './timer/TimerDisplay';
 import TimerRing from './timer/TimerRing';
-import TimerTooltip from './TimerTooltip';
 
 interface CountdownTimerProps {
   dueDate: string | null;
@@ -36,6 +34,7 @@ function CountdownTimer({
   const { shouldReduceMotion, getAnimationConfig } = useMotionPreferences();
 
   const { dynamicSize, radius, circumference } = useMemo(() => {
+    // Replace complex nested ternaries with lookup table
     const SIZE_MULTIPLIERS = {
       mobile: { high: 1.1, medium: 0.9, low: 0.7 },
       desktop: { high: 1.2, medium: 1.0, low: 0.8 },
@@ -60,8 +59,7 @@ function CountdownTimer({
     [getAnimationConfig]
   );
 
-  // Fix React Spring configuration with proper typing
-  const springProps = useSpring({
+  const { strokeDashoffset } = useSpring({
     strokeDashoffset: dashOffset,
     config: springConfig,
     immediate:
@@ -101,7 +99,7 @@ function CountdownTimer({
               size={dynamicSize}
               radius={radius}
               circumference={circumference}
-              strokeDashoffset={springProps.strokeDashoffset}
+              strokeDashoffset={strokeDashoffset}
               status={status}
               daysRemaining={daysRemaining}
             />

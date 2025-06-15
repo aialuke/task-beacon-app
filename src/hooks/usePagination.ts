@@ -4,7 +4,7 @@ import {
   DEFAULT_PAGINATION_CONFIG,
   validatePaginationParams,
   calculatePaginationMeta,
-} from '@/shared/utils/pagination';
+} from '@/lib/utils/pagination';
 import type {
   PaginationState,
   PaginationControls,

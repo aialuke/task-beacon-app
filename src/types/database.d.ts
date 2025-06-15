@@ -5,7 +5,7 @@
  * This replaces scattered database type definitions throughout the codebase.
  */
 
-import type { Database } from '@/shared/services/supabase/types';
+import type { Database } from '@/integrations/supabase/types';
 
 // Core database table types
 export type Tables<T extends keyof Database['public']['Tables']> =

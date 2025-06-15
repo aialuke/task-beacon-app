@@ -1,8 +1,8 @@
 import { UseMutationResult } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
+import { TaskService } from '@/lib/api/tasks';
 import { logger } from '@/lib/logger';
-import { TaskService } from '@/shared/services/api';
 import { Task } from '@/types';
 
 import { useTaskOptimisticUpdates } from '../useTaskOptimisticUpdates';

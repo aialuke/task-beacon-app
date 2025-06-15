@@ -1,8 +1,8 @@
 import { LucideIcon } from 'lucide-react';
 import { memo } from 'react';
 
-import { Button } from '@/shared/components/ui/button';
-import { cn } from '@/shared/utils';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 interface ActionButtonProps {
   icon: LucideIcon;
@@ -22,7 +22,7 @@ export const ActionButton = memo(function ActionButton({
   const buttonClasses = cn(
     'flex touch-manipulation items-center justify-center gap-2 transition-all duration-200',
     'hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 active:scale-95',
-    'size-[48px] sm:w-auto sm:py-2 sm:pl-3 sm:pr-4',
+    'size-[48px] sm:h-[48px] sm:w-auto sm:py-2 sm:pl-3 sm:pr-4',
     'aspect-square rounded-full [aspect-ratio:1/1] sm:aspect-auto sm:[aspect-ratio:unset]',
     active
       ? 'border border-primary/30 bg-primary/20 text-primary shadow-md shadow-primary/10'

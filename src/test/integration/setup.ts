@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 import type { User } from '@supabase/supabase-js';
 import { vi } from 'vitest';
 
-import { supabase } from '@/shared/services/supabase/client';
+import { supabase } from '@/integrations/supabase/client';
 
 /**
  * Integration test setup
@@ -10,7 +10,7 @@ import { supabase } from '@/shared/services/supabase/client';
  */
 
 // Mock Supabase client for integration tests
-vi.mock('@/shared/services/supabase/client', () => ({
+vi.mock('@/integrations/supabase/client', () => ({
   supabase: {
     auth: {
       getUser: vi.fn(),

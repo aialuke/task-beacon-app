@@ -5,7 +5,7 @@
  */
 
 // Object manipulation utilities
-// State management utilities moved to @/shared/types/async-state.types.ts to eliminate duplication
+// State management utilities moved to @/types/async-state.types.ts to eliminate duplication
 import type { BaseAsyncState } from './async-state.types';
 
 type DeepPartial<T> = {
@@ -72,7 +72,7 @@ type ApiState<T> = BaseAsyncState<T> & {
   lastFetch?: Date;
 };
 
-// Form utilities moved to @/shared/types/form.types.ts to eliminate duplication;
+// Form utilities moved to @/types/form.types.ts to eliminate duplication;
 
 // Validation interfaces
 interface ValidationRule<T = unknown> {
@@ -97,4 +97,4 @@ export type Timestamp = string; // ISO 8601 format
 
 // Status utilities
 export type Status = 'idle' | 'loading' | 'success' | 'error';
-// AsyncOperationState moved to @/shared/types/async-state.types.ts to eliminate duplication;
+// AsyncOperationState moved to @/types/async-state.types.ts to eliminate duplication;

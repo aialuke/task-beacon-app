@@ -1,4 +1,3 @@
-
 import { useCallback } from 'react';
 import { toast } from 'sonner';
 
@@ -92,14 +91,14 @@ export function useTaskFormValidation() {
   );
 
   /**
-   * Validate individual fields - now properly async
+   * Validate individual fields
    */
   const validateFormField = useCallback(
-    async (
+    (
       fieldName: string,
       value: unknown
-    ): Promise<{ isValid: boolean; error?: string }> => {
-      const result = await validateField(fieldName, value);
+    ): { isValid: boolean; error?: string } => {
+      const result = validateField(fieldName, value);
 
       return {
         isValid: result.isValid,

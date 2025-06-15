@@ -1,4 +1,3 @@
-
 /**
  * Unified Error Handling System - Phase 1 Consolidation
  *
@@ -8,9 +7,9 @@
 
 import { toast } from 'sonner';
 
+import { formatApiError } from '@/lib/api/error-handling';
 import { logger } from '@/lib/logger';
-import { formatApiError } from '@/shared/services/api';
-import type { ApiError } from '@/types';
+import type { ApiError } from '@/types/shared';
 
 // === CORE ERROR INTERFACES ===
 
@@ -154,5 +153,3 @@ const ErrorHandler = {
   setup: setupGlobalErrorHandling,
   createState: createErrorState,
 };
-
-export default ErrorHandler;

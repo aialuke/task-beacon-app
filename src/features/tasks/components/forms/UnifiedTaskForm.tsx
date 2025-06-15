@@ -1,8 +1,8 @@
 import { FileText, Sparkles } from 'lucide-react';
 
-import { FloatingInput } from '@/shared/components/ui/form/FloatingInput';
-import { FloatingTextarea } from '@/shared/components/ui/form/FloatingTextarea';
-import type { ProcessingResult } from '@/shared/utils/image/';
+import { FloatingInput } from '@/components/ui/form/FloatingInput';
+import { FloatingTextarea } from '@/components/ui/form/FloatingTextarea';
+import type { ProcessingResult } from '@/lib/utils/image/';
 
 import { QuickActionBar } from './QuickActionBar';
 

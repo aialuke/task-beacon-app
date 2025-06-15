@@ -2,7 +2,7 @@ import { toast } from 'sonner';
 
 import { useUnifiedPhotoUpload } from '@/components/form/hooks/useUnifiedPhotoUpload';
 import { logger } from '@/lib/logger';
-import { ProcessingResult } from '@/shared/utils/image/';
+import { ProcessingResult } from '@/lib/utils/image/';
 import { Task } from '@/types';
 
 import { useTaskForm } from './useTaskForm';

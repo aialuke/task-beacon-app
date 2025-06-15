@@ -1,11 +1,9 @@
-
 import { memo } from 'react';
 
-import UnifiedErrorBoundary from '@/shared/components/ui/UnifiedErrorBoundary';
+import UnifiedErrorBoundary from '@/components/ui/UnifiedErrorBoundary';
 import type { Task } from '@/types';
 
 import { useTaskCard } from '../../hooks/useTaskCard';
-import { useTaskCardLogic } from '../../hooks/useTaskCardLogic';
 
 import TaskCardContent from './TaskCardContent';
 import TaskCardHeader from './TaskCardHeader';
@@ -35,10 +33,15 @@ const arePropsEqual = (
 function TaskCard({ task }: TaskCardProps) {
   const { contentRef, cardRef, isExpanded, animationState, toggleExpand } =
     useTaskCard(task);
-  
-  // Extract business logic to separate hook
-  const { statusClass, statusStyles, borderClass, getExpansionClass, ariaLabel } =
-    useTaskCardLogic(task);
+
+  // Dynamic classes
+  const statusClass = `status-${task.status.toLowerCase()}`;
+  const expandedClass = isExpanded ? 'scale-102 shadow-expanded z-10' : '';
+
+  // Status-based styles
+  const statusStyles: React.CSSProperties = {
+    opacity: task.status === 'complete' ? 0.8 : 1,
+  };
 
   return (
     <UnifiedErrorBoundary
@@ -53,9 +56,15 @@ function TaskCard({ task }: TaskCardProps) {
     >
       <article
         ref={cardRef}
-        className={`mx-auto mb-4 box-border w-full max-w-2xl cursor-pointer rounded-xl border border-border bg-card p-5 text-card-foreground shadow-task-card transition-all duration-200 hover:shadow-md ${statusClass} ${getExpansionClass(isExpanded)} ${borderClass}`}
+        className={`mx-auto mb-4 box-border w-full max-w-2xl cursor-pointer rounded-xl border border-border bg-card p-5 text-card-foreground shadow-task-card transition-all duration-200 hover:shadow-md ${statusClass} ${expandedClass} ${
+          task.status === 'complete'
+            ? 'bg-muted'
+            : task.status === 'overdue'
+              ? 'border-destructive'
+              : ''
+        }`}
         style={statusStyles}
-        aria-label={ariaLabel}
+        aria-label={`Task: ${task.title}`}
       >
         <TaskCardHeader
           task={task}

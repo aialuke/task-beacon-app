@@ -5,12 +5,12 @@ import { useRef, useEffect, useState, useCallback } from 'react';
 import {
   computeNavbarColors,
   setupThemeObserver,
-} from '@/shared/components/ui/navbar/utils/navbarColors';
+} from '@/components/ui/navbar/utils/navbarColors';
 import {
   calculateActiveButtonBounds,
   calculateIndicatorPosition,
   calculateGlowPosition,
-} from '@/shared/components/ui/navbar/utils/navbarGeometry';
+} from '@/components/ui/navbar/utils/navbarGeometry';
 
 interface NavItem {
   name: string;

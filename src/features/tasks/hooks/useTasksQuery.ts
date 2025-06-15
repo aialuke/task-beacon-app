@@ -1,13 +1,9 @@
-
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useAuth } from '@/hooks/core';
 import { usePagination } from '@/hooks/usePagination';
-import {
-  QueryKeys,
-  createLoadingState,
-  TaskService,
-} from '@/shared/services/api';
+import { QueryKeys, createLoadingState } from '@/lib/api/standardized-api';
+import { TaskService } from '@/lib/api/tasks';
 import type { Task } from '@/types';
 
 interface UseTasksQueryOptions {
@@ -84,8 +80,8 @@ export function useTasksQuery(
       }
 
       return {
-        data: response.data?.data || [],
-        totalCount: response.data?.pagination?.totalCount || 0,
+        data: response.data.data,
+        totalCount: response.data.pagination.totalCount,
       };
     },
     staleTime: 5 * 60 * 1000, // 5 minutes for better UX
@@ -111,7 +107,7 @@ export function useTasksQuery(
   const shouldPrefetch =
     pagination.hasNextPage &&
     !isLoading &&
-    (response?.data?.length || 0) === pagination.pageSize;
+    response?.data.length === pagination.pageSize;
 
   if (shouldPrefetch && user && session) {
     const nextPageKey = [
@@ -142,8 +138,8 @@ export function useTasksQuery(
           }
 
           return {
-            data: response.data?.data || [],
-            totalCount: response.data?.pagination?.totalCount || 0,
+            data: response.data.data,
+            totalCount: response.data.pagination.totalCount,
           };
         },
         staleTime: 5 * 60 * 1000,

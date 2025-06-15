@@ -1,10 +1,9 @@
 import { ReactNode } from 'react';
 
-import UnifiedErrorBoundary from '@/shared/components/ui/UnifiedErrorBoundary';
-import { createStandardContext } from '@/shared/utils/createContext';
+import UnifiedErrorBoundary from '@/components/ui/UnifiedErrorBoundary';
+import { useTasksQuery } from '@/features/tasks/hooks/useTasksQuery';
+import { createStandardContext } from '@/lib/utils/createContext';
 import type { Task } from '@/types';
-
-import { useTasksQuery } from '../hooks/useTasksQuery';
 
 interface TaskDataContextValue {
   // Data state (from React Query with standardized patterns)

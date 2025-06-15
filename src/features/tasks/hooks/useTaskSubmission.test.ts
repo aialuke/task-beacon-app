@@ -1,5 +1,13 @@
+import { renderHook, act } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+
+import { TaskService } from '@/lib/api';
+import type { TaskWithRelations } from '@/types';
+
+import { useTaskSubmission } from './useTaskSubmission';
+
 // Mock the TaskService
-vi.mock('@/shared/services/api', () => ({
+vi.mock('@/lib/api', () => ({
   TaskService: {
     crud: {
       create: vi.fn(),
@@ -41,12 +49,6 @@ vi.mock('@/lib/api/base', () => ({
   },
 }));
 
-import { TaskService } from '@/shared/services/api';
-import { renderHook, act, describe, it, expect, vi, beforeEach } from '@/test';
-import type { TaskWithRelations } from '@/types';
-
-import { useTaskSubmission } from './useTaskSubmission';
-
 interface SubmitTaskData {
   title: string;
   description: string;
@@ -72,7 +74,7 @@ describe('useTaskSubmission', () => {
     vi.clearAllMocks();
   });
 
-  it('should successfully create a task', async () => {
+  it('should successfully submit a task', async () => {
     const mockCreatedTask: TaskWithRelations = {
       id: 'task-123',
       title: mockTaskData.title,
@@ -98,22 +100,17 @@ describe('useTaskSubmission', () => {
 
     let submissionResult;
     await act(async () => {
-      submissionResult = await result.current.createTask({
-        title: mockTaskData.title,
-        description: mockTaskData.description,
-        assignee_id: mockTaskData.assigneeId,
-      });
+      submissionResult = await result.current.submitTask(mockTaskData);
     });
 
     expect(submissionResult).toEqual({
       success: true,
-      message: 'Task created successfully!',
-      task: mockCreatedTask,
+      taskId: 'task-123',
     });
     expect(TaskService.crud.create).toHaveBeenCalled();
   });
 
-  it('should handle creation errors', async () => {
+  it('should handle submission errors', async () => {
     const errorMessage = 'Failed to create task';
     vi.mocked(TaskService.crud.create).mockResolvedValue({
       success: false,
@@ -125,17 +122,12 @@ describe('useTaskSubmission', () => {
 
     let submissionResult;
     await act(async () => {
-      submissionResult = await result.current.createTask({
-        title: mockTaskData.title,
-        description: mockTaskData.description,
-        assignee_id: mockTaskData.assigneeId,
-      });
+      submissionResult = await result.current.submitTask(mockTaskData);
     });
 
     expect(submissionResult).toEqual({
       success: false,
       error: errorMessage,
-      message: 'Failed to create task',
     });
   });
 
@@ -147,26 +139,18 @@ describe('useTaskSubmission', () => {
 
     let submissionResult;
     await act(async () => {
-      submissionResult = await result.current.createTask({
-        title: mockTaskData.title,
-        description: mockTaskData.description,
-        assignee_id: mockTaskData.assigneeId,
-      });
+      submissionResult = await result.current.submitTask(mockTaskData);
     });
 
     expect(submissionResult).toEqual({
       success: false,
       error: 'Network error',
-      message: 'Failed to create task',
     });
   });
 
   it('should successfully update a task', async () => {
     const taskId = 'task-123';
-    const updates = {
-      id: taskId,
-      title: 'Updated Task',
-    };
+    const updates = { title: 'Updated Task' };
 
     const mockUpdatedTask: TaskWithRelations = {
       id: taskId,
@@ -198,8 +182,7 @@ describe('useTaskSubmission', () => {
 
     expect(updateResult).toEqual({
       success: true,
-      message: 'Task updated successfully!',
-      task: mockUpdatedTask,
+      taskId,
     });
     expect(TaskService.crud.update).toHaveBeenCalledWith(
       taskId,

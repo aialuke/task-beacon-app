@@ -1,4 +1,3 @@
-
 /**
  * Unified Validation Schemas - Zod Schema Definitions
  *
@@ -24,8 +23,7 @@ const isValidEmailEnhanced = (email: string): boolean => {
 
   // Additional domain validation
   const [, domain] = email.split('@');
-  // Fix: Ensure boolean return type
-  return Boolean(domain && domain.includes('.') && domain.length > 2);
+  return domain && domain.includes('.') && domain.length > 2;
 };
 
 const isValidPasswordEnhanced = (password: string): boolean => {
@@ -138,7 +136,7 @@ export const createUnifiedTextSchema = (
 };
 
 // ============================================================================
-// COMMON FORM SCHEMAS - PHASE 1 CONSOLIDATION
+// COMMON FORM SCHEMAS
 // ============================================================================
 
 /**
@@ -159,17 +157,13 @@ export const unifiedSignUpSchema = z.object({
 });
 
 /**
- * Task form schema - Primary validation schema
+ * Task form schema
  */
 export const unifiedTaskFormSchema = z.object({
   title: unifiedTaskTitleSchema,
   description: unifiedTaskDescriptionSchema,
   url: unifiedUrlSchema,
 });
-
-// ============================================================================
-// PROFILE SCHEMAS - SIMPLIFIED
-// ============================================================================
 
 /**
  * Username validation schema (specific for profiles)
@@ -209,6 +203,24 @@ export const unifiedProfileSchema = z.object({
   created_at: z.string().datetime().optional(),
   updated_at: z.string().datetime().optional(),
 });
+
+/**
+ * Profile creation schema
+ */
+export const unifiedProfileCreateSchema = unifiedProfileSchema
+  .omit({
+    created_at: true,
+    updated_at: true,
+  })
+  .partial({
+    id: true,
+    role: true,
+    avatar_url: true,
+    name: true,
+  })
+  .required({
+    email: true,
+  });
 
 /**
  * Profile update schema
