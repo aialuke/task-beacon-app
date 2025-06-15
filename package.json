@@ -79,7 +79,7 @@
     "knip": "^5.59.1",
     "lovable-tagger": "^1.1.7",
     "postcss": "^8.5.4",
-    "postcss-preset-env": "^10.1.0",
+    "postcss-preset-env": "^10.2.3",
     "stylelint": "^16.20.0",
     "stylelint-config-standard": "^38.0.0",
     "stylelint-config-tailwindcss": "^1.0.0",
