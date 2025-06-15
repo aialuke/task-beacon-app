@@ -61,8 +61,8 @@ function CountdownTimer({
     [getAnimationConfig]
   );
 
-  // Fix React Spring configuration
-  const { strokeDashoffset } = useSpring({
+  // Fix React Spring configuration - use proper typing
+  const springProps = useSpring({
     strokeDashoffset: dashOffset,
     config: springConfig,
     immediate:
@@ -102,7 +102,7 @@ function CountdownTimer({
               size={dynamicSize}
               radius={radius}
               circumference={circumference}
-              strokeDashoffset={strokeDashoffset}
+              strokeDashoffset={springProps.strokeDashoffset}
               status={status}
               daysRemaining={daysRemaining}
             />

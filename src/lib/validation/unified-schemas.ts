@@ -1,3 +1,4 @@
+
 /**
  * Unified Validation Schemas - Zod Schema Definitions
  *
@@ -137,7 +138,7 @@ export const createUnifiedTextSchema = (
 };
 
 // ============================================================================
-// COMMON FORM SCHEMAS
+// COMMON FORM SCHEMAS - PHASE 1 CONSOLIDATION
 // ============================================================================
 
 /**
@@ -158,13 +159,17 @@ export const unifiedSignUpSchema = z.object({
 });
 
 /**
- * Task form schema
+ * Task form schema - Primary validation schema
  */
 export const unifiedTaskFormSchema = z.object({
   title: unifiedTaskTitleSchema,
   description: unifiedTaskDescriptionSchema,
   url: unifiedUrlSchema,
 });
+
+// ============================================================================
+// PROFILE SCHEMAS - SIMPLIFIED
+// ============================================================================
 
 /**
  * Username validation schema (specific for profiles)
@@ -204,24 +209,6 @@ export const unifiedProfileSchema = z.object({
   created_at: z.string().datetime().optional(),
   updated_at: z.string().datetime().optional(),
 });
-
-/**
- * Profile creation schema
- */
-export const unifiedProfileCreateSchema = unifiedProfileSchema
-  .omit({
-    created_at: true,
-    updated_at: true,
-  })
-  .partial({
-    id: true,
-    role: true,
-    avatar_url: true,
-    name: true,
-  })
-  .required({
-    email: true,
-  });
 
 /**
  * Profile update schema
