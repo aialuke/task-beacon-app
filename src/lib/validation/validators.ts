@@ -241,5 +241,6 @@ function isDateInFuture(date: string): boolean {
   if (isNaN(dateObj.getTime())) return false;
 
   const now = new Date();
-  return dateObj > now;
+  // Fix: Ensure boolean return type
+  return Boolean(dateObj > now);
 }

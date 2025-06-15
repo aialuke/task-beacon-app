@@ -6,8 +6,9 @@ import type { Task } from '@/types';
 import { useTaskAnimation } from './useTaskAnimation';
 
 export function useTaskCard(_task: Task) {
-  const contentRef = useRef<HTMLDivElement>(null);
-  const cardRef = useRef<HTMLDivElement>(null);
+  // Fix RefObject types to allow null
+  const contentRef = useRef<HTMLDivElement | null>(null);
+  const cardRef = useRef<HTMLDivElement | null>(null);
   const { isExpanded, animationPhase, animationState, toggleExpanded } =
     useTaskAnimation();
 

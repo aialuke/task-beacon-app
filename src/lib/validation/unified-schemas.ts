@@ -23,7 +23,8 @@ const isValidEmailEnhanced = (email: string): boolean => {
 
   // Additional domain validation
   const [, domain] = email.split('@');
-  return domain && domain.includes('.') && domain.length > 2;
+  // Fix: Ensure boolean return type
+  return Boolean(domain && domain.includes('.') && domain.length > 2);
 };
 
 const isValidPasswordEnhanced = (password: string): boolean => {

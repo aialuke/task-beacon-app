@@ -1,22 +1,6 @@
-/**
- * Autocomplete Types - Type Definitions for User Autocomplete Components
- *
- * Centralized type definitions for user autocomplete functionality.
- * Provides consistent typing across all autocomplete-related components.
- */
-
 import type { User } from '@/types';
 
-export interface AutocompleteUserInputProps {
-  value: string; // user ID when selected, empty when not
-  onChange: (userId: string) => void;
-  onSubmit?: () => void;
-  placeholder?: string;
-  disabled?: boolean;
-  className?: string;
-}
-
-export type ValidationState = 'valid' | 'invalid' | 'partial' | 'empty';
+export type ValidationState = 'empty' | 'valid' | 'invalid' | 'partial';
 
 export interface AutocompleteLogicReturn {
   // State
@@ -36,6 +20,15 @@ export interface AutocompleteLogicReturn {
   setInputValue: (value: string) => void;
   setIsFocused: (focused: boolean) => void;
 
-  // Refs
-  inputRef: React.RefObject<HTMLInputElement>;
+  // Refs - Fix the RefObject type to allow null
+  inputRef: React.RefObject<HTMLInputElement | null>;
+}
+
+export interface AutocompleteUserInputProps {
+  value: string;
+  onChange: (userId: string) => void;
+  onSubmit?: () => void;
+  placeholder?: string;
+  disabled?: boolean;
+  className?: string;
 }
