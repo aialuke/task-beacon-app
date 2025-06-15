@@ -12,7 +12,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { useTaskMutations } from '@/features/tasks/hooks/useTaskMutations';
+import { TaskService } from '@/lib/api/tasks';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import type { Task } from '@/types';
 
 interface TaskActionsProps {
@@ -23,49 +25,58 @@ interface TaskActionsProps {
 
 function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
   const navigate = useNavigate();
-  const { toggleTaskCompleteCallback, deleteTaskCallback } = useTaskMutations();
-  const [isDeleting, setIsDeleting] = useState(false);
+  const queryClient = useQueryClient();
+
+  const { mutate: toggleTaskComplete, isPending: isToggling } = useMutation({
+    mutationFn: () => {
+      const newStatus = task.status === 'complete' ? 'pending' : 'complete';
+      return TaskService.status.updateStatus(task.id, newStatus);
+    },
+    onSuccess: ({ data: updatedTask }) => {
+      void queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      toast.success(
+        `Task marked as ${
+          updatedTask.status === 'complete' ? 'complete' : 'incomplete'
+        }`
+      );
+    },
+    onError: (error) => {
+      toast.error(`Error updating task: ${error.message}`);
+    },
+  });
+
+  const { mutate: deleteTask, isPending: isDeleting } = useMutation({
+    mutationFn: () => TaskService.crud.delete(task.id),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      toast.success('Task deleted successfully');
+      setIsDeleteDialogOpen(false);
+    },
+    onError: (error) => {
+      toast.error(`Error deleting task: ${error.message}`);
+    },
+  });
+
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const handleCreateFollowUp = useCallback(() => {
     navigate(`/follow-up-task/${task.id}`);
   }, [navigate, task.id]);
 
-  const handleToggleComplete = useCallback(async () => {
-    const result = await toggleTaskCompleteCallback(task);
-    if (result.success) {
-      // toast.success(result.message);
-    } else if (result.error) {
-      // toast.error(result.message);
-    }
-  }, [toggleTaskCompleteCallback, task]);
-
-  const handleDelete = useCallback(async () => {
-    setIsDeleting(true);
-    try {
-      const result = await deleteTaskCallback(task.id);
-      if (result.success) {
-        // toast.success(result.message);
-        setIsDeleteDialogOpen(false);
-      } else if (result.error) {
-        // toast.error(result.message);
-      }
-    } catch {
-      // toast.error('Failed to delete task');
-    } finally {
-      setIsDeleting(false);
-    }
-  }, [deleteTaskCallback, task.id]);
-
   return (
     <div className="flex flex-wrap gap-2">
       <Button
         variant={task.status === 'complete' ? 'outline' : 'default'}
         size="sm"
-        onClick={handleToggleComplete}
+        onClick={() => toggleTaskComplete()}
+        disabled={isToggling}
         className="rounded-full"
       >
-        {task.status === 'complete' ? 'Mark Incomplete' : 'Complete'}
+        {isToggling
+          ? 'Updating...'
+          : task.status === 'complete'
+          ? 'Mark Incomplete'
+          : 'Complete'}
       </Button>
       <Button
         variant="outline"
@@ -116,7 +127,7 @@ function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
               </Button>
               <Button
                 variant="destructive"
-                onClick={handleDelete}
+                onClick={() => deleteTask()}
                 disabled={isDeleting}
               >
                 {isDeleting ? 'Deleting...' : 'Delete'}

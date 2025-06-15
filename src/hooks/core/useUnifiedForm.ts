@@ -9,8 +9,6 @@ import { useState, useCallback, useMemo } from 'react';
 
 import type { FormState, FormErrors, FormTouched } from '@/types/form.types';
 
-import { useSubmissionState } from './useLoadingState';
-
 // === CORE INTERFACES ===
 
 interface UnifiedFormConfig<T extends Record<string, unknown>> {
@@ -96,13 +94,8 @@ export function useUnifiedForm<T extends Record<string, unknown>>(
   const [errors, setErrors] = useState<FormErrors<T>>({});
   const [touched, setTouched] = useState<FormTouched<T>>({});
 
-  // Submission state using unified loading hook
-  const {
-    isSubmitting,
-    startSubmitting,
-    stopSubmitting,
-    setError: setSubmissionError,
-  } = useSubmissionState();
+  // Submission state using simple useState
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // === VALIDATION HELPERS ===
 
@@ -200,25 +193,20 @@ export function useUnifiedForm<T extends Record<string, unknown>>(
 
       if (!onSubmit) return;
 
-      startSubmitting();
+      setIsSubmitting(true);
       try {
         await onSubmit(values);
       } catch (error) {
-        setSubmissionError(
-          error instanceof Error ? error.message : 'Form submission failed'
+        // eslint-disable-next-line no-console
+        console.error(
+          'Form submission error:',
+          error instanceof Error ? error.message : 'Unknown error'
         );
       } finally {
-        stopSubmitting();
+        setIsSubmitting(false);
       }
     },
-    [
-      values,
-      validateForm,
-      onSubmit,
-      startSubmitting,
-      stopSubmitting,
-      setSubmissionError,
-    ]
+    [values, validateForm, onSubmit]
   );
 
   const reset = useCallback(() => {

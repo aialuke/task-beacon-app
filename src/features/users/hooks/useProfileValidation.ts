@@ -2,10 +2,9 @@ import { useCallback } from 'react';
 import { z } from 'zod';
 
 import {
-  validateProfileUpdate,
   profileUpdateSchema,
   type ProfileUpdateInput,
-} from '@/lib/validation';
+} from '@/lib/validation/schemas';
 
 interface ProfileValidationResult {
   isValid: boolean;
@@ -24,7 +23,7 @@ export function useProfileValidation() {
    */
   const validateProfile = useCallback(
     (data: unknown): ProfileValidationResult => {
-      const result = validateProfileUpdate(data);
+      const result = profileUpdateSchema.safeParse(data);
 
       if (result.success) {
         return {

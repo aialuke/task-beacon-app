@@ -11,14 +11,79 @@ import { DEFAULT_PAGINATION_CONFIG } from '@/lib/utils/pagination';
 import type { TaskPriority as TaskPriorityType } from '@/types/feature-types/task.types';
 
 import { UNIFIED_VALIDATION_MESSAGES } from './messages';
-import {
-  unifiedEmailSchema,
-  unifiedPasswordSchema,
-  unifiedUserNameSchema,
-  unifiedTaskTitleSchema,
-  unifiedTaskDescriptionSchema,
-  unifiedUrlSchema,
-} from './unified-schemas';
+
+// ============================================================================
+// HELPER VALIDATION FUNCTIONS
+// ============================================================================
+
+const isValidEmailEnhanced = (email: string): boolean => {
+  if (!email || typeof email !== 'string') return false;
+
+  const emailRegex =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+
+  if (!emailRegex.test(email.trim())) return false;
+
+  // Additional domain validation
+  const [, domain] = email.split('@');
+  return domain && domain.includes('.') && domain.length > 2;
+};
+
+const isValidPasswordEnhanced = (password: string): boolean => {
+  if (!password || typeof password !== 'string') return false;
+
+  return (
+    password.length >= 8 &&
+    /[A-Z]/.test(password) && // Uppercase letter
+    /[a-z]/.test(password) && // Lowercase letter
+    /[0-9]/.test(password) && // Number
+    /[^A-Za-z0-9]/.test(password) // Special character
+  );
+};
+
+// ============================================================================
+// CORE ZOD SCHEMAS
+// ============================================================================
+
+const emailSchema = z
+  .string()
+  .min(1, UNIFIED_VALIDATION_MESSAGES.EMAIL_REQUIRED)
+  .max(254, UNIFIED_VALIDATION_MESSAGES.TEXT_TOO_LONG(254))
+  .refine(isValidEmailEnhanced, UNIFIED_VALIDATION_MESSAGES.EMAIL_INVALID)
+  .transform(email => email.toLowerCase().trim());
+
+const passwordSchema = z
+  .string()
+  .min(1, UNIFIED_VALIDATION_MESSAGES.PASSWORD_REQUIRED)
+  .min(8, UNIFIED_VALIDATION_MESSAGES.PASSWORD_TOO_SHORT)
+  .refine(
+    isValidPasswordEnhanced,
+    UNIFIED_VALIDATION_MESSAGES.PASSWORD_TOO_WEAK
+  );
+
+const userNameSchema = z
+  .string()
+  .min(1, UNIFIED_VALIDATION_MESSAGES.NAME_REQUIRED)
+  .min(2, UNIFIED_VALIDATION_MESSAGES.NAME_TOO_SHORT)
+  .max(50, UNIFIED_VALIDATION_MESSAGES.NAME_TOO_LONG)
+  .transform(name => name.trim());
+
+const taskTitleSchema = z
+  .string()
+  .min(1, UNIFIED_VALIDATION_MESSAGES.TITLE_REQUIRED)
+  .max(22, UNIFIED_VALIDATION_MESSAGES.TITLE_TOO_LONG)
+  .transform(title => title.trim());
+
+const taskDescriptionSchema = z
+  .string()
+  .max(500, UNIFIED_VALIDATION_MESSAGES.DESCRIPTION_TOO_LONG)
+  .optional()
+  .transform(desc => desc?.trim());
+
+const urlSchema = z
+  .string()
+  .url(UNIFIED_VALIDATION_MESSAGES.URL_INVALID)
+  .optional();
 
 // ============================================================================
 // TASK SCHEMAS
@@ -64,16 +129,16 @@ export const sortingSchema = z.object({
 // ============================================================================
 
 export const signInSchema = z.object({
-  email: unifiedEmailSchema,
+  email: emailSchema,
   password: z.string().min(1, 'Password is required'),
 });
 
 export const signUpSchema = z
   .object({
-    email: unifiedEmailSchema,
-    password: unifiedPasswordSchema,
+    email: emailSchema,
+    password: passwordSchema,
     confirmPassword: z.string().min(1, 'Password confirmation is required'),
-    name: unifiedUserNameSchema.optional(),
+    name: userNameSchema.optional(),
   })
   .refine(data => data.password === data.confirmPassword, {
     message: "Passwords don't match",
@@ -81,13 +146,13 @@ export const signUpSchema = z
   });
 
 export const passwordResetSchema = z.object({
-  email: unifiedEmailSchema,
+  email: emailSchema,
 });
 
 export const passwordChangeSchema = z
   .object({
     currentPassword: z.string().min(1, 'Current password is required'),
-    newPassword: unifiedPasswordSchema,
+    newPassword: passwordSchema,
     confirmNewPassword: z.string().min(1, 'Password confirmation is required'),
   })
   .refine(data => data.newPassword === data.confirmNewPassword, {
@@ -100,15 +165,15 @@ export const passwordChangeSchema = z
 // ============================================================================
 
 export const profileUpdateSchema = z.object({
-  name: unifiedUserNameSchema,
-  email: unifiedEmailSchema,
+  name: userNameSchema,
+  email: emailSchema,
   avatar_url: z.string().url('Invalid avatar URL').optional().or(z.literal('')),
 });
 
 export const profileCreateSchema = z.object({
   id: uuidSchema,
-  name: unifiedUserNameSchema,
-  email: unifiedEmailSchema,
+  name: userNameSchema,
+  email: emailSchema,
   avatar_url: z.string().url('Invalid avatar URL').optional().nullable(),
 });
 
@@ -136,13 +201,13 @@ const futureDateSchema = z
   }, 'Date cannot be in the past');
 
 const baseTaskSchema = z.object({
-  title: unifiedTaskTitleSchema,
-  description: unifiedTaskDescriptionSchema,
+  title: taskTitleSchema,
+  description: taskDescriptionSchema,
   priority: taskPrioritySchema.default('medium'),
   status: taskStatusSchema.default('pending'),
   due_date: futureDateSchema,
   photo_url: z.string().url('Invalid photo URL').optional().nullable(),
-  url_link: unifiedUrlSchema,
+  url_link: urlSchema,
   assignee_id: uuidSchema.optional().nullable(),
   parent_task_id: uuidSchema.optional().nullable(),
 });
@@ -155,7 +220,7 @@ export const createTaskSchema = baseTaskSchema.partial({
 export const updateTaskSchema = baseTaskSchema.partial();
 
 export const taskFormSchema = z.object({
-  title: unifiedTaskTitleSchema,
+  title: taskTitleSchema,
   description: z
     .string()
     .max(500, 'Description cannot exceed 500 characters')

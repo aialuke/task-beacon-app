@@ -1,12 +1,8 @@
-
 import { useCallback } from 'react';
 import { toast } from 'sonner';
 
-import {
-  useUnifiedValidation,
-  validateUnifiedTask,
-  type UnifiedValidationResult,
-} from '@/lib/validation';
+import { taskFormSchema } from '@/lib/validation/schemas';
+import type { TaskFormInput } from '@/lib/validation/schemas';
 
 interface TaskFormData {
   title: string;
@@ -20,13 +16,6 @@ interface TaskFormData {
 }
 
 export function useTaskFormValidation() {
-  const {
-    validateTaskTitle,
-    validateTaskDescription,
-    validateUrl,
-    validateField,
-  } = useUnifiedValidation();
-
   const validateTaskFormData = useCallback(
     (
       data: unknown
@@ -35,69 +24,43 @@ export function useTaskFormValidation() {
       errors: Record<string, string>;
       data?: TaskFormData;
     } => {
-      const result = validateUnifiedTask(data);
+      const result = taskFormSchema.safeParse(data);
 
-      if (result.isValid && result.data) {
-        return { isValid: true, errors: {}, data: result.data as TaskFormData };
+      if (result.success) {
+        return {
+          isValid: true,
+          errors: {},
+          data: result.data as TaskFormData,
+        };
       }
 
       const errors: Record<string, string> = {};
-      if (result.fieldErrors) {
-        Object.assign(errors, result.fieldErrors);
-      }
+      result.error.issues.forEach(issue => {
+        const path = issue.path.join('.');
+        if (path) {
+          errors[path] = issue.message;
+        }
+      });
 
       return { isValid: false, errors };
     },
     []
   );
 
-  const validateCreateTaskData = useCallback(
-    (
-      data: unknown
-    ): {
-      isValid: boolean;
-      errors: Record<string, string>;
-      data?: TaskFormData;
-    } => {
-      return validateTaskFormData(data);
-    },
-    [validateTaskFormData]
-  );
-
-  const validateUpdateTaskData = useCallback(
-    (
-      data: unknown
-    ): {
-      isValid: boolean;
-      errors: Record<string, string>;
-      data?: TaskFormData;
-    } => {
-      return validateTaskFormData(data);
-    },
-    [validateTaskFormData]
-  );
-
   const validateFormField = useCallback(
     async (
-      fieldName: string,
+      fieldName: keyof TaskFormInput,
       value: unknown
     ): Promise<{ isValid: boolean; error?: string }> => {
-      const result = await validateField(fieldName, value);
+      const fieldSchema = taskFormSchema.shape[fieldName];
+      const result = await fieldSchema.safeParseAsync(value);
 
       return {
-        isValid: result.isValid,
-        error: result.isValid ? undefined : result.errors[0],
+        isValid: result.success,
+        error: result.success ? undefined : result.error.issues[0].message,
       };
     },
-    [validateField]
-  );
-
-  const validateTitle = useCallback(
-    async (value: string): Promise<boolean> => {
-      const result = await validateTaskTitle(value);
-      return result.isValid;
-    },
-    [validateTaskTitle]
+    []
   );
 
   const createTitleSetter = useCallback((setTitle: (value: string) => void) => {
@@ -126,7 +89,7 @@ export function useTaskFormValidation() {
 
   const prepareTaskData = useCallback(
     (formData: TaskFormData): TaskFormData | null => {
-      const validation = validateCreateTaskData(formData);
+      const validation = validateTaskFormData(formData);
 
       if (!validation.isValid) {
         showValidationErrors(validation.errors);
@@ -135,15 +98,12 @@ export function useTaskFormValidation() {
 
       return validation.data || null;
     },
-    [validateCreateTaskData, showValidationErrors]
+    [validateTaskFormData, showValidationErrors]
   );
 
   return {
     validateTaskFormData,
-    validateCreateTaskData,
-    validateUpdateTaskData,
     validateField: validateFormField,
-    validateTitle,
     createTitleSetter,
     showValidationErrors,
     prepareTaskData,

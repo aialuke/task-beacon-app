@@ -1,4 +1,3 @@
-
 # Codebase Over-Engineering Audit Report
 
 ## Executive Summary
@@ -11,12 +10,14 @@ This audit identifies instances of over-engineering in the codebase, including o
 
 ### 1. Excessive Mutation Hook Abstractions in Task Features
 
+**Status: COMPLETE**
+
 **Files:**
-- `src/features/tasks/hooks/mutations/useBaseMutation.ts` (182 lines)
-- `src/features/tasks/hooks/mutations/useTaskCreation.ts`
-- `src/features/tasks/hooks/mutations/useTaskUpdates.ts`
-- `src/features/tasks/hooks/mutations/useTaskDeletion.ts`
-- `src/features/tasks/hooks/mutations/useTaskStatus.ts`
+- ~~`src/features/tasks/hooks/mutations/useBaseMutation.ts`~~
+- ~~`src/features/tasks/hooks/mutations/useTaskCreation.ts`~~
+- ~~`src/features/tasks/hooks/mutations/useTaskUpdates.ts`~~
+- ~~`src/features/tasks/hooks/mutations/useTaskDeletion.ts`~~
+- ~~`src/features/tasks/hooks/mutations/useTaskStatus.ts`~~
 
 **Over-Engineering Issues:**
 - Created a complex base mutation abstraction (`useBaseMutation`) that adds unnecessary indirection
@@ -34,9 +35,11 @@ Replace all mutation hooks with direct React Query `useMutation` calls in compon
 
 ### 2. Over-Abstracted Loading State Management
 
+**Status: COMPLETE**
+
 **Files:**
-- `src/hooks/core/useLoadingState.ts` (220+ lines)
-- `src/hooks/core/useUnifiedForm.ts` (322+ lines)
+- ~~`src/hooks/core/useLoadingState.ts`~~
+- `src/hooks/core/useUnifiedForm.ts` (Refactored to remove dependency)
 
 **Over-Engineering Issues:**
 - `useLoadingState` tries to handle every possible loading scenario with 15+ methods
@@ -57,13 +60,16 @@ Replace all mutation hooks with direct React Query `useMutation` calls in compon
 
 ### 3. Fragmented Validation System
 
+**Status: COMPLETE**
+
 **Files:**
-- `src/lib/validation/unified-schemas.ts`
-- `src/lib/validation/unified-core.ts`
-- `src/lib/validation/unified-forms.ts`
-- `src/lib/validation/unified-hooks.ts`
-- `src/lib/validation/schemas.ts`
-- `src/lib/validation/validators.ts`
+- ~~`src/lib/validation/unified-schemas.ts`~~
+- ~~`src/lib/validation/unified-core.ts`~~
+- ~~`src/lib/validation/unified-forms.ts`~~
+- ~~`src/lib/validation/unified-hooks.ts`~~
+- `src/lib/validation/schemas.ts` (Consolidated)
+- ~~`src/lib/validation/validators.ts`~~
+- ~~`src/lib/validation/index.ts`~~ (Barrel file removed)
 
 **Over-Engineering Issues:**
 - Multiple validation approaches: Zod schemas, custom validators, unified validation
@@ -235,3 +241,82 @@ The codebase shows signs of premature optimization and over-abstraction. The cor
 
 *Report generated on: 2025-01-15*
 *Codebase version: Post-commit b2a6046*
+
+---
+
+## Step-by-Step Refactoring Plan
+
+#### Phase 1: Address High-Impact Issues
+
+- [x] **1. Simplify Task Mutation Hooks**
+   - **Problem:** A complex `useBaseMutation` abstraction adds cognitive overhead and couples generic logic to task-specific updates.
+   - **Goal:** Remove the abstraction and use React Query's standard `useMutation` hook directly.
+   - **Actions:**
+     - Refactor components using `useTaskCreation`, `useTaskUpdates`, `useTaskDeletion`, and `useTaskStatus` to use a vanilla `useMutation` hook.
+     - Co-locate mutation logic within the components or feature folders where they are used.
+     - Delete the five hook files, including `useBaseMutation.ts`.
+
+- [x] **2. Consolidate Loading State Management**
+   - **Problem:** Over-engineered hooks (`useLoadingState.ts`, `useUnifiedForm.ts`) for managing simple boolean states.
+   - **Goal:** Replace complex hooks with simple `useState` where possible, or with more focused, specific hooks.
+   - **Actions:**
+     - Identify all components using `useLoadingState` and `useUnifiedForm`.
+     - Refactor them to use `const [isLoading, setIsLoading] = useState(false)`.
+     - For forms, use a simpler state management approach or a more lightweight form library if necessary.
+     - Deprecate and delete `useLoadingState.ts` and `useUnifiedForm.ts`.
+
+- [x] **3. Unify the Validation System**
+   - **Problem:** A fragmented system with multiple, overlapping validation files and approaches (Zod, custom validators, "unified" system).
+   - **Goal:** Standardize on a single validation approach (Zod) and consolidate all logic.
+   - **Actions:**
+     - Choose Zod as the single source of truth for validation.
+     - Migrate all validation logic from `validators.ts` and the various `unified-*.ts` files into a consolidated set of Zod schemas within `src/lib/validation/schemas.ts`.
+     - Remove all other validation files (`unified-core.ts`, `unified-forms.ts`, `unified-hooks.ts`, `unified-schemas.ts`, `validators.ts`).
+
+---
+
+#### Phase 2: Address Medium-Impact Issues
+
+**4. Simplify API Service Layers**
+   - **Problem:** Overly abstract service classes (`AuthService.ts`, `users.service.ts`) for simple API calls.
+   - **Goal:** Replace service classes with simple, standalone async functions.
+   - **Actions:**
+     - Convert methods in `AuthService.ts` and `users.service.ts` to exported async functions.
+     - Refactor code using these services to call the new functions directly.
+     - Delete the now-empty class files.
+
+**5. Consolidate Error Handling**
+   - **Problem:** Multiple overlapping error handling systems (`ErrorHandler.ts`, `useUnifiedError.ts`, `error-handling.ts`).
+   - **Goal:** Simplify to a single, straightforward error handling mechanism, likely leveraging React Query's built-in capabilities.
+   - **Actions:**
+     - Rely on `useMutation` and `useQuery`'s `onError` and `error` properties for handling API errors.
+     - Use a simple toast notification for user-facing errors.
+     - Deprecate and remove the three error-handling files.
+
+**6. Simplify Query Patterns**
+   - **Problem:** A generic `useEntityQuery` hook and complex optimistic update logic (`useTaskOptimisticUpdates.ts`) that add unnecessary complexity.
+   - **Goal:** Use React Query hooks directly and simplify optimistic update logic.
+   - **Actions:**
+     - Refactor components using `useEntityQuery` to use `useQuery` directly.
+     - Simplify optimistic updates within the `onMutate` function of the refactored `useMutation` hooks.
+     - Deprecate and remove `useEntityQuery.ts` and `useTaskOptimisticUpdates.ts`.
+
+---
+
+#### Phase 3: Address Low-Impact Issues
+
+**7. Clean Up Unused Consolidated Indexes**
+   - **Problem:** `index.ts` files that re-export only one or two items add unnecessary indirection.
+   - **Goal:** Improve import clarity by removing unneeded barrel files.
+   - **Actions:**
+     - Find all instances where an unnecessary `index.ts` is used for imports.
+     - Update the import paths to point directly to the source file.
+     - Delete the `index.ts` files that provide low organizational value (e.g., `src/components/ui/button/index.ts`).
+
+**8. Simplify Auth Form State Management**
+   - **Problem:** The `useAuthFormState.ts` hook (344 lines) is overly complex for a simple form.
+   - **Goal:** Replace the complex hook with simple component-level state.
+   - **Actions:**
+     - Refactor the `ModernAuthForm` component to use `useState` for its fields.
+     - Use the consolidated Zod schemas (from step 3) for validation.
+     - Delete the `useAuthFormState.ts` hook.
