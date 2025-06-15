@@ -35,7 +35,7 @@ export function useAutocompleteLogic({
 
   // Find selected user
   const selectedUser = useMemo(
-    () => users.find(user => user.id === value) || null,
+    () => users.find(user => user.id === value) || undefined,
     [users, value]
   );
 

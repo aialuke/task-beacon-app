@@ -1,18 +1,14 @@
-import { useSpring, SpringValue, config } from '@react-spring/web';
-import { useState } from 'react';
 
-interface TaskAnimationState {
-  height: SpringValue<number>;
-  opacity: SpringValue<number>;
-}
+import { useSpring, config } from '@react-spring/web';
+import { useState } from 'react';
 
 export function useTaskAnimation() {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const animationProps = useSpring({
-    height: isExpanded ? 'auto' : 0,
+    height: isExpanded ? 200 : 0, // Use fixed number instead of 'auto'
     opacity: isExpanded ? 1 : 0,
-    config: config.gentle, // Use React Spring's built-in gentle config
+    config: config.gentle,
     immediate: false,
   });
 

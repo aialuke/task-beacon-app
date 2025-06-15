@@ -1,3 +1,4 @@
+
 import { animated } from '@react-spring/web';
 import { LucideIcon } from 'lucide-react';
 
@@ -96,7 +97,6 @@ export function SimpleNavbar({
             zIndex: 105,
             backgroundColor: computedColors.primaryVeryLight,
             filter: 'blur(8px)',
-            opacity: 0.3,
             ...glowSpring,
           }}
         />

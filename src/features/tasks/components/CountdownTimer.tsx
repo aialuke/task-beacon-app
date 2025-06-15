@@ -1,5 +1,5 @@
 
-import { useSpring, animated, config } from '@react-spring/web';
+import { useSpring, animated } from '@react-spring/web';
 import { useMemo } from 'react';
 
 import { useMotionPreferences } from '@/hooks/useMotionPreferences';
