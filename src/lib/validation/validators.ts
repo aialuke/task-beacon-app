@@ -1,272 +1,142 @@
+
 /**
- * Consolidated Validation Utilities
+ * Validation Functions - Legacy Support & Utility Functions
  *
- * All validation utility functions consolidated from scattered schema files.
- * Provides a unified API for validation operations.
+ * Provides validation functions for use across the application.
+ * Acts as a bridge between old validation patterns and new unified schemas.
  */
 
+import { z, ZodError } from 'zod';
+
 import {
-  signInSchema,
-  signUpSchema,
-  passwordResetSchema,
-  passwordChangeSchema,
-  profileUpdateSchema,
-  profileCreateSchema,
-  createTaskSchema,
-  updateTaskSchema,
-  taskFormSchema,
-  taskFilterSchema,
-  paginationSchema,
-  sortingSchema,
-  fileUploadSchema,
-  type SignInInput,
-  type SignUpInput,
-  type PasswordResetInput,
-  type PasswordChangeInput,
-  type ProfileUpdateInput,
-  type ProfileCreateInput,
-  type CreateTaskInput,
-  type UpdateTaskInput,
-  type TaskFormInput,
-  type TaskFilterInput,
-  type PaginationInput,
-  type SortingInput,
-  type FileUploadInput,
-} from './schemas';
+  unifiedSignInSchema,
+  unifiedSignUpSchema,
+  unifiedProfileUpdateSchema,
+  unifiedTaskFormSchema,
+} from './unified-schemas';
+
+// ============================================================================
+// VALIDATION RESULT TYPES
+// ============================================================================
+
+export interface ValidationResult<T = any> {
+  success: boolean;
+  data?: T;
+  error?: {
+    message: string;
+    errors: Array<{
+      field: string;
+      message: string;
+      path: string[];
+    }>;
+  };
+}
+
+// ============================================================================
+// CORE VALIDATION FUNCTIONS
+// ============================================================================
+
+/**
+ * Generic Zod validator function
+ */
+function validateWithZod<T>(
+  schema: z.ZodSchema<T>,
+  data: unknown
+): ValidationResult<T> {
+  try {
+    const result = schema.parse(data);
+    return {
+      success: true,
+      data: result,
+    };
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return {
+        success: false,
+        error: {
+          message: 'Validation failed',
+          errors: error.errors.map(err => ({
+            field: err.path.join('.'),
+            message: err.message,
+            path: err.path as string[],
+          })),
+        },
+      };
+    }
+
+    return {
+      success: false,
+      error: {
+        message: 'Unknown validation error',
+        errors: [],
+      },
+    };
+  }
+}
 
 // ============================================================================
 // AUTHENTICATION VALIDATORS
 // ============================================================================
 
-function validateSignIn(data: unknown) {
-  return signInSchema.safeParse(data);
+/**
+ * Validate sign-in data
+ */
+export function validateSignIn(data: unknown): ValidationResult {
+  return validateWithZod(unifiedSignInSchema, data);
 }
 
-function validateSignUp(data: unknown) {
-  return signUpSchema.safeParse(data);
-}
-
-function validatePasswordReset(data: unknown) {
-  return passwordResetSchema.safeParse(data);
-}
-
-function validatePasswordChange(data: unknown) {
-  return passwordChangeSchema.safeParse(data);
+/**
+ * Validate sign-up data
+ */
+export function validateSignUp(data: unknown): ValidationResult {
+  return validateWithZod(unifiedSignUpSchema, data);
 }
 
 // ============================================================================
 // PROFILE VALIDATORS
 // ============================================================================
 
-export function validateProfileUpdate(
-  data: Partial<ProfileUpdateInput>
-): ProfileValidationResult {
-  const errors: Record<string, string> = {};
-  const fieldErrors: {
-    name?: string;
-    email?: string;
-    avatar_url?: string;
-  } = {};
-
-  // Name validation
-  if (data.name !== undefined) {
-    if (typeof data.name !== 'string') {
-      errors.name = 'Name must be a string';
-      fieldErrors.name = 'Name must be a string';
-    } else if (data.name.trim().length === 0) {
-      errors.name = 'Name is required';
-      fieldErrors.name = 'Name is required';
-    } else if (data.name.length < 2) {
-      errors.name = 'Name must be at least 2 characters';
-      fieldErrors.name = 'Name must be at least 2 characters';
-    } else if (data.name.length > 100) {
-      errors.name = 'Name must be less than 100 characters';
-      fieldErrors.name = 'Name must be less than 100 characters';
-    }
-  }
-
-  // Email validation
-  if (data.email !== undefined) {
-    if (typeof data.email !== 'string') {
-      errors.email = 'Email must be a string';
-      fieldErrors.email = 'Email must be a string';
-    } else if (data.email.trim().length === 0) {
-      errors.email = 'Email is required';
-      fieldErrors.email = 'Email is required';
-    } else {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      const isValidEmail = emailRegex.test(data.email); // Fix: ensure boolean type
-      if (!isValidEmail) {
-        errors.email = 'Please enter a valid email address';
-        fieldErrors.email = 'Please enter a valid email address';
-      }
-    }
-  }
-
-  // Avatar URL validation
-  if (data.avatar_url !== undefined && data.avatar_url !== null) {
-    if (typeof data.avatar_url !== 'string') {
-      errors.avatar_url = 'Avatar URL must be a string';
-      fieldErrors.avatar_url = 'Avatar URL must be a string';
-    } else if (data.avatar_url.trim().length > 0) {
-      try {
-        new URL(data.avatar_url);
-      } catch {
-        errors.avatar_url = 'Please enter a valid URL';
-        fieldErrors.avatar_url = 'Please enter a valid URL';
-      }
-    }
-  }
-
-  return {
-    isValid: Object.keys(errors).length === 0,
-    errors,
-    fieldErrors,
-  };
-}
-
-function validateProfileCreate(data: unknown) {
-  return profileCreateSchema.safeParse(data);
+/**
+ * Validate profile update data
+ */
+export function validateProfileUpdate(data: unknown): ValidationResult {
+  return validateWithZod(unifiedProfileUpdateSchema, data);
 }
 
 // ============================================================================
 // TASK VALIDATORS
 // ============================================================================
 
-function validateTaskCreation(data: unknown) {
-  return createTaskSchema.safeParse(data);
-}
-
-function validateTaskUpdate(data: unknown) {
-  return updateTaskSchema.safeParse(data);
-}
-
-function validateTaskForm(data: unknown) {
-  return taskFormSchema.safeParse(data);
-}
-
-function validateTaskFilter(data: unknown) {
-  return taskFilterSchema.safeParse(data);
+/**
+ * Validate task form data
+ */
+export function validateTaskForm(data: unknown): ValidationResult {
+  return validateWithZod(unifiedTaskFormSchema, data);
 }
 
 // ============================================================================
-// COMMON VALIDATORS
-// ============================================================================
-
-function validatePagination(data: unknown) {
-  return paginationSchema.safeParse(data);
-}
-
-function validateSorting(data: unknown) {
-  return sortingSchema.safeParse(data);
-}
-
-function validateFileUpload(data: unknown) {
-  return fileUploadSchema.safeParse(data);
-}
-
-// ============================================================================
-// TRANSFORMATION UTILITIES
+// FIELD-SPECIFIC VALIDATORS
 // ============================================================================
 
 /**
- * Transform form data to API format for task creation
+ * Email validation
  */
-function transformTaskFormToApiData(
-  formData: TaskFormInput
-): Partial<CreateTaskInput> {
-  return {
-    title: formData.title,
-    description: formData.description || undefined,
-    priority: formData.priority,
-    due_date: formData.dueDate || undefined,
-    url_link: formData.url || undefined,
-    assignee_id: formData.assigneeId || undefined,
-  };
-}
-
-// ============================================================================
-// VALIDATION RESULT HELPERS
-// ============================================================================
-
-interface ValidationResult<T = unknown> {
-  isValid: boolean;
-  errors: string[];
-  warnings?: string[];
-  data?: T;
-  fieldErrors?: Record<string, string>;
-}
-
-/**
- * Convert Zod SafeParseResult to ValidationResult
- */
-function toValidationResult<T>(
-  result: ReturnType<typeof signInSchema.safeParse>
-): ValidationResult<T> {
-  if (result.success) {
-    return {
-      isValid: true,
-      errors: [],
-      data: result.data as T,
-    };
-  }
-
-  const errors = result.error.errors.map(err => err.message);
-  const fieldErrors: Record<string, string> = {};
-
-  result.error.errors.forEach(err => {
-    const field = err.path.join('.');
-    if (field) {
-      fieldErrors[field] = err.message;
-    }
-  });
-
-  return {
-    isValid: false,
-    errors,
-    fieldErrors,
-  };
-}
-
-// ============================================================================
-// VALIDATION HOOKS UTILITIES
-// ============================================================================
-
-/**
- * Generic field validator
- */
-function validateField(
-  fieldName: string,
-  value: unknown
-): { isValid: boolean; error?: string } {
-  // This could be extended to map field names to specific validators
-  // For now, we'll keep it simple and return a basic validation
-  if (value === null || value === undefined || value === '') {
-    return { isValid: false, error: 'This field is required' };
-  }
-
-  return { isValid: true };
-}
-
-/**
- * Validate email format specifically
- */
-function isValidEmail(email: string): boolean {
+export function validateEmail(email: string): boolean {
   if (!email || typeof email !== 'string') return false;
 
   const emailRegex =
-    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
   if (!emailRegex.test(email.trim())) return false;
 
   const [, domain] = email.split('@');
-  return domain && domain.includes('.') && domain.length > 2;
+  return Boolean(domain && domain.includes('.') && domain.length > 2);
 }
 
 /**
- * Validate password strength
+ * Password strength validation
  */
-function isValidPassword(password: string): boolean {
+export function validatePassword(password: string): boolean {
   if (!password || typeof password !== 'string') return false;
 
   return (
@@ -279,15 +149,16 @@ function isValidPassword(password: string): boolean {
 }
 
 /**
- * Validate URL format
+ * URL validation
  */
-function isValidUrl(url: string): boolean {
+export function validateUrl(url: string): boolean {
   if (!url || typeof url !== 'string') return false;
 
   try {
     new URL(url);
     return true;
   } catch {
+    // Check for domain-like patterns
     const domainPattern =
       /^(www\.)?[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
     return domainPattern.test(url.trim());
@@ -295,15 +166,144 @@ function isValidUrl(url: string): boolean {
 }
 
 /**
- * Check if date is in future
+ * Required field validation
  */
-function isDateInFuture(date: string): boolean {
-  if (!date || typeof date !== 'string') return true; // Allow empty dates
+export function validateRequired(value: unknown): boolean {
+  if (value === null || value === undefined) return false;
+  if (typeof value === 'string') return value.trim().length > 0;
+  if (typeof value === 'number') return !isNaN(value);
+  if (typeof value === 'boolean') return true;
+  if (Array.isArray(value)) return value.length > 0;
+  if (typeof value === 'object') return Object.keys(value).length > 0;
+  return Boolean(value);
+}
 
-  const dateObj = new Date(date);
-  if (isNaN(dateObj.getTime())) return false;
+/**
+ * Text length validation
+ */
+export function validateLength(
+  text: string,
+  min: number = 0,
+  max: number = Infinity
+): boolean {
+  if (!text || typeof text !== 'string') return min === 0;
+  const length = text.trim().length;
+  return length >= min && length <= max;
+}
 
+/**
+ * Numeric range validation
+ */
+export function validateRange(
+  value: number,
+  min: number = -Infinity,
+  max: number = Infinity
+): boolean {
+  if (typeof value !== 'number' || isNaN(value)) return false;
+  return value >= min && value <= max;
+}
+
+/**
+ * Date validation
+ */
+export function validateDate(date: string | Date): boolean {
+  if (!date) return false;
+
+  const dateObj = date instanceof Date ? date : new Date(date);
+  return !isNaN(dateObj.getTime());
+}
+
+/**
+ * Future date validation
+ */
+export function validateFutureDate(date: string | Date): boolean {
+  if (!validateDate(date)) return false;
+
+  const dateObj = date instanceof Date ? date : new Date(date);
   const now = new Date();
-  // Fix: Ensure boolean return type
-  return Boolean(dateObj > now);
+  return dateObj > now;
+}
+
+// ============================================================================
+// COMPOSITE VALIDATORS
+// ============================================================================
+
+/**
+ * Validate multiple fields with custom rules
+ */
+export function validateFields(
+  data: Record<string, unknown>,
+  rules: Record<string, (value: unknown) => boolean>
+): { isValid: boolean; errors: Record<string, string> } {
+  const errors: Record<string, string> = {};
+
+  Object.entries(rules).forEach(([field, validator]) => {
+    const value = data[field];
+    if (!validator(value)) {
+      errors[field] = `Invalid ${field}`;
+    }
+  });
+
+  return {
+    isValid: Object.keys(errors).length === 0,
+    errors,
+  };
+}
+
+/**
+ * Async validation wrapper
+ */
+export async function validateAsync<T>(
+  validator: () => Promise<T>
+): Promise<ValidationResult<T>> {
+  try {
+    const result = await validator();
+    return {
+      success: true,
+      data: result,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: {
+        message: error instanceof Error ? error.message : 'Validation failed',
+        errors: [],
+      },
+    };
+  }
+}
+
+// ============================================================================
+// UTILITY FUNCTIONS
+// ============================================================================
+
+/**
+ * Clean validation data by removing empty strings and null values
+ */
+export function cleanValidationData(data: Record<string, unknown>): Record<string, unknown> {
+  const cleaned: Record<string, unknown> = {};
+
+  Object.entries(data).forEach(([key, value]) => {
+    if (value !== null && value !== undefined && value !== '') {
+      cleaned[key] = value;
+    }
+  });
+
+  return cleaned;
+}
+
+/**
+ * Transform validation errors to field-specific format
+ */
+export function transformValidationErrors(
+  errors: ZodError
+): Record<string, string> {
+  const fieldErrors: Record<string, string> = {};
+
+  errors.errors.forEach(error => {
+    const field = error.path.join('.');
+    fieldErrors[field] = error.message;
+  });
+
+  return fieldErrors;
 }

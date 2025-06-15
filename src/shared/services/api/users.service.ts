@@ -1,286 +1,144 @@
-/**
- * Users Service - Provides clean abstraction for user operations
- *
- * This service layer abstracts all user-related database operations,
- * providing a consistent API that can be easily tested and modified.
- */
 
-import { supabase } from '@/shared/services/supabase/client';
-import type { Database } from '@/shared/services/supabase/types';
-// Clean imports from organized type system
-import type { User, UserRole, ApiResponse } from '@/types';
-import type {
-  UserSearchOptions,
-  UserUpdateData,
-} from '@/types/feature-types/user.types';
+import type { User } from '@/types';
 
-import { AuthService } from './AuthService';
-import { apiRequest } from './error-handling';
+import { supabase } from '../supabase/client';
 
-// Type-safe database references
-type ProfileRow = Database['public']['Tables']['profiles']['Row'];
-type ProfileInsert = Database['public']['Tables']['profiles']['Insert'];
-type ProfileUpdate = Database['public']['Tables']['profiles']['Update'];
-
-// Helper function to convert database row to User type
-const profileRowToUser = (profile: ProfileRow): User => {
-  return {
-    id: profile.id,
-    email: profile.email,
-    name: profile.name,
-    role: profile.role as UserRole,
-    avatar_url: profile.avatar_url || undefined,
-    created_at: profile.created_at,
-    updated_at: profile.updated_at,
-  };
-};
-
-// User types moved to @/types/feature-types/user.types.ts to eliminate duplication
+export interface UpdateUserProfileData {
+  name?: string;
+  email?: string;
+  avatar_url?: string | null;
+}
 
 /**
- * User Service provides all user-related operations with clean abstraction
+ * Users Service
+ * Handles all user-related database operations
  */
-export class UserService {
+class UsersService {
   /**
-   * Get a single user by ID
+   * Fetch all users
    */
-  static async getById(userId: string): Promise<ApiResponse<User>> {
-    return apiRequest('users.getById', async () => {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('id, email, name, role, avatar_url, created_at, updated_at')
-        .eq('id', userId)
-        .single();
+  async getUsers(): Promise<User[]> {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .order('name');
 
-      if (error) throw error;
-      if (!data) throw new Error('User not found');
+    if (error) {
+      throw new Error(`Failed to fetch users: ${error.message}`);
+    }
 
-      return profileRowToUser(data);
-    });
+    return data || [];
   }
 
   /**
-   * Get all users with optional filtering
+   * Fetch user by ID
    */
-  static async getAll(
-    options: UserSearchOptions = {}
-  ): Promise<ApiResponse<User[]>> {
-    return apiRequest('users.getAll', async () => {
-      const { query, role, limit = 50, excludeCurrentUser = false } = options;
+  async getUserById(id: string): Promise<User | null> {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', id)
+      .single();
 
-      let queryBuilder = supabase
-        .from('profiles')
-        .select('id, email, name, role, avatar_url, created_at, updated_at')
-        .limit(limit);
-
-      // Apply filters
-      if (role) {
-        queryBuilder = queryBuilder.eq('role', role);
+    if (error) {
+      if (error.code === 'PGRST116') {
+        return null; // User not found
       }
+      throw new Error(`Failed to fetch user: ${error.message}`);
+    }
 
-      if (query) {
-        queryBuilder = queryBuilder.or(
-          `name.ilike.%${query}%, email.ilike.%${query}%`
-        );
-      }
+    // Fix type issue - ensure avatar_url is string | null
+    const user: User = {
+      ...data,
+      avatar_url: data.avatar_url || null,
+    };
 
-      if (excludeCurrentUser) {
-        const userResponse = await AuthService.getCurrentUserId();
-        if (userResponse.success && userResponse.data) {
-          queryBuilder = queryBuilder.neq('id', userResponse.data);
-        }
-      }
-
-      // Order by name
-      queryBuilder = queryBuilder.order('name', { ascending: true });
-
-      const { data, error } = await queryBuilder;
-
-      if (error) throw error;
-      return (data || []).map(profileRowToUser);
-    });
-  }
-
-  /**
-   * Search users by name or email
-   */
-  static async search(
-    searchQuery: string,
-    options: Omit<UserSearchOptions, 'query'> = {}
-  ): Promise<ApiResponse<User[]>> {
-    return this.getAll({ ...options, query: searchQuery });
-  }
-
-  /**
-   * Get the current authenticated user
-   */
-  static async getCurrentUser(): Promise<ApiResponse<User>> {
-    return apiRequest('users.getCurrentUser', async () => {
-      const authResponse = await AuthService.getCurrentUser();
-      if (!authResponse.success || !authResponse.data) {
-        throw new Error('No authenticated user');
-      }
-
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('id, email, name, role, avatar_url, created_at, updated_at')
-        .eq('id', authResponse.data.id)
-        .single();
-
-      if (error) throw error;
-      return profileRowToUser(data);
-    });
+    return user;
   }
 
   /**
    * Update user profile
    */
-  static async updateProfile(
+  async updateUserProfile(
     userId: string,
-    userData: UserUpdateData
-  ): Promise<ApiResponse<User>> {
-    return apiRequest('users.updateProfile', async () => {
-      const updateData: ProfileUpdate = {};
+    updates: UpdateUserProfileData
+  ): Promise<User> {
+    const { data, error } = await supabase
+      .from('profiles')
+      .update(updates)
+      .eq('id', userId)
+      .select()
+      .single();
 
-      if (userData.name !== undefined) updateData.name = userData.name;
-      if (userData.email !== undefined) updateData.email = userData.email;
-      if (userData.role !== undefined) updateData.role = userData.role;
-
-      const { data, error } = await supabase
-        .from('profiles')
-        .update(updateData)
-        .eq('id', userId)
-        .select()
-        .single();
-
-      if (error) throw error;
-      return profileRowToUser(data);
-    });
-  }
-
-  /**
-   * Update current user's profile
-   */
-  static async updateCurrentUserProfile(
-    userData: UserUpdateData
-  ): Promise<ApiResponse<User>> {
-    const userResponse = await AuthService.getCurrentUserId();
-    if (!userResponse.success || !userResponse.data) {
-      return {
-        data: null,
-        error: {
-          name: 'AuthenticationError',
-          message: 'User not authenticated',
-        },
-        success: false,
-      };
+    if (error) {
+      throw new Error(`Failed to update profile: ${error.message}`);
     }
 
-    return this.updateProfile(userResponse.data, userData);
+    // Fix type issue - ensure avatar_url is string | null
+    const user: User = {
+      ...data,
+      avatar_url: data.avatar_url || null,
+    };
+
+    return user;
   }
 
   /**
-   * Check if user exists by email
+   * Create user profile
    */
-  static async existsByEmail(email: string): Promise<ApiResponse<boolean>> {
-    return apiRequest('users.existsByEmail', async () => {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('email', email)
-        .limit(1);
+  async createUserProfile(profile: Omit<User, 'created_at' | 'updated_at'>): Promise<User> {
+    const { data, error } = await supabase
+      .from('profiles')
+      .insert([profile])
+      .select()
+      .single();
 
-      if (error) throw error;
-      return (data && data.length > 0) ?? false;
-    });
+    if (error) {
+      throw new Error(`Failed to create profile: ${error.message}`);
+    }
+
+    // Fix type issue - ensure avatar_url is string | null
+    const user: User = {
+      ...data,
+      avatar_url: data.avatar_url || null,
+    };
+
+    return user;
   }
 
   /**
-   * Get users by role
+   * Delete user profile
    */
-  static async getByRole(role: UserRole): Promise<ApiResponse<User[]>> {
-    return this.getAll({ role });
+  async deleteUserProfile(userId: string): Promise<void> {
+    const { error } = await supabase
+      .from('profiles')
+      .delete()
+      .eq('id', userId);
+
+    if (error) {
+      throw new Error(`Failed to delete profile: ${error.message}`);
+    }
   }
 
   /**
-   * Get user statistics
+   * Search users by name or email
    */
-  static async getStats(): Promise<
-    ApiResponse<{
-      total: number;
-      admins: number;
-      managers: number;
-      users: number;
-    }>
-  > {
-    return apiRequest('users.getStats', async () => {
-      const [totalResult, adminResult, managerResult, userResult] =
-        await Promise.all([
-          supabase.from('profiles').select('*', { count: 'exact', head: true }),
-          supabase
-            .from('profiles')
-            .select('*', { count: 'exact', head: true })
-            .eq('role', 'admin'),
-          supabase
-            .from('profiles')
-            .select('*', { count: 'exact', head: true })
-            .eq('role', 'manager'),
-          supabase
-            .from('profiles')
-            .select('*', { count: 'exact', head: true })
-            .eq('role', 'user'),
-        ]);
+  async searchUsers(query: string): Promise<User[]> {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .or(`name.ilike.%${query}%,email.ilike.%${query}%`)
+      .order('name');
 
-      return {
-        total: totalResult.count || 0,
-        admins: adminResult.count || 0,
-        managers: managerResult.count || 0,
-        users: userResult.count || 0,
-      };
-    });
-  }
+    if (error) {
+      throw new Error(`Failed to search users: ${error.message}`);
+    }
 
-  /**
-   * Delete a user (admin only)
-   */
-  static async delete(userId: string): Promise<ApiResponse<void>> {
-    return apiRequest('users.delete', async () => {
-      // Note: This only deletes the profile, not the auth user
-      // Full user deletion requires admin API or manual cleanup
-      const { error } = await supabase
-        .from('profiles')
-        .delete()
-        .eq('id', userId);
-
-      if (error) throw error;
-    });
-  }
-
-  /**
-   * Create a new user profile (typically called after auth signup)
-   */
-  static async createProfile(userData: {
-    id: string;
-    email: string;
-    name?: string;
-    role?: UserRole;
-  }): Promise<ApiResponse<User>> {
-    return apiRequest('users.createProfile', async () => {
-      const profileData: ProfileInsert = {
-        id: userData.id,
-        email: userData.email,
-        name: userData.name ?? null,
-        role: userData.role || ('user' as const),
-      };
-
-      const { data, error } = await supabase
-        .from('profiles')
-        .insert(profileData)
-        .select()
-        .single();
-
-      if (error) throw error;
-      return profileRowToUser(data);
-    });
+    return (data || []).map(user => ({
+      ...user,
+      avatar_url: user.avatar_url || null,
+    }));
   }
 }
+
+export const usersService = new UsersService();

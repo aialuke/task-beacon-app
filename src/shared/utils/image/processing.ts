@@ -1,154 +1,242 @@
-/**
- * Image Processing - Core Canvas Operations and Processing Logic
- *
- * Handles low-level image processing using HTML5 Canvas.
- * Provides the core processing engine for image manipulation.
- */
-
-import { logger } from '@/lib/logger';
-
-import { getOptimalImageFormat, WebPDetector } from './conversion';
-import { extractImageMetadata, calculateOptimalDimensions } from './metadata';
-import type {
-  ImageMetadata,
-  ProcessingResult,
-  EnhancedImageProcessingOptions,
-} from './types';
 
 /**
- * Process image using canvas operations
+ * Image Processing Utilities
+ * Handles image compression, resizing, and format conversion
  */
-async function processImageWithCanvas(
+
+import type { ImageProcessingOptions, ProcessedImageResult } from './types';
+
+// ============================================================================
+// CONSTANTS
+// ============================================================================
+
+const DEFAULT_OPTIONS: Required<ImageProcessingOptions> = {
+  maxWidth: 1920,
+  maxHeight: 1080,
+  quality: 0.8,
+  format: 'jpeg',
+  maintainAspectRatio: true,
+};
+
+const SUPPORTED_FORMATS = ['jpeg', 'png', 'webp'] as const;
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+
+// ============================================================================
+// MAIN PROCESSING FUNCTION
+// ============================================================================
+
+/**
+ * Process an image file with compression and resizing
+ */
+export async function processImage(
   file: File,
-  canvasProcessor: (
-    canvas: HTMLCanvasElement,
-    ctx: CanvasRenderingContext2D,
-    img: HTMLImageElement
-  ) => void,
-  format: 'jpeg' | 'png' | 'webp',
-  quality: number
-): Promise<Blob> {
+  options: Partial<ImageProcessingOptions> = {}
+): Promise<ProcessedImageResult> {
+  try {
+    // Validate input
+    validateImageFile(file);
+    
+    const opts = { ...DEFAULT_OPTIONS, ...options };
+    
+    // Create image element
+    const img = await createImageFromFile(file);
+    
+    // Calculate new dimensions
+    const { width, height } = calculateDimensions(img, opts);
+    
+    // Create canvas and draw image
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    if (!ctx) {
+      throw new Error('Failed to get canvas context');
+    }
+    
+    canvas.width = width;
+    canvas.height = height;
+    
+    // Use high-quality scaling
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    
+    // Draw and compress
+    ctx.drawImage(img, 0, 0, width, height);
+    
+    // Convert to blob
+    const blob = await canvasToBlob(canvas, opts.format, opts.quality);
+    
+    // Create processed file
+    const processedFile = new File(
+      [blob],
+      generateFileName(file.name, opts.format),
+      { type: blob.type }
+    );
+    
+    return {
+      file: processedFile,
+      originalSize: file.size,
+      processedSize: processedFile.size,
+      compressionRatio: file.size / processedFile.size,
+      dimensions: { width, height },
+      format: opts.format,
+    };
+    
+  } catch (error) {
+    throw new Error(`Image processing failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+}
+
+// ============================================================================
+// HELPER FUNCTIONS
+// ============================================================================
+
+/**
+ * Validate image file
+ */
+function validateImageFile(file: File): void {
+  if (!file) {
+    throw new Error('No file provided');
+  }
+  
+  if (!file.type.startsWith('image/')) {
+    throw new Error('File is not an image');
+  }
+  
+  if (file.size > MAX_FILE_SIZE) {
+    throw new Error(`File size exceeds ${MAX_FILE_SIZE / 1024 / 1024}MB limit`);
+  }
+}
+
+/**
+ * Create image element from file
+ */
+function createImageFromFile(file: File): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const img = new Image();
-
+    const url = URL.createObjectURL(file);
+    
     img.onload = () => {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-
-      if (!ctx) {
-        reject(new Error('Could not get canvas context'));
-        return;
-      }
-
-      try {
-        canvasProcessor(canvas, ctx, img);
-
-        canvas.toBlob(
-          blob => {
-            if (blob) {
-              resolve(blob);
-            } else {
-              reject(new Error('Failed to create blob from canvas'));
-            }
-          },
-          `image/${format}`,
-          quality
-        );
-      } catch (error) {
-        reject(error);
-      }
+      URL.revokeObjectURL(url);
+      resolve(img);
     };
-
-    img.onerror = () => reject(new Error('Failed to load image'));
-    img.src = URL.createObjectURL(file);
+    
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error('Failed to load image'));
+    };
+    
+    img.src = url;
   });
 }
 
 /**
- * Enhanced image processing with WebP conversion and fallback
+ * Calculate target dimensions
  */
-export async function processImageEnhanced(
-  file: File,
-  options: EnhancedImageProcessingOptions = {}
-): Promise<ProcessingResult> {
-  const startTime = performance.now();
-
-  // Import default options to avoid circular dependency
-  const { DEFAULT_PROCESSING_OPTIONS } = await import('./types');
-  const opts = { ...DEFAULT_PROCESSING_OPTIONS, ...options };
-
-  try {
-    const metadata = await extractImageMetadata(file);
-
-    const targetFormat =
-      opts.format === 'auto'
-        ? await getOptimalImageFormat(file)
-        : opts.format === 'webp'
-          ? (await WebPDetector.supportsWebP())
-            ? 'webp'
-            : 'jpeg'
-          : (opts.format as 'jpeg' | 'png' | 'webp');
-
-    const { width: newWidth, height: newHeight } = calculateOptimalDimensions(
-      metadata.width,
-      metadata.height,
-      opts.maxWidth,
-      opts.maxHeight,
-      opts.preserveAspectRatio
-    );
-
-    const blob = await processImageWithCanvas(
-      file,
-      (canvas, ctx, img) => {
-        canvas.width = newWidth;
-        canvas.height = newHeight;
-
-        if (opts.enableSmoothing) {
-          ctx.imageSmoothingEnabled = true;
-          ctx.imageSmoothingQuality = 'high';
-        }
-
-        ctx.drawImage(img, 0, 0, newWidth, newHeight);
-      },
-      targetFormat,
-      opts.quality
-    );
-
-    const processingTime = performance.now() - startTime;
-
-    const compressionStats = {
-      originalSize: file.size,
-      compressedSize: blob.size,
-      compressionRatio: blob.size / file.size,
-      sizeSavedBytes: file.size - blob.size,
-      sizeSavedPercent: ((file.size - blob.size) / file.size) * 100,
-    };
-
-    const updatedMetadata: ImageMetadata = {
-      ...metadata,
-      width: newWidth,
-      height: newHeight,
-      size: blob.size,
-      type: `image/${targetFormat}`,
-    };
-
-    logger.debug('Image processed successfully', {
-      format: targetFormat,
-      dimensions: `${newWidth}×${newHeight}`,
-      compression: `${compressionStats.sizeSavedPercent.toFixed(1)}%`,
-      processingTime: `${processingTime.toFixed(2)}ms`,
-    });
-
+function calculateDimensions(
+  img: HTMLImageElement,
+  options: Required<ImageProcessingOptions>
+): { width: number; height: number } {
+  const { width: originalWidth, height: originalHeight } = img;
+  const { maxWidth, maxHeight, maintainAspectRatio } = options;
+  
+  if (!maintainAspectRatio) {
     return {
-      blob,
-      metadata: updatedMetadata,
-      compressionStats,
-      processingTime,
+      width: Math.min(originalWidth, maxWidth),
+      height: Math.min(originalHeight, maxHeight),
     };
-  } catch (error) {
-    logger.error('Error processing image:', error);
-    throw new Error(
-      `Failed to process image: ${error instanceof Error ? error.message : 'Unknown error'}`
-    );
   }
+  
+  // Calculate scaling factor to maintain aspect ratio
+  const widthRatio = maxWidth / originalWidth;
+  const heightRatio = maxHeight / originalHeight;
+  const scaleFactor = Math.min(widthRatio, heightRatio, 1);
+  
+  return {
+    width: Math.round(originalWidth * scaleFactor),
+    height: Math.round(originalHeight * scaleFactor),
+  };
 }
+
+/**
+ * Convert canvas to blob
+ */
+function canvasToBlob(
+  canvas: HTMLCanvasElement,
+  format: string,
+  quality: number
+): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    const mimeType = `image/${format}`;
+    
+    canvas.toBlob(
+      (blob) => {
+        if (blob) {
+          resolve(blob);
+        } else {
+          reject(new Error('Failed to create blob from canvas'));
+        }
+      },
+      mimeType,
+      quality
+    );
+  });
+}
+
+/**
+ * Generate processed file name
+ */
+function generateFileName(originalName: string, format: string): string {
+  const nameWithoutExt = originalName.replace(/\.[^/.]+$/, '');
+  const timestamp = Date.now();
+  return `${nameWithoutExt}_processed_${timestamp}.${format}`;
+}
+
+// ============================================================================
+// BATCH PROCESSING
+// ============================================================================
+
+/**
+ * Process multiple images
+ */
+export async function processImages(
+  files: File[],
+  options: Partial<ImageProcessingOptions> = {}
+): Promise<ProcessedImageResult[]> {
+  const results: ProcessedImageResult[] = [];
+  
+  for (const file of files) {
+    try {
+      const result = await processImage(file, options);
+      results.push(result);
+    } catch (error) {
+      // Continue processing other files even if one fails
+      console.error(`Failed to process ${file.name}:`, error);
+      results.push({
+        file,
+        originalSize: file.size,
+        processedSize: file.size,
+        compressionRatio: 1,
+        dimensions: { width: 0, height: 0 },
+        format: 'unknown',
+        error: error instanceof Error ? error.message : 'Processing failed',
+      });
+    }
+  }
+  
+  return results;
+}
+
+// ============================================================================
+// UTILITY EXPORTS
+// ============================================================================
+
+export {
+  DEFAULT_OPTIONS,
+  SUPPORTED_FORMATS,
+  MAX_FILE_SIZE,
+};
+
+export type {
+  ImageProcessingOptions,
+  ProcessedImageResult,
+};

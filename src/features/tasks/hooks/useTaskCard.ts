@@ -13,16 +13,16 @@ import { useTaskAnimation } from './useTaskAnimation';
  * Business logic moved to useTaskCardLogic for better separation.
  */
 export function useTaskCard(task: Task) {
-  // Fix ref typing - ensure non-null assertion where needed
+  // Fix ref typing - ensure proper HTMLDivElement type
   const contentRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
 
-  const { openImagePreview } = useImagePreview();
-  const { animationState, isExpanded, toggleExpand } = useTaskAnimation(task);
+  const { openPreview } = useImagePreview();
+  const { animationState, isExpanded, toggleExpanded } = useTaskAnimation();
 
   const handleImageClick = () => {
     if (task.photo_url) {
-      openImagePreview(task.photo_url, task.title);
+      openPreview(task.photo_url);
     }
   };
 
@@ -31,7 +31,7 @@ export function useTaskCard(task: Task) {
     cardRef,
     isExpanded,
     animationState,
-    toggleExpand,
+    toggleExpand: toggleExpanded,
     handleImageClick,
   };
 }

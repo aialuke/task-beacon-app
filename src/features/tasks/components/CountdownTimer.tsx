@@ -36,7 +36,6 @@ function CountdownTimer({
   const { shouldReduceMotion, getAnimationConfig } = useMotionPreferences();
 
   const { dynamicSize, radius, circumference } = useMemo(() => {
-    // Replace complex nested ternaries with lookup table
     const SIZE_MULTIPLIERS = {
       mobile: { high: 1.1, medium: 0.9, low: 0.7 },
       desktop: { high: 1.2, medium: 1.0, low: 0.8 },
@@ -61,7 +60,7 @@ function CountdownTimer({
     [getAnimationConfig]
   );
 
-  // Fix React Spring configuration - properly type the animation properties
+  // Fix React Spring configuration with proper typing
   const springProps = useSpring({
     strokeDashoffset: dashOffset,
     config: springConfig,
