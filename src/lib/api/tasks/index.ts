@@ -6,7 +6,7 @@
  */
 
 import { supabase } from '@/integrations/supabase/client';
-import type { Task, TaskCreateData, TaskUpdateData } from '@/types';
+import type { TaskCreateData, TaskUpdateData } from '@/types';
 
 // === TASK CRUD OPERATIONS ===
 
@@ -205,7 +205,7 @@ const updateTaskStatus = async (
   }
 };
 
-const uploadPhoto = async (photo: File) => {
+const uploadPhoto = async (_photo: File) => {
   try {
     // This is a placeholder - actual implementation would use Supabase Storage
     // For now, return null to indicate no photo upload

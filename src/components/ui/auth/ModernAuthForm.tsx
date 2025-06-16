@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { toast } from 'sonner';
 
 import { Card, CardContent } from '@/components/ui/card';
 import { signIn, signUp, signOut } from '@/lib/api/auth';
 import { signInSchema, signUpSchema } from '@/lib/validation/schemas';
-import { toast } from 'sonner';
 
 import { AuthFormFields } from './components/AuthFormFields';
 import { AuthFormHeader } from './components/AuthFormHeader';
@@ -200,7 +200,9 @@ const ModernAuthForm: React.FC = () => {
       } catch (error: unknown) {
         // Log error and show toast
         console.error('Authentication error:', error);
-        toast.error('Authentication failed. Please check your credentials or try again.');
+        toast.error(
+          'Authentication failed. Please check your credentials or try again.'
+        );
 
         if (error instanceof Error) {
           const errorMessage = error.message;

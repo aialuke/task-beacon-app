@@ -42,17 +42,6 @@ interface BaseQueryParams {
 }
 
 /**
- * Pagination state interface for components
- * Used in hooks and component state management
- */
-export interface PaginationState extends PaginationParams {
-  totalCount: number;
-  totalPages: number;
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-}
-
-/**
  * Pagination controls interface
  * Used for navigation functions and UI controls
  */

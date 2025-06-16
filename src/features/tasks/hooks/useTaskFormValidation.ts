@@ -10,7 +10,6 @@ interface TaskFormData {
   url?: string;
   dueDate?: string;
   assigneeId?: string;
-  priority?: string;
   photoUrl?: string;
   parentTaskId?: string;
 }

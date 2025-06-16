@@ -11,7 +11,11 @@ const testQueryClient = new QueryClient({
   },
 });
 
-export const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
+export const AllTheProviders = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   return (
     <BrowserRouter>
       <QueryClientProvider client={testQueryClient}>

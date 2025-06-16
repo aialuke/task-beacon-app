@@ -8,12 +8,27 @@ interface TaskExpandButtonProps {
 }
 
 function TaskExpandButton({ isExpanded, onClick }: TaskExpandButtonProps) {
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isExpanded) onClick(); // Only collapse when expanded
+  };
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    e.stopPropagation();
+    if (isExpanded && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault();
+      onClick();
+    }
+  };
   return (
     <Button
       variant="ghost"
       size="icon"
       className="size-8 shrink-0 hover:bg-accent hover:text-accent-foreground"
-      onClick={onClick}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      aria-label={isExpanded ? 'Collapse task details' : 'Expand task details'}
+      tabIndex={0}
+      aria-expanded={isExpanded}
     >
       <svg
         width="16"

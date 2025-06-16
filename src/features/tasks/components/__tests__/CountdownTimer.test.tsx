@@ -31,7 +31,6 @@ describe('CountdownTimer', () => {
         dueDate="2025-06-05T10:00:00Z"
         status="pending"
         size={48}
-        priority="medium"
       />
     );
 
@@ -54,7 +53,6 @@ describe('CountdownTimer', () => {
         dueDate="2025-06-05T10:00:00Z"
         status="complete"
         size={48}
-        priority="medium"
       />
     );
 
@@ -62,29 +60,21 @@ describe('CountdownTimer', () => {
     expect(svg).toBeInTheDocument();
   });
 
-  it('applies correct size and priority styling', () => {
+  it('applies correct size styling', () => {
     render(
       <CountdownTimer
         dueDate="2025-06-05T10:00:00Z"
         status="pending"
         size={64}
-        priority="high"
       />
     );
 
     const timer = screen.getByRole('timer');
-    expect(timer).toHaveStyle({ width: '76.8px', height: '76.8px' }); // 64 * 1.2 for high priority
+    expect(timer).toHaveStyle({ width: '64px', height: '64px' }); // 64 * 1.0, no priority multiplier
   });
 
   it('handles null due date gracefully', () => {
-    render(
-      <CountdownTimer
-        dueDate={null}
-        status="pending"
-        size={48}
-        priority="medium"
-      />
-    );
+    render(<CountdownTimer dueDate={null} status="pending" size={48} />);
 
     expect(screen.getByRole('timer')).toBeInTheDocument();
   });
@@ -95,12 +85,14 @@ describe('CountdownTimer', () => {
         dueDate="2025-06-05T10:00:00Z"
         status="pending"
         size={48}
-        priority="medium"
       />
     );
 
     const timer = screen.getByRole('timer');
     expect(timer).toHaveAttribute('tabIndex', '0');
-    expect(timer).toHaveAttribute('aria-label', 'Task timer: 11 days remaining');
+    expect(timer).toHaveAttribute(
+      'aria-label',
+      'Task timer: 11 days remaining'
+    );
   });
 });

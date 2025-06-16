@@ -8,7 +8,7 @@ type AsyncFunc<T, TArgs extends unknown[] = unknown[]> = (
   ...args: TArgs
 ) => Promise<T>;
 
-const executeAsync = async <T, TArgs extends unknown[]>(
+const _executeAsync = async <T, TArgs extends unknown[]>(
   asyncFn: AsyncFunc<T, TArgs>,
   ...args: TArgs
 ): Promise<T | null> => {
@@ -24,7 +24,7 @@ const executeAsync = async <T, TArgs extends unknown[]>(
   }
 };
 
-const retryAsync = async <T>(
+const _retryAsync = async <T>(
   asyncFn: () => Promise<T>,
   maxRetries = 3,
   delay = 1000

@@ -15,9 +15,6 @@ export type TaskFilter =
   | 'overdue'
   | 'assigned';
 
-// Task priority as a simple string union type
-export type TaskPriority = 'low' | 'medium' | 'high' | 'urgent';
-
 // Main task interfaces
 interface TaskFilterOptions {
   status?: 'pending' | 'complete' | 'overdue' | 'all';
@@ -27,7 +24,6 @@ interface TaskFilterOptions {
     start?: string;
     end?: string;
   };
-  priority?: TaskPriority;
   hasParent?: boolean;
   parentId?: string;
 }
@@ -47,7 +43,6 @@ export interface TaskCreateData {
   due_date?: string;
   assignee_id?: string;
   parent_task_id?: string;
-  priority?: TaskPriority;
   url_link?: string;
   photo_url?: string;
 }

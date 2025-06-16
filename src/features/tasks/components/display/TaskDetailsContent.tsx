@@ -20,7 +20,6 @@ export default function TaskDetailsContent({
   isExpanded = false,
 }: TaskDetailsContentProps) {
   const navigate = useNavigate();
-  const status = getTaskStatus(task);
 
   return (
     <div className="space-y-4">

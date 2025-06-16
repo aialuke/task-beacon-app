@@ -5,10 +5,9 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 // === INTERNAL UTILITIES ===
 import { useAuth } from '@/hooks/core/auth';
-import * as api from '@/lib/api/auth';
 import * as supabaseClient from '@/integrations/supabase/client';
+import * as api from '@/lib/api/auth';
 import { setupIntegrationTest } from '@/test/integration/setup';
-import { renderWithProviders } from '@/test/test-utils.tsx';
 import type {
   AuthUser,
   Session,
@@ -90,8 +89,14 @@ describe('Auth Flow Integration Tests', () => {
       });
 
       // Patch: Capture and manually trigger the onAuthStateChange callback
-      let authStateChangeCb: ((event: string, session: Session | null) => void) | undefined;
-      vi.spyOn(supabaseClient.supabase.auth, 'onAuthStateChange').mockImplementation((cb) => {
+      let authStateChangeCb:
+        | ((event: string, session: Session | null) => void)
+        | undefined;
+      // eslint-disable-next-line promise/prefer-await-to-callbacks
+      vi.spyOn(
+        supabaseClient.supabase.auth,
+        'onAuthStateChange'
+      ).mockImplementation(cb => {
         authStateChangeCb = cb;
         return {
           data: {
@@ -113,7 +118,7 @@ describe('Auth Flow Integration Tests', () => {
 
       // Patch: Simulate the auth state change event
       await act(async () => {
-        authStateChangeCb && authStateChangeCb('SIGNED_IN', mockSession);
+        if (authStateChangeCb) authStateChangeCb('SIGNED_IN', mockSession);
       });
 
       // Assert: Verify sign in completed successfully
@@ -224,7 +229,7 @@ describe('Auth Flow Integration Tests', () => {
       };
 
       // Mock successful session refresh with proper typing
-      const refreshSpy = vi.spyOn(api, 'refreshSession').mockResolvedValue({
+      const _refreshSpy = vi.spyOn(api, 'refreshSession').mockResolvedValue({
         success: true,
         data: { user: mockUser, session: mockSession },
         error: null,
@@ -237,8 +242,14 @@ describe('Auth Flow Integration Tests', () => {
       });
 
       // Patch: Capture and manually trigger the onAuthStateChange callback
-      let authStateChangeCb: ((event: string, session: Session | null) => void) | undefined;
-      vi.spyOn(supabaseClient.supabase.auth, 'onAuthStateChange').mockImplementation((cb) => {
+      let authStateChangeCb:
+        | ((event: string, session: Session | null) => void)
+        | undefined;
+      // eslint-disable-next-line promise/prefer-await-to-callbacks
+      vi.spyOn(
+        supabaseClient.supabase.auth,
+        'onAuthStateChange'
+      ).mockImplementation(cb => {
         authStateChangeCb = cb;
         return {
           data: {
@@ -260,7 +271,8 @@ describe('Auth Flow Integration Tests', () => {
 
       // Patch: Simulate the auth state change event
       await act(async () => {
-        authStateChangeCb && authStateChangeCb('TOKEN_REFRESHED', mockSession);
+        if (authStateChangeCb)
+          authStateChangeCb('TOKEN_REFRESHED', mockSession);
       });
 
       // Assert: Verify session was refreshed

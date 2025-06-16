@@ -23,7 +23,8 @@ export default function FollowUpTaskPage() {
   } = useQuery({
     queryKey: ['task', parentTaskId],
     queryFn: async () => {
-      const response = await TaskService.crud.getById(parentTaskId!);
+      if (!parentTaskId) throw new Error('parentTaskId is required');
+      const response = await TaskService.crud.getById(parentTaskId);
       if (!response.success) {
         throw new Error(
           response.error?.message || 'Failed to load parent task'

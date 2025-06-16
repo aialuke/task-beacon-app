@@ -72,6 +72,3 @@ export function calculateOptimalDimensions(
 
   return { width: newWidth, height: newHeight };
 }
-
-// Re-export for backward compatibility
-export const extractImageMetadataEnhanced = extractImageMetadata;

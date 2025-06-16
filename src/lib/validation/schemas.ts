@@ -8,7 +8,6 @@
 import { z } from 'zod';
 
 import { DEFAULT_PAGINATION_CONFIG } from '@/lib/utils/pagination';
-import type { TaskPriority as TaskPriorityType } from '@/types/feature-types/task.types';
 
 import { UNIFIED_VALIDATION_MESSAGES } from './messages';
 
@@ -89,14 +88,12 @@ const urlSchema = z
 // TASK SCHEMAS
 // ============================================================================
 
-// Import TaskPriority from the canonical location
-
 // ============================================================================
 // COMMON SCHEMAS
 // ============================================================================
 
 const uuidSchema = z.string().uuid('Invalid ID format');
-const timestampSchema = z.string().datetime('Invalid timestamp format');
+const _timestampSchema = z.string().datetime('Invalid timestamp format');
 
 // ============================================================================
 // PAGINATION SCHEMAS
@@ -177,12 +174,6 @@ export const profileCreateSchema = z.object({
   avatar_url: z.string().url('Invalid avatar URL').optional().nullable(),
 });
 
-const taskPrioritySchema = z.enum(['low', 'medium', 'high', 'urgent'], {
-  errorMap: () => ({
-    message: 'Priority must be low, medium, high, or urgent',
-  }),
-});
-
 const taskStatusSchema = z.enum(['pending', 'complete', 'overdue'], {
   errorMap: () => ({ message: 'Status must be pending, complete, or overdue' }),
 });
@@ -203,7 +194,6 @@ const futureDateSchema = z
 const baseTaskSchema = z.object({
   title: taskTitleSchema,
   description: taskDescriptionSchema,
-  priority: taskPrioritySchema.default('medium'),
   status: taskStatusSchema.default('pending'),
   due_date: futureDateSchema,
   photo_url: z.string().url('Invalid photo URL').optional().nullable(),
@@ -213,7 +203,6 @@ const baseTaskSchema = z.object({
 });
 
 export const createTaskSchema = baseTaskSchema.partial({
-  priority: true,
   status: true,
 });
 
@@ -225,7 +214,6 @@ export const taskFormSchema = z.object({
     .string()
     .max(500, 'Description cannot exceed 500 characters')
     .default(''),
-  priority: taskPrioritySchema.default('medium'),
   dueDate: z.string().default(''),
   url: z
     .string()
@@ -246,7 +234,6 @@ export const taskFormSchema = z.object({
 
 export const taskFilterSchema = z.object({
   status: taskStatusSchema.optional(),
-  priority: taskPrioritySchema.optional(),
   assignee_id: uuidSchema.optional(),
   search: z.string().optional(),
   due_date_from: z.string().optional(),
@@ -281,8 +268,6 @@ export type ProfileUpdateInput = z.infer<typeof profileUpdateSchema>;
 export type ProfileCreateInput = z.infer<typeof profileCreateSchema>;
 
 // Use the canonical TaskPriority type instead of inferring from schema;
-type TaskStatus = z.infer<typeof taskStatusSchema>;
-type BaseTask = z.infer<typeof baseTaskSchema>;
 export type CreateTaskInput = z.infer<typeof createTaskSchema>;
 export type UpdateTaskInput = z.infer<typeof updateTaskSchema>;
 export type TaskFormInput = z.infer<typeof taskFormSchema>;

@@ -1,6 +1,6 @@
-import { renderWithProviders, screen } from '@/test/test-utils.tsx';
 import { describe, it, expect } from 'vitest';
 
+import { renderWithProviders, screen } from '@/test/test-utils.tsx';
 import type { Task } from '@/types';
 
 import TaskDetailsContent from '../display/TaskDetailsContent';

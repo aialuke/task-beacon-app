@@ -91,14 +91,3 @@ export function calculateGlowPosition(
     width: glowWidth,
   };
 }
-
-/**
- * Updates button references array safely
- */
-function setButtonRef(
-  refs: React.MutableRefObject<(HTMLButtonElement | null)[]>,
-  index: number,
-  element: HTMLButtonElement | null
-): void {
-  refs.current[index] = element;
-}

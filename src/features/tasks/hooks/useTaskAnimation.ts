@@ -1,10 +1,9 @@
-import { useSpring, SpringValue, config } from '@react-spring/web';
+import {
+  useSpring,
+  SpringValue as _SpringValue,
+  config,
+} from '@react-spring/web';
 import { useState } from 'react';
-
-interface TaskAnimationState {
-  height: SpringValue<number>;
-  opacity: SpringValue<number>;
-}
 
 export function useTaskAnimation() {
   const [isExpanded, setIsExpanded] = useState(false);

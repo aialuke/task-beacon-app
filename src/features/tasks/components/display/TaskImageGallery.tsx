@@ -1,6 +1,3 @@
-// === EXTERNAL LIBRARIES ===
-import { memo } from 'react';
-
 // === INTERNAL UTILITIES ===
 import { LazyImage } from '@/components/ui/LazyImage';
 import { cn } from '@/lib/utils';

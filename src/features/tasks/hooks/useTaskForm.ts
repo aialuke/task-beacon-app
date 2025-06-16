@@ -1,7 +1,14 @@
 import { useCallback, useState } from 'react';
-import { logger } from '@/lib/logger';
+
+import { logger as _logger } from '@/lib/logger';
 import type { TaskCreateData } from '@/types';
-import type { FormErrors } from '@/types/form.types';
+
+// Local type definition for form errors
+// Matches the previous FormErrors type
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+type FormErrors<T extends Record<string, unknown>> = {
+  [K in keyof T]?: string;
+};
 
 interface UseTaskFormOptions {
   initialTitle?: string;
@@ -93,7 +100,14 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     setAssigneeId(initialAssigneeId ?? '');
     setErrors({});
     if (onClose) onClose();
-  }, [initialTitle, initialDescription, initialDueDate, initialUrl, initialAssigneeId, onClose]);
+  }, [
+    initialTitle,
+    initialDescription,
+    initialDueDate,
+    initialUrl,
+    initialAssigneeId,
+    onClose,
+  ]);
 
   const getTaskData = useCallback((): TaskCreateData => {
     return {
@@ -122,21 +136,29 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     isValid,
     errors,
     isSubmitting,
-    setIsSubmitting: (submitting: boolean) => {
-      logger.warn('setIsSubmitting is deprecated - form handles submission state automatically');
-    },
     handleSubmit,
     resetFormState,
     validateForm,
     getTaskData,
-    setFieldValue: (field: keyof TaskFormValues, value: any) => {
+    setFieldValue: (field: keyof TaskFormValues, value: unknown) => {
       switch (field) {
-        case 'title': setTitle(value); break;
-        case 'description': setDescription(value); break;
-        case 'dueDate': setDueDate(value); break;
-        case 'url': setUrl(value); break;
-        case 'assigneeId': setAssigneeId(value); break;
-        default: break;
+        case 'title':
+          setTitle(value as string);
+          break;
+        case 'description':
+          setDescription(value as string);
+          break;
+        case 'dueDate':
+          setDueDate(value as string);
+          break;
+        case 'url':
+          setUrl(value as string);
+          break;
+        case 'assigneeId':
+          setAssigneeId(value as string);
+          break;
+        default:
+          break;
       }
     },
     values: { title, description, dueDate, url, assigneeId },

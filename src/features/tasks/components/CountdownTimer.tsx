@@ -19,33 +19,27 @@ interface CountdownTimerProps {
   dueDate: string | null;
   status: TaskStatus;
   size?: number;
-  priority?: 'low' | 'medium' | 'high';
 }
 
 const AnimatedDiv = animated.div;
 
-function CountdownTimer({
-  dueDate,
-  status,
-  size = 48,
-  priority = 'medium',
-}: CountdownTimerProps) {
+function CountdownTimer({ dueDate, status, size = 48 }: CountdownTimerProps) {
   const { isMobile } = useTaskUIContext();
   const { shouldReduceMotion, getAnimationConfig } = useMotionPreferences();
 
   const { dynamicSize, radius, circumference } = useMemo(() => {
-    // Replace complex nested ternaries with lookup table
+    // Remove priority-based sizing, use a single multiplier per deviceType
     const SIZE_MULTIPLIERS = {
-      mobile: { high: 1.1, medium: 0.9, low: 0.7 },
-      desktop: { high: 1.2, medium: 1.0, low: 0.8 },
+      mobile: 0.9,
+      desktop: 1.0,
     } as const;
 
     const deviceType = isMobile ? 'mobile' : 'desktop';
-    const dynamicSize = size * SIZE_MULTIPLIERS[deviceType][priority];
+    const dynamicSize = size * SIZE_MULTIPLIERS[deviceType];
     const radius = dynamicSize / 2 - 4;
     const circumference = 2 * Math.PI * radius;
     return { dynamicSize, radius, circumference };
-  }, [isMobile, priority, size]);
+  }, [isMobile, size]);
 
   const { timeDisplay, dashOffset, tooltipContent, ariaLabel, daysRemaining } =
     useCountdown(dueDate, status, circumference);

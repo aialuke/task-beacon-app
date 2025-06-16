@@ -12,7 +12,7 @@ import { useAuth } from '@/hooks/core/auth';
 
 function TaskDashboardHeader() {
   const { user, signOut } = useAuth();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     try {

@@ -1,5 +1,4 @@
 import { useCallback } from 'react';
-import { z } from 'zod';
 
 import {
   profileUpdateSchema,
@@ -102,6 +101,3 @@ export function useProfileValidation() {
     schema: profileUpdateSchema,
   };
 }
-
-// Backward compatibility exports
-const useProfileValidationHook = useProfileValidation;

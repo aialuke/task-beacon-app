@@ -10,7 +10,6 @@ import type { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import type {
   ApiResponse,
-  ServiceResult,
   ApiError,
   AuthResponse,
 } from '@/types';
@@ -164,134 +163,6 @@ export async function signOut(): Promise<ApiResponse<void>> {
 // === SESSION MANAGEMENT ===
 
 /**
- * Get current session
- */
-export async function getCurrentSession(): Promise<ServiceResult<Session>> {
-  try {
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.getSession();
-
-    if (error) {
-      return {
-        success: false,
-        error: createApiError(error.message),
-        data: null,
-      };
-    }
-
-    return {
-      success: true,
-      error: null,
-      data: session,
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error: createApiError(
-        error instanceof Error ? error.message : 'Unknown error'
-      ),
-      data: null,
-    };
-  }
-}
-
-/**
- * Get current user
- */
-export async function getCurrentUser(): Promise<ServiceResult<User>> {
-  try {
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.getUser();
-
-    if (error) {
-      return {
-        success: false,
-        error: createApiError(error.message),
-        data: null,
-      };
-    }
-
-    if (!user) {
-      return {
-        success: false,
-        error: createApiError('No authenticated user'),
-        data: null,
-      };
-    }
-
-    return {
-      success: true,
-      error: null,
-      data: user,
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error: createApiError(
-        error instanceof Error ? error.message : 'Unknown error'
-      ),
-      data: null,
-    };
-  }
-}
-
-/**
- * Get current user ID
- */
-export async function getCurrentUserId(): Promise<ServiceResult<string>> {
-  try {
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.getUser();
-
-    if (error) {
-      return {
-        success: false,
-        error: createApiError(error.message),
-        data: null,
-      };
-    }
-
-    if (!user) {
-      return {
-        success: false,
-        error: createApiError('No authenticated user'),
-        data: null,
-      };
-    }
-
-    return {
-      success: true,
-      error: null,
-      data: user.id,
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error: createApiError(
-        error instanceof Error ? error.message : 'Unknown error'
-      ),
-      data: null,
-    };
-  }
-}
-
-/**
- * Check if a user is currently authenticated.
- */
-export async function isAuthenticated(): Promise<boolean> {
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-  return !!session;
-}
-
-/**
  * Refresh the current session
  *
  * Note: Supabase client automatically refreshes the token. This is for manual refreshing.
@@ -335,19 +206,4 @@ export async function refreshSession(): Promise<
       data: null,
     };
   }
-}
-
-/**
- * Set up a listener for authentication state changes.
- *
- * @param callback - The function to call when auth state changes.
- * @returns An object with a `unsubscribe` method.
- */
-export function onAuthStateChange(
-  callback: (event: string, session: Session | null) => void
-) {
-  const {
-    data: { subscription },
-  } = supabase.auth.onAuthStateChange(callback);
-  return subscription;
 }

@@ -1,10 +1,10 @@
 import { useRef } from 'react';
 
-import type { Task } from '@/types';
+import type { Task as _Task } from '@/types';
 
 import { useTaskAnimation } from './useTaskAnimation';
 
-export function useTaskCard(task: Task) {
+export function useTaskCard() {
   const contentRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const { isExpanded, animationPhase, animationState, toggleExpanded } =

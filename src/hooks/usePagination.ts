@@ -6,8 +6,6 @@ import {
   calculatePaginationMeta,
 } from '@/lib/utils/pagination';
 import type {
-  PaginationState,
-  PaginationControls,
   PaginationAPI,
   PaginationParams,
   PaginationConfig,

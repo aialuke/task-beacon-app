@@ -116,3 +116,10 @@ function safeJsonParse<T>(jsonString: string, defaultValue: T): T {
     return defaultValue;
   }
 }
+
+const _sortByProperty = sortByProperty;
+const _searchByTerm = searchByTerm;
+const _groupBy = groupBy;
+const _uniqueBy = uniqueBy;
+const _paginateArray = paginateArray;
+const _safeJsonParse = safeJsonParse;

@@ -5,24 +5,7 @@
  */
 
 // === FORM STATE TYPES ===
-export interface FormState<
-  T extends Record<string, unknown> = Record<string, unknown>,
-> {
-  values: T;
-  errors: FormErrors<T>;
-  touched: FormTouched<T>;
-  isSubmitting: boolean;
-  isValid: boolean;
-  isDirty: boolean;
-}
-
-export type FormErrors<T extends Record<string, unknown>> = {
-  [K in keyof T]?: string;
-};
-
-export type FormTouched<T extends Record<string, unknown>> = {
-  [K in keyof T]?: boolean;
-};
+// Remove FormState and FormTouched type/interface definitions
 
 // === VALIDATION TYPES ===
 // Use canonical ValidationResult from validators;

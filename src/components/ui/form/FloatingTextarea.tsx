@@ -7,7 +7,6 @@ interface FloatingTextareaProps {
   id: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  placeholder: string;
   label: string;
   icon?: ReactNode;
   className?: string;
@@ -17,7 +16,6 @@ export function FloatingTextarea({
   id,
   value,
   onChange,
-  placeholder,
   label,
   icon,
   className,

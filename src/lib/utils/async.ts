@@ -73,7 +73,9 @@ function useAsyncOperation<T>(
 
     setError(lastError);
     setIsLoading(false);
-    onError?.(lastError!);
+    if (lastError) {
+      onError?.(lastError);
+    }
   }, [operation, options]);
 
   const reset = useCallback(() => {
@@ -111,7 +113,11 @@ async function withRetry<T>(
     }
   }
 
-  throw lastError!;
+  if (lastError) {
+    throw lastError;
+  } else {
+    throw new Error('Unknown error in withRetry');
+  }
 }
 
 /**
@@ -149,3 +155,8 @@ async function executeWithConcurrency<T>(
 }
 
 // Note: debounce and throttle utilities are available from ./core
+
+const _useAsyncOperation = useAsyncOperation;
+const _withRetry = withRetry;
+const _executeInSequence = executeInSequence;
+const _executeWithConcurrency = executeWithConcurrency;

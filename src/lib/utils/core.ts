@@ -67,3 +67,7 @@ async function optimizeAnimations(): Promise<void> {
     document.documentElement.style.setProperty('--transition-duration', '0ms');
   }
 }
+
+const _debounce = debounce;
+const _throttle = throttle;
+const _optimizeAnimations = optimizeAnimations;

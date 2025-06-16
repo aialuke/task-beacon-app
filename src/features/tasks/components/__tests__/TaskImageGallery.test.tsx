@@ -25,7 +25,9 @@ beforeAll(() => {
     observe() {}
     unobserve() {}
     disconnect() {}
-    takeRecords() { return []; }
+    takeRecords() {
+      return [];
+    }
   }
   Object.defineProperty(global, 'IntersectionObserver', {
     writable: true,
@@ -63,7 +65,7 @@ describe('TaskImageGallery', () => {
     expect(image).toHaveAttribute('src', 'https://example.com/image.jpg');
   });
 
-  it('does not render when no photo_url is provided', () => {
+  it('does not render when no photo_url is provided', async () => {
     const taskWithoutImage = { ...mockTask, photo_url: null };
     const { container } = render(<TaskImageGallery task={taskWithoutImage} />);
 

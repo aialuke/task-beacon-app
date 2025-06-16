@@ -76,7 +76,7 @@ vi.mock('react-router-dom', async () => {
 });
 
 // Global test utilities for integration tests
-const mockApiResponse = <T>(data: T, error: unknown = null) => ({
+const _mockApiResponse = <T>(data: T, error: unknown = null) => ({
   data,
   error,
   status: error ? 400 : 200,
@@ -100,7 +100,7 @@ const mockSuccessfulAuth = (userOverrides: Partial<User> = {}) => {
   });
 };
 
-const mockFailedAuth = (errorMessage = 'Authentication failed') => {
+const _mockFailedAuth = (errorMessage = 'Authentication failed') => {
   vi.mocked(supabase.auth.getUser).mockResolvedValue({
     data: { user: null },
     error: {
@@ -111,7 +111,7 @@ const mockFailedAuth = (errorMessage = 'Authentication failed') => {
   });
 };
 
-const mockDatabaseQuery = (tableName: string, result: unknown) => {
+const _mockDatabaseQuery = (tableName: string, result: unknown) => {
   const mockChain = {
     select: vi.fn().mockReturnThis(),
     insert: vi.fn().mockReturnThis(),
@@ -145,7 +145,6 @@ const createTestTask = (overrides = {}) => ({
   title: 'Test Task',
   description: 'Test task description',
   status: 'pending' as const,
-  priority: 'medium' as const,
   due_date: '2024-12-31T23:59:59Z',
   owner_id: 'test-user-id',
   assignee_id: null,

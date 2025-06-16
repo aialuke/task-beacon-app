@@ -32,7 +32,7 @@ const arePropsEqual = (
 
 function TaskCard({ task }: TaskCardProps) {
   const { contentRef, cardRef, isExpanded, animationState, toggleExpand } =
-    useTaskCard(task);
+    useTaskCard();
 
   // Dynamic classes
   const statusClass = `status-${task.status.toLowerCase()}`;
@@ -42,6 +42,9 @@ function TaskCard({ task }: TaskCardProps) {
   const statusStyles: React.CSSProperties = {
     opacity: task.status === 'complete' ? 0.8 : 1,
   };
+
+  // Accessibility: Only make the card focusable/clickable when collapsed
+  const isCardInteractive = !isExpanded;
 
   return (
     <UnifiedErrorBoundary
@@ -56,15 +59,26 @@ function TaskCard({ task }: TaskCardProps) {
     >
       <article
         ref={cardRef}
-        className={`mx-auto mb-4 box-border w-full max-w-2xl cursor-pointer rounded-xl border border-border bg-card p-5 text-card-foreground shadow-task-card transition-all duration-200 hover:shadow-md ${statusClass} ${expandedClass} ${
+        className={`mx-auto mb-4 box-border w-full max-w-2xl rounded-xl border border-border bg-card p-5 text-card-foreground shadow-task-card transition-all duration-200 hover:shadow-md ${statusClass} ${expandedClass} ${
           task.status === 'complete'
             ? 'bg-muted'
             : task.status === 'overdue'
               ? 'border-destructive'
               : ''
-        }`}
+        } ${isCardInteractive ? 'cursor-pointer' : ''}`}
         style={statusStyles}
         aria-label={`Task: ${task.title}`}
+        {...(isCardInteractive && {
+          role: 'button',
+          tabIndex: 0,
+          onClick: () => toggleExpand(),
+          onKeyDown: e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              toggleExpand();
+            }
+          },
+        })}
       >
         <TaskCardHeader
           task={task}

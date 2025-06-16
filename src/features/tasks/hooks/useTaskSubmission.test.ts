@@ -1,10 +1,9 @@
 import { renderHook, act } from '@testing-library/react';
-import { AllTheProviders } from '@/test/test-utils.tsx';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import * as TaskApi from '@/lib/api/tasks';
+import { AllTheProviders } from '@/test/test-utils.tsx';
 import type { TaskWithRelations } from '@/types';
-import type { TaskPriority } from '@/types/feature-types/task.types';
 
 import { useTaskSubmission } from './useTaskSubmission';
 
@@ -21,7 +20,9 @@ vi.mock('sonner', () => ({
 
 // Mock the query client
 vi.mock('@tanstack/react-query', async () => {
-  const actual = await vi.importActual<typeof import('@tanstack/react-query')>('@tanstack/react-query');
+  const actual = await vi.importActual<typeof import('@tanstack/react-query')>(
+    '@tanstack/react-query'
+  );
   return {
     ...actual,
     useQueryClient: () => ({
@@ -59,7 +60,6 @@ interface SubmitTaskData {
   pinned: boolean;
   assigneeId: string;
   photoUrl?: string | null;
-  priority?: TaskPriority;
 }
 
 interface TaskUpdateData {
@@ -69,7 +69,6 @@ interface TaskUpdateData {
   dueDate?: string;
   url?: string;
   assigneeId?: string;
-  priority?: TaskPriority;
 }
 
 describe('useTaskSubmission', () => {
@@ -108,7 +107,9 @@ describe('useTaskSubmission', () => {
       error: null,
     });
 
-    const { result } = renderHook(() => useTaskSubmission(), { wrapper: AllTheProviders });
+    const { result } = renderHook(() => useTaskSubmission(), {
+      wrapper: AllTheProviders,
+    });
 
     let submissionResult;
     await act(async () => {
@@ -136,7 +137,9 @@ describe('useTaskSubmission', () => {
       error: { message: errorMessage, name: 'TaskError' },
     });
 
-    const { result } = renderHook(() => useTaskSubmission(), { wrapper: AllTheProviders });
+    const { result } = renderHook(() => useTaskSubmission(), {
+      wrapper: AllTheProviders,
+    });
 
     let submissionResult;
     await act(async () => {
@@ -154,7 +157,9 @@ describe('useTaskSubmission', () => {
     const networkError = new Error('Network error');
     vi.mocked(TaskApi.TaskService.crud.create).mockRejectedValue(networkError);
 
-    const { result } = renderHook(() => useTaskSubmission(), { wrapper: AllTheProviders });
+    const { result } = renderHook(() => useTaskSubmission(), {
+      wrapper: AllTheProviders,
+    });
 
     let submissionResult;
     await act(async () => {
@@ -172,7 +177,6 @@ describe('useTaskSubmission', () => {
     const taskUpdateData: TaskUpdateData = {
       id: 'task-123',
       title: 'Updated Task',
-      priority: 'high' as TaskPriority,
     };
 
     const mockUpdatedTask: TaskWithRelations = {
@@ -196,7 +200,9 @@ describe('useTaskSubmission', () => {
       error: null,
     });
 
-    const { result } = renderHook(() => useTaskSubmission(), { wrapper: AllTheProviders });
+    const { result } = renderHook(() => useTaskSubmission(), {
+      wrapper: AllTheProviders,
+    });
 
     let updateResult;
     await act(async () => {
@@ -219,7 +225,6 @@ describe('useTaskSubmission', () => {
       'task-123',
       expect.objectContaining({
         title: taskUpdateData.title,
-        priority: taskUpdateData.priority,
       })
     );
   });

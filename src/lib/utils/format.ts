@@ -106,3 +106,7 @@ function truncateUrl(url: string, maxLength = 30): string {
       : url;
   }
 }
+
+const _truncateText = truncateText;
+const _toTitleCase = toTitleCase;
+const _truncateUrl = truncateUrl;

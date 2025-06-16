@@ -4,7 +4,7 @@ import { TaskService } from '@/lib/api/tasks';
 import { logger } from '@/lib/logger';
 import {
   compressAndResizePhoto,
-  extractImageMetadataEnhanced,
+  extractImageMetadata,
   ProcessingResult,
   EnhancedImageProcessingOptions,
 } from '@/lib/utils/image/';
@@ -120,7 +120,7 @@ export function useUnifiedPhotoUpload(
         );
 
         // Extract full metadata for the processed file
-        const metadata = await extractImageMetadataEnhanced(processedFile);
+        const metadata = await extractImageMetadata(processedFile);
 
         setPhoto(processedFile);
         setProcessingResult({

@@ -42,7 +42,6 @@ export interface TaskWithRelations extends TaskTable {
   > | null;
   assignee?: Pick<ProfileTable, 'id' | 'name' | 'email' | 'avatar_url'> | null;
   owner?: Pick<ProfileTable, 'id' | 'name' | 'email' | 'avatar_url'> | null;
-  priority?: 'low' | 'medium' | 'high' | 'urgent';
 }
 
 export interface ProfileWithRelations extends ProfileTable {
