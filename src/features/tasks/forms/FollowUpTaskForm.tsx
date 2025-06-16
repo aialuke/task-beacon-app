@@ -1,13 +1,13 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-import { UnifiedTaskForm } from '@/features/tasks/components/forms/UnifiedTaskForm';
 import { useUnifiedPhotoUpload } from '@/components/form/hooks/useUnifiedPhotoUpload';
-import { logger } from '@/lib/logger';
-import { TaskService } from '@/lib/api/tasks';
-import type { Task, TaskCreateData } from '@/types';
+import { UnifiedTaskForm } from '@/features/tasks/components/forms/UnifiedTaskForm';
 import { useTaskForm } from '@/features/tasks/hooks/useTaskForm';
 import { useTaskFormValidation } from '@/features/tasks/hooks/useTaskFormValidation';
+import { TaskService } from '@/lib/api/tasks';
+import { logger } from '@/lib/logger';
+import type { Task, TaskCreateData } from '@/types';
 
 interface FollowUpTaskFormProps {
   parentTask: Task;
@@ -46,7 +46,7 @@ export default function FollowUpTaskForm({
       photoUpload.resetPhoto();
       onClose?.();
     },
-    onError: (error) => {
+    onError: error => {
       logger.error('Follow-up task creation error', error);
       toast.error(error.message || 'Failed to create follow-up task');
     },

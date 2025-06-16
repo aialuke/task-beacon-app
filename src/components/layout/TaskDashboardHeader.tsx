@@ -1,5 +1,5 @@
 import { LogOut, User } from 'lucide-react';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -8,10 +8,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { useAuth } from '@/hooks/core';
+import { useAuth } from '@/hooks/core/auth';
 
 function TaskDashboardHeader() {
   const { user, signOut } = useAuth();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     try {

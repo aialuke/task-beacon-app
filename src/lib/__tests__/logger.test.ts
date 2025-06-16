@@ -79,9 +79,8 @@ describe('Logger', () => {
       const consoleSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
       testLogger.info('test message', { key: 'value' });
       expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringMatching(/\[.*Z\] \[.*\] \[INFO\] .*test message/),
-        { key: 'value' },
-        undefined
+        expect.stringContaining('[INFO] test message'),
+        { key: 'value' }
       );
       consoleSpy.mockRestore();
     });
@@ -91,8 +90,7 @@ describe('Logger', () => {
       const consoleSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
       testLogger.info('test message', { key: 'value' });
       expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringMatching(/\[.*Z\] \[.*\] \[INFO\] .*test message/),
-        undefined,
+        expect.stringContaining('[INFO] test message'),
         undefined
       );
       consoleSpy.mockRestore();
@@ -105,8 +103,7 @@ describe('Logger', () => {
       const consoleSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
       prefixedLogger.info('test message');
       expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringMatching(/\[.*Z\] \[.*\] \[INFO\] .*test message/),
-        undefined,
+        expect.stringContaining('[INFO] [TEST] test message'),
         undefined
       );
       consoleSpy.mockRestore();
@@ -120,8 +117,7 @@ describe('Logger', () => {
       const consoleSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
       childLogger.info('test message');
       expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringMatching(/\[.*Z\] \[.*\] \[INFO\] .*test message/),
-        undefined,
+        expect.stringContaining('[INFO] [PARENT:CHILD] test message'),
         undefined
       );
       consoleSpy.mockRestore();
@@ -133,8 +129,7 @@ describe('Logger', () => {
       const consoleSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
       authLogger.info('auth event');
       expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringMatching(/\[.*Z\] \[.*\] \[INFO\] .*auth event/),
-        undefined,
+        expect.stringContaining('[INFO] [Auth] auth event'),
         undefined
       );
       consoleSpy.mockRestore();

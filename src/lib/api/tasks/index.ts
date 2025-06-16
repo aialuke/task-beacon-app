@@ -6,15 +6,12 @@
  */
 
 import { supabase } from '@/integrations/supabase/client';
-import { AuthService } from '@/lib/api/AuthService';
-import { apiRequest } from '@/lib/api/error-handling';
 import type { Task, TaskCreateData, TaskUpdateData } from '@/types';
 
 // === TASK CRUD OPERATIONS ===
 
 const createTask = async (taskData: TaskCreateData) => {
-  return apiRequest('createTask', async () => {
-    // Get current user for owner_id
+  try {
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -38,12 +35,20 @@ const createTask = async (taskData: TaskCreateData) => {
       .single();
 
     if (error) throw error;
-    return data;
-  });
+    return { success: true, data, error: null };
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : 'An unknown error occurred';
+    return {
+      success: false,
+      data: null,
+      error: { name: 'CreateTaskError', message },
+    };
+  }
 };
 
 const updateTask = async (taskId: string, updates: Partial<TaskUpdateData>) => {
-  return apiRequest('updateTask', async () => {
+  try {
     const { data, error } = await supabase
       .from('tasks')
       .update({
@@ -60,21 +65,36 @@ const updateTask = async (taskId: string, updates: Partial<TaskUpdateData>) => {
       .single();
 
     if (error) throw error;
-    return data;
-  });
+    return { success: true, data, error: null };
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : 'An unknown error occurred';
+    return {
+      success: false,
+      data: null,
+      error: { name: 'UpdateTaskError', message },
+    };
+  }
 };
 
 const deleteTask = async (taskId: string) => {
-  return apiRequest('deleteTask', async () => {
+  try {
     const { error } = await supabase.from('tasks').delete().eq('id', taskId);
-
     if (error) throw error;
-    return { success: true };
-  });
+    return { success: true, data: { success: true }, error: null };
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : 'An unknown error occurred';
+    return {
+      success: false,
+      data: null,
+      error: { name: 'DeleteTaskError', message },
+    };
+  }
 };
 
 const getTaskById = async (taskId: string) => {
-  return apiRequest('getTaskById', async () => {
+  try {
     const { data, error } = await supabase
       .from('tasks')
       .select(
@@ -88,8 +108,16 @@ const getTaskById = async (taskId: string) => {
       .single();
 
     if (error) throw error;
-    return data;
-  });
+    return { success: true, data, error: null };
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : 'An unknown error occurred';
+    return {
+      success: false,
+      data: null,
+      error: { name: 'GetTaskByIdError', message },
+    };
+  }
 };
 
 const getTasks = async (
@@ -99,7 +127,7 @@ const getTasks = async (
     assignedToMe?: boolean;
   } = {}
 ) => {
-  return apiRequest('getTasks', async () => {
+  try {
     const { page = 1, pageSize = 10, assignedToMe = false } = options;
     const from = (page - 1) * pageSize;
     const to = from + pageSize - 1;
@@ -129,22 +157,34 @@ const getTasks = async (
     if (error) throw error;
 
     return {
-      data: data || [],
-      pagination: {
-        totalCount: count || 0,
-        currentPage: page,
-        pageSize,
-        hasNextPage: (count || 0) > page * pageSize,
+      success: true,
+      data: {
+        data: data || [],
+        pagination: {
+          totalCount: count || 0,
+          currentPage: page,
+          pageSize,
+          hasNextPage: (count || 0) > page * pageSize,
+        },
       },
+      error: null,
     };
-  });
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : 'An unknown error occurred';
+    return {
+      success: false,
+      data: null,
+      error: { name: 'GetTasksError', message },
+    };
+  }
 };
 
 const updateTaskStatus = async (
   taskId: string,
   status: 'pending' | 'complete' | 'overdue'
 ) => {
-  return apiRequest('updateTaskStatus', async () => {
+  try {
     const { data, error } = await supabase
       .from('tasks')
       .update({ status })
@@ -153,16 +193,32 @@ const updateTaskStatus = async (
       .single();
 
     if (error) throw error;
-    return data;
-  });
+    return { success: true, data, error: null };
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : 'An unknown error occurred';
+    return {
+      success: false,
+      data: null,
+      error: { name: 'UpdateTaskStatusError', message },
+    };
+  }
 };
 
 const uploadPhoto = async (photo: File) => {
-  return apiRequest('uploadPhoto', async () => {
+  try {
     // This is a placeholder - actual implementation would use Supabase Storage
     // For now, return null to indicate no photo upload
-    return null;
-  });
+    return { success: true, data: null, error: null };
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : 'An unknown error occurred';
+    return {
+      success: false,
+      data: null,
+      error: { name: 'UploadPhotoError', message },
+    };
+  }
 };
 
 // === BACKWARDS COMPATIBILITY ===

@@ -71,18 +71,6 @@ export default defineConfig(({ mode }) => ({
     testTimeout: 10000,
     hookTimeout: 10000,
     pool: 'threads',
-    poolOptions: {
-      threads: {
-        isolate: false,
-        minThreads: 1,
-        maxThreads: 4,
-      },
-    },
-    server: {
-      deps: {
-        inline: false,
-      },
-    },
     sourcemap: true,
   },
 }));

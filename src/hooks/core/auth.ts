@@ -9,7 +9,7 @@ import { User, Session } from '@supabase/supabase-js';
 import { useState, useEffect, useCallback } from 'react';
 
 import { supabase } from '@/integrations/supabase/client';
-import { AuthService } from '@/lib/api/AuthService';
+import { signIn as apiSignIn } from '@/lib/api/auth';
 import { cleanupAuthState } from '@/lib/auth-utils';
 import { logger } from '@/lib/logger';
 import type { ApiError } from '@/types/shared';
@@ -77,7 +77,7 @@ export function useAuth(): UseAuthReturn {
         setLoading(true);
         setError(null);
 
-        const response = await AuthService.signIn(email, password);
+        const response = await apiSignIn(email, password);
         if (!response.success) {
           logMobileDebug('Sign in failed', { error: response.error });
           setError(

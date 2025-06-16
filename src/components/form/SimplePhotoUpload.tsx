@@ -1,8 +1,7 @@
 import { ImageUp } from 'lucide-react';
-import { useRef } from 'react';
+import { useRef, useState, useCallback } from 'react';
 
 import { Button } from '@/components/ui/button';
-import { useImageLoadingState } from '@/hooks/core';
 import type { ProcessingResult } from '@/lib/utils/image/';
 
 interface SimplePhotoUploadProps {
@@ -25,8 +24,18 @@ export default function SimplePhotoUpload({
   loading = false,
 }: SimplePhotoUploadProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { imageLoaded, imageError, handleImageLoad, handleImageError } =
-    useImageLoadingState();
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
+
+  const handleImageLoad = useCallback(() => {
+    setImageLoaded(true);
+    setImageError(false);
+  }, []);
+
+  const handleImageError = useCallback(() => {
+    setImageLoaded(false);
+    setImageError(true);
+  }, []);
 
   const handleButtonClick = () => {
     if (photoPreview && onSubmit) {

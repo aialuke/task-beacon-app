@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
 
 import type { Task } from '@/types';
 
@@ -14,6 +14,29 @@ vi.mock('../hooks/useImagePreview', () => ({
     closePreview: vi.fn(),
   }),
 }));
+
+// Mock IntersectionObserver to always intersect
+beforeAll(() => {
+  class MockIntersectionObserver {
+    constructor(callback) {
+      // Immediately call the callback with isIntersecting: true
+      setTimeout(() => callback([{ isIntersecting: true }]), 0);
+    }
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+    takeRecords() { return []; }
+  }
+  Object.defineProperty(global, 'IntersectionObserver', {
+    writable: true,
+    configurable: true,
+    value: MockIntersectionObserver,
+  });
+});
+
+afterAll(() => {
+  delete global.IntersectionObserver;
+});
 
 describe('TaskImageGallery', () => {
   const mockTask: Task = {
@@ -32,10 +55,10 @@ describe('TaskImageGallery', () => {
     updated_at: '2024-01-01T00:00:00Z',
   };
 
-  it('renders image when photo_url is provided', () => {
+  it('renders image when photo_url is provided', async () => {
     render(<TaskImageGallery task={mockTask} />);
 
-    const image = screen.getByRole('img', { name: /task image/i });
+    const image = await screen.findByAltText('Task image');
     expect(image).toBeInTheDocument();
     expect(image).toHaveAttribute('src', 'https://example.com/image.jpg');
   });

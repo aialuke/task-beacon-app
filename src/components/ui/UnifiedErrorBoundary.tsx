@@ -7,9 +7,9 @@
 
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 import React, { Component, ReactNode } from 'react';
+import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
-import { handleError } from '@/lib/core/ErrorHandler';
 import { cn } from '@/lib/utils';
 
 // === INTERFACES ===
@@ -57,12 +57,12 @@ class UnifiedErrorBoundary extends Component<
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    // Use unified error handler for consistent logging
-    handleError(error, {
-      context: 'Error Boundary',
-      showToast: false, // Don't show toast for boundary errors
-      logToConsole: true,
-    });
+    // Log error to console
+    console.error('Error Boundary:', error, errorInfo);
+    // Optionally, show a toast in development
+    if (process.env.NODE_ENV === 'development') {
+      toast.error('An unexpected error occurred. See console for details.');
+    }
 
     this.setState({
       errorInfo,

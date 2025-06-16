@@ -1,22 +1,15 @@
-
 import { renderHook, act } from '@testing-library/react';
+import { AllTheProviders } from '@/test/test-utils.tsx';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-import { TaskService } from '@/lib/api';
+import * as TaskApi from '@/lib/api/tasks';
 import type { TaskWithRelations } from '@/types';
 import type { TaskPriority } from '@/types/feature-types/task.types';
 
 import { useTaskSubmission } from './useTaskSubmission';
 
-// Mock the TaskService
-vi.mock('@/lib/api', () => ({
-  TaskService: {
-    crud: {
-      create: vi.fn(),
-      update: vi.fn(),
-    },
-  },
-}));
+// Mock the Task API
+vi.mock('@/lib/api/tasks');
 
 // Mock the toast
 vi.mock('sonner', () => ({
@@ -27,11 +20,18 @@ vi.mock('sonner', () => ({
 }));
 
 // Mock the query client
-vi.mock('@tanstack/react-query', () => ({
-  useQueryClient: () => ({
-    invalidateQueries: vi.fn(),
-  }),
-}));
+vi.mock('@tanstack/react-query', async () => {
+  const actual = await vi.importActual<typeof import('@tanstack/react-query')>('@tanstack/react-query');
+  return {
+    ...actual,
+    useQueryClient: () => ({
+      invalidateQueries: vi.fn(),
+      cancelQueries: vi.fn(),
+      getQueryData: vi.fn(),
+      setQueryData: vi.fn(),
+    }),
+  };
+});
 
 // Mock the validation hook
 vi.mock('./useTaskFormValidation', () => ({
@@ -102,13 +102,13 @@ describe('useTaskSubmission', () => {
       url_link: null,
     };
 
-    vi.mocked(TaskService.crud.create).mockResolvedValue({
+    vi.mocked(TaskApi.TaskService.crud.create).mockResolvedValue({
       success: true,
       data: mockCreatedTask,
       error: null,
     });
 
-    const { result } = renderHook(() => useTaskSubmission());
+    const { result } = renderHook(() => useTaskSubmission(), { wrapper: AllTheProviders });
 
     let submissionResult;
     await act(async () => {
@@ -117,20 +117,26 @@ describe('useTaskSubmission', () => {
 
     expect(submissionResult).toEqual({
       success: true,
-      taskId: 'task-123',
+      message: 'Task created successfully!',
+      task: expect.objectContaining({
+        id: 'task-123',
+        title: mockTaskData.title,
+        description: mockTaskData.description,
+        assignee_id: 'user-123',
+      }),
     });
-    expect(TaskService.crud.create).toHaveBeenCalled();
+    expect(TaskApi.TaskService.crud.create).toHaveBeenCalled();
   });
 
   it('should handle submission errors', async () => {
     const errorMessage = 'Failed to create task';
-    vi.mocked(TaskService.crud.create).mockResolvedValue({
+    vi.mocked(TaskApi.TaskService.crud.create).mockResolvedValue({
       success: false,
       data: null,
       error: { message: errorMessage, name: 'TaskError' },
     });
 
-    const { result } = renderHook(() => useTaskSubmission());
+    const { result } = renderHook(() => useTaskSubmission(), { wrapper: AllTheProviders });
 
     let submissionResult;
     await act(async () => {
@@ -139,15 +145,16 @@ describe('useTaskSubmission', () => {
 
     expect(submissionResult).toEqual({
       success: false,
+      message: 'Failed to create task',
       error: errorMessage,
     });
   });
 
   it('should handle network errors', async () => {
     const networkError = new Error('Network error');
-    vi.mocked(TaskService.crud.create).mockRejectedValue(networkError);
+    vi.mocked(TaskApi.TaskService.crud.create).mockRejectedValue(networkError);
 
-    const { result } = renderHook(() => useTaskSubmission());
+    const { result } = renderHook(() => useTaskSubmission(), { wrapper: AllTheProviders });
 
     let submissionResult;
     await act(async () => {
@@ -156,15 +163,16 @@ describe('useTaskSubmission', () => {
 
     expect(submissionResult).toEqual({
       success: false,
+      message: 'Failed to create task',
       error: 'Network error',
     });
   });
 
   it('should successfully update a task', async () => {
-    const taskUpdateData: TaskUpdateData = { 
+    const taskUpdateData: TaskUpdateData = {
       id: 'task-123',
       title: 'Updated Task',
-      priority: 'high' as TaskPriority
+      priority: 'high' as TaskPriority,
     };
 
     const mockUpdatedTask: TaskWithRelations = {
@@ -182,28 +190,36 @@ describe('useTaskSubmission', () => {
       url_link: null,
     };
 
-    vi.mocked(TaskService.crud.update).mockResolvedValue({
+    vi.mocked(TaskApi.TaskService.crud.update).mockResolvedValue({
       success: true,
       data: mockUpdatedTask,
       error: null,
     });
 
-    const { result } = renderHook(() => useTaskSubmission());
+    const { result } = renderHook(() => useTaskSubmission(), { wrapper: AllTheProviders });
 
     let updateResult;
     await act(async () => {
-      updateResult = await result.current.updateTask('task-123', taskUpdateData);
+      updateResult = await result.current.updateTask(
+        'task-123',
+        taskUpdateData
+      );
     });
 
     expect(updateResult).toEqual({
       success: true,
-      taskId: 'task-123',
+      message: 'Task updated successfully!',
+      task: expect.objectContaining({
+        id: 'task-123',
+        title: 'Updated Task',
+        assignee_id: 'user-123',
+      }),
     });
-    expect(TaskService.crud.update).toHaveBeenCalledWith(
+    expect(TaskApi.TaskService.crud.update).toHaveBeenCalledWith(
       'task-123',
-      expect.objectContaining({ 
+      expect.objectContaining({
         title: taskUpdateData.title,
-        priority: taskUpdateData.priority
+        priority: taskUpdateData.priority,
       })
     );
   });

@@ -1,4 +1,3 @@
-
 /**
  * Standardized API Layer - Phase 3 Implementation
  */
@@ -55,7 +54,9 @@ function createSuccessResponse<T>(data: T): ApiResponse<T> {
 /**
  * Standard error response creator
  */
-function createErrorResponse<T = null>(error: ExtendedApiError): ApiResponse<T> {
+function createErrorResponse<T = null>(
+  error: ExtendedApiError
+): ApiResponse<T> {
   return {
     data: null,
     error,

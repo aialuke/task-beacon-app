@@ -1,6 +1,4 @@
-import { useCallback } from 'react';
-
-import { useUnifiedForm } from '@/hooks/core';
+import { useCallback, useState } from 'react';
 import { logger } from '@/lib/logger';
 import type { TaskCreateData } from '@/types';
 import type { FormErrors } from '@/types/form.types';
@@ -40,104 +38,107 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     onClose,
   } = options;
 
-  // Task form validation logic
-  const validateTaskForm = useCallback(
-    (values: TaskFormValues): FormErrors<TaskFormValues> => {
-      const errors: FormErrors<TaskFormValues> = {};
+  // Local state for each field
+  const [title, setTitle] = useState(initialTitle);
+  const [description, setDescription] = useState(initialDescription);
+  const [dueDate, setDueDate] = useState(initialDueDate ?? '');
+  const [url, setUrl] = useState(initialUrl ?? '');
+  const [assigneeId, setAssigneeId] = useState(initialAssigneeId ?? '');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState<FormErrors<TaskFormValues>>({});
 
-      if (!values.title.trim()) {
-        errors.title = 'Title is required';
+  // Validation logic
+  const validateForm = useCallback((): boolean => {
+    const newErrors: FormErrors<TaskFormValues> = {};
+    if (!title.trim()) {
+      newErrors.title = 'Title is required';
+    }
+    if (url?.trim()) {
+      try {
+        new URL(url);
+      } catch {
+        newErrors.url = 'Please enter a valid URL';
       }
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }, [title, url]);
 
-      if (values.url?.trim()) {
-        try {
-          new URL(values.url);
-        } catch {
-          errors.url = 'Please enter a valid URL';
-        }
+  const handleSubmit = useCallback(
+    async (e?: React.FormEvent) => {
+      if (e) e.preventDefault();
+      if (!validateForm()) return;
+      if (!onSubmit) return;
+      setIsSubmitting(true);
+      try {
+        await onSubmit({
+          title: title.trim(),
+          description: description.trim(),
+          dueDate: dueDate || '',
+          url: url.trim(),
+          assigneeId: assigneeId || '',
+        });
+      } finally {
+        setIsSubmitting(false);
       }
-
-      return errors;
     },
-    []
+    [onSubmit, title, description, dueDate, url, assigneeId, validateForm]
   );
 
-  // Unified form with task-specific configuration
-  const form = useUnifiedForm<TaskFormValues>({
-    initialValues: {
-      title: initialTitle,
-      description: initialDescription,
-      dueDate: initialDueDate ?? '',
-      url: initialUrl ?? '',
-      assigneeId: initialAssigneeId ?? '',
-    },
-    validate: validateTaskForm,
-    onSubmit: async values => {
-      if (onSubmit) {
-        const trimmedValues = {
-          title: values.title.trim(),
-          description: values.description.trim(),
-          dueDate: values.dueDate || '',
-          url: values.url.trim(),
-          assigneeId: values.assigneeId || '',
-        };
-        await onSubmit(trimmedValues);
-      }
-    },
-    onReset: onClose,
-    validateOnBlur: true,
-  });
+  const resetFormState = useCallback(() => {
+    setTitle(initialTitle);
+    setDescription(initialDescription);
+    setDueDate(initialDueDate ?? '');
+    setUrl(initialUrl ?? '');
+    setAssigneeId(initialAssigneeId ?? '');
+    setErrors({});
+    if (onClose) onClose();
+  }, [initialTitle, initialDescription, initialDueDate, initialUrl, initialAssigneeId, onClose]);
 
-  // Task-specific helper functions
   const getTaskData = useCallback((): TaskCreateData => {
     return {
-      title: form.values.title.trim(),
-      description: form.values.description.trim() || undefined,
-      due_date: form.values.dueDate || undefined,
+      title: title.trim(),
+      description: description.trim() || undefined,
+      due_date: dueDate || undefined,
       photo_url: null,
-      url_link: form.values.url.trim() || undefined,
-      assignee_id: form.values.assigneeId || undefined,
+      url_link: url.trim() || undefined,
+      assignee_id: assigneeId || undefined,
     };
-  }, [form.values]);
+  }, [title, description, dueDate, url, assigneeId]);
 
-  // Enhanced validation that includes title requirement
-  const isValid = form.isValid && form.values.title.trim().length > 0;
+  const isValid = !Object.keys(errors).length && title.trim().length > 0;
 
-  // Backward compatibility interface
   return {
-    // Current field values (backward compatibility)
-    title: form.values.title,
-    description: form.values.description,
-    dueDate: form.values.dueDate,
-    url: form.values.url,
-    assigneeId: form.values.assigneeId,
-
-    // Individual field setters (backward compatibility)
-    setTitle: (value: string) => form.setFieldValue('title', value),
-    setDescription: (value: string) => form.setFieldValue('description', value),
-    setDueDate: (value: string) => form.setFieldValue('dueDate', value),
-    setUrl: (value: string) => form.setFieldValue('url', value),
-    setAssigneeId: (value: string) => form.setFieldValue('assigneeId', value),
-
-    // Form state (backward compatibility)
+    title,
+    description,
+    dueDate,
+    url,
+    assigneeId,
+    setTitle,
+    setDescription,
+    setDueDate,
+    setUrl,
+    setAssigneeId,
     isValid,
-    errors: form.errors,
-    isSubmitting: form.isSubmitting,
+    errors,
+    isSubmitting,
     setIsSubmitting: (submitting: boolean) => {
-      // Legacy compatibility - unified form handles this internally
-      logger.warn(
-        'setIsSubmitting is deprecated - form handles submission state automatically'
-      );
+      logger.warn('setIsSubmitting is deprecated - form handles submission state automatically');
     },
-
-    // Form actions (backward compatibility)
-    handleSubmit: form.handleSubmit,
-    resetFormState: form.reset,
-    validateForm: form.validateForm,
+    handleSubmit,
+    resetFormState,
+    validateForm,
     getTaskData,
-    setFieldValue: form.setFieldValue,
-
-    // Computed values object (backward compatibility)
-    values: form.values,
+    setFieldValue: (field: keyof TaskFormValues, value: any) => {
+      switch (field) {
+        case 'title': setTitle(value); break;
+        case 'description': setDescription(value); break;
+        case 'dueDate': setDueDate(value); break;
+        case 'url': setUrl(value); break;
+        case 'assigneeId': setAssigneeId(value); break;
+        default: break;
+      }
+    },
+    values: { title, description, dueDate, url, assigneeId },
   };
 }

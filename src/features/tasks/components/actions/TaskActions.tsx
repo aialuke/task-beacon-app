@@ -1,6 +1,8 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Trash2 } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -13,8 +15,6 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { TaskService } from '@/lib/api/tasks';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
 import type { Task } from '@/types';
 
 interface TaskActionsProps {
@@ -40,7 +40,7 @@ function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
         }`
       );
     },
-    onError: (error) => {
+    onError: error => {
       toast.error(`Error updating task: ${error.message}`);
     },
   });
@@ -52,7 +52,7 @@ function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
       toast.success('Task deleted successfully');
       setIsDeleteDialogOpen(false);
     },
-    onError: (error) => {
+    onError: error => {
       toast.error(`Error deleting task: ${error.message}`);
     },
   });
@@ -75,8 +75,8 @@ function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
         {isToggling
           ? 'Updating...'
           : task.status === 'complete'
-          ? 'Mark Incomplete'
-          : 'Complete'}
+            ? 'Mark Incomplete'
+            : 'Complete'}
       </Button>
       <Button
         variant="outline"

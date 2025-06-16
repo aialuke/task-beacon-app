@@ -14,8 +14,6 @@ import { QueryKeys } from '@/lib/api/standardized-api';
 import { TaskService } from '@/lib/api/tasks';
 import type { Task, TaskCreateData, TaskUpdateData } from '@/types';
 
-import { useTaskOptimisticUpdates } from './useTaskOptimisticUpdates';
-
 // === TASK SUBMISSION RESULT TYPES ===
 
 interface TaskSubmissionResult {
@@ -43,7 +41,6 @@ interface UseTaskSubmissionReturn {
 export function useTaskSubmission(): UseTaskSubmissionReturn {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const optimisticUpdates = useTaskOptimisticUpdates();
 
   // Create task mutation
   const createMutation = useMutation({
@@ -56,9 +53,6 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
 
       return response.data;
     },
-    onError: (error: Error) => {
-      toast.error(`Failed to create task: ${error.message}`);
-    },
     onSuccess: (task: Task) => {
       // Invalidate and refetch tasks list
       queryClient.invalidateQueries({ queryKey: QueryKeys.tasks });
@@ -66,6 +60,9 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
 
       // Navigate to task details
       navigate(`/tasks/${task.id}`);
+    },
+    onError: (error: Error) => {
+      toast.error(`Failed to create task: ${error.message}`);
     },
   });
 
@@ -91,23 +88,32 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
       await queryClient.cancelQueries({ queryKey: QueryKeys.task(id) });
 
       // Snapshot previous value
-      const previousTask = queryClient.getQueryData(QueryKeys.task(id));
+      const previousTask = queryClient.getQueryData<Task>(QueryKeys.task(id));
 
       // Optimistically update
-      optimisticUpdates.updateTaskOptimistically(id, data, previousTask);
+      if (previousTask) {
+        queryClient.setQueryData(QueryKeys.task(id), {
+          ...previousTask,
+          ...data,
+        });
+      }
 
       return { previousTask };
     },
     onError: (error: Error, _, context) => {
       // Rollback on error
       if (context?.previousTask) {
-        optimisticUpdates.rollbackToData(context.previousTask);
+        queryClient.setQueryData(
+          QueryKeys.task(context.previousTask.id),
+          context.previousTask
+        );
       }
       toast.error(`Failed to update task: ${error.message}`);
     },
-    onSuccess: () => {
+    onSuccess: data => {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: QueryKeys.tasks });
+      queryClient.invalidateQueries({ queryKey: QueryKeys.task(data.id) });
       toast.success('Task updated successfully!');
     },
   });
@@ -126,27 +132,33 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
       await queryClient.cancelQueries({ queryKey: QueryKeys.task(id) });
 
       // Snapshot previous value
-      const previousData = optimisticUpdates.getPreviousData();
+      const previousTask = queryClient.getQueryData<Task>(QueryKeys.task(id));
 
       // Optimistically remove task
-      optimisticUpdates.removeTaskOptimistically(id, previousData);
+      queryClient.setQueryData(QueryKeys.task(id), undefined);
 
-      return { previousData };
+      return { previousTask };
     },
     onError: (error: Error, _, context) => {
       // Rollback on error
-      if (context?.previousData) {
-        optimisticUpdates.rollbackToData(context.previousData);
+      if (context?.previousTask) {
+        queryClient.setQueryData(
+          QueryKeys.task(context.previousTask.id),
+          context.previousTask
+        );
       }
       toast.error(`Failed to delete task: ${error.message}`);
     },
-    onSuccess: () => {
+    onSuccess: (_, id) => {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: QueryKeys.tasks });
+      queryClient.removeQueries({ queryKey: QueryKeys.task(id) });
       toast.success('Task deleted successfully!');
 
       // Navigate back to tasks list
-      navigate('/');
+      if (window.location.pathname.includes(id)) {
+        navigate('/');
+      }
     },
   });
 

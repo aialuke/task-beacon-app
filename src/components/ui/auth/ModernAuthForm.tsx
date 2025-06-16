@@ -1,12 +1,9 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 
 import { Card, CardContent } from '@/components/ui/card';
-import { useErrorHandler } from '@/hooks/core';
-import { AuthService } from '@/lib/api/AuthService';
-import {
-  signInSchema,
-  signUpSchema,
-} from '@/lib/validation/schemas';
+import { signIn, signUp, signOut } from '@/lib/api/auth';
+import { signInSchema, signUpSchema } from '@/lib/validation/schemas';
+import { toast } from 'sonner';
 
 import { AuthFormFields } from './components/AuthFormFields';
 import { AuthFormHeader } from './components/AuthFormHeader';
@@ -43,36 +40,32 @@ const ModernAuthForm: React.FC = () => {
 
   const nameInputRef = useRef<HTMLInputElement>(null);
   const emailInputRef = useRef<HTMLInputElement>(null);
-  const { handleError } = useErrorHandler({ showToast: false });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Using unified validation functions
-  const validateEmail = useCallback(
-    (value: string) => {
-      if (!value) return 'Email is required';
-      const result = signInSchema.shape.email.safeParse(value);
-      return result.success ? '' : result.error.issues[0].message || 'Invalid email';
-    },
-    []
-  );
+  const validateEmail = useCallback((value: string) => {
+    if (!value) return 'Email is required';
+    const result = signInSchema.shape.email.safeParse(value);
+    return result.success
+      ? ''
+      : result.error.issues[0].message || 'Invalid email';
+  }, []);
 
-  const validatePassword = useCallback(
-    (value: string) => {
-      if (!value) return 'Password is required';
-      const result = signInSchema.shape.password.safeParse(value);
-      return result.success ? '' : result.error.issues[0].message || 'Invalid password';
-    },
-    []
-  );
+  const validatePassword = useCallback((value: string) => {
+    if (!value) return 'Password is required';
+    const result = signInSchema.shape.password.safeParse(value);
+    return result.success
+      ? ''
+      : result.error.issues[0].message || 'Invalid password';
+  }, []);
 
-  const validateName = useCallback(
-    (value: string) => {
-      if (!value) return 'Name is required';
-      const result = signUpSchema._def.schema.shape.name.safeParse(value);
-      return result.success ? '' : result.error.issues[0].message || 'Invalid name';
-    },
-    []
-  );
+  const validateName = useCallback((value: string) => {
+    if (!value) return 'Name is required';
+    const result = signUpSchema._def.schema.shape.name.safeParse(value);
+    return result.success
+      ? ''
+      : result.error.issues[0].message || 'Invalid name';
+  }, []);
 
   const validateForm = useCallback(() => {
     const emailError = validateEmail(email);
@@ -157,7 +150,7 @@ const ModernAuthForm: React.FC = () => {
 
         // Attempt global sign out first using AuthService
         try {
-          await AuthService.signOut();
+          await signOut();
         } catch {
           // Pre-auth cleanup failed, continue with sign-in
         }
@@ -169,7 +162,7 @@ const ModernAuthForm: React.FC = () => {
             throw new Error('Invalid sign-in data');
           }
 
-          const response = await AuthService.signIn(email, password);
+          const response = await signIn(email, password);
           if (!response.success) {
             const errorMessage =
               getErrorMessage(response.error) || 'Sign in failed';
@@ -189,7 +182,7 @@ const ModernAuthForm: React.FC = () => {
             throw new Error('Invalid sign-up data');
           }
 
-          const response = await AuthService.signUp(email, password, {
+          const response = await signUp(email, password, {
             data: {
               full_name: name,
               name: name,
@@ -205,7 +198,9 @@ const ModernAuthForm: React.FC = () => {
           }, 1500);
         }
       } catch (error: unknown) {
-        handleError(error, 'Authentication');
+        // Log error and show toast
+        console.error('Authentication error:', error);
+        toast.error('Authentication failed. Please check your credentials or try again.');
 
         if (error instanceof Error) {
           const errorMessage = error.message;
@@ -226,15 +221,7 @@ const ModernAuthForm: React.FC = () => {
         setIsSubmitting(false);
       }
     },
-    [
-      mode,
-      email,
-      password,
-      name,
-      validateForm,
-      handleError,
-      cleanupAuthState,
-    ]
+    [mode, email, password, name, validateForm, cleanupAuthState]
   );
 
   const toggleMode = useCallback(() => {
@@ -289,7 +276,11 @@ const ModernAuthForm: React.FC = () => {
             <AuthSubmitButton mode={mode} loading={isSubmitting} />
           </form>
 
-          <AuthModeToggle mode={mode} loading={isSubmitting} onToggle={toggleMode} />
+          <AuthModeToggle
+            mode={mode}
+            loading={isSubmitting}
+            onToggle={toggleMode}
+          />
         </CardContent>
       </Card>
     </div>

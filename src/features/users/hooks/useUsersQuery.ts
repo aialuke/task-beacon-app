@@ -1,5 +1,6 @@
-import { useEntityListQuery } from '@/hooks/core';
-import { UserService } from '@/lib/api/users.service';
+import { useQuery } from '@tanstack/react-query';
+
+import { getAllUsers } from '@/lib/api/users';
 import type { User, UserQueryOptions } from '@/types';
 
 interface UseUsersQueryOptions extends UserQueryOptions {
@@ -9,14 +10,12 @@ interface UseUsersQueryOptions extends UserQueryOptions {
 interface UseUsersQueryReturn {
   users: User[];
   isLoading: boolean;
-  error: string | null;
+  error: Error | null;
   refetch: () => void;
 }
 
 /**
- * Consolidated user query hook - Phase 2 Refactored
- *
- * Now uses the generic useEntityListQuery to eliminate duplicate React Query patterns.
+ * Custom hook to fetch users with query options.
  */
 export function useUsersQuery(
   options: UseUsersQueryOptions = {}
@@ -24,24 +23,26 @@ export function useUsersQuery(
   const { enabled = true, ...queryOptions } = options;
 
   const {
-    data: users,
+    data: response,
     isLoading,
     error,
     refetch,
-  } = useEntityListQuery<User, UserQueryOptions>(
-    'users',
-    queryOptions,
-    filters => UserService.getAll(filters),
-    {
-      enabled,
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      retry: 2,
-      errorContext: 'users list',
-    }
-  );
+  } = useQuery({
+    queryKey: ['users', queryOptions],
+    queryFn: async () => {
+      const result = await getAllUsers(queryOptions);
+      if (!result.success) {
+        throw new Error(result.error?.message || 'Failed to fetch users');
+      }
+      return result.data;
+    },
+    enabled,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    retry: 2,
+  });
 
   return {
-    users: users || [],
+    users: response || [],
     isLoading,
     error,
     refetch,

@@ -1,37 +1,42 @@
-import { useEntityByIdQuery } from '@/hooks/core';
+import { useQuery } from '@tanstack/react-query';
+
 import { QueryKeys } from '@/lib/api/standardized-api';
 import { TaskService } from '@/lib/api/tasks';
 import type { Task } from '@/types';
 
 interface UseTaskQueryReturn {
   task: Task | null;
-  loading: boolean;
-  error: string | null;
+  isLoading: boolean;
+  error: Error | null;
 }
 
 /**
- * Standardized hook for querying a single task by ID - Phase 2 Refactored
- *
- * Now uses the generic useEntityByIdQuery to eliminate duplicate React Query patterns.
+ * Standardized hook for querying a single task by ID.
  */
 export function useTaskQuery(taskId: string | undefined): UseTaskQueryReturn {
   const {
     data: task,
-    isLoading: loading,
+    isLoading,
     error,
-  } = useEntityByIdQuery<Task>(
-    'tasks',
-    taskId,
-    (id: string) => TaskService.query.getById(id),
-    {
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      errorContext: 'task details',
-    }
-  );
+  } = useQuery({
+    queryKey: [QueryKeys.tasks, taskId],
+    queryFn: async () => {
+      if (!taskId) {
+        throw new Error('Task ID is required');
+      }
+      const response = await TaskService.query.getById(taskId);
+      if (!response.success) {
+        throw new Error(response.error?.message || 'Failed to fetch task');
+      }
+      return response.data;
+    },
+    enabled: !!taskId,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
 
   return {
     task,
-    loading,
+    isLoading,
     error,
   };
 }
