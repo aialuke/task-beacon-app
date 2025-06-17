@@ -30,15 +30,19 @@ export function useUsersQuery(
   } = useQuery({
     queryKey: ['users', queryOptions],
     queryFn: async () => {
-      const result = await getAllUsers(queryOptions);
-      if (!result.success) {
-        throw new Error(result.error?.message || 'Failed to fetch users');
-      }
-      return result.data;
+      return await getAllUsers(queryOptions);
     },
     enabled,
     staleTime: 5 * 60 * 1000, // 5 minutes
     retry: 2,
+    select: data => {
+      // Transform the response data safely
+      if (data.success) {
+        return data.data;
+      }
+      // For failed responses, return empty array and let error handling be done via onError
+      throw new Error(data.error?.message || 'Failed to fetch users');
+    },
   });
 
   return {

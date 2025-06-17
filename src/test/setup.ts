@@ -9,11 +9,19 @@ vi.mock('@/integrations/supabase/client', () => {
     update: vi.fn(() => mockSupabase),
     delete: vi.fn(() => mockSupabase),
     auth: {
-      signInWithPassword: vi.fn(() => Promise.resolve({ data: { user: {}, session: {} }, error: null })),
-      signUp: vi.fn(() => Promise.resolve({ data: { user: {}, session: {} }, error: null })),
+      signInWithPassword: vi.fn(() =>
+        Promise.resolve({ data: { user: {}, session: {} }, error: null })
+      ),
+      signUp: vi.fn(() =>
+        Promise.resolve({ data: { user: {}, session: {} }, error: null })
+      ),
       signOut: vi.fn(() => Promise.resolve({ error: null })),
-      getSession: vi.fn(() => Promise.resolve({ data: { session: null }, error: null })),
-      refreshSession: vi.fn(() => Promise.resolve({ data: { session: null }, error: null })),
+      getSession: vi.fn(() =>
+        Promise.resolve({ data: { session: null }, error: null })
+      ),
+      refreshSession: vi.fn(() =>
+        Promise.resolve({ data: { session: null }, error: null })
+      ),
       onAuthStateChange: vi.fn(() => ({
         data: { subscription: { unsubscribe: vi.fn() } },
       })),

@@ -42,46 +42,36 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  // Create task mutation
+  // Create task mutation - using safe API contract
   const createMutation = useMutation({
-    mutationFn: async (data: TaskCreateData): Promise<Task> => {
-      const response = await TaskService.crud.create(data);
-
-      if (!response.success) {
-        throw new Error(response.error?.message || 'Failed to create task');
-      }
-
-      return response.data;
+    mutationFn: async (data: TaskCreateData) => {
+      return await TaskService.crud.create(data);
     },
-    onSuccess: (task: Task) => {
-      // Invalidate and refetch tasks list
-      queryClient.invalidateQueries({ queryKey: QueryKeys.tasks });
-      toast.success('Task created successfully!');
+    onSuccess: response => {
+      if (response.success) {
+        // Invalidate and refetch tasks list
+        queryClient.invalidateQueries({ queryKey: QueryKeys.tasks });
+        toast.success('Task created successfully!');
 
-      // Navigate to task details
-      navigate(`/tasks/${task.id}`);
+        // Navigate to task details
+        navigate(`/tasks/${response.data.id}`);
+      } else {
+        // Handle API error without throwing
+        toast.error(
+          `Failed to create task: ${response.error?.message || 'Unknown error'}`
+        );
+      }
     },
     onError: (error: Error) => {
+      // Handle network/unexpected errors
       toast.error(`Failed to create task: ${error.message}`);
     },
   });
 
-  // Update task mutation
+  // Update task mutation - using safe API contract
   const updateMutation = useMutation({
-    mutationFn: async ({
-      id,
-      data,
-    }: {
-      id: string;
-      data: TaskUpdateData;
-    }): Promise<Task> => {
-      const response = await TaskService.crud.update(id, data);
-
-      if (!response.success) {
-        throw new Error(response.error?.message || 'Failed to update task');
-      }
-
-      return response.data;
+    mutationFn: async ({ id, data }: { id: string; data: TaskUpdateData }) => {
+      return await TaskService.crud.update(id, data);
     },
     onMutate: async ({ id, data }) => {
       // Cancel outgoing refetches
@@ -110,22 +100,29 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
       }
       toast.error(`Failed to update task: ${error.message}`);
     },
-    onSuccess: data => {
-      // Invalidate and refetch
-      queryClient.invalidateQueries({ queryKey: QueryKeys.tasks });
-      queryClient.invalidateQueries({ queryKey: QueryKeys.task(data.id) });
-      toast.success('Task updated successfully!');
+    onSuccess: (response, { id }) => {
+      if (response.success) {
+        // Invalidate and refetch
+        queryClient.invalidateQueries({ queryKey: QueryKeys.tasks });
+        queryClient.invalidateQueries({ queryKey: QueryKeys.task(id) });
+        toast.success('Task updated successfully!');
+      } else {
+        // Handle API error without throwing - also rollback optimistic update
+        const previousTask = queryClient.getQueryData<Task>(QueryKeys.task(id));
+        if (previousTask) {
+          queryClient.setQueryData(QueryKeys.task(id), previousTask);
+        }
+        toast.error(
+          `Failed to update task: ${response.error?.message || 'Unknown error'}`
+        );
+      }
     },
   });
 
-  // Delete task mutation
+  // Delete task mutation - using safe API contract
   const deleteMutation = useMutation({
-    mutationFn: async (id: string): Promise<void> => {
-      const response = await TaskService.crud.delete(id);
-
-      if (!response.success) {
-        throw new Error(response.error?.message || 'Failed to delete task');
-      }
+    mutationFn: async (id: string) => {
+      return await TaskService.crud.delete(id);
     },
     onMutate: async (id: string) => {
       // Cancel outgoing refetches
@@ -149,15 +146,26 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
       }
       toast.error(`Failed to delete task: ${error.message}`);
     },
-    onSuccess: (_, id) => {
-      // Invalidate and refetch
-      queryClient.invalidateQueries({ queryKey: QueryKeys.tasks });
-      queryClient.removeQueries({ queryKey: QueryKeys.task(id) });
-      toast.success('Task deleted successfully!');
+    onSuccess: (response, id) => {
+      if (response.success) {
+        // Invalidate and refetch
+        queryClient.invalidateQueries({ queryKey: QueryKeys.tasks });
+        queryClient.removeQueries({ queryKey: QueryKeys.task(id) });
+        toast.success('Task deleted successfully!');
 
-      // Navigate back to tasks list
-      if (window.location.pathname.includes(id)) {
-        navigate('/');
+        // Navigate back to tasks list
+        if (window.location.pathname.includes(id)) {
+          navigate('/');
+        }
+      } else {
+        // Handle API error without throwing - rollback optimistic update
+        const previousTask = queryClient.getQueryData<Task>(QueryKeys.task(id));
+        if (previousTask) {
+          queryClient.setQueryData(QueryKeys.task(id), previousTask);
+        }
+        toast.error(
+          `Failed to delete task: ${response.error?.message || 'Unknown error'}`
+        );
       }
     },
   });
@@ -166,17 +174,18 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
 
   const createTask = useCallback(
     async (data: TaskCreateData): Promise<TaskSubmissionResult> => {
-      try {
-        const task = await createMutation.mutateAsync(data);
+      const response = await createMutation.mutateAsync(data);
+
+      if (response.success) {
         return {
           success: true,
           message: 'Task created successfully!',
-          task,
+          task: response.data,
         };
-      } catch (error) {
+      } else {
         return {
           success: false,
-          error: error instanceof Error ? error.message : 'Unknown error',
+          error: response.error?.message || 'Unknown error',
           message: 'Failed to create task',
         };
       }
@@ -186,17 +195,18 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
 
   const updateTask = useCallback(
     async (id: string, data: TaskUpdateData): Promise<TaskSubmissionResult> => {
-      try {
-        const task = await updateMutation.mutateAsync({ id, data });
+      const response = await updateMutation.mutateAsync({ id, data });
+
+      if (response.success) {
         return {
           success: true,
           message: 'Task updated successfully!',
-          task,
+          task: response.data,
         };
-      } catch (error) {
+      } else {
         return {
           success: false,
-          error: error instanceof Error ? error.message : 'Unknown error',
+          error: response.error?.message || 'Unknown error',
           message: 'Failed to update task',
         };
       }
@@ -206,16 +216,17 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
 
   const deleteTask = useCallback(
     async (id: string): Promise<TaskSubmissionResult> => {
-      try {
-        await deleteMutation.mutateAsync(id);
+      const response = await deleteMutation.mutateAsync(id);
+
+      if (response.success) {
         return {
           success: true,
           message: 'Task deleted successfully!',
         };
-      } catch (error) {
+      } else {
         return {
           success: false,
-          error: error instanceof Error ? error.message : 'Unknown error',
+          error: response.error?.message || 'Unknown error',
           message: 'Failed to delete task',
         };
       }

@@ -69,20 +69,22 @@ export function useTasksQuery(
   } = useQuery({
     queryKey,
     queryFn: async () => {
-      const response = await TaskService.query.getMany({
+      return await TaskService.query.getMany({
         page: pagination.currentPage,
         pageSize: pagination.pageSize,
         assignedToMe: false,
       });
-
-      if (!response.success) {
-        throw new Error(response.error?.message || 'Failed to load tasks');
+    },
+    select: response => {
+      // Transform the response data safely
+      if (response.success) {
+        return {
+          data: response.data.data,
+          totalCount: response.data.pagination.totalCount,
+        };
       }
-
-      return {
-        data: response.data.data,
-        totalCount: response.data.pagination.totalCount,
-      };
+      // For failed responses, let error handling be done via onError
+      throw new Error(response.error?.message || 'Failed to load tasks');
     },
     staleTime: 5 * 60 * 1000, // 5 minutes for better UX
     gcTime: 10 * 60 * 1000, // 10 minutes garbage collection

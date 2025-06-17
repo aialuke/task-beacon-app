@@ -1,3 +1,3 @@
 export * from './AnimatedCharacterCount';
 export * from './FloatingInput';
-export * from './FloatingTextarea'; 
+export * from './FloatingTextarea';

@@ -156,7 +156,9 @@ describe('UnifiedErrorBoundary', () => {
 
     // The className is applied to the outermost container div that contains the error UI
     const tryAgainButton = screen.getByRole('button', { name: /try again/i });
-    const errorContainer = tryAgainButton.closest('[class*="custom-error-class"]');
+    const errorContainer = tryAgainButton.closest(
+      '[class*="custom-error-class"]'
+    );
     expect(errorContainer).toBeInTheDocument();
     expect(errorContainer).toHaveClass(customClass);
   });

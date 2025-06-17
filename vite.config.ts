@@ -41,19 +41,18 @@ export default defineConfig(({ mode }) => ({
         '**/vitest.config.*',
       ],
       thresholds: {
-        // Temporarily lower thresholds while building test suite
         global: {
-          statements: 60, // Reduced from 80
-          branches: 50, // Reduced from 75
-          functions: 60, // Reduced from 80
-          lines: 60, // Reduced from 80
+          statements: 75, // Intermediate target
+          branches: 65, // Intermediate target
+          functions: 75, // Intermediate target
+          lines: 75, // Intermediate target
         },
         // Keep higher thresholds for critical modules
         'src/lib/api/**': {
-          statements: 80, // Reduced from 90
-          branches: 70, // Reduced from 85
-          functions: 80, // Reduced from 90
-          lines: 80, // Reduced from 90
+          statements: 85,
+          branches: 80,
+          functions: 85,
+          lines: 85,
         },
         'src/hooks/**': {
           statements: 70, // Reduced from 85

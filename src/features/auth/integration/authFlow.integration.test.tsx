@@ -92,7 +92,7 @@ describe('Auth Flow Integration Tests', () => {
       let authStateChangeCb:
         | ((event: string, session: Session | null) => void)
         | undefined;
-       
+
       vi.spyOn(
         supabaseClient.supabase.auth,
         'onAuthStateChange'
@@ -245,7 +245,7 @@ describe('Auth Flow Integration Tests', () => {
       let authStateChangeCb:
         | ((event: string, session: Session | null) => void)
         | undefined;
-       
+
       vi.spyOn(
         supabaseClient.supabase.auth,
         'onAuthStateChange'

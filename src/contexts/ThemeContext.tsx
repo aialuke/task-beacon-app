@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
+import { createStandardContext } from '@/lib/utils/createContext';
 
 type Theme = 'dark' | 'light' | 'system';
 
@@ -8,16 +10,14 @@ interface ThemeContextType {
   actualTheme: 'dark' | 'light';
 }
 
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+// Create standardized context
+const { Provider: ThemeContextProvider, useContext: useTheme } =
+  createStandardContext<ThemeContextType>({
+    name: 'Theme',
+    errorMessage: 'useTheme must be used within a ThemeProvider',
+  });
 
-// Custom hook for consuming theme context
-export function useTheme() {
-  const context = useContext(ThemeContext);
-  if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider');
-  }
-  return context;
-}
+export { useTheme };
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>('dark'); // Default to dark
@@ -79,8 +79,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, [theme]);
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, actualTheme }}>
+    <ThemeContextProvider value={{ theme, setTheme, actualTheme }}>
       {children}
-    </ThemeContext.Provider>
+    </ThemeContextProvider>
   );
 }

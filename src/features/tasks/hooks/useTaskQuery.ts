@@ -24,14 +24,18 @@ export function useTaskQuery(taskId: string | undefined): UseTaskQueryReturn {
       if (!taskId) {
         throw new Error('Task ID is required');
       }
-      const response = await TaskService.query.getById(taskId);
-      if (!response.success) {
-        throw new Error(response.error?.message || 'Failed to fetch task');
-      }
-      return response.data;
+      return await TaskService.query.getById(taskId);
     },
     enabled: !!taskId,
     staleTime: 5 * 60 * 1000, // 5 minutes
+    select: data => {
+      // Transform the response data safely
+      if (data.success) {
+        return data.data;
+      }
+      // For failed responses, let error handling be done via onError
+      throw new Error(data.error?.message || 'Failed to fetch task');
+    },
   });
 
   return {
