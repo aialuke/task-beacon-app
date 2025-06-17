@@ -1,8 +1,6 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Trash2 } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -14,7 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { TaskService } from '@/lib/api/tasks';
+import { useTaskSubmission } from '@/features/tasks/hooks/useTaskSubmission';
 import type { Task } from '@/types';
 
 interface TaskActionsProps {
@@ -25,39 +23,20 @@ interface TaskActionsProps {
 
 function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
-
-  const { mutate: toggleTaskComplete, isPending: isToggling } = useMutation({
-    mutationFn: () => {
-      const newStatus = task.status === 'complete' ? 'pending' : 'complete';
-      return TaskService.status.updateStatus(task.id, newStatus);
-    },
-    onSuccess: ({ data: updatedTask }) => {
-      void queryClient.invalidateQueries({ queryKey: ['tasks'] });
-      toast.success(
-        `Task marked as ${
-          updatedTask.status === 'complete' ? 'complete' : 'incomplete'
-        }`
-      );
-    },
-    onError: error => {
-      toast.error(`Error updating task: ${error.message}`);
-    },
-  });
-
-  const { mutate: deleteTask, isPending: isDeleting } = useMutation({
-    mutationFn: () => TaskService.crud.delete(task.id),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['tasks'] });
-      toast.success('Task deleted successfully');
-      setIsDeleteDialogOpen(false);
-    },
-    onError: error => {
-      toast.error(`Error deleting task: ${error.message}`);
-    },
-  });
-
+  const { updateTask, deleteTask, isSubmitting } = useTaskSubmission();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+  const handleToggleComplete = async () => {
+    const newStatus = task.status === 'complete' ? 'pending' : 'complete';
+    await updateTask(task.id, { id: task.id, status: newStatus });
+  };
+
+  const handleDelete = async () => {
+    const result = await deleteTask(task.id);
+    if (result.success) {
+      setIsDeleteDialogOpen(false);
+    }
+  };
 
   const handleCreateFollowUp = useCallback(() => {
     navigate(`/follow-up-task/${task.id}`);
@@ -68,11 +47,11 @@ function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
       <Button
         variant={task.status === 'complete' ? 'outline' : 'default'}
         size="sm"
-        onClick={() => toggleTaskComplete()}
-        disabled={isToggling}
+        onClick={handleToggleComplete}
+        disabled={isSubmitting}
         className="rounded-full"
       >
-        {isToggling
+        {isSubmitting
           ? 'Updating...'
           : task.status === 'complete'
             ? 'Mark Incomplete'
@@ -102,7 +81,7 @@ function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
               variant="ghost"
               size="icon"
               className="size-8 text-muted-foreground hover:bg-muted hover:text-foreground"
-              disabled={isDeleting}
+              disabled={isSubmitting}
             >
               <Trash2 size={16} />
             </Button>
@@ -121,16 +100,16 @@ function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
                 onClick={() => {
                   setIsDeleteDialogOpen(false);
                 }}
-                disabled={isDeleting}
+                disabled={isSubmitting}
               >
                 Cancel
               </Button>
               <Button
                 variant="destructive"
-                onClick={() => deleteTask()}
-                disabled={isDeleting}
+                onClick={handleDelete}
+                disabled={isSubmitting}
               >
-                {isDeleting ? 'Deleting...' : 'Delete'}
+                {isSubmitting ? 'Deleting...' : 'Delete'}
               </Button>
             </DialogFooter>
           </DialogContent>

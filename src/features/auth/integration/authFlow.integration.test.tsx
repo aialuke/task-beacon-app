@@ -92,7 +92,7 @@ describe('Auth Flow Integration Tests', () => {
       let authStateChangeCb:
         | ((event: string, session: Session | null) => void)
         | undefined;
-      // eslint-disable-next-line promise/prefer-await-to-callbacks
+       
       vi.spyOn(
         supabaseClient.supabase.auth,
         'onAuthStateChange'
@@ -245,7 +245,7 @@ describe('Auth Flow Integration Tests', () => {
       let authStateChangeCb:
         | ((event: string, session: Session | null) => void)
         | undefined;
-      // eslint-disable-next-line promise/prefer-await-to-callbacks
+       
       vi.spyOn(
         supabaseClient.supabase.auth,
         'onAuthStateChange'

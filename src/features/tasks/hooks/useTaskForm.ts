@@ -1,11 +1,13 @@
 import { useCallback, useState } from 'react';
 
 import { logger as _logger } from '@/lib/logger';
+import type { TaskFormInput } from '@/lib/validation/schemas';
 import type { TaskCreateData } from '@/types';
+
+import { useTaskFormValidation } from './useTaskFormValidation';
 
 // Local type definition for form errors
 // Matches the previous FormErrors type
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type FormErrors<T extends Record<string, unknown>> = {
   [K in keyof T]?: string;
 };
@@ -16,16 +18,8 @@ interface UseTaskFormOptions {
   initialDueDate?: string | null;
   initialUrl?: string | null;
   initialAssigneeId?: string | null;
-  onSubmit?: (values: TaskFormValues) => Promise<void> | void;
+  onSubmit?: (values: TaskFormInput) => Promise<void> | void;
   onClose?: () => void;
-}
-
-interface TaskFormValues extends Record<string, unknown> {
-  title: string;
-  description: string;
-  dueDate: string;
-  url: string;
-  assigneeId: string;
 }
 
 /**
@@ -52,24 +46,25 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
   const [url, setUrl] = useState(initialUrl ?? '');
   const [assigneeId, setAssigneeId] = useState(initialAssigneeId ?? '');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errors, setErrors] = useState<FormErrors<TaskFormValues>>({});
+  const [errors, setErrors] = useState<FormErrors<TaskFormInput>>({});
 
-  // Validation logic
-  const validateForm = useCallback((): boolean => {
-    const newErrors: FormErrors<TaskFormValues> = {};
-    if (!title.trim()) {
-      newErrors.title = 'Title is required';
-    }
-    if (url?.trim()) {
-      try {
-        new URL(url);
-      } catch {
-        newErrors.url = 'Please enter a valid URL';
-      }
-    }
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  }, [title, url]);
+  // Use Zod validation instead of manual validation
+  const validation = useTaskFormValidation();
+
+  // Replace validateForm usage with Zod validation
+  const validateForm = useCallback(() => {
+    const formData = {
+      title: title.trim(),
+      description: description.trim(),
+      dueDate,
+      url: url.trim(),
+      assigneeId,
+    };
+
+    const result = validation.validateTaskFormData(formData);
+    setErrors(result.errors);
+    return result.isValid;
+  }, [title, description, dueDate, url, assigneeId, validation]);
 
   const handleSubmit = useCallback(
     async (e?: React.FormEvent) => {
@@ -79,12 +74,16 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
       setIsSubmitting(true);
       try {
         await onSubmit({
-          title: title.trim(),
-          description: description.trim(),
-          dueDate: dueDate || '',
-          url: url.trim(),
+          title,
+          description,
+          dueDate,
+          url,
           assigneeId: assigneeId || '',
         });
+      } catch (error) {
+        console.error('Submission failed:', error);
+        // Even if submission fails, we resolve the promise as the error is handled internally.
+        return Promise.resolve();
       } finally {
         setIsSubmitting(false);
       }
@@ -140,7 +139,7 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     resetFormState,
     validateForm,
     getTaskData,
-    setFieldValue: (field: keyof TaskFormValues, value: unknown) => {
+    setFieldValue: (field: keyof TaskFormInput, value: unknown) => {
       switch (field) {
         case 'title':
           setTitle(value as string);

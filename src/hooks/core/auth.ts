@@ -109,34 +109,18 @@ export function useAuth(): UseAuthReturn {
   );
 
   // Sign out operation
-  const signOut = useCallback(async () => {
-    try {
-      logMobileDebug('Starting sign out process');
-      setLoading(true);
-      setError(null);
-
-      // Clean up auth state first
-      cleanupAuthState();
-
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        logMobileDebug('Sign out error', { error });
-        setError({ name: 'SignOutError', message: error.message });
-        return;
-      }
-
-      logMobileDebug('Sign out successful');
-      clearAuthState();
-    } catch (err: unknown) {
-      logMobileDebug('Sign out error caught', { error: err });
-      setError({
-        name: 'SignOutError',
-        message: 'An unexpected error occurred during sign out',
-      });
-    } finally {
-      setLoading(false);
+  const signOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      logger.error('Error signing out:', error);
+      throw error;
     }
-  }, [clearAuthState, logMobileDebug]);
+    // Clear local user state
+    setUser(null);
+    setSession(null);
+    setLoading(false);
+    logger.debug('[Auth] Auth storage cleanup completed');
+  };
 
   // Refresh session operation
   const refreshSession = useCallback(async () => {

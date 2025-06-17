@@ -4,16 +4,6 @@ import { toast } from 'sonner';
 import { taskFormSchema } from '@/lib/validation/schemas';
 import type { TaskFormInput } from '@/lib/validation/schemas';
 
-interface TaskFormData {
-  title: string;
-  description?: string;
-  url?: string;
-  dueDate?: string;
-  assigneeId?: string;
-  photoUrl?: string;
-  parentTaskId?: string;
-}
-
 export function useTaskFormValidation() {
   const validateTaskFormData = useCallback(
     (
@@ -21,7 +11,7 @@ export function useTaskFormValidation() {
     ): {
       isValid: boolean;
       errors: Record<string, string>;
-      data?: TaskFormData;
+      data?: TaskFormInput;
     } => {
       const result = taskFormSchema.safeParse(data);
 
@@ -29,7 +19,7 @@ export function useTaskFormValidation() {
         return {
           isValid: true,
           errors: {},
-          data: result.data as TaskFormData,
+          data: result.data as TaskFormInput,
         };
       }
 
@@ -87,7 +77,7 @@ export function useTaskFormValidation() {
   }, []);
 
   const prepareTaskData = useCallback(
-    (formData: TaskFormData): TaskFormData | null => {
+    (formData: TaskFormInput): TaskFormInput | null => {
       const validation = validateTaskFormData(formData);
 
       if (!validation.isValid) {

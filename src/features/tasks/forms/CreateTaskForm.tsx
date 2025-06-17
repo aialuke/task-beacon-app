@@ -1,17 +1,13 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 import { useUnifiedPhotoUpload } from '@/components/form/hooks/useUnifiedPhotoUpload';
 import { UnifiedTaskForm } from '@/features/tasks/components/forms/UnifiedTaskForm';
 import { useTaskForm } from '@/features/tasks/hooks/useTaskForm';
-import { useTaskFormValidation } from '@/features/tasks/hooks/useTaskFormValidation';
-import { TaskService } from '@/lib/api/tasks';
+import { useTaskSubmission } from '@/features/tasks/hooks/useTaskSubmission';
 import { logger } from '@/lib/logger';
 import type { TaskCreateData } from '@/types';
 
 export default function CreateTaskForm({ onClose }: { onClose?: () => void }) {
-  const queryClient = useQueryClient();
-
   // Form state management
   const taskForm = useTaskForm({ onClose });
 
@@ -25,21 +21,7 @@ export default function CreateTaskForm({ onClose }: { onClose?: () => void }) {
     },
   });
 
-  const validation = useTaskFormValidation();
-
-  const { mutate: createTask, isPending: isCreating } = useMutation({
-    mutationFn: (taskData: TaskCreateData) => TaskService.crud.create(taskData),
-    onSuccess: () => {
-      toast.success('Task created successfully');
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
-      photoUpload.resetPhoto();
-      onClose?.();
-    },
-    onError: error => {
-      logger.error('Task creation error', error);
-      toast.error(error.message || 'Failed to create task');
-    },
-  });
+  const { createTask, isSubmitting } = useTaskSubmission();
 
   // Integrated submit handler
   const handleSubmit = async (e: React.FormEvent) => {
@@ -56,25 +38,22 @@ export default function CreateTaskForm({ onClose }: { onClose?: () => void }) {
       const photoUrl = await photoUpload.uploadPhoto();
 
       // Prepare task data
-      const rawTaskData = {
+      const taskData: TaskCreateData = {
         title: taskForm.title.trim(),
         description: taskForm.description.trim() || undefined,
-        due_date: taskForm.dueDate,
-        url: taskForm.url.trim(),
-        assignee_id: taskForm.assigneeId,
-        parent_task_id: undefined, // Add if needed
-        photo_url: photoUrl ?? undefined,
+        due_date: taskForm.dueDate || undefined,
         url_link: taskForm.url.trim() || undefined,
+        assignee_id: taskForm.assigneeId || undefined,
+        photo_url: photoUrl ?? undefined,
       };
 
-      const taskData = validation.prepareTaskData(rawTaskData);
-      if (!taskData) {
-        toast.error('Validation failed');
-        return;
-      }
-
       // Create task
-      createTask(taskData as TaskCreateData);
+      const result = await createTask(taskData);
+
+      if (result.success) {
+        photoUpload.resetPhoto();
+        onClose?.();
+      }
     } catch (error) {
       logger.error(
         'Task creation error',
@@ -100,7 +79,7 @@ export default function CreateTaskForm({ onClose }: { onClose?: () => void }) {
       assigneeId={taskForm.assigneeId}
       setAssigneeId={taskForm.setAssigneeId}
       onSubmit={handleSubmit}
-      isSubmitting={isCreating || photoUpload.loading}
+      isSubmitting={isSubmitting || photoUpload.loading}
       onPhotoChange={photoUpload.handlePhotoChange}
       onPhotoRemove={photoUpload.handlePhotoRemove}
       photoLoading={photoUpload.loading}

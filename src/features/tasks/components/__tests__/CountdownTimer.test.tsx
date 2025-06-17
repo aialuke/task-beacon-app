@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import * as countdownHook from '@/features/tasks/hooks/useCountdown';
 
 import CountdownTimer from '../CountdownTimer';
 
@@ -10,22 +11,20 @@ vi.mock('@/features/tasks/context/TaskUIContext', () => ({
   }),
 }));
 
-// Mock useCountdown hook
-vi.mock('@/hooks/useCountdown', () => ({
-  useCountdown: () => ({
-    timeDisplay: '5',
-    dashOffset: 50,
-    tooltipContent: 'Due in 5 days',
-    ariaLabel: 'Task timer: 5 days remaining',
-  }),
-}));
-
 describe('CountdownTimer', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   it('renders timer with pending status', () => {
+    vi.spyOn(countdownHook, 'useCountdown').mockReturnValue({
+      timeDisplay: '11d',
+      dashOffset: 50,
+      tooltipContent: 'Due in 11 days',
+      ariaLabel: 'Task timer: 11 days remaining',
+      daysRemaining: 11,
+    });
+
     render(
       <CountdownTimer
         dueDate="2025-06-05T10:00:00Z"
@@ -39,14 +38,13 @@ describe('CountdownTimer', () => {
   });
 
   it('renders checkmark for completed tasks', () => {
-    vi.doMock('@/hooks/useCountdown', () => ({
-      useCountdown: () => ({
-        timeDisplay: '',
-        dashOffset: 0,
-        tooltipContent: 'Task completed',
-        ariaLabel: 'Task timer: Completed',
-      }),
-    }));
+    vi.spyOn(countdownHook, 'useCountdown').mockReturnValue({
+      timeDisplay: '',
+      dashOffset: 0,
+      tooltipContent: 'Task completed',
+      ariaLabel: 'Task timer: Completed',
+      daysRemaining: 0,
+    });
 
     render(
       <CountdownTimer
@@ -61,6 +59,13 @@ describe('CountdownTimer', () => {
   });
 
   it('applies correct size styling', () => {
+    vi.spyOn(countdownHook, 'useCountdown').mockReturnValue({
+      timeDisplay: '11d',
+      dashOffset: 50,
+      tooltipContent: 'Due in 11 days',
+      ariaLabel: 'Task timer: 11 days remaining',
+      daysRemaining: 11,
+    });
     render(
       <CountdownTimer
         dueDate="2025-06-05T10:00:00Z"
@@ -74,12 +79,26 @@ describe('CountdownTimer', () => {
   });
 
   it('handles null due date gracefully', () => {
+    vi.spyOn(countdownHook, 'useCountdown').mockReturnValue({
+      timeDisplay: '',
+      dashOffset: 0,
+      tooltipContent: 'No due date',
+      ariaLabel: 'Task timer: No due date',
+      daysRemaining: 0,
+    });
     render(<CountdownTimer dueDate={null} status="pending" size={48} />);
 
     expect(screen.getByRole('timer')).toBeInTheDocument();
   });
 
   it('has proper accessibility attributes', () => {
+    vi.spyOn(countdownHook, 'useCountdown').mockReturnValue({
+      timeDisplay: '11d',
+      dashOffset: 50,
+      tooltipContent: 'Due in 11 days',
+      ariaLabel: 'Task timer: 11 days remaining',
+      daysRemaining: 11,
+    });
     render(
       <CountdownTimer
         dueDate="2025-06-05T10:00:00Z"

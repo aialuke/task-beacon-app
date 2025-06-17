@@ -8,11 +8,7 @@
 import type { User, Session } from '@supabase/supabase-js';
 
 import { supabase } from '@/integrations/supabase/client';
-import type {
-  ApiResponse,
-  ApiError,
-  AuthResponse,
-} from '@/types';
+import type { ApiResponse, ApiError, AuthResponse } from '@/types';
 
 // === HELPER FUNCTIONS ===
 function createApiError(message: string, code?: string): ApiError {

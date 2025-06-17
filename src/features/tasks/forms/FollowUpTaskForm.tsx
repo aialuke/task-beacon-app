@@ -1,11 +1,9 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 import { useUnifiedPhotoUpload } from '@/components/form/hooks/useUnifiedPhotoUpload';
 import { UnifiedTaskForm } from '@/features/tasks/components/forms/UnifiedTaskForm';
 import { useTaskForm } from '@/features/tasks/hooks/useTaskForm';
-import { useTaskFormValidation } from '@/features/tasks/hooks/useTaskFormValidation';
-import { TaskService } from '@/lib/api/tasks';
+import { useTaskSubmission } from '@/features/tasks/hooks/useTaskSubmission';
 import { logger } from '@/lib/logger';
 import type { Task, TaskCreateData } from '@/types';
 
@@ -18,8 +16,6 @@ export default function FollowUpTaskForm({
   parentTask,
   onClose,
 }: FollowUpTaskFormProps) {
-  const queryClient = useQueryClient();
-
   // Form state management with follow-up defaults
   const taskForm = useTaskForm({
     onClose,
@@ -36,21 +32,7 @@ export default function FollowUpTaskForm({
     },
   });
 
-  const validation = useTaskFormValidation();
-
-  const { mutate: createFollowUpTask, isPending: isCreating } = useMutation({
-    mutationFn: (taskData: TaskCreateData) => TaskService.crud.create(taskData),
-    onSuccess: () => {
-      toast.success('Follow-up task created successfully');
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
-      photoUpload.resetPhoto();
-      onClose?.();
-    },
-    onError: error => {
-      logger.error('Follow-up task creation error', error);
-      toast.error(error.message || 'Failed to create follow-up task');
-    },
-  });
+  const { createTask, isSubmitting } = useTaskSubmission();
 
   // Integrated submit handler for follow-up tasks
   const handleSubmit = async (e: React.FormEvent) => {
@@ -67,27 +49,25 @@ export default function FollowUpTaskForm({
       const photoUrl = await photoUpload.uploadPhoto();
 
       // Prepare follow-up task data
-      const rawTaskData = {
+      const taskData: TaskCreateData = {
         title: taskForm.title.trim(),
         description:
           taskForm.description.trim() ||
           `Follow-up from task: ${parentTask.title}`,
-        due_date: taskForm.dueDate,
-        url: taskForm.url.trim(),
-        assignee_id: taskForm.assigneeId,
+        due_date: taskForm.dueDate || undefined,
+        url_link: taskForm.url.trim() || undefined,
+        assignee_id: taskForm.assigneeId || undefined,
         parent_task_id: parentTask.id,
         photo_url: photoUrl ?? undefined,
-        url_link: taskForm.url.trim() || undefined,
       };
 
-      const taskData = validation.prepareTaskData(rawTaskData);
-      if (!taskData) {
-        toast.error('Validation failed');
-        return;
-      }
-
       // Create follow-up task
-      createFollowUpTask(taskData as TaskCreateData);
+      const result = await createTask(taskData);
+
+      if (result.success) {
+        photoUpload.resetPhoto();
+        onClose?.();
+      }
     } catch (error) {
       logger.error(
         'Follow-up task creation error',
@@ -115,7 +95,7 @@ export default function FollowUpTaskForm({
       assigneeId={taskForm.assigneeId}
       setAssigneeId={taskForm.setAssigneeId}
       onSubmit={handleSubmit}
-      isSubmitting={isCreating || photoUpload.loading}
+      isSubmitting={isSubmitting || photoUpload.loading}
       onPhotoChange={photoUpload.handlePhotoChange}
       onPhotoRemove={photoUpload.handlePhotoRemove}
       photoLoading={photoUpload.loading}

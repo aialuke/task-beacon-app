@@ -1,5 +1,6 @@
-import { ReactNode, useState, useEffect } from 'react';
+import { ReactNode, useState } from 'react';
 
+import { useIsMobile } from '@/hooks/useMediaQuery';
 import { createStandardContext } from '@/lib/utils/createContext';
 
 import { TaskFilter } from '../types';
@@ -34,21 +35,9 @@ export function TaskUIContextProvider({ children }: { children: ReactNode }) {
   // UI States - using standard React hooks
   const [filter, setFilter] = useState<TaskFilter>('all');
   const [expandedTaskId, setExpandedTaskId] = useState<string | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
 
-  // Check if the device is mobile on component mount and window resize
-  useEffect(() => {
-    const checkIfMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    checkIfMobile();
-    window.addEventListener('resize', checkIfMobile);
-
-    return () => {
-      window.removeEventListener('resize', checkIfMobile);
-    };
-  }, []);
+  // Use centralized responsive logic instead of manual window resize handling
+  const isMobile = useIsMobile();
 
   const contextValue: TaskUIContextType = {
     filter,
