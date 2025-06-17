@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
 import { PageLoader } from '@/components/ui/loading/UnifiedLoadingStates';
+import { QueryKeys } from '@/lib/api/standardized-api';
 import { TaskService } from '@/lib/api/tasks';
 
 // Lazy load the form component for additional code splitting
@@ -21,7 +22,7 @@ export default function FollowUpTaskPage() {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ['task', parentTaskId],
+    queryKey: QueryKeys.task(parentTaskId || ''),
     queryFn: async () => {
       if (!parentTaskId) throw new Error('parentTaskId is required');
       const response = await TaskService.crud.getById(parentTaskId);

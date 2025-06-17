@@ -27,7 +27,6 @@ export function useTaskQuery(taskId: string | undefined): UseTaskQueryReturn {
       return await TaskService.query.getById(taskId);
     },
     enabled: !!taskId,
-    staleTime: 5 * 60 * 1000, // 5 minutes
     select: data => {
       // Transform the response data safely
       if (data.success) {

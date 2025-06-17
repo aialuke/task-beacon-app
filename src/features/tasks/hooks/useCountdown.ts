@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 
 import { calculateTimerOffset } from '@/lib/utils/animation';
 import {
@@ -56,61 +56,59 @@ export function useCountdown(
   const lastCalculationRef = useRef<number>(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Optimize calculation frequency
-  const calculateWithThrottle = useCallback(
-    (currentDueDate: string | null, currentStatus: TaskStatus) => {
+  const savedCallback = useRef<() => void>(() => {});
+
+  // Always keep the latest callback
+  useEffect(() => {
+    savedCallback.current = () => {
       const now = Date.now();
       const timeSinceLastCalc = now - lastCalculationRef.current;
 
       // Throttle calculations to avoid excessive computation
       if (timeSinceLastCalc < 100) {
-        return state.timeLeft;
+        return;
       }
 
       lastCalculationRef.current = now;
-      return calculateTimeLeft(currentDueDate, currentStatus);
-    },
-    [state.timeLeft]
-  );
+      const newTimeLeft = calculateTimeLeft(dueDate, status);
+      const newInterval = getUpdateInterval(newTimeLeft.days, status);
 
-  // Update countdown when props change or interval triggers
-  const updateCountdown = useCallback(() => {
-    const newTimeLeft = calculateWithThrottle(dueDate, status);
-    const newInterval = getUpdateInterval(newTimeLeft.days, status);
-
-    // Only update state if values actually changed
-    if (
-      newTimeLeft.days !== state.timeLeft.days ||
-      newTimeLeft.hours !== state.timeLeft.hours ||
-      newTimeLeft.minutes !== state.timeLeft.minutes ||
-      newTimeLeft.seconds !== state.timeLeft.seconds ||
-      newTimeLeft.isOverdue !== state.timeLeft.isOverdue ||
-      newInterval !== state.interval
-    ) {
-      setState({
-        timeLeft: newTimeLeft,
-        interval: newInterval,
+      // Only update state if values actually changed
+      setState(prevState => {
+        if (
+          newTimeLeft.days !== prevState.timeLeft.days ||
+          newTimeLeft.hours !== prevState.timeLeft.hours ||
+          newTimeLeft.minutes !== prevState.timeLeft.minutes ||
+          newTimeLeft.seconds !== prevState.timeLeft.seconds ||
+          newTimeLeft.isOverdue !== prevState.timeLeft.isOverdue ||
+          newInterval !== prevState.interval
+        ) {
+          return {
+            timeLeft: newTimeLeft,
+            interval: newInterval,
+          };
+        }
+        return prevState;
       });
-    }
-  }, [dueDate, status, state.timeLeft, state.interval, calculateWithThrottle]);
+    };
+  }, [dueDate, status]);
 
-  // Set up interval based on how close the due date is
+  // Stable interval setup
   useEffect(() => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-    }
-
+    const tick = () => savedCallback.current?.();
+    
     if (state.interval > 0) {
-      updateCountdown(); // Update immediately
-      intervalRef.current = setInterval(updateCountdown, state.interval);
+      tick(); // Update immediately
+      intervalRef.current = setInterval(tick, state.interval);
     }
 
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
+        intervalRef.current = null;
       }
     };
-  }, [state.interval, updateCountdown]);
+  }, [state.interval]);
 
   // Memoize the computed values that depend on the countdown state
   const computedValues = useMemo(() => {

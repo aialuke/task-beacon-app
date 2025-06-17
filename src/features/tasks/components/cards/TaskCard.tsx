@@ -16,17 +16,9 @@ const arePropsEqual = (
   prevProps: TaskCardProps,
   nextProps: TaskCardProps
 ): boolean => {
-  const prev = prevProps.task;
-  const next = nextProps.task;
   return (
-    prev.id === next.id &&
-    prev.title === next.title &&
-    prev.description === next.description &&
-    prev.due_date === next.due_date &&
-    prev.url_link === next.url_link &&
-    prev.status === next.status &&
-    prev.photo_url === next.photo_url &&
-    prev.updated_at === next.updated_at
+    prevProps.task.id === nextProps.task.id &&
+    prevProps.task.updated_at === nextProps.task.updated_at
   );
 };
 

@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { getAllUsers } from '@/lib/api/users';
+import { QueryKeys } from '@/lib/api/standardized-api';
 import type { User, UserQueryOptions } from '@/types';
 
 interface UseUsersQueryOptions extends UserQueryOptions {
@@ -28,12 +29,11 @@ export function useUsersQuery(
     error,
     refetch,
   } = useQuery({
-    queryKey: ['users', queryOptions],
+    queryKey: [...QueryKeys.users, queryOptions],
     queryFn: async () => {
       return await getAllUsers(queryOptions);
     },
     enabled,
-    staleTime: 5 * 60 * 1000, // 5 minutes
     retry: 2,
     select: data => {
       // Transform the response data safely

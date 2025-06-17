@@ -18,6 +18,27 @@ export default defineConfig(({ mode }) => ({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          tanstack: ['@tanstack/react-query'],
+          ui: [
+            '@radix-ui/react-avatar',
+            '@radix-ui/react-dialog',
+            '@radix-ui/react-popover',
+            '@radix-ui/react-slot',
+            '@radix-ui/react-tooltip',
+            '@radix-ui/react-visually-hidden',
+          ],
+          icons: ['lucide-react'],
+          router: ['react-router-dom'],
+        },
+      },
+    },
+    sourcemap: mode === 'production' ? 'hidden' : true,
+  },
   test: {
     globals: true,
     environment: 'jsdom',

@@ -86,7 +86,6 @@ export function useTasksQuery(
       // For failed responses, let error handling be done via onError
       throw new Error(response.error?.message || 'Failed to load tasks');
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes for better UX
     gcTime: 10 * 60 * 1000, // 10 minutes garbage collection
     enabled: !!user && !!session,
     retry: (failureCount, error) => {
@@ -144,7 +143,6 @@ export function useTasksQuery(
             totalCount: response.data.pagination.totalCount,
           };
         },
-        staleTime: 5 * 60 * 1000,
       });
     }
   }
