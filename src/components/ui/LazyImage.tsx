@@ -1,3 +1,4 @@
+
 import { memo, useState } from 'react';
 
 import { cn } from '@/lib/utils';
@@ -49,7 +50,20 @@ export const LazyImage = memo(function LazyImage({
   // Create a default loading placeholder as a simple string for OptimizedImage
   const defaultPlaceholderText = 'Loading...';
 
-  // Use OptimizedImage for better performance
+  // Prepare props for OptimizedImage, only including defined values
+  const optimizedImageProps: Parameters<typeof OptimizedImage>[0] = {
+    src,
+    alt,
+    className: "size-full object-cover",
+    priority,
+    onLoad: handleImageLoad,
+    onError: handleImageError,
+    placeholder: defaultPlaceholderText,
+    ...(width !== undefined && { width }),
+    ...(height !== undefined && { height }),
+    ...(sizes !== undefined && { sizes }),
+  };
+
   return (
     <div className={cn('relative', className)}>
       {!imageLoaded && !imageError && (
@@ -66,18 +80,7 @@ export const LazyImage = memo(function LazyImage({
         <div className="absolute inset-0">{errorFallback}</div>
       )}
 
-      <OptimizedImage
-        src={src}
-        alt={alt}
-        width={width}
-        height={height}
-        sizes={sizes}
-        className="size-full object-cover"
-        priority={priority}
-        onLoad={handleImageLoad}
-        onError={handleImageError}
-        placeholder={defaultPlaceholderText}
-      />
+      <OptimizedImage {...optimizedImageProps} />
     </div>
   );
 });

@@ -1,3 +1,4 @@
+
 /**
  * Autocomplete Utils - Helper Functions for Autocomplete Logic
  *
@@ -14,7 +15,7 @@ import type { ValidationState } from './types';
  */
 export function getBorderColor(
   disabled: boolean,
-  selectedUser: User | undefined,
+  selectedUser: User | null,
   isFocused: boolean,
   validationState: ValidationState
 ): string {
@@ -38,7 +39,7 @@ export function getBorderColor(
  * Get display name for user
  */
 export function getUserDisplayName(user: User): string {
-  return user.name || user.email.split('@')[0];
+  return user.name ?? user.email.split('@')[0];
 }
 
 /**
@@ -47,7 +48,7 @@ export function getUserDisplayName(user: User): string {
 export function shouldShowPlaceholder(
   inputValue: string,
   isFocused: boolean,
-  selectedUser: User | undefined
+  selectedUser: User | null
 ): boolean {
   return !inputValue && !isFocused && !selectedUser;
 }

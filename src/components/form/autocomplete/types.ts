@@ -1,14 +1,24 @@
+
 /**
- * Autocomplete Types - Type Definitions for User Autocomplete Components
+ * Autocomplete Types - Type definitions for user autocomplete components
  *
- * Centralized type definitions for user autocomplete functionality.
- * Provides consistent typing across all autocomplete-related components.
+ * Centralized type definitions for validation states, component props,
+ * and business logic interfaces used across autocomplete components.
  */
 
 import type { User } from '@/types';
+import type { RefObject } from 'react';
 
+/**
+ * Validation state for autocomplete input
+ */
+export type ValidationState = 'empty' | 'valid' | 'invalid' | 'partial';
+
+/**
+ * Props for AutocompleteUserInput component
+ */
 export interface AutocompleteUserInputProps {
-  value: string; // user ID when selected, empty when not
+  value: string;
   onChange: (userId: string) => void;
   onSubmit?: () => void;
   placeholder?: string;
@@ -16,13 +26,23 @@ export interface AutocompleteUserInputProps {
   className?: string;
 }
 
-export type ValidationState = 'valid' | 'invalid' | 'partial' | 'empty';
+/**
+ * Props for useAutocompleteLogic hook
+ */
+export interface UseAutocompleteLogicProps {
+  value: string;
+  onChange: (userId: string) => void;
+  onSubmit?: () => void;
+}
 
+/**
+ * Return type for useAutocompleteLogic hook
+ */
 export interface AutocompleteLogicReturn {
   // State
   inputValue: string;
   isFocused: boolean;
-  selectedUser: User | undefined;
+  selectedUser: User | null;
   exactMatch: User | null;
   ghostSuggestion: User | null;
   ghostText: string;
@@ -37,5 +57,22 @@ export interface AutocompleteLogicReturn {
   setIsFocused: (focused: boolean) => void;
 
   // Refs
-  inputRef: React.RefObject<HTMLInputElement>;
+  inputRef: RefObject<HTMLInputElement>;
+}
+
+/**
+ * Props for AutocompleteUserTag component
+ */
+export interface AutocompleteUserTagProps {
+  user: User;
+  onClear: () => void;
+  disabled?: boolean;
+}
+
+/**
+ * Props for AutocompleteStatusIcon component
+ */
+export interface AutocompleteStatusIconProps {
+  selectedUser: User | null;
+  validationState: ValidationState;
 }

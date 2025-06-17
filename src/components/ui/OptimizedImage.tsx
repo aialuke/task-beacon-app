@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect, memo } from 'react';
 
 import { cn } from '@/lib/utils';
@@ -43,7 +44,7 @@ export const OptimizedImage = memo(function OptimizedImage({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry?.isIntersecting) {
           setIsInView(true);
           observer.disconnect();
         }

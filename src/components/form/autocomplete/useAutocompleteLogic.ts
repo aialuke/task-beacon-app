@@ -12,14 +12,8 @@ import { useState, useRef, useMemo, useEffect } from 'react';
 
 import { useUsersQuery } from '@/features/users/hooks/useUsersQuery';
 
-import type { AutocompleteLogicReturn, ValidationState } from './types';
+import type { AutocompleteLogicReturn, ValidationState, UseAutocompleteLogicProps } from './types';
 import { getUserDisplayName } from './utils';
-
-interface UseAutocompleteLogicProps {
-  value: string;
-  onChange: (userId: string) => void;
-  onSubmit?: () => void;
-}
 
 export function useAutocompleteLogic({
   value,
@@ -34,7 +28,7 @@ export function useAutocompleteLogic({
 
   // Find selected user
   const selectedUser = useMemo(
-    () => users.find(user => user.id === value),
+    () => users.find(user => user.id === value) ?? null,
     [users, value]
   );
 
@@ -49,7 +43,7 @@ export function useAutocompleteLogic({
         displayName.toLowerCase() === searchTerm ||
         user.email.toLowerCase() === searchTerm
       );
-    });
+    }) ?? null;
   }, [users, inputValue, selectedUser]);
 
   // Auto-select exact matches
@@ -75,7 +69,7 @@ export function useAutocompleteLogic({
       );
     });
 
-    return match;
+    return match ?? null;
   }, [users, inputValue, selectedUser, exactMatch]);
 
   // Generate ghost text completion
