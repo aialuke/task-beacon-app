@@ -1,3 +1,4 @@
+
 import { memo } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -10,13 +11,13 @@ interface TaskExpandButtonProps {
 function TaskExpandButton({ isExpanded, onClick }: TaskExpandButtonProps) {
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (isExpanded) onClick(); // Only collapse when expanded
+    onClick(); // Allow both expand and collapse
   };
   const handleKeyDown = (e: React.KeyboardEvent) => {
     e.stopPropagation();
-    if (isExpanded && (e.key === 'Enter' || e.key === ' ')) {
+    if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      onClick();
+      onClick(); // Allow both expand and collapse
     }
   };
   return (
