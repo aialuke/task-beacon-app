@@ -20,7 +20,7 @@ export type ValidationState = 'empty' | 'valid' | 'invalid' | 'partial';
 export interface AutocompleteUserInputProps {
   value: string;
   onChange: (userId: string) => void;
-  onSubmit?: () => void;
+  onSubmit?: (() => void) | undefined;
   placeholder?: string;
   disabled?: boolean;
   className?: string;
@@ -32,7 +32,7 @@ export interface AutocompleteUserInputProps {
 export interface UseAutocompleteLogicProps {
   value: string;
   onChange: (userId: string) => void;
-  onSubmit?: () => void;
+  onSubmit?: (() => void) | undefined;
 }
 
 /**
@@ -42,9 +42,9 @@ export interface AutocompleteLogicReturn {
   // State
   inputValue: string;
   isFocused: boolean;
-  selectedUser: User | null;
-  exactMatch: User | null;
-  ghostSuggestion: User | null;
+  selectedUser: User | undefined;
+  exactMatch: User | undefined;
+  ghostSuggestion: User | undefined;
   ghostText: string;
   validationState: ValidationState;
 
@@ -73,6 +73,6 @@ export interface AutocompleteUserTagProps {
  * Props for AutocompleteStatusIcon component
  */
 export interface AutocompleteStatusIconProps {
-  selectedUser: User | null;
+  selectedUser: User | undefined;
   validationState: ValidationState;
 }

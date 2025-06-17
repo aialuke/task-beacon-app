@@ -15,7 +15,7 @@ import type { ValidationState } from './types';
  */
 export function getBorderColor(
   disabled: boolean,
-  selectedUser: User | null,
+  selectedUser: User | undefined,
   isFocused: boolean,
   validationState: ValidationState
 ): string {
@@ -48,7 +48,7 @@ export function getUserDisplayName(user: User): string {
 export function shouldShowPlaceholder(
   inputValue: string,
   isFocused: boolean,
-  selectedUser: User | null
+  selectedUser: User | undefined
 ): boolean {
   return !inputValue && !isFocused && !selectedUser;
 }

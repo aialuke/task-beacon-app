@@ -1,3 +1,4 @@
+
 /**
  * Autocomplete Logic Hook - Business Logic for User Autocomplete
  *
@@ -26,15 +27,15 @@ export function useAutocompleteLogic({
 
   const { users } = useUsersQuery();
 
-  // Find selected user
+  // Find selected user - convert null to undefined for strict optional types
   const selectedUser = useMemo(
-    () => users.find(user => user.id === value) ?? null,
+    () => users.find(user => user.id === value) ?? undefined,
     [users, value]
   );
 
-  // Find exact match for typed input
+  // Find exact match for typed input - convert null to undefined
   const exactMatch = useMemo(() => {
-    if (!inputValue.trim() || selectedUser) return null;
+    if (!inputValue.trim() || selectedUser) return undefined;
 
     const searchTerm = inputValue.toLowerCase().trim();
     return users.find(user => {
@@ -43,7 +44,7 @@ export function useAutocompleteLogic({
         displayName.toLowerCase() === searchTerm ||
         user.email.toLowerCase() === searchTerm
       );
-    }) ?? null;
+    }) ?? undefined;
   }, [users, inputValue, selectedUser]);
 
   // Auto-select exact matches
@@ -56,9 +57,9 @@ export function useAutocompleteLogic({
     }
   }, [exactMatch, selectedUser, onChange]);
 
-  // Find the best matching suggestion for ghost text
+  // Find the best matching suggestion for ghost text - convert null to undefined
   const ghostSuggestion = useMemo(() => {
-    if (!inputValue.trim() || selectedUser || exactMatch) return null;
+    if (!inputValue.trim() || selectedUser || exactMatch) return undefined;
 
     const searchTerm = inputValue.toLowerCase();
     const match = users.find(user => {
@@ -69,7 +70,7 @@ export function useAutocompleteLogic({
       );
     });
 
-    return match ?? null;
+    return match ?? undefined;
   }, [users, inputValue, selectedUser, exactMatch]);
 
   // Generate ghost text completion

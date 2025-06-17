@@ -43,7 +43,8 @@ export const OptimizedImage = memo(function OptimizedImage({
     if (priority || isInView) return;
 
     const observer = new IntersectionObserver(
-      ([entry]) => {
+      (entries) => {
+        const entry = entries[0];
         if (entry?.isIntersecting) {
           setIsInView(true);
           observer.disconnect();

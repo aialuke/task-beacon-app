@@ -9,9 +9,9 @@ interface LazyImageProps {
   src: string;
   alt: string;
   className?: string;
-  width?: number;
-  height?: number;
-  sizes?: string;
+  width?: number | undefined;
+  height?: number | undefined;
+  sizes?: string | undefined;
   onLoad?: () => void;
   onError?: (e: React.SyntheticEvent<HTMLImageElement>) => void;
   placeholder?: React.ReactNode;
