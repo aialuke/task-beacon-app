@@ -1,3 +1,4 @@
+
 import { toast } from 'sonner';
 
 import { useUnifiedPhotoUpload } from '@/components/form/hooks/useUnifiedPhotoUpload';
@@ -7,9 +8,11 @@ import { useTaskSubmission } from '@/features/tasks/hooks/useTaskSubmission';
 import { logger } from '@/lib/logger';
 import type { TaskCreateData } from '@/types';
 
-export default function CreateTaskForm({ onClose }: { onClose?: () => void }) {
-  // Form state management
-  const taskForm = useTaskForm({ onClose });
+export default function CreateTaskForm({ onClose }: { onClose?: (() => void) | undefined }) {
+  // Form state management with proper optional handling
+  const taskForm = useTaskForm({ 
+    ...(onClose && { onClose })
+  });
 
   // Photo upload functionality
   const photoUpload = useUnifiedPhotoUpload({
@@ -81,7 +84,7 @@ export default function CreateTaskForm({ onClose }: { onClose?: () => void }) {
       onSubmit={handleSubmit}
       isSubmitting={isSubmitting || photoUpload.loading}
       onPhotoChange={photoUpload.handlePhotoChange}
-      onPhotoRemove={photoUpload.handlePhotoRemove}
+      {...(photoUpload.handlePhotoRemove && { onPhotoRemove: photoUpload.handlePhotoRemove })}
       photoLoading={photoUpload.loading}
       processingResult={photoUpload.processingResult}
       headerTitle="Create your task"

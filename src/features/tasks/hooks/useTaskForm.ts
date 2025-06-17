@@ -1,3 +1,4 @@
+
 import { useCallback, useState } from 'react';
 
 import { logger as _logger } from '@/lib/logger';
@@ -19,7 +20,7 @@ interface UseTaskFormOptions {
   initialUrl?: string | null;
   initialAssigneeId?: string | null;
   onSubmit?: (values: TaskFormInput) => Promise<void> | void;
-  onClose?: () => void;
+  onClose?: (() => void) | undefined;
 }
 
 /**

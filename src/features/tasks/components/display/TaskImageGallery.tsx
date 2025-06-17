@@ -1,3 +1,4 @@
+
 // === INTERNAL UTILITIES ===
 import { LazyImage } from '@/components/ui/LazyImage';
 import { cn } from '@/lib/utils';
@@ -45,7 +46,9 @@ function TaskImageGallery({ task, className }: TaskImageGalleryProps) {
   }
 
   const handleImageClick = () => {
-    openPreview(task.photo_url);
+    if (task.photo_url) {
+      openPreview(task.photo_url);
+    }
   };
 
   return (
@@ -66,7 +69,7 @@ function TaskImageGallery({ task, className }: TaskImageGalleryProps) {
 
       <ImagePreviewModal
         isOpen={isPreviewOpen}
-        imageUrl={previewImageUrl}
+        imageUrl={previewImageUrl || ''}
         onClose={closePreview}
         alt={`Image for task: ${task.title}`}
       />

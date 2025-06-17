@@ -29,14 +29,15 @@ export default function SimplePhotoUploadModal({
     onClose();
   };
 
-  // Create props object with proper undefined handling
+  // Create props object with proper undefined handling for exactOptionalPropertyTypes
   const photoUploadProps: SimplePhotoUploadProps = {
     photoPreview,
     onPhotoChange,
     onSubmit: handleSubmit,
     loading,
-    ...(onPhotoRemove !== undefined && { onPhotoRemove }),
-    ...(processingResult !== undefined && { processingResult }),
+    // Only include optional properties if they are defined
+    ...(onPhotoRemove && { onPhotoRemove }),
+    ...(processingResult !== null && processingResult !== undefined && { processingResult }),
   };
 
   return (
@@ -52,5 +53,3 @@ export default function SimplePhotoUploadModal({
     </Dialog>
   );
 }
-
-// Note: Named export SimplePhotoUploadModal removed as unused

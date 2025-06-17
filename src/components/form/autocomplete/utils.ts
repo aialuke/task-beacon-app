@@ -39,7 +39,7 @@ export function getBorderColor(
  * Get display name for user
  */
 export function getUserDisplayName(user: User): string {
-  return user.name ?? user.email.split('@')[0];
+  return user.name ?? user.email.split('@')[0] ?? 'Unknown User';
 }
 
 /**
