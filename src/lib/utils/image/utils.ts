@@ -92,4 +92,4 @@ export async function convertToWebPWithFallback(
 }
 
 // Re-export commonly used functions for convenience
-export { resizeImage, generateThumbnail };
+// Removed: resizeImage, generateThumbnail - no external usage detected

@@ -31,6 +31,4 @@ export { getOptimalImageFormat, WebPDetector } from './conversion';
 export {
   compressAndResizePhoto,
   convertToWebPWithFallback,
-  resizeImage,
-  generateThumbnail,
 } from './utils';
