@@ -18,7 +18,6 @@ export { DEFAULT_PROCESSING_OPTIONS } from './types';
 // Metadata extraction
 export {
   extractImageMetadata,
-  extractImageMetadataEnhanced,
   calculateOptimalDimensions,
 } from './metadata';
 
