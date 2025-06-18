@@ -26,9 +26,23 @@ function TaskCard({ task }: TaskCardProps) {
   const { contentRef, cardRef, isExpanded, animationState, toggleExpand } =
     useTaskCard();
 
+  // Status color mapping to preserve exact visual appearance
+  const getStatusTextColor = (status: string): string => {
+    switch (status.toLowerCase()) {
+      case 'pending':
+        return 'text-amber-500 dark:text-amber-300'; // #f59e0b / #fcd34d
+      case 'overdue':
+        return 'text-red-600 dark:text-red-400'; // #dc2626 / #f87171
+      case 'complete':
+        return 'text-emerald-600 dark:text-green-400'; // #059669 / #4ade80
+      default:
+        return 'text-foreground';
+    }
+  };
+
   // Dynamic classes
-  const statusClass = `status-${task.status.toLowerCase()}`;
-  const expandedClass = isExpanded ? 'scale-102 shadow-expanded z-10' : '';
+  const statusClass = getStatusTextColor(task.status);
+  const expandedClass = isExpanded ? 'scale-[1.02] shadow-expanded z-10' : '';
 
   // Status-based styles
   const statusStyles: React.CSSProperties = {

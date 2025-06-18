@@ -35,7 +35,7 @@
   /* Disable transforms for interactive elements */
   .interactive:hover,
   .timer-container:hover,
-  .gpu-accelerated {
+  .transform-gpu {
     transform: none !important;
   }
 

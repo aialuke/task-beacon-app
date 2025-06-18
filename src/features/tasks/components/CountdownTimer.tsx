@@ -86,7 +86,7 @@ function CountdownTimer({ dueDate, status, size = 48 }: CountdownTimerProps) {
               !shouldReduceMotion
                 ? 'animate-pulse-subtle'
                 : ''
-            } ${shouldReduceMotion ? '' : 'gpu-accelerated'}`}
+            } ${shouldReduceMotion ? '' : 'transform-gpu backface-hidden'}`}
             style={containerStyles}
           >
             <TimerRing

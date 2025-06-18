@@ -1,26 +1,5 @@
 /* src/styles/utilities.css - Clean unified utilities */
 @layer utilities {
-  /* ===== UNIFIED UTILITIES ===== */
-  .grid-unified-responsive {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  }
-
-  .shadow-sm {
-    box-shadow: var(--shadow-sm);
-  }
-
-  .shadow-md {
-    box-shadow: var(--shadow-md);
-  }
-
-  .shadow-lg {
-    box-shadow: var(--shadow-lg);
-  }
-
-  .shadow-focus {
-    box-shadow: var(--shadow-focus);
-  }
-
   /* ===== ANIMATION UTILITIES ===== */
   .animate-smooth {
     animation-timing-function: var(--ease-out);
@@ -34,17 +13,8 @@
     transform: var(--transform-gpu);
   }
 
-  .gpu-accelerated {
-    transform: translateZ(0);
-    backface-visibility: hidden;
-  }
-
   .optimize-rendering {
     contain: layout style paint;
-  }
-
-  .will-change-transform {
-    will-change: transform;
   }
 
   /* ===== INTERACTIVE UTILITIES ===== */
@@ -94,42 +64,6 @@
   }
 
   /* ===== RESPONSIVE UTILITIES ===== */
-  @media (width <= 480px) {
-    .filter-dropdown-mobile {
-      width: 45%;
-    }
-
-    .touch-target {
-      min-height: 44px;
-      min-width: 44px;
-    }
-
-    .xs\:inline {
-      display: inline;
-    }
-  }
-
-  @media (width <= 640px) {
-    .filter-dropdown-mobile {
-      width: 40%;
-    }
-
-    .touch-target {
-      min-height: 44px;
-      min-width: 44px;
-    }
-  }
-
-  @media (width >= 641px) {
-    .filter-dropdown-mobile {
-      width: 25%;
-    }
-
-    .touch-target {
-      min-height: 32px;
-      min-width: 32px;
-    }
-  }
 
   @supports (height: 100dvh) {
     .min-h-screen {

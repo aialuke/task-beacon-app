@@ -5,23 +5,22 @@ export default {
   darkMode: ['class'],
   content: ['./src/**/*.{ts,tsx}'],
   safelist: [
+    // Dynamic color utilities used in status indicators and interactive elements
     'text-destructive',
-    'text-success',
+    'text-success', 
     'text-primary',
     'bg-destructive',
     'bg-success',
+    
+    // SVG icon color utilities applied dynamically based on status
     'fill-destructive',
     'fill-success',
     'fill-primary',
     'stroke-destructive',
     'stroke-success',
     'stroke-primary',
-    'bg-task-pending',
-    'bg-task-overdue',
-    'bg-task-complete',
-    'text-task-pending',
-    'text-task-overdue',
-    'text-task-complete',
+    
+    // Dark mode gray variations for dynamic theme switching
     'dark:bg-gray-800',
     'dark:bg-gray-900',
     'dark:text-gray-100',
@@ -36,6 +35,8 @@ export default {
       screens: {
         sm: '640px',
         md: '768px',
+        lg: '1024px',
+        xl: '1280px',
         '2xl': '1400px',
       },
     },
@@ -90,10 +91,6 @@ export default {
           DEFAULT: 'hsl(var(--primary))',
           light: 'hsl(var(--brand-light))',
         },
-        'task-pending': 'var(--status-pending)',
-        'task-overdue': 'var(--status-overdue)',
-        'task-complete': 'var(--status-complete)',
-        'task-timer': 'var(--status-pending)',
         // Enhanced gray scale for better dark mode
         gray: {
           50: '#f9fafb',
@@ -135,9 +132,6 @@ export default {
       },
       transform: {
         gpu: 'translate3d(0, 0, 0)',
-      },
-      scale: {
-        '102': '1.02', // From task-cards.css and taskCardStyles.ts
       },
       keyframes: {
         'accordion-down': {

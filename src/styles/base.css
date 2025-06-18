@@ -10,8 +10,6 @@
 @import "./base/accessibility.css";
 
 /* Import component styles */
-@import "./components/unified-components.css";
-@import "./components/task-cards.css";
 @import "./components/virtualized-tasks.css";
 @import "./components/avatars.css";
 @import "./components/timer.css";
