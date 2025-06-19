@@ -7,7 +7,6 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import UnifiedErrorBoundary from '@/components/ui/UnifiedErrorBoundary';
 // AuthProvider removed - using direct useAuth hook instead
 import { ThemeProvider } from '@/contexts/ThemeContext';
-import { isFeatureEnabled } from '@/lib/config/app';
 import { queryClient } from '@/lib/query-client';
 
 // Type for the Network Information API

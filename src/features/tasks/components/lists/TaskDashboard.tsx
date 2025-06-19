@@ -1,5 +1,4 @@
 // === EXTERNAL LIBRARIES ===
-import React from 'react';
 
 // === COMPONENTS ===
 import TaskDashboardHeader from '@/components/layout/TaskDashboardHeader';

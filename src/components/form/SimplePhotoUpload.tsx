@@ -1,12 +1,12 @@
 import { ImageUp } from 'lucide-react';
-import { useRef, useState, useCallback } from 'react';
+import { useRef, useState, useCallback, type ChangeEvent } from 'react';
 
 import { Button } from '@/components/ui/button';
 import type { ProcessingResult } from '@/lib/utils/image/';
 
 interface SimplePhotoUploadProps {
   photoPreview: string | null;
-  onPhotoChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onPhotoChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onPhotoRemove?: () => void;
   onSubmit?: () => void;
   disabled?: boolean;

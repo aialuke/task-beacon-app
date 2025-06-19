@@ -9,7 +9,6 @@
 // CORE UTILITIES (Always loaded)
 // ============================================================================
 
-export * from './core';
 export * from './ui';
 export * from './data';
 export * from './date';
@@ -31,6 +30,5 @@ export * from './async';
 // OTHER UTILITIES
 // ============================================================================
 
-export * from './patterns';
 export * from './animation';
 export * from './createContext';

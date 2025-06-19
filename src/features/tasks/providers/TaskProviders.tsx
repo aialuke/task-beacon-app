@@ -1,12 +1,12 @@
 // === EXTERNAL LIBRARIES ===
-import React from 'react';
+import type { ReactNode } from 'react';
 
 // === FEATURE CONTEXTS ===
 import { TaskDataContextProvider } from '../context/TaskDataContext';
 import { TaskUIContextProvider } from '../context/TaskUIContext';
 
 interface TaskProvidersProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 /**

@@ -7,10 +7,8 @@
 
 import type {
   PaginationMeta,
-  PaginationParams,
   PaginationConfig,
   PaginationValidationResult,
-  PaginationRange,
 } from '@/types/pagination.types';
 
 // === DEFAULT CONFIGURATION ===
@@ -25,35 +23,7 @@ export const DEFAULT_PAGINATION_CONFIG: PaginationConfig = {
 
 // === TYPE GUARDS ===
 
-/**
- * Type guard to check if an object is a valid PaginationMeta
- */
-function isPaginationMeta(obj: unknown): obj is PaginationMeta {
-  return (
-    typeof obj === 'object' &&
-    obj !== null &&
-    typeof (obj as PaginationMeta).currentPage === 'number' &&
-    typeof (obj as PaginationMeta).totalPages === 'number' &&
-    typeof (obj as PaginationMeta).totalCount === 'number' &&
-    typeof (obj as PaginationMeta).pageSize === 'number' &&
-    typeof (obj as PaginationMeta).hasNextPage === 'boolean' &&
-    typeof (obj as PaginationMeta).hasPreviousPage === 'boolean'
-  );
-}
 
-/**
- * Type guard to check if an object is valid PaginationParams
- */
-function isPaginationParams(obj: unknown): obj is PaginationParams {
-  return (
-    typeof obj === 'object' &&
-    obj !== null &&
-    typeof (obj as PaginationParams).page === 'number' &&
-    typeof (obj as PaginationParams).pageSize === 'number' &&
-    (obj as PaginationParams).page >= 1 &&
-    (obj as PaginationParams).pageSize >= 1
-  );
-}
 
 // === CALCULATION FUNCTIONS ===
 
@@ -128,16 +98,3 @@ export function validatePaginationParams(
   };
 }
 
-/**
- * Get pagination range information
- */
-function getPaginationRange(pagination: PaginationMeta): PaginationRange {
-  const start = (pagination.currentPage - 1) * pagination.pageSize + 1;
-  const end = Math.min(start + pagination.pageSize - 1, pagination.totalCount);
-
-  return {
-    start,
-    end,
-    total: pagination.totalCount,
-  };
-}

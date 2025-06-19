@@ -1,4 +1,3 @@
-import { format } from 'date-fns';
 import { Calendar } from 'lucide-react';
 import { memo, useState } from 'react';
 
@@ -73,7 +72,7 @@ export const DatePickerButton = memo(function DatePickerButton({
             )}
           />
           <span className="hidden whitespace-nowrap text-sm font-medium sm:inline">
-            {hasDate ? format(selectedDate, 'MMM d') : 'Due Date'}
+            {hasDate ? selectedDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Due Date'}
           </span>
         </Button>
       </PopoverTrigger>

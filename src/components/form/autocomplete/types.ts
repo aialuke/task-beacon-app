@@ -6,8 +6,9 @@
  * and business logic interfaces used across autocomplete components.
  */
 
-import type { User } from '@/types';
 import type { RefObject } from 'react';
+
+import type { User } from '@/types';
 
 /**
  * Validation state for autocomplete input
@@ -61,18 +62,18 @@ export interface AutocompleteLogicReturn {
 }
 
 /**
- * Props for AutocompleteUserTag component
+ * Props for AutocompleteUserTag component - internal use only
  */
-export interface AutocompleteUserTagProps {
+interface _AutocompleteUserTagProps {
   user: User;
   onClear: () => void;
   disabled?: boolean;
 }
 
 /**
- * Props for AutocompleteStatusIcon component
+ * Props for AutocompleteStatusIcon component - internal use only
  */
-export interface AutocompleteStatusIconProps {
+interface _AutocompleteStatusIconProps {
   selectedUser: User | undefined;
   validationState: ValidationState;
 }

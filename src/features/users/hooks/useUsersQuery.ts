@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getAllUsers } from '@/lib/api/users';
 import { QueryKeys } from '@/lib/api/standardized-api';
+import { getAllUsers } from '@/lib/api/users';
 import type { User, UserQueryOptions } from '@/types';
 
 interface UseUsersQueryOptions extends UserQueryOptions {

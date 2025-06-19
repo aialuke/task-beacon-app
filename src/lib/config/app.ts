@@ -2,9 +2,7 @@
  * Application Configuration
  */
 
-interface FeatureFlags {
-  enableBundleOptimization: boolean;
-}
+// Feature flags interface removed - no active feature flags
 
 interface CacheConfig {
   staleTime: number;
@@ -15,9 +13,7 @@ interface ApiConfig {
   retryAttempts: number;
 }
 
-const features: FeatureFlags = {
-  enableBundleOptimization: false,
-};
+// Feature flags removed - no active feature flags
 
 const cacheConfig: CacheConfig = {
   staleTime: 5 * 60 * 1000, // 5 minutes
@@ -28,9 +24,7 @@ const apiConfig: ApiConfig = {
   retryAttempts: 3,
 };
 
-export function isFeatureEnabled(feature: keyof FeatureFlags): boolean {
-  return features[feature] || false;
-}
+// Feature flag function removed - no active feature flags
 
 export function getCacheConfig(): CacheConfig {
   return cacheConfig;

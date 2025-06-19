@@ -28,7 +28,7 @@ function getErrorMessage(error: unknown): string {
   return 'Unknown error';
 }
 
-export interface AuthFormState {
+interface AuthFormState {
   mode: AuthMode;
   email: string;
   password: string;
@@ -42,7 +42,7 @@ export interface AuthFormState {
   isSubmitting: boolean;
 }
 
-export interface AuthFormHandlers {
+interface AuthFormHandlers {
   handleEmailChange: (value: string) => void;
   handlePasswordChange: (value: string) => void;
   handleNameChange: (value: string) => void;
@@ -51,12 +51,12 @@ export interface AuthFormHandlers {
   handleTogglePassword: () => void;
 }
 
-export interface AuthFormRefs {
+interface AuthFormRefs {
   nameInputRef: React.RefObject<HTMLInputElement>;
   emailInputRef: React.RefObject<HTMLInputElement>;
 }
 
-export interface UseAuthFormReturn {
+interface UseAuthFormReturn {
   formState: AuthFormState;
   formHandlers: AuthFormHandlers;
   formRefs: AuthFormRefs;

@@ -1,6 +1,6 @@
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { Link, ArrowRight } from 'lucide-react';
-import { useState, useRef } from 'react';
+import { useState, useRef, type KeyboardEvent, type ChangeEvent } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
@@ -59,7 +59,7 @@ export function UrlInputModal({
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'Enter' && isValid) {
       e.preventDefault();
       e.stopPropagation();
@@ -70,7 +70,7 @@ export function UrlInputModal({
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setTempValue(e.target.value);
   };
 

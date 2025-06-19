@@ -56,7 +56,9 @@ export function useCountdown(
   const lastCalculationRef = useRef<number>(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const savedCallback = useRef<() => void>(() => {});
+  const savedCallback = useRef<() => void>(() => {
+    // Initial empty callback
+  });
 
   // Always keep the latest callback
   useEffect(() => {

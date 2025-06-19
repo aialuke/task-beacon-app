@@ -5,30 +5,25 @@
  * Provides a single import point for all image-related operations.
  */
 
-// Types
+// Types - Only export types that are used externally
 export type {
-  ImageMetadata,
   ProcessingResult,
-  ConversionResult,
   EnhancedImageProcessingOptions,
 } from './types';
 
-export { DEFAULT_PROCESSING_OPTIONS } from './types';
+// Unused types removed: ImageMetadata, ConversionResult
+// Unused export removed: DEFAULT_PROCESSING_OPTIONS
 
-// Metadata extraction
-export {
-  extractImageMetadata,
-  calculateOptimalDimensions,
-} from './metadata';
+// Metadata extraction - Only export functions used externally
+export { extractImageMetadata } from './metadata';
 
-// Core processing
-export { processImageEnhanced } from './processing';
+// Unused export removed: calculateOptimalDimensions
 
-// Format conversion
-export { getOptimalImageFormat, WebPDetector } from './conversion';
+// Unused export removed: processImageEnhanced
 
-// High-level utilities
-export {
-  compressAndResizePhoto,
-  convertToWebPWithFallback,
-} from './utils';
+// Unused exports removed: getOptimalImageFormat, WebPDetector
+
+// High-level utilities - Only export functions used externally
+export { compressAndResizePhoto } from './utils';
+
+// Unused export removed: convertToWebPWithFallback

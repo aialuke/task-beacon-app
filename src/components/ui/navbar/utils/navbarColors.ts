@@ -3,6 +3,8 @@
  * Handles theme-aware color calculations for navbar components
  */
 
+import { isDarkThemeActive } from '@/lib/utils/ui';
+
 interface NavbarColors {
   primary: string;
   primaryWithOpacity: string;
@@ -20,7 +22,7 @@ interface NavbarColors {
 export function computeNavbarColors(): NavbarColors {
   const root = document.documentElement;
   const computedStyle = getComputedStyle(root);
-  const isDarkMode = root.classList.contains('dark');
+  const isDarkMode = isDarkThemeActive();
 
   // Get the primary color HSL values
   const primaryHSL = computedStyle.getPropertyValue('--primary').trim();

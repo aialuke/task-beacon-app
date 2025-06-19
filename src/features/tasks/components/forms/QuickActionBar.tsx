@@ -1,5 +1,5 @@
 import { User, ImageUp, Link, FileCheck } from 'lucide-react';
-import { useState } from 'react';
+import { useState, type ChangeEvent, type FormEvent } from 'react';
 
 import { ActionButton } from '@/components/form/components/ActionButton';
 import { DatePickerButton } from '@/components/form/components/DatePickerButton';
@@ -12,14 +12,14 @@ import type { ProcessingResult } from '@/lib/utils/image/';
 interface QuickActionBarProps {
   // Date picker props
   dueDate: string;
-  onDueDateChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onDueDateChange: (e: ChangeEvent<HTMLInputElement>) => void;
 
   // User assignment props
   assigneeId: string;
   onAssigneeChange: (value: string) => void;
 
   // Photo upload props - unified interface
-  onPhotoChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onPhotoChange: (e: ChangeEvent<HTMLInputElement>) => void;
   photoPreview: string | null;
   onPhotoRemove?: () => void;
   photoLoading?: boolean;
@@ -30,7 +30,7 @@ interface QuickActionBarProps {
   onUrlChange: (value: string) => void;
 
   // Submit props
-  onSubmit?: (e: React.FormEvent) => void;
+  onSubmit?: (e: FormEvent) => void;
   isSubmitting?: boolean;
 
   disabled?: boolean;

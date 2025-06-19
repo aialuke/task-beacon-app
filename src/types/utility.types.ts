@@ -72,7 +72,7 @@ type ApiState<T> = BaseAsyncState<T> & {
   lastFetch?: Date;
 };
 
-// Form utilities moved to @/types/form.types.ts to eliminate duplication;
+// Form utilities removed - types not used in codebase
 
 // Validation interfaces
 interface ValidationRule<T = unknown> {

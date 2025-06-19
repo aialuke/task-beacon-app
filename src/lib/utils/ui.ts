@@ -11,26 +11,27 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-/**
- * Determines if an element is visible in the viewport
- */
-function isElementInViewport(element: HTMLElement): boolean {
-  const rect = element.getBoundingClientRect();
-  return (
-    rect.top >= 0 &&
-    rect.left >= 0 &&
-    rect.bottom <=
-      (window.innerHeight || document.documentElement.clientHeight) &&
-    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-  );
-}
 
 /**
- * Checks if the device is in dark mode
+ * Checks if the device is in dark mode based on system preference
  */
-function isDarkMode(): boolean {
+export function isDarkMode(): boolean {
   return (
     window.matchMedia &&
     window.matchMedia('(prefers-color-scheme: dark)').matches
   );
+}
+
+/**
+ * Checks if dark theme is currently applied (based on CSS class)
+ */
+export function isDarkThemeActive(): boolean {
+  return document.documentElement.classList.contains('dark');
+}
+
+/**
+ * Gets the system dark mode media query for event listening
+ */
+export function getDarkModeMediaQuery(): MediaQueryList {
+  return window.matchMedia('(prefers-color-scheme: dark)');
 }

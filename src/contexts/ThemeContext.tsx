@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { createStandardContext } from '@/lib/utils/createContext';
+import { isDarkMode, getDarkModeMediaQuery } from '@/lib/utils/ui';
 
 type Theme = 'dark' | 'light' | 'system';
 
@@ -43,9 +44,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     let effectiveTheme: 'dark' | 'light';
 
     if (theme === 'system') {
-      effectiveTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light';
+      effectiveTheme = isDarkMode() ? 'dark' : 'light';
     } else {
       effectiveTheme = theme;
     }
@@ -62,7 +61,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (theme !== 'system') return;
 
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const mediaQuery = getDarkModeMediaQuery();
     const handleChange = () => {
       const root = window.document.documentElement;
       root.classList.remove('light', 'dark');
