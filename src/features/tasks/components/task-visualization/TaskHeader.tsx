@@ -2,7 +2,7 @@ import { memo } from 'react';
 
 import type { Task } from '@/types';
 
-import TaskExpandButton from '../TaskExpandButton';
+import TaskExpandButton from '../task-interaction/TaskExpandButton';
 
 import TaskStatus from './TaskStatus';
 

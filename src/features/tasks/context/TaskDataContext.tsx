@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, useMemo } from 'react';
 
 import UnifiedErrorBoundary from '@/components/ui/UnifiedErrorBoundary';
 import { useTasksQuery } from '@/features/tasks/hooks/useTasksQuery';
@@ -55,8 +55,8 @@ export function TaskDataContextProvider({
   // Use standardized task queries with optimized data flow
   const taskQueries = useTasksQuery();
 
-  // Enhanced context value with error recovery
-  const contextValue: TaskDataContextValue = {
+  // Enhanced context value with error recovery - optimized with useMemo
+  const contextValue: TaskDataContextValue = useMemo(() => ({
     tasks: taskQueries.tasks,
     isLoading: taskQueries.isLoading,
     isFetching: taskQueries.isFetching,
@@ -65,7 +65,7 @@ export function TaskDataContextProvider({
     pagination: {
       currentPage: taskQueries.pagination.currentPage,
       totalPages: taskQueries.pagination.totalPages,
-      pageSize: taskQueries.pagination.pageSize || 10, // Access pageSize from the hook's usePagination result
+      pageSize: taskQueries.pagination.pageSize || 10,
       hasNextPage: taskQueries.pagination.hasNextPage,
       hasPreviousPage: taskQueries.pagination.hasPreviousPage,
       goToNextPage: taskQueries.pagination.goToNextPage,
@@ -77,7 +77,15 @@ export function TaskDataContextProvider({
       function retryFallback() {
         console.warn('Retry not available - no refetch function provided');
       },
-  };
+  }), [
+    taskQueries.tasks,
+    taskQueries.isLoading,
+    taskQueries.isFetching,
+    taskQueries.error,
+    taskQueries.totalCount,
+    taskQueries.pagination,
+    taskQueries.refetch,
+  ]);
 
   return (
     <UnifiedErrorBoundary

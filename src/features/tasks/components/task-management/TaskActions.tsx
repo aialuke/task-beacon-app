@@ -1,6 +1,7 @@
 import { Trash2 } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+
+import { useTaskNavigation } from '@/lib/navigation';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -22,7 +23,7 @@ interface TaskActionsProps {
 }
 
 function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
-  const navigate = useNavigate();
+  const { goToCreateFollowUpTask } = useTaskNavigation();
   const { updateTask, deleteTask, isSubmitting } = useTaskSubmission();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
@@ -39,8 +40,8 @@ function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
   };
 
   const handleCreateFollowUp = useCallback(() => {
-    navigate(`/follow-up-task/${task.id}`);
-  }, [navigate, task.id]);
+    goToCreateFollowUpTask(task.id);
+  }, [goToCreateFollowUpTask, task.id]);
 
   return (
     <div className="flex flex-wrap gap-2">

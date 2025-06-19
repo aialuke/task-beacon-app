@@ -7,8 +7,9 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+
+import { useTaskNavigation } from '@/lib/navigation';
 
 import { QueryKeys } from '@/lib/api/standardized-api';
 import { TaskService } from '@/lib/api/tasks';
@@ -40,7 +41,7 @@ interface UseTaskSubmissionReturn {
  */
 export function useTaskSubmission(): UseTaskSubmissionReturn {
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
+  const { goToTaskDetails, goToTaskList } = useTaskNavigation();
 
   // Create task mutation - using safe API contract
   const createMutation = useMutation({
@@ -54,7 +55,7 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
         toast.success('Task created successfully!');
 
         // Navigate to task details
-        navigate(`/tasks/${response.data.id}`);
+        goToTaskDetails(response.data.id);
       } else {
         // Handle API error without throwing
         toast.error(
@@ -155,7 +156,7 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
 
         // Navigate back to tasks list
         if (window.location.pathname.includes(id)) {
-          navigate('/');
+          goToTaskList();
         }
       } else {
         // Handle API error without throwing - rollback optimistic update
@@ -174,18 +175,28 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
 
   const createTask = useCallback(
     async (data: TaskCreateData): Promise<TaskSubmissionResult> => {
-      const response = await createMutation.mutateAsync(data);
+      try {
+        const response = await createMutation.mutateAsync(data);
 
-      if (response.success) {
-        return {
-          success: true,
-          message: 'Task created successfully!',
-          task: response.data,
-        };
-      } else {
+        if (response.success) {
+          return {
+            success: true,
+            message: 'Task created successfully!',
+            task: response.data,
+          };
+        } else {
+          return {
+            success: false,
+            error: response.error?.message || 'Unknown error',
+            message: 'Failed to create task',
+          };
+        }
+      } catch (error) {
+        // Handle network errors and other unexpected errors
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
         return {
           success: false,
-          error: response.error?.message || 'Unknown error',
+          error: errorMessage,
           message: 'Failed to create task',
         };
       }
@@ -195,18 +206,28 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
 
   const updateTask = useCallback(
     async (id: string, data: TaskUpdateData): Promise<TaskSubmissionResult> => {
-      const response = await updateMutation.mutateAsync({ id, data });
+      try {
+        const response = await updateMutation.mutateAsync({ id, data });
 
-      if (response.success) {
-        return {
-          success: true,
-          message: 'Task updated successfully!',
-          task: response.data,
-        };
-      } else {
+        if (response.success) {
+          return {
+            success: true,
+            message: 'Task updated successfully!',
+            task: response.data,
+          };
+        } else {
+          return {
+            success: false,
+            error: response.error?.message || 'Unknown error',
+            message: 'Failed to update task',
+          };
+        }
+      } catch (error) {
+        // Handle network errors and other unexpected errors
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
         return {
           success: false,
-          error: response.error?.message || 'Unknown error',
+          error: errorMessage,
           message: 'Failed to update task',
         };
       }
@@ -216,17 +237,27 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
 
   const deleteTask = useCallback(
     async (id: string): Promise<TaskSubmissionResult> => {
-      const response = await deleteMutation.mutateAsync(id);
+      try {
+        const response = await deleteMutation.mutateAsync(id);
 
-      if (response.success) {
-        return {
-          success: true,
-          message: 'Task deleted successfully!',
-        };
-      } else {
+        if (response.success) {
+          return {
+            success: true,
+            message: 'Task deleted successfully!',
+          };
+        } else {
+          return {
+            success: false,
+            error: response.error?.message || 'Unknown error',
+            message: 'Failed to delete task',
+          };
+        }
+      } catch (error) {
+        // Handle network errors and other unexpected errors
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
         return {
           success: false,
-          error: response.error?.message || 'Unknown error',
+          error: errorMessage,
           message: 'Failed to delete task',
         };
       }

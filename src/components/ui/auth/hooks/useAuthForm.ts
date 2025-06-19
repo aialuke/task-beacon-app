@@ -10,7 +10,19 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { signIn, signUp, signOut } from '@/lib/api/auth';
-import { signInSchema, signUpSchema } from '@/lib/validation/schemas';
+import { z } from 'zod';
+
+// Simplified schemas for API-level validation (without UI-specific fields like confirmPassword)
+const apiSignInSchema = z.object({
+  email: z.string().email('Invalid email address'),
+  password: z.string().min(1, 'Password is required'),
+});
+
+const apiSignUpSchema = z.object({
+  email: z.string().email('Invalid email address'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+  name: z.string().min(1, 'Name is required'),
+});
 
 type AuthMode = 'signin' | 'signup';
 
@@ -88,7 +100,7 @@ export function useAuthForm(): UseAuthFormReturn {
   // Validation functions
   const validateEmail = useCallback((value: string) => {
     if (!value) return 'Email is required';
-    const result = signInSchema.shape.email.safeParse(value);
+    const result = apiSignInSchema.shape.email.safeParse(value);
     return result.success
       ? ''
       : result.error.issues[0].message || 'Invalid email';
@@ -96,7 +108,7 @@ export function useAuthForm(): UseAuthFormReturn {
 
   const validatePassword = useCallback((value: string) => {
     if (!value) return 'Password is required';
-    const result = signInSchema.shape.password.safeParse(value);
+    const result = apiSignInSchema.shape.password.safeParse(value);
     return result.success
       ? ''
       : result.error.issues[0].message || 'Invalid password';
@@ -104,7 +116,7 @@ export function useAuthForm(): UseAuthFormReturn {
 
   const validateName = useCallback((value: string) => {
     if (!value) return 'Name is required';
-    const result = signUpSchema._def.schema.shape.name.safeParse(value);
+    const result = apiSignUpSchema.shape.name.safeParse(value);
     return result.success
       ? ''
       : result.error.issues[0].message || 'Invalid name';
@@ -183,12 +195,16 @@ export function useAuthForm(): UseAuthFormReturn {
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
-      if (!validateForm()) {
-        return;
-      }
-
+      
+      // Set submitting state immediately for synchronous UI feedback
       setIsSubmitting(true);
+      
       try {
+        // Validate after setting submitting state
+        const isValid = validateForm();
+        if (!isValid) {
+          return;
+        }
         // Clean up existing state before any auth operation
         cleanupAuthState();
 
@@ -200,8 +216,8 @@ export function useAuthForm(): UseAuthFormReturn {
         }
 
         if (mode === 'signin') {
-          // Validate with unified schema
-          const validationResult = signInSchema.safeParse({ email, password });
+          // Validate with API schema
+          const validationResult = apiSignInSchema.safeParse({ email, password });
           if (!validationResult.success) {
             throw new Error('Invalid sign-in data');
           }
@@ -216,8 +232,8 @@ export function useAuthForm(): UseAuthFormReturn {
             navigate('/', { replace: true });
           }, 1000);
         } else {
-          // Validate with unified schema
-          const validationResult = signUpSchema.safeParse({
+          // Validate with API schema
+          const validationResult = apiSignUpSchema.safeParse({
             email,
             password,
             name,

@@ -17,7 +17,7 @@ export interface BaseAsyncState<T = unknown, E = Error> {
 /**
  * Extended async operation state with retry capabilities
  */
-interface AsyncOperationState<T = unknown> extends BaseAsyncState<T> {
+export interface AsyncOperationState<T = unknown> extends BaseAsyncState<T> {
   retryCount?: number;
   canRetry?: boolean;
 }
@@ -25,7 +25,7 @@ interface AsyncOperationState<T = unknown> extends BaseAsyncState<T> {
 /**
  * Batch async operation state for multiple operations
  */
-interface BatchAsyncOperationState<T = unknown> extends BaseAsyncState<T[]> {
+export interface BatchAsyncOperationState<T = unknown> extends BaseAsyncState<T[]> {
   completedCount: number;
   totalCount: number;
   failedItems: { index: number; error: Error }[];
@@ -34,16 +34,16 @@ interface BatchAsyncOperationState<T = unknown> extends BaseAsyncState<T[]> {
 /**
  * Optimistic async operation state for UI updates
  */
-interface OptimisticAsyncOperationState<T = unknown> extends BaseAsyncState<T> {
+export interface OptimisticAsyncOperationState<T = unknown> extends BaseAsyncState<T> {
   optimisticData: T | null;
   isOptimistic: boolean;
   rollbackData: T | null;
 }
 
 /**
- * Standard loading state patterns
+ * Standard loading state patterns - commonly used across components
  */
-interface StandardLoadingState {
+export interface StandardLoadingState {
   isLoading: boolean;
   isFetching: boolean;
   isError: boolean;
@@ -53,19 +53,39 @@ interface StandardLoadingState {
 /**
  * Form submission state
  */
-interface FormSubmissionState extends BaseAsyncState<unknown> {
+export interface FormSubmissionState extends BaseAsyncState<unknown> {
   isSubmitting: boolean;
   isValid: boolean;
   submitCount: number;
 }
 
 /**
- * Query state for data fetching
+ * Query state for data fetching - TanStack Query compatible
  */
-interface QueryState<T = unknown> extends BaseAsyncState<T> {
+export interface QueryState<T = unknown> extends BaseAsyncState<T> {
   isFetching: boolean;
   isStale: boolean;
   refetch: () => Promise<void>;
+}
+
+/**
+ * Mutation state for data updates - TanStack Query compatible
+ */
+export interface MutationState<T = unknown, V = unknown> extends BaseAsyncState<T> {
+  isIdle: boolean;
+  isPending: boolean;
+  isSuccess: boolean;
+  mutate: (variables: V) => void;
+  reset: () => void;
+}
+
+/**
+ * API Response state - standardized API responses
+ */
+export interface ApiResponseState<T = unknown> extends BaseAsyncState<T> {
+  status: 'idle' | 'loading' | 'success' | 'error';
+  statusCode?: number;
+  message?: string;
 }
 
 /**

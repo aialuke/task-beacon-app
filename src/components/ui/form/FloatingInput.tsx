@@ -2,21 +2,9 @@ import { useState, type ReactNode, type ChangeEvent } from 'react';
 
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import type { FormFloatingInputProps } from '@/types';
 
 import { AnimatedCharacterCount } from './AnimatedCharacterCount';
-
-interface FloatingInputProps {
-  id: string;
-  type?: string;
-  value: string;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  label: string;
-  icon?: ReactNode;
-  maxLength?: number;
-  required?: boolean;
-  disabled?: boolean;
-  className?: string;
-}
 
 export function FloatingInput({
   id,
@@ -29,7 +17,7 @@ export function FloatingInput({
   required = false,
   disabled = false,
   className,
-}: FloatingInputProps) {
+}: FormFloatingInputProps) {
   const [isFocused, setIsFocused] = useState(false);
   const hasValue = value.length > 0;
   const isFloating = isFocused || hasValue;

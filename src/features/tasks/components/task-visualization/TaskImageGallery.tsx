@@ -6,7 +6,7 @@ import type { Task } from '@/types';
 
 // === INTERNAL COMPONENTS ===
 import { useImagePreview } from '../../hooks/useImagePreview';
-import { ImagePreviewModal } from '../ImagePreviewModal';
+import { ImagePreviewModal } from '../task-interaction/ImagePreviewModal';
 
 // === HOOKS ===
 

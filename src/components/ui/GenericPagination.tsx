@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 
 import type { PaginationAPI } from '@/types/pagination.types';
 
@@ -13,18 +13,8 @@ import {
 } from './pagination';
 
 interface GenericPaginationProps {
-  pagination: Pick<
-    PaginationAPI,
-    | 'currentPage'
-    | 'totalPages'
-    | 'hasNextPage'
-    | 'hasPreviousPage'
-    | 'goToNextPage'
-    | 'goToPreviousPage'
-    | 'goToPage'
-  >;
+  pagination: PaginationAPI;
   totalCount: number;
-  pageSize: number;
   showInfo?: boolean;
   showPageNumbers?: boolean;
   maxVisiblePages?: number;
@@ -61,12 +51,12 @@ function GenericPaginationComponent({
   } = pagination;
 
   // Don't render if there's only one page or less
-  if (totalCount <= pageSize) {
+  if (totalCount <= (pagination.pageSize || 10)) {
     return null;
   }
 
-  // Calculate visible page numbers
-  const getVisiblePages = () => {
+  // Memoized visible page numbers calculation
+  const visiblePages = useMemo(() => {
     if (!showPageNumbers) return [];
 
     const pages: (number | 'ellipsis')[] = [];
@@ -104,9 +94,7 @@ function GenericPaginationComponent({
     }
 
     return pages;
-  };
-
-  const visiblePages = getVisiblePages();
+  }, [currentPage, totalPages, maxVisiblePages, showPageNumbers]);
 
   return (
     <div className={className}>

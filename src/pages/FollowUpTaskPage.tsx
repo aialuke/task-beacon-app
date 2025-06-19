@@ -1,7 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { ArrowLeft } from 'lucide-react';
 import { lazy, Suspense } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+
+import { useTaskNavigation } from '@/lib/navigation';
+import UnifiedErrorBoundary from '@/components/ui/UnifiedErrorBoundary';
 
 import { Button } from '@/components/ui/button';
 import { PageLoader } from '@/components/ui/loading/UnifiedLoadingStates';
@@ -14,7 +17,7 @@ const FollowUpTaskForm = lazy(
 );
 
 export default function FollowUpTaskPage() {
-  const navigate = useNavigate();
+  const { goBack, goToTaskList } = useTaskNavigation();
   const { parentTaskId } = useParams<{ parentTaskId: string }>();
 
   const {
@@ -37,7 +40,7 @@ export default function FollowUpTaskPage() {
   });
 
   const handleClose = () => {
-    navigate('/');
+    goBack();
   };
 
   if (isLoading) {
@@ -53,7 +56,7 @@ export default function FollowUpTaskPage() {
               variant="ghost"
               size="sm"
               onClick={() => {
-                navigate('/');
+                goToTaskList();
               }}
               className="rounded-full p-3 shadow-sm transition-all duration-200 hover:scale-105 hover:bg-accent/80 hover:shadow-md"
             >
@@ -66,7 +69,7 @@ export default function FollowUpTaskPage() {
                 Task not found or error loading task.
               </p>
               <Button
-                onClick={() => navigate('/')}
+                onClick={() => goToTaskList()}
                 className="mt-6 rounded-full px-6 py-2"
               >
                 Go Back
@@ -79,27 +82,29 @@ export default function FollowUpTaskPage() {
   }
 
   return (
-    <div className="min-h-screen animate-fade-in bg-gradient-to-br from-background via-background to-muted/20">
-      <div className="container mx-auto max-w-2xl px-4 py-8">
-        <div className="mb-8 flex items-center">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate('/')}
-            className="rounded-full p-3 shadow-sm transition-all duration-200 hover:scale-105 hover:bg-accent/80 hover:shadow-md"
-          >
-            <ArrowLeft className="size-5" />
-          </Button>
-        </div>
+    <UnifiedErrorBoundary variant="page">
+      <div className="min-h-screen animate-fade-in bg-gradient-to-br from-background via-background to-muted/20">
+        <div className="container mx-auto max-w-2xl px-4 py-8">
+          <div className="mb-8 flex items-center">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => goToTaskList()}
+              className="rounded-full p-3 shadow-sm transition-all duration-200 hover:scale-105 hover:bg-accent/80 hover:shadow-md"
+            >
+              <ArrowLeft className="size-5" />
+            </Button>
+          </div>
 
-        <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
-          <Suspense
-            fallback={<PageLoader message="Loading follow-up form..." />}
-          >
-            <FollowUpTaskForm parentTask={parentTask} onClose={handleClose} />
-          </Suspense>
+          <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
+            <Suspense
+              fallback={<PageLoader message="Loading follow-up form..." />}
+            >
+              <FollowUpTaskForm parentTask={parentTask} onClose={handleClose} />
+            </Suspense>
+          </div>
         </div>
       </div>
-    </div>
+    </UnifiedErrorBoundary>
   );
 }

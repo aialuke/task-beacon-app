@@ -1,35 +1,27 @@
 
-import { useCallback, useState } from 'react';
+import { useState, useCallback } from 'react';
 
-import { logger as _logger } from '@/lib/logger';
 import type { TaskFormInput } from '@/lib/validation/schemas';
-import type { TaskCreateData } from '@/types';
+import type { TaskFormOptions, TaskFormHookReturn } from '@/types';
 
+import { useTaskFormState } from './useTaskFormState';
+import { useTaskFormSubmission } from './useTaskFormSubmission';
 import { useTaskFormValidation } from './useTaskFormValidation';
 
 // Local type definition for form errors
-// Matches the previous FormErrors type
 type FormErrors<T extends Record<string, unknown>> = {
   [K in keyof T]?: string;
 };
 
-interface UseTaskFormOptions {
-  initialTitle?: string;
-  initialDescription?: string;
-  initialDueDate?: string | null;
-  initialUrl?: string | null;
-  initialAssigneeId?: string | null;
-  onSubmit?: (values: TaskFormInput) => Promise<void> | void;
-  onClose?: (() => void) | undefined;
-}
-
 /**
- * Task form hook - Phase 2 Refactored
+ * Task form hook - Phase 3 Refactored
  *
- * Now uses unified form hook to eliminate duplicate form state patterns.
- * Maintains backward compatibility with existing interface.
+ * Now composed of focused hooks for better separation of concerns:
+ * - useTaskFormState: Form data management
+ * - useTaskFormValidation: Validation logic
+ * - useTaskFormSubmission: Submission handling
  */
-export function useTaskForm(options: UseTaskFormOptions = {}) {
+export function useTaskForm(options: TaskFormOptions = {}): TaskFormHookReturn {
   const {
     initialTitle = '',
     initialDescription = '',
@@ -40,127 +32,72 @@ export function useTaskForm(options: UseTaskFormOptions = {}) {
     onClose,
   } = options;
 
-  // Local state for each field
-  const [title, setTitle] = useState(initialTitle);
-  const [description, setDescription] = useState(initialDescription);
-  const [dueDate, setDueDate] = useState(initialDueDate ?? '');
-  const [url, setUrl] = useState(initialUrl ?? '');
-  const [assigneeId, setAssigneeId] = useState(initialAssigneeId ?? '');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errors, setErrors] = useState<FormErrors<TaskFormInput>>({});
-
-  // Use Zod validation instead of manual validation
-  const validation = useTaskFormValidation();
-
-  // Replace validateForm usage with Zod validation
-  const validateForm = useCallback(() => {
-    const formData = {
-      title: title.trim(),
-      description: description.trim(),
-      dueDate,
-      url: url.trim(),
-      assigneeId,
-    };
-
-    const result = validation.validateTaskFormData(formData);
-    setErrors(result.errors);
-    return result.isValid;
-  }, [title, description, dueDate, url, assigneeId, validation]);
-
-  const handleSubmit = useCallback(
-    async (e?: React.FormEvent) => {
-      if (e) e.preventDefault();
-      if (!validateForm()) return;
-      if (!onSubmit) return;
-      setIsSubmitting(true);
-      try {
-        await onSubmit({
-          title,
-          description,
-          dueDate,
-          url,
-          assigneeId: assigneeId || '',
-        });
-      } catch (error) {
-        console.error('Submission failed:', error);
-        // Even if submission fails, we resolve the promise as the error is handled internally.
-        return Promise.resolve();
-      } finally {
-        setIsSubmitting(false);
-      }
-    },
-    [onSubmit, title, description, dueDate, url, assigneeId, validateForm]
-  );
-
-  const resetFormState = useCallback(() => {
-    setTitle(initialTitle);
-    setDescription(initialDescription);
-    setDueDate(initialDueDate ?? '');
-    setUrl(initialUrl ?? '');
-    setAssigneeId(initialAssigneeId ?? '');
-    setErrors({});
-    if (onClose) onClose();
-  }, [
+  // Form state management
+  const formState = useTaskFormState({
     initialTitle,
     initialDescription,
     initialDueDate,
     initialUrl,
     initialAssigneeId,
+  });
+
+  // Validation logic
+  const validation = useTaskFormValidation();
+  const [errors, setErrors] = useState<FormErrors<TaskFormInput>>({});
+
+  // Submission handling
+  const submission = useTaskFormSubmission(formState.values, {
+    onSubmit,
     onClose,
-  ]);
+  });
 
-  const getTaskData = useCallback((): TaskCreateData => {
-    return {
-      title: title.trim(),
-      description: description.trim() || undefined,
-      due_date: dueDate || undefined,
-      photo_url: null,
-      url_link: url.trim() || undefined,
-      assignee_id: assigneeId || undefined,
+  // Enhanced form validation with error state management
+  const validateForm = useCallback(() => {
+    const formData = {
+      title: formState.title.trim(),
+      description: formState.description.trim(),
+      dueDate: formState.dueDate,
+      url: formState.url.trim(),
+      assigneeId: formState.assigneeId,
     };
-  }, [title, description, dueDate, url, assigneeId]);
 
-  const isValid = !Object.keys(errors).length && title.trim().length > 0;
+    const result = validation.validateTaskFormData(formData);
+    setErrors(result.errors);
+    return result.isValid;
+  }, [formState, validation]);
+
+  // Enhanced submit handler with validation
+  const handleSubmit = useCallback(
+    async (e?: React.FormEvent) => {
+      if (e) e.preventDefault();
+      if (!validateForm()) return;
+      await submission.handleSubmit();
+    },
+    [validateForm, submission]
+  );
+
+  // Enhanced reset that clears errors
+  const resetFormState = useCallback(() => {
+    formState.resetForm();
+    setErrors({});
+    submission.handleReset();
+  }, [formState, submission]);
+
+  const isValid = !Object.keys(errors).length && formState.title.trim().length > 0;
 
   return {
-    title,
-    description,
-    dueDate,
-    url,
-    assigneeId,
-    setTitle,
-    setDescription,
-    setDueDate,
-    setUrl,
-    setAssigneeId,
+    // Form state
+    ...formState,
+    
+    // Validation
     isValid,
     errors,
-    isSubmitting,
+    validateForm,
+    
+    // Submission
+    isSubmitting: submission.isSubmitting,
     handleSubmit,
     resetFormState,
-    validateForm,
-    getTaskData,
-    setFieldValue: (field: keyof TaskFormInput, value: unknown) => {
-      switch (field) {
-        case 'title':
-          setTitle(value as string);
-          break;
-        case 'description':
-          setDescription(value as string);
-          break;
-        case 'dueDate':
-          setDueDate(value as string);
-          break;
-        case 'url':
-          setUrl(value as string);
-          break;
-        case 'assigneeId':
-          setAssigneeId(value as string);
-          break;
-        default:
-          break;
-      }
-    },
-    values: { title, description, dueDate, url, assigneeId },
+    getTaskData: submission.getTaskData,
   };
 }

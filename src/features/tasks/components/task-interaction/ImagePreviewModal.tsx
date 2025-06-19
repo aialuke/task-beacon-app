@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import ImageErrorFallback from '@/components/ui/ImageErrorFallback';
 import ImageLoadingState from '@/components/ui/ImageLoadingState';
 
-import { useImagePreview } from '../hooks/useImagePreview';
+import { useImagePreview } from '../../hooks/useImagePreview';
 
 interface ImagePreviewModalProps {
   isOpen: boolean;

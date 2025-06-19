@@ -1,13 +1,11 @@
 import { SpringValue } from '@react-spring/web';
 import { memo } from 'react';
 
-import { Task } from '@/types';
+import type { TaskCardContentProps } from '@/types';
 
-import TaskDetails from '../display/TaskDetails';
+import TaskDetails from './TaskDetails';
 
-interface TaskCardContentProps {
-  task: Task;
-  isExpanded: boolean;
+interface ExtendedTaskCardContentProps extends TaskCardContentProps {
   animationState: {
     height: SpringValue<number>;
     opacity: SpringValue<number>;
@@ -20,7 +18,7 @@ function TaskCardContent({
   isExpanded,
   animationState,
   contentRef,
-}: TaskCardContentProps) {
+}: ExtendedTaskCardContentProps) {
   return (
     <TaskDetails
       task={task}

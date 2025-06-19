@@ -4,8 +4,8 @@
 import TaskDashboardHeader from '@/components/layout/TaskDashboardHeader';
 import { useTaskUIContext } from '@/features/tasks/context/TaskUIContext';
 
-import { FabButton } from '../actions';
-import TaskFilterNavbar from '../TaskFilterNavbar';
+import { FabButton } from '../task-management';
+import TaskFilterNavbar from '../task-interaction/TaskFilterNavbar';
 
 import TaskList from './TaskList';
 

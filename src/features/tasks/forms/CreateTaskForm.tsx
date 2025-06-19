@@ -2,7 +2,8 @@
 import { toast } from 'sonner';
 
 import { useUnifiedPhotoUpload } from '@/components/form/hooks/useUnifiedPhotoUpload';
-import { UnifiedTaskForm } from '@/features/tasks/components/forms/UnifiedTaskForm';
+import UnifiedErrorBoundary from '@/components/ui/UnifiedErrorBoundary';
+import UnifiedTaskForm from '@/features/tasks/components/task-management/UnifiedTaskForm';
 import { useTaskForm } from '@/features/tasks/hooks/useTaskForm';
 import { useTaskSubmission } from '@/features/tasks/hooks/useTaskSubmission';
 import { logger } from '@/lib/logger';
@@ -69,26 +70,28 @@ export default function CreateTaskForm({ onClose }: { onClose?: (() => void) | u
   };
 
   return (
-    <UnifiedTaskForm
-      title={taskForm.title}
-      setTitle={taskForm.setTitle}
-      description={taskForm.description}
-      setDescription={taskForm.setDescription}
-      dueDate={taskForm.dueDate}
-      setDueDate={taskForm.setDueDate}
-      url={taskForm.url}
-      setUrl={taskForm.setUrl}
-      photoPreview={photoUpload.photoPreview}
-      assigneeId={taskForm.assigneeId}
-      setAssigneeId={taskForm.setAssigneeId}
-      onSubmit={handleSubmit}
-      isSubmitting={isSubmitting || photoUpload.loading}
-      onPhotoChange={photoUpload.handlePhotoChange}
-      {...(photoUpload.handlePhotoRemove && { onPhotoRemove: photoUpload.handlePhotoRemove })}
-      photoLoading={photoUpload.loading}
-      processingResult={photoUpload.processingResult}
-      headerTitle="Create your task"
-      headerSubtitle="For every minute spent organising, an hour is earnt. ✨"
-    />
+    <UnifiedErrorBoundary variant="section">
+      <UnifiedTaskForm
+        title={taskForm.title}
+        setTitle={taskForm.setTitle}
+        description={taskForm.description}
+        setDescription={taskForm.setDescription}
+        dueDate={taskForm.dueDate}
+        setDueDate={taskForm.setDueDate}
+        url={taskForm.url}
+        setUrl={taskForm.setUrl}
+        photoPreview={photoUpload.photoPreview}
+        assigneeId={taskForm.assigneeId}
+        setAssigneeId={taskForm.setAssigneeId}
+        onSubmit={handleSubmit}
+        isSubmitting={isSubmitting || photoUpload.loading}
+        onPhotoChange={photoUpload.handlePhotoChange}
+        {...(photoUpload.handlePhotoRemove && { onPhotoRemove: photoUpload.handlePhotoRemove })}
+        photoLoading={photoUpload.loading}
+        processingResult={photoUpload.processingResult}
+        headerTitle="Create your task"
+        headerSubtitle="For every minute spent organising, an hour is earnt. ✨"
+      />
+    </UnifiedErrorBoundary>
   );
 }

@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import * as countdownHook from '@/features/tasks/hooks/useCountdown';
 
-import CountdownTimer from '../CountdownTimer';
+import CountdownTimer from '../task-interaction/CountdownTimer';
 
 // Mock the TaskUIContext
 vi.mock('@/features/tasks/context/TaskUIContext', () => ({

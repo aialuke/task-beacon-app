@@ -1,14 +1,8 @@
 import { memo } from 'react';
 
-import { Task } from '@/types';
+import type { TaskCardHeaderProps } from '@/types';
 
-import TaskHeader from '../display/TaskHeader';
-
-interface TaskCardHeaderProps {
-  task: Task;
-  isExpanded: boolean;
-  toggleExpand: () => void;
-}
+import TaskHeader from './TaskHeader';
 
 function TaskCardHeader({
   task,

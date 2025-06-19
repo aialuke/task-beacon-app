@@ -1,25 +1,21 @@
 import { Calendar1, ExternalLink } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { memo } from 'react';
 
-import { ParentTaskReference } from '@/components/form/ParentTaskReference';
+import { useTaskNavigation } from '@/lib/navigation';
+import { ParentTaskReference } from '../task-forms/ParentTaskReference';
 import { formatDate } from '@/lib/utils/date';
-import type { Task } from '@/types';
+import type { TaskDetailsContentProps } from '@/types';
 
 import { getTaskStatus } from '../../utils/taskUiUtils';
-import TaskActions from '../actions/TaskActions';
+import TaskActions from '../task-management/TaskActions';
 
 import { TaskImageGallery } from './TaskImageGallery';
 
-interface TaskDetailsContentProps {
-  task: Task;
-  isExpanded?: boolean;
-}
-
-export default function TaskDetailsContent({
+function TaskDetailsContent({
   task,
   isExpanded = false,
 }: TaskDetailsContentProps) {
-  const navigate = useNavigate();
+  const { goToTaskDetails } = useTaskNavigation();
 
   return (
     <div className="space-y-4">
@@ -73,7 +69,7 @@ export default function TaskDetailsContent({
         <TaskActions
           task={task}
           onView={() => {
-            navigate(`/tasks/${task.id}`);
+            goToTaskDetails(task.id);
           }}
           isExpanded={isExpanded}
         />
@@ -81,3 +77,5 @@ export default function TaskDetailsContent({
     </div>
   );
 }
+
+export default memo(TaskDetailsContent);

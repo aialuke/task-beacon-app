@@ -3,7 +3,7 @@ import { memo } from 'react';
 import { getTaskStatus } from '@/features/tasks/utils/taskUiUtils';
 import type { Task } from '@/types';
 
-import CountdownTimer from '../CountdownTimer';
+import CountdownTimer from '../task-interaction/CountdownTimer';
 
 interface TaskStatusProps {
   task: Task;

@@ -1,4 +1,5 @@
 import { FileText, Sparkles } from 'lucide-react';
+import { memo, useCallback } from 'react';
 
 import { FloatingInput } from '@/components/ui/form/FloatingInput';
 import { FloatingTextarea } from '@/components/ui/form/FloatingTextarea';
@@ -46,7 +47,7 @@ interface UnifiedTaskFormProps {
  *
  * Single component for all task form variations with consistent interface.
  */
-export function UnifiedTaskForm({
+function UnifiedTaskForm({
   // Form state
   title,
   setTitle,
@@ -80,13 +81,17 @@ export function UnifiedTaskForm({
   disabled = false,
   children,
 }: UnifiedTaskFormProps) {
-  const handleUrlChange = (newUrl: string) => {
+  const handleUrlChange = useCallback((newUrl: string) => {
     setUrl(newUrl);
-  };
+  }, [setUrl]);
 
-  const handleDueDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDueDateChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setDueDate(e.target.value);
-  };
+  }, [setDueDate]);
+
+  const handleAssigneeChange = useCallback((value: string) => {
+    setAssigneeId(value);
+  }, [setAssigneeId]);
 
   return (
     <div className="w-full rounded-3xl border border-border bg-card/40 p-8 text-card-foreground shadow-2xl shadow-black/5 backdrop-blur-xl">
@@ -132,7 +137,7 @@ export function UnifiedTaskForm({
             dueDate={dueDate}
             onDueDateChange={handleDueDateChange}
             assigneeId={assigneeId}
-            onAssigneeChange={setAssigneeId}
+            onAssigneeChange={handleAssigneeChange}
             onPhotoChange={onPhotoChange}
             photoPreview={photoPreview}
             onPhotoRemove={onPhotoRemove}
@@ -152,3 +157,5 @@ export function UnifiedTaskForm({
     </div>
   );
 }
+
+export default memo(UnifiedTaskForm);

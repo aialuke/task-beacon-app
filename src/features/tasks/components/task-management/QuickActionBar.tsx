@@ -1,12 +1,12 @@
 import { User, ImageUp, Link, FileCheck } from 'lucide-react';
-import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useState, useCallback, type ChangeEvent, type FormEvent } from 'react';
 
 import { ActionButton } from '@/components/form/components/ActionButton';
 import { DatePickerButton } from '@/components/form/components/DatePickerButton';
 import { SubmitButton } from '@/components/form/components/SubmitButton';
 import SimplePhotoUploadModal from '@/components/form/SimplePhotoUploadModal';
 import { UrlInputModal } from '@/components/form/UrlInputModal';
-import { UserSearchModal } from '@/components/form/UserSearchModal';
+import { UserSearchModal } from '../task-forms/UserSearchModal';
 import type { ProcessingResult } from '@/lib/utils/image/';
 
 interface QuickActionBarProps {
@@ -60,15 +60,35 @@ export function QuickActionBar({
   const hasPhoto = !!photoPreview;
   const hasAssignee = !!assigneeId;
 
-  const handlePhotoClick = () => {
+  const handlePhotoClick = useCallback(() => {
     setIsPhotoModalOpen(true);
-  };
+  }, []);
 
-  const handlePhotoSubmit = () => {
+  const handlePhotoSubmit = useCallback(() => {
     // Photo is already processed and set via onPhotoChange
     // This just confirms the attachment by closing the modal
     setIsPhotoModalOpen(false);
-  };
+  }, []);
+
+  const handleUrlModalClose = useCallback(() => {
+    setIsUrlModalOpen(false);
+  }, []);
+
+  const handleUserModalClose = useCallback(() => {
+    setIsUserModalOpen(false);
+  }, []);
+
+  const handlePhotoModalClose = useCallback(() => {
+    setIsPhotoModalOpen(false);
+  }, []);
+
+  const handleUserModalOpen = useCallback(() => {
+    setIsUserModalOpen(true);
+  }, []);
+
+  const handleUrlModalOpen = useCallback(() => {
+    setIsUrlModalOpen(true);
+  }, []);
 
   return (
     <div className="flex items-center justify-center gap-4 rounded-xl bg-background/30 px-4 py-1.5 backdrop-blur-sm">
@@ -87,9 +107,7 @@ export function QuickActionBar({
           label={hasAssignee ? 'Assigned' : 'Assign'}
           active={hasAssignee}
           disabled={disabled}
-          onClick={() => {
-            setIsUserModalOpen(true);
-          }}
+          onClick={handleUserModalOpen}
         />
 
         {/* Photo Button */}
@@ -107,9 +125,7 @@ export function QuickActionBar({
           label={hasUrl ? 'Link Added' : 'Link'}
           active={hasUrl}
           disabled={disabled}
-          onClick={() => {
-            setIsUrlModalOpen(true);
-          }}
+          onClick={handleUrlModalOpen}
         />
       </div>
 
@@ -123,18 +139,14 @@ export function QuickActionBar({
       {/* Modals */}
       <UrlInputModal
         isOpen={isUrlModalOpen}
-        onClose={() => {
-          setIsUrlModalOpen(false);
-        }}
+        onClose={handleUrlModalClose}
         value={url}
         onChange={onUrlChange}
       />
 
       <UserSearchModal
         isOpen={isUserModalOpen}
-        onClose={() => {
-          setIsUserModalOpen(false);
-        }}
+        onClose={handleUserModalClose}
         value={assigneeId}
         onChange={onAssigneeChange}
       />
@@ -142,9 +154,7 @@ export function QuickActionBar({
       {/* Simple Photo Upload Modal */}
       <SimplePhotoUploadModal
         isOpen={isPhotoModalOpen}
-        onClose={() => {
-          setIsPhotoModalOpen(false);
-        }}
+        onClose={handlePhotoModalClose}
         photoPreview={photoPreview}
         onPhotoChange={onPhotoChange}
         onPhotoRemove={onPhotoRemove}

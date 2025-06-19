@@ -1,16 +1,12 @@
-import { memo } from 'react';
+import { memo, useMemo, useCallback } from 'react';
 
 import UnifiedErrorBoundary from '@/components/ui/UnifiedErrorBoundary';
-import type { Task } from '@/types';
+import type { TaskCardProps } from '@/types';
 
 import { useTaskCard } from '../../hooks/useTaskCard';
 
 import TaskCardContent from './TaskCardContent';
 import TaskCardHeader from './TaskCardHeader';
-
-interface TaskCardProps {
-  task: Task;
-}
 
 const arePropsEqual = (
   prevProps: TaskCardProps,
@@ -26,31 +22,50 @@ function TaskCard({ task }: TaskCardProps) {
   const { contentRef, cardRef, isExpanded, animationState, toggleExpand } =
     useTaskCard();
 
-  // Status color mapping to preserve exact visual appearance
-  const getStatusTextColor = (status: string): string => {
-    switch (status.toLowerCase()) {
+  // Memoized status color mapping to preserve exact visual appearance
+  const statusClass = useMemo(() => {
+    switch (task.status.toLowerCase()) {
       case 'pending':
-        return 'text-amber-500 dark:text-amber-300'; // #f59e0b / #fcd34d
+        return 'text-amber-500 dark:text-amber-300';
       case 'overdue':
-        return 'text-red-600 dark:text-red-400'; // #dc2626 / #f87171
+        return 'text-red-600 dark:text-red-400';
       case 'complete':
-        return 'text-emerald-600 dark:text-green-400'; // #059669 / #4ade80
+        return 'text-emerald-600 dark:text-green-400';
       default:
         return 'text-foreground';
     }
-  };
+  }, [task.status]);
 
-  // Dynamic classes
-  const statusClass = getStatusTextColor(task.status);
-  const expandedClass = isExpanded ? 'scale-[1.02] shadow-expanded z-10' : '';
+  // Memoized dynamic classes
+  const expandedClass = useMemo(
+    () => (isExpanded ? 'scale-[1.02] shadow-expanded z-10' : ''),
+    [isExpanded]
+  );
 
-  // Status-based styles
-  const statusStyles: React.CSSProperties = {
-    opacity: task.status === 'complete' ? 0.8 : 1,
-  };
+  // Memoized status-based styles
+  const statusStyles = useMemo(
+    (): React.CSSProperties => ({
+      opacity: task.status === 'complete' ? 0.8 : 1,
+    }),
+    [task.status]
+  );
 
   // Accessibility: Only make the card focusable/clickable when collapsed
   const isCardInteractive = !isExpanded;
+
+  // Memoized event handlers
+  const handleCardClick = useCallback(() => {
+    if (isCardInteractive) {
+      toggleExpand();
+    }
+  }, [isCardInteractive, toggleExpand]);
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      toggleExpand();
+    }
+  }, [toggleExpand]);
 
   return (
     <UnifiedErrorBoundary
@@ -77,13 +92,8 @@ function TaskCard({ task }: TaskCardProps) {
         {...(isCardInteractive && {
           role: 'button',
           tabIndex: 0,
-          onClick: () => toggleExpand(),
-          onKeyDown: e => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              toggleExpand();
-            }
-          },
+          onClick: handleCardClick,
+          onKeyDown: handleKeyDown,
         })}
       >
         <TaskCardHeader

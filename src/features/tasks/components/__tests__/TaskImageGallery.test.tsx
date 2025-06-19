@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
 
 import type { Task } from '@/types';
 
-import { TaskImageGallery } from '../display/TaskImageGallery';
+import { TaskImageGallery } from '../task-visualization/TaskImageGallery';
 
 // Mock the image preview hook
 vi.mock('../hooks/useImagePreview', () => ({

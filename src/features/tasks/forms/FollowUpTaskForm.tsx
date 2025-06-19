@@ -1,7 +1,8 @@
 import { toast } from 'sonner';
 
 import { useUnifiedPhotoUpload } from '@/components/form/hooks/useUnifiedPhotoUpload';
-import { UnifiedTaskForm } from '@/features/tasks/components/forms/UnifiedTaskForm';
+import UnifiedErrorBoundary from '@/components/ui/UnifiedErrorBoundary';
+import UnifiedTaskForm from '@/features/tasks/components/task-management/UnifiedTaskForm';
 import { useTaskForm } from '@/features/tasks/hooks/useTaskForm';
 import { useTaskSubmission } from '@/features/tasks/hooks/useTaskSubmission';
 import { logger } from '@/lib/logger';
@@ -82,26 +83,28 @@ export default function FollowUpTaskForm({
   };
 
   return (
-    <UnifiedTaskForm
-      title={taskForm.title}
-      setTitle={taskForm.setTitle}
-      description={taskForm.description}
-      setDescription={taskForm.setDescription}
-      dueDate={taskForm.dueDate}
-      setDueDate={taskForm.setDueDate}
-      url={taskForm.url}
-      setUrl={taskForm.setUrl}
-      photoPreview={photoUpload.photoPreview}
-      assigneeId={taskForm.assigneeId}
-      setAssigneeId={taskForm.setAssigneeId}
-      onSubmit={handleSubmit}
-      isSubmitting={isSubmitting || photoUpload.loading}
-      onPhotoChange={photoUpload.handlePhotoChange}
-      onPhotoRemove={photoUpload.handlePhotoRemove}
-      photoLoading={photoUpload.loading}
-      processingResult={photoUpload.processingResult}
-      headerTitle="Create Follow-up Task"
-      headerSubtitle={`This new task will be linked to: "${parentTask.title}"`}
-    />
+    <UnifiedErrorBoundary variant="section">
+      <UnifiedTaskForm
+        title={taskForm.title}
+        setTitle={taskForm.setTitle}
+        description={taskForm.description}
+        setDescription={taskForm.setDescription}
+        dueDate={taskForm.dueDate}
+        setDueDate={taskForm.setDueDate}
+        url={taskForm.url}
+        setUrl={taskForm.setUrl}
+        photoPreview={photoUpload.photoPreview}
+        assigneeId={taskForm.assigneeId}
+        setAssigneeId={taskForm.setAssigneeId}
+        onSubmit={handleSubmit}
+        isSubmitting={isSubmitting || photoUpload.loading}
+        onPhotoChange={photoUpload.handlePhotoChange}
+        onPhotoRemove={photoUpload.handlePhotoRemove}
+        photoLoading={photoUpload.loading}
+        processingResult={photoUpload.processingResult}
+        headerTitle="Create Follow-up Task"
+        headerSubtitle={`This new task will be linked to: "${parentTask.title}"`}
+      />
+    </UnifiedErrorBoundary>
   );
 }

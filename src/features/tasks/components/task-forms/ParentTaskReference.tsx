@@ -1,4 +1,4 @@
-import { ReferenceCard } from '@/components/form/ReferenceCard';
+import { ReferenceCard } from './ReferenceCard';
 import { TaskWithRelations } from '@/types';
 
 interface ParentTaskReferenceProps {

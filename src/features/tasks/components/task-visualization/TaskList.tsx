@@ -6,8 +6,8 @@ import { useTaskUIContext } from '@/features/tasks/context/TaskUIContext';
 import { useTasksFilter } from '@/features/tasks/hooks/useTasksFilter';
 import type { Task } from '@/types';
 
-import { TaskCard } from '../cards';
-import TaskPagination from '../TaskPagination';
+import TaskCard from './TaskCard';
+import TaskPagination from '../task-interaction/TaskPagination';
 
 function TaskListComponent() {
   const { tasks, isLoading, error, pagination, totalCount, isFetching } =

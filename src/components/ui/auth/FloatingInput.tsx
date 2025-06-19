@@ -2,21 +2,9 @@
 import { useRef, useEffect, forwardRef } from 'react';
 
 import { cn } from '@/lib/utils';
+import type { AuthFloatingInputProps } from '@/types';
 
-interface FloatingInputProps {
-  id: string;
-  label: string;
-  type?: string;
-  value: string;
-  onChange: (value: string) => void;
-  error?: string | undefined;
-  required?: boolean;
-  autoComplete?: string;
-  disabled?: boolean;
-  className?: string;
-}
-
-const FloatingInput = forwardRef<HTMLInputElement, FloatingInputProps>(
+const FloatingInput = forwardRef<HTMLInputElement, AuthFloatingInputProps>(
   (
     {
       id,

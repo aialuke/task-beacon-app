@@ -6,14 +6,14 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import TimerTooltip from '@/features/tasks/components/TimerTooltip';
+import TimerTooltip from './TimerTooltip';
 import { useTaskUIContext } from '@/features/tasks/context/TaskUIContext';
 import { useCountdown } from '@/features/tasks/hooks/useCountdown';
 import { useMotionPreferences } from '@/hooks/useMotionPreferences';
 import { TaskStatus } from '@/types';
 
-import TimerDisplay from './timer/TimerDisplay';
-import TimerRing from './timer/TimerRing';
+import TimerDisplay from './TimerDisplay';
+import TimerRing from './TimerRing';
 
 interface CountdownTimerProps {
   dueDate: string | null;
