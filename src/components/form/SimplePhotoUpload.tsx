@@ -1,5 +1,5 @@
 import { ImageUp } from 'lucide-react';
-import { useRef, useState, useCallback, type ChangeEvent } from 'react';
+import { useRef, useState, useCallback, memo, type ChangeEvent } from 'react';
 
 import { Button } from '@/components/ui/button';
 import type { ProcessingResult } from '@/lib/utils/image/';
@@ -14,7 +14,7 @@ interface SimplePhotoUploadProps {
   loading?: boolean;
 }
 
-export default function SimplePhotoUpload({
+const SimplePhotoUpload = memo(function SimplePhotoUpload({
   photoPreview,
   onPhotoChange,
   onPhotoRemove,
@@ -144,6 +144,6 @@ export default function SimplePhotoUpload({
       )}
     </div>
   );
-}
+});
 
-// Note: Named export SimplePhotoUpload removed as unused
+export default SimplePhotoUpload;

@@ -14,6 +14,9 @@ export function useTasksFilter(tasks: Task[], filter: TaskFilter) {
       return [];
     }
 
+    // Cache Date object to avoid creating multiple Date() instances
+    const now = new Date();
+
     switch (filter) {
       case 'all':
         return tasks.filter(task => task.status !== 'complete');
@@ -27,16 +30,16 @@ export function useTasksFilter(tasks: Task[], filter: TaskFilter) {
       case 'overdue':
         return tasks.filter(task => {
           if (task.status === 'complete') return false;
-          const dueDate = task.due_date ? new Date(task.due_date) : new Date();
-          return dueDate < new Date();
+          const dueDate = task.due_date ? new Date(task.due_date) : now;
+          return dueDate < now;
         });
       case 'complete':
         return tasks.filter(task => task.status === 'complete');
       case 'pending':
         return tasks.filter(task => {
           if (task.status === 'complete') return false;
-          const dueDate = task.due_date ? new Date(task.due_date) : new Date();
-          return dueDate >= new Date();
+          const dueDate = task.due_date ? new Date(task.due_date) : now;
+          return dueDate >= now;
         });
       default:
         return tasks;

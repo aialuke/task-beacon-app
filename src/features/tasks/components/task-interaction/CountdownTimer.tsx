@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, memo } from 'react';
 
 import {
   Tooltip,
@@ -20,7 +20,7 @@ interface CountdownTimerProps {
   size?: number;
 }
 
-function CountdownTimer({ dueDate, status, size = 48 }: CountdownTimerProps) {
+const CountdownTimer = memo(function CountdownTimer({ dueDate, status, size = 48 }: CountdownTimerProps) {
   const { isMobile } = useTaskUIContext();
   const { shouldReduceMotion } = useMotionPreferences();
 
@@ -86,6 +86,6 @@ function CountdownTimer({ dueDate, status, size = 48 }: CountdownTimerProps) {
       </Tooltip>
     </TooltipProvider>
   );
-}
+});
 
 export default CountdownTimer;

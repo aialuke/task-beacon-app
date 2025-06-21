@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 
 import { createStandardContext } from '@/lib/utils/createContext';
 import { isDarkMode, getDarkModeMediaQuery } from '@/lib/utils/ui';
@@ -75,8 +75,13 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     };
   }, [theme]);
 
+  const contextValue = useMemo(
+    () => ({ theme, setTheme, actualTheme }),
+    [theme, setTheme, actualTheme]
+  );
+
   return (
-    <ThemeContextProvider value={{ theme, setTheme, actualTheme }}>
+    <ThemeContextProvider value={contextValue}>
       {children}
     </ThemeContextProvider>
   );

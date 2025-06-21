@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { animated } from '@react-spring/web';
 import { LucideIcon } from 'lucide-react';
 
@@ -23,7 +24,7 @@ interface SimpleNavbarProps {
  * This component focuses solely on rendering and delegates all business logic
  * to the useNavbar hook, following separation of concerns principles.
  */
-export function SimpleNavbar({
+export const SimpleNavbar = memo(function SimpleNavbar({
   items,
   activeItem,
   onItemChange,
@@ -133,4 +134,4 @@ export function SimpleNavbar({
       </div>
     </div>
   );
-}
+});

@@ -27,25 +27,35 @@ export function useAutocompleteLogic({
 
   const { users } = useUsersQuery();
 
-  // Find selected user - convert null to undefined for strict optional types
+  // Create optimized lookup maps - single O(n) pass instead of O(3n)
+  const userMaps = useMemo(() => {
+    const byId = new Map();
+    const byDisplayName = new Map();
+    const byEmail = new Map();
+    
+    users.forEach(user => {
+      const displayName = getUserDisplayName(user);
+      byId.set(user.id, user);
+      byDisplayName.set(displayName.toLowerCase(), user);
+      byEmail.set(user.email.toLowerCase(), user);
+    });
+    
+    return { byId, byDisplayName, byEmail };
+  }, [users]);
+
+  // Find selected user - optimized Map lookup
   const selectedUser = useMemo(
-    () => users.find(user => user.id === value) ?? undefined,
-    [users, value]
+    () => userMaps.byId.get(value) ?? undefined,
+    [userMaps.byId, value]
   );
 
-  // Find exact match for typed input - convert null to undefined
+  // Find exact match for typed input - optimized Map lookup
   const exactMatch = useMemo(() => {
     if (!inputValue.trim() || selectedUser) return undefined;
 
     const searchTerm = inputValue.toLowerCase().trim();
-    return users.find(user => {
-      const displayName = getUserDisplayName(user);
-      return (
-        displayName.toLowerCase() === searchTerm ||
-        user.email.toLowerCase() === searchTerm
-      );
-    }) ?? undefined;
-  }, [users, inputValue, selectedUser]);
+    return userMaps.byDisplayName.get(searchTerm) || userMaps.byEmail.get(searchTerm) || undefined;
+  }, [userMaps.byDisplayName, userMaps.byEmail, inputValue, selectedUser]);
 
   // Auto-select exact matches
   useEffect(() => {
@@ -57,20 +67,22 @@ export function useAutocompleteLogic({
     }
   }, [exactMatch, selectedUser, onChange]);
 
-  // Find the best matching suggestion for ghost text - convert null to undefined
+  // Find the best matching suggestion for ghost text - optimized single pass
   const ghostSuggestion = useMemo(() => {
     if (!inputValue.trim() || selectedUser || exactMatch) return undefined;
 
     const searchTerm = inputValue.toLowerCase();
-    const match = users.find(user => {
+    // Single pass through users for prefix matching
+    for (const user of users) {
       const displayName = getUserDisplayName(user);
-      return (
+      if (
         displayName.toLowerCase().startsWith(searchTerm) ||
         user.email.toLowerCase().startsWith(searchTerm)
-      );
-    });
-
-    return match ?? undefined;
+      ) {
+        return user;
+      }
+    }
+    return undefined;
   }, [users, inputValue, selectedUser, exactMatch]);
 
   // Generate ghost text completion

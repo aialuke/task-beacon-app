@@ -1,4 +1,6 @@
 
+import { memo } from 'react';
+
 // === INTERNAL UTILITIES ===
 import { cn } from '@/lib/utils';
 import type { Task } from '@/types';
@@ -35,7 +37,7 @@ interface TaskImageGalleryProps {
  * @since 1.4.0 - Extracted from TaskDetails during Phase 1 refactoring
  * @version 1.0.0
  */
-function TaskImageGallery({ task, className }: TaskImageGalleryProps) {
+const TaskImageGallery = memo(function TaskImageGallery({ task, className }: TaskImageGalleryProps) {
   const { isPreviewOpen, previewImageUrl, openPreview, closePreview } =
     useImagePreview();
 
@@ -75,7 +77,7 @@ function TaskImageGallery({ task, className }: TaskImageGalleryProps) {
       />
     </>
   );
-}
+});
 
 TaskImageGallery.displayName = 'TaskImageGallery';
 export { TaskImageGallery };
