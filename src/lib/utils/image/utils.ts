@@ -70,26 +70,6 @@ async function generateThumbnail(
   return result.blob;
 }
 
-/**
- * Convert image to WebP with JPEG fallback
- */
-export async function convertToWebPWithFallback(
-  file: File,
-  quality = 0.85
-): Promise<ConversionResult> {
-  const supportsWebP = await WebPDetector.supportsWebP();
-
-  const result = await processImageEnhanced(file, {
-    format: supportsWebP ? 'webp' : 'jpeg',
-    quality,
-  });
-
-  return {
-    blob: result.blob,
-    format: supportsWebP ? 'webp' : 'jpeg',
-    supportsWebP,
-  };
-}
 
 // Re-export commonly used functions for convenience
 // Removed: resizeImage, generateThumbnail - no external usage detected

@@ -3,7 +3,6 @@ import { memo } from 'react';
 
 import { Button } from '@/components/ui/button';
 import ImageErrorFallback from '@/components/ui/ImageErrorFallback';
-import ImageLoadingState from '@/components/ui/ImageLoadingState';
 
 import { useImagePreview } from '../../hooks/useImagePreview';
 
@@ -67,7 +66,14 @@ export const ImagePreviewModal = memo(function ImagePreviewModal({
 
         {/* Image Content */}
         <div className="relative flex min-h-[200px] items-center justify-center bg-gray-100 p-6">
-          {!imageLoaded && !imageError && <ImageLoadingState />}
+          {!imageLoaded && !imageError && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="flex flex-col items-center gap-2">
+                <div className="animate-spin rounded-full size-8 border-2 border-primary border-t-transparent" />
+                <span className="text-sm text-muted-foreground">Loading image...</span>
+              </div>
+            </div>
+          )}
           {imageError && <ImageErrorFallback />}
 
           <img

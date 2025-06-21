@@ -60,7 +60,7 @@ describe('TaskImageGallery', () => {
   it('renders image when photo_url is provided', async () => {
     render(<TaskImageGallery task={mockTask} />);
 
-    const image = await screen.findByAltText('Task image');
+    const image = await screen.findByAltText('Task attachment');
     expect(image).toBeInTheDocument();
     expect(image).toHaveAttribute('src', 'https://example.com/image.jpg');
   });

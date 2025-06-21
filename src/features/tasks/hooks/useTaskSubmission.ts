@@ -9,10 +9,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { toast } from 'sonner';
 
-import { useTaskNavigation } from '@/lib/navigation';
 
 import { QueryKeys } from '@/lib/api/standardized-api';
 import { TaskService } from '@/lib/api/tasks';
+import { useTaskNavigation } from '@/lib/navigation';
 import type { Task, TaskCreateData, TaskUpdateData } from '@/types';
 
 // === TASK SUBMISSION RESULT TYPES ===

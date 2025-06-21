@@ -50,14 +50,9 @@ function GenericPaginationComponent({
     goToPage,
   } = pagination;
 
-  // Don't render if there's only one page or less
-  if (totalCount <= (pagination.pageSize || 10)) {
-    return null;
-  }
-
   // Memoized visible page numbers calculation
   const visiblePages = useMemo(() => {
-    if (!showPageNumbers) return [];
+    if (!showPageNumbers || totalCount <= (pagination.pageSize || 10)) return [];
 
     const pages: (number | 'ellipsis')[] = [];
     const half = Math.floor(maxVisiblePages / 2);
@@ -94,7 +89,15 @@ function GenericPaginationComponent({
     }
 
     return pages;
-  }, [currentPage, totalPages, maxVisiblePages, showPageNumbers]);
+  }, [currentPage, totalPages, maxVisiblePages, showPageNumbers, totalCount, pagination.pageSize]);
+
+  // Don't render if there's only one page or less
+  if (totalCount <= (pagination.pageSize || 10)) {
+    return null;
+  }
+
+  const isFirstPage = currentPage === 1;
+  const isLastPage = currentPage >= totalPages;
 
   return (
     <div className={className}>

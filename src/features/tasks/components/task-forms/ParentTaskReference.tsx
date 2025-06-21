@@ -1,5 +1,6 @@
-import { ReferenceCard } from './ReferenceCard';
 import { TaskWithRelations } from '@/types';
+
+import { ReferenceCard } from './ReferenceCard';
 
 interface ParentTaskReferenceProps {
   parentTask: NonNullable<TaskWithRelations['parent_task']>;

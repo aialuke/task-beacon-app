@@ -25,10 +25,3 @@ export function calculateTimerOffset(
   return circumference * (1 - remainingPercentage);
 }
 
-/**
- * Determines if reduced motion is preferred by the user
- */
-export function prefersReducedMotion(): boolean {
-  if (typeof window === 'undefined') return false;
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-}

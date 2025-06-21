@@ -1,8 +1,8 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useSuspenseQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useAuth } from '@/hooks/core/auth';
 import { usePagination } from '@/hooks/usePagination';
-import { QueryKeys, createLoadingState } from '@/lib/api/standardized-api';
+import { QueryKeys } from '@/lib/api/standardized-api';
 import { TaskService } from '@/lib/api/tasks';
 import type { Task } from '@/types';
 
@@ -24,9 +24,7 @@ interface UseTasksQueryReturn {
     goToPreviousPage: () => void;
     goToPage: (page: number) => void;
   };
-  isLoading: boolean;
   isFetching: boolean;
-  error: string | null;
   refetch: () => void;
 }
 
@@ -59,14 +57,12 @@ export function useTasksQuery(
     user?.id,
   ];
 
-  // Fetch tasks with enhanced caching and error handling
+  // Fetch tasks with enhanced caching - Suspense handles loading/error states
   const {
     data: response,
-    isLoading,
-    error,
     isFetching,
     refetch,
-  } = useQuery({
+  } = useSuspenseQuery({
     queryKey,
     queryFn: async () => {
       return await TaskService.query.getMany({
@@ -107,7 +103,6 @@ export function useTasksQuery(
   // Intelligent prefetching - only when beneficial
   const shouldPrefetch =
     pagination.hasNextPage &&
-    !isLoading &&
     response?.data.length === pagination.pageSize;
 
   if (shouldPrefetch && user && session) {
@@ -147,9 +142,6 @@ export function useTasksQuery(
     }
   }
 
-  // Standardized loading state
-  const loadingState = createLoadingState(isLoading, isFetching, error);
-
   return {
     tasks: response?.data || [],
     totalCount: response?.totalCount || 0,
@@ -163,9 +155,7 @@ export function useTasksQuery(
       goToPreviousPage: pagination.goToPreviousPage,
       goToPage: pagination.goToPage,
     },
-    isLoading: loadingState.isLoading,
-    isFetching: loadingState.isFetching,
-    error: loadingState.error,
+    isFetching,
     refetch: () => refetch(),
   };
 }

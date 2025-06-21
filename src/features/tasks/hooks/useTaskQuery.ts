@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { QueryKeys } from '@/lib/api/standardized-api';
 import { TaskService } from '@/lib/api/tasks';
@@ -6,8 +6,6 @@ import type { Task } from '@/types';
 
 interface UseTaskQueryReturn {
   task: Task | null;
-  isLoading: boolean;
-  error: Error | null;
 }
 
 /**
@@ -16,9 +14,7 @@ interface UseTaskQueryReturn {
 export function useTaskQuery(taskId: string | undefined): UseTaskQueryReturn {
   const {
     data: task,
-    isLoading,
-    error,
-  } = useQuery({
+  } = useSuspenseQuery({
     queryKey: [QueryKeys.tasks, taskId],
     queryFn: async () => {
       if (!taskId) {
@@ -39,7 +35,5 @@ export function useTaskQuery(taskId: string | undefined): UseTaskQueryReturn {
 
   return {
     task,
-    isLoading,
-    error,
   };
 }

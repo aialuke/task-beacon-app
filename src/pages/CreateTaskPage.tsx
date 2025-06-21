@@ -1,11 +1,10 @@
 import { ArrowLeft } from 'lucide-react';
 import { lazy, Suspense } from 'react';
 
-import { useTaskNavigation } from '@/lib/navigation';
-import UnifiedErrorBoundary from '@/components/ui/UnifiedErrorBoundary';
-
 import { Button } from '@/components/ui/button';
-import { PageLoader } from '@/components/ui/loading/UnifiedLoadingStates';
+import UnifiedErrorBoundary from '@/components/ui/UnifiedErrorBoundary';
+import { useTaskNavigation } from '@/lib/navigation';
+
 
 // Lazy load the form component for additional code splitting
 const CreateTaskForm = lazy(
@@ -35,7 +34,14 @@ export default function CreateTaskPage() {
           </div>
 
           <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
-            <Suspense fallback={<PageLoader message="Loading form..." />}>
+            <Suspense fallback={
+              <div className="flex items-center justify-center p-8">
+                <div className="text-center space-y-4">
+                  <div className="animate-spin rounded-full size-8 border-2 border-primary border-t-transparent mx-auto" />
+                  <p className="text-muted-foreground">Loading form...</p>
+                </div>
+              </div>
+            }>
               <CreateTaskForm onClose={handleClose} />
             </Suspense>
           </div>

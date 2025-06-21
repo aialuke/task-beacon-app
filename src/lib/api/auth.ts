@@ -8,16 +8,9 @@
 import type { User, Session } from '@supabase/supabase-js';
 
 import { supabase } from '@/integrations/supabase/client';
-import type { ApiResponse, ApiError, AuthResponse } from '@/types';
+import type { ApiResponse, AuthResponse } from '@/types';
 
-// === HELPER FUNCTIONS ===
-function createApiError(message: string, code?: string): ApiError {
-  return {
-    message,
-    name: 'AuthError',
-    code: code ?? 'AUTH_ERROR',
-  };
-}
+import { withApiResponse } from './withApiResponse';
 
 // === CORE AUTHENTICATION OPERATIONS ===
 
@@ -28,26 +21,18 @@ export async function signIn(
   email: string,
   password: string
 ): Promise<ApiResponse<AuthResponse>> {
-  try {
+  return withApiResponse(async () => {
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
     if (error) {
-      return {
-        success: false,
-        error: createApiError(error.message),
-        data: null,
-      };
+      throw new Error(error.message);
     }
 
     if (!data.user) {
-      return {
-        success: false,
-        error: createApiError('Sign in failed - no user returned'),
-        data: null,
-      };
+      throw new Error('Sign in failed - no user returned');
     }
 
     const authResponse: AuthResponse = {
@@ -56,20 +41,8 @@ export async function signIn(
       emailConfirmed: !!data.user.email_confirmed_at,
     };
 
-    return {
-      success: true,
-      error: null,
-      data: authResponse,
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error: createApiError(
-        error instanceof Error ? error.message : 'Unknown error'
-      ),
-      data: null,
-    };
-  }
+    return authResponse;
+  });
 }
 
 /**
@@ -80,7 +53,7 @@ export async function signUp(
   password: string,
   options?: unknown
 ): Promise<ApiResponse<AuthResponse>> {
-  try {
+  return withApiResponse(async () => {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -88,19 +61,11 @@ export async function signUp(
     });
 
     if (error) {
-      return {
-        success: false,
-        error: createApiError(error.message),
-        data: null,
-      };
+      throw new Error(error.message);
     }
 
     if (!data.user) {
-      return {
-        success: false,
-        error: createApiError('Sign up failed - no user returned'),
-        data: null,
-      };
+      throw new Error('Sign up failed - no user returned');
     }
 
     const authResponse: AuthResponse = {
@@ -109,97 +74,22 @@ export async function signUp(
       emailConfirmed: !!data.user.email_confirmed_at,
     };
 
-    return {
-      success: true,
-      error: null,
-      data: authResponse,
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error: createApiError(
-        error instanceof Error ? error.message : 'Unknown error'
-      ),
-      data: null,
-    };
-  }
+    return authResponse;
+  });
 }
 
 /**
  * Sign out current user
  */
 export async function signOut(): Promise<ApiResponse<void>> {
-  try {
+  return withApiResponse(async () => {
     const { error } = await supabase.auth.signOut();
 
     if (error) {
-      return {
-        success: false,
-        error: createApiError(error.message),
-        data: null,
-      };
+      throw new Error(error.message);
     }
 
-    return {
-      success: true,
-      error: null,
-      data: null,
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error: createApiError(
-        error instanceof Error ? error.message : 'Unknown error'
-      ),
-      data: null,
-    };
-  }
+    return;
+  });
 }
 
-// === SESSION MANAGEMENT ===
-
-/**
- * Refresh the current session
- *
- * Note: Supabase client automatically refreshes the token. This is for manual refreshing.
- */
-export async function refreshSession(): Promise<
-  ApiResponse<{ user: User; session: Session }>
-> {
-  try {
-    const { data, error } = await supabase.auth.refreshSession();
-
-    if (error) {
-      return {
-        success: false,
-        error: createApiError(error.message),
-        data: null,
-      };
-    }
-
-    if (!data.user || !data.session) {
-      return {
-        success: false,
-        error: createApiError('Session refresh failed'),
-        data: null,
-      };
-    }
-
-    return {
-      success: true,
-      error: null,
-      data: {
-        user: data.user,
-        session: data.session,
-      },
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error: createApiError(
-        error instanceof Error ? error.message : 'Unknown error'
-      ),
-      data: null,
-    };
-  }
-}

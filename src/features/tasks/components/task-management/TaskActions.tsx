@@ -1,7 +1,6 @@
 import { Trash2 } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
 
-import { useTaskNavigation } from '@/lib/navigation';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -14,6 +13,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { useTaskSubmission } from '@/features/tasks/hooks/useTaskSubmission';
+import { useTaskNavigation } from '@/lib/navigation';
 import type { Task } from '@/types';
 
 interface TaskActionsProps {

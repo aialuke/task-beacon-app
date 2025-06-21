@@ -1,6 +1,6 @@
-import { animated, SpringValue } from '@react-spring/web';
 import { memo } from 'react';
 
+import { cn } from '@/lib/utils';
 import { Task } from '@/types';
 
 import TaskDetailsContent from './TaskDetailsContent';
@@ -8,33 +8,27 @@ import TaskDetailsContent from './TaskDetailsContent';
 interface TaskDetailsProps {
   task: Task;
   isExpanded: boolean;
-  animationState: {
-    height: SpringValue<number>;
-    opacity: SpringValue<number>;
-  };
   contentRef: React.RefObject<HTMLDivElement>;
 }
 
 function TaskDetails({
   task,
   isExpanded,
-  animationState,
   contentRef,
 }: TaskDetailsProps) {
   return (
-    <animated.div
+    <div
       ref={contentRef}
+      className={cn(
+        "mt-1 w-full transition-all duration-300 ease-in-out overflow-hidden",
+        isExpanded ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+      )}
       style={{
-        height: animationState.height,
-        opacity: animationState.opacity,
-        willChange: 'height, opacity',
-        overflow: 'hidden',
         minHeight: 0,
       }}
-      className="mt-1 w-full"
     >
       <TaskDetailsContent task={task} isExpanded={isExpanded} />
-    </animated.div>
+    </div>
   );
 }
 

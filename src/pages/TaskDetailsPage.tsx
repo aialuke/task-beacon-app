@@ -2,17 +2,11 @@ import { ArrowLeft, Calendar1, ExternalLink } from 'lucide-react';
 import { lazy, Suspense } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { useTaskNavigation } from '@/lib/navigation';
-import UnifiedErrorBoundary from '@/components/ui/UnifiedErrorBoundary';
-
 import { Button } from '@/components/ui/button';
-import {
-  PageLoader,
-  CardLoader,
-  LoadingSpinner,
-} from '@/components/ui/loading/UnifiedLoadingStates';
+import UnifiedErrorBoundary from '@/components/ui/UnifiedErrorBoundary';
 import { useTaskQuery } from '@/features/tasks/hooks/useTaskQuery';
 import { getTaskStatus } from '@/features/tasks/utils/taskUiUtils';
+import { useTaskNavigation } from '@/lib/navigation';
 import { formatDate } from '@/lib/utils/date';
 
 // Lazy load heavy components for better performance
@@ -26,13 +20,9 @@ const TaskActions = lazy(
 const TaskDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
   const { goBack, goToTaskDetails } = useTaskNavigation();
-  const { task, loading, error } = useTaskQuery(id);
+  const { task } = useTaskQuery(id);
 
-  if (loading) {
-    return <PageLoader message="Loading task details..." />;
-  }
-
-  if (error || !task) {
+  if (!task) {
     return (
       <div className="container py-8">
         <Button
@@ -46,7 +36,7 @@ const TaskDetailsPage = () => {
           <ArrowLeft size={16} className="mr-2" /> Back
         </Button>
         <div className="rounded-lg bg-red-50 p-4 text-red-600">
-          {error || 'Task not found'}
+          Task not found
         </div>
       </div>
     );
@@ -69,7 +59,11 @@ const TaskDetailsPage = () => {
         <div className="space-y-6 rounded-xl bg-white p-6 shadow-sm">
           <div className="flex items-start gap-4">
             <div className="shrink-0">
-              <Suspense fallback={<LoadingSpinner size="lg" />}>
+              <Suspense fallback={
+                <div className="flex items-center justify-center size-24">
+                  <div className="animate-spin rounded-full size-8 border-2 border-primary border-t-transparent" />
+                </div>
+              }>
                 <CountdownTimer dueDate={task.due_date} status={status} />
               </Suspense>
             </div>
@@ -141,7 +135,11 @@ const TaskDetailsPage = () => {
           )}
 
           <div className="border-t pt-4">
-            <Suspense fallback={<CardLoader count={1} />}>
+            <Suspense fallback={
+              <div className="flex items-center justify-center p-4">
+                <div className="animate-spin rounded-full size-6 border-2 border-primary border-t-transparent" />
+              </div>
+            }>
               <TaskActions
                 task={task}
                 onView={() => {

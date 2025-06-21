@@ -1,6 +1,5 @@
-import { ReactNode, useState, useMemo } from 'react';
+import { ReactNode, useState, useMemo, useEffect } from 'react';
 
-import { useIsMobile } from '@/hooks/useMediaQuery';
 import { createStandardContext } from '@/lib/utils/createContext';
 
 import { TaskFilter } from '../types';
@@ -35,9 +34,20 @@ export function TaskUIContextProvider({ children }: { children: ReactNode }) {
   // UI States - using standard React hooks
   const [filter, setFilter] = useState<TaskFilter>('all');
   const [expandedTaskId, setExpandedTaskId] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Use centralized responsive logic instead of manual window resize handling
-  const isMobile = useIsMobile();
+  // Mobile detection
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.matchMedia('(max-width: 768px)').matches);
+    };
+    
+    checkMobile();
+    const mediaQuery = window.matchMedia('(max-width: 768px)');
+    mediaQuery.addEventListener('change', checkMobile);
+    
+    return () => mediaQuery.removeEventListener('change', checkMobile);
+  }, []);
 
   const contextValue: TaskUIContextType = useMemo(() => ({
     filter,

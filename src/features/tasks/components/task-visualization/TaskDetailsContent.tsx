@@ -2,11 +2,11 @@ import { Calendar1, ExternalLink } from 'lucide-react';
 import { memo } from 'react';
 
 import { useTaskNavigation } from '@/lib/navigation';
-import { ParentTaskReference } from '../task-forms/ParentTaskReference';
 import { formatDate } from '@/lib/utils/date';
 import type { TaskDetailsContentProps } from '@/types';
 
 import { getTaskStatus } from '../../utils/taskUiUtils';
+import { ParentTaskReference } from '../task-forms/ParentTaskReference';
 import TaskActions from '../task-management/TaskActions';
 
 import { TaskImageGallery } from './TaskImageGallery';

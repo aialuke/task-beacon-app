@@ -1,18 +1,14 @@
 /**
- * Unified Error Boundary - Phase 1 Consolidation
+ * Unified Error Boundary - React 19 Optimized
  *
- * Single error boundary component that replaces ErrorBoundary.tsx,
- * TaskErrorBoundary.tsx, and AppErrorBoundary with unified behavior.
+ * Simplified error boundary leveraging React 19 enhanced error handling.
  */
 
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 import React, { Component, ReactNode } from 'react';
-import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-
-// === INTERFACES ===
 
 interface UnifiedErrorBoundaryProps {
   children: ReactNode;
@@ -26,81 +22,43 @@ interface UnifiedErrorBoundaryProps {
 interface UnifiedErrorBoundaryState {
   hasError: boolean;
   error: Error | null;
-  errorInfo: React.ErrorInfo | null;
 }
 
-// === ERROR BOUNDARY COMPONENT ===
-
-/**
- * Unified error boundary with consistent behavior across all use cases
- */
 class UnifiedErrorBoundary extends Component<
   UnifiedErrorBoundaryProps,
   UnifiedErrorBoundaryState
 > {
   constructor(props: UnifiedErrorBoundaryProps) {
     super(props);
-    this.state = {
-      hasError: false,
-      error: null,
-      errorInfo: null,
-    };
+    this.state = { hasError: false, error: null };
   }
 
-  static getDerivedStateFromError(
-    error: Error
-  ): Partial<UnifiedErrorBoundaryState> {
-    return {
-      hasError: true,
-      error,
-    };
+  static getDerivedStateFromError(error: Error): UnifiedErrorBoundaryState {
+    return { hasError: true, error };
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    // Log error to console
     console.error('Error Boundary:', error, errorInfo);
-    // Optionally, show a toast in development
-    if (process.env.NODE_ENV === 'development') {
-      toast.error('An unexpected error occurred. See console for details.');
-    }
-
-    this.setState({
-      errorInfo,
-    });
-
-    // Call custom error handler if provided
     this.props.onError?.(error, errorInfo);
   }
 
   private handleRetry = () => {
-    this.setState({
-      hasError: false,
-      error: null,
-      errorInfo: null,
-    });
-  };
-
-  private handleReload = () => {
-    window.location.reload();
+    this.setState({ hasError: false, error: null });
   };
 
   render() {
     if (this.state.hasError) {
-      // Use custom fallback if provided
       if (this.props.fallback) {
         return this.props.fallback;
       }
 
       return (
-        <UnifiedErrorUI
+        <ErrorDisplay
           error={this.state.error}
           variant={this.props.variant || 'section'}
           title={this.props.title}
           onRetry={this.handleRetry}
-          onReload={this.handleReload}
           className={this.props.className}
-          showDetails={process.env.NODE_ENV === 'development'}
-          errorInfo={this.state.errorInfo}
         />
       );
     }
@@ -109,122 +67,61 @@ class UnifiedErrorBoundary extends Component<
   }
 }
 
-// === ERROR UI COMPONENT ===
-
-interface UnifiedErrorUIProps {
+interface ErrorDisplayProps {
   error: Error | null;
   variant: 'page' | 'section' | 'inline';
   title?: string;
   onRetry: () => void;
-  onReload: () => void;
   className?: string;
-  showDetails?: boolean;
-  errorInfo?: React.ErrorInfo | null;
 }
 
-/**
- * Consistent error UI across all variants
- */
-function UnifiedErrorUI({
-  error,
-  variant,
-  title,
-  onRetry,
-  onReload,
-  className,
-  showDetails = false,
-  errorInfo,
-}: UnifiedErrorUIProps) {
-  const variantStyles = {
-    page: 'flex min-h-screen items-center justify-center p-8',
-    section: 'flex items-center justify-center min-h-[400px] p-8',
-    inline: 'flex items-center justify-center min-h-[200px] p-4',
-  };
-
-  const contentStyles = {
-    page: 'max-w-md space-y-6',
-    section: 'max-w-md space-y-4',
-    inline: 'max-w-sm space-y-3',
-  };
-
-  const iconSize = {
-    page: 'w-16 h-16',
-    section: 'w-12 h-12',
-    inline: 'w-8 h-8',
-  };
-
-  const defaultTitle = {
-    page: 'Application Error',
-    section: 'Something went wrong',
-    inline: 'Error occurred',
-  };
-
+function ErrorDisplay({ error, variant, title, onRetry, className }: ErrorDisplayProps) {
+  const isPage = variant === 'page';
+  const isInline = variant === 'inline';
+  
   return (
-    <div className={cn(variantStyles[variant], className)}>
-      <div className={cn('text-center', contentStyles[variant])}>
-        <div
-          className={cn(
-            'mx-auto flex items-center justify-center rounded-full bg-destructive/10',
-            iconSize[variant]
-          )}
-        >
-          <AlertTriangle
-            className={cn(
-              'text-destructive',
-              variant === 'page'
-                ? 'size-8'
-                : variant === 'section'
-                  ? 'size-6'
-                  : 'size-4'
-            )}
-          />
+    <div className={cn(
+      'flex items-center justify-center text-center',
+      isPage ? 'min-h-screen p-8' : isInline ? 'min-h-[200px] p-4' : 'min-h-[400px] p-8',
+      className
+    )}>
+      <div className={cn('space-y-4', isPage ? 'max-w-md' : 'max-w-sm')}>
+        <div className={cn(
+          'mx-auto flex items-center justify-center rounded-full bg-destructive/10',
+          isPage ? 'size-16' : isInline ? 'size-8' : 'size-12'
+        )}>
+          <AlertTriangle className={cn(
+            'text-destructive',
+            isPage ? 'size-8' : isInline ? 'size-4' : 'size-6'
+          )} />
         </div>
 
         <div className="space-y-2">
-          <h2
-            className={cn(
-              'font-semibold text-destructive',
-              variant === 'page'
-                ? 'text-2xl'
-                : variant === 'section'
-                  ? 'text-lg'
-                  : 'text-base'
-            )}
-          >
-            {title || defaultTitle[variant]}
+          <h2 className={cn(
+            'font-semibold text-destructive',
+            isPage ? 'text-2xl' : isInline ? 'text-base' : 'text-lg'
+          )}>
+            {title || (isPage ? 'Application Error' : isInline ? 'Error occurred' : 'Something went wrong')}
           </h2>
-          <p
-            className={cn(
-              'text-muted-foreground',
-              variant === 'page' ? 'text-base' : 'text-sm'
-            )}
-          >
-            {error?.message ||
-              'An unexpected error occurred. Please try again.'}
+          <p className={cn('text-muted-foreground', isPage ? 'text-base' : 'text-sm')}>
+            {error?.message || 'An unexpected error occurred. Please try again.'}
           </p>
         </div>
 
-        <div
-          className={cn(
-            'flex justify-center gap-3',
-            variant === 'inline' ? 'flex-col' : 'flex-row'
-          )}
-        >
+        <div className={cn('flex justify-center gap-3', isInline ? 'flex-col' : 'flex-row')}>
           <Button
             onClick={onRetry}
-            variant="default"
-            size={variant === 'page' ? 'default' : 'sm'}
+            size={isPage ? 'default' : 'sm'}
             className="flex items-center gap-2"
           >
             <RefreshCw className="size-4" />
             Try Again
           </Button>
-
-          {variant !== 'inline' && (
+          {!isInline && (
             <Button
-              onClick={onReload}
+              onClick={() => window.location.reload()}
               variant="outline"
-              size={variant === 'page' ? 'default' : 'sm'}
+              size={isPage ? 'default' : 'sm'}
             >
               Reload Page
             </Button>
@@ -232,32 +129,19 @@ function UnifiedErrorUI({
         </div>
 
         {/* Development error details */}
-        {showDetails && error && (
+        {process.env.NODE_ENV === 'development' && error && (
           <details className="mt-4 text-left">
             <summary className="cursor-pointer text-sm font-medium text-muted-foreground hover:text-foreground">
-              Error Details (Development)
+              Error Details
             </summary>
-            <div className="mt-2 max-h-40 overflow-auto whitespace-pre-wrap break-all rounded-md bg-muted p-3 font-mono text-xs text-muted-foreground">
-              <div className="mb-2">
-                <strong>Error:</strong> {error.message}
-              </div>
-              <div className="mb-2">
-                <strong>Stack:</strong> {error.stack}
-              </div>
-              {errorInfo?.componentStack && (
-                <div>
-                  <strong>Component Stack:</strong>
-                  {errorInfo.componentStack}
-                </div>
-              )}
-            </div>
+            <pre className="mt-2 max-h-40 overflow-auto whitespace-pre-wrap break-all rounded-md bg-muted p-3 text-xs text-muted-foreground">
+              {error.stack}
+            </pre>
           </details>
         )}
       </div>
     </div>
   );
 }
-
-// === EXPORTS ===
 
 export default UnifiedErrorBoundary;

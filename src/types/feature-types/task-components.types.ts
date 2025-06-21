@@ -14,7 +14,9 @@ export interface BaseTaskComponentProps extends BaseComponentProps {
 }
 
 // Task card related props
-export interface TaskCardProps extends BaseTaskComponentProps {}
+export interface TaskCardProps extends BaseTaskComponentProps {
+  className?: string;
+}
 
 export interface TaskCardContentProps extends BaseTaskComponentProps {
   isExpanded?: boolean;
@@ -76,11 +78,11 @@ export interface TaskImageGalleryProps extends BaseComponentProps {
 export interface TaskFilterProps extends BaseComponentProps {
   currentFilter: string;
   onFilterChange: (filter: string) => void;
-  filterOptions: Array<{
+  filterOptions: {
     value: string;
     label: string;
     count?: number;
-  }>;
+  }[];
 }
 
 // Task status props

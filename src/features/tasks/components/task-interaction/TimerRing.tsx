@@ -1,4 +1,3 @@
-import { animated, SpringValue } from '@react-spring/web';
 import { memo, useMemo } from 'react';
 
 import { TaskStatus } from '@/types';
@@ -7,7 +6,7 @@ interface TimerRingProps {
   size: number;
   radius: number;
   circumference: number;
-  strokeDashoffset: SpringValue<number> | number;
+  strokeDashoffset: number;
   status: TaskStatus;
   daysRemaining: number | null;
 }
@@ -91,7 +90,7 @@ const TimerRing = ({
         stroke="#F9FAFB"
         style={{ strokeWidth: '2.5px' }}
       />
-      <animated.circle
+      <circle
         cx={size / 2}
         cy={size / 2}
         r={radius}
@@ -101,7 +100,7 @@ const TimerRing = ({
         strokeDashoffset={strokeDashoffset}
         transform={`rotate(-90, ${size / 2}, ${size / 2})`}
         strokeLinecap="round"
-        className="timer-progress"
+        className="timer-progress transition-all duration-300 ease-out"
         style={{
           filter: staticProps.filterId,
           strokeWidth: staticProps.strokeWidth,
@@ -118,9 +117,6 @@ export default memo(TimerRing, (prevProps, nextProps) => {
     prevProps.circumference === nextProps.circumference &&
     prevProps.status === nextProps.status &&
     prevProps.daysRemaining === nextProps.daysRemaining &&
-    (prevProps.strokeDashoffset === nextProps.strokeDashoffset ||
-      (typeof prevProps.strokeDashoffset === 'number' &&
-        typeof nextProps.strokeDashoffset === 'number' &&
-        prevProps.strokeDashoffset === nextProps.strokeDashoffset))
+    prevProps.strokeDashoffset === nextProps.strokeDashoffset
   );
 });

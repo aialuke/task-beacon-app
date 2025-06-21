@@ -1,4 +1,3 @@
-import { useSpring, animated } from '@react-spring/web';
 import { useMemo } from 'react';
 
 import {
@@ -6,7 +5,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import TimerTooltip from './TimerTooltip';
 import { useTaskUIContext } from '@/features/tasks/context/TaskUIContext';
 import { useCountdown } from '@/features/tasks/hooks/useCountdown';
 import { useMotionPreferences } from '@/hooks/useMotionPreferences';
@@ -14,6 +12,7 @@ import { TaskStatus } from '@/types';
 
 import TimerDisplay from './TimerDisplay';
 import TimerRing from './TimerRing';
+import TimerTooltip from './TimerTooltip';
 
 interface CountdownTimerProps {
   dueDate: string | null;
@@ -21,11 +20,9 @@ interface CountdownTimerProps {
   size?: number;
 }
 
-const AnimatedDiv = animated.div;
-
 function CountdownTimer({ dueDate, status, size = 48 }: CountdownTimerProps) {
   const { isMobile } = useTaskUIContext();
-  const { shouldReduceMotion, getAnimationConfig } = useMotionPreferences();
+  const { shouldReduceMotion } = useMotionPreferences();
 
   const { dynamicSize, radius, circumference } = useMemo(() => {
     // Remove priority-based sizing, use a single multiplier per deviceType
@@ -44,25 +41,6 @@ function CountdownTimer({ dueDate, status, size = 48 }: CountdownTimerProps) {
   const { timeDisplay, dashOffset, tooltipContent, ariaLabel, daysRemaining } =
     useCountdown(dueDate, status, circumference);
 
-  const springConfig = useMemo(
-    () =>
-      getAnimationConfig(
-        { tension: 120, friction: 14 },
-        { tension: 300, friction: 30 }
-      ),
-    [getAnimationConfig]
-  );
-
-  const { strokeDashoffset } = useSpring({
-    strokeDashoffset: dashOffset,
-    config: springConfig,
-    immediate:
-      status === 'complete' ||
-      status === 'overdue' ||
-      !dueDate ||
-      shouldReduceMotion,
-  });
-
   const containerStyles = useMemo(
     () => ({
       width: dynamicSize,
@@ -76,8 +54,8 @@ function CountdownTimer({ dueDate, status, size = 48 }: CountdownTimerProps) {
     <TooltipProvider>
       <Tooltip delayDuration={300}>
         <TooltipTrigger asChild>
-          <AnimatedDiv
-            role="timer"
+          <button
+            type="button"
             tabIndex={0}
             aria-label={ariaLabel}
             className={`timer-container relative flex items-center justify-center rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
@@ -93,7 +71,7 @@ function CountdownTimer({ dueDate, status, size = 48 }: CountdownTimerProps) {
               size={dynamicSize}
               radius={radius}
               circumference={circumference}
-              strokeDashoffset={strokeDashoffset}
+              strokeDashoffset={dashOffset}
               status={status}
               daysRemaining={daysRemaining}
             />
@@ -102,7 +80,7 @@ function CountdownTimer({ dueDate, status, size = 48 }: CountdownTimerProps) {
               status={status}
               timeDisplay={timeDisplay}
             />
-          </AnimatedDiv>
+          </button>
         </TooltipTrigger>
         <TimerTooltip tooltipContent={tooltipContent} status={status} />
       </Tooltip>

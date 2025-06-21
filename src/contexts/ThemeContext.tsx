@@ -12,13 +12,11 @@ interface ThemeContextType {
 }
 
 // Create standardized context
-const { Provider: ThemeContextProvider, useContext: useTheme } =
-  createStandardContext<ThemeContextType>({
-    name: 'Theme',
-    errorMessage: 'useTheme must be used within a ThemeProvider',
-  });
+const { Provider: ThemeContextProvider } = createStandardContext<ThemeContextType>({
+  name: 'Theme',
+  errorMessage: 'useTheme must be used within a ThemeProvider',
+});
 
-export { useTheme };
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>('dark'); // Default to dark

@@ -13,6 +13,9 @@ export const queryClient = new QueryClient({
       staleTime: cacheConfig.staleTime,
       refetchOnWindowFocus: true,
       refetchInterval: cacheConfig.refetchInterval,
+      // Enable React 19 Enhanced Suspense integration
+      suspense: false, // We use useSuspenseQuery explicitly
+      throwOnError: true, // Let error boundaries handle errors
     },
   },
 });

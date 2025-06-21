@@ -2,7 +2,6 @@ import { Send } from 'lucide-react';
 import { memo } from 'react';
 
 import { Button } from '@/components/ui/button';
-import { LoadingSpinner } from '@/components/ui/loading/UnifiedLoadingStates';
 import { cn } from '@/lib/utils';
 
 interface SubmitButtonProps {
@@ -41,7 +40,7 @@ export const SubmitButton = memo(function SubmitButton({
       className={buttonClasses}
     >
       {isSubmitting ? (
-        <LoadingSpinner size="sm" className="text-primary-foreground" />
+        <div className="animate-spin rounded-full size-5 border-2 border-primary-foreground border-t-transparent" />
       ) : (
         <Send className="size-5 flex-shrink-0 transition-all duration-200" />
       )}

@@ -1,7 +1,7 @@
 import { FileText, Sparkles } from 'lucide-react';
 import { memo, useCallback } from 'react';
 
-import { FloatingInput } from '@/components/ui/form/FloatingInput';
+import { FloatingInput } from '@/components/ui/FloatingInput';
 import { FloatingTextarea } from '@/components/ui/form/FloatingTextarea';
 import type { ProcessingResult } from '@/lib/utils/image/';
 

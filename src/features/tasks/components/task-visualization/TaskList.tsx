@@ -1,16 +1,16 @@
 import { memo, useMemo } from 'react';
 
-import { CardLoader } from '@/components/ui/loading/UnifiedLoadingStates';
 import { useTaskDataContext } from '@/features/tasks/context/TaskDataContext';
 import { useTaskUIContext } from '@/features/tasks/context/TaskUIContext';
 import { useTasksFilter } from '@/features/tasks/hooks/useTasksFilter';
 import type { Task } from '@/types';
 
-import TaskCard from './TaskCard';
 import TaskPagination from '../task-interaction/TaskPagination';
 
+import TaskCard from './TaskCard';
+
 function TaskListComponent() {
-  const { tasks, isLoading, error, pagination, totalCount, isFetching } =
+  const { tasks, pagination, totalCount, isFetching } =
     useTaskDataContext();
 
   const { filter, isMobile } = useTaskUIContext();
@@ -23,21 +23,6 @@ function TaskListComponent() {
     () => totalCount > pagination.pageSize,
     [totalCount, pagination.pageSize]
   );
-
-  if (isLoading) {
-    return <CardLoader count={3} />;
-  }
-
-  if (error) {
-    return (
-      <div className="flex h-64 items-center justify-center">
-        <div className="text-center">
-          <p className="text-muted-foreground">Failed to load tasks</p>
-          <p className="text-sm text-muted-foreground">{error}</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6">
@@ -66,7 +51,6 @@ function TaskListComponent() {
             totalCount={totalCount}
             pageSize={pagination.pageSize}
             isFetching={isFetching}
-            isLoading={isLoading}
           />
         </div>
       )}

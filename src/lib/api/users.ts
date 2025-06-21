@@ -8,6 +8,8 @@
 import { supabase } from '@/integrations/supabase/client';
 import type { ApiResponse, User, UserQueryOptions } from '@/types';
 
+import { withApiResponse } from './withApiResponse';
+
 /**
  * Get all users with optional query parameters
  * TODO: Implement full functionality in later phases
@@ -15,7 +17,7 @@ import type { ApiResponse, User, UserQueryOptions } from '@/types';
 export async function getAllUsers(
   options: UserQueryOptions = {}
 ): Promise<ApiResponse<User[]>> {
-  try {
+  return withApiResponse(async () => {
     // Basic implementation to prevent build errors
     const { data, error } = await supabase
       .from('profiles')
@@ -23,26 +25,9 @@ export async function getAllUsers(
       .limit(options.pageSize || 50);
 
     if (error) {
-      return {
-        success: false,
-        error: { name: 'GetUsersError', message: error.message },
-        data: null,
-      };
+      throw new Error(error.message);
     }
 
-    return {
-      success: true,
-      error: null,
-      data: data || [],
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error: {
-        name: 'GetUsersError',
-        message: error instanceof Error ? error.message : 'Unknown error',
-      },
-      data: null,
-    };
-  }
+    return data || [];
+  });
 }

@@ -6,11 +6,9 @@ import { createStandardContext } from '@/lib/utils/createContext';
 import type { Task } from '@/types';
 
 interface TaskDataContextValue {
-  // Data state (from React Query with standardized patterns)
+  // Data state (from React Query with Suspense patterns)
   tasks: Task[];
-  isLoading: boolean;
   isFetching: boolean;
-  error: string | null;
 
   // Pagination object (complete pagination API)
   pagination: {
@@ -58,9 +56,7 @@ export function TaskDataContextProvider({
   // Enhanced context value with error recovery - optimized with useMemo
   const contextValue: TaskDataContextValue = useMemo(() => ({
     tasks: taskQueries.tasks,
-    isLoading: taskQueries.isLoading,
     isFetching: taskQueries.isFetching,
-    error: taskQueries.error,
     totalCount: taskQueries.totalCount,
     pagination: {
       currentPage: taskQueries.pagination.currentPage,
@@ -79,9 +75,7 @@ export function TaskDataContextProvider({
       },
   }), [
     taskQueries.tasks,
-    taskQueries.isLoading,
     taskQueries.isFetching,
-    taskQueries.error,
     taskQueries.totalCount,
     taskQueries.pagination,
     taskQueries.refetch,

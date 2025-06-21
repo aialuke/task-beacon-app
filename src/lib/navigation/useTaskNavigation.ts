@@ -6,8 +6,8 @@
  * provides consistent navigation patterns throughout the app.
  */
 
-import { useNavigate } from 'react-router-dom';
 import { useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export interface TaskNavigationHook {
   /**

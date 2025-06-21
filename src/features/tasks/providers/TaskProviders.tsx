@@ -25,29 +25,6 @@ export function TaskProviders({ children }: TaskProvidersProps) {
   );
 }
 
-/**
- * UI-only task provider for components that don't need data context
- * Prevents unnecessary re-renders when data changes but UI state doesn't
- */
-export function TaskUIProvider({ children }: TaskProvidersProps) {
-  return (
-    <TaskUIContextProvider>
-      {children}
-    </TaskUIContextProvider>
-  );
-}
-
-/**
- * Data-only task provider for components that don't need UI context
- * Prevents unnecessary re-renders when UI state changes but data doesn't
- */
-export function TaskDataProvider({ children }: TaskProvidersProps) {
-  return (
-    <TaskDataContextProvider>
-      {children}
-    </TaskDataContextProvider>
-  );
-}
 
 // Removed unused convenience functions (useTaskFiltering, withTaskProviders)
 // Components should use contexts directly for better clarity

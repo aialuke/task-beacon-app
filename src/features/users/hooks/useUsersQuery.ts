@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { QueryKeys } from '@/lib/api/standardized-api';
 import { getAllUsers } from '@/lib/api/users';
@@ -10,8 +10,6 @@ interface UseUsersQueryOptions extends UserQueryOptions {
 
 interface UseUsersQueryReturn {
   users: User[];
-  isLoading: boolean;
-  error: Error | null;
   refetch: () => void;
 }
 
@@ -25,10 +23,8 @@ export function useUsersQuery(
 
   const {
     data: response,
-    isLoading,
-    error,
     refetch,
-  } = useQuery({
+  } = useSuspenseQuery({
     queryKey: [...QueryKeys.users, queryOptions],
     queryFn: async () => {
       return await getAllUsers(queryOptions);
@@ -47,8 +43,6 @@ export function useUsersQuery(
 
   return {
     users: response || [],
-    isLoading,
-    error,
     refetch,
   };
 }

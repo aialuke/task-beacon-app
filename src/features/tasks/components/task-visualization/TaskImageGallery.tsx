@@ -1,6 +1,5 @@
 
 // === INTERNAL UTILITIES ===
-import { LazyImage } from '@/components/ui/LazyImage';
 import { cn } from '@/lib/utils';
 import type { Task } from '@/types';
 
@@ -59,10 +58,11 @@ function TaskImageGallery({ task, className }: TaskImageGalleryProps) {
           className="block w-full overflow-hidden rounded-lg transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
           aria-label="View task image"
         >
-          <LazyImage
+          <img
             src={task.photo_url}
-            alt="Task image"
+            alt="Task attachment"
             className="h-48 w-full object-cover"
+            loading="lazy"
           />
         </button>
       </div>
