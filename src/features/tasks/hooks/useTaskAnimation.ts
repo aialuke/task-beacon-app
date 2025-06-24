@@ -1,11 +1,14 @@
-import { useState, startTransition } from 'react';
+import { startTransition } from 'react';
 
-export function useTaskAnimation() {
-  const [isExpanded, setIsExpanded] = useState(false);
+import { useTaskUIContext } from '../context/TaskUIContext';
+
+export function useTaskAnimation(taskId: string) {
+  const { expandedTaskId, setExpandedTaskId } = useTaskUIContext();
+  const isExpanded = expandedTaskId === taskId;
 
   const toggleExpanded = () => {
     startTransition(() => {
-      setIsExpanded(prev => !prev);
+      setExpandedTaskId(isExpanded ? null : taskId);
     });
   };
 

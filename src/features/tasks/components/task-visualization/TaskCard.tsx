@@ -10,7 +10,7 @@ import TaskCardHeader from './TaskCardHeader';
 
 function TaskCard({ task }: TaskCardProps) {
   const { contentRef, cardRef, isExpanded, animationState, toggleExpand } =
-    useTaskCard();
+    useTaskCard(task.id);
 
   // Memoized status color mapping to preserve exact visual appearance
   const statusClass = useMemo(() => {

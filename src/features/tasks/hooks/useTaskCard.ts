@@ -4,18 +4,18 @@ import type { Task as _Task } from '@/types';
 
 import { useTaskAnimation } from './useTaskAnimation';
 
-export function useTaskCard() {
+export function useTaskCard(taskId: string) {
   const contentRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
-  const { isExpanded, animationPhase, animationState, toggleExpanded } =
-    useTaskAnimation();
+  const { isExpanded, animationPhase, toggleExpanded } =
+    useTaskAnimation(taskId);
 
   return {
     contentRef,
     cardRef,
     isExpanded,
     animationPhase,
-    animationState,
+    animationState: animationPhase,
     toggleExpand: toggleExpanded,
   };
 }
