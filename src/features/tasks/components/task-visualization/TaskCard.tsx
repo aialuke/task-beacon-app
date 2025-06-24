@@ -40,15 +40,10 @@ function TaskCard({ task }: TaskCardProps) {
     [task.status],
   );
 
-  // Accessibility: Only make the card focusable/clickable when collapsed
-  const isCardInteractive = !isExpanded;
-
   // Memoized event handlers
   const handleCardClick = useCallback(() => {
-    if (isCardInteractive) {
-      toggleExpand();
-    }
-  }, [isCardInteractive, toggleExpand]);
+    toggleExpand();
+  }, [toggleExpand]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -71,23 +66,21 @@ function TaskCard({ task }: TaskCardProps) {
         </div>
       }
     >
-      <article
+      <div
         ref={cardRef}
-        className={`mx-auto mb-4 box-border w-full max-w-2xl rounded-xl border border-border bg-card p-5 text-card-foreground shadow-task-card transition-all duration-200 hover:shadow-md focus-visible:shadow-md active:shadow-md ${statusClass} ${expandedClass} ${
+        className={`mx-auto mb-4 box-border w-full max-w-2xl cursor-pointer rounded-xl border border-border bg-card p-5 text-card-foreground shadow-task-card transition-all duration-200 hover:shadow-md focus-visible:shadow-md active:shadow-md ${statusClass} ${expandedClass} ${
           task.status === 'complete'
             ? 'bg-muted'
             : task.status === 'overdue'
               ? 'border-destructive'
               : ''
-        } ${isCardInteractive ? 'cursor-pointer' : ''}`}
+        }`}
         style={statusStyles}
         aria-label={`Task: ${task.title}`}
-        {...(isCardInteractive && {
-          role: 'button',
-          tabIndex: 0,
-          onClick: handleCardClick,
-          onKeyDown: handleKeyDown,
-        })}
+        role="button"
+        tabIndex={0}
+        onClick={handleCardClick}
+        onKeyDown={handleKeyDown}
       >
         <TaskCardHeader
           task={task}
@@ -100,7 +93,7 @@ function TaskCard({ task }: TaskCardProps) {
           animationState={animationState}
           contentRef={contentRef}
         />
-      </article>
+      </div>
     </UnifiedErrorBoundary>
   );
 }

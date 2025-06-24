@@ -7,6 +7,10 @@ export function useTaskAnimation(taskId: string) {
   const isExpanded = expandedTaskId === taskId;
 
   const toggleExpanded = () => {
+    if (!taskId) {
+      console.error('toggleExpanded called with undefined taskId');
+      return;
+    }
     startTransition(() => {
       setExpandedTaskId(isExpanded ? null : taskId);
     });
