@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
@@ -9,6 +9,8 @@ import TaskDetailsContent from './TaskDetailsContent';
 import TaskStatus from './TaskStatus';
 
 function TaskCardCollapsible({ task }: TaskCardProps) {
+  const [isOpen, setIsOpen] = useState(false);
+
   // Memoized status color mapping to preserve exact visual appearance
   const statusClass = useMemo(() => {
     switch (task.status.toLowerCase()) {
@@ -43,7 +45,11 @@ function TaskCardCollapsible({ task }: TaskCardProps) {
       }
     >
       <Collapsible
-        defaultOpen={false}
+        open={isOpen}
+        onOpenChange={(open) => {
+          console.log('Collapsible state changed:', task.title, 'open:', open);
+          setIsOpen(open);
+        }}
         className={`mx-auto mb-4 box-border w-full max-w-2xl rounded-xl border border-border bg-card p-5 text-card-foreground shadow-task-card transition-all duration-200 hover:shadow-md active:shadow-md focus-visible:shadow-md data-[state=open]:scale-[1.02] data-[state=open]:shadow-expanded data-[state=open]:z-10 ${statusClass} ${
           task.status === 'complete'
             ? 'bg-muted'
@@ -56,6 +62,9 @@ function TaskCardCollapsible({ task }: TaskCardProps) {
         <CollapsibleTrigger
           className="flex w-full items-center gap-3 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           aria-label={`Task: ${task.title}`}
+          onClick={(e) => {
+            console.log('Collapsible trigger clicked:', task.title, e);
+          }}
         >
           <div className="pointer-events-none">
             <TaskStatus task={task} />
@@ -65,7 +74,7 @@ function TaskCardCollapsible({ task }: TaskCardProps) {
               {task.title}
             </h3>
           </div>
-          <ChevronDown className="size-4 shrink-0 transition-transform duration-200 data-[state=open]:rotate-180" />
+          <ChevronDown className={`size-4 shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
         </CollapsibleTrigger>
         <CollapsibleContent>
           <div className="pt-4">
