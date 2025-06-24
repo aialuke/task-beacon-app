@@ -21,12 +21,14 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 const TaskDetailsPage = lazy(() => import('./pages/TaskDetailsPage'));
 const CreateTaskPage = lazy(() => import('./pages/CreateTaskPage'));
 const FollowUpTaskPage = lazy(() => import('./pages/FollowUpTaskPage'));
+const TaskCardTest = lazy(() => import('./pages/TaskCardTest'));
 
 const App = () => (
   <AppProviders>
     <Suspense fallback={<AppLoadingFallback />}>
       <Routes>
         <Route path="/" element={<AuthPage />} />
+        <Route path="/test-cards" element={<TaskCardTest />} />
         <Route path="/create-task" element={<CreateTaskPage />} />
         <Route
           path="/follow-up-task/:parentTaskId"
