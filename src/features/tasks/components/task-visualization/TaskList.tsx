@@ -7,7 +7,7 @@ import type { Task } from '@/types';
 
 import TaskPagination from '../task-interaction/TaskPagination';
 
-import TaskCard from './TaskCard';
+import TaskCardCollapsible from './TaskCardCollapsible';
 
 function TaskListComponent() {
   const { tasks, pagination, totalCount, isFetching } = useTaskDataContext();
@@ -36,7 +36,7 @@ function TaskListComponent() {
             className={`space-y-4 sm:space-y-6 ${isMobile ? 'pb-20' : 'pb-6'}`}
           >
             {filteredTasks.map((task: Task) => (
-              <TaskCard key={task.id} task={task} />
+              <TaskCardCollapsible key={task.id} task={task} />
             ))}
           </div>
         )}
