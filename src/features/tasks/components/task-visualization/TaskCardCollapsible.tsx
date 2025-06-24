@@ -43,6 +43,7 @@ function TaskCardCollapsible({ task }: TaskCardProps) {
       }
     >
       <Collapsible
+        defaultOpen={false}
         className={`mx-auto mb-4 box-border w-full max-w-2xl rounded-xl border border-border bg-card p-5 text-card-foreground shadow-task-card transition-all duration-200 hover:shadow-md active:shadow-md focus-visible:shadow-md data-[state=open]:scale-[1.02] data-[state=open]:shadow-expanded data-[state=open]:z-10 ${statusClass} ${
           task.status === 'complete'
             ? 'bg-muted'
@@ -55,8 +56,11 @@ function TaskCardCollapsible({ task }: TaskCardProps) {
         <CollapsibleTrigger
           className="flex w-full items-center gap-3 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           aria-label={`Task: ${task.title}`}
+          onClick={() => console.log(`Collapsible trigger clicked for task: ${task.title}`)}
         >
-          <TaskStatus task={task} />
+          <div className="pointer-events-none">
+            <TaskStatus task={task} />
+          </div>
           <div className="flex min-w-0 flex-1 items-center">
             <h3 className="mb-0 text-base text-card-foreground sm:text-lg truncate">
               {task.title}
