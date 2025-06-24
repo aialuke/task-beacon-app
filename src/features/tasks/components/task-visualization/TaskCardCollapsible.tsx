@@ -59,25 +59,33 @@ function TaskCardCollapsible({ task }: TaskCardProps) {
         }`}
         style={statusStyles}
       >
-        <CollapsibleTrigger
-          className="flex w-full items-center gap-3 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-          aria-label={`Task: ${task.title}`}
-          onClick={(e) => {
-            console.log('Collapsible trigger clicked:', task.title, e);
-          }}
-        >
-          <div className="pointer-events-none">
-            <TaskStatus task={task} />
-          </div>
-          <div className="flex min-w-0 flex-1 items-center">
-            <h3 className="mb-0 text-base text-card-foreground sm:text-lg truncate">
-              {task.title}
-            </h3>
-          </div>
-          <ChevronDown className={`size-4 shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+        <CollapsibleTrigger asChild>
+          <button
+            className="flex w-full items-center gap-3 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border-0 bg-transparent p-0 text-left"
+            aria-label={`Task: ${task.title}`}
+            onClick={(e) => {
+              console.log('Collapsible trigger clicked:', task.title, e);
+            }}
+          >
+            <div className="pointer-events-none">
+              <TaskStatus task={task} />
+            </div>
+            <div className="flex min-w-0 flex-1 items-center">
+              <h3 className="mb-0 text-base text-card-foreground sm:text-lg truncate">
+                {task.title}
+              </h3>
+            </div>
+            <ChevronDown className={`size-4 shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+          </button>
         </CollapsibleTrigger>
         <CollapsibleContent>
           <div className="pt-4">
+            <button 
+              onClick={() => console.log('TEST BUTTON CLICKED for:', task.title)}
+              className="mb-2 px-4 py-2 bg-blue-500 text-white rounded"
+            >
+              Test Click (Debug)
+            </button>
             <TaskDetailsContent task={task} />
           </div>
         </CollapsibleContent>
