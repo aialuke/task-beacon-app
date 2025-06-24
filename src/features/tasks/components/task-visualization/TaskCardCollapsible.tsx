@@ -78,7 +78,7 @@ function TaskCardCollapsible({ task }: TaskCardProps) {
             <ChevronDown className={`size-4 shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
           </button>
         </CollapsibleTrigger>
-        <CollapsibleContent>
+        <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down">
           <div className="pt-4">
             <button 
               onClick={() => console.log('TEST BUTTON CLICKED for:', task.title)}
