@@ -35,7 +35,7 @@ interface UseTasksQueryReturn {
  * Eliminates scattered pagination logic and provides clean abstraction.
  */
 export function useTasksQuery(
-  options: UseTasksQueryOptions = {}
+  options: UseTasksQueryOptions = {},
 ): UseTasksQueryReturn {
   const { pageSize = 10, onPageChange } = options;
   const queryClient = useQueryClient();
@@ -80,7 +80,7 @@ export function useTasksQuery(
         };
       }
       // For failed responses, let error handling be done via onError
-      throw new Error(response.error?.message || 'Failed to load tasks');
+      throw new Error(response.error?.message ?? 'Failed to load tasks');
     },
     gcTime: 10 * 60 * 1000, // 10 minutes garbage collection
     enabled: !!user && !!session,
@@ -102,8 +102,7 @@ export function useTasksQuery(
 
   // Intelligent prefetching - only when beneficial
   const shouldPrefetch =
-    pagination.hasNextPage &&
-    response?.data.length === pagination.pageSize;
+    pagination.hasNextPage && response?.data.length === pagination.pageSize;
 
   if (shouldPrefetch && user && session) {
     const nextPageKey = [
@@ -129,7 +128,7 @@ export function useTasksQuery(
 
           if (!response.success) {
             throw new Error(
-              response.error?.message || 'Failed to prefetch tasks'
+              response.error?.message ?? 'Failed to prefetch tasks',
             );
           }
 
@@ -143,8 +142,8 @@ export function useTasksQuery(
   }
 
   return {
-    tasks: response?.data || [],
-    totalCount: response?.totalCount || 0,
+    tasks: response?.data ?? [],
+    totalCount: response?.totalCount ?? 0,
     pagination: {
       currentPage: pagination.currentPage,
       totalPages: pagination.totalPages,

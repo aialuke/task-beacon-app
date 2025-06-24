@@ -1,4 +1,3 @@
-
 import type { ProcessingResult } from '@/lib/utils/image/';
 
 export interface SimplePhotoUploadProps {

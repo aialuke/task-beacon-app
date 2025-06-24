@@ -1,5 +1,4 @@
 import { memo } from 'react';
-import { animated } from '@react-spring/web';
 import { LucideIcon } from 'lucide-react';
 
 import { useNavbar } from '@/hooks/ui';
@@ -35,9 +34,9 @@ export const SimpleNavbar = memo(function SimpleNavbar({
     setButtonRef,
     computedColors,
     handleKeyDown,
-    indicatorLineSpring,
-    buttonBackgroundSpring,
-    glowSpring,
+    indicatorLineStyle,
+    buttonBackgroundStyle,
+    glowStyle,
   } = useNavbar({ items, activeItem, onItemChange });
 
   return (
@@ -52,7 +51,7 @@ export const SimpleNavbar = memo(function SimpleNavbar({
         className="relative z-[100] flex items-center gap-1 rounded-full border border-border bg-card/80 p-2 shadow-lg backdrop-blur-md"
       >
         {/* Active indicator line above button */}
-        <animated.div
+        <div
           aria-hidden="true"
           style={{
             position: 'absolute',
@@ -66,12 +65,12 @@ export const SimpleNavbar = memo(function SimpleNavbar({
             boxShadow: computedColors.isDarkMode
               ? '0 0 8px rgba(255, 255, 255, 0.4)'
               : `0 0 8px ${computedColors.primaryGlow}`,
-            ...indicatorLineSpring,
+            ...indicatorLineStyle,
           }}
         />
 
         {/* Button background highlight */}
-        <animated.div
+        <div
           aria-hidden="true"
           style={{
             position: 'absolute',
@@ -81,12 +80,12 @@ export const SimpleNavbar = memo(function SimpleNavbar({
             borderRadius: '9999px',
             zIndex: 110,
             backgroundColor: computedColors.highlightColor,
-            ...buttonBackgroundSpring,
+            ...buttonBackgroundStyle,
           }}
         />
 
         {/* Glow effect */}
-        <animated.div
+        <div
           aria-hidden="true"
           style={{
             position: 'absolute',
@@ -97,8 +96,7 @@ export const SimpleNavbar = memo(function SimpleNavbar({
             zIndex: 105,
             backgroundColor: computedColors.primaryVeryLight,
             filter: 'blur(8px)',
-            opacity: 0.3,
-            ...glowSpring,
+            ...glowStyle,
           }}
         />
 
@@ -122,7 +120,7 @@ export const SimpleNavbar = memo(function SimpleNavbar({
                 'relative z-[120] flex h-10 min-w-10 items-center justify-center rounded-full px-3 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
                 isActive
                   ? 'text-foreground'
-                  : 'text-foreground/70 hover:text-foreground'
+                  : 'text-foreground/70 hover:text-foreground active:text-foreground/90',
               )}
               title={item.name}
             >

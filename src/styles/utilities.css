@@ -17,22 +17,6 @@
     contain: layout style paint;
   }
 
-  /* ===== INTERACTIVE UTILITIES ===== */
-  .interactive {
-    transition: all var(--duration-normal) var(--ease-out);
-    cursor: pointer;
-  }
-
-  .interactive:hover {
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
-  }
-
-  .interactive:active {
-    transform: translateY(0);
-    box-shadow: var(--shadow-sm);
-  }
-
   /* ===== SCROLL UTILITIES ===== */
   .scroll-smooth {
     scroll-behavior: smooth;

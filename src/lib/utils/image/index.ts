@@ -6,10 +6,7 @@
  */
 
 // Types - Only export types that are used externally
-export type {
-  ProcessingResult,
-  EnhancedImageProcessingOptions,
-} from './types';
+export type { ProcessingResult, EnhancedImageProcessingOptions } from './types';
 
 // Unused types removed: ImageMetadata, ConversionResult
 // Unused export removed: DEFAULT_PROCESSING_OPTIONS

@@ -1,6 +1,7 @@
 # Tech Stack Reference - Task Beacon App
 
-> **Project**: Task management application with advanced image processing and real-time collaboration  
+> **Project**: Task management application with advanced image processing and real-time
+> collaboration  
 > **Architecture**: Feature-based with centralized services  
 > **Last Updated**: 2025-01-18
 
@@ -8,28 +9,30 @@
 
 ## 📋 **Quick Reference**
 
-| **Category** | **Primary Technology** | **Version** |
-|--------------|------------------------|-------------|
-| **Frontend Framework** | React | 19.1.0 |
-| **Language** | TypeScript | 5.5.3 |
-| **Build Tool** | Vite | 5.4.1 |
-| **Backend/Database** | Supabase | 2.49.6 |
-| **State Management** | TanStack Query | 5.56.2 |
-| **Styling** | Tailwind CSS | 3.4.17 |
-| **Testing** | Vitest | 3.2.2 |
-| **Routing** | React Router | 7.6.2 |
+| **Category**           | **Primary Technology** | **Version** |
+| ---------------------- | ---------------------- | ----------- |
+| **Frontend Framework** | React                  | 19.1.0      |
+| **Language**           | TypeScript             | 5.5.3       |
+| **Build Tool**         | Vite                   | 5.4.1       |
+| **Backend/Database**   | Supabase               | 2.49.6      |
+| **State Management**   | TanStack Query         | 5.56.2      |
+| **Styling**            | Tailwind CSS           | 3.4.17      |
+| **Testing**            | Vitest                 | 3.2.2       |
+| **Routing**            | React Router           | 7.6.2       |
 
 ---
 
 ## 🎯 **Frontend Stack**
 
 ### **Core Framework**
+
 - **React 19.1.0** - Main UI framework with concurrent features
 - **TypeScript 5.5.3** - Static typing with strict configuration
 - **Vite 5.4.1** - Development server and build tool
 - **React Router DOM 7.6.2** - Client-side routing
 
 ### **UI & Styling**
+
 - **Tailwind CSS 3.4.17** - Utility-first CSS framework
 - **Shadcn UI Components** - Via Radix UI primitives:
   - `@radix-ui/react-avatar` (1.1.10)
@@ -43,10 +46,12 @@
 - **Lucide React** (0.511.0) - Icon library
 
 ### **Animation & Interactions**
+
 - **React Spring** (@react-spring/web 10.0.1) - Physics-based animations
 - **Custom CSS animations** - Performance-optimized with GPU acceleration
 
 ### **Forms & Validation**
+
 - **Zod** (3.23.8) - Schema validation and type inference
 - **React Hook Form** (implied from structure) - Form state management
 - **Custom validation hooks** - Feature-specific validation logic
@@ -56,6 +61,7 @@
 ## 🔧 **Backend & Infrastructure**
 
 ### **Backend-as-a-Service**
+
 - **Supabase** (2.49.6) - Complete backend solution providing:
   - **PostgreSQL Database** - Relational database with real-time subscriptions
   - **Authentication** - Built-in auth with multiple providers
@@ -64,6 +70,7 @@
   - **Edge Functions** - Serverless compute
 
 ### **Database Architecture**
+
 - **PostgreSQL** - Via Supabase with:
   - Row Level Security (RLS)
   - Real-time subscriptions
@@ -71,6 +78,7 @@
   - Database functions and triggers
 
 ### **API Layer**
+
 - **Supabase Client** - Type-safe database client
 - **Standardized API Services** - Centralized in `src/lib/api/`
 - **Error Handling** - Unified error management
@@ -81,6 +89,7 @@
 ## 📊 **State Management**
 
 ### **Server State**
+
 - **TanStack Query v5** (5.56.2) - Powerful data fetching with:
   - 5-minute stale time default
   - 3-attempt retry logic
@@ -89,6 +98,7 @@
   - Cache invalidation
 
 ### **Client State**
+
 - **React Context** - For UI state:
   - Theme management
   - Authentication status
@@ -96,6 +106,7 @@
   - Task UI state
 
 ### **Form State**
+
 - **Zod-based validation** - Type-safe form schemas
 - **Custom hooks** - Feature-specific form logic
 - **Real-time validation** - Immediate feedback
@@ -105,6 +116,7 @@
 ## 🧪 **Testing Framework**
 
 ### **Test Runner**
+
 - **Vitest** (3.2.2) - Fast unit test runner with:
   - JSDOM environment for DOM testing
   - V8 coverage provider
@@ -112,11 +124,13 @@
   - Concurrent test execution
 
 ### **Testing Libraries**
+
 - **React Testing Library** (16.3.0) - Component testing
 - **Jest DOM** (6.6.3) - Extended DOM matchers
 - **JSDOM** (26.1.0) - DOM simulation
 
 ### **Test Organization**
+
 ```bash
 # Test Commands
 npm run test              # Watch mode
@@ -132,6 +146,7 @@ npm run test:ci           # CI with JUnit output
 ```
 
 ### **Coverage Targets**
+
 - **Global**: 75% statements, 65% branches, 75% functions/lines
 - **API Layer**: 85% across all metrics
 - **Hooks**: 70% across all metrics
@@ -141,6 +156,7 @@ npm run test:ci           # CI with JUnit output
 ## 🏗️ **Build & Development Tools**
 
 ### **Build System**
+
 - **Vite 5.4.1** - Lightning-fast builds with:
   - Hot Module Replacement (HMR)
   - Bundle splitting optimization
@@ -149,6 +165,7 @@ npm run test:ci           # CI with JUnit output
   - SWC for React compilation
 
 ### **Bundle Optimization**
+
 ```typescript
 // Manual chunk splitting in vite.config.ts
 manualChunks: {
@@ -161,6 +178,7 @@ manualChunks: {
 ```
 
 ### **Code Quality**
+
 - **ESLint** (9.9.0) - Advanced linting with:
   - React hooks rules
   - Accessibility checks (jsx-a11y)
@@ -172,6 +190,7 @@ manualChunks: {
 - **Knip** (5.59.1) - Dead code detection and removal
 
 ### **CSS Tools**
+
 - **PostCSS** (8.5.4) - CSS processing
 - **Autoprefixer** (10.4.21) - Vendor prefix automation
 - **Stylelint** (16.20.0) - CSS linting
@@ -181,6 +200,7 @@ manualChunks: {
 ## 📁 **Architecture Patterns**
 
 ### **Feature-Based Structure**
+
 ```
 src/
 ├── features/           # Feature modules
@@ -197,6 +217,7 @@ src/
 ```
 
 ### **Component Organization**
+
 ```
 features/{feature}/
 ├── components/       # Feature UI components
@@ -208,6 +229,7 @@ features/{feature}/
 ```
 
 ### **Styling Architecture**
+
 ```
 src/styles/
 ├── base/            # Reset, typography, accessibility
@@ -222,12 +244,14 @@ src/styles/
 ## ⚡ **Performance Features**
 
 ### **Bundle Optimization**
+
 - **Code Splitting** - Route-based and component-based
 - **Tree Shaking** - Dead code elimination
 - **Manual Chunks** - Vendor, UI, and feature splitting
 - **Dynamic Imports** - Lazy loading for heavy components
 
 ### **Image Processing**
+
 - **Enhanced Image Utils** - Located in `src/lib/utils/image/`
 - **WebP Conversion** - Automatic format optimization
 - **Canvas Processing** - Client-side image manipulation
@@ -235,6 +259,7 @@ src/styles/
 - **Compression** - Quality and size optimization
 
 ### **Runtime Optimizations**
+
 - **GPU Acceleration** - CSS transforms with `transform-gpu`
 - **Animation Performance** - React Spring physics-based animations
 - **Memory Management** - Intelligent query caching
@@ -245,12 +270,14 @@ src/styles/
 ## 🔐 **Security & Accessibility**
 
 ### **Security**
+
 - **Row Level Security (RLS)** - Database-level permissions
 - **Type Safety** - End-to-end TypeScript coverage
 - **Input Validation** - Zod schema validation
 - **Environment Variables** - Secure configuration management
 
 ### **Accessibility**
+
 - **WCAG Compliance** - Comprehensive a11y implementation
 - **Screen Reader Support** - Enhanced `.sr-only` utilities
 - **Keyboard Navigation** - Full keyboard accessibility
@@ -263,12 +290,14 @@ src/styles/
 ## 🚀 **Development Workflow**
 
 ### **Environment**
+
 - **Node.js** - Version 22+ recommended
 - **Development Server** - `http://localhost:8080`
 - **Hot Reload** - Instant code updates
 - **TypeScript** - Strict mode with path mapping
 
 ### **Key Commands**
+
 ```bash
 # Development
 npm run dev              # Start dev server (port 8080)
@@ -287,6 +316,7 @@ npm run test:critical    # Critical path validation
 ```
 
 ### **Configuration Files**
+
 - `vite.config.ts` - Build and dev server config
 - `tsconfig.json` - TypeScript configuration
 - `tailwind.config.ts` - Styling configuration
@@ -298,6 +328,7 @@ npm run test:critical    # Critical path validation
 ## 📚 **Key Dependencies Summary**
 
 ### **Production Dependencies (26 total)**
+
 ```json
 {
   "react": "^19.1.0",
@@ -314,6 +345,7 @@ npm run test:critical    # Critical path validation
 ```
 
 ### **Development Dependencies (33 total)**
+
 ```json
 {
   "vite": "^5.4.1",

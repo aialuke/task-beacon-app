@@ -3,98 +3,66 @@ import type { BaseComponentProps } from '@/types/shared/components.types';
 
 /**
  * Task Component Type Definitions
- * 
+ *
  * Centralized types for task-related components including display,
  * interaction, and management component props.
  */
 
-// Base task component props
-export interface BaseTaskComponentProps extends BaseComponentProps {
-  task: Task;
-}
 
 // Task card related props
-export interface TaskCardProps extends BaseTaskComponentProps {
+export interface TaskCardProps extends BaseComponentProps {
+  task: Task;
   className?: string;
 }
 
-export interface TaskCardContentProps extends BaseTaskComponentProps {
+export interface TaskCardContentProps extends BaseComponentProps {
+  task: Task;
   isExpanded?: boolean;
 }
 
-export interface TaskCardHeaderProps extends BaseTaskComponentProps {
+export interface TaskCardHeaderProps extends BaseComponentProps {
+  task: Task;
   isExpanded: boolean;
   toggleExpand: () => void;
 }
 
 // Task details props
-export interface TaskDetailsContentProps extends BaseTaskComponentProps {
+export interface TaskDetailsContentProps extends BaseComponentProps {
+  task: Task;
   isExpanded?: boolean;
 }
 
-// Task actions props
-export interface TaskActionsProps extends BaseTaskComponentProps {
-  onView?: () => void;
-  onEdit?: () => void;
-  onDelete?: () => void;
+// Task interaction props
+export interface CountdownTimerProps {
+  dueDate: string;
   onComplete?: () => void;
-  variant?: 'compact' | 'full';
+  compact?: boolean;
+  showProgress?: boolean;
+  className?: string;
 }
 
-// Task list props
-export interface TaskListProps extends BaseComponentProps {
-  tasks: Task[];
-  isLoading?: boolean;
-  error?: string | null;
-  emptyMessage?: string;
-  onTaskClick?: (task: Task) => void;
+export interface TaskActionsProps {
+  task: Task;
+  onView: () => void;
+  isExpanded?: boolean;
 }
 
-// Task dashboard props
-export interface TaskDashboardProps extends BaseComponentProps {
-  showFilters?: boolean;
-  showStats?: boolean;
-  defaultFilter?: string;
-}
-
-// Countdown timer props
-export interface CountdownTimerProps extends BaseComponentProps {
-  dueDate: string | null;
-  status: 'pending' | 'complete' | 'overdue';
-  size?: number;
-  showTooltip?: boolean;
-}
-
-// Task image gallery props
-export interface TaskImageGalleryProps extends BaseComponentProps {
+export interface TaskImageGalleryProps {
+  task: Task;
   images: string[];
-  onImageClick?: (image: string, index: number) => void;
-  maxImages?: number;
-  showAddButton?: boolean;
-  onAddImage?: () => void;
+  onImageClick?: (imageUrl: string) => void;
+  className?: string;
 }
 
-// Task filter props
-export interface TaskFilterProps extends BaseComponentProps {
-  currentFilter: string;
-  onFilterChange: (filter: string) => void;
-  filterOptions: {
-    value: string;
-    label: string;
-    count?: number;
-  }[];
+export interface TaskStatusProps {
+  task: Task;
+  className?: string;
 }
 
-// Task status props
-export interface TaskStatusProps extends BaseComponentProps {
-  status: Task['status'];
-  onChange?: (status: Task['status']) => void;
-  readonly?: boolean;
-}
 
-// Task priority props (if used)
-export interface TaskPriorityProps extends BaseComponentProps {
-  priority?: 'low' | 'medium' | 'high' | 'urgent';
-  onChange?: (priority: TaskPriorityProps['priority']) => void;
-  readonly?: boolean;
-}
+
+
+
+
+
+

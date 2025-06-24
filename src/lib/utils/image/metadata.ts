@@ -49,7 +49,7 @@ export function calculateOptimalDimensions(
   originalHeight: number,
   maxWidth: number,
   maxHeight: number,
-  preserveAspectRatio = true
+  preserveAspectRatio = true,
 ): { width: number; height: number } {
   if (!preserveAspectRatio) {
     return {

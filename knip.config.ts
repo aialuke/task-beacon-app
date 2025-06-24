@@ -7,22 +7,29 @@ const config: KnipConfig = {
     'src/App.tsx',
     'index.html',
 
-    // Styling entry points (main CSS only, not @import chain)
+    // Styling entry points
     'src/index.css',
 
     // Configuration files
     'vite.config.ts',
     'tailwind.config.ts',
     'eslint.config.js',
+    'postcss.config.js',
 
-    // Testing entry points (Solution B: Selective Test Analysis)
+    // Testing entry points - Enhanced for React 19 patterns
     'src/test/setup.ts',
+    'src/test/test-utils.tsx', // Explicitly include test utilities
     'src/**/*.test.{ts,tsx}',
     'src/**/*.spec.{ts,tsx}',
-    'vitest.config.ts',
+    'src/**/__tests__/**/*.{ts,tsx}',
+    'src/**/integration/**/*.{ts,tsx}',
 
-    // Type definitions
+    // Type definitions that serve as entry points
     'src/**/*.d.ts',
+
+    // React 19 specific patterns
+    'src/lib/actions/**/*.ts', // Server actions
+    'src/providers/**/*.tsx', // Provider patterns
   ],
 
   project: [
@@ -31,8 +38,9 @@ const config: KnipConfig = {
     '!src/**/*.spec.{ts,tsx}',
     '!src/**/__tests__/**',
     '!src/**/__mocks__/**',
-    // Solution A: Ignore entire styles directory (CSS @import chains)
-    '!src/styles/**',
+    '!src/styles/**', // Ignore CSS @import chains
+    '!dist/**',
+    '!coverage/**',
   ],
 
   ignore: [
@@ -43,24 +51,28 @@ const config: KnipConfig = {
     '.git/**',
     'coverage/**',
 
-    // Solution A: Supabase - ignore generated files only
+    // Generated files from integrations
     'src/integrations/supabase/types.ts',
 
-    // Solution A: Tailwind CSS - ignore entire styles directory
+    // Styling directory (CSS imports not tracked well)
     'src/styles/**',
 
     // Development and tooling files
     '.cursor/**',
     '*.md',
     'public/**',
+    '.env*',
+
+    // Backup and temporary files
+    'backup-*/**',
+    '*-backup.*',
   ],
 
   ignoreDependencies: [
-    // Only ignore dependencies that actually show as false positives
-    // Based on actual testing, most utilities are properly detected by Knip
+    // Add any dependencies that show false positives here
   ],
 
-  // Enhanced plugin configurations for Solution B approaches
+  // Enhanced plugin configurations for React 19 and current tech stack
   vite: {
     config: 'vite.config.ts',
     entry: ['src/main.tsx', 'index.html'],
@@ -68,8 +80,12 @@ const config: KnipConfig = {
 
   vitest: {
     config: 'vite.config.ts',
-    // Solution B: Better test analysis
-    entry: ['src/test/setup.ts'],
+    entry: [
+      'src/test/setup.ts',
+      'src/test/test-utils.tsx',
+      'src/**/*.test.{ts,tsx}',
+      'src/**/__tests__/**/*.{ts,tsx}',
+    ],
   },
 
   eslint: {
@@ -78,6 +94,23 @@ const config: KnipConfig = {
 
   tailwind: {
     config: 'tailwind.config.ts',
+  },
+
+  typescript: {
+    config: 'tsconfig.json',
+  },
+
+  // CRITICAL: Ignore exports used in the same file they're defined
+  // This solves our main false positive pattern: local interface definitions
+  ignoreExportsUsedInFile: true,
+
+  // Rule configurations for unused code detection
+  rules: {
+    files: 'error',
+    dependencies: 'error',
+    devDependencies: 'error',
+    exports: 'warn', // More lenient for barrel exports
+    types: 'warn', // More lenient for TypeScript type exports
   },
 };
 

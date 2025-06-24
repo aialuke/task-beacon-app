@@ -23,10 +23,10 @@ async function processImageWithCanvas(
   canvasProcessor: (
     canvas: HTMLCanvasElement,
     ctx: CanvasRenderingContext2D,
-    img: HTMLImageElement
+    img: HTMLImageElement,
   ) => void,
   format: 'jpeg' | 'png' | 'webp',
-  quality: number
+  quality: number,
 ): Promise<Blob> {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -52,7 +52,7 @@ async function processImageWithCanvas(
             }
           },
           `image/${format}`,
-          quality
+          quality,
         );
       } catch (error) {
         reject(error);
@@ -69,7 +69,7 @@ async function processImageWithCanvas(
  */
 export async function processImageEnhanced(
   file: File,
-  options: EnhancedImageProcessingOptions = {}
+  options: EnhancedImageProcessingOptions = {},
 ): Promise<ProcessingResult> {
   const startTime = performance.now();
 
@@ -94,7 +94,7 @@ export async function processImageEnhanced(
       metadata.height,
       opts.maxWidth,
       opts.maxHeight,
-      opts.preserveAspectRatio
+      opts.preserveAspectRatio,
     );
 
     const blob = await processImageWithCanvas(
@@ -111,7 +111,7 @@ export async function processImageEnhanced(
         ctx.drawImage(img, 0, 0, newWidth, newHeight);
       },
       targetFormat,
-      opts.quality
+      opts.quality,
     );
 
     const processingTime = performance.now() - startTime;
@@ -148,7 +148,7 @@ export async function processImageEnhanced(
   } catch (error) {
     logger.error('Error processing image:', error);
     throw new Error(
-      `Failed to process image: ${error instanceof Error ? error.message : 'Unknown error'}`
+      `Failed to process image: ${error instanceof Error ? error.message : 'Unknown error'}`,
     );
   }
 }

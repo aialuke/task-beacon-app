@@ -80,7 +80,7 @@ const getTaskById = async (taskId: string) => {
         *,
         assignee:profiles!tasks_assignee_id_fkey(id, name, email, avatar_url),
         owner:profiles!tasks_owner_id_fkey(id, name, email, avatar_url)
-      `
+      `,
       )
       .eq('id', taskId)
       .single();
@@ -95,7 +95,7 @@ const getTasks = async (
     page?: number;
     pageSize?: number;
     assignedToMe?: boolean;
-  } = {}
+  } = {},
 ) => {
   return withApiResponse(async () => {
     const { page = 1, pageSize = 10, assignedToMe = false } = options;
@@ -108,7 +108,7 @@ const getTasks = async (
         assignee:profiles!tasks_assignee_id_fkey(id, name, email, avatar_url),
         owner:profiles!tasks_owner_id_fkey(id, name, email, avatar_url)
       `,
-      { count: 'exact' }
+      { count: 'exact' },
     );
 
     if (assignedToMe) {
@@ -127,12 +127,12 @@ const getTasks = async (
     if (error) throw error;
 
     return {
-      data: data || [],
+      data: data ?? [],
       pagination: {
-        totalCount: count || 0,
+        totalCount: count ?? 0,
         currentPage: page,
         pageSize,
-        hasNextPage: (count || 0) > page * pageSize,
+        hasNextPage: (count ?? 0) > page * pageSize,
       },
     };
   });
@@ -140,7 +140,7 @@ const getTasks = async (
 
 const updateTaskStatus = async (
   taskId: string,
-  status: 'pending' | 'complete' | 'overdue'
+  status: 'pending' | 'complete' | 'overdue',
 ) => {
   return withApiResponse(async () => {
     const { data, error } = await supabase

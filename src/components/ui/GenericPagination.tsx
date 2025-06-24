@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react';
+import { useMemo } from 'react';
 
 import type { PaginationAPI } from '@/types/pagination.types';
 
@@ -32,7 +32,6 @@ interface GenericPaginationProps {
 function GenericPaginationComponent({
   pagination,
   totalCount,
-  pageSize,
   showInfo = true,
   showPageNumbers = true,
   maxVisiblePages = 5,
@@ -52,7 +51,8 @@ function GenericPaginationComponent({
 
   // Memoized visible page numbers calculation
   const visiblePages = useMemo(() => {
-    if (!showPageNumbers || totalCount <= (pagination.pageSize || 10)) return [];
+    if (!showPageNumbers || totalCount <= (pagination.pageSize || 10))
+      return [];
 
     const pages: (number | 'ellipsis')[] = [];
     const half = Math.floor(maxVisiblePages / 2);
@@ -89,7 +89,14 @@ function GenericPaginationComponent({
     }
 
     return pages;
-  }, [currentPage, totalPages, maxVisiblePages, showPageNumbers, totalCount, pagination.pageSize]);
+  }, [
+    currentPage,
+    totalPages,
+    maxVisiblePages,
+    showPageNumbers,
+    totalCount,
+    pagination.pageSize,
+  ]);
 
   // Don't render if there's only one page or less
   if (totalCount <= (pagination.pageSize || 10)) {
@@ -116,12 +123,12 @@ function GenericPaginationComponent({
 
           {showPageNumbers &&
             visiblePages.map((page, index) => (
-              <PaginationItem key={index}>
+              <PaginationItem key={page === 'ellipsis' ? `ellipsis-${index}` : page}>
                 {page === 'ellipsis' ? (
                   <PaginationEllipsis />
                 ) : (
                   <PaginationLink
-                    onClick={() => goToPage(page as number)}
+                    onClick={() => goToPage(page)}
                     isActive={page === currentPage}
                     className="cursor-pointer"
                   >
@@ -155,8 +162,8 @@ function GenericPaginationComponent({
       {/* Optional info display */}
       {showInfo && (
         <div className="mt-2 text-center text-sm text-muted-foreground">
-          Showing {Math.min((currentPage - 1) * pageSize + 1, totalCount)} to{' '}
-          {Math.min(currentPage * pageSize, totalCount)} of {totalCount} items
+          Showing {Math.min((currentPage - 1) * pagination.pageSize + 1, totalCount)} to{' '}
+          {Math.min(currentPage * pagination.pageSize, totalCount)} of {totalCount} items
         </div>
       )}
 
@@ -170,4 +177,4 @@ function GenericPaginationComponent({
   );
 }
 
-export default memo(GenericPaginationComponent);
+export default GenericPaginationComponent;

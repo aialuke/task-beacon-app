@@ -55,7 +55,7 @@ class UnifiedErrorBoundary extends Component<
       return (
         <ErrorDisplay
           error={this.state.error}
-          variant={this.props.variant || 'section'}
+          variant={this.props.variant ?? 'section'}
           title={this.props.title}
           onRetry={this.handleRetry}
           className={this.props.className}
@@ -75,40 +75,74 @@ interface ErrorDisplayProps {
   className?: string;
 }
 
-function ErrorDisplay({ error, variant, title, onRetry, className }: ErrorDisplayProps) {
+function ErrorDisplay({
+  error,
+  variant,
+  title,
+  onRetry,
+  className,
+}: ErrorDisplayProps) {
   const isPage = variant === 'page';
   const isInline = variant === 'inline';
-  
+
   return (
-    <div className={cn(
-      'flex items-center justify-center text-center',
-      isPage ? 'min-h-screen p-8' : isInline ? 'min-h-[200px] p-4' : 'min-h-[400px] p-8',
-      className
-    )}>
+    <div
+      className={cn(
+        'flex items-center justify-center text-center',
+        isPage
+          ? 'min-h-screen p-8'
+          : isInline
+            ? 'min-h-[200px] p-4'
+            : 'min-h-[400px] p-8',
+        className,
+      )}
+    >
       <div className={cn('space-y-4', isPage ? 'max-w-md' : 'max-w-sm')}>
-        <div className={cn(
-          'mx-auto flex items-center justify-center rounded-full bg-destructive/10',
-          isPage ? 'size-16' : isInline ? 'size-8' : 'size-12'
-        )}>
-          <AlertTriangle className={cn(
-            'text-destructive',
-            isPage ? 'size-8' : isInline ? 'size-4' : 'size-6'
-          )} />
+        <div
+          className={cn(
+            'mx-auto flex items-center justify-center rounded-full bg-destructive/10',
+            isPage ? 'size-16' : isInline ? 'size-8' : 'size-12',
+          )}
+        >
+          <AlertTriangle
+            className={cn(
+              'text-destructive',
+              isPage ? 'size-8' : isInline ? 'size-4' : 'size-6',
+            )}
+          />
         </div>
 
         <div className="space-y-2">
-          <h2 className={cn(
-            'font-semibold text-destructive',
-            isPage ? 'text-2xl' : isInline ? 'text-base' : 'text-lg'
-          )}>
-            {title || (isPage ? 'Application Error' : isInline ? 'Error occurred' : 'Something went wrong')}
+          <h2
+            className={cn(
+              'font-semibold text-destructive',
+              isPage ? 'text-2xl' : isInline ? 'text-base' : 'text-lg',
+            )}
+          >
+            {title ??
+              (isPage
+                ? 'Application Error'
+                : isInline
+                  ? 'Error occurred'
+                  : 'Something went wrong')}
           </h2>
-          <p className={cn('text-muted-foreground', isPage ? 'text-base' : 'text-sm')}>
-            {error?.message || 'An unexpected error occurred. Please try again.'}
+          <p
+            className={cn(
+              'text-muted-foreground',
+              isPage ? 'text-base' : 'text-sm',
+            )}
+          >
+            {error?.message ??
+              'An unexpected error occurred. Please try again.'}
           </p>
         </div>
 
-        <div className={cn('flex justify-center gap-3', isInline ? 'flex-col' : 'flex-row')}>
+        <div
+          className={cn(
+            'flex justify-center gap-3',
+            isInline ? 'flex-col' : 'flex-row',
+          )}
+        >
           <Button
             onClick={onRetry}
             size={isPage ? 'default' : 'sm'}
@@ -131,7 +165,7 @@ function ErrorDisplay({ error, variant, title, onRetry, className }: ErrorDispla
         {/* Development error details */}
         {process.env.NODE_ENV === 'development' && error && (
           <details className="mt-4 text-left">
-            <summary className="cursor-pointer text-sm font-medium text-muted-foreground hover:text-foreground">
+            <summary className="cursor-pointer text-sm font-medium text-muted-foreground transition-colors duration-200 hover:text-foreground focus-visible:text-foreground active:text-foreground">
               Error Details
             </summary>
             <pre className="mt-2 max-h-40 overflow-auto whitespace-pre-wrap break-all rounded-md bg-muted p-3 text-xs text-muted-foreground">

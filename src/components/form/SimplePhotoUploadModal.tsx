@@ -1,4 +1,3 @@
-
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
@@ -37,7 +36,8 @@ export default function SimplePhotoUploadModal({
     loading,
     // Only include optional properties if they are defined
     ...(onPhotoRemove && { onPhotoRemove }),
-    ...(processingResult !== null && processingResult !== undefined && { processingResult }),
+    ...(processingResult !== null &&
+      processingResult !== undefined && { processingResult }),
   };
 
   return (

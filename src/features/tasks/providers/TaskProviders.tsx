@@ -18,13 +18,10 @@ interface TaskProvidersProps {
 export function TaskProviders({ children }: TaskProvidersProps) {
   return (
     <TaskDataContextProvider>
-      <TaskUIContextProvider>
-        {children}
-      </TaskUIContextProvider>
+      <TaskUIContextProvider>{children}</TaskUIContextProvider>
     </TaskDataContextProvider>
   );
 }
-
 
 // Removed unused convenience functions (useTaskFiltering, withTaskProviders)
 // Components should use contexts directly for better clarity

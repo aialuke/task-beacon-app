@@ -8,19 +8,17 @@ import {
 import { useTaskUIContext } from '@/features/tasks/context/TaskUIContext';
 import { useCountdown } from '@/features/tasks/hooks/useCountdown';
 import { useMotionPreferences } from '@/hooks/useMotionPreferences';
-import { TaskStatus } from '@/types';
+import type { CountdownTimerProps } from '@/types';
 
 import TimerDisplay from './TimerDisplay';
 import TimerRing from './TimerRing';
 import TimerTooltip from './TimerTooltip';
 
-interface CountdownTimerProps {
-  dueDate: string | null;
-  status: TaskStatus;
-  size?: number;
-}
-
-const CountdownTimer = memo(function CountdownTimer({ dueDate, status, size = 48 }: CountdownTimerProps) {
+const CountdownTimer = memo(function CountdownTimer({
+  dueDate,
+  status,
+  size = 48,
+}: CountdownTimerProps) {
   const { isMobile } = useTaskUIContext();
   const { shouldReduceMotion } = useMotionPreferences();
 
@@ -47,7 +45,7 @@ const CountdownTimer = memo(function CountdownTimer({ dueDate, status, size = 48
       height: dynamicSize,
       transform: shouldReduceMotion ? undefined : 'translateZ(0)',
     }),
-    [dynamicSize, shouldReduceMotion]
+    [dynamicSize, shouldReduceMotion],
   );
 
   return (
@@ -58,14 +56,14 @@ const CountdownTimer = memo(function CountdownTimer({ dueDate, status, size = 48
             type="button"
             tabIndex={0}
             aria-label={ariaLabel}
+            style={containerStyles}
             className={`timer-container relative flex items-center justify-center rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
               status === 'pending' &&
               Number(timeDisplay) === 0 &&
               !shouldReduceMotion
                 ? 'animate-pulse-subtle'
                 : ''
-            } ${shouldReduceMotion ? '' : 'transform-gpu backface-hidden'}`}
-            style={containerStyles}
+            } ${shouldReduceMotion ? '' : 'backface-hidden transform-gpu'}`}
           >
             <TimerRing
               size={dynamicSize}

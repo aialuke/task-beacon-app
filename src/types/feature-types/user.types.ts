@@ -34,13 +34,6 @@ interface UserCreateData {
   notificationPreferences?: Partial<NotificationPreferences>;
 }
 
-export interface UserUpdateData {
-  name?: string;
-  email?: string;
-  role?: UserRole;
-  avatar_url?: string;
-}
-
 // Query and filtering options
 export interface UserQueryOptions {
   page?: number;
@@ -49,14 +42,6 @@ export interface UserQueryOptions {
   role?: UserRole;
   sortBy?: 'name' | 'email' | 'created_at';
   sortDirection?: 'asc' | 'desc';
-}
-
-// Search options for user service
-export interface UserSearchOptions {
-  query?: string;
-  role?: UserRole;
-  limit?: number;
-  excludeCurrentUser?: boolean;
 }
 
 // Export convenience type aliases

@@ -83,7 +83,7 @@ interface ContextReturn<T> {
  * ```
  */
 export function createStandardContext<T>(
-  options: CreateContextOptions<T>
+  options: CreateContextOptions<T>,
 ): ContextReturn<T> {
   const { name, strict = true, defaultValue, errorMessage } = options;
 
@@ -121,7 +121,7 @@ export function createStandardContext<T>(
         return defaultValue;
       }
       throw new Error(
-        `use${name} called outside provider and no defaultValue provided`
+        `use${name} called outside provider and no defaultValue provided`,
       );
     }
 

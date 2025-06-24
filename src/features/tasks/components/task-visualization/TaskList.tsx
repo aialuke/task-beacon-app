@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react';
+import { useMemo } from 'react';
 
 import { useTaskDataContext } from '@/features/tasks/context/TaskDataContext';
 import { useTaskUIContext } from '@/features/tasks/context/TaskUIContext';
@@ -10,8 +10,7 @@ import TaskPagination from '../task-interaction/TaskPagination';
 import TaskCard from './TaskCard';
 
 function TaskListComponent() {
-  const { tasks, pagination, totalCount, isFetching } =
-    useTaskDataContext();
+  const { tasks, pagination, totalCount, isFetching } = useTaskDataContext();
 
   const { filter, isMobile } = useTaskUIContext();
 
@@ -21,7 +20,7 @@ function TaskListComponent() {
   // Show pagination if there are multiple pages
   const shouldShowPagination = useMemo(
     () => totalCount > pagination.pageSize,
-    [totalCount, pagination.pageSize]
+    [totalCount, pagination.pageSize],
   );
 
   return (
@@ -58,4 +57,4 @@ function TaskListComponent() {
   );
 }
 
-export default memo(TaskListComponent);
+export default TaskListComponent;

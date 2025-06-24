@@ -7,11 +7,11 @@ export default {
   safelist: [
     // Dynamic color utilities used in status indicators and interactive elements
     'text-destructive',
-    'text-success', 
+    'text-success',
     'text-primary',
     'bg-destructive',
     'bg-success',
-    
+
     // SVG icon color utilities applied dynamically based on status
     'fill-destructive',
     'fill-success',
@@ -19,7 +19,7 @@ export default {
     'stroke-destructive',
     'stroke-success',
     'stroke-primary',
-    
+
     // Dark mode gray variations for dynamic theme switching
     'dark:bg-gray-800',
     'dark:bg-gray-900',

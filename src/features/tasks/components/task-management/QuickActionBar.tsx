@@ -1,4 +1,4 @@
-import { User, ImageUp, Link, FileCheck } from 'lucide-react';
+import { User, ImageUp, Link as LinkIcon, FileCheck } from 'lucide-react';
 import { useState, useCallback, type ChangeEvent, type FormEvent } from 'react';
 
 import { ActionButton } from '@/components/form/components/ActionButton';
@@ -122,7 +122,7 @@ export function QuickActionBar({
 
         {/* URL Button */}
         <ActionButton
-          icon={hasUrl ? FileCheck : Link}
+          icon={hasUrl ? FileCheck : LinkIcon}
           label={hasUrl ? 'Link Added' : 'Link'}
           active={hasUrl}
           disabled={disabled}

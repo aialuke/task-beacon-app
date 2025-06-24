@@ -20,11 +20,6 @@ export interface ApiError {
   details?: unknown;
 }
 
-export interface ServiceResult<T = unknown> {
-  data: T | null;
-  error: ApiError | null;
-  success: boolean;
-}
 
 interface ActionResult<T = unknown> {
   success: boolean;

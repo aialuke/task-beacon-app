@@ -1,5 +1,3 @@
-import { memo } from 'react';
-
 import type { TaskCardContentProps } from '@/types';
 
 import TaskDetails from './TaskDetails';
@@ -14,12 +12,8 @@ function TaskCardContent({
   contentRef,
 }: ExtendedTaskCardContentProps) {
   return (
-    <TaskDetails
-      task={task}
-      isExpanded={isExpanded}
-      contentRef={contentRef}
-    />
+    <TaskDetails task={task} isExpanded={isExpanded} contentRef={contentRef} />
   );
 }
 
-export default memo(TaskCardContent);
+export default TaskCardContent;

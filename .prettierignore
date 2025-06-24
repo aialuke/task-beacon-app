@@ -47,13 +47,12 @@ package-lock.json
 yarn.lock
 pnpm-lock.yaml
 
-# Static assets
+# Static assets (but allow formatting of icon files used in imports)
 public/
 *.png
 *.jpg
 *.jpeg
 *.gif
-*.svg
 *.ico
 
 # Supabase
@@ -74,7 +73,14 @@ out/
 *.tmp
 *.temp
 
+# Backup files from refactoring
+backup-*/
+*.backup.*
+
 # Configuration files that should maintain their format
 .gitignore
 .eslintignore
-.prettierignore 
+.prettierignore
+
+# Generated TypeScript files from tools
+src/types/database.d.ts 

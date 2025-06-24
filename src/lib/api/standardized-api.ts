@@ -55,7 +55,7 @@ function createSuccessResponse<T>(data: T): ApiResponse<T> {
  * Standard error response creator
  */
 function createErrorResponse<T = null>(
-  error: ExtendedApiError
+  error: ExtendedApiError,
 ): ApiResponse<T> {
   return {
     data: null,
@@ -90,4 +90,3 @@ export const QueryKeys = {
     return queryClient.invalidateQueries({ queryKey: QueryKeys.users });
   },
 } as const;
-

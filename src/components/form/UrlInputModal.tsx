@@ -1,5 +1,5 @@
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
-import { Link, ArrowRight } from 'lucide-react';
+import { Link as LinkIcon, ArrowRight } from 'lucide-react';
 import { useState, useRef, type KeyboardEvent, type ChangeEvent } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -89,8 +89,8 @@ export function UrlInputModal({
           <DialogTitle>Enter URL</DialogTitle>
         </VisuallyHidden>
         <div className="space-y-4">
-          <div className="relative flex h-12 items-center rounded-2xl border border-border bg-background/60 p-2 backdrop-blur-sm hover:bg-background/70">
-            <Link className={cn('ml-1 size-4', getIconColor())} />
+          <div className="relative flex h-12 items-center rounded-2xl border border-border bg-background/60 p-2 backdrop-blur-sm transition-colors duration-200 focus-within:bg-background/75 hover:bg-background/70 active:bg-background/75">
+            <LinkIcon className={cn('ml-1 size-4', getIconColor())} />
 
             <div className="ml-3 flex min-w-0 flex-1 items-center">
               <Input
@@ -102,9 +102,8 @@ export function UrlInputModal({
                 onKeyDown={handleKeyDown}
                 className={cn(
                   'h-auto border-none bg-transparent pl-1 pr-0 text-sm font-semibold focus:ring-0 focus-visible:ring-0',
-                  getTextColor()
+                  getTextColor(),
                 )}
-                // eslint-disable-next-line jsx-a11y/no-autofocus
                 autoFocus
               />
             </div>
@@ -120,7 +119,7 @@ export function UrlInputModal({
               <ArrowRight
                 className={cn(
                   'size-4 transition-colors',
-                  isValid ? 'text-blue-500' : 'text-muted-foreground'
+                  isValid ? 'text-blue-500' : 'text-muted-foreground',
                 )}
               />
             </Button>

@@ -34,13 +34,13 @@ export function AutocompleteUserInput({
     disabled,
     logic.selectedUser,
     logic.isFocused,
-    logic.validationState
+    logic.validationState,
   );
 
   const showPlaceholder = shouldShowPlaceholder(
     logic.inputValue,
     logic.isFocused,
-    logic.selectedUser
+    logic.selectedUser,
   );
 
   return (
@@ -49,10 +49,10 @@ export function AutocompleteUserInput({
         <div
           className={cn(
             'flex h-12 items-center rounded-2xl border bg-background/60 p-2 backdrop-blur-sm transition-all duration-300',
-            'hover:border-border/60 hover:bg-background/70',
+            'focus-within:bg-background/75 hover:border-border/60 hover:bg-background/70 active:bg-background/75',
             logic.isFocused && 'bg-background/80',
             borderColor,
-            disabled && 'cursor-not-allowed opacity-50'
+            disabled && 'cursor-not-allowed opacity-50',
           )}
         >
           <AutocompleteStatusIcon
@@ -120,7 +120,7 @@ export function AutocompleteUserInput({
             <ArrowRight
               className={cn(
                 'size-4 transition-colors',
-                logic.selectedUser ? 'text-primary' : 'text-muted-foreground'
+                logic.selectedUser ? 'text-primary' : 'text-muted-foreground',
               )}
             />
           </Button>

@@ -1,5 +1,3 @@
-import { memo } from 'react';
-
 import type { TaskCardHeaderProps } from '@/types';
 
 import TaskHeader from './TaskHeader';
@@ -18,4 +16,4 @@ function TaskCardHeader({
   );
 }
 
-export default memo(TaskCardHeader);
+export default TaskCardHeader;

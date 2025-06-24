@@ -15,7 +15,7 @@ const TimerTooltip = ({ tooltipContent, status }: TimerTooltipProps) => {
     <TooltipContent
       id="timer-tooltip"
       className={`z-50 px-5 py-3 text-lg shadow-xl ${getStatusTooltipClass(
-        status
+        status,
       )}`}
       side="top"
       sideOffset={10}

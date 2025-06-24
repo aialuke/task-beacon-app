@@ -36,10 +36,13 @@ const ModernAuthForm: React.FC = () => {
 
           <form action={action} className="space-y-6">
             <input type="hidden" name="mode" value={mode} />
-            
+
             {mode === 'signup' && (
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-foreground">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-foreground"
+                >
                   Full Name
                 </label>
                 <Input
@@ -51,7 +54,7 @@ const ModernAuthForm: React.FC = () => {
                   className="mt-1"
                 />
                 {state.errors.name && (
-                  <div className="text-red-500 text-sm mt-1">
+                  <div className="mt-1 text-sm text-red-500">
                     {state.errors.name[0]}
                   </div>
                 )}
@@ -59,7 +62,10 @@ const ModernAuthForm: React.FC = () => {
             )}
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-foreground">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-foreground"
+              >
                 Email
               </label>
               <Input
@@ -71,14 +77,17 @@ const ModernAuthForm: React.FC = () => {
                 className="mt-1"
               />
               {state.errors.email && (
-                <div className="text-red-500 text-sm mt-1">
+                <div className="mt-1 text-sm text-red-500">
                   {state.errors.email[0]}
                 </div>
               )}
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-foreground">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-foreground"
+              >
                 Password
               </label>
               <Input
@@ -90,7 +99,7 @@ const ModernAuthForm: React.FC = () => {
                 className="mt-1"
               />
               {state.errors.password && (
-                <div className="text-red-500 text-sm mt-1">
+                <div className="mt-1 text-sm text-red-500">
                   {state.errors.password[0]}
                 </div>
               )}
@@ -98,7 +107,10 @@ const ModernAuthForm: React.FC = () => {
 
             {mode === 'signup' && (
               <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-foreground">
+                <label
+                  htmlFor="confirmPassword"
+                  className="block text-sm font-medium text-foreground"
+                >
                   Confirm Password
                 </label>
                 <Input
@@ -110,30 +122,28 @@ const ModernAuthForm: React.FC = () => {
                   className="mt-1"
                 />
                 {state.errors.confirmPassword && (
-                  <div className="text-red-500 text-sm mt-1">
+                  <div className="mt-1 text-sm text-red-500">
                     {state.errors.confirmPassword[0]}
                   </div>
                 )}
               </div>
             )}
 
-            <Button
-              type="submit"
-              disabled={isPending}
-              className="w-full"
-            >
+            <Button type="submit" disabled={isPending} className="w-full">
               {isPending ? (
                 <>
                   <Loader2 className="mr-2 size-4 animate-spin" />
                   {mode === 'signin' ? 'Signing in...' : 'Creating account...'}
                 </>
+              ) : mode === 'signin' ? (
+                'Sign In'
               ) : (
-                mode === 'signin' ? 'Sign In' : 'Sign Up'
+                'Sign Up'
               )}
             </Button>
 
             {state.errors.form && (
-              <div className="text-red-500 text-sm text-center">
+              <div className="text-center text-sm text-red-500">
                 {state.errors.form[0]}
               </div>
             )}
@@ -147,10 +157,9 @@ const ModernAuthForm: React.FC = () => {
               disabled={isPending}
               className="text-sm"
             >
-              {mode === 'signin' 
+              {mode === 'signin'
                 ? "Don't have an account? Sign up"
-                : "Already have an account? Sign in"
-              }
+                : 'Already have an account? Sign in'}
             </Button>
           </div>
         </CardContent>

@@ -27,7 +27,7 @@ export function AutocompleteUserTag({
       <span>{getUserDisplayName(user)}</span>
       <button
         type="button"
-        className="ml-1 text-primary/70 hover:text-primary"
+        className="ml-1 text-primary/70 transition-colors duration-200 hover:text-primary focus-visible:text-primary active:text-primary"
         onClick={onClear}
         disabled={disabled}
       >

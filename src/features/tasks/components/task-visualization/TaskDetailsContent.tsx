@@ -1,5 +1,4 @@
 import { Calendar1, ExternalLink } from 'lucide-react';
-import { memo } from 'react';
 
 import { useTaskNavigation } from '@/lib/navigation';
 import { formatDate } from '@/lib/utils/date';
@@ -30,7 +29,7 @@ function TaskDetailsContent({
       <TaskImageGallery task={task} />
 
       {/* Date + URL Info (Combined Section) */}
-      {(task.due_date || task.url_link) && (
+      {(task.due_date ?? task.url_link) && (
         <div className="space-y-3">
           {task.due_date && (
             <div className="flex items-center gap-3">
@@ -48,7 +47,7 @@ function TaskDetailsContent({
                 href={task.url_link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1 text-sm text-primary hover:underline"
+                className="flex items-center gap-1 text-sm text-primary transition-colors duration-200 hover:underline focus-visible:underline active:underline"
               >
                 {task.url_link}
               </a>
@@ -78,4 +77,4 @@ function TaskDetailsContent({
   );
 }
 
-export default memo(TaskDetailsContent);
+export default TaskDetailsContent;

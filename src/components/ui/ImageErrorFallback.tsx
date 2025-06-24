@@ -1,5 +1,3 @@
-import { memo } from 'react';
-
 interface ImageErrorFallbackProps {
   message?: string;
   description?: string;
@@ -19,4 +17,4 @@ function ImageErrorFallback({
   );
 }
 
-export default memo(ImageErrorFallback);
+export default ImageErrorFallback;

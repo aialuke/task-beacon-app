@@ -1,6 +1,6 @@
 /**
  * Auth Action for React 19 useActionState
- * 
+ *
  * Replaces the 346-line useAuthForm hook with server-side form handling,
  * leveraging React 19's useActionState for built-in pending states and validation.
  */
@@ -29,7 +29,7 @@ export interface AuthState {
 
 export async function authAction(
   prevState: AuthState,
-  formData: FormData
+  formData: FormData,
 ): Promise<AuthState> {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
@@ -39,12 +39,13 @@ export async function authAction(
 
   // Validation
   const schema = mode === 'signin' ? signInSchema : signUpSchema;
-  const validationData = mode === 'signup' 
-    ? { email, password, confirmPassword, name }
-    : { email, password };
-    
+  const validationData =
+    mode === 'signup'
+      ? { email, password, confirmPassword, name }
+      : { email, password };
+
   const validation = schema.safeParse(validationData);
-  
+
   if (!validation.success) {
     return {
       success: false,
@@ -54,14 +55,15 @@ export async function authAction(
   }
 
   try {
-    const result = mode === 'signin'
-      ? await signIn(email, password)
-      : await signUp(email, password, { data: { full_name: name, name } });
+    const result =
+      mode === 'signin'
+        ? await signIn(email, password)
+        : await signUp(email, password, { data: { full_name: name, name } });
 
     if (!result.success) {
       return {
         success: false,
-        errors: { form: [result.error?.message || 'Authentication failed'] },
+        errors: { form: [result.error?.message ?? 'Authentication failed'] },
         data: null,
       };
     }

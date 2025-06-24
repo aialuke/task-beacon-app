@@ -55,7 +55,7 @@ const passwordSchema = z
   .min(8, UNIFIED_VALIDATION_MESSAGES.PASSWORD_TOO_SHORT)
   .refine(
     isValidPasswordEnhanced,
-    UNIFIED_VALIDATION_MESSAGES.PASSWORD_TOO_WEAK
+    UNIFIED_VALIDATION_MESSAGES.PASSWORD_TOO_WEAK,
   );
 
 const userNameSchema = z
@@ -125,12 +125,7 @@ export const signUpSchema = z
 // USER PROFILE SCHEMAS
 // ============================================================================
 
-export const profileUpdateSchema = z.object({
-  name: userNameSchema,
-  email: emailSchema,
-  avatar_url: z.string().url('Invalid avatar URL').optional().or(z.literal('')),
-});
-
+// profileUpdateSchema removed - unused in codebase
 // profileCreateSchema removed - unused in codebase
 
 const taskStatusSchema = z.enum(['pending', 'complete', 'overdue'], {
@@ -173,7 +168,7 @@ export const taskFormSchema = z.object({
   url: z
     .string()
     .refine(url => {
-      if (!url || !url.trim()) return true;
+      if (!url?.trim()) return true;
       try {
         new URL(url);
         return true;
@@ -193,8 +188,7 @@ export const taskFormSchema = z.object({
 // TYPE EXPORTS
 // ============================================================================
 
-export type ProfileUpdateInput = z.infer<typeof profileUpdateSchema>;
-export type TaskFormInput = z.infer<typeof taskFormSchema>;
+// TaskFormInput type removed because it is not used anywhere in the codebase
 
 // Unused types removed:
 // SignInInput, SignUpInput, PasswordResetInput, PasswordChangeInput

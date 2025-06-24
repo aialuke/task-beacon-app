@@ -28,7 +28,7 @@ describe('UnifiedErrorBoundary', () => {
     render(
       <UnifiedErrorBoundary>
         <WorkingComponent />
-      </UnifiedErrorBoundary>
+      </UnifiedErrorBoundary>,
     );
 
     expect(screen.getByText('Working component')).toBeInTheDocument();
@@ -38,12 +38,12 @@ describe('UnifiedErrorBoundary', () => {
     render(
       <UnifiedErrorBoundary>
         <ThrowError />
-      </UnifiedErrorBoundary>
+      </UnifiedErrorBoundary>,
     );
 
     expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: /try again/i })
+      screen.getByRole('button', { name: /try again/i }),
     ).toBeInTheDocument();
   });
 
@@ -53,7 +53,7 @@ describe('UnifiedErrorBoundary', () => {
     render(
       <UnifiedErrorBoundary fallback={customFallback}>
         <ThrowError />
-      </UnifiedErrorBoundary>
+      </UnifiedErrorBoundary>,
     );
 
     expect(screen.getByText('Custom error message')).toBeInTheDocument();
@@ -63,7 +63,7 @@ describe('UnifiedErrorBoundary', () => {
     render(
       <UnifiedErrorBoundary variant="page">
         <ThrowError />
-      </UnifiedErrorBoundary>
+      </UnifiedErrorBoundary>,
     );
 
     expect(screen.getByText(/application error/i)).toBeInTheDocument();
@@ -73,7 +73,7 @@ describe('UnifiedErrorBoundary', () => {
     render(
       <UnifiedErrorBoundary variant="inline">
         <ThrowError />
-      </UnifiedErrorBoundary>
+      </UnifiedErrorBoundary>,
     );
 
     expect(screen.getByText(/error occurred/i)).toBeInTheDocument();
@@ -85,7 +85,7 @@ describe('UnifiedErrorBoundary', () => {
     render(
       <UnifiedErrorBoundary title={customTitle}>
         <ThrowError />
-      </UnifiedErrorBoundary>
+      </UnifiedErrorBoundary>,
     );
 
     expect(screen.getByText(customTitle)).toBeInTheDocument();
@@ -97,14 +97,14 @@ describe('UnifiedErrorBoundary', () => {
     render(
       <UnifiedErrorBoundary onError={onErrorMock}>
         <ThrowError />
-      </UnifiedErrorBoundary>
+      </UnifiedErrorBoundary>,
     );
 
     expect(onErrorMock).toHaveBeenCalledWith(
       expect.any(Error),
       expect.objectContaining({
         componentStack: expect.any(String),
-      })
+      }),
     );
   });
 
@@ -121,7 +121,7 @@ describe('UnifiedErrorBoundary', () => {
     const { rerender } = render(
       <UnifiedErrorBoundary>
         <ConditionalThrowError />
-      </UnifiedErrorBoundary>
+      </UnifiedErrorBoundary>,
     );
 
     // Error should be shown
@@ -138,7 +138,7 @@ describe('UnifiedErrorBoundary', () => {
     rerender(
       <UnifiedErrorBoundary>
         <ConditionalThrowError />
-      </UnifiedErrorBoundary>
+      </UnifiedErrorBoundary>,
     );
 
     // Component should recover
@@ -151,13 +151,13 @@ describe('UnifiedErrorBoundary', () => {
     render(
       <UnifiedErrorBoundary className={customClass}>
         <ThrowError />
-      </UnifiedErrorBoundary>
+      </UnifiedErrorBoundary>,
     );
 
     // The className is applied to the outermost container div that contains the error UI
     const tryAgainButton = screen.getByRole('button', { name: /try again/i });
     const errorContainer = tryAgainButton.closest(
-      '[class*="custom-error-class"]'
+      '[class*="custom-error-class"]',
     );
     expect(errorContainer).toBeInTheDocument();
     expect(errorContainer).toHaveClass(customClass);

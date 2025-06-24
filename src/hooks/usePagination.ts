@@ -33,7 +33,7 @@ interface UsePaginationReturn extends PaginationAPI {
  * Replaces scattered pagination logic across components.
  */
 export function usePagination(
-  options: UsePaginationOptions = {}
+  options: UsePaginationOptions = {},
 ): UsePaginationReturn {
   const {
     initialPage = 1,
@@ -80,7 +80,7 @@ export function usePagination(
     (targetPage: number) => {
       const validationResult = validatePaginationParams(
         { page: targetPage, pageSize },
-        finalConfig
+        finalConfig,
       );
 
       if (validationResult.isValid && targetPage <= paginationMeta.totalPages) {
@@ -88,14 +88,14 @@ export function usePagination(
         onPageChange?.(targetPage);
       }
     },
-    [pageSize, finalConfig, paginationMeta.totalPages, onPageChange]
+    [pageSize, finalConfig, paginationMeta.totalPages, onPageChange],
   );
 
   const setPageSizeHandler = useCallback(
     (newPageSize: number) => {
       const validationResult = validatePaginationParams(
         { page, pageSize: newPageSize },
-        finalConfig
+        finalConfig,
       );
 
       if (validationResult.isValid) {
@@ -106,7 +106,7 @@ export function usePagination(
         onPageChange?.(1);
       }
     },
-    [page, finalConfig, onPageSizeChange, onPageChange]
+    [page, finalConfig, onPageSizeChange, onPageChange],
   );
 
   // Utility functions
@@ -121,7 +121,7 @@ export function usePagination(
       page,
       pageSize,
     }),
-    [page, pageSize]
+    [page, pageSize],
   );
 
   // Update total count when external value changes

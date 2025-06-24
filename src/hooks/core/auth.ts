@@ -10,7 +10,6 @@ import { useState, useEffect, useCallback } from 'react';
 
 import { supabase } from '@/integrations/supabase/client';
 import { signIn as apiSignIn } from '@/lib/api/auth';
-import { cleanupAuthState } from '@/lib/auth-utils';
 import { logger } from '@/lib/logger';
 import type { ApiError } from '@/types/shared';
 
@@ -44,7 +43,7 @@ export function useAuth(): UseAuthReturn {
         ...(data || {}),
       });
     },
-    []
+    [],
   );
 
   // Update session and user together
@@ -58,7 +57,7 @@ export function useAuth(): UseAuthReturn {
       setUser(newSession?.user ?? null);
       setError(null);
     },
-    [logMobileDebug]
+    [logMobileDebug],
   );
 
   // Clear auth state
@@ -81,10 +80,10 @@ export function useAuth(): UseAuthReturn {
         if (!response.success) {
           logMobileDebug('Sign in failed', { error: response.error });
           setError(
-            response.error || {
+            response.error ?? {
               name: 'SignInError',
               message: 'Failed to sign in',
-            }
+            },
           );
           clearAuthState();
           return;
@@ -105,7 +104,7 @@ export function useAuth(): UseAuthReturn {
         setLoading(false);
       }
     },
-    [clearAuthState, logMobileDebug]
+    [clearAuthState, logMobileDebug],
   );
 
   // Sign out operation

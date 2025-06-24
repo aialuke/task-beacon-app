@@ -1,5 +1,3 @@
-import { memo } from 'react';
-
 import type { Task } from '@/types';
 
 import TaskExpandButton from '../task-interaction/TaskExpandButton';
@@ -29,4 +27,4 @@ function TaskHeader({ task, isExpanded, toggleExpand }: TaskHeaderProps) {
   );
 }
 
-export default memo(TaskHeader);
+export default TaskHeader;

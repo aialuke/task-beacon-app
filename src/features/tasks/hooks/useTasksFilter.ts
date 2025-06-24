@@ -25,7 +25,7 @@ export function useTasksFilter(tasks: Task[], filter: TaskFilter) {
           task =>
             task.owner_id &&
             task.assignee_id &&
-            task.owner_id !== task.assignee_id
+            task.owner_id !== task.assignee_id,
         );
       case 'overdue':
         return tasks.filter(task => {

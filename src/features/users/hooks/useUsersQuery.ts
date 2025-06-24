@@ -17,14 +17,11 @@ interface UseUsersQueryReturn {
  * Custom hook to fetch users with query options.
  */
 export function useUsersQuery(
-  options: UseUsersQueryOptions = {}
+  options: UseUsersQueryOptions = {},
 ): UseUsersQueryReturn {
   const { enabled = true, ...queryOptions } = options;
 
-  const {
-    data: response,
-    refetch,
-  } = useSuspenseQuery({
+  const { data: response, refetch } = useSuspenseQuery({
     queryKey: [...QueryKeys.users, queryOptions],
     queryFn: async () => {
       return await getAllUsers(queryOptions);
@@ -37,12 +34,12 @@ export function useUsersQuery(
         return data.data;
       }
       // For failed responses, return empty array and let error handling be done via onError
-      throw new Error(data.error?.message || 'Failed to fetch users');
+      throw new Error(data.error?.message ?? 'Failed to fetch users');
     },
   });
 
   return {
-    users: response || [],
+    users: response ?? [],
     refetch,
   };
 }

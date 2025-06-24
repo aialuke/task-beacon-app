@@ -1,16 +1,12 @@
-import { useState, useRef, useEffect, type ReactNode, type ChangeEvent } from 'react';
+import {
+  useState,
+  useRef,
+  useEffect,
+} from 'react';
 
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
-
-interface FloatingTextareaProps {
-  id: string;
-  value: string;
-  onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
-  label: string;
-  icon?: ReactNode;
-  className?: string;
-}
+import type { FloatingTextareaProps } from '@/types';
 
 export function FloatingTextarea({
   id,
@@ -40,7 +36,7 @@ export function FloatingTextarea({
           <div
             className={cn(
               'absolute left-3 top-3 z-10 transition-all duration-300', // Changed from top-6 to top-3
-              isFloating ? 'scale-95 text-primary' : 'text-muted-foreground'
+              isFloating ? 'scale-95 text-primary' : 'text-muted-foreground',
             )}
           >
             {icon}
@@ -61,9 +57,9 @@ export function FloatingTextarea({
           placeholder=""
           rows={1}
           className={cn(
-            'peer min-h-28 resize-none overflow-hidden bg-background/60 pb-2 pt-6 backdrop-blur-sm transition-all duration-300 hover:bg-background/70 focus:bg-background/80 focus:shadow-lg focus:shadow-primary/10',
+            'peer min-h-28 resize-none overflow-hidden bg-background/60 pb-2 pt-6 backdrop-blur-sm transition-all duration-300 hover:bg-background/70 focus:bg-background/80 focus:shadow-lg focus:shadow-primary/10 active:bg-background/75',
             icon ? 'pl-11' : 'pl-4',
-            'pr-4'
+            'pr-4',
           )}
         />
 
@@ -74,7 +70,7 @@ export function FloatingTextarea({
             icon ? 'left-11' : 'left-4',
             isFloating
               ? 'top-2 text-xs text-primary' // Keeps the floated label at top-2
-              : 'top-3 text-sm text-muted-foreground' // Changed from top-6 to top-3 for better alignment
+              : 'top-3 text-sm text-muted-foreground', // Changed from top-6 to top-3 for better alignment
           )}
         >
           {label}

@@ -39,7 +39,7 @@ interface UnifiedPhotoUploadReturn {
  * Eliminates duplication between usePhotoState, usePhotoProcessing, and useTaskPhotoUpload.
  */
 export function useUnifiedPhotoUpload(
-  options: UnifiedPhotoUploadOptions = {}
+  options: UnifiedPhotoUploadOptions = {},
 ): UnifiedPhotoUploadReturn {
   const {
     processingOptions = {
@@ -73,7 +73,7 @@ export function useUnifiedPhotoUpload(
   // Upload functionality
   const uploadPhoto = useCallback(
     async (fileToUpload?: File): Promise<string | null> => {
-      const targetFile = fileToUpload || photo;
+      const targetFile = fileToUpload ?? photo;
       if (!targetFile) {
         return null;
       }
@@ -82,23 +82,23 @@ export function useUnifiedPhotoUpload(
         setLoading(true);
         const response = await TaskService.media.uploadPhoto(targetFile);
         if (!response.success) {
-          throw new Error(response.error?.message || 'Photo upload failed');
+          throw new Error(response.error?.message ?? 'Photo upload failed');
         }
 
-        const url = response.data || null;
+        const url = response.data ?? null;
         setUploadedUrl(url);
         return url;
       } catch (error) {
         logger.error(
           'Photo upload error',
-          error instanceof Error ? error : new Error(String(error))
+          error instanceof Error ? error : new Error(String(error)),
         );
         return null;
       } finally {
         setLoading(false);
       }
     },
-    [photo]
+    [photo],
   );
 
   // Photo processing and handling
@@ -116,7 +116,7 @@ export function useUnifiedPhotoUpload(
           file,
           processingOptions.maxWidth,
           processingOptions.maxHeight,
-          processingOptions.quality
+          processingOptions.quality,
         );
 
         // Extract full metadata for the processed file
@@ -144,14 +144,14 @@ export function useUnifiedPhotoUpload(
       } catch (error) {
         logger.error(
           'Photo processing error',
-          error instanceof Error ? error : new Error(String(error))
+          error instanceof Error ? error : new Error(String(error)),
         );
         setProcessingResult(null);
       } finally {
         setLoading(false);
       }
     },
-    [processingOptions, autoUpload, uploadPhoto]
+    [processingOptions, autoUpload, uploadPhoto],
   );
 
   // Return memoized object to prevent unnecessary re-renders
@@ -183,6 +183,6 @@ export function useUnifiedPhotoUpload(
       uploadPhoto,
       resetPhoto,
       processingOptions,
-    ]
+    ],
   );
 }

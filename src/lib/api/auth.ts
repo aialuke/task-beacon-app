@@ -19,7 +19,7 @@ import { withApiResponse } from './withApiResponse';
  */
 export async function signIn(
   email: string,
-  password: string
+  password: string,
 ): Promise<ApiResponse<AuthResponse>> {
   return withApiResponse(async () => {
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -28,7 +28,7 @@ export async function signIn(
     });
 
     if (error) {
-      throw new Error(error.message);
+      throw error;
     }
 
     if (!data.user) {
@@ -51,7 +51,7 @@ export async function signIn(
 export async function signUp(
   email: string,
   password: string,
-  options?: unknown
+  options?: unknown,
 ): Promise<ApiResponse<AuthResponse>> {
   return withApiResponse(async () => {
     const { data, error } = await supabase.auth.signUp({
@@ -61,7 +61,7 @@ export async function signUp(
     });
 
     if (error) {
-      throw new Error(error.message);
+      throw error;
     }
 
     if (!data.user) {
@@ -86,10 +86,36 @@ export async function signOut(): Promise<ApiResponse<void>> {
     const { error } = await supabase.auth.signOut();
 
     if (error) {
-      throw new Error(error.message);
+      throw error;
     }
 
-    return;
+    return null;
   });
 }
 
+/**
+ * Refresh the current session (stub implementation for tests)
+ */
+export async function refreshSession(): Promise<ApiResponse<AuthResponse>> {
+  return withApiResponse(async () => {
+    const { data, error } = await supabase.auth.refreshSession();
+
+    if (error) {
+      const err = new Error(error.message);
+      err.name = 'AuthError';
+      throw err;
+    }
+
+    if (!data.user) {
+      throw new Error('Session refresh failed - no user returned');
+    }
+
+    const authResponse: AuthResponse = {
+      user: data.user as User,
+      session: data.session as Session,
+      emailConfirmed: !!data.user?.email_confirmed_at,
+    };
+
+    return authResponse;
+  });
+}

@@ -1,6 +1,4 @@
-import { memo } from 'react';
-
-export const AuthFormHeader = memo(function AuthFormHeader() {
+export function AuthFormHeader() {
   return (
     <div className="mb-8 text-center">
       <div className="mb-4 flex items-center justify-center gap-3">
@@ -15,4 +13,4 @@ export const AuthFormHeader = memo(function AuthFormHeader() {
       </div>
     </div>
   );
-});
+}

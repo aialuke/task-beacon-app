@@ -11,23 +11,21 @@ import { useTaskNavigation } from '@/lib/navigation';
 
 // Lazy load the form component for additional code splitting
 const FollowUpTaskForm = lazy(
-  () => import('@/features/tasks/forms/FollowUpTaskForm')
+  () => import('@/features/tasks/forms/FollowUpTaskForm'),
 );
 
 export default function FollowUpTaskPage() {
   const { goBack, goToTaskList } = useTaskNavigation();
   const { parentTaskId } = useParams<{ parentTaskId: string }>();
 
-  const {
-    data: parentTask,
-  } = useSuspenseQuery({
-    queryKey: QueryKeys.task(parentTaskId || ''),
+  const { data: parentTask } = useSuspenseQuery({
+    queryKey: QueryKeys.task(parentTaskId ?? ''),
     queryFn: async () => {
       if (!parentTaskId) throw new Error('parentTaskId is required');
       const response = await TaskService.crud.getById(parentTaskId);
       if (!response.success) {
         throw new Error(
-          response.error?.message || 'Failed to load parent task'
+          response.error?.message ?? 'Failed to load parent task',
         );
       }
       return response.data;
@@ -50,7 +48,7 @@ export default function FollowUpTaskPage() {
               onClick={() => {
                 goToTaskList();
               }}
-              className="rounded-full p-3 shadow-sm transition-all duration-200 hover:scale-105 hover:bg-accent/80 hover:shadow-md"
+              className="rounded-full p-3 shadow-sm transition-all duration-200 hover:scale-105 hover:bg-accent/80 hover:shadow-md focus-visible:ring-2 focus-visible:ring-primary/30 active:scale-100 active:bg-accent/70"
             >
               <ArrowLeft className="size-5" />
             </Button>
@@ -82,7 +80,7 @@ export default function FollowUpTaskPage() {
               variant="ghost"
               size="sm"
               onClick={() => goToTaskList()}
-              className="rounded-full p-3 shadow-sm transition-all duration-200 hover:scale-105 hover:bg-accent/80 hover:shadow-md"
+              className="rounded-full p-3 shadow-sm transition-all duration-200 hover:scale-105 hover:bg-accent/80 hover:shadow-md focus-visible:ring-2 focus-visible:ring-primary/30 active:scale-100 active:bg-accent/70"
             >
               <ArrowLeft className="size-5" />
             </Button>
@@ -92,9 +90,11 @@ export default function FollowUpTaskPage() {
             <Suspense
               fallback={
                 <div className="flex items-center justify-center p-8">
-                  <div className="text-center space-y-4">
-                    <div className="animate-spin rounded-full size-8 border-2 border-primary border-t-transparent mx-auto" />
-                    <p className="text-muted-foreground">Loading follow-up form...</p>
+                  <div className="space-y-4 text-center">
+                    <div className="mx-auto size-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                    <p className="text-muted-foreground">
+                      Loading follow-up form...
+                    </p>
                   </div>
                 </div>
               }

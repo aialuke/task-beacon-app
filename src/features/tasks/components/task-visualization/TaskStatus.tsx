@@ -1,23 +1,7 @@
-import { memo } from 'react';
-
 import { getTaskStatus } from '@/features/tasks/utils/taskUiUtils';
-import type { Task } from '@/types';
+import type { TaskStatusProps } from '@/types';
 
 import CountdownTimer from '../task-interaction/CountdownTimer';
-
-interface TaskStatusProps {
-  task: Task;
-}
-
-const arePropsEqual = (
-  prevProps: TaskStatusProps,
-  nextProps: TaskStatusProps
-): boolean => {
-  return (
-    prevProps.task.due_date === nextProps.task.due_date &&
-    prevProps.task.status === nextProps.task.status
-  );
-};
 
 function TaskStatus({ task }: TaskStatusProps) {
   const status = getTaskStatus(task);
@@ -28,4 +12,4 @@ function TaskStatus({ task }: TaskStatusProps) {
   );
 }
 
-export default memo(TaskStatus, arePropsEqual);
+export default TaskStatus;

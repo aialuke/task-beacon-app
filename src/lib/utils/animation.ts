@@ -14,7 +14,7 @@ export function calculateTimerOffset(
   circumference: number,
   daysLeft: number,
   status: TaskStatus,
-  dueDate: string | null
+  dueDate: string | null,
 ): number {
   if (status === 'complete') return 0;
   if (status === 'overdue') return 0;
@@ -24,4 +24,3 @@ export function calculateTimerOffset(
   const remainingPercentage = Math.min(Math.max(daysLeft / totalDays, 0), 1);
   return circumference * (1 - remainingPercentage);
 }
-

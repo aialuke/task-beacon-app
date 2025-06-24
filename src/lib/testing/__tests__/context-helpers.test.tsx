@@ -43,7 +43,7 @@ describe('Context Helpers', () => {
       render(
         <Wrapper>
           <TestComponent />
-        </Wrapper>
+        </Wrapper>,
       );
 
       expect(screen.getByTestId('test-component')).toBeInTheDocument();
@@ -60,7 +60,7 @@ describe('Context Helpers', () => {
       render(
         <TestProviders>
           <TestComponent />
-        </TestProviders>
+        </TestProviders>,
       );
 
       expect(screen.getByTestId('test-component')).toBeInTheDocument();

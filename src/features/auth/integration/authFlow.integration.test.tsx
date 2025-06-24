@@ -95,7 +95,7 @@ describe('Auth Flow Integration Tests', () => {
 
       vi.spyOn(
         supabaseClient.supabase.auth,
-        'onAuthStateChange'
+        'onAuthStateChange',
       ).mockImplementation(cb => {
         authStateChangeCb = cb;
         return {
@@ -248,7 +248,7 @@ describe('Auth Flow Integration Tests', () => {
 
       vi.spyOn(
         supabaseClient.supabase.auth,
-        'onAuthStateChange'
+        'onAuthStateChange',
       ).mockImplementation(cb => {
         authStateChangeCb = cb;
         return {

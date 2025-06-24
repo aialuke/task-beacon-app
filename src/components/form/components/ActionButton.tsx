@@ -1,18 +1,8 @@
-import { LucideIcon } from 'lucide-react';
-import { memo } from 'react';
-
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import type { ActionButtonProps } from '@/types';
 
-interface ActionButtonProps {
-  icon: LucideIcon;
-  label: string;
-  active?: boolean;
-  disabled?: boolean;
-  onClick: () => void;
-}
-
-export const ActionButton = memo(function ActionButton({
+export function ActionButton({
   icon: Icon,
   label,
   active = false,
@@ -27,7 +17,7 @@ export const ActionButton = memo(function ActionButton({
     active
       ? 'border border-primary/30 bg-primary/20 text-primary shadow-md shadow-primary/10'
       : 'border border-border/40 bg-background/60 text-muted-foreground hover:border-border/60 hover:bg-background/80 hover:text-foreground',
-    disabled && 'cursor-not-allowed opacity-50 hover:scale-100'
+    disabled && 'cursor-not-allowed opacity-50 hover:scale-100',
   );
 
   return (
@@ -41,7 +31,7 @@ export const ActionButton = memo(function ActionButton({
       <Icon
         className={cn(
           'size-5 flex-shrink-0 transition-all duration-200 sm:size-4',
-          active && 'scale-110'
+          active && 'scale-110',
         )}
       />
       <span className="hidden whitespace-nowrap text-sm font-medium sm:inline">
@@ -49,4 +39,4 @@ export const ActionButton = memo(function ActionButton({
       </span>
     </Button>
   );
-});
+}

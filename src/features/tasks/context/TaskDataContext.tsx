@@ -54,32 +54,35 @@ export function TaskDataContextProvider({
   const taskQueries = useTasksQuery();
 
   // Enhanced context value with error recovery - optimized with useMemo
-  const contextValue: TaskDataContextValue = useMemo(() => ({
-    tasks: taskQueries.tasks,
-    isFetching: taskQueries.isFetching,
-    totalCount: taskQueries.totalCount,
-    pagination: {
-      currentPage: taskQueries.pagination.currentPage,
-      totalPages: taskQueries.pagination.totalPages,
-      pageSize: taskQueries.pagination.pageSize || 10,
-      hasNextPage: taskQueries.pagination.hasNextPage,
-      hasPreviousPage: taskQueries.pagination.hasPreviousPage,
-      goToNextPage: taskQueries.pagination.goToNextPage,
-      goToPreviousPage: taskQueries.pagination.goToPreviousPage,
-      goToPage: taskQueries.pagination.goToPage,
-    },
-    retry:
-      taskQueries.refetch ||
-      function retryFallback() {
-        console.warn('Retry not available - no refetch function provided');
+  const contextValue: TaskDataContextValue = useMemo(
+    () => ({
+      tasks: taskQueries.tasks,
+      isFetching: taskQueries.isFetching,
+      totalCount: taskQueries.totalCount,
+      pagination: {
+        currentPage: taskQueries.pagination.currentPage,
+        totalPages: taskQueries.pagination.totalPages,
+        pageSize: taskQueries.pagination.pageSize || 10,
+        hasNextPage: taskQueries.pagination.hasNextPage,
+        hasPreviousPage: taskQueries.pagination.hasPreviousPage,
+        goToNextPage: taskQueries.pagination.goToNextPage,
+        goToPreviousPage: taskQueries.pagination.goToPreviousPage,
+        goToPage: taskQueries.pagination.goToPage,
       },
-  }), [
-    taskQueries.tasks,
-    taskQueries.isFetching,
-    taskQueries.totalCount,
-    taskQueries.pagination,
-    taskQueries.refetch,
-  ]);
+      retry:
+        taskQueries.refetch ??
+        function retryFallback() {
+          console.warn('Retry not available - no refetch function provided');
+        },
+    }),
+    [
+      taskQueries.tasks,
+      taskQueries.isFetching,
+      taskQueries.totalCount,
+      taskQueries.pagination,
+      taskQueries.refetch,
+    ],
+  );
 
   return (
     <UnifiedErrorBoundary

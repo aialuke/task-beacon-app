@@ -31,10 +31,10 @@ describe('CountdownTimer', () => {
         dueDate="2025-06-05T10:00:00Z"
         status="pending"
         size={48}
-      />
+      />,
     );
 
-    expect(screen.getByRole('timer')).toBeInTheDocument();
+    expect(screen.getByRole('button')).toBeInTheDocument();
     expect(screen.getByText('11d')).toBeInTheDocument();
   });
 
@@ -52,10 +52,10 @@ describe('CountdownTimer', () => {
         dueDate="2025-06-05T10:00:00Z"
         status="complete"
         size={48}
-      />
+      />,
     );
 
-    const svg = screen.getByRole('timer').querySelector('svg');
+    const svg = screen.getByRole('button').querySelector('svg');
     expect(svg).toBeInTheDocument();
   });
 
@@ -72,10 +72,10 @@ describe('CountdownTimer', () => {
         dueDate="2025-06-05T10:00:00Z"
         status="pending"
         size={64}
-      />
+      />,
     );
 
-    const timer = screen.getByRole('timer');
+    const timer = screen.getByRole('button');
     expect(timer).toHaveStyle({ width: '64px', height: '64px' }); // 64 * 1.0, no priority multiplier
   });
 
@@ -89,7 +89,7 @@ describe('CountdownTimer', () => {
     });
     render(<CountdownTimer dueDate={null} status="pending" size={48} />);
 
-    expect(screen.getByRole('timer')).toBeInTheDocument();
+    expect(screen.getByRole('button')).toBeInTheDocument();
   });
 
   it('has proper accessibility attributes', () => {
@@ -105,14 +105,14 @@ describe('CountdownTimer', () => {
         dueDate="2025-06-05T10:00:00Z"
         status="pending"
         size={48}
-      />
+      />,
     );
 
-    const timer = screen.getByRole('timer');
+    const timer = screen.getByRole('button');
     expect(timer).toHaveAttribute('tabIndex', '0');
     expect(timer).toHaveAttribute(
       'aria-label',
-      'Task timer: 11 days remaining'
+      'Task timer: 11 days remaining',
     );
   });
 });

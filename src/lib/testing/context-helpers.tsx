@@ -24,7 +24,7 @@ export function createTestQueryClient(): QueryClient {
  * Creates a wrapper component with providers for testing
  */
 export function createTestWrapper(options: { queryClient?: QueryClient } = {}) {
-  const queryClient = options.queryClient || createTestQueryClient();
+  const queryClient = options.queryClient ?? createTestQueryClient();
 
   return function TestWrapper({ children }: { children: React.ReactNode }) {
     return (
@@ -43,7 +43,7 @@ export function TestProviders({
   children: React.ReactNode;
   queryClient?: QueryClient;
 }) {
-  const client = queryClient || createTestQueryClient();
+  const client = queryClient ?? createTestQueryClient();
 
   return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
 }
@@ -53,7 +53,7 @@ export function TestProviders({
  */
 export function renderWithProviders(
   ui: React.ReactElement,
-  options: { queryClient?: QueryClient } & Omit<RenderOptions, 'wrapper'> = {}
+  options: { queryClient?: QueryClient } & Omit<RenderOptions, 'wrapper'> = {},
 ): RenderResult & { queryClient: QueryClient } {
   const { queryClient = createTestQueryClient(), ...renderOptions } = options;
 

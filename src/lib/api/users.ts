@@ -12,10 +12,10 @@ import { withApiResponse } from './withApiResponse';
 
 /**
  * Get all users with optional query parameters
- * TODO: Implement full functionality in later phases
+ * Currently supports basic pagination via pageSize option
  */
 export async function getAllUsers(
-  options: UserQueryOptions = {}
+  options: UserQueryOptions = {},
 ): Promise<ApiResponse<User[]>> {
   return withApiResponse(async () => {
     // Basic implementation to prevent build errors
@@ -28,6 +28,6 @@ export async function getAllUsers(
       throw new Error(error.message);
     }
 
-    return data || [];
+    return data ?? [];
   });
 }

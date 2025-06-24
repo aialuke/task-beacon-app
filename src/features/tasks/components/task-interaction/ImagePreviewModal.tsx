@@ -1,5 +1,4 @@
 import { X } from 'lucide-react';
-import { memo } from 'react';
 
 import { Button } from '@/components/ui/button';
 import ImageErrorFallback from '@/components/ui/ImageErrorFallback';
@@ -13,7 +12,7 @@ interface ImagePreviewModalProps {
   alt?: string;
 }
 
-export const ImagePreviewModal = memo(function ImagePreviewModal({
+export function ImagePreviewModal({
   isOpen,
   onClose,
   imageUrl,
@@ -45,7 +44,7 @@ export const ImagePreviewModal = memo(function ImagePreviewModal({
         variant="default"
         size="icon"
         onClick={onClose}
-        className="absolute right-4 top-4 z-10 size-10 rounded-full bg-primary text-white shadow-lg hover:bg-primary/90"
+        className="absolute right-4 top-4 z-10 size-10 rounded-full bg-primary text-white shadow-lg transition-colors duration-200 hover:bg-primary/90 focus-visible:bg-primary/90 active:bg-primary/90"
         style={{ zIndex: 10000 }}
       >
         <X className="size-4" />
@@ -69,8 +68,10 @@ export const ImagePreviewModal = memo(function ImagePreviewModal({
           {!imageLoaded && !imageError && (
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="flex flex-col items-center gap-2">
-                <div className="animate-spin rounded-full size-8 border-2 border-primary border-t-transparent" />
-                <span className="text-sm text-muted-foreground">Loading image...</span>
+                <div className="size-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                <span className="text-sm text-muted-foreground">
+                  Loading image...
+                </span>
               </div>
             </div>
           )}
@@ -92,4 +93,4 @@ export const ImagePreviewModal = memo(function ImagePreviewModal({
       </div>
     </div>
   );
-});
+}

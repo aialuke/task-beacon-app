@@ -1,4 +1,4 @@
-import { memo, useMemo, useCallback } from 'react';
+import { useMemo, useCallback } from 'react';
 
 import UnifiedErrorBoundary from '@/components/ui/UnifiedErrorBoundary';
 import type { TaskCardProps } from '@/types';
@@ -7,16 +7,6 @@ import { useTaskCard } from '../../hooks/useTaskCard';
 
 import TaskCardContent from './TaskCardContent';
 import TaskCardHeader from './TaskCardHeader';
-
-const arePropsEqual = (
-  prevProps: TaskCardProps,
-  nextProps: TaskCardProps
-): boolean => {
-  return (
-    prevProps.task.id === nextProps.task.id &&
-    prevProps.task.updated_at === nextProps.task.updated_at
-  );
-};
 
 function TaskCard({ task }: TaskCardProps) {
   const { contentRef, cardRef, isExpanded, animationState, toggleExpand } =
@@ -39,7 +29,7 @@ function TaskCard({ task }: TaskCardProps) {
   // Memoized dynamic classes
   const expandedClass = useMemo(
     () => (isExpanded ? 'scale-[1.02] shadow-expanded z-10' : ''),
-    [isExpanded]
+    [isExpanded],
   );
 
   // Memoized status-based styles
@@ -47,7 +37,7 @@ function TaskCard({ task }: TaskCardProps) {
     (): React.CSSProperties => ({
       opacity: task.status === 'complete' ? 0.8 : 1,
     }),
-    [task.status]
+    [task.status],
   );
 
   // Accessibility: Only make the card focusable/clickable when collapsed
@@ -60,12 +50,15 @@ function TaskCard({ task }: TaskCardProps) {
     }
   }, [isCardInteractive, toggleExpand]);
 
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      toggleExpand();
-    }
-  }, [toggleExpand]);
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleExpand();
+      }
+    },
+    [toggleExpand],
+  );
 
   return (
     <UnifiedErrorBoundary
@@ -80,7 +73,7 @@ function TaskCard({ task }: TaskCardProps) {
     >
       <article
         ref={cardRef}
-        className={`mx-auto mb-4 box-border w-full max-w-2xl rounded-xl border border-border bg-card p-5 text-card-foreground shadow-task-card transition-all duration-200 hover:shadow-md ${statusClass} ${expandedClass} ${
+        className={`mx-auto mb-4 box-border w-full max-w-2xl rounded-xl border border-border bg-card p-5 text-card-foreground shadow-task-card transition-all duration-200 hover:shadow-md focus-visible:shadow-md active:shadow-md ${statusClass} ${expandedClass} ${
           task.status === 'complete'
             ? 'bg-muted'
             : task.status === 'overdue'
@@ -113,4 +106,4 @@ function TaskCard({ task }: TaskCardProps) {
 }
 
 TaskCard.displayName = 'TaskCard';
-export default memo(TaskCard, arePropsEqual);
+export default TaskCard;

@@ -1,4 +1,3 @@
-
 /**
  * Autocomplete Logic Hook - Business Logic for User Autocomplete
  *
@@ -13,7 +12,11 @@ import { useState, useRef, useMemo, useEffect } from 'react';
 
 import { useUsersQuery } from '@/features/users/hooks/useUsersQuery';
 
-import type { AutocompleteLogicReturn, ValidationState, UseAutocompleteLogicProps } from './types';
+import type {
+  AutocompleteLogicReturn,
+  ValidationState,
+  UseAutocompleteLogicProps,
+} from './types';
 import { getUserDisplayName } from './utils';
 
 export function useAutocompleteLogic({
@@ -32,21 +35,21 @@ export function useAutocompleteLogic({
     const byId = new Map();
     const byDisplayName = new Map();
     const byEmail = new Map();
-    
+
     users.forEach(user => {
       const displayName = getUserDisplayName(user);
       byId.set(user.id, user);
       byDisplayName.set(displayName.toLowerCase(), user);
       byEmail.set(user.email.toLowerCase(), user);
     });
-    
+
     return { byId, byDisplayName, byEmail };
   }, [users]);
 
   // Find selected user - optimized Map lookup
   const selectedUser = useMemo(
     () => userMaps.byId.get(value) ?? undefined,
-    [userMaps.byId, value]
+    [userMaps.byId, value],
   );
 
   // Find exact match for typed input - optimized Map lookup
@@ -54,7 +57,11 @@ export function useAutocompleteLogic({
     if (!inputValue.trim() || selectedUser) return undefined;
 
     const searchTerm = inputValue.toLowerCase().trim();
-    return userMaps.byDisplayName.get(searchTerm) || userMaps.byEmail.get(searchTerm) || undefined;
+    return (
+      userMaps.byDisplayName.get(searchTerm) ??
+      userMaps.byEmail.get(searchTerm) ??
+      undefined
+    );
   }, [userMaps.byDisplayName, userMaps.byEmail, inputValue, selectedUser]);
 
   // Auto-select exact matches

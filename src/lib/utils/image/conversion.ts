@@ -35,7 +35,7 @@ class WebPDetector {
  */
 export async function getOptimalImageFormat(
   file: File,
-  forceFormat?: 'webp' | 'jpeg' | 'png'
+  forceFormat?: 'webp' | 'jpeg' | 'png',
 ): Promise<'webp' | 'jpeg' | 'png'> {
   if (forceFormat) {
     return forceFormat;

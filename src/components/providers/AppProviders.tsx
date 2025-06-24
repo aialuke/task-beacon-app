@@ -11,8 +11,8 @@ import { queryClient } from '@/lib/query-client';
 function AppLoadingFallback() {
   return (
     <div className="flex min-h-screen items-center justify-center">
-      <div className="text-center space-y-4">
-        <div className="animate-spin rounded-full size-12 border-2 border-primary border-t-transparent mx-auto" />
+      <div className="space-y-4 text-center">
+        <div className="mx-auto size-12 animate-spin rounded-full border-2 border-primary border-t-transparent" />
         <p className="text-muted-foreground">Loading application...</p>
       </div>
     </div>

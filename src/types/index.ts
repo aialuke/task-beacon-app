@@ -20,67 +20,31 @@ export type {
 export type { AuthUser, Session, AuthResponse } from './auth.types';
 
 // API types
-export type { ApiResponse, ApiError, ServiceResult } from './api.types';
+export type { ApiResponse, ApiError } from './api.types';
 
 // UI component types
 export type {
-  BaseComponentProps,
-  BaseFloatingInputProps,
   AuthFloatingInputProps,
   FormFloatingInputProps,
-  FloatingInputProps,
   FloatingTextareaProps,
   ActionButtonProps,
-  BaseModalProps,
-  LoadingStateProps,
-  ErrorStateProps,
 } from './shared/components.types';
 
-// Task form types
-export type {
-  TaskFormFields,
-  TaskFormInitialValues,
-  TaskFormSubmissionOptions,
-  TaskFormOptions,
-  TaskFormState,
-  TaskFormValidationState,
-  TaskFormSubmissionState,
-  TaskFormHookReturn,
-  TaskFormComponentProps,
-} from './feature-types/task-forms.types';
 
 // Task component types
 export type {
-  BaseTaskComponentProps,
   TaskCardProps,
   TaskCardContentProps,
   TaskCardHeaderProps,
   TaskDetailsContentProps,
-  TaskActionsProps,
-  TaskListProps,
-  TaskDashboardProps,
   CountdownTimerProps,
+  TaskActionsProps,
   TaskImageGalleryProps,
-  TaskFilterProps,
   TaskStatusProps,
-  TaskPriorityProps,
 } from './feature-types/task-components.types';
 
-// Pagination types
-export type { PaginationAPI, PaginationState, PaginationConfig } from './pagination.types';
 
-// Async state types
-export type {
-  BaseAsyncState,
-  AsyncOperationState,
-  BatchAsyncOperationState,
-  OptimisticAsyncOperationState,
-  StandardLoadingState,
-  FormSubmissionState,
-  QueryState,
-  MutationState,
-  ApiResponseState,
-} from './async-state.types';
+// Async state types: (no longer re-exporting BaseAsyncState as it is unused)
 
 // Feature-specific types
 export type {
@@ -92,3 +56,6 @@ export type {
 
 // Utility types
 export type { ID, Timestamp } from './utility.types';
+
+// Navigation types
+export type { TaskNavigationHook } from '../lib/navigation/useTaskNavigation';

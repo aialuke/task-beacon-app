@@ -1,5 +1,5 @@
 import { Calendar } from 'lucide-react';
-import { memo, useState } from 'react';
+import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
@@ -16,7 +16,7 @@ interface DatePickerButtonProps {
   disabled?: boolean;
 }
 
-export const DatePickerButton = memo(function DatePickerButton({
+export function DatePickerButton({
   dueDate,
   onDueDateChange,
   disabled = false,
@@ -53,7 +53,7 @@ export const DatePickerButton = memo(function DatePickerButton({
     hasDate
       ? 'border border-primary/30 bg-primary/20 text-primary shadow-md shadow-primary/10'
       : 'border border-border/40 bg-background/60 text-muted-foreground hover:border-border/60 hover:bg-background/80 hover:text-foreground',
-    disabled && 'cursor-not-allowed opacity-50 hover:scale-100'
+    disabled && 'cursor-not-allowed opacity-50 hover:scale-100',
   );
 
   return (
@@ -68,11 +68,16 @@ export const DatePickerButton = memo(function DatePickerButton({
           <Calendar
             className={cn(
               'size-5 flex-shrink-0 transition-all duration-200 sm:size-4',
-              hasDate && 'scale-110'
+              hasDate && 'scale-110',
             )}
           />
           <span className="hidden whitespace-nowrap text-sm font-medium sm:inline">
-            {hasDate ? selectedDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Due Date'}
+            {hasDate
+              ? selectedDate.toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                })
+              : 'Due Date'}
           </span>
         </Button>
       </PopoverTrigger>
@@ -92,4 +97,4 @@ export const DatePickerButton = memo(function DatePickerButton({
       </PopoverContent>
     </Popover>
   );
-});
+}

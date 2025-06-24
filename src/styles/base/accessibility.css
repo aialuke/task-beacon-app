@@ -33,7 +33,6 @@
   }
 
   /* Disable transforms for interactive elements */
-  .interactive:hover,
   .timer-container:hover,
   .transform-gpu {
     transform: none !important;

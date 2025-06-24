@@ -37,7 +37,7 @@ describe('Auth API', () => {
       } as any;
 
       vi.mocked(supabase.auth.signInWithPassword).mockResolvedValue(
-        mockResponse
+        mockResponse,
       );
 
       const result = await signIn('test@example.com', 'password');
@@ -89,7 +89,7 @@ describe('Auth API', () => {
 
     it('should handle unexpected errors', async () => {
       vi.mocked(supabase.auth.signInWithPassword).mockRejectedValue(
-        new Error('Network error')
+        new Error('Network error'),
       );
 
       const result = await signIn('test@example.com', 'password');
@@ -210,7 +210,7 @@ describe('Auth API', () => {
 
     it('should handle unexpected errors during sign out', async () => {
       vi.mocked(supabase.auth.signOut).mockRejectedValue(
-        new Error('Network error')
+        new Error('Network error'),
       );
 
       const result = await signOut();

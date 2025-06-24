@@ -1,6 +1,3 @@
-
-import { memo } from 'react';
-
 import { Button } from '@/components/ui/button';
 
 interface TaskExpandButtonProps {
@@ -24,7 +21,7 @@ function TaskExpandButton({ isExpanded, onClick }: TaskExpandButtonProps) {
     <Button
       variant="ghost"
       size="icon"
-      className="size-8 shrink-0 hover:bg-accent hover:text-accent-foreground"
+      className="size-8 shrink-0 transition-colors duration-200 hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent active:bg-accent"
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       aria-label={isExpanded ? 'Collapse task details' : 'Expand task details'}
@@ -52,4 +49,4 @@ function TaskExpandButton({ isExpanded, onClick }: TaskExpandButtonProps) {
   );
 }
 
-export default memo(TaskExpandButton);
+export default TaskExpandButton;

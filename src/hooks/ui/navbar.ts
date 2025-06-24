@@ -1,6 +1,11 @@
-import { useSpring } from '@react-spring/web';
 import { LucideIcon } from 'lucide-react';
-import { useRef, useEffect, useState, useCallback } from 'react';
+import {
+  useRef,
+  useEffect,
+  useState,
+  useCallback,
+  startTransition,
+} from 'react';
 
 import {
   computeNavbarColors,
@@ -49,7 +54,7 @@ export function useNavbar({
   });
   const [isInitialized, setIsInitialized] = useState(false);
   const [computedColors, setComputedColors] = useState(() =>
-    computeNavbarColors()
+    computeNavbarColors(),
   );
 
   // Theme change detection and color computation
@@ -74,7 +79,7 @@ export function useNavbar({
         activeIndex,
         buttonRefs.current,
         container,
-        containerPadding
+        containerPadding,
       );
 
       setActiveButtonBounds(newBounds);
@@ -140,34 +145,49 @@ export function useNavbar({
         buttonRefs.current[newIndex]?.focus();
       }
     },
-    [items, activeItem, onItemChange]
+    [items, activeItem, onItemChange],
   );
 
   // Calculate positions for effects
   const indicatorPosition = calculateIndicatorPosition(
     activeButtonBounds.centerX,
-    24
+    24,
   );
   const glowPosition = calculateGlowPosition(activeButtonBounds, 8);
 
-  // Unified spring animation for all navbar elements
-  const navbarAnimation = useSpring({
-    // Indicator line position
+  // CSS transition state for navbar animations
+  const [animationState, setAnimationState] = useState({
     indicatorX: indicatorPosition.x,
     indicatorWidth: indicatorPosition.width,
-    // Button background position
     backgroundX: activeButtonBounds.x,
     backgroundWidth: activeButtonBounds.width,
-    // Glow effect position
     glowX: glowPosition.x,
     glowWidth: glowPosition.width,
-    // Common opacity
     opacity: isInitialized ? 1 : 0,
-    config: {
-      tension: 300,
-      friction: 30,
-    },
   });
+
+  // Update animation state with React 19 transitions
+  useEffect(() => {
+    startTransition(() => {
+      setAnimationState({
+        indicatorX: indicatorPosition.x,
+        indicatorWidth: indicatorPosition.width,
+        backgroundX: activeButtonBounds.x,
+        backgroundWidth: activeButtonBounds.width,
+        glowX: glowPosition.x,
+        glowWidth: glowPosition.width,
+        opacity: isInitialized ? 1 : 0,
+      });
+    });
+  }, [
+    indicatorPosition.x,
+    indicatorPosition.width,
+    activeButtonBounds.x,
+    activeButtonBounds.width,
+    glowPosition.x,
+    glowPosition.width,
+    isInitialized,
+  ]);
 
   // Helper function to set button ref
   const setButtonRef =
@@ -187,21 +207,27 @@ export function useNavbar({
     // Event handlers
     handleKeyDown,
 
-    // Animations - derived from unified spring
-    indicatorLineSpring: {
-      transform: navbarAnimation.indicatorX.to(x => `translateX(${x}px)`),
-      width: navbarAnimation.indicatorWidth,
-      opacity: navbarAnimation.opacity,
+    // CSS animations with React 19 transitions
+    indicatorLineStyle: {
+      transform: `translateX(${animationState.indicatorX}px)`,
+      width: `${animationState.indicatorWidth}px`,
+      opacity: animationState.opacity,
+      transition:
+        'transform 300ms ease-out, width 300ms ease-out, opacity 300ms ease-out',
     },
-    buttonBackgroundSpring: {
-      transform: navbarAnimation.backgroundX.to(x => `translateX(${x}px)`),
-      width: navbarAnimation.backgroundWidth,
-      opacity: navbarAnimation.opacity,
+    buttonBackgroundStyle: {
+      transform: `translateX(${animationState.backgroundX}px)`,
+      width: `${animationState.backgroundWidth}px`,
+      opacity: animationState.opacity,
+      transition:
+        'transform 300ms ease-out, width 300ms ease-out, opacity 300ms ease-out',
     },
-    glowSpring: {
-      transform: navbarAnimation.glowX.to(x => `translateX(${x}px)`),
-      width: navbarAnimation.glowWidth,
-      opacity: navbarAnimation.opacity,
+    glowStyle: {
+      transform: `translateX(${animationState.glowX}px)`,
+      width: `${animationState.glowWidth}px`,
+      opacity: animationState.opacity * 0.3,
+      transition:
+        'transform 300ms ease-out, width 300ms ease-out, opacity 300ms ease-out',
     },
   };
 }

@@ -1,5 +1,4 @@
 import { LogOut, User } from 'lucide-react';
-import { memo, useState } from 'react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -12,7 +11,6 @@ import { useAuth } from '@/hooks/core/auth';
 
 function TaskDashboardHeader() {
   const { user, signOut } = useAuth();
-  const [isMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -63,7 +61,7 @@ function TaskDashboardHeader() {
                 <Avatar className="size-9">
                   <AvatarImage
                     src={user.user_metadata?.avatar_url}
-                    alt={user.user_metadata?.full_name || user.email || 'User'}
+                    alt={user.user_metadata?.full_name ?? user.email ?? 'User'}
                   />
                   <AvatarFallback className="bg-primary/10 text-primary">
                     {getUserInitials()}
@@ -78,7 +76,7 @@ function TaskDashboardHeader() {
                     <User className="size-4 text-muted-foreground" />
                     <div className="flex flex-col">
                       <p className="text-sm font-medium">
-                        {user.user_metadata?.full_name || 'User'}
+                        {user.user_metadata?.full_name ?? 'User'}
                       </p>
                       <p className="truncate text-xs text-muted-foreground">
                         {user.email}
@@ -89,7 +87,7 @@ function TaskDashboardHeader() {
                 <div className="p-1">
                   <Button
                     variant="ghost"
-                    className="w-full justify-start gap-2 text-red-600 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-950"
+                    className="w-full justify-start gap-2 text-red-600 transition-colors duration-200 hover:bg-red-50 hover:text-red-700 focus-visible:ring-2 focus-visible:ring-red-500/30 active:bg-red-100 active:text-red-800 dark:hover:bg-red-950 dark:active:bg-red-900"
                     onClick={handleLogout}
                   >
                     <LogOut className="size-4" />
@@ -105,4 +103,4 @@ function TaskDashboardHeader() {
   );
 }
 
-export default memo(TaskDashboardHeader);
+export default TaskDashboardHeader;

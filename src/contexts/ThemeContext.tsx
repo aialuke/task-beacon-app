@@ -12,11 +12,11 @@ interface ThemeContextType {
 }
 
 // Create standardized context
-const { Provider: ThemeContextProvider } = createStandardContext<ThemeContextType>({
-  name: 'Theme',
-  errorMessage: 'useTheme must be used within a ThemeProvider',
-});
-
+const { Provider: ThemeContextProvider } =
+  createStandardContext<ThemeContextType>({
+    name: 'Theme',
+    errorMessage: 'useTheme must be used within a ThemeProvider',
+  });
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>('dark'); // Default to dark
@@ -77,12 +77,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   const contextValue = useMemo(
     () => ({ theme, setTheme, actualTheme }),
-    [theme, setTheme, actualTheme]
+    [theme, setTheme, actualTheme],
   );
 
   return (
-    <ThemeContextProvider value={contextValue}>
-      {children}
-    </ThemeContextProvider>
+    <ThemeContextProvider value={contextValue}>{children}</ThemeContextProvider>
   );
 }

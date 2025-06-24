@@ -1,5 +1,4 @@
 import { Send } from 'lucide-react';
-import { memo } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -10,7 +9,7 @@ interface SubmitButtonProps {
   disabled?: boolean;
 }
 
-export const SubmitButton = memo(function SubmitButton({
+export function SubmitButton({
   onSubmit,
   isSubmitting = false,
   disabled = false,
@@ -28,7 +27,7 @@ export const SubmitButton = memo(function SubmitButton({
     'size-[48px]',
     'aspect-square rounded-full [aspect-ratio:1/1]',
     'border border-primary bg-primary text-primary-foreground shadow-md hover:bg-primary/90',
-    disabled && 'cursor-not-allowed opacity-50 hover:scale-100'
+    disabled && 'cursor-not-allowed opacity-50 hover:scale-100',
   );
 
   return (
@@ -40,10 +39,10 @@ export const SubmitButton = memo(function SubmitButton({
       className={buttonClasses}
     >
       {isSubmitting ? (
-        <div className="animate-spin rounded-full size-5 border-2 border-primary-foreground border-t-transparent" />
+        <div className="size-5 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
       ) : (
         <Send className="size-5 flex-shrink-0 transition-all duration-200" />
       )}
     </Button>
   );
-});
+}

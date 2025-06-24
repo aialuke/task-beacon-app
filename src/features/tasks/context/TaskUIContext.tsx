@@ -41,21 +41,24 @@ export function TaskUIContextProvider({ children }: { children: ReactNode }) {
     const checkMobile = () => {
       setIsMobile(window.matchMedia('(max-width: 768px)').matches);
     };
-    
+
     checkMobile();
     const mediaQuery = window.matchMedia('(max-width: 768px)');
     mediaQuery.addEventListener('change', checkMobile);
-    
+
     return () => mediaQuery.removeEventListener('change', checkMobile);
   }, []);
 
-  const contextValue: TaskUIContextType = useMemo(() => ({
-    filter,
-    setFilter,
-    expandedTaskId,
-    setExpandedTaskId,
-    isMobile,
-  }), [filter, expandedTaskId, isMobile]);
+  const contextValue: TaskUIContextType = useMemo(
+    () => ({
+      filter,
+      setFilter,
+      expandedTaskId,
+      setExpandedTaskId,
+      isMobile,
+    }),
+    [filter, expandedTaskId, isMobile],
+  );
 
   return <TaskUIProvider value={contextValue}>{children}</TaskUIProvider>;
 }

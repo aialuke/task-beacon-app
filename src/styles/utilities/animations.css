@@ -40,6 +40,19 @@
     }
   }
 
+  @keyframes flash {
+    0%,
+    50%,
+    100% {
+      opacity: 1;
+    }
+
+    25%,
+    75% {
+      opacity: 0.5;
+    }
+  }
+
   @keyframes slide-in-up {
     from {
       transform: translateY(100%);
@@ -84,6 +97,10 @@
 
   .animate-pulse-subtle {
     animation: pulse-subtle 3s infinite ease-in-out;
+  }
+
+  .animate-flash {
+    animation: flash 1s infinite ease-in-out;
   }
 
   /* === TRANSITION UTILITIES === */

@@ -11,10 +11,10 @@ import { formatDate } from '@/lib/utils/date';
 
 // Lazy load heavy components for better performance
 const CountdownTimer = lazy(
-  () => import('@/features/tasks/components/task-interaction/CountdownTimer')
+  () => import('@/features/tasks/components/task-interaction/CountdownTimer'),
 );
 const TaskActions = lazy(
-  () => import('@/features/tasks/components/task-management/TaskActions')
+  () => import('@/features/tasks/components/task-management/TaskActions'),
 );
 
 const TaskDetailsPage = () => {
@@ -59,11 +59,13 @@ const TaskDetailsPage = () => {
         <div className="space-y-6 rounded-xl bg-white p-6 shadow-sm">
           <div className="flex items-start gap-4">
             <div className="shrink-0">
-              <Suspense fallback={
-                <div className="flex items-center justify-center size-24">
-                  <div className="animate-spin rounded-full size-8 border-2 border-primary border-t-transparent" />
-                </div>
-              }>
+              <Suspense
+                fallback={
+                  <div className="flex size-24 items-center justify-center">
+                    <div className="size-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                  </div>
+                }
+              >
                 <CountdownTimer dueDate={task.due_date} status={status} />
               </Suspense>
             </div>
@@ -90,7 +92,7 @@ const TaskDetailsPage = () => {
                   href={task.url_link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1 text-primary hover:underline"
+                  className="flex items-center gap-1 text-primary transition-colors duration-200 hover:underline focus-visible:underline active:underline"
                 >
                   {task.url_link}
                 </a>
@@ -124,7 +126,7 @@ const TaskDetailsPage = () => {
                   size="sm"
                   className="mt-3"
                   onClick={() => {
-                    goToTaskDetails(task.parent_task_id!);
+                    goToTaskDetails(task.parent_task_id);
                   }}
                 >
                   <ExternalLink size={14} className="mr-2" />
@@ -135,11 +137,13 @@ const TaskDetailsPage = () => {
           )}
 
           <div className="border-t pt-4">
-            <Suspense fallback={
-              <div className="flex items-center justify-center p-4">
-                <div className="animate-spin rounded-full size-6 border-2 border-primary border-t-transparent" />
-              </div>
-            }>
+            <Suspense
+              fallback={
+                <div className="flex items-center justify-center p-4">
+                  <div className="size-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                </div>
+              }
+            >
               <TaskActions
                 task={task}
                 onView={() => {

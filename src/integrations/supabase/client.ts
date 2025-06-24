@@ -8,12 +8,10 @@ const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
 if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
   throw new Error(
-    'Missing Supabase environment variables. Please check your .env.local file.'
+    'Missing Supabase environment variables. Please check your .env.local file.',
   );
 }
 
-// Import the supabase client like this:
-// import { supabase } from "@/integrations/supabase/client";
 
 export const supabase = createClient<Database>(
   SUPABASE_URL,
@@ -25,5 +23,5 @@ export const supabase = createClient<Database>(
       autoRefreshToken: true,
       detectSessionInUrl: true,
     },
-  }
+  },
 );

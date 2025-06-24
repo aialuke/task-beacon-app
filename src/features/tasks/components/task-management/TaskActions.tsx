@@ -1,6 +1,5 @@
 import { Trash2 } from 'lucide-react';
-import { memo, useCallback, useState } from 'react';
-
+import { useCallback, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -14,13 +13,7 @@ import {
 } from '@/components/ui/dialog';
 import { useTaskSubmission } from '@/features/tasks/hooks/useTaskSubmission';
 import { useTaskNavigation } from '@/lib/navigation';
-import type { Task } from '@/types';
-
-interface TaskActionsProps {
-  task: Task;
-  onView: () => void;
-  isExpanded?: boolean;
-}
+import type { TaskActionsProps } from '@/types';
 
 function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
   const { goToCreateFollowUpTask } = useTaskNavigation();
@@ -81,7 +74,7 @@ function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
             <Button
               variant="ghost"
               size="icon"
-              className="size-8 text-muted-foreground hover:bg-muted hover:text-foreground"
+              className="size-8 text-muted-foreground transition-colors duration-200 hover:bg-muted hover:text-foreground focus-visible:bg-muted active:bg-muted"
               disabled={isSubmitting}
             >
               <Trash2 size={16} />
@@ -120,4 +113,4 @@ function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
   );
 }
 
-export default memo(TaskActions);
+export default TaskActions;

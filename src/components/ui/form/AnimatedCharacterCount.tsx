@@ -27,7 +27,7 @@ export function AnimatedCharacterCount({
             : isNearLimit
               ? 'text-warning animate-pulse'
               : 'text-muted-foreground',
-          isNearLimit && 'scale-105'
+          isNearLimit && 'scale-105',
         )}
       >
         {current}/{max}

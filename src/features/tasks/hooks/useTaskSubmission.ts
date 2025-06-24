@@ -9,7 +9,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { toast } from 'sonner';
 
-
 import { QueryKeys } from '@/lib/api/standardized-api';
 import { TaskService } from '@/lib/api/tasks';
 import { useTaskNavigation } from '@/lib/navigation';
@@ -28,7 +27,7 @@ interface UseTaskSubmissionReturn {
   createTask: (data: TaskCreateData) => Promise<TaskSubmissionResult>;
   updateTask: (
     id: string,
-    data: TaskUpdateData
+    data: TaskUpdateData,
   ) => Promise<TaskSubmissionResult>;
   deleteTask: (id: string) => Promise<TaskSubmissionResult>;
   isSubmitting: boolean;
@@ -59,7 +58,7 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
       } else {
         // Handle API error without throwing
         toast.error(
-          `Failed to create task: ${response.error?.message || 'Unknown error'}`
+          `Failed to create task: ${response.error?.message ?? 'Unknown error'}`,
         );
       }
     },
@@ -96,7 +95,7 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
       if (context?.previousTask) {
         queryClient.setQueryData(
           QueryKeys.task(context.previousTask.id),
-          context.previousTask
+          context.previousTask,
         );
       }
       toast.error(`Failed to update task: ${error.message}`);
@@ -114,7 +113,7 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
           queryClient.setQueryData(QueryKeys.task(id), previousTask);
         }
         toast.error(
-          `Failed to update task: ${response.error?.message || 'Unknown error'}`
+          `Failed to update task: ${response.error?.message ?? 'Unknown error'}`,
         );
       }
     },
@@ -142,7 +141,7 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
       if (context?.previousTask) {
         queryClient.setQueryData(
           QueryKeys.task(context.previousTask.id),
-          context.previousTask
+          context.previousTask,
         );
       }
       toast.error(`Failed to delete task: ${error.message}`);
@@ -165,7 +164,7 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
           queryClient.setQueryData(QueryKeys.task(id), previousTask);
         }
         toast.error(
-          `Failed to delete task: ${response.error?.message || 'Unknown error'}`
+          `Failed to delete task: ${response.error?.message ?? 'Unknown error'}`,
         );
       }
     },
@@ -187,13 +186,14 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
         } else {
           return {
             success: false,
-            error: response.error?.message || 'Unknown error',
+            error: response.error?.message ?? 'Unknown error',
             message: 'Failed to create task',
           };
         }
       } catch (error) {
         // Handle network errors and other unexpected errors
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        const errorMessage =
+          error instanceof Error ? error.message : 'Unknown error';
         return {
           success: false,
           error: errorMessage,
@@ -201,7 +201,7 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
         };
       }
     },
-    [createMutation]
+    [createMutation],
   );
 
   const updateTask = useCallback(
@@ -218,13 +218,14 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
         } else {
           return {
             success: false,
-            error: response.error?.message || 'Unknown error',
+            error: response.error?.message ?? 'Unknown error',
             message: 'Failed to update task',
           };
         }
       } catch (error) {
         // Handle network errors and other unexpected errors
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        const errorMessage =
+          error instanceof Error ? error.message : 'Unknown error';
         return {
           success: false,
           error: errorMessage,
@@ -232,7 +233,7 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
         };
       }
     },
-    [updateMutation]
+    [updateMutation],
   );
 
   const deleteTask = useCallback(
@@ -248,13 +249,14 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
         } else {
           return {
             success: false,
-            error: response.error?.message || 'Unknown error',
+            error: response.error?.message ?? 'Unknown error',
             message: 'Failed to delete task',
           };
         }
       } catch (error) {
         // Handle network errors and other unexpected errors
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        const errorMessage =
+          error instanceof Error ? error.message : 'Unknown error';
         return {
           success: false,
           error: errorMessage,
@@ -262,7 +264,7 @@ export function useTaskSubmission(): UseTaskSubmissionReturn {
         };
       }
     },
-    [deleteMutation]
+    [deleteMutation],
   );
 
   const isSubmitting =

@@ -16,7 +16,7 @@ export async function compressAndResizePhoto(
   file: File,
   maxWidth = 1200,
   maxHeight = 1200,
-  quality = 0.85
+  quality = 0.85,
 ): Promise<File> {
   const result = await processImageEnhanced(file, {
     maxWidth,
@@ -38,7 +38,7 @@ async function resizeImage(
   file: File,
   maxWidth: number,
   maxHeight: number = maxWidth,
-  quality = 0.85
+  quality = 0.85,
 ): Promise<Blob> {
   const result = await processImageEnhanced(file, {
     maxWidth,
@@ -57,7 +57,7 @@ async function resizeImage(
 async function generateThumbnail(
   file: File,
   size = 150,
-  format: 'auto' | 'webp' | 'jpeg' = 'auto'
+  format: 'auto' | 'webp' | 'jpeg' = 'auto',
 ): Promise<Blob> {
   const result = await processImageEnhanced(file, {
     maxWidth: size,
@@ -69,7 +69,6 @@ async function generateThumbnail(
 
   return result.blob;
 }
-
 
 // Re-export commonly used functions for convenience
 // Removed: resizeImage, generateThumbnail - no external usage detected

@@ -1,5 +1,5 @@
 import { FileText, Sparkles } from 'lucide-react';
-import { memo, useCallback } from 'react';
+import { useCallback } from 'react';
 
 import { FloatingInput } from '@/components/ui/FloatingInput';
 import { FloatingTextarea } from '@/components/ui/form/FloatingTextarea';
@@ -81,17 +81,26 @@ function UnifiedTaskForm({
   disabled = false,
   children,
 }: UnifiedTaskFormProps) {
-  const handleUrlChange = useCallback((newUrl: string) => {
-    setUrl(newUrl);
-  }, [setUrl]);
+  const handleUrlChange = useCallback(
+    (newUrl: string) => {
+      setUrl(newUrl);
+    },
+    [setUrl],
+  );
 
-  const handleDueDateChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setDueDate(e.target.value);
-  }, [setDueDate]);
+  const handleDueDateChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setDueDate(e.target.value);
+    },
+    [setDueDate],
+  );
 
-  const handleAssigneeChange = useCallback((value: string) => {
-    setAssigneeId(value);
-  }, [setAssigneeId]);
+  const handleAssigneeChange = useCallback(
+    (value: string) => {
+      setAssigneeId(value);
+    },
+    [setAssigneeId],
+  );
 
   return (
     <div className="w-full rounded-3xl border border-border bg-card/40 p-8 text-card-foreground shadow-2xl shadow-black/5 backdrop-blur-xl">
@@ -158,4 +167,4 @@ function UnifiedTaskForm({
   );
 }
 
-export default memo(UnifiedTaskForm);
+export default UnifiedTaskForm;

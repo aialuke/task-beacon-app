@@ -1,4 +1,3 @@
-
 /**
  * Autocomplete Types - Type definitions for user autocomplete components
  *

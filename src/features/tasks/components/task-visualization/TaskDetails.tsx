@@ -1,5 +1,3 @@
-import { memo } from 'react';
-
 import { cn } from '@/lib/utils';
 import { Task } from '@/types';
 
@@ -11,17 +9,13 @@ interface TaskDetailsProps {
   contentRef: React.RefObject<HTMLDivElement>;
 }
 
-function TaskDetails({
-  task,
-  isExpanded,
-  contentRef,
-}: TaskDetailsProps) {
+function TaskDetails({ task, isExpanded, contentRef }: TaskDetailsProps) {
   return (
     <div
       ref={contentRef}
       className={cn(
-        "mt-1 w-full transition-all duration-300 ease-in-out overflow-hidden",
-        isExpanded ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+        'mt-1 w-full overflow-hidden transition-all duration-300 ease-in-out',
+        isExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0',
       )}
       style={{
         minHeight: 0,
@@ -32,4 +26,4 @@ function TaskDetails({
   );
 }
 
-export default memo(TaskDetails);
+export default TaskDetails;

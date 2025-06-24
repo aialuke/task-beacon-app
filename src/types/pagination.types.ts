@@ -41,11 +41,12 @@ interface BaseQueryParams {
   search?: string;
 }
 
+
 /**
  * Pagination controls interface
  * Used for navigation functions and UI controls
  */
-export interface PaginationControls {
+interface PaginationControls {
   goToNextPage: () => void;
   goToPreviousPage: () => void;
   goToPage: (page: number) => void;
@@ -107,11 +108,3 @@ export interface PaginationValidationResult {
   sanitized: PaginationParams;
 }
 
-/**
- * Pagination range information
- */
-export interface PaginationRange {
-  start: number;
-  end: number;
-  total: number;
-}

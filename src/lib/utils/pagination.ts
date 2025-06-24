@@ -23,8 +23,6 @@ export const DEFAULT_PAGINATION_CONFIG: PaginationConfig = {
 
 // === TYPE GUARDS ===
 
-
-
 // === CALCULATION FUNCTIONS ===
 
 /**
@@ -33,7 +31,7 @@ export const DEFAULT_PAGINATION_CONFIG: PaginationConfig = {
 export function calculatePaginationMeta(
   page: number,
   pageSize: number,
-  totalCount: number
+  totalCount: number,
 ): PaginationMeta {
   const totalPages = Math.ceil(totalCount / pageSize);
 
@@ -52,7 +50,7 @@ export function calculatePaginationMeta(
  */
 export function validatePaginationParams(
   params: unknown,
-  config: PaginationConfig = DEFAULT_PAGINATION_CONFIG
+  config: PaginationConfig = DEFAULT_PAGINATION_CONFIG,
 ): PaginationValidationResult {
   const errors: string[] = [];
   let page = 1;
@@ -83,7 +81,7 @@ export function validatePaginationParams(
         !Number.isInteger(p.pageSize)
       ) {
         errors.push(
-          `Page size must be between ${config.minPageSize} and ${config.maxPageSize}`
+          `Page size must be between ${config.minPageSize} and ${config.maxPageSize}`,
         );
       } else {
         pageSize = p.pageSize;
@@ -97,4 +95,3 @@ export function validatePaginationParams(
     sanitized: { page, pageSize },
   };
 }
-

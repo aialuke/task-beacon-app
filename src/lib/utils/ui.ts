@@ -11,7 +11,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-
 /**
  * Checks if the device is in dark mode based on system preference
  */

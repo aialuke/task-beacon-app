@@ -41,7 +41,7 @@ interface CountdownTimerResult {
 export function useCountdown(
   dueDate: string | null,
   status: TaskStatus,
-  circumference: number
+  circumference: number,
 ): CountdownTimerResult {
   const [state, setState] = useState<CountdownState>(() => {
     const initialTimeLeft = calculateTimeLeft(dueDate, status);
@@ -98,7 +98,7 @@ export function useCountdown(
   // Stable interval setup
   useEffect(() => {
     const tick = () => savedCallback.current?.();
-    
+
     if (state.interval > 0) {
       tick(); // Update immediately
       intervalRef.current = setInterval(tick, state.interval);
@@ -124,7 +124,7 @@ export function useCountdown(
       circumference,
       timeLeft.days ?? 0,
       status,
-      dueDate
+      dueDate,
     );
 
     // Generate tooltip content
@@ -182,7 +182,7 @@ export function useCountdown(
  */
 function calculateTimeLeft(
   dueDate: string | null,
-  status: TaskStatus
+  status: TaskStatus,
 ): CountdownResult {
   const nullResult: CountdownResult = {
     days: null,
@@ -233,7 +233,7 @@ function calculateTimeLeft(
   }
 
   const hours = Math.floor(
-    (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
   );
   const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
   const seconds = Math.floor((difference % (1000 * 60)) / 1000);

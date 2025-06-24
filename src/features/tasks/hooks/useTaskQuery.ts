@@ -12,9 +12,7 @@ interface UseTaskQueryReturn {
  * Standardized hook for querying a single task by ID.
  */
 export function useTaskQuery(taskId: string | undefined): UseTaskQueryReturn {
-  const {
-    data: task,
-  } = useSuspenseQuery({
+  const { data: task } = useSuspenseQuery({
     queryKey: [QueryKeys.tasks, taskId],
     queryFn: async () => {
       if (!taskId) {
@@ -29,7 +27,7 @@ export function useTaskQuery(taskId: string | undefined): UseTaskQueryReturn {
         return data.data;
       }
       // For failed responses, let error handling be done via onError
-      throw new Error(data.error?.message || 'Failed to fetch task');
+      throw new Error(data.error?.message ?? 'Failed to fetch task');
     },
   });
 

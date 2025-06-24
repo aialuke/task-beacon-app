@@ -15,7 +15,7 @@ export function formatDate(
     month: 'short',
     day: 'numeric',
     year: 'numeric',
-  }
+  },
 ): string {
   const date =
     typeof dateString === 'string' ? new Date(dateString) : dateString;
@@ -41,9 +41,6 @@ export function getDaysRemaining(dueDate: string | null): number | null {
   return Math.ceil(timeDiff / (1000 * 3600 * 24));
 }
 
-
-
-
 /**
  * Formats the time display for the timer component
  *
@@ -55,7 +52,7 @@ export function getDaysRemaining(dueDate: string | null): number | null {
 export function formatTimeDisplay(
   daysLeft: number | null,
   dueDate: string | null,
-  status: string
+  status: string,
 ): string {
   if (!dueDate) return 'No due date';
   if (status === 'complete') return 'Done';
@@ -71,7 +68,6 @@ export function formatTimeDisplay(
   return `${daysLeft}d`;
 }
 
-
 /**
  * Determines the appropriate interval for updating the timer
  *
@@ -81,7 +77,7 @@ export function formatTimeDisplay(
  */
 export function getUpdateInterval(
   daysLeft: number | null,
-  status: string
+  status: string,
 ): number {
   if (status === 'complete' || status === 'overdue' || daysLeft === null) {
     // No need for frequent updates for these states

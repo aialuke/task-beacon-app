@@ -45,7 +45,7 @@ const SimplePhotoUpload = memo(function SimplePhotoUpload({
     }
   };
 
-  const fileName = processingResult?.metadata?.name || 'Uploaded image';
+  const fileName = processingResult?.metadata?.name ?? 'Uploaded image';
 
   return (
     <div className="flex flex-col items-center gap-4">
@@ -133,7 +133,7 @@ const SimplePhotoUpload = memo(function SimplePhotoUpload({
           {onPhotoRemove && (
             <button
               onClick={onPhotoRemove}
-              className="font-medium text-destructive hover:underline"
+              className="font-medium text-destructive transition-colors duration-200 hover:underline focus-visible:underline active:underline"
               aria-label={`Remove ${fileName}`}
               disabled={disabled || loading}
             >

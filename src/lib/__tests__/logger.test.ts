@@ -80,7 +80,7 @@ describe('Logger', () => {
       testLogger.info('test message', { key: 'value' });
       expect(consoleSpy).toHaveBeenCalledWith(
         expect.stringContaining('[INFO] test message'),
-        { key: 'value' }
+        { key: 'value' },
       );
       consoleSpy.mockRestore();
     });
@@ -91,7 +91,7 @@ describe('Logger', () => {
       testLogger.info('test message', { key: 'value' });
       expect(consoleSpy).toHaveBeenCalledWith(
         expect.stringContaining('[INFO] test message'),
-        undefined
+        undefined,
       );
       consoleSpy.mockRestore();
     });
@@ -104,7 +104,7 @@ describe('Logger', () => {
       prefixedLogger.info('test message');
       expect(consoleSpy).toHaveBeenCalledWith(
         expect.stringContaining('[INFO] [TEST] test message'),
-        undefined
+        undefined,
       );
       consoleSpy.mockRestore();
     });
@@ -118,7 +118,7 @@ describe('Logger', () => {
       childLogger.info('test message');
       expect(consoleSpy).toHaveBeenCalledWith(
         expect.stringContaining('[INFO] [PARENT:CHILD] test message'),
-        undefined
+        undefined,
       );
       consoleSpy.mockRestore();
     });
@@ -130,7 +130,7 @@ describe('Logger', () => {
       authLogger.info('auth event');
       expect(consoleSpy).toHaveBeenCalledWith(
         expect.stringContaining('[INFO] [Auth] auth event'),
-        undefined
+        undefined,
       );
       consoleSpy.mockRestore();
     });

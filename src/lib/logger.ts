@@ -145,7 +145,7 @@ class Logger {
     level: LogLevel,
     message: string,
     context?: Record<string, unknown>,
-    error?: Error
+    error?: Error,
   ): LogEntry {
     return {
       level,
@@ -186,7 +186,7 @@ class Logger {
   error(
     message: string,
     error?: Error,
-    context?: Record<string, unknown>
+    context?: Record<string, unknown>,
   ): void {
     const entry = this.createLogEntry('error', message, context, error);
     this.outputLog(entry);
@@ -226,7 +226,7 @@ class Logger {
   component(
     component: string,
     event: string,
-    context?: Record<string, unknown>
+    context?: Record<string, unknown>,
   ): void {
     this.debug(`Component [${component}]: ${event}`, context);
   }

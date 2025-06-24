@@ -2,7 +2,7 @@ import type { ChangeEvent, ReactNode } from 'react';
 
 /**
  * Shared Component Type Definitions
- * 
+ *
  * Centralized types for reusable UI components to ensure consistency
  * and prevent duplication across different component implementations.
  */
@@ -14,7 +14,7 @@ export interface BaseComponentProps {
 }
 
 // Base Floating Input Component Props
-export interface BaseFloatingInputProps extends BaseComponentProps {
+interface BaseFloatingInputProps extends BaseComponentProps {
   id: string;
   label: string;
   type?: string;
@@ -36,11 +36,8 @@ export interface FormFloatingInputProps extends BaseFloatingInputProps {
   icon?: ReactNode;
 }
 
-// Union type for components that need to support both
-export type FloatingInputProps = AuthFloatingInputProps | FormFloatingInputProps;
-
-// Floating Textarea Component Props
-export interface FloatingTextareaProps extends BaseComponentProps {
+// Floating Textarea Props
+export interface FloatingTextareaProps {
   id: string;
   label: string;
   value: string;
@@ -49,38 +46,25 @@ export interface FloatingTextareaProps extends BaseComponentProps {
   required?: boolean;
   maxLength?: number;
   rows?: number;
-  icon?: ReactNode;
   error?: string;
-}
-
-// Button Component Props
-export interface ActionButtonProps extends BaseComponentProps {
-  icon: React.ComponentType<{ size?: number; className?: string }>;
-  label: string;
-  active?: boolean;
-  onClick: () => void;
-  variant?: 'primary' | 'secondary' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
-}
-
-// Modal Component Props
-export interface BaseModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title?: string;
   className?: string;
+  disabled?: boolean;
 }
 
-// Loading States
-export interface LoadingStateProps {
-  isLoading?: boolean;
-  loadingMessage?: string;
+// Action Button Props
+export interface ActionButtonProps {
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
+  disabled?: boolean;
+  loading?: boolean;
+  onClick?: () => void;
+  children: ReactNode;
+  className?: string;
+  type?: 'button' | 'submit' | 'reset';
 }
 
-// Error States
-export interface ErrorStateProps {
-  error?: string | Error | null;
-  onRetry?: () => void;
-  variant?: 'inline' | 'section' | 'page';
-}
+
+
+
+
+

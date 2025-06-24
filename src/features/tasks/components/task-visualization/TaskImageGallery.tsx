@@ -1,22 +1,12 @@
-
 import { memo } from 'react';
 
 // === INTERNAL UTILITIES ===
 import { cn } from '@/lib/utils';
-import type { Task } from '@/types';
+import type { TaskImageGalleryProps } from '@/types';
 
 // === INTERNAL COMPONENTS ===
 import { useImagePreview } from '../../hooks/useImagePreview';
 import { ImagePreviewModal } from '../task-interaction/ImagePreviewModal';
-
-// === HOOKS ===
-
-// === TYPES ===
-
-interface TaskImageGalleryProps {
-  task: Task;
-  className?: string;
-}
 
 /**
  * TaskImageGallery Component
@@ -37,7 +27,10 @@ interface TaskImageGalleryProps {
  * @since 1.4.0 - Extracted from TaskDetails during Phase 1 refactoring
  * @version 1.0.0
  */
-const TaskImageGallery = memo(function TaskImageGallery({ task, className }: TaskImageGalleryProps) {
+const TaskImageGallery = memo(function TaskImageGallery({
+  task,
+  className,
+}: TaskImageGalleryProps) {
   const { isPreviewOpen, previewImageUrl, openPreview, closePreview } =
     useImagePreview();
 
@@ -57,7 +50,7 @@ const TaskImageGallery = memo(function TaskImageGallery({ task, className }: Tas
       <div className={cn('task-image-gallery', className)}>
         <button
           onClick={handleImageClick}
-          className="block w-full overflow-hidden rounded-lg transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+          className="block w-full overflow-hidden rounded-lg transition-opacity duration-200 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus-visible:opacity-90 active:opacity-90"
           aria-label="View task image"
         >
           <img
@@ -71,7 +64,7 @@ const TaskImageGallery = memo(function TaskImageGallery({ task, className }: Tas
 
       <ImagePreviewModal
         isOpen={isPreviewOpen}
-        imageUrl={previewImageUrl || ''}
+        imageUrl={previewImageUrl ?? ''}
         onClose={closePreview}
         alt={`Image for task: ${task.title}`}
       />

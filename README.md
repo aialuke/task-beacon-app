@@ -14,7 +14,7 @@ Supabase.
 
 ## Tech Stack
 
-- **Frontend**: React 18, TypeScript, Vite
+- **Frontend**: React 19.1.0, TypeScript, Vite
 - **Backend**: Supabase (PostgreSQL, Auth, Storage)
 - **Styling**: Tailwind CSS, Shadcn UI
 - **State Management**: TanStack Query, React Context
@@ -45,4 +45,5 @@ src/
 This project uses modern development practices including TypeScript strict mode, comprehensive
 testing, and performance monitoring.
 
-For detailed development guidelines, see the documentation in the `docs/` directory.
+For detailed development guidelines, see the `CLAUDE.md` file and documentation in the
+`.cursor/rules/` directory.

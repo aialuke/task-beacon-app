@@ -1,0 +1,19 @@
+#!/bin/bash
+# STOP/CORRECTION TOOL for MANDATORY FIRST RESPONSE PROTOCOL violations
+
+echo "🛑 STOP - PROTOCOL VIOLATION"
+echo "============================="
+echo ""
+echo "❌ YOU FAILED TO FOLLOW CLAUDE.md MANDATORY FIRST RESPONSE PROTOCOL"
+echo ""
+echo "You MUST restart your response using this EXACT format:"
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "Checking CLAUDE.md rules for this task..."
+echo "- [Rule Name] applies - [reason]"
+echo "- [Rule Name] applies - [reason]"
+echo ""
+echo "Now proceeding with [original request]..."
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+echo "⛔ RESTART NOW WITH PROPER PROTOCOL ⛔"

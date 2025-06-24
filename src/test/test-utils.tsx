@@ -27,7 +27,7 @@ export const AllTheProviders = ({
 
 const renderWithProviders = (
   ui: ReactElement,
-  options?: Omit<RenderOptions, 'wrapper'>
+  options?: Omit<RenderOptions, 'wrapper'>,
 ) => render(ui, { wrapper: AllTheProviders, ...options });
 
 // re-export everything

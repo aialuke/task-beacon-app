@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react';
+import { useMemo } from 'react';
 
 import { TaskStatus } from '@/types';
 
@@ -11,7 +11,7 @@ interface TimerRingProps {
   daysRemaining: number | null;
 }
 
-const GradientDefs = memo(() => (
+const GradientDefs = () => (
   <defs>
     <linearGradient id="gradientPending" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stopColor="#FFDD24" />
@@ -38,7 +38,7 @@ const GradientDefs = memo(() => (
       <feComposite in="SourceGraphic" in2="blur" operator="over" />
     </filter>
   </defs>
-));
+);
 
 GradientDefs.displayName = 'GradientDefs';
 
@@ -110,13 +110,4 @@ const TimerRing = ({
   );
 };
 
-export default memo(TimerRing, (prevProps, nextProps) => {
-  return (
-    prevProps.size === nextProps.size &&
-    prevProps.radius === nextProps.radius &&
-    prevProps.circumference === nextProps.circumference &&
-    prevProps.status === nextProps.status &&
-    prevProps.daysRemaining === nextProps.daysRemaining &&
-    prevProps.strokeDashoffset === nextProps.strokeDashoffset
-  );
-});
+export default TimerRing;
