@@ -12,7 +12,6 @@ import { TaskImageGallery } from './TaskImageGallery';
 
 function TaskDetailsContent({
   task,
-  isExpanded = false,
 }: TaskDetailsContentProps) {
   const { goToTaskDetails } = useTaskNavigation();
 
@@ -70,7 +69,6 @@ function TaskDetailsContent({
           onView={() => {
             goToTaskDetails(task.id);
           }}
-          isExpanded={isExpanded}
         />
       </div>
     </div>

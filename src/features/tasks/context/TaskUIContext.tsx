@@ -10,10 +10,6 @@ interface TaskUIContextType {
   filter: TaskFilter;
   setFilter: (filter: TaskFilter) => void;
 
-  // Expanded state
-  expandedTaskId: string | null;
-  setExpandedTaskId: (id: string | null) => void;
-
   // Mobile detection
   isMobile: boolean;
 }
@@ -33,7 +29,6 @@ const { Provider: TaskUIProvider, useContext: useTaskUIContext } =
 export function TaskUIContextProvider({ children }: { children: ReactNode }) {
   // UI States - using standard React hooks
   const [filter, setFilter] = useState<TaskFilter>('all');
-  const [expandedTaskId, setExpandedTaskId] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
 
   // Mobile detection
@@ -53,11 +48,9 @@ export function TaskUIContextProvider({ children }: { children: ReactNode }) {
     () => ({
       filter,
       setFilter,
-      expandedTaskId,
-      setExpandedTaskId,
       isMobile,
     }),
-    [filter, expandedTaskId, isMobile],
+    [filter, isMobile],
   );
 
   return <TaskUIProvider value={contextValue}>{children}</TaskUIProvider>;

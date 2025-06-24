@@ -56,7 +56,6 @@ function TaskCardCollapsible({ task }: TaskCardProps) {
         <CollapsibleTrigger
           className="flex w-full items-center gap-3 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           aria-label={`Task: ${task.title}`}
-          onClick={() => console.log(`Collapsible trigger clicked for task: ${task.title}`)}
         >
           <div className="pointer-events-none">
             <TaskStatus task={task} />
@@ -70,7 +69,7 @@ function TaskCardCollapsible({ task }: TaskCardProps) {
         </CollapsibleTrigger>
         <CollapsibleContent>
           <div className="pt-4">
-            <TaskDetailsContent task={task} isExpanded={true} />
+            <TaskDetailsContent task={task} />
           </div>
         </CollapsibleContent>
       </Collapsible>

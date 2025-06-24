@@ -17,19 +17,15 @@ export interface TaskCardProps extends BaseComponentProps {
 
 export interface TaskCardContentProps extends BaseComponentProps {
   task: Task;
-  isExpanded?: boolean;
 }
 
 export interface TaskCardHeaderProps extends BaseComponentProps {
   task: Task;
-  isExpanded: boolean;
-  toggleExpand: () => void;
 }
 
 // Task details props
 export interface TaskDetailsContentProps extends BaseComponentProps {
   task: Task;
-  isExpanded?: boolean;
 }
 
 // Task interaction props
@@ -44,7 +40,6 @@ export interface CountdownTimerProps {
 export interface TaskActionsProps {
   task: Task;
   onView: () => void;
-  isExpanded?: boolean;
 }
 
 export interface TaskImageGalleryProps {
