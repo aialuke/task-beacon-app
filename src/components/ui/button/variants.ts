@@ -10,15 +10,15 @@ export const buttonVariants = cva(
         destructive:
           'rounded-full bg-destructive text-destructive-foreground shadow hover:bg-destructive/90 hover:shadow-md',
         outline:
-          'rounded-full border border-input bg-background shadow hover:bg-accent hover:text-accent-foreground hover:shadow-md',
+          'rounded-full border border-input bg-background text-white shadow hover:bg-accent hover:text-accent-foreground hover:shadow-md',
         secondary:
           'rounded-full bg-secondary text-secondary-foreground shadow hover:bg-secondary/80 hover:shadow-md',
-        ghost: 'rounded-full hover:bg-accent hover:text-accent-foreground',
-        link: 'text-primary underline-offset-4 hover:underline',
+        ghost: 'rounded-full text-white hover:bg-accent hover:text-accent-foreground',
+        link: 'text-white underline-offset-4 hover:underline',
         brand:
           'bg-gradient-primary hover:bg-gradient-primary-dark rounded-full text-primary-foreground shadow hover:shadow-md',
         'brand-secondary':
-          'rounded-full bg-secondary text-primary shadow hover:bg-secondary/80 hover:shadow-md',
+          'rounded-full bg-secondary text-white shadow hover:bg-secondary/80 hover:shadow-md',
       },
       size: {
         default: 'h-10 px-4 py-2',

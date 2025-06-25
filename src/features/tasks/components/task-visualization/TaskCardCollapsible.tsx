@@ -76,7 +76,7 @@ function TaskCardCollapsible({ task }: TaskCardProps) {
               </h3>
             </div>
             <ChevronDown
-              className={`size-4 shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+              className={`size-4 shrink-0 text-white transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
             />
           </button>
         </CollapsibleTrigger>

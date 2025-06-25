@@ -87,7 +87,7 @@ function TaskDashboardHeader() {
                 <div className="p-1">
                   <Button
                     variant="ghost"
-                    className="w-full justify-start gap-2 text-red-600 transition-colors duration-200 hover:bg-red-50 hover:text-red-700 focus-visible:ring-2 focus-visible:ring-red-500/30 active:bg-red-100 active:text-red-800 dark:hover:bg-red-950 dark:active:bg-red-900"
+                    className="w-full justify-start gap-2 text-destructive transition-colors duration-200 hover:bg-destructive/10 hover:text-destructive/80 focus-visible:ring-2 focus-visible:ring-destructive/30 active:bg-destructive/20 active:text-destructive/90 dark:hover:bg-destructive/10 dark:active:bg-destructive/20"
                     onClick={handleLogout}
                   >
                     <LogOut className="size-4" />
