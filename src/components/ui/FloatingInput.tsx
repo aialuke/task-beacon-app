@@ -17,7 +17,7 @@ function isFormVariant(
 ): props is FormFloatingInputProps {
   return (
     'icon' in props &&
-    typeof (props as FormFloatingInputProps).onChange === 'function'
+    typeof props.onChange === 'function'
   );
 }
 

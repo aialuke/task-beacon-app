@@ -20,7 +20,6 @@ export interface ApiError {
   details?: unknown;
 }
 
-
 interface ActionResult<T = unknown> {
   success: boolean;
   data?: T;

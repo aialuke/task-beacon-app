@@ -70,7 +70,7 @@ class UnifiedErrorBoundary extends Component<
 interface ErrorDisplayProps {
   error: Error | null;
   variant: 'page' | 'section' | 'inline';
-  title?: string;
+  title?: string | undefined;
   onRetry: () => void;
   className?: string;
 }

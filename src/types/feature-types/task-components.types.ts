@@ -8,7 +8,6 @@ import type { BaseComponentProps } from '@/types/shared/components.types';
  * interaction, and management component props.
  */
 
-
 // Task card related props
 export interface TaskCardProps extends BaseComponentProps {
   task: Task;
@@ -53,11 +52,3 @@ export interface TaskStatusProps {
   task: Task;
   className?: string;
 }
-
-
-
-
-
-
-
-

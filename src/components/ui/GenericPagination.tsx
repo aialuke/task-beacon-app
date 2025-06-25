@@ -103,9 +103,6 @@ function GenericPaginationComponent({
     return null;
   }
 
-  const isFirstPage = currentPage === 1;
-  const isLastPage = currentPage >= totalPages;
-
   return (
     <div className={className}>
       <Pagination>
@@ -123,7 +120,9 @@ function GenericPaginationComponent({
 
           {showPageNumbers &&
             visiblePages.map((page, index) => (
-              <PaginationItem key={page === 'ellipsis' ? `ellipsis-${index}` : page}>
+              <PaginationItem
+                key={page === 'ellipsis' ? `ellipsis-${index}` : page}
+              >
                 {page === 'ellipsis' ? (
                   <PaginationEllipsis />
                 ) : (
@@ -162,8 +161,10 @@ function GenericPaginationComponent({
       {/* Optional info display */}
       {showInfo && (
         <div className="mt-2 text-center text-sm text-muted-foreground">
-          Showing {Math.min((currentPage - 1) * pagination.pageSize + 1, totalCount)} to{' '}
-          {Math.min(currentPage * pagination.pageSize, totalCount)} of {totalCount} items
+          Showing{' '}
+          {Math.min((currentPage - 1) * pagination.pageSize + 1, totalCount)} to{' '}
+          {Math.min(currentPage * pagination.pageSize, totalCount)} of{' '}
+          {totalCount} items
         </div>
       )}
 

@@ -1,8 +1,4 @@
-import {
-  useState,
-  useRef,
-  useEffect,
-} from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';

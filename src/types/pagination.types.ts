@@ -41,7 +41,6 @@ interface BaseQueryParams {
   search?: string;
 }
 
-
 /**
  * Pagination controls interface
  * Used for navigation functions and UI controls
@@ -107,4 +106,3 @@ export interface PaginationValidationResult {
   errors: string[];
   sanitized: PaginationParams;
 }
-

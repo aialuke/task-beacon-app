@@ -21,10 +21,14 @@ export async function withApiResponse<T>(
     };
   } catch (error) {
     console.error('API operation failed:', error);
-    
+
     // Handle Supabase auth errors - both real AuthError objects and test mocks
-    const isAuthError = error && typeof error === 'object' && 'message' in error && !(error instanceof Error);
-    
+    const isAuthError =
+      error &&
+      typeof error === 'object' &&
+      'message' in error &&
+      !(error instanceof Error);
+
     if (isAuthError) {
       // Format auth errors to match test expectations exactly
       return {
@@ -37,7 +41,7 @@ export async function withApiResponse<T>(
         },
       };
     }
-    
+
     // Handle regular errors
     return {
       success: false,

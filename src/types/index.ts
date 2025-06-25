@@ -30,7 +30,6 @@ export type {
   ActionButtonProps,
 } from './shared/components.types';
 
-
 // Task component types
 export type {
   TaskCardProps,
@@ -42,7 +41,6 @@ export type {
   TaskImageGalleryProps,
   TaskStatusProps,
 } from './feature-types/task-components.types';
-
 
 // Async state types: (no longer re-exporting BaseAsyncState as it is unused)
 

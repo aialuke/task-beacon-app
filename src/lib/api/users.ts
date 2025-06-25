@@ -22,7 +22,7 @@ export async function getAllUsers(
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
-      .limit(options.pageSize || 50);
+      .limit(options.pageSize ?? 50);
 
     if (error) {
       throw new Error(error.message);

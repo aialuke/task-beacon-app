@@ -40,7 +40,7 @@ export function useAuth(): UseAuthReturn {
         isMobile: /Mobi|Android/i.test(navigator.userAgent),
         userAgent: navigator.userAgent,
         url: window.location.href,
-        ...(data || {}),
+        ...(data ?? {}),
       });
     },
     [],

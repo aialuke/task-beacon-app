@@ -10,6 +10,7 @@ repository.
 Before responding to ANY user request, you MUST:
 
 1. **Check for Direct Questions First**:
+
    - Scan for question marks (?)
    - Look for "Why" / "How" / "What" at start of sentences
    - Detect challenges ("you ignored", "you didn't", "are you")
@@ -20,6 +21,7 @@ Before responding to ANY user request, you MUST:
 4. **ONLY THEN** proceed with the actual work
 
 ### Example:
+
 ```
 User: "Continue with Phase 2"
 Assistant: "Checking CLAUDE.md rules for this task...
@@ -32,6 +34,7 @@ Now proceeding with Phase 2..."
 ```
 
 ### Required Rules to Check:
+
 - Does this involve code deletion? → CRITICAL VERIFICATION RULE
 - Does this involve analysis? → Systematic Completion Protocol + Evidence Enumeration
 - Does this involve creating new code? → Minimal Complexity Principle
@@ -42,7 +45,8 @@ Now proceeding with Phase 2..."
 - Am I making claims without evidence? → Mandatory Tool Usage (.cursor/rules)
 - Do I need to verify my understanding? → Mandatory Understanding Verification (.cursor/rules)
 
-**VIOLATION**: Failing to perform this check before starting work requires immediate acknowledgment and restart.
+**VIOLATION**: Failing to perform this check before starting work requires immediate acknowledgment
+and restart.
 
 ---
 
@@ -206,16 +210,20 @@ See `NEVER_DELETE_BEFORE_PRESERVE_RULE.md` for complete workflow requirements.
 
 ## 🚨 CRITICAL VERIFICATION RULE - MANDATORY TOOL OUTPUT VALIDATION
 
-**ABSOLUTE REQUIREMENT**: Before making ANY changes based on tool outputs (Knip, ESLint, grep, etc.):
+**ABSOLUTE REQUIREMENT**: Before making ANY changes based on tool outputs (Knip, ESLint, grep,
+etc.):
 
 ### 1. **MANDATORY VERIFICATION PROTOCOL**
+
 - **NEVER trust tool outputs blindly** - all tools can have false positives
 - **ALWAYS verify each reported issue** with manual code searches before fixing
 - **VALIDATE every deletion candidate** with comprehensive usage searches
 - **CONFIRM every "unused" export** is actually unused in the entire codebase
 
 ### 2. **REQUIRED VERIFICATION COMMANDS**
+
 For each reported "unused" item, run ALL of these verification checks:
+
 ```bash
 # Search for exact usage in all file types
 rg "ExactItemName" . --type ts --type-add 'tsx:*.tsx' -t tsx -t js -n
@@ -231,19 +239,23 @@ rg "ExactItemName[>\s]" . -n
 ```
 
 ### 3. **VERIFICATION DECISION MATRIX**
+
 - ✅ **SAFE TO REMOVE**: Zero usage found in any verification search
 - ❌ **DO NOT REMOVE**: Any usage found, even in same file as definition
 - ⚠️ **INVESTIGATE**: Usage only in comments or documentation
 - 🔄 **RE-EXPORT ONLY**: Used internally but not exported elsewhere
 
 ### 4. **ENFORCEMENT CHECKLIST**
+
 Before ANY deletion, you MUST:
+
 - [ ] Run all 4 verification commands above
 - [ ] Document verification results in your response using the template below
-- [ ] Explicitly state "VERIFIED SAFE" or "VERIFICATION FAILED" 
+- [ ] Explicitly state "VERIFIED SAFE" or "VERIFICATION FAILED"
 - [ ] If verification fails, explain why item should NOT be removed
 
 #### Verification Output Template (MANDATORY)
+
 When marking ANY item as verified, you MUST use this exact format:
 
 ```
@@ -251,7 +263,7 @@ VERIFYING: [ItemName]
 Command 1: rg "ExactItemName" . --type ts --type-add 'tsx:*.tsx' -t tsx -t js -n
 Output: [PASTE ACTUAL OUTPUT or "No results"]
 
-Command 2: rg "ExactItemName" . -n  
+Command 2: rg "ExactItemName" . -n
 Output: [PASTE ACTUAL OUTPUT or "No results"]
 
 Command 3: rg ": ExactItemName|extends ExactItemName|implements ExactItemName" . -n
@@ -266,12 +278,14 @@ VERDICT: ✅ VERIFIED SAFE / ❌ ACTIVE USAGE FOUND
 **PROHIBITED**: Writing "VERIFIED", "SAFE", or "✅" without this complete template.
 
 ### 5. **ZERO TOLERANCE POLICY**
+
 - **ANY** deletion without prior verification is a critical error
 - **ANY** bulk removal without individual verification is prohibited
 - **ANY** "probably unused" assumptions are forbidden
 - **EVERY** tool-reported issue requires independent verification
 
-**Violation of this rule is grounds for immediate task suspension and requires explicit re-verification of all previous changes.**
+**Violation of this rule is grounds for immediate task suspension and requires explicit
+re-verification of all previous changes.**
 
 ## 🛑 COMPLETION CLAIM PROTOCOL
 
@@ -283,10 +297,11 @@ Before writing "COMPLETE", "DONE", "FINISHED", or marking any todo as completed,
 4. **State completion scope**: "X of Y items complete" (never just "complete")
 
 Example:
+
 ```
 Checking completion status...
 Command: grep -n "NEEDS VERIFICATION\|PENDING\|⚠️" VERIFICATION_AUDIT_LOG.md
-Output: 
+Output:
 - Line 112: TaskFilterProps - ⚠️ NEEDS VERIFICATION
 - Line 114: TaskPriorityProps - ⚠️ NEEDS VERIFICATION
 
@@ -300,7 +315,7 @@ When conducting any verification audit, maintain this tracker at the top of the 
 ```
 VERIFICATION PROGRESS TRACKER
 Total Items: [X]
-✅ Verified Safe: [Y] 
+✅ Verified Safe: [Y]
 ❌ Active Usage Found: [Z]
 ⚠️ Pending Verification: [X-Y-Z]
 Last Updated: [timestamp of last verification]

@@ -13,11 +13,3 @@ export interface BaseAsyncState<T = unknown, E = Error> {
   error: E | null;
   lastUpdated: number | null;
 }
-
-
-
-
-
-
-
-

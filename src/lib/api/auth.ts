@@ -111,8 +111,8 @@ export async function refreshSession(): Promise<ApiResponse<AuthResponse>> {
     }
 
     const authResponse: AuthResponse = {
-      user: data.user as User,
-      session: data.session as Session,
+      user: data.user,
+      session: data.session,
       emailConfirmed: !!data.user?.email_confirmed_at,
     };
 

@@ -10,9 +10,7 @@ import TaskActions from '../task-management/TaskActions';
 
 import { TaskImageGallery } from './TaskImageGallery';
 
-function TaskDetailsContent({
-  task,
-}: TaskDetailsContentProps) {
+function TaskDetailsContent({ task }: TaskDetailsContentProps) {
   const { goToTaskDetails } = useTaskNavigation();
 
   return (
