@@ -15,7 +15,7 @@ import { useTaskSubmission } from '@/features/tasks/hooks/useTaskSubmission';
 import { useTaskNavigation } from '@/lib/navigation';
 import type { TaskActionsProps } from '@/types';
 
-function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
+function TaskActions({ task }: TaskActionsProps) {
   const { goToCreateFollowUpTask } = useTaskNavigation();
   const { updateTask, deleteTask, isSubmitting } = useTaskSubmission();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -60,12 +60,6 @@ function TaskActions({ task, onView, isExpanded = false }: TaskActionsProps) {
         Follow Up
       </Button>
 
-      {/* Only show View Details button when not expanded */}
-      {!isExpanded && (
-        <Button variant="outline" size="sm" onClick={onView}>
-          View Details
-        </Button>
-      )}
 
       {/* Delete button */}
       <div className="ml-auto">

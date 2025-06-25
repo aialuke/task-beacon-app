@@ -38,7 +38,6 @@ export interface CountdownTimerProps {
 
 export interface TaskActionsProps {
   task: Task;
-  onView: () => void;
 }
 
 export interface TaskImageGalleryProps {

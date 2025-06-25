@@ -1,6 +1,5 @@
 import { Calendar1, ExternalLink } from 'lucide-react';
 
-import { useTaskNavigation } from '@/lib/navigation';
 import { formatDate } from '@/lib/utils/date';
 import type { TaskDetailsContentProps } from '@/types';
 
@@ -11,7 +10,6 @@ import TaskActions from '../task-management/TaskActions';
 import { TaskImageGallery } from './TaskImageGallery';
 
 function TaskDetailsContent({ task }: TaskDetailsContentProps) {
-  const { goToTaskDetails } = useTaskNavigation();
 
   return (
     <div className="space-y-4">
@@ -62,12 +60,7 @@ function TaskDetailsContent({ task }: TaskDetailsContentProps) {
 
       {/* Single Border Separator + Action Buttons */}
       <div className="border-t pt-4">
-        <TaskActions
-          task={task}
-          onView={() => {
-            goToTaskDetails(task.id);
-          }}
-        />
+        <TaskActions task={task} />
       </div>
     </div>
   );
